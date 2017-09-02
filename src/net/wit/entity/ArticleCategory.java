@@ -188,17 +188,4 @@ public class ArticleCategory extends OrderEntity {
 		return treePaths;
 	}
 
-	/**
-	 * 获取访问路径
-	 * 
-	 * @return 访问路径
-	 */
-	@Transient
-	public String getPath() {
-		if (getId() != null) {
-			return PATH_PREFIX + "/" + getId() + PATH_SUFFIX;
-		}
-		return null;
-	}
-
 }

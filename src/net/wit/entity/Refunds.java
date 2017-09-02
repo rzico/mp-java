@@ -3,13 +3,7 @@ package net.wit.entity;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -27,7 +21,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_refunds_sequence")
 public class Refunds extends BaseEntity {
 
-	private static final long serialVersionUID = 354885216604823632L;
+	private static final long serialVersionUID = 502L;
 
 	/**
 	 * 类型
@@ -113,24 +107,12 @@ public class Refunds extends BaseEntity {
 	@OneToOne(mappedBy = "refunds", fetch = FetchType.LAZY)
 	private Deposit deposit;
 
-	public net.wit.entity.Refunds.Type getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(net.wit.entity.Refunds.Type type) {
+	public void setType(Type type) {
 		this.type = type;
-	}
-
-	public void setMethod(net.wit.entity.Refunds.Method method) {
-		this.method = method;
-	}
-
-	public net.wit.entity.Refunds.Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(net.wit.entity.Refunds.Status status) {
-		this.status = status;
 	}
 
 	public String getSn() {
@@ -141,12 +123,20 @@ public class Refunds extends BaseEntity {
 		this.sn = sn;
 	}
 
-	public Refunds.Method getMethod() {
+	public Method getMethod() {
 		return method;
 	}
 
-	public void setMethod(Refunds.Method method) {
+	public void setMethod(Method method) {
 		this.method = method;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public String getPaymentMethod() {

@@ -1,4 +1,4 @@
-package net.shopxx.entity;
+package net.wit.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -141,27 +141,27 @@ public class Payment extends BaseEntity {
 		this.sn = sn;
 	}
 
-	public net.shopxx.entity.Payment.Type getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(net.shopxx.entity.Payment.Type type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 
-	public net.shopxx.entity.Payment.Method getMethod() {
+	public Method getMethod() {
 		return method;
 	}
 
-	public void setMethod(net.shopxx.entity.Payment.Method method) {
+	public void setMethod(Method method) {
 		this.method = method;
 	}
 
-	public net.shopxx.entity.Payment.Status getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(net.shopxx.entity.Payment.Status status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 

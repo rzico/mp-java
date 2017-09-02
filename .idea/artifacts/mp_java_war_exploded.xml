@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="mp-java:war exploded">
+    <output-path>$PROJECT_DIR$/WebContent/WEB-INF/classes</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="mp-java" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="lib" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="mp-java/web/Web2" />
+      <element id="javaee-facet-resources" facet="mp-java/web/Web" />
+    </root>
+  </artifact>
+</component>

@@ -57,7 +57,6 @@ public class ArticleCatalog extends OrderEntity {
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
 	private Member member;
 
 	/** 文章 */

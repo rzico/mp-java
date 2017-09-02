@@ -1,5 +1,5 @@
 
-package net..entity;
+package net.wit.entity;
 
 import java.math.BigDecimal;
 

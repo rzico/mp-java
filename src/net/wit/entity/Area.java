@@ -153,45 +153,6 @@ public class Area extends OrderEntity {
 		this.children = children;
 	}
 
-	/**
-	 * 获取会员
-	 * 
-	 * @return 会员
-	 */
-	@OneToMany(mappedBy = "area", fetch = FetchType.LAZY)
-	public Set<Member> getMembers() {
-		return members;
-	}
-
-	/**
-	 * 设置会员
-	 * 
-	 * @param members
-	 *            会员
-	 */
-	public void setMembers(Set<Member> members) {
-		this.members = members;
-	}
-
-	/**
-	 * 获取收货地址
-	 * 
-	 * @return 收货地址
-	 */
-	@OneToMany(mappedBy = "area", fetch = FetchType.LAZY)
-	public Set<Receiver> getReceivers() {
-		return receivers;
-	}
-
-	/**
-	 * 设置收货地址
-	 * 
-	 * @param receivers
-	 *            收货地址
-	 */
-	public void setReceivers(Set<Receiver> receivers) {
-		this.receivers = receivers;
-	}
 
 	/**
 	 * 持久化前处理
@@ -226,12 +187,7 @@ public class Area extends OrderEntity {
 	 */
 	@PreRemove
 	public void preRemove() {
-		Set<Member> members = getMembers();
-		if (members != null) {
-			for (Member member : members) {
-				member.setArea(null);
-			}
-		}
+		;
 	}
 
 	/**

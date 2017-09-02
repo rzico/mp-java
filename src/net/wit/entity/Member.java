@@ -27,9 +27,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import net.shopxx.entity.MemberAttribute.Type;
-import net.shopxx.interceptor.MemberInterceptor;
-import net.shopxx.util.JsonUtils;
+import net.wit.entity.MemberAttribute.Type;
+import net.wit.util.JsonUtils;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -64,7 +63,7 @@ public class Member extends BaseEntity {
 	}
 
 	/** "身份信息"参数名称 */
-	public static final String PRINCIPAL_ATTRIBUTE_NAME = MemberInterceptor.class.getName() + ".PRINCIPAL";
+	public static final String PRINCIPAL_ATTRIBUTE_NAME = "MEMBER.PRINCIPAL";
 
 	/** "用户名"Cookie名称 */
 	public static final String USERNAME_COOKIE_NAME = "username";
@@ -204,6 +203,12 @@ public class Member extends BaseEntity {
 	/** 地区 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Area area;
+
+	/** 会员标签*/
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "xm_member_tag")
+	@OrderBy("order asc")
+	private Set<Tag> tags = new HashSet<Tag>();
 
 	/** 预存款 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -488,6 +493,14 @@ public class Member extends BaseEntity {
 
 	public void setReceivers(Set<Receiver> receivers) {
 		this.receivers = receivers;
+	}
+
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
 	}
 
 	/**

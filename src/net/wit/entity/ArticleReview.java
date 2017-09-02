@@ -27,9 +27,9 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 
 @Entity
-@Table(name = "xm_artcile_review")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_artcile_review_sequence")
-public class  ArtcileReview extends BaseEntity {
+@Table(name = "xm_article_review")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_review_sequence")
+public class  ArticleReview extends BaseEntity {
 
 	private static final long serialVersionUID = 106L;
 
@@ -55,30 +55,17 @@ public class  ArtcileReview extends BaseEntity {
 	/** 文章 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
-	private Artcile artcile;
+	private Article article;
 
 	/** 评论 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
-	private ArtcileReview forArtcileReview;
+	private ArticleReview forArticleReview;
 
 	/** 回复 */
-	@OneToMany(mappedBy = "forArtcileReview", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "forArticleReview", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
-	private Set<ArtcileReview> replyArtcileReviews = new HashSet<ArtcileReview>();
-
-	/**
-	 * 获取访问路径
-	 * 
-	 * @return 访问路径
-	 */
-	@Transient
-	public String getPath() {
-		if (getProduct() != null && getProduct().getId() != null) {
-			return PATH_PREFIX + "/" + getProduct().getId() + PATH_SUFFIX;
-		}
-		return null;
-	}
+	private Set<ArticleReview> replyArtcileReviews = new HashSet<ArticleReview>();
 
 	public String getContent() {
 		return content;
@@ -112,27 +99,27 @@ public class  ArtcileReview extends BaseEntity {
 		this.member = member;
 	}
 
-	public Artcile getArtcile() {
-		return artcile;
+	public Article getArticle() {
+		return article;
 	}
 
-	public void setArtcile(Artcile artcile) {
-		this.artcile = artcile;
+	public void setArticle(Article article) {
+		this.article = article;
 	}
 
-	public ArtcileReview getForArtcileReview() {
-		return forArtcileReview;
+	public ArticleReview getForArticleReview() {
+		return forArticleReview;
 	}
 
-	public void setForArtcileReview(ArtcileReview forArtcileReview) {
-		this.forArtcileReview = forArtcileReview;
+	public void setForArticleReview(ArticleReview forArticleReview) {
+		this.forArticleReview = forArticleReview;
 	}
 
-	public Set<ArtcileReview> getReplyArtcileReviews() {
+	public Set<ArticleReview> getReplyArtcileReviews() {
 		return replyArtcileReviews;
 	}
 
-	public void setReplyArtcileReviews(Set<ArtcileReview> replyArtcileReviews) {
+	public void setReplyArtcileReviews(Set<ArticleReview> replyArtcileReviews) {
 		this.replyArtcileReviews = replyArtcileReviews;
 	}
 }

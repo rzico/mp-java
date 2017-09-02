@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "xm_friends")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_friends_sequence")
-public class Deposit extends BaseEntity {
+public class Friends extends BaseEntity {
 
 	private static final long serialVersionUID = 801L;
 
@@ -55,11 +55,11 @@ public class Deposit extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Member friend;
 
-	public net.wit.entity.Deposit.Status getStatus() {
+	public Status getStatus() {
 		return Status;
 	}
 
-	public void setStatus(net.wit.entity.Deposit.Status status) {
+	public void setStatus(Status status) {
 		Status = status;
 	}
 
