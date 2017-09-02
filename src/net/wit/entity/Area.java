@@ -3,18 +3,7 @@ package net.wit.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -51,7 +40,7 @@ public class Area extends OrderEntity {
 
 	/** 上级地区 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@Column(columnDefinition="bigint(20) comment '上级'")
+	@JoinColumn(columnDefinition="bigint(20) comment '上级'")
 	private Area parent;
 
 	/** 下级地区 */
