@@ -36,6 +36,9 @@ public class Message {
 	/** 内容 */
 	private String content;
 
+	/** 数据 */
+	private Object data;
+
 	/**
 	 * 初始化一个新创建的 Message 对象，使其表示一个空消息。
 	 */
@@ -80,6 +83,21 @@ public class Message {
 	 */
 	public static Message success(String content, Object... args) {
 		return new Message(Type.success, content, args);
+	}
+
+	/**
+	 * 返回带数据的成功消息
+	 *
+	 * @param content
+	 *            内容
+	 * @param args
+	 *            参数
+	 * @return 成功消息
+	 */
+	public static Message success(Object entity,String content, Object... args) {
+		Message m = new Message(Type.success, content, args);
+		m.data = entity;
+		return m;
 	}
 
 	/**
@@ -151,4 +169,11 @@ public class Message {
 		return SpringUtils.getMessage(content);
 	}
 
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
 }

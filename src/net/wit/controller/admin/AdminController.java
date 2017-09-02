@@ -7,6 +7,7 @@ package net.wit.controller.admin;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -40,30 +41,25 @@ public class AdminController extends BaseController {
 	private AdminService adminService;
 
 	/**
-	 * 添加
-	 */
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String add(ModelMap model) {
-		return "/admin/admin/add";
-	}
-
-	/**
 	 * 保存
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Message save(Admin admin,RedirectAttributes redirectAttributes) {
+	public Message save(Admin admin
+						//,Long areaId  多对一传参
+						) {
 		Admin entity = new Admin();
 		//正常赋值
 		entity.setEmail(admin.getEmail());
-		//多对一赋值
+		//多对一输出
+		//model.addAttribute("area",areaService.findAll());
 
 		if (!isValid(admin, Save.class)) {
 			return Message.error("admin.data.valid");
 		}
 		try {
 			adminService.save(entity);
-			return Message.success("admin.save.success");
+			return Message.success(entity,"admin.save.success");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error("admin.save.error");
@@ -71,12 +67,12 @@ public class AdminController extends BaseController {
 	}
 
 	/**
-	 * 编辑
+	 * 获取数据
 	 */
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String edit(Long id, ModelMap model) {
-		model.addAttribute("admin", adminService.find(id));
-		return "/admin/admin/edit";
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
+	@ResponseBody
+	public Admin view(Long id, ModelMap model) {
+		return adminService.find(id);
 	}
 
 	/**
@@ -84,17 +80,20 @@ public class AdminController extends BaseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Message update(Admin admin) {
+	public Message update(Admin admin
+						  //,Long areaId  多对一传参
+	     ) {
 		Admin entity = adminService.find(admin.getId());
 		//正常赋值
 		entity.setEmail(admin.getEmail());
 		//多对一赋值
+		//entity.setArea(areaService.find(areaId));
 		if (!isValid(entity)) {
 			return Message.error("admin.data.valid");
 		}
 		try {
 			adminService.save(entity);
-			return Message.success("admin.update.success");
+			return Message.success(entity,"admin.update.success");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error("admin.update.error");
@@ -106,6 +105,17 @@ public class AdminController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+		//常量输出
+		//Map<String,String> status = new HashMap<String,String)();
+		//status.put("key1","值1");
+		//status.put("key2","值2");
+		//model.addAttribute("status",status);
+		//多对一输出
+		//model.addAttribute("area",areaService.findAll());
+
+		//是否要返回例信息，待定
+		//model.addAttribute("columns",例信息);
+
 		model.addAttribute("page", adminService.findPage(beginDate,endDate,pageable));
 		return "/admin/admin/list";
 	}
