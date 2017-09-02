@@ -30,24 +30,33 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_area_sequence")
 public class Area extends OrderEntity {
 
-	private static final long serialVersionUID = -202L;
+	private static final long serialVersionUID = -102L;
 
 	/** 树路径分隔符 */
 	private static final String TREE_PATH_SEPARATOR = ",";
 
 	/** 名称 */
+	@NotEmpty
+	@Length(max = 100)
+	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
 	/** 全称 */
+	@Column(columnDefinition="varchar(255) not null comment '全称'")
 	private String fullName;
 
 	/** 树路径 */
+	@Column(nullable = false, updatable = false)
 	private String treePath;
 
 	/** 上级地区 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Column(columnDefinition="bigint(20) comment '上级'")
 	private Area parent;
 
 	/** 下级地区 */
+	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OrderBy("order asc")
 	private Set<Area> children = new HashSet<Area>();
 
 	/**
@@ -55,9 +64,6 @@ public class Area extends OrderEntity {
 	 * 
 	 * @return 名称
 	 */
-	@NotEmpty
-	@Length(max = 100)
-	@Column(nullable = false, length = 100)
 	public String getName() {
 		return name;
 	}
@@ -77,7 +83,6 @@ public class Area extends OrderEntity {
 	 * 
 	 * @return 全称
 	 */
-	@Column(nullable = false, length = 500)
 	public String getFullName() {
 		return fullName;
 	}
@@ -97,7 +102,6 @@ public class Area extends OrderEntity {
 	 * 
 	 * @return 树路径
 	 */
-	@Column(nullable = false, updatable = false)
 	public String getTreePath() {
 		return treePath;
 	}
@@ -117,7 +121,6 @@ public class Area extends OrderEntity {
 	 * 
 	 * @return 上级地区
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
 	public Area getParent() {
 		return parent;
 	}
@@ -137,8 +140,6 @@ public class Area extends OrderEntity {
 	 * 
 	 * @return 下级地区
 	 */
-	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@OrderBy("order asc")
 	public Set<Area> getChildren() {
 		return children;
 	}

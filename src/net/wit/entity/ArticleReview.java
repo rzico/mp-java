@@ -31,12 +31,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_review_sequence")
 public class  ArticleReview extends BaseEntity {
 
-	private static final long serialVersionUID = 106L;
+	private static final long serialVersionUID = 109L;
 
 	/** 内容 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition=" varchar(255) comment '内容'")
 	private String content;
 
 	/** 是否显示 */
@@ -44,22 +44,22 @@ public class  ArticleReview extends BaseEntity {
 	private Boolean isShow;
 
 	/** IP */
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition=" varchar(255) comment 'IP'")
 	private String ip;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) comment 'IP'")
 	private Member member;
 
 	/** 文章 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) comment '文章'")
 	private Article article;
 
-	/** 评论 */
+	/** 评论谁 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) comment '评论谁'")
 	private ArticleReview forArticleReview;
 
 	/** 回复 */

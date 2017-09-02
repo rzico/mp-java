@@ -68,11 +68,11 @@ public class AuthenticationRealm extends AuthorizingRealm {
 			if (admin == null) {
 				throw new UnknownAccountException();
 			}
-			if (!admin.getIsEnabled()) {
+			if (!admin.getEnabled()) {
 				throw new DisabledAccountException();
 			}
 			Setting setting = SettingUtils.get();
-			if (admin.getIsLocked()) {
+			if (admin.getLocked()) {
 				if (ArrayUtils.contains(setting.getAccountLockTypes(), AccountLockType.admin)) {
 					int loginFailureLockTime = setting.getAccountLockTime();
 					if (loginFailureLockTime == 0) {
@@ -82,7 +82,7 @@ public class AuthenticationRealm extends AuthorizingRealm {
 					Date unlockDate = DateUtils.addMinutes(lockedDate, loginFailureLockTime);
 					if (new Date().after(unlockDate)) {
 						admin.setLoginFailureCount(0);
-						admin.setIsLocked(false);
+						admin.setLocked(false);
 						admin.setLockedDate(null);
 						adminService.update(admin);
 					} else {
@@ -90,7 +90,7 @@ public class AuthenticationRealm extends AuthorizingRealm {
 					}
 				} else {
 					admin.setLoginFailureCount(0);
-					admin.setIsLocked(false);
+					admin.setLocked(false);
 					admin.setLockedDate(null);
 					adminService.update(admin);
 				}
@@ -98,7 +98,7 @@ public class AuthenticationRealm extends AuthorizingRealm {
 			if (!DigestUtils.md5Hex(password).equals(admin.getPassword())) {
 				int loginFailureCount = admin.getLoginFailureCount() + 1;
 				if (loginFailureCount >= setting.getAccountLockCount()) {
-					admin.setIsLocked(true);
+					admin.setLocked(true);
 					admin.setLockedDate(new Date());
 				}
 				admin.setLoginFailureCount(loginFailureCount);

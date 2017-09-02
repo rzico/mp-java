@@ -30,7 +30,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_payment_sequence")
 public class Payment extends BaseEntity {
 
-	private static final long serialVersionUID = 111L;
+	private static final long serialVersionUID = 116L;
 
 	/** 支付方式分隔符 */
 	public static final String PAYMENT_METHOD_SEPARATOR = " - ";
@@ -78,59 +78,60 @@ public class Payment extends BaseEntity {
 	}
 
 	/** 编号 */
-	@Column(nullable = false, updatable = false, unique = true, length = 100)
+	@Column(columnDefinition="varchar(255) not null unique comment '编号'")
 	private String sn;
 
 	/** 类型 */
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition="int(11) not null comment '类型'")
 	private Type type;
 
 	/** 方式 */
 	@NotNull
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition="int(11) not null comment '方式'")
 	private Method method;
 
 	/** 状态 */
-	@Column(updatable = false)
+	@Column(columnDefinition="int(11) not null comment '状态'")
 	private Status status;
 
 	/** 支付方式 */
-	@Column(updatable = false)
+	@Column(columnDefinition="varchar(255) comment '支付方式'")
 	private String paymentMethod;
+
+	/** 支付插件 */
+	@Column(columnDefinition="varchar(255) comment '支付插件'")
+	private String paymentPluginId;
 
 	/** 付款金额 */
 	@NotNull
 	@Min(0)
-	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, updatable = false, precision = 21, scale = 6)
+	@Column(columnDefinition="decimal(21,3) not null default 0 comment '付款金额'")
 	private BigDecimal amount;
 
 	/** 操作员 */
-	@Column(updatable = false)
+	@Column(columnDefinition="varchar(255) comment '操作员'")
 	private String operator;
 
 	/** 付款日期 */
+	@Column(columnDefinition="datetime comment '付款日期'")
 	private Date paymentDate;
 
 	/** 备注 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '备注'")
 	private String memo;
 
-	/** 支付插件ID */
-	@JoinColumn(updatable = false)
-	private String paymentPluginId;
-
 	/** 到期时间 */
-	@JoinColumn(updatable = false)
+	@Column(columnDefinition="datetime comment '到期时间'")
 	private Date expire;
 
-	/** 预存款 */
+	/** 账单记录 */
 	@OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
 	private Deposit deposit;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
 	private Member member;
 
 	public String getSn() {
@@ -236,6 +237,7 @@ public class Payment extends BaseEntity {
 	public void setMember(Member member) {
 		this.member = member;
 	}
+
 
 	/**
 	 * 判断是否已过期

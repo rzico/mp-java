@@ -1,8 +1,4 @@
-/*
- * Copyright 2005-2013 shopxx.net. All rights reserved.
- * Support: http://www.shopxx.net
- * License: http://www.shopxx.net/license
- */
+
 package net.wit.entity;
 
 import java.util.ArrayList;
@@ -32,20 +28,21 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_role_sequence")
 public class Role extends BaseEntity {
 
-	private static final long serialVersionUID = -102L;
+	private static final long serialVersionUID = 120L;
 
 	/** 名称 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
 	/** 是否内置 */
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition="bit not null comment '是否内置'")
 	private Boolean isSystem;
 
 	/** 描述 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '描述'")
 	private String description;
 
 	/** 权限 */
@@ -96,4 +93,5 @@ public class Role extends BaseEntity {
 	public void setAdmins(Set<Admin> admins) {
 		this.admins = admins;
 	}
+
 }

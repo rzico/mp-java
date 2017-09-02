@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_receiver_sequence")
 public class Receiver extends BaseEntity {
 
-	private static final long serialVersionUID = 203L;
+	private static final long serialVersionUID = 118L;
 
 	/** 收货地址最大保存数 */
 	public static final Integer MAX_RECEIVER_COUNT = 8;
@@ -36,44 +36,45 @@ public class Receiver extends BaseEntity {
 	/** 收货人 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) not null comment '收货人'")
 	private String consignee;
 
 	/** 地区名称 */
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) not null comment '地区名称'")
 	private String areaName;
 
 	/** 地址 */
  	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) not null comment '地址'")
 	private String address;
 
 	/** 邮编 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) comment '邮编'")
 	private String zipCode;
 
 	/** 电话 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) comment '电话'")
 	private String phone;
 
 	/** 是否默认 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="bit not null comment '是否默认'")
 	private Boolean isDefault;
 
 	/** 地区 */
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '地区'")
 	private Area area;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
 	private Member member;
 
 	/**

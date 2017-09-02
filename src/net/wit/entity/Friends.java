@@ -19,12 +19,13 @@ import org.hibernate.validator.constraints.Length;
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
+
 @Entity
 @Table(name = "xm_friends")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_friends_sequence")
 public class Friends extends BaseEntity {
 
-	private static final long serialVersionUID = 801L;
+	private static final long serialVersionUID = 111L;
 
 	/**
 	 * 状态
@@ -41,18 +42,18 @@ public class Friends extends BaseEntity {
 		black
 	}
 
-	/** 类型 */
-	@Column(nullable = false, updatable = false)
+	/** 状态 */
+	@JoinColumn(columnDefinition="int(11) not null comment '状态'")
 	private Status Status;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
 	private Member member;
 
 	/** 好友 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '好友'")
 	private Member friend;
 
 	public Status getStatus() {

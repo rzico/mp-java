@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_deposit_sequence")
 public class Deposit extends BaseEntity {
 
-	private static final long serialVersionUID = 903L;
+	private static final long serialVersionUID = 110L;
 
 	/**
 	 * 类型
@@ -42,33 +42,33 @@ public class Deposit extends BaseEntity {
 	}
 
 	/** 类型 */
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition="int(11) not null comment '类型'")
 	private Type type;
 
 	/** 收入金额 */
-	@Column(nullable = false, updatable = false, precision = 21, scale = 6)
+	@Column(columnDefinition="decimal(21,6) not null comment '收入金额'")
 	private BigDecimal credit;
 
 	/** 支出金额 */
-	@Column(nullable = false, updatable = false, precision = 21, scale = 6)
+	@Column(columnDefinition="decimal(21,6) not null comment '支出金额'")
 	private BigDecimal debit;
 
 	/** 当前余额 */
-	@Column(nullable = false, updatable = false, precision = 21, scale = 6)
+	@Column(columnDefinition="decimal(21,6) not null comment '当前余额'")
 	private BigDecimal balance;
 
 	/** 操作员 */
-	@Column(updatable = false)
+	@Column(columnDefinition="varchar(255) comment '操作员'")
 	private String operator;
 
 	/** 备注 */
 	@Length(max = 200)
-	@Column(updatable = false)
+	@Column(columnDefinition="varchar(255) comment '备注'")
 	private String memo;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '备注'")
 	private Member member;
 
 	/** 收款单 */

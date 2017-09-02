@@ -21,11 +21,12 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_refunds_sequence")
 public class Refunds extends BaseEntity {
 
-	private static final long serialVersionUID = 502L;
+	private static final long serialVersionUID = 119L;
 
 	/**
 	 * 类型
 	 */
+
 	public enum Type {
 
 		/** 消费支付 */
@@ -68,42 +69,46 @@ public class Refunds extends BaseEntity {
 
 
 	/** 类型 */
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition="int(11) not null comment '类型'")
 	private Type type;
 
 	/** 编号 */
-	@Column(nullable = false, updatable = false, unique = true, length = 100)
+	@Column(columnDefinition="varchar(255) not null unique comment '编号'")
 	private String sn;
 
 	/** 方式 */
 	@NotNull
-	@Column(nullable = false, updatable = false)
+	@Column(columnDefinition="int(11) not null comment '方式'")
 	private Method method;
 
 	/** 状态 */
-	@Column(updatable = false)
+	@Column(columnDefinition="int(11) not null comment '状态'")
 	private Status status;
 
 	/** 支付方式 */
-	@Column(updatable = false)
+	@Column(columnDefinition="varchar(255) comment '支付方式'")
 	private String paymentMethod;
+
+	/** 支付插件 */
+	@Column(columnDefinition="varchar(255) comment '支付插件'")
+	private String paymentPluginId;
 
 	/** 退款金额 */
 	@NotNull
 	@Min(0)
-	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, updatable = false, precision = 21, scale = 6)
+	@Column(columnDefinition="decimal(21,3) not null default 0 comment '退款金额'")
 	private BigDecimal amount;
 
 	/** 操作员 */
+	@Column(columnDefinition="varchar(255) comment '操作员'")
 	private String operator;
 
 	/** 备注 */
 	@Length(max = 200)
-	@Column(updatable = false)
+	@Column(columnDefinition="varchar(255) comment '备注'")
 	private String memo;
 
-	/** 预存款 */
+	/** 账单记录 */
 	@OneToOne(mappedBy = "refunds", fetch = FetchType.LAZY)
 	private Deposit deposit;
 
@@ -178,4 +183,13 @@ public class Refunds extends BaseEntity {
 	public void setDeposit(Deposit deposit) {
 		this.deposit = deposit;
 	}
+
+	public String getPaymentPluginId() {
+		return paymentPluginId;
+	}
+
+	public void setPaymentPluginId(String paymentPluginId) {
+		this.paymentPluginId = paymentPluginId;
+	}
+
 }

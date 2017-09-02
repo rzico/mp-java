@@ -19,7 +19,7 @@ import org.apache.commons.lang.time.DateUtils;
 @Embeddable
 public class ArticleOptions implements Serializable {
 
-	private static final long serialVersionUID = 402L;
+	private static final long serialVersionUID = 108L;
 
 	/**
 	 * 权限
@@ -41,32 +41,32 @@ public class ArticleOptions implements Serializable {
 
 	/** 是否投稿 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="bit comment '是否投稿'")
 	private Boolean isPublish;
 
 	/** 是否精选 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="bit comment '是否精选'")
 	private Boolean isPitch;
 
 	/** 是否评论 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="bit comment '是否评论'")
 	private Boolean isReview;
 
 	/** 是否赞赏 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="bit comment '是否赞赏'")
 	private Boolean isReward;
 
-	/** 权限 */
+	/** 谁可见 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="int(11) comment '谁可见'")
 	private Authority authority;
 
 	/** 是否删除，false 删除不显示 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="bit comment '是否显示'")
 	private Boolean isShow;
 
 }

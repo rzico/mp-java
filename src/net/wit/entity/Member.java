@@ -30,6 +30,7 @@ import javax.validation.constraints.Pattern;
 import net.wit.entity.MemberAttribute.Type;
 import net.wit.util.JsonUtils;
 
+import net.wit.weixin.message.resp.*;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Email;
@@ -48,7 +49,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "x_member_sequence")
 public class Member extends BaseEntity {
 
-	private static final long serialVersionUID = 1533130686714725835L;
+	private static final long serialVersionUID = 113L;
 
 	/**
 	 * 性别
@@ -80,120 +81,139 @@ public class Member extends BaseEntity {
 	/** 用户名 */
 	@NotEmpty(groups = Save.class)
 	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]+$")
-	@Column(nullable = false, updatable = false, unique = true, length = 100)
+	@Column(columnDefinition="varchar(255) not null unique comment '用户名'")
 	private String username;
 
 	/** 密码 */
 	@NotEmpty(groups = Save.class)
 	@Pattern(regexp = "^[^\\s&\"<>]+$")
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) comment '密码'")
 	private String password;
 
 	/** E-mail */
 	@NotEmpty
 	@Email
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '邮箱'")
 	private String email;
 
 	/** 积分 */
 	@NotNull(groups = Save.class)
 	@Min(0)
-	@Column(nullable = false)
+	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
 	private Long point;
 
 	/** 余额 */
 	@Min(0)
-	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 27, scale = 12)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '余额'")
 	private BigDecimal balance;
 
 	/** 是否启用 */
 	@NotNull
-	@Column(nullable = false)
+	@Column(columnDefinition="bit not null comment '是否启用'")
 	private Boolean isEnabled;
 
 	/** 是否锁定 */
-	@Column(nullable = false)
+	@Column(columnDefinition="bit not null comment '是否锁定'")
 	private Boolean isLocked;
 
 	/** 连续登录失败次数 */
-	@Column(nullable = false)
+	@Column(columnDefinition="int(11) comment '连续登录失败次数'")
 	private Integer loginFailureCount;
 
 	/** 锁定日期 */
+	@Column(columnDefinition="datetime comment '锁定日期'")
 	private Date lockedDate;
 
 	/** 注册IP */
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) comment '注册IP'")
 	private String registerIp;
 
 	/** 最后登录IP */
+	@Column(columnDefinition="varchar(255) comment '最后登录IP'")
 	private String loginIp;
 
 	/** 最后登录日期 */
+	@Column(columnDefinition="datetime comment '最后登录日期'")
 	private Date loginDate;
 
 	/** 姓名 */
-	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '姓名'")
 	private String name;
 
 	/** 性别 */
+	@Column(columnDefinition="int(11) comment '性别'")
 	private Gender gender;
 
 	/** 出生日期 */
+	@Column(columnDefinition="datetime comment '出生日期'")
 	private Date birth;
 
 	/** 地址 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '地址'")
 	private String address;
 
 	/** 邮编 */
+	@Column(columnDefinition="varchar(255) comment '邮编'")
 	private String zipCode;
 
 	/** 电话 */
+	@Column(columnDefinition="varchar(255) comment '电话'")
 	private String phone;
 
 	/** 手机 */
+	@Column(columnDefinition="varchar(255) comment '手机'")
 	private String mobile;
 
 	/** 会员注册项值0 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
 	private String attributeValue0;
 
 	/** 会员注册项值1 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值1'")
 	private String attributeValue1;
 
 	/** 会员注册项值2 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值2'")
 	private String attributeValue2;
 
 	/** 会员注册项值3 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值3'")
 	private String attributeValue3;
 
 	/** 会员注册项值4 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值4'")
 	private String attributeValue4;
 
 	/** 会员注册项值5 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值5'")
 	private String attributeValue5;
 
 	/** 会员注册项值6 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值6'")
 	private String attributeValue6;
 
 	/** 会员注册项值7 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值7'")
 	private String attributeValue7;
 
 	/** 会员注册项值8 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值8'")
 	private String attributeValue8;
 
 	/** 会员注册项值9 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '会员注册项值9'")
 	private String attributeValue9;
 
 	/** 安全密匙 */
@@ -202,6 +222,7 @@ public class Member extends BaseEntity {
 
 	/** 地区 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '地区'")
 	private Area area;
 
 	/** 会员标签*/

@@ -6,15 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
@@ -31,7 +23,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_catalog_sequence")
 public class ArticleCatalog extends OrderEntity {
 
-	private static final long serialVersionUID = 604L;
+	private static final long serialVersionUID = 104L;
 
 	/**
 	 * 状态
@@ -46,17 +38,20 @@ public class ArticleCatalog extends OrderEntity {
 	}
 
 	/** 状态 */
-	@Column(updatable = false)
+	@NotEmpty
+	@Column(columnDefinition="int(11) not null comment '状态'")
 	private Status status;
 
 	/** 名称 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) not null comment '点赞数'")
 	private String name;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@NotEmpty
+	@JoinColumn(columnDefinition="bigint(20) not null comment '点赞数'")
 	private Member member;
 
 	/** 文章 */

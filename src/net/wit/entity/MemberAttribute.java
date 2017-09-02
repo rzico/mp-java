@@ -25,7 +25,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_member_attribute_sequence")
 public class MemberAttribute extends OrderEntity {
 
-	private static final long serialVersionUID = 604L;
+	private static final long serialVersionUID = 114L;
 
 	/**
 	 * 类型
@@ -67,21 +67,33 @@ public class MemberAttribute extends OrderEntity {
 	}
 
 	/** 名称 */
+	@NotEmpty
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
 	/** 类型 */
+	@NotNull(groups = Save.class)
+	@Column(columnDefinition="int(11) not null comment '类型'")
 	private Type type;
 
 	/** 是否启用 */
+	@NotNull
+	@Column(columnDefinition="bit not null comment '是否启用'")
 	private Boolean isEnabled;
 
 	/** 是否必填 */
+	@NotNull
+	@Column(columnDefinition="bit not null comment '是否必填'")
 	private Boolean isRequired;
 
 	/** 属性序号 */
+	@Column(columnDefinition="int(11) not null comment '序号'")
 	private Integer propertyIndex;
 
 	/** 可选项 */
+	@ElementCollection
+	@CollectionTable(name = "xm_member_attribute_option")
 	private List<String> options = new ArrayList<String>();
 
 	/**
@@ -89,9 +101,6 @@ public class MemberAttribute extends OrderEntity {
 	 * 
 	 * @return 名称
 	 */
-	@NotEmpty
-	@Length(max = 200)
-	@Column(nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -111,8 +120,6 @@ public class MemberAttribute extends OrderEntity {
 	 * 
 	 * @return 类型
 	 */
-	@NotNull(groups = Save.class)
-	@Column(nullable = false, updatable = false)
 	public Type getType() {
 		return type;
 	}
@@ -132,8 +139,6 @@ public class MemberAttribute extends OrderEntity {
 	 * 
 	 * @return 是否启用
 	 */
-	@NotNull
-	@Column(nullable = false)
 	public Boolean getIsEnabled() {
 		return isEnabled;
 	}
@@ -153,8 +158,6 @@ public class MemberAttribute extends OrderEntity {
 	 * 
 	 * @return 是否必填
 	 */
-	@NotNull
-	@Column(nullable = false)
 	public Boolean getIsRequired() {
 		return isRequired;
 	}
@@ -174,7 +177,6 @@ public class MemberAttribute extends OrderEntity {
 	 * 
 	 * @return 属性序号
 	 */
-	@Column(updatable = false)
 	public Integer getPropertyIndex() {
 		return propertyIndex;
 	}
@@ -194,8 +196,6 @@ public class MemberAttribute extends OrderEntity {
 	 * 
 	 * @return 可选项
 	 */
-	@ElementCollection
-	@CollectionTable(name = "xm_member_attribute_option")
 	public List<String> getOptions() {
 		return options;
 	}

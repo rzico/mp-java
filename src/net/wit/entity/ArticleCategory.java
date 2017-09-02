@@ -6,15 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
@@ -31,7 +23,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_category_sequence")
 public class ArticleCategory extends OrderEntity {
 
-	private static final long serialVersionUID = 104L;
+	private static final long serialVersionUID = 105L;
 
 	/** 树路径分隔符 */
 	public static final String TREE_PATH_SEPARATOR = ",";
@@ -49,25 +41,28 @@ public class ArticleCategory extends OrderEntity {
 	}
 
 	/** 状态 */
-	@Column(updatable = false)
+	@Column(columnDefinition="int(11) not null comment '状态'")
 	private Status status;
 
 	/** 名称 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false)
+	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
 	/** 页面标题 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '页面标题'")
 	private String seoTitle;
 
 	/** 页面关键词 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '页面关键词'")
 	private String seoKeywords;
 
 	/** 页面描述 */
 	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '页面描述'")
 	private String seoDescription;
 
 	/** 树路径 */
@@ -80,6 +75,7 @@ public class ArticleCategory extends OrderEntity {
 
 	/** 上级分类 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '上级分类'")
 	private ArticleCategory parent;
 
 	/** 下级分类 */
