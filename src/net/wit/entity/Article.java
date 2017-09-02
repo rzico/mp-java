@@ -40,7 +40,7 @@ public class Article extends BaseEntity{
 
     /** 类型 */
     @NotEmpty
-    @Column(columnDefinition="int(11) comment '类型 {0:图文,1:音频,2:视频}'")
+    @Column(columnDefinition="int(11) comment '类型 {image:图文,audio:音频,video:视频}'")
     private MediaType mediaType;
 
     /** 作者 */

@@ -38,7 +38,7 @@ public class Tag extends OrderEntity{
 
     /*类型*/
     @NotNull(groups = Save.class)
-    @Column(columnDefinition="int(11) not null comment '类型 {0:文章,1:会员}'")
+    @Column(columnDefinition="int(11) not null comment '类型 {article:文章,member:会员}'")
     private Type type;
 
     /*图标*/

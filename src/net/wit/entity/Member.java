@@ -145,7 +145,7 @@ public class Member extends BaseEntity {
 	private String name;
 
 	/** 性别 */
-	@Column(columnDefinition="int(11) comment '性别 {0:男,1:女,2:保密}'")
+	@Column(columnDefinition="int(11) comment '性别 {male:男,female:女,secrecy:保密}'")
 	private Gender gender;
 
 	/** 出生日期 */

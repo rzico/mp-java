@@ -61,7 +61,7 @@ public class ArticleOptions implements Serializable {
 
 	/** 谁可见 */
 	@NotNull
-	@Column(columnDefinition="int(11) comment '谁可见  {0:公开,1:不会开,2:加密,3:私秘}'")
+	@Column(columnDefinition="int(11) comment '谁可见  {isPublic:公开,isShare:不会开,isEncrypt:加密,isPrivate:私秘}'")
 	private Authority authority;
 
 	/** 密码 */

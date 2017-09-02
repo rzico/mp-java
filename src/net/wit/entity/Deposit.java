@@ -42,7 +42,7 @@ public class Deposit extends BaseEntity {
 	}
 
 	/** 类型 */
-	@Column(columnDefinition="int(11) not null comment '类型 {0:充值,1:支付,2:退款}'")
+	@Column(columnDefinition="int(11) not null comment '类型 {recharge:充值,payment:支付,refunds:退款}'")
 	private Type type;
 
 	/** 收入金额 */

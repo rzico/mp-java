@@ -55,7 +55,7 @@ public class Message extends BaseEntity {
 	}
 
 	/** 类型 */
-	@Column(columnDefinition="int(11) not null comment '类型 {0:订单提醒,1:账单提醒,2:系统消息,3:评论回复,4:点赞提醒,5:关注提醒,6:收藏提醒}'")
+	@Column(columnDefinition="int(11) not null comment '类型 {order:订单提醒,account:账单提醒,message:系统消息,review:评论回复,laud:点赞提醒,follow:关注提醒,favorite:收藏提醒}'")
 	private Type type;
 	
 	/** 标题 */
