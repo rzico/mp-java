@@ -1,8 +1,3 @@
-/*
- * Copyright 2005-2013 shopxx.net. All rights reserved.
- * Support: http://www.shopxx.net
- * License: http://www.shopxx.net/license
- */
 package net.wit.controller.admin;
 
 import java.util.Date;
@@ -29,9 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller - 管理员
- * 
- * @author SHOP++ Team
- * @version 3.0
  */
 @Controller("adminAdminController")
 @RequestMapping("/admin/admin")
