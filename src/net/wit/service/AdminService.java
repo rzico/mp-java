@@ -71,4 +71,15 @@ public interface AdminService extends BaseService<Admin, Long> {
 	 * @return 当前登录用户名,若不存在则返回null
 	 */
 	String getCurrentUsername();
+
+	/**
+	 * @Title：findPage
+	 * @Description：标准代码
+	 * @param beginDate
+	 * @param endDate
+	 * @param pageable
+	 * @return Page<Admin>
+	 */
+	Page<Admin> findPage(Date beginDate,Date endDate, Pageable pageable);
+
 }

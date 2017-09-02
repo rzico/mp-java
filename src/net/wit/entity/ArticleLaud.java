@@ -39,4 +39,5 @@ public class ArticleLaud extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Article article;
+
 }

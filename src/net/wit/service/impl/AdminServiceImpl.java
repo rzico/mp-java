@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author rsico Team
  * @version 3.0
  */
+
 @Service("adminServiceImpl")
 public class AdminServiceImpl extends BaseServiceImpl<Admin, Long> implements AdminService {
 
@@ -138,4 +139,7 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, Long> implements Ad
 		super.delete(admin);
 	}
 
+	public Page<Admin> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	  return adminDao.findPage(beginDate,endDate,pageable);
+	}
 }

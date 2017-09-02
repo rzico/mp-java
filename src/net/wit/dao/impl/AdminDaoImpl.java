@@ -10,6 +10,10 @@ import java.util.*;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import net.wit.Page;
 import net.wit.Pageable;
@@ -18,7 +22,9 @@ import net.wit.entity.Admin;
 import net.wit.entity.Area;
 
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 /**
  * Dao - 管理员
@@ -33,7 +39,7 @@ public class AdminDaoImpl extends BaseDaoImpl<Admin, Long> implements AdminDao {
 		if (username == null) {
 			return false;
 		}
-		String jpql = "select count(*) from Admin admin where lower(admin.username) = lower(:username)";
+		String jpql = "select count(admin.id) from Admin admin where lower(admin.username) = lower(:username)";
 		Long count = entityManager.createQuery(jpql, Long.class).setFlushMode(FlushModeType.COMMIT).setParameter("username", username).getSingleResult();
 		return count > 0;
 	}
@@ -48,6 +54,34 @@ public class AdminDaoImpl extends BaseDaoImpl<Admin, Long> implements AdminDao {
 		} catch (NoResultException e) {
 			return null;
 		}
+	}
+
+	/**
+	 * @Title：findPage
+	 * @Description：标准代码
+	 * @param beginDate
+	 * @param endDate
+	 * @param pageable
+	 * @return Page<Admin>
+	 */
+	public Page<Admin> findPage(Date beginDate,Date endDate, Pageable pageable) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Admin> criteriaQuery = criteriaBuilder.createQuery(Admin.class);
+		Root<Admin> root = criteriaQuery.from(Admin.class);
+		criteriaQuery.select(root);
+		Predicate restrictions = criteriaBuilder.conjunction();
+		restrictions = criteriaBuilder.conjunction();
+		if (beginDate!=null) {
+			Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.greaterThanOrEqualTo(root.<Date> get("createDate"), b));
+		}
+		if (endDate!=null) {
+			Date e = DateUtils.truncate(endDate,Calendar.DATE);
+			e =DateUtils.addDays(e,1);
+			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
+		}
+		criteriaQuery.where(restrictions);
+		return super.findPage(criteriaQuery,pageable);
 	}
 
 }
