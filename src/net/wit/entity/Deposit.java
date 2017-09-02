@@ -31,18 +31,18 @@ public class Deposit extends BaseEntity {
 	 */
 	public enum Type {
 
-		/** 钱包充值 */
+		/** 充值 */
 		recharge,
 
-		/** 消费支付 */
+		/** 支付 */
 		payment,
 
-		/** 消费退款 */
+		/** 退款 */
 		refunds
 	}
 
 	/** 类型 */
-	@Column(columnDefinition="int(11) not null comment '类型'")
+	@Column(columnDefinition="int(11) not null comment '类型 {0:充值,1:支付,2:退款}'")
 	private Type type;
 
 	/** 收入金额 */

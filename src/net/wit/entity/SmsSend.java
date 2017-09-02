@@ -51,7 +51,7 @@ public class SmsSend extends BaseEntity {
 	private BigDecimal fee;
 
 	/** 发送状态 0待发送 1发送成功，其他失败 */
-	@Column(columnDefinition="int(11) not null comment '发送状态'")
+	@Column(columnDefinition="int(11) not null comment '发送状态 {0:等待,1:成功,2:失败}'")
 	private Status status;
 
 	/** 错误说明 */

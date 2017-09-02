@@ -78,20 +78,20 @@ public class Payment extends BaseEntity {
 	}
 
 	/** 编号 */
-	@Column(columnDefinition="varchar(255) not null unique comment '编号'")
+	@Column(columnDefinition="varchar(50) not null unique comment '编号'")
 	private String sn;
 
 	/** 类型 */
-	@Column(columnDefinition="int(11) not null comment '类型'")
+	@Column(columnDefinition="int(11) not null comment '类型 {0:消费支付,1:钱包充值}'")
 	private Type type;
 
 	/** 方式 */
 	@NotNull
-	@Column(columnDefinition="int(11) not null comment '方式'")
+	@Column(columnDefinition="int(11) not null comment '方式 {0:在线支付,1:线下支付,2:钱包支付}'")
 	private Method method;
 
 	/** 状态 */
-	@Column(columnDefinition="int(11) not null comment '状态'")
+	@Column(columnDefinition="int(11) not null comment '状态 {0:等待支付,1:支付成功,2:支付失败}'")
 	private Status status;
 
 	/** 支付方式 */

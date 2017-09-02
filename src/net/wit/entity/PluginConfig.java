@@ -23,7 +23,7 @@ public class PluginConfig extends OrderEntity {
 	private static final long serialVersionUID = 117L;
 
 	/** 插件ID */
-	@Column(columnDefinition="varchar(255) not null unique comment '插件ID'")
+	@Column(columnDefinition="varchar(50) not null unique comment '插件ID'")
 	private String pluginId;
 
 	/** 是否启用 */

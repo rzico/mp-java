@@ -60,7 +60,10 @@ public class Member extends BaseEntity {
 		male,
 
 		/** 女 */
-		female
+		female,
+
+		/** 保密 */
+		secrecy
 	}
 
 	/** "身份信息"参数名称 */
@@ -81,7 +84,7 @@ public class Member extends BaseEntity {
 	/** 用户名 */
 	@NotEmpty(groups = Save.class)
 	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]+$")
-	@Column(columnDefinition="varchar(255) not null unique comment '用户名'")
+	@Column(columnDefinition="varchar(50) not null unique comment '用户名'")
 	private String username;
 
 	/** 密码 */
@@ -142,7 +145,7 @@ public class Member extends BaseEntity {
 	private String name;
 
 	/** 性别 */
-	@Column(columnDefinition="int(11) comment '性别'")
+	@Column(columnDefinition="int(11) comment '性别 {0:男,1:女,2:保密}'")
 	private Gender gender;
 
 	/** 出生日期 */
@@ -222,7 +225,7 @@ public class Member extends BaseEntity {
 
 	/** 地区 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) comment '地区'")
+	@JoinColumn(columnDefinition="bigint(20) comment '地区 {}'")
 	private Area area;
 
 	/** 会员标签*/

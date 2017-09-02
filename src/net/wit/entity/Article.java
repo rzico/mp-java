@@ -5,6 +5,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -37,6 +38,11 @@ public class Article extends BaseEntity{
         video
     };
 
+    /** 类型 */
+    @NotEmpty
+    @Column(columnDefinition="int(11) comment '类型 {0:图文,1:音频,2:视频}'")
+    private MediaType mediaType;
+
     /** 作者 */
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) comment '作者'")
@@ -49,7 +55,7 @@ public class Article extends BaseEntity{
 
     /** 类别 */
     @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(columnDefinition="bigint(20) comment '类别'")
+    @JoinColumn(columnDefinition="bigint(20) comment '类别 {}'")
     private ArticleCategory articleCategory;
 
     /** 文集 */

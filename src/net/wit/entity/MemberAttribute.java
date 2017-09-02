@@ -74,7 +74,7 @@ public class MemberAttribute extends OrderEntity {
 
 	/** 类型 */
 	@NotNull(groups = Save.class)
-	@Column(columnDefinition="int(11) not null comment '类型'")
+	@Column(columnDefinition="int(11) not null comment '类型 {0:姓名,1:性别,2:出生日期,3:地区,4:地址,5:邮编,6:电话,7:手机,8:文本,9:单选项,10:多选项}'")
 	private Type type;
 
 	/** 是否启用 */

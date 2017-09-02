@@ -41,7 +41,7 @@ public class ArticleCategory extends OrderEntity {
 	}
 
 	/** 状态 */
-	@Column(columnDefinition="int(11) not null comment '状态'")
+	@Column(columnDefinition="int(11) not null comment '状态 {0:开启,1:关闭}'")
 	private Status status;
 
 	/** 名称 */

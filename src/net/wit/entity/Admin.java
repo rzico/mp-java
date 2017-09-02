@@ -37,7 +37,7 @@ public class Admin extends BaseEntity {
 	@NotEmpty(groups = Save.class)
 	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]+$")
 	@Length(min = 2, max = 20)
-	@Column(columnDefinition="varchar(255) not null unique comment '用户名'")
+	@Column(columnDefinition="varchar(50) not null unique comment '用户名'")
 	private String username;
 
 	/** 密码 */

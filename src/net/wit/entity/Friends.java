@@ -43,7 +43,7 @@ public class Friends extends BaseEntity {
 	}
 
 	/** 状态 */
-	@JoinColumn(columnDefinition="int(11) not null comment '状态'")
+	@JoinColumn(columnDefinition="int(11) not null comment '状态 {0:申请,1:通过,2:拉黑}'")
 	private Status Status;
 
 	/** 会员 */

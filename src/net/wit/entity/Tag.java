@@ -25,7 +25,7 @@ public class Tag extends OrderEntity{
     public enum Type{
         /* 文章 */
         article,
-        /*会员*/
+        /* 会员 */
         member
     }
 
@@ -38,7 +38,7 @@ public class Tag extends OrderEntity{
 
     /*类型*/
     @NotNull(groups = Save.class)
-    @Column(columnDefinition="int(11) not null comment '类型'")
+    @Column(columnDefinition="int(11) not null comment '类型 {0:文章,1:会员}'")
     private Type type;
 
     /*图标*/
