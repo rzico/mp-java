@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 import net.wit.entity.Admin;
@@ -15,6 +16,7 @@ import net.wit.service.AdminService;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Filters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,17 +98,24 @@ public class AdminController extends BaseController {
 	 * 列表
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public String list(Date beginDate, Date endDate
+					   //,Status status
+			, Pageable pageable, ModelMap model) {
 		//常量输出
 		//Map<String,String> status = new HashMap<String,String)();
 		//status.put("key1","值1");
 		//status.put("key2","值2");
 		//model.addAttribute("status",status);
 		//多对一输出
-		//model.addAttribute("area",areaService.findAll());
+		//model.addAttribute("areas",areaService.findAll());
 
 		//是否要返回例信息，待定
 		//model.addAttribute("columns",例信息);
+
+		//常输的过滤条件
+		//ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		//Filter statusFilter = new Filter("status", Filter.Operator.eq,status);
+		//filters.add(statusFilter);
 
 		model.addAttribute("page", adminService.findPage(beginDate,endDate,pageable));
 		return "/admin/admin/list";
