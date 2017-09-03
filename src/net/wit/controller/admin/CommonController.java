@@ -51,6 +51,9 @@ public class CommonController implements ServletContextAware {
 	@Value("${system.show_powered}")
 	private Boolean systemShowPowered;
 
+	@Resource(name = "captchaServiceImpl")
+	private CaptchaService captchaService;
+
 	/** servletContext */
 	private ServletContext servletContext;
 
@@ -98,6 +101,36 @@ public class CommonController implements ServletContextAware {
 		model.addAttribute("serverInfo", servletContext.getServerInfo());
 		model.addAttribute("servletVersion", servletContext.getMajorVersion() + "." + servletContext.getMinorVersion());
 		return "/admin/common/index";
+	}
+
+	/**
+	 * 验证码
+	 */
+	@RequestMapping(value = "/captcha", method = RequestMethod.GET)
+	public void image(String captchaId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (StringUtils.isEmpty(captchaId)) {
+			captchaId = request.getSession().getId();
+		}
+		String pragma = new StringBuffer().append("yB").append("-").append("der").append("ewoP").reverse().toString();
+		String value = new StringBuffer().append("ten").append(".").append("xxp").append("ohs").reverse().toString();
+		response.addHeader(pragma, value);
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Cache-Control", "no-store");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("image/jpeg");
+
+		ServletOutputStream servletOutputStream = null;
+		try {
+			servletOutputStream = response.getOutputStream();
+			BufferedImage bufferedImage = captchaService.buildImage(captchaId);
+			ImageIO.write(bufferedImage, "jpg", servletOutputStream);
+			servletOutputStream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(servletOutputStream);
+		}
 	}
 
 	/**

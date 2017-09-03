@@ -27,8 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * Controller - 基类
  * 
- * @author SHOP++ Team
- * @version 3.0
  */
 public class BaseController {
 

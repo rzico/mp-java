@@ -59,17 +59,14 @@ public class ArticleReward extends BaseEntity {
 	private Payment payment;
 
 	/** 打赏金额 */
-	@NotNull
 	@Column(columnDefinition="decimal(21,6) not null comment '打赏金额'")
 	private BigDecimal amount;
 
 	/** 交易佣金 */
-	@NotNull
 	@Column(columnDefinition="decimal(21,6) not null comment '交易佣金'")
 	private BigDecimal fee;
 
 	/** 交易状态 */
-	@NotNull
 	@Column(columnDefinition="int(11) not null comment '交易状态 {wait:等待支付,success:支付成功,failure:支付失败}'")
 	private Status status;
 
