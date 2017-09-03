@@ -67,6 +67,22 @@ public class CommonController implements ServletContextAware {
 	}
 
 	/**
+	 * 主页
+	 */
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login() {
+		return "/admin/common/login";
+	}
+
+	/**
+	 * 欢迎页面
+	 */
+	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
+	public String welcome() {
+		return "/admin/common/welcome";
+	}
+
+	/**
 	 * 首页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
