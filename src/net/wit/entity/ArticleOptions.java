@@ -73,4 +73,59 @@ public class ArticleOptions implements Serializable {
 	@Column(columnDefinition="bit comment '是否显示'")
 	private Boolean isShow;
 
+	public Boolean getPublish() {
+		return isPublish;
+	}
+
+	public void setPublish(Boolean publish) {
+		isPublish = publish;
+	}
+
+	public Boolean getPitch() {
+		return isPitch;
+	}
+
+	public void setPitch(Boolean pitch) {
+		isPitch = pitch;
+	}
+
+	public Boolean getReview() {
+		return isReview;
+	}
+
+	public void setReview(Boolean review) {
+		isReview = review;
+	}
+
+	public Boolean getReward() {
+		return isReward;
+	}
+
+	public void setReward(Boolean reward) {
+		isReward = reward;
+	}
+
+	public Authority getAuthority() {
+		return authority;
+	}
+
+	public void setAuthority(Authority authority) {
+		this.authority = authority;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Boolean getShow() {
+		return isShow;
+	}
+
+	public void setShow(Boolean show) {
+		isShow = show;
+	}
 }
