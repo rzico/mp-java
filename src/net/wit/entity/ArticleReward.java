@@ -2,6 +2,7 @@
 package net.wit.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "xm_article_reward")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_laud_sequence")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_reward_sequence")
 public class ArticleReward extends BaseEntity {
 
 	private static final long serialVersionUID = 126L;
@@ -34,26 +35,105 @@ public class ArticleReward extends BaseEntity {
 	}
 
 	/** IP */
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false, updatable = false,columnDefinition="String comment 'IP'")
 	private String ip;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '会员'")
 	private Member member;
+
+	/** 作者 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '作者'")
+	private Member author;
 
 	/** 文章 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '文章'")
 	private Article article;
 
-	/** 支付 */
+	/** 付款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '付款单'")
 	private Payment payment;
 
-	/** 当前余额 */
-	@Column(columnDefinition="decimal(21,6) not null comment '当前余额'")
-	private BigDecimal balance;
+	/** 打赏金额 */
+	@NotNull(groups = Save.class)
+	@Column(columnDefinition="decimal(21,6) not null comment '打赏金额'")
+	private BigDecimal amount;
 
+	/** 交易佣金 */
+	@NotNull(groups = Save.class)
+	@Column(columnDefinition="decimal(21,6) not null comment '交易佣金'")
+	private BigDecimal fee;
+
+	/** 交易状态 */
+	@NotNull(groups = Save.class)
+	@Column(columnDefinition="int(11) not null comment '交易状态'")
+	private Status status;
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Member getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Member author) {
+		this.author = author;
+	}
+
+	public Article getArticle() {
+		return article;
+	}
+
+	public void setArticle(Article article) {
+		this.article = article;
+	}
+
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public BigDecimal getFee() {
+		return fee;
+	}
+
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }

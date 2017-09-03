@@ -101,6 +101,7 @@ public class AdminController extends BaseController {
 	public String list(Date beginDate, Date endDate
 					   //,Status status
 			, Pageable pageable, ModelMap model) {
+
 		//常量输出
 		//Map<String,String> status = new HashMap<String,String)();
 		//status.put("key1","值1");
