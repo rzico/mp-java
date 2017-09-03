@@ -4,13 +4,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 实体类 - 短信发送 ============================================================================ 版权所有 2008-2010 rsico.com,并保留所有权利。
@@ -23,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Table(name = "xm_smssend")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_smssend_sequence")
-public class SmsSend extends BaseEntity {
+public class Smssend extends BaseEntity {
 
 	private static final long serialVersionUID = 121L;
 
@@ -90,11 +85,11 @@ public class SmsSend extends BaseEntity {
 		this.fee = fee;
 	}
 
-	public net.wit.entity.SmsSend.Status getStatus() {
+	public Smssend.Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(net.wit.entity.SmsSend.Status status) {
+	public void setStatus(Smssend.Status status) {
 		this.status = status;
 	}
 

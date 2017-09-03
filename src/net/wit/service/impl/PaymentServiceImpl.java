@@ -1,59 +1,41 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
-import javax.servlet.http.HttpServletRequest;
 
-import net.wit.Setting;
-import net.wit.dao.*;
-import net.wit.entity.*;
-import net.wit.plugin.PaymentPlugin;
-import net.wit.service.*;
-import net.wit.util.*;
-import net.wit.weixin.pojo.AccessToken;
-import net.wit.weixin.util.WeixinUtil;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.http.HttpRequest;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
-import org.apache.shiro.codec.Base64;
+import net.wit.Filter;
+import net.wit.Page;
+import net.wit.Pageable;
+import net.wit.Principal;
+import net.wit.Filter.Operator;
+
+import net.wit.dao.SnDao;
+import net.wit.service.PluginService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.entity.Payment.Status;
-import net.wit.entity.Payment.Type;
+import net.wit.dao.PaymentDao;
+import net.wit.entity.*;
+import net.wit.service.PaymentService;
 
 /**
- * Service - 收款单
- * @author rsico Team
- * @version 3.0
+ * @ClassName: PaymentDaoImpl
+ * @author 降魔战队
+ * @date 2017-9-3 21:54:59
  */
+ 
+ 
 @Service("paymentServiceImpl")
 public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implements PaymentService {
-
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
@@ -77,29 +59,74 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Transactional
 	public synchronized void handle(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
-		if (payment != null && !payment.getStatus().equals(Status.success)) {
-			if (payment.getType() == Type.payment) {
-			} else if (payment.getType() == Type.recharge) {
+		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
+			if (payment.getType() == Payment.Type.payment) {
+			} else if (payment.getType() == Payment.Type.recharge) {
 			}
 			payment.setPaymentDate(new Date());
 			paymentDao.merge(payment);
 		}
 	}
 
+
+
 	@Transactional
 	public void close(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
-		if (payment != null && payment.getStatus() == Status.wait) {
+		if (payment != null && payment.getStatus() == Payment.Status.wait) {
 			payment.setMemo("超时关闭");
-			payment.setStatus(Status.failure);
+			payment.setStatus(Payment.Status.failure);
 			paymentDao.merge(payment);
 		};
 	}
 
 
-	@Transactional(readOnly = true)
-	public Page<Payment> findPage(Member member, Pageable pageable, Payment.Type type) {
-		return paymentDao.findPage(member, pageable, type);
+
+
+	@Override
+	@Transactional
+	//@CacheEvict(value = "authorization", allEntries = true)
+	public void save(Payment payment) {
+		super.save(payment);
 	}
 
+
+	@Override
+	@Transactional
+	//@CacheEvict(value = "authorization", allEntries = true)
+	public Payment update(Payment payment) {
+		return super.update(payment);
+	}
+
+	@Override
+	@Transactional
+	//@CacheEvict(value = "authorization", allEntries = true)
+	public Payment update(Payment payment, String... ignoreProperties) {
+		return super.update(payment, ignoreProperties);
+	}
+
+	@Override
+	@Transactional
+	//@CacheEvict(value = "authorization", allEntries = true)
+	public void delete(Long id) {
+		super.delete(id);
+	}
+
+	@Override
+	@Transactional
+	//@CacheEvict(value = "authorization", allEntries = true)
+	public void delete(Long... ids) {
+		super.delete(ids);
+	}
+
+	@Override
+	@Transactional
+	//@CacheEvict(value = "authorization", allEntries = true)
+	public void delete(Payment payment) {
+		super.delete(payment);
+	}
+
+	public Page<Payment> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	  return paymentDao.findPage(beginDate,endDate,pageable);
+	}
 }

@@ -20,46 +20,46 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.PluginConfigDao;
+import net.wit.dao.ArticleReviewDao;
 import net.wit.entity.*;
-import net.wit.service.PluginConfigService;
+import net.wit.service.ArticleReviewService;
 
 /**
- * @ClassName: PluginConfigDaoImpl
+ * @ClassName: ArticleReviewDaoImpl
  * @author 降魔战队
  * @date 2017-9-3 21:54:59
  */
  
  
-@Service("pluginConfigServiceImpl")
-public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long> implements PluginConfigService {
-	@Resource(name = "pluginConfigDaoImpl")
-	private PluginConfigDao pluginConfigDao;
+@Service("articleReviewServiceImpl")
+public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Long> implements ArticleReviewService {
+	@Resource(name = "articleReviewDaoImpl")
+	private ArticleReviewDao articleReviewDao;
 
-	@Resource(name = "pluginConfigDaoImpl")
-	public void setBaseDao(PluginConfigDao pluginConfigDao) {
-		super.setBaseDao(pluginConfigDao);
+	@Resource(name = "articleReviewDaoImpl")
+	public void setBaseDao(ArticleReviewDao articleReviewDao) {
+		super.setBaseDao(articleReviewDao);
 	}
 	
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void save(PluginConfig pluginConfig) {
-		super.save(pluginConfig);
+	public void save(ArticleReview articleReview) {
+		super.save(articleReview);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public PluginConfig update(PluginConfig pluginConfig) {
-		return super.update(pluginConfig);
+	public ArticleReview update(ArticleReview articleReview) {
+		return super.update(articleReview);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public PluginConfig update(PluginConfig pluginConfig, String... ignoreProperties) {
-		return super.update(pluginConfig, ignoreProperties);
+	public ArticleReview update(ArticleReview articleReview, String... ignoreProperties) {
+		return super.update(articleReview, ignoreProperties);
 	}
 
 	@Override
@@ -79,22 +79,11 @@ public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long>
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void delete(PluginConfig pluginConfig) {
-		super.delete(pluginConfig);
+	public void delete(ArticleReview articleReview) {
+		super.delete(articleReview);
 	}
 
-
-	@Transactional(readOnly = true)
-	public boolean pluginIdExists(String pluginId) {
-		return pluginConfigDao.pluginIdExists(pluginId);
-	}
-
-	@Transactional(readOnly = true)
-	public PluginConfig findByPluginId(String pluginId) {
-		return pluginConfigDao.findByPluginId(pluginId);
-	}
-
-	public Page<PluginConfig> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return pluginConfigDao.findPage(beginDate,endDate,pageable);
+	public Page<ArticleReview> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	  return articleReviewDao.findPage(beginDate,endDate,pageable);
 	}
 }

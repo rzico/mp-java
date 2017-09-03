@@ -42,11 +42,11 @@
             <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
                     <input id="captcha" name="captcha" class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:150px;">
-                    <img id="captchaImage" src=""> <a id="captchaClick" href="javascript:;">看不清，换一张</a> </div>
+                    <img id="captchaImage" src="${base}/admin/common/captcha.jhtml?captchaId=${captchaId}"> <a id="captchaClick" href="javascript:;">看不清，换一张</a> </div>
             </div>
             <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
-                    <label for="online">
+                    <label for="rememberMe">
                         <input type="checkbox" name="rememberMe" id="rememberMe" value="">
                         使我保持登录状态</label>
                 </div>
@@ -64,10 +64,23 @@
 <div class="footer">Copyright ${setting.company} ${setting.siteName} v1.0</div>
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
 <script type="text/javascript">
+    var $loginForm = $("#loginForm");
+    var $username = $("#username");
+    var $password = $("#password");
+    var $rememberMe = $("#rememberMe");
+    var $captcha = $("#captcha");
+    var $captchaImage = $("#captchaImage");
+    var $captchaClick = $("#captchaClick");
+    var $submit = $(":submit");
+
     // 更换验证码
     $captchaClick.click(function() {
-        $captchaImage.attr("src", "${base}/admiin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+        $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
     });
     // 表单验证、记住用户名
     $loginForm.validate({
@@ -110,10 +123,15 @@
                                 location.href = "${base}/admin/common/main.jhtml";
                             [/#if]
                             } else {
-                                $.message(message);
+                                layer.msg(message.content,{icon:1,time:5000});
                                 $captcha.val("");
                                 $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
                             }
+                        },
+                        error:function(message) {
+                            layer.msg(message.content,{icon:1,time:5000});
+                            $captcha.val("");
+                            $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
                         }
                     });
                 }

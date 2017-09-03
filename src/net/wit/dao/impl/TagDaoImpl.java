@@ -17,32 +17,31 @@ import org.springframework.util.StringUtils;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.dao.PluginConfigDao;
-import net.wit.entity.PluginConfig;
+import net.wit.dao.TagDao;
+import net.wit.entity.Tag;
 
 
 /**
- * @ClassName: PluginConfigDaoImpl
+ * @ClassName: TagDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-3 21:55:0
  */
  
 
-@Repository("pluginConfigDaoImpl")
-public class PluginConfigDaoImpl extends BaseDaoImpl<PluginConfig, Long> implements PluginConfigDao {
-
+@Repository("tagDaoImpl")
+public class TagDaoImpl extends BaseDaoImpl<Tag, Long> implements TagDao {
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
 	 * @param beginDate
 	 * @param endDate
 	 * @param pageable
-	 * @return Page<PluginConfig>
+	 * @return Page<Tag>
 	 */
-	public Page<PluginConfig> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<Tag> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<PluginConfig> criteriaQuery = criteriaBuilder.createQuery(PluginConfig.class);
-		Root<PluginConfig> root = criteriaQuery.from(PluginConfig.class);
+		CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
+		Root<Tag> root = criteriaQuery.from(Tag.class);
 		criteriaQuery.select(root);
 		Predicate restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.conjunction();
@@ -58,26 +57,4 @@ public class PluginConfigDaoImpl extends BaseDaoImpl<PluginConfig, Long> impleme
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
-
-	public boolean pluginIdExists(String pluginId) {
-		if (pluginId == null) {
-			return false;
-		}
-		String jpql = "select count(*) from PluginConfig pluginConfig where pluginConfig.pluginId = :pluginId";
-		Long count = entityManager.createQuery(jpql, Long.class).setFlushMode(FlushModeType.COMMIT).setParameter("pluginId", pluginId).getSingleResult();
-		return count > 0;
-	}
-
-	public PluginConfig findByPluginId(String pluginId) {
-		if (pluginId == null) {
-			return null;
-		}
-		try {
-			String jpql = "select pluginConfig from PluginConfig pluginConfig where pluginConfig.pluginId = :pluginId";
-			return entityManager.createQuery(jpql, PluginConfig.class).setFlushMode(FlushModeType.COMMIT).setParameter("pluginId", pluginId).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
 }

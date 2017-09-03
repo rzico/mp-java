@@ -20,46 +20,46 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.PluginConfigDao;
+import net.wit.dao.MemberAttributeDao;
 import net.wit.entity.*;
-import net.wit.service.PluginConfigService;
+import net.wit.service.MemberAttributeService;
 
 /**
- * @ClassName: PluginConfigDaoImpl
+ * @ClassName: MemberAttributeDaoImpl
  * @author 降魔战队
  * @date 2017-9-3 21:54:59
  */
  
  
-@Service("pluginConfigServiceImpl")
-public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long> implements PluginConfigService {
-	@Resource(name = "pluginConfigDaoImpl")
-	private PluginConfigDao pluginConfigDao;
+@Service("memberAttributeServiceImpl")
+public class MemberAttributeServiceImpl extends BaseServiceImpl<MemberAttribute, Long> implements MemberAttributeService {
+	@Resource(name = "memberAttributeDaoImpl")
+	private MemberAttributeDao memberAttributeDao;
 
-	@Resource(name = "pluginConfigDaoImpl")
-	public void setBaseDao(PluginConfigDao pluginConfigDao) {
-		super.setBaseDao(pluginConfigDao);
+	@Resource(name = "memberAttributeDaoImpl")
+	public void setBaseDao(MemberAttributeDao memberAttributeDao) {
+		super.setBaseDao(memberAttributeDao);
 	}
 	
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void save(PluginConfig pluginConfig) {
-		super.save(pluginConfig);
+	public void save(MemberAttribute memberAttribute) {
+		super.save(memberAttribute);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public PluginConfig update(PluginConfig pluginConfig) {
-		return super.update(pluginConfig);
+	public MemberAttribute update(MemberAttribute memberAttribute) {
+		return super.update(memberAttribute);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public PluginConfig update(PluginConfig pluginConfig, String... ignoreProperties) {
-		return super.update(pluginConfig, ignoreProperties);
+	public MemberAttribute update(MemberAttribute memberAttribute, String... ignoreProperties) {
+		return super.update(memberAttribute, ignoreProperties);
 	}
 
 	@Override
@@ -79,22 +79,11 @@ public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long>
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void delete(PluginConfig pluginConfig) {
-		super.delete(pluginConfig);
+	public void delete(MemberAttribute memberAttribute) {
+		super.delete(memberAttribute);
 	}
 
-
-	@Transactional(readOnly = true)
-	public boolean pluginIdExists(String pluginId) {
-		return pluginConfigDao.pluginIdExists(pluginId);
-	}
-
-	@Transactional(readOnly = true)
-	public PluginConfig findByPluginId(String pluginId) {
-		return pluginConfigDao.findByPluginId(pluginId);
-	}
-
-	public Page<PluginConfig> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return pluginConfigDao.findPage(beginDate,endDate,pageable);
+	public Page<MemberAttribute> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	  return memberAttributeDao.findPage(beginDate,endDate,pageable);
 	}
 }

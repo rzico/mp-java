@@ -1,25 +1,22 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.dao;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.entity.*;
-import net.wit.entity.Payment.Method;
-import net.wit.entity.Payment.Status;
+import net.wit.entity.Payment;
+
 
 /**
- * Dao - 收款单
- * @author rsico Team
- * @version 3.0
+ * @ClassName: PaymentDao
+ * @author 降魔战队
+ * @date 2017-9-3 21:54:59
  */
+ 
+
 public interface PaymentDao extends BaseDao<Payment, Long> {
 
 	/**
@@ -32,11 +29,11 @@ public interface PaymentDao extends BaseDao<Payment, Long> {
 
 	/**
 	 * @Title：findPage
-	 * @Description：
-	 * @param type
+	 * @Description：标准代码
+	 * @param beginDate
+	 * @param endDate
 	 * @param pageable
 	 * @return Page<Payment>
 	 */
-	Page<Payment> findPage(Member member, Pageable pageable, Payment.Type type);
-
+	Page<Payment> findPage(Date beginDate, Date endDate, Pageable pageable);
 }

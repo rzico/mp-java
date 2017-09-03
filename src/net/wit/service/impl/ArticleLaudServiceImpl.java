@@ -20,46 +20,46 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.PluginConfigDao;
+import net.wit.dao.ArticleLaudDao;
 import net.wit.entity.*;
-import net.wit.service.PluginConfigService;
+import net.wit.service.ArticleLaudService;
 
 /**
- * @ClassName: PluginConfigDaoImpl
+ * @ClassName: ArticleLaudDaoImpl
  * @author 降魔战队
  * @date 2017-9-3 21:54:59
  */
  
  
-@Service("pluginConfigServiceImpl")
-public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long> implements PluginConfigService {
-	@Resource(name = "pluginConfigDaoImpl")
-	private PluginConfigDao pluginConfigDao;
+@Service("articleLaudServiceImpl")
+public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> implements ArticleLaudService {
+	@Resource(name = "articleLaudDaoImpl")
+	private ArticleLaudDao articleLaudDao;
 
-	@Resource(name = "pluginConfigDaoImpl")
-	public void setBaseDao(PluginConfigDao pluginConfigDao) {
-		super.setBaseDao(pluginConfigDao);
+	@Resource(name = "articleLaudDaoImpl")
+	public void setBaseDao(ArticleLaudDao articleLaudDao) {
+		super.setBaseDao(articleLaudDao);
 	}
 	
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void save(PluginConfig pluginConfig) {
-		super.save(pluginConfig);
+	public void save(ArticleLaud articleLaud) {
+		super.save(articleLaud);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public PluginConfig update(PluginConfig pluginConfig) {
-		return super.update(pluginConfig);
+	public ArticleLaud update(ArticleLaud articleLaud) {
+		return super.update(articleLaud);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public PluginConfig update(PluginConfig pluginConfig, String... ignoreProperties) {
-		return super.update(pluginConfig, ignoreProperties);
+	public ArticleLaud update(ArticleLaud articleLaud, String... ignoreProperties) {
+		return super.update(articleLaud, ignoreProperties);
 	}
 
 	@Override
@@ -79,22 +79,11 @@ public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long>
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void delete(PluginConfig pluginConfig) {
-		super.delete(pluginConfig);
+	public void delete(ArticleLaud articleLaud) {
+		super.delete(articleLaud);
 	}
 
-
-	@Transactional(readOnly = true)
-	public boolean pluginIdExists(String pluginId) {
-		return pluginConfigDao.pluginIdExists(pluginId);
-	}
-
-	@Transactional(readOnly = true)
-	public PluginConfig findByPluginId(String pluginId) {
-		return pluginConfigDao.findByPluginId(pluginId);
-	}
-
-	public Page<PluginConfig> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return pluginConfigDao.findPage(beginDate,endDate,pageable);
+	public Page<ArticleLaud> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	  return articleLaudDao.findPage(beginDate,endDate,pageable);
 	}
 }

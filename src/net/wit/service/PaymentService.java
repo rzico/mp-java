@@ -1,8 +1,3 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.service;
 
 import java.math.BigDecimal;
@@ -12,20 +7,18 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.entity.*;
-import net.wit.entity.Payment.Type;
-
-import javax.servlet.http.HttpServletRequest;
+import net.wit.entity.Payment;
 
 /**
- * Service - 收款单
- * @author rsico Team
- * @version 3.0
+ * @ClassName: PaymentService
+ * @author 降魔战队
+ * @date 2017-9-3 20:35:58
  */
+
 public interface PaymentService extends BaseService<Payment, Long> {
 
 	/**
-	 * 根据编号查找收款单 
+	 * 根据编号查找收款单
 	 * @param sn 编号(忽略大小写)
 	 * @return 收款单，若不存在则返回null
 	 */
@@ -44,6 +37,7 @@ public interface PaymentService extends BaseService<Payment, Long> {
 	 */
 	void close(Payment payment) throws Exception;
 
-	Page<Payment> findPage(Member member, Pageable pageable, Payment.Type type);
+
+	Page<Payment> findPage(Date beginDate, Date endDate, Pageable pageable);
 
 }
