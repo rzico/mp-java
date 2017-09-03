@@ -7,6 +7,7 @@ package net.wit.controller.admin;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import net.wit.service.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -51,6 +53,9 @@ public class CommonController implements ServletContextAware {
 	@Value("${system.show_powered}")
 	private Boolean systemShowPowered;
 
+	@Resource(name = "rsaServiceImpl")
+	private RSAService rsaService;
+
 	@Resource(name = "captchaServiceImpl")
 	private CaptchaService captchaService;
 
@@ -70,37 +75,16 @@ public class CommonController implements ServletContextAware {
 	}
 
 	/**
-	 * 主页
+	 * 公钥
 	 */
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login() {
-		return "/admin/common/login";
-	}
-
-	/**
-	 * 欢迎页面
-	 */
-	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
-	public String welcome() {
-		return "/admin/common/welcome";
-	}
-
-	/**
-	 * 首页
-	 */
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(ModelMap model) {
-		model.addAttribute("systemName", systemName);
-		model.addAttribute("systemVersion", systemVersion);
-		model.addAttribute("systemDescription", systemDescription);
-		model.addAttribute("systemShowPowered", systemShowPowered);
-		model.addAttribute("javaVersion", System.getProperty("java.version"));
-		model.addAttribute("javaHome", System.getProperty("java.home"));
-		model.addAttribute("osName", System.getProperty("os.name"));
-		model.addAttribute("osArch", System.getProperty("os.arch"));
-		model.addAttribute("serverInfo", servletContext.getServerInfo());
-		model.addAttribute("servletVersion", servletContext.getMajorVersion() + "." + servletContext.getMinorVersion());
-		return "/admin/common/index";
+	@RequestMapping(value = "/public_key", method = RequestMethod.GET)
+	public @ResponseBody
+	Map<String, String> publicKey(HttpServletRequest request) {
+		RSAPublicKey publicKey = rsaService.generateKey(request);
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("modulus", Base64.encodeBase64String(publicKey.getModulus().toByteArray()));
+		data.put("exponent", Base64.encodeBase64String(publicKey.getPublicExponent().toByteArray()));
+		return data;
 	}
 
 	/**
