@@ -45,8 +45,9 @@ public class AdminController extends BaseController {
 		Admin entity = new Admin();
 		//正常赋值
 		entity.setEmail(admin.getEmail());
+
 		//多对一输出
-		//model.addAttribute("area",areaService.findAll());
+		//entity.setArea(areaService.find(areaId));
 
 		if (!isValid(admin, Save.class)) {
 			return Message.error("admin.data.valid");
