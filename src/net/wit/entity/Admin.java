@@ -4,15 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -31,6 +23,21 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_admin_sequence")
 public class Admin extends BaseEntity {
 
+	/**
+	 * 性别
+	 */
+	public enum Gender {
+
+		/** 男 */
+		male,
+
+		/** 女 */
+		female,
+
+		/** 保密 */
+		secrecy
+	}
+
 	private static final long serialVersionUID = 101L;
 
 	/** 用户名 */
@@ -39,6 +46,11 @@ public class Admin extends BaseEntity {
 	@Length(min = 2, max = 20)
 	@Column(columnDefinition="varchar(50) not null unique comment '用户名'")
 	private String username;
+
+	/** 性别----可删除 */
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '性别'")
+	private Gender sex;
 
 	/** 密码 */
 	@NotEmpty(groups = Save.class)
@@ -88,6 +100,11 @@ public class Admin extends BaseEntity {
 	/** 最后登录IP */
 	@Column(columnDefinition="varchar(255) comment '最后登录IP'")
 	private String loginIp;
+
+	/** 企业名*/
+	@NotEmpty
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Enterprise enterprise;
 
 	/** 角色 */
 	@NotEmpty
@@ -196,5 +213,21 @@ public class Admin extends BaseEntity {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Gender getSex() {
+		return sex;
+	}
+
+	public void setSex(Gender sex) {
+		this.sex = sex;
+	}
+
+	public Enterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
 	}
 }

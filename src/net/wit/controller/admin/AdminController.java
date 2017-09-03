@@ -2,12 +2,14 @@ package net.wit.controller.admin;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import net.wit.Filter;
 import net.wit.Message;
+import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Admin;
 import net.wit.entity.BaseEntity.Save;
@@ -39,15 +41,15 @@ public class AdminController extends BaseController {
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Message save(Admin admin
-						//,Long areaId  多对一传参
-						) {
+	public Message save(Admin admin,Long [] roleIds,Long enterpriseId) {
 		Admin entity = new Admin();
 		//正常赋值
 		entity.setEmail(admin.getEmail());
 
 		//多对一输出
 		//entity.setArea(areaService.find(areaId));
+
+//		entity.setRoles(roleService.findList(roleIds));
 
 		if (!isValid(admin, Save.class)) {
 			return Message.error("admin.data.valid");
@@ -96,6 +98,14 @@ public class AdminController extends BaseController {
 	}
 
 	/**
+	 * 添加页面
+	 */
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String add() {
+		return "/admin/admin/add";
+	}
+
+	/**
 	 * 列表
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -119,7 +129,8 @@ public class AdminController extends BaseController {
 		//Filter statusFilter = new Filter("status", Filter.Operator.eq,status);
 		//filters.add(statusFilter);
 
-		model.addAttribute("page", adminService.findPage(beginDate,endDate,pageable));
+		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
+		model.addAttribute("page", page);
 		return "/admin/admin/list";
 	}
 
