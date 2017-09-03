@@ -49,8 +49,8 @@ public class Admin extends BaseEntity {
 
 	/** 性别----可删除 */
 	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '性别'")
-	private Gender sex;
+	@Column(columnDefinition="int(11) comment '性别'")
+	private Gender gender;
 
 	/** 密码 */
 	@NotEmpty(groups = Save.class)
@@ -90,11 +90,11 @@ public class Admin extends BaseEntity {
 	private Integer loginFailureCount;
 
 	/** 锁定日期 */
-	@Column(columnDefinition="datetime not null comment '锁定日期'")
+	@Column(columnDefinition="datetime  comment '锁定日期'")
 	private Date lockedDate;
 
 	/** 最后登录日期 */
-	@Column(columnDefinition="datetime not null comment '最后登录日期'")
+	@Column(columnDefinition="datetime  comment '最后登录日期'")
 	private Date loginDate;
 
 	/** 最后登录IP */
@@ -102,12 +102,11 @@ public class Admin extends BaseEntity {
 	private String loginIp;
 
 	/** 企业名*/
-	@NotEmpty
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Enterprise enterprise;
 
 	/** 角色 */
-	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "xm_admin_role")
 	private Set<Role> roles = new HashSet<Role>();
@@ -215,12 +214,12 @@ public class Admin extends BaseEntity {
 		this.roles = roles;
 	}
 
-	public Gender getSex() {
-		return sex;
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setSex(Gender sex) {
-		this.sex = sex;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public Enterprise getEnterprise() {

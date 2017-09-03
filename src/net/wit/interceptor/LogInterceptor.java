@@ -84,7 +84,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 					log.setContent(content);
 					log.setParameter(parameter.toString());
 					log.setIp(ip);
-					logService.save(log);
+					//logService.save(log);
 					break;
 				}
 			}

@@ -66,15 +66,15 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>性别：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="radio-box">
-                    <input name="sex" type="radio" id="sex-1" value="male" checked>
+                    <input name="gender" type="radio" id="sex-1" value="male" checked>
                     <label for="sex-1">男</label>
                 </div>
                 <div class="radio-box">
-                    <input type="radio" id="sex-2" name="sex" value="female">
+                    <input type="radio" id="sex-2" name="gender" value="female">
                     <label for="sex-2">女</label>
                 </div>
                 <div class="radio-box">
-                    <input type="radio" id="sex-3" name="sex" value="secrecy">
+                    <input type="radio" id="sex-3" name="gender" value="secrecy">
                     <label for="sex-2">保密</label>
                 </div>
             </div>

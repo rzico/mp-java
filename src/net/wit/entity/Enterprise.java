@@ -19,6 +19,6 @@ import javax.persistence.Table;
 public class Enterprise extends BaseEntity {
     /** 企业 */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '企业名'")
+    @Column(columnDefinition="varchar(255) comment '企业名称'")
     private String name;
 }

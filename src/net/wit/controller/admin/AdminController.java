@@ -1,9 +1,6 @@
 package net.wit.controller.admin;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -13,9 +10,11 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Admin;
 import net.wit.entity.BaseEntity.Save;
+import net.wit.entity.Enterprise;
 import net.wit.entity.Role;
 import net.wit.service.AdminService;
 
+import net.wit.util.MD5Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -44,16 +43,29 @@ public class AdminController extends BaseController {
 	public Message save(Admin admin,Long [] roleIds,Long enterpriseId) {
 		Admin entity = new Admin();
 		//正常赋值
+		entity.setUsername(admin.getUsername());
+		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
+		entity.setGender(admin.getGender());
 		entity.setEmail(admin.getEmail());
+		entity.setName(admin.getName());
+		entity.setDepartment(admin.getDepartment());
+		entity.setIsLocked(admin.getIsLocked());
+		entity.setLoginFailureCount(1);
+		entity.setLockedDate(admin.getLockedDate());
+		entity.setLoginDate(admin.getLoginDate());
+		entity.setLoginIp(admin.getLoginIp());
+		entity.setEnterprise(new Enterprise());
+
+		//entity.setRoles(new HashSet<Role>().add(r)));
 
 		//多对一输出
 		//entity.setArea(areaService.find(areaId));
 
 //		entity.setRoles(roleService.findList(roleIds));
 
-		if (!isValid(admin, Save.class)) {
-			return Message.error("admin.data.valid");
-		}
+//		if (!isValid(admin, Save.class)) {
+//			return Message.error("admin.data.valid");
+//		}
 		try {
 			adminService.save(entity);
 			return Message.success(entity,"admin.save.success");
