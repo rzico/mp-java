@@ -33,7 +33,7 @@ public class EncodingConvertFilter extends OncePerRequestFilter {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		if (request.getMethod().equalsIgnoreCase("GET")) {
+		//if (request.getMethod().equalsIgnoreCase("GET")) {
 			for (Iterator<String[]> iterator = request.getParameterMap().values().iterator(); iterator.hasNext();) {
 				String[] parames = iterator.next();
 				for (int i = 0; i < parames.length; i++) {
@@ -44,7 +44,7 @@ public class EncodingConvertFilter extends OncePerRequestFilter {
 					}
 				}
 			}
-		}
+		//}
 		filterChain.doFilter(request, response);
 	}
 

@@ -22,7 +22,7 @@ public class CrossDomainFilter implements Filter {
             throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) resp;
         //这里最好不要写通配符，如果允许多个域请求数据的话，可以直接用逗号隔开："http://www.baidu.com,http://google.com"
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin",  "*");
         res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept,X-Requested-With");
         chain.doFilter(req, resp);

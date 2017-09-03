@@ -142,19 +142,19 @@ public class Admin extends BaseEntity {
 		this.department = department;
 	}
 
-	public Boolean getEnabled() {
+	public Boolean getIsEnabled() {
 		return isEnabled;
 	}
 
-	public void setEnabled(Boolean enabled) {
+	public void setIsEnabled(Boolean enabled) {
 		isEnabled = enabled;
 	}
 
-	public Boolean getLocked() {
+	public Boolean getIsLocked() {
 		return isLocked;
 	}
 
-	public void setLocked(Boolean locked) {
+	public void setIsLocked(Boolean locked) {
 		isLocked = locked;
 	}
 
