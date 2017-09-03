@@ -35,7 +35,7 @@ public class ArticleReward extends BaseEntity {
 	}
 
 	/** IP */
-	@Column(nullable = false, updatable = false,columnDefinition="String comment 'IP'")
+	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment 'IP'")
 	private String ip;
 
 	/** 会员 */
