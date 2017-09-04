@@ -99,42 +99,42 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, Long> implements Ad
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "authorization", allEntries = true)
+	@CacheEvict(value = "admin", allEntries = true)
 	public void save(Admin admin) {
 		super.save(admin);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "authorization", allEntries = true)
+	@CacheEvict(value = "admin", allEntries = true)
 	public Admin update(Admin admin) {
 		return super.update(admin);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "authorization", allEntries = true)
+	@CacheEvict(value = "admin", allEntries = true)
 	public Admin update(Admin admin, String... ignoreProperties) {
 		return super.update(admin, ignoreProperties);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "authorization", allEntries = true)
+	@CacheEvict(value = "admin", allEntries = true)
 	public void delete(Long id) {
 		super.delete(id);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "authorization", allEntries = true)
+	@CacheEvict(value = "admin", allEntries = true)
 	public void delete(Long... ids) {
 		super.delete(ids);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "authorization", allEntries = true)
+	@CacheEvict(value = "admin", allEntries = true)
 	public void delete(Admin admin) {
 		super.delete(admin);
 	}

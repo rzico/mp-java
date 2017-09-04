@@ -1,8 +1,6 @@
 package net.wit.entity;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -47,8 +45,7 @@ public class Admin extends BaseEntity {
 	@Column(columnDefinition="varchar(50) not null unique comment '用户名'")
 	private String username;
 
-	/** 性别----可删除 */
-	@Length(max = 200)
+	/** 性别 */
 	@Column(columnDefinition="int(11) comment '性别'")
 	private Gender gender;
 
@@ -109,7 +106,7 @@ public class Admin extends BaseEntity {
 	/** 角色 */
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "xm_admin_role")
-	private Set<Role> roles = new HashSet<Role>();
+	private List<Role> roles = new ArrayList<>();
 
 	/**
 	 * 删除前处理
@@ -206,11 +203,11 @@ public class Admin extends BaseEntity {
 		this.loginIp = loginIp;
 	}
 
-	public Set<Role> getRoles() {
+	public List<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<Role> roles) {
+	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
 

@@ -206,7 +206,11 @@
                             type: 'post',
                             url: "${base}/admin/admin/save.jhtml" ,
                             success: function(data){
-                                layer.msg('添加成功!',{icon:1,time:1000});
+                                if(data.type ==  "success"){
+                                    layer.msg('添加成功!',{icon:1,time:1000});
+                                }else{
+                                    layer.msg('添加失败!',{icon:1,time:1000});
+                                }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
                                 layer.msg('error!',{icon:1,time:1000});
