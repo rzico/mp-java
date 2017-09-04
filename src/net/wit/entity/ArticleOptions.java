@@ -69,6 +69,11 @@ public class ArticleOptions implements Serializable {
 	@Column(columnDefinition="bit comment '是否样例'")
 	private Boolean isExample;
 
+	/** 是否置顶 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否置顶'")
+	private Boolean isTop;
+
 	/** 密码 */
 	@Column(columnDefinition=" varchar(255) comment '密码'")
 	private String password;
@@ -127,5 +132,13 @@ public class ArticleOptions implements Serializable {
 
 	public void setIsExample(Boolean isExample) {
 		isExample = isExample;
+	}
+
+	public Boolean getTop() {
+		return isTop;
+	}
+
+	public void setTop(Boolean top) {
+		isTop = top;
 	}
 }

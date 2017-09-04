@@ -73,7 +73,7 @@ public abstract class BaseEntity implements Serializable {
 	/** 创建日期 */
 	@Field(store = Store.YES, index = Index.UN_TOKENIZED)
 	@DateBridge(resolution = Resolution.SECOND)
-	@Column(columnDefinition="datetime not null comment '创建日期'")
+	@Column(updatable = false,columnDefinition="datetime not null comment '创建日期'")
 	private Date createDate;
 
 	/** 修改日期 */

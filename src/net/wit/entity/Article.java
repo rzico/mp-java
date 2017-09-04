@@ -113,6 +113,14 @@ public class Article extends BaseEntity{
     @Embedded
     private ArticleOptions articleOptions;
 
+    /** 定位 */
+    @Embedded
+    private Location location;
+
+    /** 所在地 */
+    @Column(columnDefinition="bigint(20) comment '所在地'")
+    private Area area;
+
     /** 文章标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "xm_article_tag")
@@ -285,5 +293,13 @@ public class Article extends BaseEntity{
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

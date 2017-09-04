@@ -69,15 +69,17 @@ public class Deposit extends BaseEntity {
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '备注'")
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
 	private Member member;
 
 	/** 收款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '收款单'")
 	private Payment payment;
 
 	/** 退款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '退款单'")
 	private Refunds refunds;
 
 	/** 是否删除 */
