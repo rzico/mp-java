@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -78,6 +79,11 @@ public class Deposit extends BaseEntity {
 	/** 退款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Refunds refunds;
+
+	/** 是否删除 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否删除'")
+	private Boolean deleted;
 
 	/**
 	 * 获取类型
@@ -237,5 +243,13 @@ public class Deposit extends BaseEntity {
 
 	public void setRefunds(Refunds refunds) {
 		this.refunds = refunds;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 }

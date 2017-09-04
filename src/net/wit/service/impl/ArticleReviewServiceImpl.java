@@ -66,13 +66,20 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		ArticleReview entity = super.find(id);
+		entity.setDeleted(true);
+		super.save(entity);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
+		List<ArticleReview> reviews = super.findList(ids);
+		for (ArticleReview review:reviews) {
+			review.setDeleted(true);
+			super.save(review);
+		}
 		super.delete(ids);
 	}
 
@@ -80,7 +87,8 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleReview articleReview) {
-		super.delete(articleReview);
+		articleReview.setDeleted(true);
+		super.save(articleReview);
 	}
 
 	public Page<ArticleReview> findPage(Date beginDate,Date endDate, Pageable pageable) {

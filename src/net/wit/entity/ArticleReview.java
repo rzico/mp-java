@@ -15,6 +15,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -39,9 +40,10 @@ public class  ArticleReview extends BaseEntity {
 	@Column(columnDefinition=" varchar(255) comment '内容'")
 	private String content;
 
-	/** 是否显示 */
-	@Column(nullable = false)
-	private Boolean isShow;
+	/** 是否删除 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否删除'")
+	private Boolean deleted;
 
 	/** IP */
 	@Column(columnDefinition=" varchar(255) comment 'IP'")
@@ -75,12 +77,12 @@ public class  ArticleReview extends BaseEntity {
 		this.content = content;
 	}
 
-	public Boolean getShow() {
-		return isShow;
+	public Boolean getDeleted() {
+		return deleted;
 	}
 
-	public void setShow(Boolean show) {
-		isShow = show;
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public String getIp() {

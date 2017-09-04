@@ -52,7 +52,6 @@ public class FileController extends BaseController {
 		pluginConfig.setIsEnabled(isEnabled);
 		pluginConfig.setOrder(order);
 		pluginConfigService.update(pluginConfig);
-		addFlashMessage(redirectAttributes, SUCCESS_MESSAGE);
 		return "redirect:/admin/storage_plugin/list.jhtml";
 	}
 

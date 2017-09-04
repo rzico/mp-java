@@ -66,21 +66,28 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Article entity = super.find(id);
+		entity.setDeleted(true);
+		super.save(entity);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		List<Article> entitys = super.findList(ids);
+		for (Article article:entitys) {
+			article.setDeleted(true);
+			super.save(article);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Article article) {
-		super.delete(article);
+		article.setDeleted(true);
+		super.save(article);
 	}
 
 	public Page<Article> findPage(Date beginDate,Date endDate, Pageable pageable) {

@@ -66,21 +66,28 @@ public class DepositServiceImpl extends BaseServiceImpl<Deposit, Long> implement
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Deposit entity = super.find(id);
+		entity.setDeleted(true);
+		super.save(entity);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		List<Deposit> deposits = super.findList(ids);
+		for (Deposit deposit:deposits) {
+			deposit.setDeleted(true);
+			super.save(deposit);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Deposit deposit) {
-		super.delete(deposit);
+		deposit.setDeleted(true);
+		super.save(deposit);
 	}
 
 	public Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable) {

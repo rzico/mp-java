@@ -1,5 +1,5 @@
 
-package net.wit.controller.app;
+package net.wit.controller.website;
 
 import net.wit.DateEditor;
 import net.wit.Message;
@@ -24,9 +24,6 @@ import java.util.Set;
  * 
  */
 public class BaseController {
-
-	/** 错误视图 */
-	protected static final String ERROR_VIEW = "/app/common/error";
 
 	/** "验证结果"参数名称 */
 	private static final String CONSTRAINT_VIOLATIONS_ATTRIBUTE_NAME = "constraintViolations";

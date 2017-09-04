@@ -140,6 +140,18 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="datetime comment '最后登录日期'")
 	private Date loginDate;
 
+	/** 昵称 */
+	@Column(columnDefinition="varchar(255) comment '昵称'")
+	private String nickName;
+
+	/** 签名 */
+	@Column(columnDefinition="varchar(255) comment '签名'")
+	private String autograph;
+
+	/** 头像 */
+	@Column(columnDefinition="varchar(255) comment '头像'")
+	private String logo;
+
 	/** 姓名 */
 	@Column(columnDefinition="varchar(255) comment '姓名'")
 	private String name;
@@ -247,6 +259,18 @@ public class Member extends BaseEntity {
 	@OrderBy("isDefault desc, createDate desc")
 	private Set<Receiver> receivers = new HashSet<Receiver>();
 
+	/** 收藏文章*/
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<ArticleFavorite> favorites = new HashSet<ArticleFavorite>();
+
+	/** 我的关注*/
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<MemberFollow> follows = new HashSet<MemberFollow>();
+
+	/** 我的粉丝*/
+	@OneToMany(mappedBy = "follow", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<MemberFollow> fans = new HashSet<MemberFollow>();
+
 	public String getUsername() {
 		return username;
 	}
@@ -343,6 +367,8 @@ public class Member extends BaseEntity {
 		this.loginDate = loginDate;
 	}
 
+
+
 	public String getName() {
 		return name;
 	}
@@ -351,11 +377,19 @@ public class Member extends BaseEntity {
 		this.name = name;
 	}
 
-	public net.wit.entity.Member.Gender getGender() {
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(net.wit.entity.Member.Gender gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
@@ -525,6 +559,46 @@ public class Member extends BaseEntity {
 
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public String getAutograph() {
+		return autograph;
+	}
+
+	public void setAutograph(String autograph) {
+		this.autograph = autograph;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public Set<ArticleFavorite> getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(Set<ArticleFavorite> favorites) {
+		this.favorites = favorites;
+	}
+
+	public Set<MemberFollow> getFollows() {
+		return follows;
+	}
+
+	public void setFollows(Set<MemberFollow> follows) {
+		this.follows = follows;
+	}
+
+	public Set<MemberFollow> getFans() {
+		return fans;
+	}
+
+	public void setFans(Set<MemberFollow> fans) {
+		this.fans = fans;
 	}
 
 	/**

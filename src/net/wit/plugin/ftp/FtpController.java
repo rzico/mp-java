@@ -48,7 +48,7 @@ public class FtpController extends BaseController {
 			pluginConfig.setIsEnabled(false);
 			pluginConfigService.save(pluginConfig);
 		}
-		return SUCCESS_MESSAGE;
+		return Message.success("admin.save.success");
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class FtpController extends BaseController {
 			PluginConfig pluginConfig = ftpPlugin.getPluginConfig();
 			pluginConfigService.delete(pluginConfig);
 		}
-		return SUCCESS_MESSAGE;
+		return Message.success("admin.save.success");
 	}
 
 	/**
@@ -88,7 +88,6 @@ public class FtpController extends BaseController {
 		pluginConfig.setIsEnabled(isEnabled);
 		pluginConfig.setOrder(order);
 		pluginConfigService.update(pluginConfig);
-		addFlashMessage(redirectAttributes, SUCCESS_MESSAGE);
 		return "redirect:/admin/storage_plugin/list.jhtml";
 	}
 

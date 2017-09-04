@@ -68,11 +68,6 @@ public class ArticleOptions implements Serializable {
 	@Column(columnDefinition=" varchar(255) comment '密码'")
 	private String password;
 
-	/** 是否删除，false 删除不显示 */
-	@NotNull
-	@Column(columnDefinition="bit comment '是否显示'")
-	private Boolean isShow;
-
 	public Boolean getIsPublish() {
 		return isPublish;
 	}
@@ -121,11 +116,4 @@ public class ArticleOptions implements Serializable {
 		this.password = password;
 	}
 
-	public Boolean getIsShow() {
-		return isShow;
-	}
-
-	public void setIsShow(Boolean show) {
-		isShow = show;
-	}
 }
