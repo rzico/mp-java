@@ -1,22 +1,11 @@
 
-package net.wit.controller.admin;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+package net.wit.controller.app;
 
 import net.wit.DateEditor;
 import net.wit.Message;
-import net.wit.Setting;
 import net.wit.entity.Log;
 import net.wit.template.directive.FlashMessageDirective;
-import net.wit.util.SettingUtils;
 import net.wit.util.SpringUtils;
-
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -24,11 +13,20 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.Resource;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Date;
+import java.util.Set;
+
 /**
  * Controller - 基类
  * 
  */
 public class BaseController {
+
+	/** 错误视图 */
+	protected static final String ERROR_VIEW = "/app/common/error";
 
 	/** "验证结果"参数名称 */
 	private static final String CONSTRAINT_VIOLATIONS_ATTRIBUTE_NAME = "constraintViolations";

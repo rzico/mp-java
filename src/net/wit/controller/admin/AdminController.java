@@ -66,6 +66,7 @@ public class AdminController extends BaseController {
 //		if (!isValid(admin, Save.class)) {
 //			return Message.error("admin.data.valid");
 //		}
+
 		try {
 			adminService.save(entity);
 			return Message.success(entity,"admin.save.success");
