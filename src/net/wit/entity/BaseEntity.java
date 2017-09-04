@@ -20,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.groups.Default;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import net.wit.listener.EntityListener;
 
 import org.hibernate.search.annotations.DateBridge;
@@ -39,7 +40,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Administrator
  * @date 2014年10月11日 下午5:32:42
  */
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @EntityListeners(EntityListener.class)
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
