@@ -8,21 +8,29 @@ import net.wit.Pageable;
  */
 public class PageModel {
 
-    //    当前页数
+    //    绘制计数器
     private int draw;
-    //    当前页数
+    //    开始记录号
+    private int start;
+    //    页显示大小
+    private int length;
+    //    记录总数
     private long recordsTotal;
-    //    当前页数
+    //    过滤后记录总数
     private long recordsFiltered;
 
     private Object data;
 
-    public static PageModel bindPage(Page page){
-        PageModel pageModel = new PageModel();
-        pageModel.setData(page.getPageNumber());
-        pageModel.setRecordsTotal(page.getTotal());
-        pageModel.setData( page.getContent() );
-        return pageModel;
+    public void bind(Page page){
+        this.draw = this.draw + 1;
+        this.recordsFiltered = page.getTotal();
+        this.recordsTotal = page.getTotal();
+        this.data = page.getContent();
+    }
+
+    public int getPageNumber() {
+        int p = (int) Math.ceil((double) this.start / (double) this.getLength())+1;
+        return p;
     }
 
 
@@ -56,5 +64,21 @@ public class PageModel {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 }

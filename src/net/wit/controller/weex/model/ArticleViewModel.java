@@ -36,4 +36,99 @@ public class ArticleViewModel implements Serializable {
     /** 内容 */
     private String content;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public MemberModel getMember() {
+        return member;
+    }
+
+    public void setMember(MemberModel member) {
+        this.member = member;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getThumbnial() {
+        return thumbnial;
+    }
+
+    public void setThumbnial(String thumbnial) {
+        this.thumbnial = thumbnial;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getMusic() {
+        return music;
+    }
+
+    public void setMusic(String music) {
+        this.music = music;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Long getReview() {
+        return review;
+    }
+
+    public void setReview(Long review) {
+        this.review = review;
+    }
+
+    public Long getHits() {
+        return hits;
+    }
+
+    public void setHits(Long hits) {
+        this.hits = hits;
+    }
+
+    public Long getLaud() {
+        return laud;
+    }
+
+    public void setLaud(Long laud) {
+        this.laud = laud;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

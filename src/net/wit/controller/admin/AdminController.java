@@ -220,17 +220,18 @@ public class AdminController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Admin.Gender gender, PageModel page, Pageable pageable, ModelMap model) {
 		//常输的过滤条件
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (gender!=null) {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
 			filters.add(genderFilter);
 		}
-		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
-//		model.addAttribute("page", page);
-
-		return Message.success(PageModel.bindPage(page), "admin.list.success");
+		pageable.setPageSize(page.getLength());
+		pageable.setPageNumber(page.getPageNumber());
+		Page<Admin> adminPage = adminService.findPage(beginDate,endDate,pageable);
+		page.bind(adminPage);
+		return Message.success(page, "admin.list.success");
 	}
 
 	/**
