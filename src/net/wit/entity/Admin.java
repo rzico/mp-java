@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -45,16 +46,16 @@ public class Admin extends BaseEntity {
 	@Column(columnDefinition="varchar(50) not null unique comment '用户名'")
 	private String username;
 
-	/** 性别 */
-	@Column(columnDefinition="int(11) comment '性别'")
-	private Gender gender;
-
 	/** 密码 */
 	@NotEmpty(groups = Save.class)
 	@Pattern(regexp = "^[^\\s&\"<>]+$")
-	@Length(min = 4, max = 20)
 	@Column(columnDefinition="varchar(255) not null comment '密码'")
 	private String password;
+
+
+	/** 性别 */
+	@Column(columnDefinition="int(11) comment '性别 {male:男,female:女,secrecy:保密}'")
+	private Gender gender;
 
 	/** E-mail */
 	@NotEmpty
@@ -100,10 +101,12 @@ public class Admin extends BaseEntity {
 
 	/** 企业名*/
 	@NotNull
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Enterprise enterprise;
 
 	/** 角色 */
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "xm_admin_role")
 	private List<Role> roles = new ArrayList<>();

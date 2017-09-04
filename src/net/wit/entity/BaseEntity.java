@@ -41,9 +41,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Administrator
  * @date 2014年10月11日 下午5:32:42
  */
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.ANY, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.ANY, creatorVisibility = Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.PUBLIC_ONLY, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.PUBLIC_ONLY, creatorVisibility = Visibility.NONE)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonIgnoreProperties(value={"handler","hibernateLazyInitializer"})
 @EntityListeners(EntityListener.class)
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {

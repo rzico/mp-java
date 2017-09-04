@@ -8,8 +8,11 @@ import net.wit.Message;
 import net.wit.Page;
 import net.wit.Pageable;
 
+import net.wit.controller.admin.model.MapModel;
+import net.wit.controller.admin.model.PageModel;
 import net.wit.entity.Role;
 import net.wit.service.RoleService;
+import net.wit.util.MD5Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -76,14 +79,11 @@ public class AdminController extends BaseController {
 
 		entity.setName(admin.getName());
 
-		entity.setPassword(admin.getPassword());
+		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
 
 		entity.setUsername(admin.getUsername());
 
 		entity.setEnterprise(enterpriseService.find(enterpriseId));
-
-		entity.setGender(admin.getGender());
-
 
 		entity.setGender(admin.getGender());
 
@@ -103,12 +103,18 @@ public class AdminController extends BaseController {
 
 
 	/**
-	 * 获取数据
+	 * 企业名称视图
 	 */
-	@RequestMapping(value = "/view", method = RequestMethod.GET)
-	@ResponseBody
-	public Admin view(Long id, ModelMap model) {
-		return adminService.find(id);
+	@RequestMapping(value = "/enterpriseView", method = RequestMethod.GET)
+	public String enterpriseView(Long id, ModelMap model) {
+
+		List<MapModel> types = new ArrayList<>();
+		types.add(new MapModel("operate","运营商"));
+		types.add(new MapModel("agent","代理商"));
+
+		model.addAttribute("types",types);
+		model.addAttribute("enterprise",enterpriseService.find(id));
+		return "/admin/admin/view/enterpriseView";
 	}
 
 
@@ -157,7 +163,7 @@ public class AdminController extends BaseController {
 			return Message.error("admin.data.valid");
 		}
 		try {
-			adminService.save(entity);
+			adminService.update(entity);
 			return Message.success(entity,"admin.update.success");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,9 +174,44 @@ public class AdminController extends BaseController {
 	 * 主页
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String main() {
+	public String add(ModelMap model) {
+
+		List<MapModel> genders = new ArrayList<>();
+		genders.add(new MapModel("male","男"));
+		genders.add(new MapModel("female","女"));
+		genders.add(new MapModel("secrecy","保密"));
+
+		List<Enterprise> enterprises = enterpriseService.findAll();
+
+		List<Role> roles = roleService.findAll();
+
+		model.addAttribute("genders",genders);
+		model.addAttribute("enterprises", enterprises);
+		model.addAttribute("roles", roles);
 
 		return "/admin/admin/add";
+	}
+	/**
+	 * 主页
+	 */
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public String edit(Long id, ModelMap model) {
+
+		List<MapModel> genders = new ArrayList<>();
+		genders.add(new MapModel("male","男"));
+		genders.add(new MapModel("female","女"));
+		genders.add(new MapModel("secrecy","保密"));
+
+		List<Enterprise> enterprises = enterpriseService.findAll();
+
+		List<Role> roles = roleService.findAll();
+
+		model.addAttribute("genders",genders);
+		model.addAttribute("enterprises", enterprises);
+		model.addAttribute("roles", roles);
+		model.addAttribute("data",adminService.find(id));
+
+		return "/admin/admin/edit";
 	}
 
 
@@ -178,14 +219,32 @@ public class AdminController extends BaseController {
 	 * 列表
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
-		//常量输出
-		Map<String,String> gender = new HashMap<String,String>();
-		gender.put("male","男");
-		gender.put("female","女");
-		gender.put("secrecy","保密");
+	@ResponseBody
+	public Message list(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {
+		//常输的过滤条件
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		if (gender!=null) {
+			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
+			filters.add(genderFilter);
+		}
+		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
+//		model.addAttribute("page", page);
 
-		//model.addAttribute("gender",gender);
+		return Message.success(PageModel.bindPage(page), "admin.list.success");
+	}
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {
+		//常量输出
+		List<MapModel> genders = new ArrayList<>();
+		genders.add(new MapModel("male","男"));
+		genders.add(new MapModel("female","女"));
+		genders.add(new MapModel("secrecy","保密"));
+
+		model.addAttribute("genders",genders);
 
 		//多对一输出
 		model.addAttribute("enterprises",enterpriseService.findAll());
@@ -195,8 +254,10 @@ public class AdminController extends BaseController {
 
 		//常输的过滤条件
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		Filter genderFilter = new Filter("gender", Filter.Operator.eq,gender);
-		filters.add(genderFilter);
+		if (gender!=null) {
+			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
+			filters.add(genderFilter);
+		}
 		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
 		model.addAttribute("page", page);
 		return "/admin/admin/list";

@@ -26,15 +26,15 @@ public class Enterprise extends BaseEntity {
         agent
     };
 
-    /** 类型 */
-    @NotEmpty
-    @Column(columnDefinition="int(11) comment '类型 {operate:运营商,agent:代理商}'")
-    private Type type;
-
     /** 企业 */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '企业名称'")
+    @Column(columnDefinition="varchar(255) not null comment '企业名称'")
     private String name;
+
+    /** 类型 */
+    @NotEmpty
+    @Column(columnDefinition="int(11) not null comment '类型 {operate:运营商,agent:代理商}'")
+    private Type type;
 
     /** 地区 null 代表没有区域限制 */
     @ManyToOne(fetch = FetchType.LAZY)

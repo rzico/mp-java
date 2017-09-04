@@ -31,35 +31,37 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-admin-add">
+        <input type="number" value="${data.id}" style="display:none" name="id">
+        [#if data??]
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户名：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="test" placeholder="" id="username" name="username">
+                <input type="text" class="input-text" value="${data.username}" placeholder="" id="username" name="username">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>密码：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="password" class="input-text" value="123456" placeholder="" id="password" name="password">
+                <input type="password" class="input-text" value="${data.password}" placeholder="" id="password" name="password">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>邮箱：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="@" name="email" value="jinlesoft@163.com" id="email">
+                <input type="text" class="input-text" placeholder="@" name="email" value="${data.email}" id="email">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>真实姓名：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="陈金乐" placeholder="" id="name" name="name">
+                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>部门：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="研发部" placeholder="" id="department" name="department">
+                <input type="text" class="input-text" value="${data.department}" placeholder="" id="department" name="department">
             </div>
         </div>
         <div class="row cl">
@@ -67,10 +69,10 @@
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 [#if genders??]
                 [#list genders as gender]
-                    <div class="radio-box">
-                        <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.key}" checked>
-                        <label for="gender-${gender_index}">${gender.value}</label>
-                    </div>
+                     <div class="radio-box">
+                          <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.key}" [#if gender.key == data.gender]checked[/#if]>
+                          <label for="gender-${gender_index}">${gender.value}</label>
+                     </div>
                 [/#list]
                 [/#if]
             </div>
@@ -79,7 +81,7 @@
             <label class="form-label col-xs-4 col-sm-2">是否启用：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isEnabled" id="isEnabled" checked>
+                    <input type="checkbox" name="isEnabled" id="isEnabled" [#if data.isEnabled?? && data.isEnabled]checked[/#if]>
                     <label for="isEnabled">&nbsp;</label>
                 </div>
             </div>
@@ -88,7 +90,7 @@
             <label class="form-label col-xs-4 col-sm-2">是否锁定：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isLocked" id="isLocked" checked>
+                    <input type="checkbox" name="isLocked" id="isLocked" [#if data.isLocked?? && data.isLocked]checked[/#if]>
                     <label for="isLocked">&nbsp;</label>
                 </div>
             </div>
@@ -96,7 +98,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">锁定时间：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="2017-9-13 16:16:16" id="lockedDate" name="lockedDate" class="input-text Wdate" style="width:180px;">
+                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.lockedDate}" id="lockedDate" name="lockedDate" class="input-text Wdate" style="width:180px;">
             </div>
         </div>
         <div class="row cl">
@@ -105,7 +107,7 @@
                 [#if enterprises??]
 				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
                     [#list enterprises as enterprise]
-					<option value="${enterprise.id}">${enterprise.name}</option>
+					<option [#if data.enterprise?? && enterprise.id == data.enterprise.id] selected [/#if] value="${enterprise.id}">${enterprise.name}</option>
                     [/#list]
 				</select>
                 [/#if]
@@ -118,22 +120,30 @@
                 [#if roles??]
                     [#list roles as role]
                 <div class="check-box">
+                    [#--这里的yes 是判断 这个角色是否勾选了--]
+                    [#assign yes = "false"]
+                    [#list data.roles as dataRole]
+                        [#if dataRole.id == role.id]
+                            [#assign yes = "true"]
+                        [/#if]
+                    [/#list]
                             <label class="">
-                                <input type="checkbox" value="${role.id}" name="roleIds" >
+                                <input type="checkbox" [#if yes == "true"] checked [/#if] value="${role.id}" name="roleIds" >
                             ${role.name}</label>
                 </div>
                     [/#list]
                 [/#if]
-
-        </div>
+            </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
             </div>
         </div>
-
+            [#else]
+            查找失败
+        [/#if]
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
@@ -187,12 +197,12 @@
                     submitHandler:function(form){
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/admin/save.jhtml" ,
+                            url: "${base}/admin/admin/update.jhtml" ,
                             success: function(data){
                                 if(data.type ==  "success"){
-                                    layer.msg('添加成功!',{icon:1,time:1000});
+                                    layer.msg('修改成功!',{icon:1,time:1000});
                                 }else{
-                                    layer.msg('添加失败!',{icon:1,time:1000});
+                                    layer.msg('修改失败!',{icon:1,time:1000});
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
