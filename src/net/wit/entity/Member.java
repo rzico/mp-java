@@ -160,6 +160,10 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="int(11) comment '性别 {male:男,female:女,secrecy:保密}'")
 	private Gender gender;
 
+	/** 职业 */
+	@Column(columnDefinition="int(11) comment '职务'")
+	private Occupation occupation;
+
 	/** 出生日期 */
 	@Column(columnDefinition="datetime comment '出生日期'")
 	private Date birth;
@@ -234,6 +238,10 @@ public class Member extends BaseEntity {
 	/** 安全密匙 */
 	@Embedded
 	private SafeKey safeKey;
+
+	/** 定位 */
+	@Embedded
+	private Location location;
 
 	/** 地区 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -367,7 +375,13 @@ public class Member extends BaseEntity {
 		this.loginDate = loginDate;
 	}
 
+	public Location getLocation() {
+		return location;
+	}
 
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
 	public String getName() {
 		return name;
@@ -599,6 +613,14 @@ public class Member extends BaseEntity {
 
 	public void setFans(Set<MemberFollow> fans) {
 		this.fans = fans;
+	}
+
+	public Occupation getOccupation() {
+		return occupation;
+	}
+
+	public void setOccupation(Occupation occupation) {
+		this.occupation = occupation;
 	}
 
 	/**

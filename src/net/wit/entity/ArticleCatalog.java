@@ -45,7 +45,7 @@ public class ArticleCatalog extends OrderEntity {
 	/** 名称 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) not null comment '点赞数'")
+	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
 	/** 会员 */

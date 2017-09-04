@@ -64,6 +64,16 @@ public class ArticleOptions implements Serializable {
 	@Column(columnDefinition="int(11) comment '谁可见  {isPublic:公开,isShare:不会开,isEncrypt:加密,isPrivate:私秘}'")
 	private Authority authority;
 
+	/** 是否样例 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否样例'")
+	private Boolean isExample;
+
+	/** 是否置顶 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否置顶'")
+	private Boolean isTop;
+
 	/** 密码 */
 	@Column(columnDefinition=" varchar(255) comment '密码'")
 	private String password;
@@ -116,4 +126,19 @@ public class ArticleOptions implements Serializable {
 		this.password = password;
 	}
 
+	public Boolean getIsExample() {
+		return isExample;
+	}
+
+	public void setIsExample(Boolean isExample) {
+		isExample = isExample;
+	}
+
+	public Boolean getTop() {
+		return isTop;
+	}
+
+	public void setTop(Boolean top) {
+		isTop = top;
+	}
 }

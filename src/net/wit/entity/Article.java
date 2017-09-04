@@ -22,6 +22,7 @@ import java.util.Set;
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
+
 @Entity
 @Table(name = "xm_article")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_sequence")
@@ -48,10 +49,19 @@ public class Article extends BaseEntity{
     @Column(columnDefinition="varchar(255) comment '作者'")
     private String author;
 
+    /** 会员 */
+    @Column(columnDefinition="bigint(20) not null comment '会员'")
+    private Member member;
+
     /** 标题 */
     @Length(max = 255)
     @Column(columnDefinition="varchar(255) comment '标题'")
     private String title;
+
+    /** 缩例图 */
+    @Length(max = 255)
+    @Column(columnDefinition="varchar(255) comment '缩例图'")
+    private String thumbnial;
 
     /** 类别 */
     @ManyToOne(fetch= FetchType.LAZY)
@@ -102,6 +112,14 @@ public class Article extends BaseEntity{
     /** 安全密匙 */
     @Embedded
     private ArticleOptions articleOptions;
+
+    /** 定位 */
+    @Embedded
+    private Location location;
+
+    /** 所在地 */
+    @Column(columnDefinition="bigint(20) comment '所在地'")
+    private Area area;
 
     /** 文章标签*/
     @ManyToMany(fetch = FetchType.LAZY)
@@ -259,5 +277,29 @@ public class Article extends BaseEntity{
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getThumbnial() {
+        return thumbnial;
+    }
+
+    public void setThumbnial(String thumbnial) {
+        this.thumbnial = thumbnial;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

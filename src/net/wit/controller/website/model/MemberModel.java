@@ -1,4 +1,4 @@
-package net.wit.controller.weex.model;
+package net.wit.controller.website.model;
 import net.wit.entity.Member;
 
 import java.io.Serializable;
