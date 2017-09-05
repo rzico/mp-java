@@ -104,9 +104,18 @@ public class Pageable implements Serializable {
 		this.pageStart = new Long(map.get("iDisplayStart").toString()).intValue();
 		this.pageSize = new Long(map.get("iDisplayLength").toString()).intValue();
 
-		int idx = new Long(map.get("iSortCol_0").toString()).intValue();
+		if (map.containsKey("iSortCol_0")) {
+			int idx = new Long(map.get("iSortCol_0").toString()).intValue();
 
-		this.orderProperty = map.get("iSortCol_0").toString();
+			this.orderProperty = map.get("mDataProp_" + idx).toString();
+
+			String dir = map.get("sSortDir_0").toString();
+			if ("desc".equals(dir)) {
+				this.orderDirection = Direction.desc;
+			} else {
+				this.orderDirection = Direction.asc;
+			}
+		}
 
 
 	}
