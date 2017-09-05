@@ -109,6 +109,11 @@ public class Topic extends BaseEntity {
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
     private BigDecimal brokerage;
 
+    /** 模板编号 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) not null comment '模板编号'")
+    private String template;
+
     public Type getType() {
         return type;
     }
@@ -195,6 +200,14 @@ public class Topic extends BaseEntity {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
     }
 
     public Member getMember() {
