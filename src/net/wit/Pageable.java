@@ -7,8 +7,12 @@ package net.wit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.Order.Direction;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -25,7 +29,7 @@ public class Pageable implements Serializable {
 	private static final long serialVersionUID = -3930180379790344299L;
 
 	/** 默认页码 */
-	private static final int DEFAULT_PAGE_NUMBER = 1;
+	private static final int DEFAULT_PAGE_NUMBER = 0;
 
 	/** 默认每页记录数 */
 	private static final int DEFAULT_PAGE_SIZE = 20;
@@ -34,7 +38,7 @@ public class Pageable implements Serializable {
 	private static final int MAX_PAGE_SIZE = 1000;
 
 	/** 页码 */
-	private int pageNumber = DEFAULT_PAGE_NUMBER;
+	private int pageStart = DEFAULT_PAGE_NUMBER;
 
 	/** 每页记录数 */
 	private int pageSize = DEFAULT_PAGE_SIZE;
@@ -51,6 +55,12 @@ public class Pageable implements Serializable {
 	/** 排序方向 */
 	private Direction orderDirection;
 
+	//  接收计数器
+	private int draw;
+
+	//  接收DataTable 参数
+	private String aoData;
+
 	/** 筛选 */
 	private List<Filter> filters = new ArrayList<Filter>();
 
@@ -66,18 +76,57 @@ public class Pageable implements Serializable {
 	/**
 	 * 初始化一个新创建的Pageable对象
 	 * 
-	 * @param pageNumber
+	 * @param pageStart
 	 *            页码
 	 * @param pageSize
 	 *            每页记录数
 	 */
-	public Pageable(Integer pageNumber, Integer pageSize) {
-		if (pageNumber != null && pageNumber >= 1) {
-			this.pageNumber = pageNumber;
+	public Pageable(Integer pageStart, Integer pageSize) {
+		if (pageStart != null && pageStart >= 1) {
+			this.pageStart = pageStart;
 		}
 		if (pageSize != null && pageSize >= 1 && pageSize <= MAX_PAGE_SIZE) {
 			this.pageSize = pageSize;
 		}
+	}
+
+	public void bindAo(){
+		System.out.println(aoData);
+		JSONArray ja = new JSONArray();
+		ja.fromObject(aoData);
+		Map<String,Object> map = new HashMap<String,Object>();
+		for(int i=0;i<ja.size();i++){
+			JSONObject jsonObj = ja.getJSONObject(i);
+			map.put(jsonObj.getString("name"), jsonObj.get("value"));
+		}
+
+		this.draw = new Long(map.get("sEcho").toString()).intValue();
+		this.pageStart = new Long(map.get("iDisplayStart").toString()).intValue();
+		this.pageSize = new Long(map.get("iDisplayLength").toString()).intValue();
+
+		int idx = new Long(map.get("iSortCol_0").toString()).intValue();
+
+		this.orderProperty = map.get("iSortCol_0").toString();
+
+
+	}
+
+
+	public int getDraw() {
+		return draw;
+	}
+
+	public void setDraw(int draw) {
+		this.draw = draw;
+	}
+
+	public String getAoData() {
+		return aoData;
+	}
+
+	public void setAoData(String aoData) {
+		this.aoData = aoData;
+		bindAo();
 	}
 
 	/**
@@ -85,21 +134,21 @@ public class Pageable implements Serializable {
 	 * 
 	 * @return 页码
 	 */
-	public int getPageNumber() {
-		return pageNumber;
+	public int getPageStart() {
+		return pageStart;
 	}
 
 	/**
 	 * 设置页码
 	 * 
-	 * @param pageNumber
+	 * @param pageStart
 	 *            页码
 	 */
-	public void setPageNumber(int pageNumber) {
-		if (pageNumber < 1) {
-			pageNumber = DEFAULT_PAGE_NUMBER;
+	public void setPageStart(int pageStart) {
+		if (pageStart < 1) {
+			pageStart = DEFAULT_PAGE_NUMBER;
 		}
-		this.pageNumber = pageNumber;
+		this.pageStart = pageStart;
 	}
 
 	/**
@@ -250,13 +299,13 @@ public class Pageable implements Serializable {
 			return true;
 		}
 		Pageable other = (Pageable) obj;
-		return new EqualsBuilder().append(getPageNumber(), other.getPageNumber()).append(getPageSize(), other.getPageSize()).append(getSearchProperty(), other.getSearchProperty()).append(getSearchValue(), other.getSearchValue()).append(getOrderProperty(), other.getOrderProperty()).append(getOrderDirection(), other.getOrderDirection()).append(getFilters(), other.getFilters())
+		return new EqualsBuilder().append(getPageStart(), other.getPageStart()).append(getPageSize(), other.getPageSize()).append(getSearchProperty(), other.getSearchProperty()).append(getSearchValue(), other.getSearchValue()).append(getOrderProperty(), other.getOrderProperty()).append(getOrderDirection(), other.getOrderDirection()).append(getFilters(), other.getFilters())
 				.append(getOrders(), other.getOrders()).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(getPageNumber()).append(getPageSize()).append(getSearchProperty()).append(getSearchValue()).append(getOrderProperty()).append(getOrderDirection()).append(getFilters()).append(getOrders()).toHashCode();
+		return new HashCodeBuilder(17, 37).append(getPageStart()).append(getPageSize()).append(getSearchProperty()).append(getSearchValue()).append(getOrderProperty()).append(getOrderDirection()).append(getFilters()).append(getOrders()).toHashCode();
 	}
 
 }

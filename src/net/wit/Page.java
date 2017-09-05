@@ -57,8 +57,8 @@ public class Page<T> implements Serializable {
 	 * 
 	 * @return 页码
 	 */
-	public int getPageNumber() {
-		return pageable.getPageNumber();
+	public int getPageStart() {
+		return pageable.getPageStart();
 	}
 
 	/**

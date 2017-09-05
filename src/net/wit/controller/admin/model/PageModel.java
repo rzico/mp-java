@@ -1,7 +1,14 @@
 package net.wit.controller.admin.model;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.Page;
 import net.wit.Pageable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jinlesoft on 2017/9/4.
@@ -18,21 +25,18 @@ public class PageModel {
     private long recordsTotal;
     //    过滤后记录总数
     private long recordsFiltered;
-
+    //    返回的数据
     private Object data;
 
-    public void bind(Page page){
-        this.draw = this.draw + 1;
-        this.recordsFiltered = page.getTotal();
-        this.recordsTotal = page.getTotal();
-        this.data = page.getContent();
+    public static PageModel bind(Page page){
+        PageModel model = new PageModel();
+        model.start = page.getPageStart();
+        model.length = page.getPageSize();
+        model.recordsFiltered = page.getTotal();
+        model.recordsTotal = page.getTotal();
+        model.data = page.getContent();
+        return model;
     }
-
-    public int getPageNumber() {
-        int p = (int) Math.ceil((double) this.start / (double) this.getLength())+1;
-        return p;
-    }
-
 
     public int getDraw() {
         return draw;
@@ -58,15 +62,7 @@ public class PageModel {
         this.recordsFiltered = recordsFiltered;
     }
 
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    public int getStart() {
+     public int getStart() {
         return start;
     }
 
@@ -81,4 +77,5 @@ public class PageModel {
     public void setLength(int length) {
         this.length = length;
     }
-}
+
+  }
