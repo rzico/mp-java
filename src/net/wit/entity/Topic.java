@@ -109,10 +109,10 @@ public class Topic extends BaseEntity {
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
     private BigDecimal brokerage;
 
-    /** 模板编号 */
-    @Length(max = 200)
-    @Column(columnDefinition="varchar(255) not null comment '模板编号'")
-    private String template;
+    /** 模板 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition="bigint(20) not null comment '模板'")
+    private Template template;
 
     public Type getType() {
         return type;
@@ -202,11 +202,11 @@ public class Topic extends BaseEntity {
         this.category = category;
     }
 
-    public String getTemplate() {
+    public Template getTemplate() {
         return template;
     }
 
-    public void setTemplate(String template) {
+    public void setTemplate(Template template) {
         this.template = template;
     }
 
@@ -233,6 +233,16 @@ public class Topic extends BaseEntity {
     public void setExpire(Date expire) {
         this.expire = expire;
     }
+
+
+    public MapEntity getMapTemplate() {
+        if (getTemplate() != null) {
+            return new MapEntity(getTemplate().getId().toString(), getTemplate().getName());
+        } else {
+            return null;
+        }
+    }
+
     public MapEntity getMapMember() {
         if (getMember() != null) {
             return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");

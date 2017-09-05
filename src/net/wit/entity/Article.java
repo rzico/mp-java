@@ -122,6 +122,11 @@ public class Article extends BaseEntity{
     @Column(columnDefinition="bigint(20) comment '所在地'")
     private Area area;
 
+    /** 模板 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition="bigint(20) not null comment '模板'")
+    private Template template;
+
     /** 文章标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "xm_article_tag")
@@ -310,6 +315,22 @@ public class Article extends BaseEntity{
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    public Template getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(Template template) {
+        this.template = template;
+    }
+
+    public MapEntity getMapTemplate() {
+        if (getTemplate() != null) {
+            return new MapEntity(getTemplate().getId().toString(), getTemplate().getName());
+        } else {
+            return null;
+        }
     }
 
     public MapEntity getMapArticleCategory() {
