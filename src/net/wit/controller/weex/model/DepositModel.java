@@ -13,10 +13,12 @@ public class DepositModel implements Serializable {
 
     /** 类型 */
     private Deposit.Type type;
+    /** 交易方头像 */
+    private String logo;
     /** 摘要 */
     private String memo;
     /** 变动金额 */
-    private BigDecimal credit;
+    private BigDecimal amount;
     /** 余额 */
     private BigDecimal balance;
     /** 时间 */
@@ -38,12 +40,20 @@ public class DepositModel implements Serializable {
         this.memo = memo;
     }
 
-    public BigDecimal getCredit() {
-        return credit;
+    public String getLogo() {
+        return logo;
     }
 
-    public void setCredit(BigDecimal credit) {
-        this.credit = credit;
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public BigDecimal getBalance() {

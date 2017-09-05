@@ -1,30 +1,23 @@
 package net.wit.controller.weex.model;
 
-import net.wit.entity.Deposit;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 //文章编辑模板
 
-public class RewardModel implements Serializable {
+public class PaymentModel implements Serializable {
 
-    /** 交易昵称 */
+    /** 收款方 */
     private String nickName;
-    /** 交易方头像 */
+    /** 收款方头像 */
     private String logo;
     /** 摘要 */
     private String memo;
     /** 金额 */
     private BigDecimal amount;
 
-    /** 文章id */
-    private Long articleId;
-    /** 文章标题 */
-    private String title;
-
-    /** 时间 */
+    /** 交易时间 */
     private Date createDate;
 
     public String getNickName() {
@@ -51,28 +44,12 @@ public class RewardModel implements Serializable {
         this.memo = memo;
     }
 
-    public BigDecimal getAmt() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmt(BigDecimal amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public Long getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public Date getCreateDate() {
