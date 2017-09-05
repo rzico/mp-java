@@ -3,12 +3,11 @@ package net.wit.controller.admin;
 import java.util.*;
 
 import javax.annotation.Resource;
-import net.wit.Filter;
-import net.wit.Message;
-import net.wit.Page;
-import net.wit.Pageable;
 
-import net.wit.controller.admin.model.MapModel;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.wit.*;
+
 import net.wit.controller.admin.model.PageModel;
 import net.wit.entity.Role;
 import net.wit.service.RoleService;
@@ -108,9 +107,9 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/enterpriseView", method = RequestMethod.GET)
 	public String enterpriseView(Long id, ModelMap model) {
 
-		List<MapModel> types = new ArrayList<>();
-		types.add(new MapModel("operate","运营商"));
-		types.add(new MapModel("agent","代理商"));
+		List<MapEntity> types = new ArrayList<>();
+		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("agent","代理商"));
 
 		model.addAttribute("types",types);
 		model.addAttribute("enterprise",enterpriseService.find(id));
@@ -176,10 +175,11 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
 
-		List<MapModel> genders = new ArrayList<>();
-		genders.add(new MapModel("male","男"));
-		genders.add(new MapModel("female","女"));
-		genders.add(new MapModel("secrecy","保密"));
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
+
 
 		List<Enterprise> enterprises = enterpriseService.findAll();
 
@@ -197,10 +197,10 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
-		List<MapModel> genders = new ArrayList<>();
-		genders.add(new MapModel("male","男"));
-		genders.add(new MapModel("female","女"));
-		genders.add(new MapModel("secrecy","保密"));
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
 
 		List<Enterprise> enterprises = enterpriseService.findAll();
 
@@ -237,10 +237,10 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {
 		//常量输出
-		List<MapModel> genders = new ArrayList<>();
-		genders.add(new MapModel("male","男"));
-		genders.add(new MapModel("female","女"));
-		genders.add(new MapModel("secrecy","保密"));
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
 
 		model.addAttribute("genders",genders);
 

@@ -70,8 +70,8 @@
                 [#if genders??]
                 [#list genders as gender]
                      <div class="radio-box">
-                          <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.key}" [#if gender.key == data.gender]checked[/#if]>
-                          <label for="gender-${gender_index}">${gender.value}</label>
+                          <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.id}" [#if gender.id == data.gender]checked[/#if]>
+                          <label for="gender-${gender_index}">${gender.name}</label>
                      </div>
                 [/#list]
                 [/#if]

@@ -57,6 +57,63 @@
             </tr>
             </thead>
             <tbody>
+            [#--[#if page]--]
+            [#--[#if page.content??]--]
+               [#--[#list page.content as item]--]
+
+               [#--<tr class="text-c">--]
+                   [#--<td><input type="checkbox" value="${item.id}" name=""></td>--]
+                   [#--<td>${item.id}</td>--]
+                   [#--<td>${item.username}</td>--]
+                   [#--<td>${item.password}</td>--]
+                   [#--需要转换--]
+                   [#--[#if genders??]--]
+                       [#--[#list genders as gender]--]
+                       [#--[#if gender.id == item.gender]--]
+                           [#--<td>${gender.name}</td>--]
+                       [#--[/#if]--]
+                       [#--[/#list]--]
+                   [#--[/#if]--]
+                   [#--<td>${item.email}</td>--]
+                   [#--<td>${item.name}</td>--]
+                   [#--<td>${item.department}</td>--]
+                   [#--这里boolean类型 要家个 td-status--]
+                   [#--<td class="td-status">--]
+                       [#--[#if item.isEnabled == true]--]
+                       [#--<span class="label label-success radius">是</span>--]
+                           [#--[#else]--]
+                        [#--<span class="label lable-error radius">否</span>--]
+                       [#--[/#if]--]
+                   [#--</td>--]
+                   [#--<td class="td-status">--]
+                       [#--[#if item.isLocked == true]--]
+                           [#--<span class="label label-success radius">是</span>--]
+                       [#--[#else]--]
+                           [#--<span class="label lable-error radius">否</span>--]
+                       [#--[/#if]--]
+                   [#--</td>--]
+                   [#--<td>${item.loginFailureCount}</td>--]
+                   [#--<td>${item.lockedDate}</td>--]
+                   [#--<td>${item.loginDate}</td>--]
+                   [#--<td>${item.loginIp}</td>--]
+               [#--需要转换--]
+               [#--<td><u style="cursor:pointer" class="text-primary" onclick="member_show('${item.enterprise.name}','enterpriseView.jhtml?id=${item.enterprise.id}','1000${item_index}','360','400')">${item.enterprise.name}</u></td>--]
+                   [#--<td>${item.enterprise}</td>--]
+               [#--需要转换 ,已转换--]
+                   [#--<td>--]
+                       [#--[#if item.roles??]--]
+                         [#--[#list item.roles as role]--]
+                             [#--[#if role_index==0]${role.name}[#else],${role.name}[/#if]--]
+                         [#--[/#list]--]
+                       [#--[/#if]--]
+                   [#--</td>--]
+                   [#--<td class="td-manage">--]
+                       [#--<a title="编辑" href="javascript:;" onclick="member_edit('编辑','edit.jhtml?id=${item.id}','200${item_index}','','510')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>--]
+                       [#--<a title="删除" href="javascript:;" onclick="member_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>--]
+               [#--</tr>--]
+               [#--[/#list]--]
+            [#--[/#if]--]
+            [#--[/#if]--]
             </tbody>
         </table>
     </div>
@@ -72,21 +129,22 @@
 <script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
-    $(function(){
-        $('.table-sort').dataTable({
-            "bProcessing": true,
-            "bServerSide": true,
-            "sPaginationType": "full_numbers",
-            "sAjaxSource":"${base}/admin/admin/list.jhtml",
+            $(function(){
+                $('.table').dataTable({
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sPaginationType": "full_numbers",
+                    "sAjaxSource":"${base}/admin/admin/list.jhtml",
+                    "bAutoWidth": true,//自动宽度
 //            "bPaginate":true,
-//            "aaSorting": [[ 1, "desc" ]],//默认第几个排序
+            "aaSorting": [[ 1, "desc" ]],//默认第几个排序
 //            "bStateSave": false,//状态保存
-            "bFilter": false, //过滤功能
-            "bLengthChange": false, //改变每页显示数据数量
-            "aoColumns": [
-                {"mData": "null", "bSortable": false},
-                {"mData": "id", "bSortable": false},
-                {"mData": "username"},
+                    "bFilter": false, //过滤功能
+                    "bLengthChange": false, //改变每页显示数据数量
+                    "aoColumns": [
+                        {"mData": null},
+                        {"mData": "id", "bSortable": false},
+                        {"mData": "username"},
                 {"mData": "password"},
                 {"mData": "gender",},
                 {"mData": "email"},
@@ -96,39 +154,45 @@
                 {"mData": "isLocked"},
                 {"mData": "loginFailureCount"},
                 {"mData": "lockedDate"},
-                {"mData": "loginDate"},
-                {"mData": "loginIp"},
-                {"mData": "enterprise"},
-                {"mData": "roles"},
-                {"mData": "null", "bSortable": false}
-             ],
-            "aoColumnDefs": [
-                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
-            ],
-            "fnServerData":function ( sSource,aoData, fnCallback) {
+//                {"mData": "loginDate"},
+//                {"mData": "loginIp"},
+//                {"mData": "enterprise"},
+//                {"mData": "roles"},
+//                {"mData": "null", "bSortable": false}
+                    ],
+                    "aoColumnDefs": [
+                        {
+                            "aTargets" : [0],
+                            "mRender" : function (data, display, row) {
+                                return "<input type='checkbox' value='1' name=''>";
+                            }
+                        },
+                        //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                      {"orderable":false,"aTargets":[0]}// 制定列不参与排序
+                    ],
+                    "fnServerData":function ( sSource,aoData, fnCallback) {
 //                alert(aoData);
-                $.ajax({
-                    url : sSource,//这个就是请求地址对应sAjaxSource
-                    data : {"aoData":JSON.stringify(aoData)},//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
-                    type : 'get',
-                    dataType : 'json',
-                    async : false,
-                    success : function(message) {
-                        if( message.type == "success"){
-                            fnCallback(message.data);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
-                        }else{
-                            layer.msg('数据请求失败!',{icon:1,time:1000});
-                        }
-                    },
-                    error : function(msg) {
-                        layer.msg('数据请求失败!',{icon:1,time:1000});
+                        $.ajax({
+                            url : sSource,//这个就是请求地址对应sAjaxSource
+                            data : {"aoData":JSON.stringify(aoData)},//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
+                            type : 'get',
+                            dataType : 'json',
+                            async : false,
+                            success : function(message) {
+                                if( message.type == "success"){
+                                    fnCallback(message.data);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
+                                }else{
+                                    layer.msg('数据请求失败!',{icon:1,time:1000});
+                                }
+                            },
+                            error : function(msg) {
+                                layer.msg('数据请求失败!',{icon:1,time:1000});
+                            }
+                        });
                     }
                 });
-            }
-        });
 
-    });
+            });
     /*用户-添加*/
     function member_add(title,url,w,h){
         layer_show(title,url,w,h);
@@ -163,6 +227,7 @@
             });
         });
     }
+
 </script>
 </body>
 </html>

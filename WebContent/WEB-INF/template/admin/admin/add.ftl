@@ -68,8 +68,8 @@
                 [#if genders??]
                 [#list genders as gender]
                     <div class="radio-box">
-                        <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.key}" checked>
-                        <label for="gender-${gender_index}">${gender.value}</label>
+                        <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.id}" checked>
+                        <label for="gender-${gender_index}">${gender.name}</label>
                     </div>
                 [/#list]
                 [/#if]
