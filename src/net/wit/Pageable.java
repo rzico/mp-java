@@ -95,13 +95,11 @@ public class Pageable implements Serializable {
 	}
 
 	public void bindAo(){
-		System.out.println(aoData);
-		JSONArray ja = new JSONArray();
-		ja.fromObject(aoData);
+		ArrayList<Params> at = new ArrayList<Params>();
+		at = JsonUtils.toObject(aoData,ArrayList.class);
 		Map<String,Object> map = new HashMap<String,Object>();
-		for(int i=0;i<ja.size();i++){
-			JSONObject jsonObj = ja.getJSONObject(i);
-			map.put(jsonObj.getString("name"), jsonObj.get("value"));
+		for(Params params:at){
+			map.put(params.getName(), params.getValue());
 		}
 
 		this.draw = new Long(map.get("sEcho").toString()).intValue();

@@ -5,19 +5,19 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 
 /**
- * @ClassName: xm_company_category
- * @Description:  所属行业
+ * @ClassName: xm_category
+ * @Description:  行业
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_company_category")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_company_category_sequence")
-public class CommanyCategory extends OrderEntity {
+@Table(name = "xm_category")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_category_sequence")
+public class Category extends OrderEntity {
 
 	private static final long serialVersionUID = 104L;
 
@@ -44,12 +44,16 @@ public class CommanyCategory extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 交易佣金 百分比 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
+	private BigDecimal brokerage;
 
-	public CommanyCategory.Status getStatus() {
+	public Category.Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(CommanyCategory.Status status) {
+	public void setStatus(Category.Status status) {
 		this.status = status;
 	}
 
@@ -61,4 +65,11 @@ public class CommanyCategory extends OrderEntity {
 		this.name = name;
 	}
 
+	public BigDecimal getBrokerage() {
+		return brokerage;
+	}
+
+	public void setBrokerage(BigDecimal brokerage) {
+		this.brokerage = brokerage;
+	}
 }

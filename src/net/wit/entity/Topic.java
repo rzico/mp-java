@@ -6,26 +6,37 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
- * Entity - 商家认证
+ * Entity - 专栏
  *
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_company")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_company_sequence")
-public class Company extends BaseEntity {
+@Table(name = "xm_topic")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_topic_sequence")
+public class Topic extends BaseEntity {
+
     private static final long serialVersionUID = 127L;
 
     public static enum Type{
-        /** 公司/企业 */
+        /** 企业 */
          company,
         /** 个体工商户 */
          individual,
         /** 个人 */
          personal
+    };
+
+    public static enum Status{
+        /** 等待 */
+         waiting,
+        /** 通过 */
+         success,
+        /** 驳回 */
+         failure
     };
 
     /** 全称 */
@@ -38,20 +49,35 @@ public class Company extends BaseEntity {
     @Column(columnDefinition="varchar(255) not null comment '简称'")
     private String shortName;
 
-    /** 营业执照/证件 */
+    /** 营业执照/证件号  个人时用证件号 */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '营业执照/证件'")
+    @Column(columnDefinition="varchar(255) comment '上传证件'")
     private String license;
 
-    /** 门头照片 */
+    /** 营业执照号/证件号 */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '门头照片'")
+    @Column(columnDefinition="varchar(255) comment '证件号'")
+    private String licenseCode;
+
+    /** 上传门头 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '上传门头'")
     private String thedoor;
 
-    /** 店内场景 */
+    /** 经营场所 */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '店内场景'")
+    @Column(columnDefinition="varchar(255) comment '经营场所'")
     private String scene;
+
+    /** 状态 */
+    @NotEmpty
+    @Column(columnDefinition="int(11) not null comment '状态 {waiting:等待,success:通过,failure:驳回}'")
+    private Status status;
+
+    /** 到期日 */
+    @NotEmpty
+    @Column(columnDefinition="datetime not null comment '到期日'")
+    private Date expire;
 
     /** 类型 */
     @NotEmpty
@@ -70,7 +96,7 @@ public class Company extends BaseEntity {
     /** 行业 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '行业'")
-    private CommanyCategory commanyCategory;
+    private Category category;
 
     /** 交易佣金 百分比 */
     @Min(0)
@@ -141,19 +167,27 @@ public class Company extends BaseEntity {
         this.address = address;
     }
 
-    public CommanyCategory getCommanyCategory() {
-        return commanyCategory;
-    }
-
-    public void setCommanyCategory(CommanyCategory commanyCategory) {
-        this.commanyCategory = commanyCategory;
-    }
-
     public BigDecimal getBrokerage() {
         return brokerage;
     }
 
     public void setBrokerage(BigDecimal brokerage) {
         this.brokerage = brokerage;
+    }
+
+    public String getLicenseCode() {
+        return licenseCode;
+    }
+
+    public void setLicenseCode(String licenseCode) {
+        this.licenseCode = licenseCode;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
