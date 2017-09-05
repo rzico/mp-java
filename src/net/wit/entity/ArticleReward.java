@@ -1,6 +1,8 @@
 
 package net.wit.entity;
 
+import net.wit.MapEntity;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -133,4 +135,30 @@ public class ArticleReward extends BaseEntity {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapRuthor() {
+		if (getAuthor() != null) {
+			return new MapEntity(getAuthor().getId().toString(), getAuthor().getNickName()+"("+getAuthor().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapArticle() {
+		if (getArticle() != null) {
+			return new MapEntity(getArticle().getId().toString(), getArticle().getTitle());
+		} else {
+			return null;
+		}
+	}
+
 }

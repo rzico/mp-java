@@ -8,6 +8,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -115,6 +116,11 @@ public class Refunds extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Payment payment;
 
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
+	private Member member;
+
 	public Type getType() {
 		return type;
 	}
@@ -203,4 +209,19 @@ public class Refunds extends BaseEntity {
 		this.payment = payment;
 	}
 
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
 }

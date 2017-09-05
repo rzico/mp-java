@@ -27,6 +27,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import net.wit.MapEntity;
 import net.wit.entity.MemberAttribute.Type;
 import net.wit.util.JsonUtils;
 
@@ -769,6 +770,39 @@ public class Member extends BaseEntity {
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public MapEntity getMapArea() {
+		if (getArea() != null) {
+			return new MapEntity(getArea().getId().toString(), getArea().getName());
+		} else {
+			return null;
+		}
+	}
+
+
+	public MapEntity getMapOccupation() {
+		if (getOccupation() != null) {
+			return new MapEntity(getOccupation().getId().toString(), getOccupation().getName());
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapTags() {
+		String tagStr = "";
+		if (getTags() != null) {
+			for (Tag tag:getTags()) {
+				if ("".equals(tagStr)) {
+					tagStr = tag.getName();
+				} else {
+					tagStr = tagStr.concat(","+tag.getName());
+				}
+			}
+			return new MapEntity("",tagStr);
+		} else {
+			return null;
 		}
 	}
 

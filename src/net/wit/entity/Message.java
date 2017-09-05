@@ -19,6 +19,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -152,5 +153,21 @@ public class Message extends BaseEntity {
 
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapReceiver() {
+		if (getReceiver() != null) {
+			return new MapEntity(getReceiver().getId().toString(), getReceiver().getNickName()+"("+getReceiver().getName()+")");
+		} else {
+			return null;
+		}
 	}
 }

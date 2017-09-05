@@ -1,6 +1,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import net.wit.MapEntity;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Store;
@@ -302,4 +303,62 @@ public class Article extends BaseEntity{
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public MapEntity getMapArticleCategory() {
+        if (getArticleCategory() != null) {
+            return new MapEntity(getArticleCategory().getId().toString(), getArticleCategory().getName());
+        } else {
+            return null;
+        }
+    }
+
+    public MapEntity getMapArticleCatalog() {
+        if (getArticleCatalog() != null) {
+            return new MapEntity(getArticleCatalog().getId().toString(), getArticleCatalog().getName());
+        } else {
+            return null;
+        }
+    }
+
+    public MapEntity getMapMember() {
+        if (getMember() != null) {
+            return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+        } else {
+            return null;
+        }
+    }
+
+    public MapEntity getMapArea() {
+        if (getArea() != null) {
+            return new MapEntity(getArea().getId().toString(), getArea().getName());
+        } else {
+            return null;
+        }
+    }
+
+    public MapEntity getMapTags() {
+        String tagStr = "";
+        if (getTags() != null) {
+            for (Tag tag:getTags()) {
+                if ("".equals(tagStr)) {
+                    tagStr = tag.getName();
+                } else {
+                    tagStr = tagStr.concat(","+tag.getName());
+                }
+            }
+            return new MapEntity("",tagStr);
+        } else {
+            return null;
+        }
+    }
+
+
 }

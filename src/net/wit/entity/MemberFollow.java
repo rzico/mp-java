@@ -1,6 +1,8 @@
 
 package net.wit.entity;
 
+import net.wit.MapEntity;
+
 import javax.persistence.*;
 
 /**
@@ -31,4 +33,43 @@ public class MemberFollow extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) comment '关注的'")
 	private Member follow;
 
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Member getFollow() {
+		return follow;
+	}
+
+	public void setFollow(Member follow) {
+		this.follow = follow;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapFollow() {
+		if (getFollow() != null) {
+			return new MapEntity(getFollow().getId().toString(), getFollow().getNickName()+"("+getFollow().getName()+")");
+		} else {
+			return null;
+		}
+	}
 }

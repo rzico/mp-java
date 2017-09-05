@@ -1,5 +1,6 @@
 package net.wit.entity;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -77,4 +78,14 @@ public class Enterprise extends BaseEntity {
     public void setBrokerage(BigDecimal brokerage) {
         this.brokerage = brokerage;
     }
+
+
+    public MapEntity getMapArea() {
+        if (getArea() != null) {
+            return new MapEntity(getArea().getId().toString(), getArea().getName());
+        } else {
+            return null;
+        }
+    }
+
 }
