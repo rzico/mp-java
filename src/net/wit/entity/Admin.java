@@ -233,7 +233,7 @@ public class Admin extends BaseEntity {
 
 	public MapEntity getMapEnterprise() {
 		if (getEnterprise()!=null) {
-			return new MapEntity(getEnterprise().getId(), getEnterprise().getName());
+			return new MapEntity(getEnterprise().getId().toString(), getEnterprise().getName());
 		} else {
 			return null;
 		}
