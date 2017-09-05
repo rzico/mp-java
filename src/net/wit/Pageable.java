@@ -17,7 +17,6 @@ import net.sf.json.JsonConfig;
 import net.sf.json.util.JSONUtils;
 import net.wit.Order.Direction;
 
-import net.wit.controller.admin.model.MapModel;
 import net.wit.util.JsonUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -95,12 +94,15 @@ public class Pageable implements Serializable {
 	}
 
 	public void bindAo(){
-		ArrayList<Params> at = new ArrayList<Params>();
-		at = JsonUtils.toObject(aoData,ArrayList.class);
+		List<Map<String, Object>> at ;
+		at = JsonUtils.toObject(aoData,List.class);
 		Map<String,Object> map = new HashMap<String,Object>();
-		for(Params params:at){
-			map.put(params.getName(), params.getValue());
+		for (int i = 0 ;i < at.size() ;i ++){
+			map.put(at.get(i).get("name").toString(), at.get(i).get("value"));
 		}
+//		for(Params params:at){
+//			map.put(params.getName(), params.getValue());
+//		}
 
 		this.draw = new Long(map.get("sEcho").toString()).intValue();
 		this.pageStart = new Long(map.get("iDisplayStart").toString()).intValue();

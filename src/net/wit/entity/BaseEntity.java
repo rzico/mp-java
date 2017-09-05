@@ -42,7 +42,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @date 2014年10月11日 下午5:32:42
  */
 @JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.PUBLIC_ONLY, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.PUBLIC_ONLY, creatorVisibility = Visibility.NONE)
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @EntityListeners(EntityListener.class)
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {

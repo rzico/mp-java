@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 
-import net.wit.Params;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -133,10 +132,4 @@ public final class JsonUtils {
 
 
 
-	public static void main(String[] args) throws Exception {
-		String d ="[{\"name\":\"sEcho\",\"value\":1},{\"name\":\"iColumns\",\"value\":12},{\"name\":\"sColumns\",\"value\":\",,,,,,,,,,,\"},{\"name\":\"iDisplayStart\",\"value\":0},{\"name\":\"iDisplayLength\",\"value\":10},{\"name\":\"mDataProp_0\",\"value\":null},{\"name\":\"bSortable_0\",\"value\":false},{\"name\":\"mDataProp_1\",\"value\":\"id\"},{\"name\":\"bSortable_1\",\"value\":false},{\"name\":\"mDataProp_2\",\"value\":\"username\"},{\"name\":\"bSortable_2\",\"value\":true},{\"name\":\"mDataProp_3\",\"value\":\"password\"},{\"name\":\"bSortable_3\",\"value\":true},{\"name\":\"mDataProp_4\",\"value\":\"gender\"},{\"name\":\"bSortable_4\",\"value\":true},{\"name\":\"mDataProp_5\",\"value\":\"email\"},{\"name\":\"bSortable_5\",\"value\":true},{\"name\":\"mDataProp_6\",\"value\":\"name\"},{\"name\":\"bSortable_6\",\"value\":true},{\"name\":\"mDataProp_7\",\"value\":\"department\"},{\"name\":\"bSortable_7\",\"value\":true},{\"name\":\"mDataProp_8\",\"value\":\"isEnabled\"},{\"name\":\"bSortable_8\",\"value\":true},{\"name\":\"mDataProp_9\",\"value\":\"isLocked\"},{\"name\":\"bSortable_9\",\"value\":true},{\"name\":\"mDataProp_10\",\"value\":\"loginFailureCount\"},{\"name\":\"bSortable_10\",\"value\":true},{\"name\":\"mDataProp_11\",\"value\":\"lockedDate\"},{\"name\":\"bSortable_11\",\"value\":true},{\"name\":\"iSortCol_0\",\"value\":1},{\"name\":\"sSortDir_0\",\"value\":\"desc\"},{\"name\":\"iSortingCols\",\"value\":1}]";
-		ArrayList<Params> at = new ArrayList<Params>();
-		at = JsonUtils.toObject(d,ArrayList.class);
-		System.out.println(at);
-	}
 }

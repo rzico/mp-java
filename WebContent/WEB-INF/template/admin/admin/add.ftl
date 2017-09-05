@@ -79,7 +79,8 @@
             <label class="form-label col-xs-4 col-sm-2">是否启用：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isEnabled" id="isEnabled" checked>
+                    <input type="checkbox" name="isEnabled" id="isEnabled" value="true" checked>
+                    <input type="hidden" name="_isEnabled" value="false" />
                     <label for="isEnabled">&nbsp;</label>
                 </div>
             </div>
@@ -88,7 +89,8 @@
             <label class="form-label col-xs-4 col-sm-2">是否锁定：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isLocked" id="isLocked" checked>
+                    <input type="checkbox" name="isLocked" id="isLocked" value="true" checked>
+                    <input type="hidden" name="_isLocked" value="false" />'
                     <label for="isLocked">&nbsp;</label>
                 </div>
             </div>
@@ -188,20 +190,23 @@
                         $(form).ajaxSubmit({
                             type: 'post',
                             url: "${base}/admin/admin/save.jhtml" ,
-                            success: function(data){
-                                if(data.type ==  "success"){
-                                    layer.msg('添加成功!',{icon:1,time:1000});
+                            success: function(message){
+                                if(message.type ==  "success"){
+                                    parent.toast('添加成功',1);
+//                                    关闭当前页面
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.add_row(message.data);
+                                    parent.closeWindow(index);
                                 }else{
-                                    layer.msg('添加失败!',{icon:1,time:1000});
+                                    layer.msg('添加失败!',{icon:2,time:1000});
                                 }
+
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
-                                layer.msg('error!',{icon:1,time:1000});
+                                layer.msg('error!',{icon:2,time:1000});
                             }
                         });
-                        var index = parent.layer.getFrameIndex(window.name);
-                        parent.$('.btn-refresh').click();
-                        parent.layer.close(index);
+
                     }
                 });
 

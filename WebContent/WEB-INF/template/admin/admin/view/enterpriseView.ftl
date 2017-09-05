@@ -36,8 +36,8 @@
             <th class="text-r" width="80">类型：</th>
         [#if types??]
             [#list types as type]
-                [#if type.key == enterprise.type]
-                    <td>${type.value}</td>
+                [#if type.id == enterprise.type]
+                    <td>${type.name}</td>
                 [/#if]
             [/#list]
         [/#if]

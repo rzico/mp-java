@@ -202,11 +202,11 @@
                                 if(data.type ==  "success"){
                                     layer.msg('修改成功!',{icon:1,time:1000});
                                 }else{
-                                    layer.msg('修改失败!',{icon:1,time:1000});
+                                    layer.msg('修改失败!',{icon:2,time:1000});
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
-                                layer.msg('error!',{icon:1,time:1000});
+                                layer.msg('error!',{icon:2,time:1000});
                             }
                         });
                         var index = parent.layer.getFrameIndex(window.name);

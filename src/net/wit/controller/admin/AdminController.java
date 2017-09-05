@@ -235,7 +235,7 @@ public class AdminController extends BaseController {
 	 * 列表
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {
+	public String index(ModelMap model) {
 		//常量输出
 		List<MapEntity> genders = new ArrayList<>();
 		genders.add(new MapEntity("male","男"));
@@ -246,18 +246,9 @@ public class AdminController extends BaseController {
 
 		//多对一输出
 		model.addAttribute("enterprises",enterpriseService.findAll());
-
 		//多对一输出
 		model.addAttribute("roles",roleService.findAll());
 
-		//常输的过滤条件
-		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		if (gender!=null) {
-			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
-			filters.add(genderFilter);
-		}
-		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
-		model.addAttribute("page", page);
 		return "/admin/admin/list";
 	}
 
