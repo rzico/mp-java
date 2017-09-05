@@ -7,20 +7,20 @@ package net.wit;
  */
 public class MapEntity {
 	/** id */
-	private Long id;
+	private String id;
 	/** 名称 */
 	private String name;
 
-	public MapEntity(Long id, String name) {
+	public MapEntity(String id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

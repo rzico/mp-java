@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -228,5 +229,13 @@ public class Admin extends BaseEntity {
 
 	public void setEnterprise(Enterprise enterprise) {
 		this.enterprise = enterprise;
+	}
+
+	public MapEntity getMapEnterprise() {
+		if (getEnterprise()!=null) {
+			return new MapEntity(getEnterprise().getId(), getEnterprise().getName());
+		} else {
+			return null;
+		}
 	}
 }
