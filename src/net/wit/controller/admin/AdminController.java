@@ -128,7 +128,7 @@ public class AdminController extends BaseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Message update(Admin admin, Long enterpriseId,Long [] roleIds){
+	public Message update(Admin admin, Long enterpriseId, Long areaId, Long [] roleIds){
 		Admin entity = adminService.find(admin.getId());
 
 		entity.setCreateDate(admin.getCreateDate());
@@ -156,6 +156,8 @@ public class AdminController extends BaseController {
 		entity.setPassword(admin.getPassword());
 
 		entity.setUsername(admin.getUsername());
+
+		entity.setArea(areaService.find(areaId));
 
 		entity.setEnterprise(enterpriseService.find(enterpriseId));
 

@@ -58,7 +58,14 @@
                 <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
             </div>
         </div>
-
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">所在地：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                <span class="fieldSet">
+                    <input type="hidden" id="areaId" name="areaId" value="${(data.area.id)!}" treePath="${(data.area.treePath)!}" />
+                </span>
+                </div>
+            </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>部门：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -159,8 +166,14 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript">
             $(function(){
+                var $areaId = $("#areaId");
+                // 地区选择
+                $areaId.lSelect({
+                    url: "${base}/admin/common/area.jhtml"
+                });
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',

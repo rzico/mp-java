@@ -187,6 +187,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "mapArea",
+                    "sTitle": "所属地区",
+                    "sClass": "center"
+                },
+                {
                     "mData": "mapEnterprise",
                     "sTitle": "企业名",
                     "sClass": "center"
@@ -237,20 +242,8 @@
                             return "<span class=\"label label-success radius\">否</span>";
                         }
                     }
-                }
-                , {
+                }, {
                     "aTargets": [13],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','enterpriseView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-
-                }
-                , {
-                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -261,7 +254,29 @@
 
                 }
                 , {
+                    "aTargets": [14],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','enterpriseView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+
+                }
+                , {
                     "aTargets": [15],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
+                    }
+
+                }
+                , {
+                    "aTargets": [16],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
