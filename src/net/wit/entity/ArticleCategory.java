@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import net.wit.MapEntity;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -184,4 +185,11 @@ public class ArticleCategory extends OrderEntity {
 		return treePaths;
 	}
 
+	public MapEntity getMapArticles() {
+		if (getArticles() != null) {
+			return new MapEntity("","文章("+new Long(getArticles().size()).toString()+")");
+		} else {
+			return new MapEntity("","文章(0)");
+		}
+	}
 }

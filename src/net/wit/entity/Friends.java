@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -79,4 +80,23 @@ public class Friends extends BaseEntity {
 	public void setFriend(Member friend) {
 		this.friend = friend;
 	}
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+
+	public MapEntity getMapFriend() {
+		if (getFriend() != null) {
+			return new MapEntity(getFriend().getId().toString(), getFriend().getNickName()+"("+getFriend().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
 }

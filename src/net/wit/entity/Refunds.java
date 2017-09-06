@@ -8,6 +8,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -57,13 +58,13 @@ public class Refunds extends BaseEntity {
 	 */
 	public enum Status {
 
-		/** 等待支付 */
-		wait,
+		/** 等待退款 */
+		waiting,
 
-		/** 支付成功 */
+		/** 退款成功 */
 		success,
 
-		/** 支付失败 */
+		/** 退款失败 */
 		failure
 	}
 
@@ -81,7 +82,7 @@ public class Refunds extends BaseEntity {
 	private Method method;
 
 	/** 状态 */
-	@Column(columnDefinition="int(11) not null comment '状态 {wait:等待支付,success:支付成功,failure:支付失败}'")
+	@Column(columnDefinition="int(11) not null comment '状态 {waiting:等待退款,success:退款成功,failure:退款失败}'")
 	private Status status;
 
 	/** 支付方式 */
@@ -110,6 +111,15 @@ public class Refunds extends BaseEntity {
 	/** 账单记录 */
 	@OneToOne(mappedBy = "refunds", fetch = FetchType.LAZY)
 	private Deposit deposit;
+
+	/** 付款单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Payment payment;
+
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
+	private Member member;
 
 	public Type getType() {
 		return type;
@@ -191,4 +201,27 @@ public class Refunds extends BaseEntity {
 		this.paymentPluginId = paymentPluginId;
 	}
 
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
 }

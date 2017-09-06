@@ -1,6 +1,8 @@
 
 package net.wit.entity;
 
+import net.wit.MapEntity;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -93,6 +95,14 @@ public class TopicBill extends BaseEntity {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
 	}
 
 }

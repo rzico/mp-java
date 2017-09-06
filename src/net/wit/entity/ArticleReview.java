@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -123,5 +124,21 @@ public class  ArticleReview extends BaseEntity {
 
 	public void setReplyArtcileReviews(Set<ArticleReview> replyArtcileReviews) {
 		this.replyArtcileReviews = replyArtcileReviews;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapArticle() {
+		if (getArticle() != null) {
+			return new MapEntity(getArticle().getId().toString(), getArticle().getTitle());
+		} else {
+			return null;
+		}
 	}
 }

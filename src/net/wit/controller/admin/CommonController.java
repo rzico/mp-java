@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 //import net.wit.entity.Area;
+import net.wit.entity.Area;
 import net.wit.service.*;
 
 import org.apache.commons.io.IOUtils;
@@ -55,6 +56,9 @@ public class CommonController implements ServletContextAware {
 
 	@Resource(name = "rsaServiceImpl")
 	private RSAService rsaService;
+
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
 
 	@Resource(name = "captchaServiceImpl")
 	private CaptchaService captchaService;
@@ -115,6 +119,26 @@ public class CommonController implements ServletContextAware {
 		} finally {
 			IOUtils.closeQuietly(servletOutputStream);
 		}
+	}
+
+	/**
+	 * 地区
+	 */
+	@RequestMapping(value = "/area", method = RequestMethod.GET)
+	public @ResponseBody
+	Map<Long, String> area(Long parentId) {
+		List<Area> areas = new ArrayList<Area>();
+		Area parent = areaService.find(parentId);
+		if (parent != null) {
+			areas = new ArrayList<Area>(parent.getChildren());
+		} else {
+			areas = areaService.findRoots();
+		}
+		Map<Long, String> options = new HashMap<Long, String>();
+		for (Area area : areas) {
+			options.put(area.getId(), area.getName());
+		}
+		return options;
 	}
 
 	/**

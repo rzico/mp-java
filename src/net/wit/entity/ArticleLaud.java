@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -70,5 +71,21 @@ public class ArticleLaud extends BaseEntity {
 
 	public void setArticle(Article article) {
 		this.article = article;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapArticle() {
+		if (getArticle() != null) {
+			return new MapEntity(getArticle().getId().toString(), getArticle().getTitle());
+		} else {
+			return null;
+		}
 	}
 }

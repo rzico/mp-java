@@ -17,6 +17,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -68,13 +69,18 @@ public class Payment extends BaseEntity {
 	public enum Status {
 
 		/** 等待支付 */
-		wait,
-
+		waiting,
 		/** 支付成功 */
 		success,
-
 		/** 支付失败 */
-		failure
+		failure,
+		/** 等待退款 */
+		refund_waiting,
+		/** 退款完成 */
+		refund_success,
+		/** 退款失败 */
+		refund_failure
+
 	}
 
 	/** 编号 */
@@ -91,7 +97,7 @@ public class Payment extends BaseEntity {
 	private Method method;
 
 	/** 状态 */
-	@Column(columnDefinition="int(11) not null comment '状态 {wait:等待支付,success:支付成功,failure:支付失败}'")
+	@Column(columnDefinition="int(11) not null comment '状态 {waiting:等待支付,success:支付成功,failure:支付失败,refund_waiting:等待支付,refund_success:支付成功,refund_failure:支付失败}'")
 	private Status status;
 
 	/** 支付方式 */
@@ -259,4 +265,12 @@ public class Payment extends BaseEntity {
 		}
 	}
 
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
 }

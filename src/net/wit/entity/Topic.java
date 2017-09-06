@@ -1,5 +1,6 @@
 package net.wit.entity;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -69,6 +70,11 @@ public class Topic extends BaseEntity {
     @Column(columnDefinition="varchar(255) comment '经营场所'")
     private String scene;
 
+    /** 会员 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
+    private Member member;
+
     /** 状态 */
     @NotEmpty
     @Column(columnDefinition="int(11) not null comment '状态 {waiting:等待,success:通过,failure:驳回}'")
@@ -102,6 +108,11 @@ public class Topic extends BaseEntity {
     @Min(0)
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
     private BigDecimal brokerage;
+
+    /** 模板 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition="bigint(20) not null comment '模板'")
+    private Template template;
 
     public Type getType() {
         return type;
@@ -189,5 +200,71 @@ public class Topic extends BaseEntity {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Template getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(Template template) {
+        this.template = template;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Date getExpire() {
+        return expire;
+    }
+
+    public void setExpire(Date expire) {
+        this.expire = expire;
+    }
+
+
+    public MapEntity getMapTemplate() {
+        if (getTemplate() != null) {
+            return new MapEntity(getTemplate().getId().toString(), getTemplate().getName());
+        } else {
+            return null;
+        }
+    }
+
+    public MapEntity getMapMember() {
+        if (getMember() != null) {
+            return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+        } else {
+            return null;
+        }
+    }
+
+    public MapEntity getMapArea() {
+        if (getArea() != null) {
+            return new MapEntity(getArea().getId().toString(), getArea().getName());
+        } else {
+            return null;
+        }
+    }
+
+
+    public MapEntity getMapCategory() {
+        if (getCategory() != null) {
+            return new MapEntity(getCategory().getId().toString(), getCategory().getName());
+        } else {
+            return null;
+        }
     }
 }
