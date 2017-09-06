@@ -10,6 +10,7 @@ import net.wit.*;
 
 import net.wit.controller.admin.model.PageModel;
 import net.wit.entity.Role;
+import net.wit.service.AreaService;
 import net.wit.service.RoleService;
 import net.wit.util.MD5Utils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -47,12 +48,15 @@ public class AdminController extends BaseController {
 	@Resource(name = "roleServiceImpl")
 	private RoleService roleService;
 
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
+
 	/**
 	 * 保存
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Message save(Admin admin, Long enterpriseId,Long [] roleIds){
+	public Message save(Admin admin, Long enterpriseId,Long [] roleIds, Long areaId){
 		Admin entity = new Admin();
 
 
@@ -83,6 +87,8 @@ public class AdminController extends BaseController {
 		entity.setUsername(admin.getUsername());
 
 		entity.setEnterprise(enterpriseService.find(enterpriseId));
+
+		entity.setArea(areaService.find(areaId));
 
 		entity.setGender(admin.getGender());
 
@@ -141,7 +147,7 @@ public class AdminController extends BaseController {
 
 		entity.setLoginDate(admin.getLoginDate());
 
-		entity.setLoginFailureCount(admin.getLoginFailureCount());
+		entity.setLoginFailureCount(admin.getLoginFailureCount() == null ? 0 : admin.getLoginFailureCount());
 
 		entity.setLoginIp(admin.getLoginIp());
 

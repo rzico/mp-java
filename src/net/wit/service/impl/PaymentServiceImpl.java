@@ -73,7 +73,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Transactional
 	public void close(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
-		if (payment != null && payment.getStatus() == Payment.Status.wait) {
+		if (payment != null && payment.getStatus() == Payment.Status.waiting) {
 			payment.setMemo("超时关闭");
 			payment.setStatus(Payment.Status.failure);
 			paymentDao.merge(payment);

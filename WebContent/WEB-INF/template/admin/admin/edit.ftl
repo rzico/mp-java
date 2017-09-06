@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
@@ -195,23 +196,30 @@
                     focusCleanup:true,
                     success:"valid",
                     submitHandler:function(form){
+                        var load = layer.msg('加载中', {
+                            icon: 16
+                            ,shade: 0.01
+                        });
                         $(form).ajaxSubmit({
                             type: 'post',
                             url: "${base}/admin/admin/update.jhtml" ,
-                            success: function(data){
-                                if(data.type ==  "success"){
-                                    layer.msg('修改成功!',{icon:1,time:1000});
+                            success: function(message){
+                                layer.close(load);
+                                if(message.type ==  "success"){
+//                                    关闭当前页面
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.add_row(message.data);
+                                    //关闭弹窗并提示
+                                    parent.closeWindow(index, '修改成功');
                                 }else{
-                                    layer.msg('修改失败!',{icon:2,time:1000});
+                                    parent.toast('修改失败',2);
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
-                                layer.msg('error!',{icon:2,time:1000});
+                                layer.close(load);
+                                parent.toast('修改失败',2);
                             }
                         });
-                        var index = parent.layer.getFrameIndex(window.name);
-                        parent.$('.btn-refresh').click();
-                        parent.layer.close(index);
                     }
                 });
 

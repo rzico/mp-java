@@ -20,12 +20,13 @@
 
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
+
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
-
     <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -102,6 +103,14 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">所在地：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="fieldSet">
+                <input type="hidden" id="areaId" name="areaId" treePath="" />
+                </span>
+            </div>
+        </div>
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">所属企业：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
                 [#if enterprises??]
@@ -150,8 +159,16 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
+
         <script type="text/javascript">
             $(function(){
+                var $areaId = $("#areaId");
+                // 地区选择
+                $areaId.lSelect({
+                    url: "${base}/admin/common/area.jhtml"
+                });
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
@@ -166,43 +183,48 @@
                             maxlength:16
                         },
                         password:{
-                            required:true,
+                            required:true
                         },
-//                        password2:{
-//                            required:true,
-//                            equalTo: "#password"
-//                        },
+                        areaId:{
+                            required:true
+                        },
                         sex:{
-                            required:true,
+                            required:true
                         },
                         email:{
                             required:true,
-                            email:true,
+                            email:true
                         },
-                        roles:{
-                            required:true,
+                        roleIds:{
+                            required:true
                         },
                     },
                     onkeyup:false,
                     focusCleanup:true,
                     success:"valid",
+                    ignore:"",
                     submitHandler:function(form){
+                        var load = layer.msg('加载中', {
+                            icon: 16
+                            ,shade: 0.01
+                        });
                         $(form).ajaxSubmit({
                             type: 'post',
                             url: "${base}/admin/admin/save.jhtml" ,
                             success: function(message){
+                                layer.close(load);
                                 if(message.type ==  "success"){
-                                    parent.toast('添加成功',1);
 //                                    关闭当前页面
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
-                                    parent.closeWindow(index);
+                                    parent.closeWindow(index, '添加成功');
                                 }else{
                                     layer.msg('添加失败!',{icon:2,time:1000});
                                 }
 
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
+                                layer.close(load);
                                 layer.msg('error!',{icon:2,time:1000});
                             }
                         });

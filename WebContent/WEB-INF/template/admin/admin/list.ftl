@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css"/>
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin"/>
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <style>
         .center {
             text-align: center;
@@ -57,11 +58,11 @@
                 class="Hui-iconfont">&#xe600;</i> 添加管理员</a></span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
-            <thead>
+            <thead style="width: 100%;">
             <tr class="text-c">
             </tr>
             </thead>
-            <tbody>
+            <tbody style="width: 100%;">
             </tbody>
         </table>
     </div>
@@ -281,7 +282,10 @@
                 var _searchValue = $("#searchvalue").val();
                 /*处理常量*/
                 var _gender =  $('select[name="gender"]').val();
-//                if(_beginDate == null || _beginDate == "")
+                var index = layer.msg('加载中', {
+                    icon: 16
+                    ,shade: 0.01
+                });
                 $.ajax({
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
@@ -295,6 +299,7 @@
                     dataType: 'json',
                     async: false,
                     success: function (message) {
+                        layer.close(index);
                         if (message.type == "success") {
                             fnCallback(message.data);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
                         } else {
@@ -302,6 +307,7 @@
                         }
                     },
                     error: function (msg) {
+                        layer.close(load);
                         layer.msg('数据请求失败!', {icon: 2, time: 1000});
                     }
                 });
@@ -309,14 +315,15 @@
         });
         table = $('.table').DataTable();
     });
+//   表格自适应屏幕
+    window.onresize = function(){
+        $('.table').css('width','100%');
+    }
     /*添加单行*/
     function add_row(data) {
         table.row.add(data).draw();
     }
-    /*更新单行*/
-    function edit_row() {
 
-    }
     /*搜索*/
     function search(){
      table.ajax.reload();
@@ -338,8 +345,9 @@
         layer.msg(msg, {icon: icon, time: 1000});
     }
     /*关闭页面*/
-    function closeWindow(index) {
+    function closeWindow(index, msg) {
         layer.close(index);
+        layer.msg(msg, {icon: 1, time: 1000});
     }
     /*删除全部*/
     function delAll(){
@@ -361,12 +369,16 @@
             return;
         }
         layer.confirm('确认要删除吗？', function (index) {
-
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
             $.ajax({
                 type: 'POST',
                 url: url ,
                 dataType: 'json' ,
                 success: function (data) {
+                    layer.close(load);
                     if (data.type == "success") {
                         table.rows('.selected').remove().draw( false );
                         layer.msg('已删除!', {icon: 1, time: 1000});
@@ -375,6 +387,7 @@
                     }
                 },
                 error: function (data) {
+                    layer.close(load);
                     console.log(data.msg);
                 },
             });
@@ -383,6 +396,10 @@
     /*删除*/
     function del(obj, id) {
         layer.confirm('确认要删除吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
             $.ajax({
                 type: 'POST',
                 data: {
@@ -391,6 +408,7 @@
                 url: '${base}/admin/admin/delete.jhtml',
                 dataType: 'json',
                 success: function (data) {
+                    layer.close(load);
                     if (data.type == "success") {
                         $(obj).parents("tr").addClass("del");
                         table.row('.del').remove().draw( false );
