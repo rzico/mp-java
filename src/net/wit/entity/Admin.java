@@ -131,6 +131,13 @@ public class Admin extends BaseEntity {
     private String loginIp;
 
     /**
+     * 所在地
+     */
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    private  Area area;
+
+    /**
      * 企业名
      */
     @NotNull
@@ -265,6 +272,14 @@ public class Admin extends BaseEntity {
         this.enterprise = enterprise;
     }
 
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
     public MapEntity getMapEnterprise() {
         if (getEnterprise() != null) {
             return new MapEntity(getEnterprise().getId().toString(), getEnterprise().getName());
@@ -289,4 +304,11 @@ public class Admin extends BaseEntity {
         }
     }
 
+    public MapEntity getMapArea() {
+        if (getArea() != null) {
+            return new MapEntity(getArea().getId().toString(), getArea().getName());
+        } else {
+            return null;
+        }
+    }
 }
