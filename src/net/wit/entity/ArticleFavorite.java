@@ -13,8 +13,8 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "xm_article_favorite")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_favorite_sequence")
+@Table(name = "wx_article_favorite")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_favorite_sequence")
 public class ArticleFavorite extends BaseEntity {
 
 	private static final long serialVersionUID = 106L;

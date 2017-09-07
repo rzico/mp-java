@@ -15,8 +15,8 @@ import java.math.BigDecimal;
  */
 
 @Entity
-@Table(name = "xm_article_reward")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_reward_sequence")
+@Table(name = "wx_article_reward")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_reward_sequence")
 public class ArticleReward extends BaseEntity {
 
 	private static final long serialVersionUID = 126L;

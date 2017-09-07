@@ -16,8 +16,8 @@ import java.util.Map;
  * @date 2014年10月14日 上午9:10:23
  */
 @Entity
-@Table(name = "xm_plugin_config")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_plugin_config_sequence")
+@Table(name = "wx_plugin_config")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_plugin_config_sequence")
 public class PluginConfig extends OrderEntity {
 
 	private static final long serialVersionUID = 117L;
@@ -32,7 +32,7 @@ public class PluginConfig extends OrderEntity {
 
 	/** 属性 */
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "xm_plugin_config_attribute")
+	@CollectionTable(name = "wx_plugin_config_attribute")
 	@MapKeyColumn(name = "name", length = 100)
 	private Map<String, String> attributes = new HashMap<String, String>();
 

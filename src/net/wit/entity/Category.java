@@ -9,14 +9,14 @@ import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 /**
- * @ClassName: xm_category
+ * @ClassName: wx_category
  * @Description:  行业
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_category")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_category_sequence")
+@Table(name = "wx_category")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_category_sequence")
 public class Category extends OrderEntity {
 
 	private static final long serialVersionUID = 104L;

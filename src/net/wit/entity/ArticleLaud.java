@@ -17,8 +17,8 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "xm_article_laud")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_laud_sequence")
+@Table(name = "wx_article_laud")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_laud_sequence")
 public class ArticleLaud extends BaseEntity {
 
 	private static final long serialVersionUID = 107L;

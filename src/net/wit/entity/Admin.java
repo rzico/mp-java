@@ -19,8 +19,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_admin")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_admin_sequence")
+@Table(name = "wx_admin")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_admin_sequence")
 public class Admin extends BaseEntity {
 
     /**
@@ -150,7 +150,7 @@ public class Admin extends BaseEntity {
      */
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "xm_admin_role")
+    @JoinTable(name = "wx_admin_role")
     private List<Role> roles = new ArrayList<>();
 
     /**

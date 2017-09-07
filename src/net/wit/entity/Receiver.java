@@ -25,8 +25,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_receiver")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_receiver_sequence")
+@Table(name = "wx_receiver")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_receiver_sequence")
 public class Receiver extends BaseEntity {
 
 	private static final long serialVersionUID = 118L;

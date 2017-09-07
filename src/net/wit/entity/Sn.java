@@ -16,8 +16,8 @@ import javax.persistence.Table;
  * @version 3.0
  */
 @Entity
-@Table(name = "xm_sn")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_sn_sequence")
+@Table(name = "wx_sn")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_sn_sequence")
 public class Sn extends BaseEntity {
 
 	private static final long serialVersionUID = 122L;

@@ -15,8 +15,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_area")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_area_sequence")
+@Table(name = "wx_area")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_area_sequence")
 public class Area extends OrderEntity {
 
 	private static final long serialVersionUID = -102L;

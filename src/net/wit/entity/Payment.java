@@ -27,8 +27,8 @@ import org.hibernate.validator.constraints.Length;
  * @version 3.0
  */
 @Entity
-@Table(name = "xm_payment")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_payment_sequence")
+@Table(name = "wx_payment")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_payment_sequence")
 public class Payment extends BaseEntity {
 
 	private static final long serialVersionUID = 116L;

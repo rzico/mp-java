@@ -14,8 +14,8 @@ import java.math.BigDecimal;
  */
 
 @Entity
-@Table(name = "xm_topic_bill")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_topic_bill_sequence")
+@Table(name = "wx_topic_bill")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_topic_bill_sequence")
 public class TopicBill extends BaseEntity {
 
 	private static final long serialVersionUID = 126L;

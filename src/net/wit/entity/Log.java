@@ -13,8 +13,8 @@ import javax.persistence.Table;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_log")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_log_sequence")
+@Table(name = "wx_log")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_log_sequence")
 public class Log extends BaseEntity {
 
 	private static final long serialVersionUID = 112L;

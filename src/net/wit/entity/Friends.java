@@ -22,8 +22,8 @@ import org.hibernate.validator.constraints.Length;
  */
 
 @Entity
-@Table(name = "xm_friends")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_friends_sequence")
+@Table(name = "wx_friends")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_friends_sequence")
 public class Friends extends BaseEntity {
 
 	private static final long serialVersionUID = 111L;
@@ -43,9 +43,34 @@ public class Friends extends BaseEntity {
 		black
 	}
 
+	/**
+	 * 类型
+	 */
+	public enum Type {
+
+		/** 好友 */
+		friend,
+
+		/** 会员 */
+		customer,
+
+		/** 一级代理 */
+		vip1,
+
+		/** 二级代理 */
+		vip2,
+
+		/** 三级代理 */
+		vip3
+	}
+
 	/** 状态 */
 	@JoinColumn(columnDefinition="int(11) not null comment '状态 {ask:申请,adopt:通过,black:拉黑}'")
 	private Status Status;
+
+	/** 类型 */
+	@JoinColumn(columnDefinition="int(11) not null comment '类型 {friend:好友,customer:会员,vip1:一级代理,vip2:二级代理,vip3:三级代理}'")
+	private Type type;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -81,6 +106,13 @@ public class Friends extends BaseEntity {
 		this.friend = friend;
 	}
 
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {

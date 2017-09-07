@@ -29,8 +29,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 
 @Entity
-@Table(name = "xm_article_review")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_review_sequence")
+@Table(name = "wx_article_review")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_review_sequence")
 public class  ArticleReview extends BaseEntity {
 
 	private static final long serialVersionUID = 109L;

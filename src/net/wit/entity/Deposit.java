@@ -22,8 +22,8 @@ import org.hibernate.validator.constraints.Length;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_deposit")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_deposit_sequence")
+@Table(name = "wx_deposit")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_deposit_sequence")
 public class Deposit extends BaseEntity {
 
 	private static final long serialVersionUID = 110L;
