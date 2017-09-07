@@ -90,6 +90,7 @@
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
                     <input type="checkbox" name="isEnabled" id="isEnabled" [#if data.isEnabled?? && data.isEnabled]checked[/#if]>
+                    <input type="hidden" name="_isEnabled" value="false" />'
                     <label for="isEnabled">&nbsp;</label>
                 </div>
             </div>
@@ -99,6 +100,7 @@
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
                     <input type="checkbox" name="isLocked" id="isLocked" [#if data.isLocked?? && data.isLocked]checked[/#if]>
+                    <input type="hidden" name="_isLocked" value="false" />'
                     <label for="isLocked">&nbsp;</label>
                 </div>
             </div>
