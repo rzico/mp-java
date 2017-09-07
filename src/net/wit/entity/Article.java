@@ -12,10 +12,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @ClassName: Article
@@ -25,8 +22,8 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "xm_article")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_sequence")
+@Table(name = "wx_article")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_sequence")
 public class Article extends BaseEntity{
 
     private static final long serialVersionUID = 103L;
@@ -129,7 +126,7 @@ public class Article extends BaseEntity{
 
     /** 文章标签*/
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "xm_article_tag")
+    @JoinTable(name = "wx_article_tag")
     @OrderBy("order asc")
     private Set<Tag> tags = new HashSet<Tag>();
 
@@ -144,6 +141,15 @@ public class Article extends BaseEntity{
     /** 评论者*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<ArticleReview> reviews = new HashSet<ArticleReview>();
+
+    /** 商品*/
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
+
+    /** 投票项 */
+    @ElementCollection
+    @CollectionTable(name = "wx_article_vote_option")
+    private List<String> voteOptions = new ArrayList<String>();
 
     public String getAuthor() {
         return author;
@@ -325,6 +331,14 @@ public class Article extends BaseEntity{
         this.template = template;
     }
 
+    public List<String> getVoteOptions() {
+        return voteOptions;
+    }
+
+    public void setVoteOptions(List<String> voteOptions) {
+        this.voteOptions = voteOptions;
+    }
+
     public MapEntity getMapTemplate() {
         if (getTemplate() != null) {
             return new MapEntity(getTemplate().getId().toString(), getTemplate().getName());
@@ -381,5 +395,11 @@ public class Article extends BaseEntity{
         }
     }
 
+    public Set<ArticleProduct> getProducts() {
+        return products;
+    }
 
+    public void setProducts(Set<ArticleProduct> products) {
+        this.products = products;
+    }
 }

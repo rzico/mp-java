@@ -24,8 +24,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_role")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_role_sequence")
+@Table(name = "wx_role")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_role_sequence")
 public class Role extends BaseEntity {
 
 	private static final long serialVersionUID = 120L;
@@ -47,7 +47,7 @@ public class Role extends BaseEntity {
 
 	/** 权限 */
 	@ElementCollection
-	@CollectionTable(name = "xm_role_authority")
+	@CollectionTable(name = "wx_role_authority")
 	private List<String> authorities = new ArrayList<String>();
 
 	/** 管理员 */

@@ -2,52 +2,42 @@
 package net.wit.entity;
 
 import net.wit.MapEntity;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigDecimal;
 
 /**
- * @ClassName: ArticleLaud
- * @Description:  文章点赞
+ * @ClassName: ArticleVote
+ * @Description:  文章投票
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 
 @Entity
-@Table(name = "wx_article_laud")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_laud_sequence")
-public class ArticleLaud extends BaseEntity {
+@Table(name = "wx_article_vote")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_vote_sequence")
+public class ArticleVote extends BaseEntity {
 
-	private static final long serialVersionUID = 107L;
-
-	/** 是否显示 */
-	@Column(nullable = false)
-	private Boolean isShow;
+	private static final long serialVersionUID = 126L;
 
 	/** IP */
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment 'IP'")
 	private String ip;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '会员'")
 	private Member member;
+
+	/** 作者 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '作者'")
+	private Member author;
 
 	/** 文章 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '文章'")
 	private Article article;
-
-	public Boolean getShow() {
-		return isShow;
-	}
-
-	public void setShow(Boolean show) {
-		isShow = show;
-	}
 
 	public String getIp() {
 		return ip;
@@ -63,6 +53,14 @@ public class ArticleLaud extends BaseEntity {
 
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	public Member getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Member author) {
+		this.author = author;
 	}
 
 	public Article getArticle() {
@@ -81,6 +79,14 @@ public class ArticleLaud extends BaseEntity {
 		}
 	}
 
+	public MapEntity getMapRuthor() {
+		if (getAuthor() != null) {
+			return new MapEntity(getAuthor().getId().toString(), getAuthor().getNickName()+"("+getAuthor().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
 	public MapEntity getMapArticle() {
 		if (getArticle() != null) {
 			return new MapEntity(getArticle().getId().toString(), getArticle().getTitle());
@@ -88,4 +94,5 @@ public class ArticleLaud extends BaseEntity {
 			return null;
 		}
 	}
+
 }

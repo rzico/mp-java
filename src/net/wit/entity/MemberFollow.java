@@ -13,8 +13,8 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "xm_member_follow")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_member_follow_sequence")
+@Table(name = "wx_member_follow")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_member_follow_sequence")
 public class MemberFollow extends BaseEntity {
 
 	private static final long serialVersionUID = 128L;

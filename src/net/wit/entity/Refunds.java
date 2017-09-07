@@ -18,8 +18,8 @@ import org.hibernate.validator.constraints.Length;
  * @version 3.0
  */
 @Entity
-@Table(name = "xm_refunds")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_refunds_sequence")
+@Table(name = "wx_refunds")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_refunds_sequence")
 public class Refunds extends BaseEntity {
 
 	private static final long serialVersionUID = 119L;
@@ -120,6 +120,11 @@ public class Refunds extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
 	private Member member;
+
+	/** 订单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orders", nullable = false, updatable = false)
+	private Order order;
 
 	public Type getType() {
 		return type;

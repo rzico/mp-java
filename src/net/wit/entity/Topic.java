@@ -16,8 +16,8 @@ import java.util.Date;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_topic")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_topic_sequence")
+@Table(name = "wx_topic")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_topic_sequence")
 public class Topic extends BaseEntity {
 
     private static final long serialVersionUID = 127L;

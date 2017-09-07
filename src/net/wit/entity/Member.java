@@ -46,7 +46,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 
 @Entity
-@Table(name = "xm_member")
+@Table(name = "wx_member")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "x_member_sequence")
 public class Member extends BaseEntity {
 
@@ -251,7 +251,7 @@ public class Member extends BaseEntity {
 
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "xm_member_tag")
+	@JoinTable(name = "wx_member_tag")
 	@OrderBy("order asc")
 	private Set<Tag> tags = new HashSet<Tag>();
 
@@ -271,6 +271,10 @@ public class Member extends BaseEntity {
 	/** 收藏文章*/
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<ArticleFavorite> favorites = new HashSet<ArticleFavorite>();
+
+	/** 我的好友*/
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<Friends> friends = new HashSet<Friends>();
 
 	/** 我的关注*/
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -622,6 +626,14 @@ public class Member extends BaseEntity {
 
 	public void setOccupation(Occupation occupation) {
 		this.occupation = occupation;
+	}
+
+	public Set<Friends> getFriends() {
+		return friends;
+	}
+
+	public void setFriends(Set<Friends> friends) {
+		this.friends = friends;
 	}
 
 	/**

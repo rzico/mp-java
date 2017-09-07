@@ -15,8 +15,8 @@ import java.util.Set;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_occupation")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_occupation_sequence")
+@Table(name = "wx_occupation")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_occupation_sequence")
 public class Occupation extends OrderEntity {
 
 	private static final long serialVersionUID = 104L;

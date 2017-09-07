@@ -20,8 +20,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_article_catalog")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_article_catalog_sequence")
+@Table(name = "wx_article_catalog")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_catalog_sequence")
 public class ArticleCatalog extends OrderEntity {
 
 	private static final long serialVersionUID = 104L;

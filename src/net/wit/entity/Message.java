@@ -31,8 +31,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version 3.0
  */
 @Entity
-@Table(name = "xm_message")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_message_sequence")
+@Table(name = "wx_message")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_message_sequence")
 public class Message extends BaseEntity {
 
 	private static final long serialVersionUID = 115L;

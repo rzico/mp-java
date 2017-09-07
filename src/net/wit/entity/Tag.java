@@ -15,8 +15,8 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "xm_tag")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_tag_sequence")
+@Table(name = "wx_tag")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_tag_sequence")
 public class Tag extends OrderEntity{
 
     private static final long serialVersionUID = 125L;

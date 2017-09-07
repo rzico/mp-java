@@ -21,8 +21,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @version 3.0
  */
 @Entity
-@Table(name = "xm_member_attribute")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_member_attribute_sequence")
+@Table(name = "wx_member_attribute")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_member_attribute_sequence")
 public class MemberAttribute extends OrderEntity {
 
 	private static final long serialVersionUID = 114L;
@@ -93,7 +93,7 @@ public class MemberAttribute extends OrderEntity {
 
 	/** 可选项 */
 	@ElementCollection
-	@CollectionTable(name = "xm_member_attribute_option")
+	@CollectionTable(name = "wx_member_attribute_option")
 	private List<String> options = new ArrayList<String>();
 
 	/**

@@ -16,8 +16,8 @@ import java.util.Set;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "xm_template")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "xm_template_sequence")
+@Table(name = "wx_template")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_template_sequence")
 public class Template extends OrderEntity {
 
 	private static final long serialVersionUID = 104L;
