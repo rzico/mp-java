@@ -29,12 +29,6 @@ public class Principal implements Serializable {
 	/** 用户名 */
 	private String username;
 
-	/** 时间戳 */
-	private String timestamp;
-	
-	/** 签名 */
-	private String sign;
-	
 	public Principal() {
 	}
 	
@@ -85,44 +79,6 @@ public class Principal implements Serializable {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	/**
-	 * 获取时间戳
-	 * 
-	 * @return 时间戳
-	 */
-	public String getTimestamp() {
-		return timestamp;
-	}
-
-	/**
-	 * 设置时间戳
-	 * 
-	 * @param timestamp
-	 *            时间戳
-	 */
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	/**
-	 * 获取签名
-	 * 
-	 * @return 签名
-	 */
-	public String getSign() {
-		return sign;
-	}
-
-	/**
-	 * 设置签名
-	 * 
-	 * @param sign
-	 *            签名
-	 */
-	public void setSign(String sign) {
-		this.sign = sign;
 	}
 
 	@Override
