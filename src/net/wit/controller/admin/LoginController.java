@@ -70,8 +70,8 @@ public class LoginController extends BaseController {
      * 登录提交
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
-    public
     @ResponseBody
+    public
     Message submit(String captchaId, String captcha,Boolean rememberMe, String username, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         try {
             String password = rsaService.decryptParameter("enPassword", request);
@@ -80,7 +80,7 @@ public class LoginController extends BaseController {
             if (!captchaService.isValid(captchaId, captcha)) {
                 return Message.error("admin.captcha.invalid");
             }
-            //              //用户校验
+            //用户校验
             Admin admin = adminService.findByUsername(username);
             if (admin == null) {
                  return Message.error("无效用户名");
