@@ -14,18 +14,19 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "wx_db_cache")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_db_cache_sequence")
-public class DbCache extends OrderEntity{
+@Table(name = "wx_redis")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_redis_sequence")
+public class Redis extends OrderEntity{
 
     private static final long serialVersionUID = 125L;
 
     /*key*/
-    @Column(nullable = false, updatable = false, unique = true)
+    @Column(nullable = false, updatable = false, unique = true,columnDefinition="varchar(50) not null unique comment '缓存'")
     private String key;
 
     /*value*/
     @Lob
+    @Column(nullable = false,columnDefinition="longtext not null unique comment '内容'")
     private String value;
 
     public String getKey() {
