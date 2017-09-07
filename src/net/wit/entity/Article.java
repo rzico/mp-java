@@ -12,10 +12,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @ClassName: Article
@@ -148,6 +145,11 @@ public class Article extends BaseEntity{
     /** 商品*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
+
+    /** 投票项 */
+    @ElementCollection
+    @CollectionTable(name = "wx_article_vote_option")
+    private List<String> voteOptions = new ArrayList<String>();
 
     public String getAuthor() {
         return author;
@@ -327,6 +329,14 @@ public class Article extends BaseEntity{
 
     public void setTemplate(Template template) {
         this.template = template;
+    }
+
+    public List<String> getVoteOptions() {
+        return voteOptions;
+    }
+
+    public void setVoteOptions(List<String> voteOptions) {
+        this.voteOptions = voteOptions;
     }
 
     public MapEntity getMapTemplate() {

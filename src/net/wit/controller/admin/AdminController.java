@@ -153,7 +153,7 @@ public class AdminController extends BaseController {
 
 		entity.setName(admin.getName());
 
-		entity.setPassword(admin.getPassword());
+		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
 
 		entity.setUsername(admin.getUsername());
 
