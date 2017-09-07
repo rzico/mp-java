@@ -24,6 +24,7 @@ public class Goods extends BaseEntity {
 	private static final long serialVersionUID = 901L;
 
 	/** 商品 */
+	@OneToMany(mappedBy = "goods", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Product> products = new HashSet<Product>();
 
 	/**
@@ -31,7 +32,6 @@ public class Goods extends BaseEntity {
 	 * 
 	 * @return 商品
 	 */
-	@OneToMany(mappedBy = "goods", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	public Set<Product> getProducts() {
 		return products;
 	}

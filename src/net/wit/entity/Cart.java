@@ -48,12 +48,15 @@ public class Cart extends BaseEntity {
 	public static final String KEY_COOKIE_NAME = "cartKey";
 
 	/** 密钥 */
+	@Column(name = "cart_key", nullable = false, updatable = false)
 	private String key;
 
 	/** 买方 */
+	@OneToOne(fetch = FetchType.LAZY)
 	private Member member;
 
 	/** 购物车项 */
+	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<CartItem> cartItems = new HashSet<CartItem>();
 
 	/**
@@ -61,7 +64,6 @@ public class Cart extends BaseEntity {
 	 * 
 	 * @return 密钥
 	 */
-	@Column(name = "cart_key", nullable = false, updatable = false)
 	public String getKey() {
 		return key;
 	}
@@ -81,7 +83,6 @@ public class Cart extends BaseEntity {
 	 * 
 	 * @return 会员
 	 */
-	@OneToOne(fetch = FetchType.LAZY)
 	public Member getMember() {
 		return member;
 	}
@@ -101,7 +102,6 @@ public class Cart extends BaseEntity {
 	 * 
 	 * @return 购物车项
 	 */
-	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	public Set<CartItem> getCartItems() {
 		return cartItems;
 	}

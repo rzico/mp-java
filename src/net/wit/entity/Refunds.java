@@ -121,6 +121,11 @@ public class Refunds extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
 	private Member member;
 
+	/** 订单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orders", nullable = false, updatable = false)
+	private Order order;
+
 	public Type getType() {
 		return type;
 	}

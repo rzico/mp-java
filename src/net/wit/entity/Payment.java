@@ -137,8 +137,13 @@ public class Payment extends BaseEntity {
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
+	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
+
+	/** 订单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orders", nullable = false, updatable = false)
+	private Order order;
 
 	public String getSn() {
 		return sn;

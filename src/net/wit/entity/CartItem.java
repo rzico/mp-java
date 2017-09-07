@@ -32,21 +32,22 @@ public class CartItem extends BaseEntity {
 	public static final Integer MAX_QUANTITY = 10000;
 
 	/** 数量 */
+	@Column(nullable = false)
 	private Integer quantity;
 
 	/** 商品 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
 	private Product product;
 
 	/** 购物车 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
 	private Cart cart;
 
-	/** 临时商品价格 */
-	private BigDecimal tempPrice;
-
-	/** 临时赠送积分 */
-	private Long tempPoint;
-
 	/** 卖方 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
 	private Member seller;
 
 	public Member getSeller() {
@@ -62,7 +63,6 @@ public class CartItem extends BaseEntity {
 	 * 
 	 * @return 数量
 	 */
-	@Column(nullable = false)
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -82,8 +82,6 @@ public class CartItem extends BaseEntity {
 	 * 
 	 * @return 商品
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
 	public Product getProduct() {
 		return product;
 	}
@@ -103,8 +101,6 @@ public class CartItem extends BaseEntity {
 	 * 
 	 * @return 购物车
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
 	public Cart getCart() {
 		return cart;
 	}
@@ -117,54 +113,6 @@ public class CartItem extends BaseEntity {
 	 */
 	public void setCart(Cart cart) {
 		this.cart = cart;
-	}
-
-	/**
-	 * 获取临时商品价格
-	 * 
-	 * @return 临时商品价格
-	 */
-	@Transient
-	public BigDecimal getTempPrice() {
-		if (tempPrice == null) {
-			return getSubtotal();
-		}
-		return tempPrice;
-	}
-
-	/**
-	 * 设置临时商品价格
-	 * 
-	 * @param tempPrice
-	 *            临时商品价格
-	 */
-	@Transient
-	public void setTempPrice(BigDecimal tempPrice) {
-		this.tempPrice = tempPrice;
-	}
-
-	/**
-	 * 获取临时赠送积分
-	 * 
-	 * @return 临时赠送积分
-	 */
-	@Transient
-	public Long getTempPoint() {
-		if (tempPoint == null) {
-			return getPoint();
-		}
-		return tempPoint;
-	}
-
-	/**
-	 * 设置临时赠送积分
-	 * 
-	 * @param tempPoint
-	 *            临时赠送积分
-	 */
-	@Transient
-	public void setTempPoint(Long tempPoint) {
-		this.tempPoint = tempPoint;
 	}
 
 	/**
