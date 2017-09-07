@@ -93,7 +93,6 @@
             $.ajax({
                 url: "${base}/admin/common/public_key.jhtml",
                 type: "GET",
-                dataType: "json",
                 cache: false,
                 beforeSend: function() {
                     $submit.prop("disabled", true);
@@ -112,9 +111,9 @@
                             captchaId: "${captchaId}",
                             captcha: $captcha.val()
                         },
-                        dataType: "json",
                         cache: false,
                         success: function(message) {
+                            alert(1);
                             $submit.prop("disabled", false);
                             if (message.type == "success") {
                             [#if redirectUrl??]
@@ -129,12 +128,20 @@
                             }
                         },
                         error:function(message) {
+                            $submit.prop("disabled", false);
                             layer.msg(message.content,{icon:1,time:5000});
                             $captcha.val("");
                             $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
                         }
                     });
+                },
+                error:function(message) {
+                    $submit.prop("disabled", false);
+                    layer.msg(message.content,{icon:1,time:5000});
+                    $captcha.val("");
+                    $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
                 }
+
             });
         }
     });

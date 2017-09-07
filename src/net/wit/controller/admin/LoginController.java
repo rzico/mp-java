@@ -76,7 +76,11 @@ public class LoginController extends BaseController {
         try {
             String password = rsaService.decryptParameter("enPassword", request);
             rsaService.removePrivateKey(request);
-//              //用户校验
+
+            if (!captchaService.isValid(captchaId, captcha)) {
+                return Message.error("admin.captcha.invalid");
+            }
+            //              //用户校验
             Admin admin = adminService.findByUsername(username);
             if (admin == null) {
                  return Message.error("无效用户名");

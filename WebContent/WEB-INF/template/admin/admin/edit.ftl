@@ -172,6 +172,7 @@
         <script type="text/javascript">
             $(function(){
                 var $areaId = $("#areaId");
+                var $submit = $(":submit");
                 // 地区选择
                 $areaId.lSelect({
                     url: "${base}/admin/common/area.jhtml"
@@ -218,6 +219,9 @@
                         $(form).ajaxSubmit({
                             type: 'post',
                             url: "${base}/admin/admin/update.jhtml" ,
+                            beforeSend: function() {
+                                $submit.prop("disabled", true);
+                            },
                             success: function(message){
                                 layer.close(load);
                                 if(message.type ==  "success"){
@@ -227,10 +231,12 @@
                                     //关闭弹窗并提示
                                     parent.closeWindow(index, '修改成功');
                                 }else{
+                                    $submit.prop("disabled", false);
                                     parent.toast('修改失败',2);
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
+                                $submit.prop("disabled", false);
                                 layer.close(load);
                                 parent.toast('修改失败',2);
                             }
