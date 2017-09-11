@@ -80,7 +80,25 @@
 <script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
     var table;
+    var isSelectAll = false;
+    var idTitleChange = function(){
+        if(!isSelectAll){
+            $('tbody').find("input[name='ids']:checkbox").prop('checked', true);
+        }else{
+            $('tbody').find("input[name='ids']:checkbox").removeProp('checked');
+        }
+        isSelectAll = !isSelectAll;
+
+    }
     $(function () {
+//        $(":checkbox").each(function(){
+//            if($(this).prop("checked")){
+//                $(this).prop("checked",false);
+//            }else{
+//                $(this).prop("checked",true);
+//            }
+//        });
+
         $('.table').DataTable({
             "bProcessing": true,
             "bServerSide": true,
@@ -124,7 +142,7 @@
                 {
                     "mData": "id",
                     "sClass": "center",
-                    "sTitle": "<input type=\"checkbox\" name=\"\" value=\"\">",
+                    "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
                     "mData": "id", "bSortable": false,
