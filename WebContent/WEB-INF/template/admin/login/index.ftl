@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
-    <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
+    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/respond.min.js"></script>
     <![endif]-->
-    <link href="${base}/resources/admin/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="${base}/resources/admin/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
-    <link href="${base}/resources/admin/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.rzico.com/weex/resources/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.rzico.com/weex/resources/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
     <!--[if IE 6]>
-    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <title>后台登录</title>
@@ -62,13 +62,14 @@
 </div>
 
 <div class="footer">Copyright ${setting.company} ${setting.siteName} v1.0</div>
-<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
 <script type="text/javascript">
+
     var $loginForm = $("#loginForm");
     var $username = $("#username");
     var $password = $("#password");
@@ -82,6 +83,7 @@
     $captchaClick.click(function() {
         $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
     });
+
     // 表单验证、记住用户名
     $loginForm.validate({
         rules: {
@@ -93,7 +95,6 @@
             $.ajax({
                 url: "${base}/admin/common/public_key.jhtml",
                 type: "GET",
-                dataType: "json",
                 cache: false,
                 beforeSend: function() {
                     $submit.prop("disabled", true);
@@ -112,7 +113,6 @@
                             captchaId: "${captchaId}",
                             captcha: $captcha.val()
                         },
-                        dataType: "json",
                         cache: false,
                         success: function(message) {
                             $submit.prop("disabled", false);
@@ -129,12 +129,20 @@
                             }
                         },
                         error:function(message) {
+                            $submit.prop("disabled", false);
                             layer.msg(message.content,{icon:1,time:5000});
                             $captcha.val("");
                             $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
                         }
                     });
+                },
+                error:function(message) {
+                    $submit.prop("disabled", false);
+                    layer.msg(message.content,{icon:1,time:5000});
+                    $captcha.val("");
+                    $captchaImage.attr("src", "${base}/admin/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
                 }
+
             });
         }
     });
