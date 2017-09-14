@@ -27,7 +27,7 @@ import net.wit.service.PluginConfigService;
 /**
  * @ClassName: PluginConfigDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:8
  */
  
  
@@ -83,18 +83,7 @@ public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long>
 		super.delete(pluginConfig);
 	}
 
-
-	@Transactional(readOnly = true)
-	public boolean pluginIdExists(String pluginId) {
-		return pluginConfigDao.pluginIdExists(pluginId);
-	}
-
-	@Transactional(readOnly = true)
-	public PluginConfig findByPluginId(String pluginId) {
-		return pluginConfigDao.findByPluginId(pluginId);
-	}
-
 	public Page<PluginConfig> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return pluginConfigDao.findPage(beginDate,endDate,pageable);
+		return pluginConfigDao.findPage(beginDate,endDate,pageable);
 	}
 }

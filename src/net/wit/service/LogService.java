@@ -1,23 +1,20 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.service;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import net.wit.Page;
+import net.wit.Pageable;
 import net.wit.entity.Log;
 
 /**
- * Service - 日志
- * 
- * @author rsico Team
- * @version 3.0
+ * @ClassName: LogService
+ * @author 降魔战队
+ * @date 2017-9-14 19:42:8
  */
+
 public interface LogService extends BaseService<Log, Long> {
-
-	/**
-	 * 清空日志
-	 */
-	void clear();
-
+	Page<Log> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

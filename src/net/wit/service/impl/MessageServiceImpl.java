@@ -27,7 +27,7 @@ import net.wit.service.MessageService;
 /**
  * @ClassName: MessageDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:8
  */
  
  
@@ -84,6 +84,6 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	}
 
 	public Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return messageDao.findPage(beginDate,endDate,pageable);
+		return messageDao.findPage(beginDate,endDate,pageable);
 	}
 }

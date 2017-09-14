@@ -28,7 +28,10 @@ public class Topic extends BaseEntity {
         /** 个体工商户 */
          individual,
         /** 个人 */
-         personal
+         personal,
+        /** 学生 */
+         student
+
     };
 
     public static enum Status{
@@ -87,7 +90,7 @@ public class Topic extends BaseEntity {
 
     /** 类型 */
     @NotEmpty
-    @Column(columnDefinition="int(11) not null comment '类型 {company:公司/企业,individual:个体工商户,personal:个人}'")
+    @Column(columnDefinition="int(11) not null comment '类型 {company:公司/企业,individual:个体工商户,personal:个人,student:学生}'")
     private Type type;
 
     /** 地区 null 代表没有区域限制 */

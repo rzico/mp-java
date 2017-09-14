@@ -12,9 +12,9 @@ import net.wit.entity.ArticleCatalog;
 /**
  * @ClassName: ArticleCatalogService
  * @author 降魔战队
- * @date 2017-9-3 20:35:56
+ * @date 2017-9-14 19:42:7
  */
 
 public interface ArticleCatalogService extends BaseService<ArticleCatalog, Long> {
-	Page<ArticleCatalog> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<ArticleCatalog> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

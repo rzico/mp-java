@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -35,6 +36,11 @@ public class ProductStock extends BaseEntity {
 	/** 卖家 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member seller;
+
+	/** 是否删除 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否删除'")
+	private Boolean deleted;
 
 	public Integer getStock() {
 		return stock;
@@ -66,6 +72,14 @@ public class ProductStock extends BaseEntity {
 
 	public void setSeller(Member seller) {
 		this.seller = seller;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	/**

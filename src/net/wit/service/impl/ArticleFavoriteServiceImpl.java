@@ -27,7 +27,7 @@ import net.wit.service.ArticleFavoriteService;
 /**
  * @ClassName: ArticleFavoriteDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:58
+ * @date 2017-9-14 19:42:7
  */
  
  
@@ -84,6 +84,6 @@ public class ArticleFavoriteServiceImpl extends BaseServiceImpl<ArticleFavorite,
 	}
 
 	public Page<ArticleFavorite> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return articleFavoriteDao.findPage(beginDate,endDate,pageable);
+		return articleFavoriteDao.findPage(beginDate,endDate,pageable);
 	}
 }

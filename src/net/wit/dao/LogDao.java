@@ -1,23 +1,30 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.dao;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import net.wit.Page;
+import net.wit.Pageable;
 import net.wit.entity.Log;
 
+
 /**
- * Dao - 日志
- * 
- * @author rsico Team
- * @version 3.0
+ * @ClassName: LogDao
+ * @author 降魔战队
+ * @date 2017-9-14 19:42:5
  */
+ 
+
 public interface LogDao extends BaseDao<Log, Long> {
-
 	/**
-	 * 删除所有日志
+	 * @Title：findPage
+	 * @Description：标准代码
+	 * @param beginDate
+	 * @param endDate
+	 * @param pageable
+	 * @return Page<Log>
 	 */
-	void removeAll();
-
+	Page<Log> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

@@ -27,7 +27,7 @@ import net.wit.service.ArticleLaudService;
 /**
  * @ClassName: ArticleLaudDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:7
  */
  
  
@@ -84,6 +84,6 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	}
 
 	public Page<ArticleLaud> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return articleLaudDao.findPage(beginDate,endDate,pageable);
+		return articleLaudDao.findPage(beginDate,endDate,pageable);
 	}
 }

@@ -13,7 +13,7 @@ import net.wit.entity.Refunds;
 /**
  * @ClassName: RefundsDao
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:5
  */
  
 
@@ -26,5 +26,5 @@ public interface RefundsDao extends BaseDao<Refunds, Long> {
 	 * @param pageable
 	 * @return Page<Refunds>
 	 */
-	Page<Refunds> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Refunds> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

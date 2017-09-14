@@ -27,7 +27,7 @@ import net.wit.service.MemberAttributeService;
 /**
  * @ClassName: MemberAttributeDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:8
  */
  
  
@@ -84,6 +84,6 @@ public class MemberAttributeServiceImpl extends BaseServiceImpl<MemberAttribute,
 	}
 
 	public Page<MemberAttribute> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return memberAttributeDao.findPage(beginDate,endDate,pageable);
+		return memberAttributeDao.findPage(beginDate,endDate,pageable);
 	}
 }

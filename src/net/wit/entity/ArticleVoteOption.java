@@ -4,25 +4,26 @@ package net.wit.entity;
 import net.wit.MapEntity;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @ClassName: ArticleVote
- * @Description:  文章投票
+ * @ClassName: ArticleVoteOption
+ * @Description:  文章题库
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 
 @Entity
-@Table(name = "wx_article_vote")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_vote_sequence")
-public class ArticleVote extends BaseEntity {
+@Table(name = "wx_article_vote_option")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_vote_option_sequence")
+public class ArticleVoteOption extends BaseEntity {
 
 	private static final long serialVersionUID = 126L;
 
-	/** IP */
-	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment 'IP'")
-	private String ip;
+	/**  题目 */
+	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment '题目'")
+	private String title;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -39,22 +40,10 @@ public class ArticleVote extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '文章'")
 	private Article article;
 
-	/** 题目 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '文章'")
-	private ArticleVoteOption articleVoteOption;
-
-	/** 答案 */
-	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment '答案'")
-	private String value;
-
-	public String getIp() {
-		return ip;
-	}
-
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+	/** 投票项 */
+	@ElementCollection
+	@CollectionTable(name = "wx_article_vote_option_items")
+	private List<String> items = new ArrayList<String>();
 
 	public Member getMember() {
 		return member;
@@ -80,20 +69,12 @@ public class ArticleVote extends BaseEntity {
 		this.article = article;
 	}
 
-	public ArticleVoteOption getArticleVoteOption() {
-		return articleVoteOption;
+	public List<String> getItems() {
+		return items;
 	}
 
-	public void setArticleVoteOption(ArticleVoteOption articleVoteOption) {
-		this.articleVoteOption = articleVoteOption;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
+	public void setItems(List<String> items) {
+		this.items = items;
 	}
 
 	public MapEntity getMapMember() {
@@ -120,4 +101,11 @@ public class ArticleVote extends BaseEntity {
 		}
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }

@@ -27,7 +27,7 @@ import net.wit.service.EnterpriseService;
 /**
  * @ClassName: EnterpriseDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:8
  */
  
  
@@ -84,6 +84,6 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 	}
 
 	public Page<Enterprise> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return enterpriseDao.findPage(beginDate,endDate,pageable);
+		return enterpriseDao.findPage(beginDate,endDate,pageable);
 	}
 }

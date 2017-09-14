@@ -1,17 +1,14 @@
 package net.wit.controller.admin;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import net.wit.Filter;
+import net.wit.Message;
+import net.wit.Pageable;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.wit.*;
-
-import net.wit.controller.admin.model.PageModel;
-import net.wit.entity.Role;
-import net.wit.service.AreaService;
-import net.wit.service.RoleService;
 import net.wit.util.MD5Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -27,20 +24,30 @@ import net.wit.entity.BaseEntity.Save;
 import net.wit.entity.Admin;
 import net.wit.service.AdminService;
 
-import net.wit.entity.Enterprise;
-import net.wit.service.EnterpriseService;
+import java.util.*;
+
+import net.wit.*;
+
+import net.wit.entity.*;
+import net.wit.service.*;
+import net.wit.controller.admin.model.*;
+
+
 
 /**
  * @ClassName: AdminController
  * @author 降魔战队
- * @date 2017-9-3 23:17:34
+ * @date 2017-9-14 19:42:9
  */
-
+ 
 @Controller("adminAdminController")
 @RequestMapping("/admin/admin")
 public class AdminController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
+	
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
 
 	@Resource(name = "enterpriseServiceImpl")
 	private EnterpriseService enterpriseService;
@@ -48,213 +55,24 @@ public class AdminController extends BaseController {
 	@Resource(name = "roleServiceImpl")
 	private RoleService roleService;
 
-	@Resource(name = "areaServiceImpl")
-	private AreaService areaService;
-
-	/**
-	 * 保存
-	 */
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	@ResponseBody
-	public Message save(Admin admin, Long enterpriseId,Long [] roleIds, Long areaId){
-		Admin entity = new Admin();
 
 
-		entity.setCreateDate(admin.getCreateDate());
-
-		entity.setModifyDate(admin.getModifyDate());
-
-		entity.setDepartment(admin.getDepartment());
-
-		entity.setEmail(admin.getEmail());
-
-		entity.setIsEnabled(admin.getIsEnabled());
-
-		entity.setIsLocked(admin.getIsLocked());
-
-		entity.setLockedDate(admin.getLockedDate());
-
-		entity.setLoginDate(admin.getLoginDate());
-
-		entity.setLoginFailureCount(admin.getLoginFailureCount() == null ? 0 : admin.getLoginFailureCount());
-
-		entity.setLoginIp(admin.getLoginIp());
-
-		entity.setName(admin.getName());
-
-		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
-
-		entity.setUsername(admin.getUsername());
-
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
-
-		entity.setArea(areaService.find(areaId));
-
-		entity.setGender(admin.getGender());
-
-		entity.setRoles(roleService.findList(roleIds));
-
-		if (!isValid(entity, Save.class)) {
-			return Message.error("admin.data.valid");
-		}
-		try {
-			adminService.save(entity);
-			return Message.success(entity,"admin.save.success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Message.error("admin.save.error");
-		}
-	}
-
-
-	/**
-	 * 企业名称视图
-	 */
-	@RequestMapping(value = "/enterpriseView", method = RequestMethod.GET)
-	public String enterpriseView(Long id, ModelMap model) {
-
-		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","代理商"));
-
-		model.addAttribute("types",types);
-		model.addAttribute("enterprise",enterpriseService.find(id));
-		return "/admin/admin/view/enterpriseView";
-	}
-
-
-	/**
-	 * 更新
-	 */
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@ResponseBody
-	public Message update(Admin admin, Long enterpriseId, Long areaId, Long [] roleIds){
-		Admin entity = adminService.find(admin.getId());
-
-		entity.setCreateDate(admin.getCreateDate());
-
-		entity.setModifyDate(admin.getModifyDate());
-
-		entity.setDepartment(admin.getDepartment());
-
-		entity.setEmail(admin.getEmail());
-
-		entity.setIsEnabled(admin.getIsEnabled());
-
-		entity.setIsLocked(admin.getIsLocked());
-
-		entity.setLockedDate(admin.getLockedDate());
-
-		entity.setLoginDate(admin.getLoginDate());
-
-		entity.setLoginFailureCount(admin.getLoginFailureCount() == null ? 0 : admin.getLoginFailureCount());
-
-		entity.setLoginIp(admin.getLoginIp());
-
-		entity.setName(admin.getName());
-
-		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
-
-		entity.setUsername(admin.getUsername());
-
-		entity.setArea(areaService.find(areaId));
-
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
-
-		entity.setGender(admin.getGender());
-
-		entity.setRoles(roleService.findList(roleIds));
-
-
-		if (!isValid(entity)) {
-			return Message.error("admin.data.valid");
-		}
-		try {
-			adminService.update(entity);
-			return Message.success(entity,"admin.update.success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Message.error("admin.update.error");
-		}
-	}
 	/**
 	 * 主页
-	 */
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String add(ModelMap model) {
-
-		List<MapEntity> genders = new ArrayList<>();
-		genders.add(new MapEntity("male","男"));
-		genders.add(new MapEntity("female","女"));
-		genders.add(new MapEntity("secrecy","保密"));
-
-
-		List<Enterprise> enterprises = enterpriseService.findAll();
-
-		List<Role> roles = roleService.findAll();
-
-		model.addAttribute("genders",genders);
-		model.addAttribute("enterprises", enterprises);
-		model.addAttribute("roles", roles);
-
-		return "/admin/admin/add";
-	}
-	/**
-	 * 主页
-	 */
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String edit(Long id, ModelMap model) {
-
-		List<MapEntity> genders = new ArrayList<>();
-		genders.add(new MapEntity("male","男"));
-		genders.add(new MapEntity("female","女"));
-		genders.add(new MapEntity("secrecy","保密"));
-
-		List<Enterprise> enterprises = enterpriseService.findAll();
-
-		List<Role> roles = roleService.findAll();
-
-		model.addAttribute("genders",genders);
-		model.addAttribute("enterprises", enterprises);
-		model.addAttribute("roles", roles);
-		model.addAttribute("data",adminService.find(id));
-
-		return "/admin/admin/edit";
-	}
-
-
-	/**
-	 * 列表
-	 */
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Admin.Gender gender,Pageable pageable, ModelMap model) {
-		//常输的过滤条件
-		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		if (gender!=null) {
-			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
-			filters.add(genderFilter);
-		}
-		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
-		return Message.success(PageModel.bind(page), "admin.list.success");
-	}
-
-	/**
-	 * 列表
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
-		//常量输出
+
+		model.addAttribute("enterprises",enterpriseService.findAll());
+
 		List<MapEntity> genders = new ArrayList<>();
 		genders.add(new MapEntity("male","男"));
 		genders.add(new MapEntity("female","女"));
 		genders.add(new MapEntity("secrecy","保密"));
-
 		model.addAttribute("genders",genders);
 
-		//多对一输出
-		model.addAttribute("enterprises",enterpriseService.findAll());
-		//多对一输出
+		model.addAttribute("areas",areaService.findAll());
+
 		model.addAttribute("roles",roleService.findAll());
 
 		return "/admin/admin/list";
@@ -262,17 +80,222 @@ public class AdminController extends BaseController {
 
 
 	/**
-	 * 删除
+	 * 添加
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public @ResponseBody
-	Message delete(Long[] ids) {
-		try {
-			adminService.delete(ids);
-			return Message.success("admin.delete.success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Message.error("admin.delete.error");
-		}
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String add(ModelMap model) {
+
+		model.addAttribute("enterprises",enterpriseService.findAll());
+
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
+		model.addAttribute("genders",genders);
+
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("roles",roleService.findAll());
+
+		return "/admin/admin/add";
 	}
+
+
+	/**
+     * 保存
+     */
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+	public Message save(Admin admin, Long areaId, Long enterpriseId, Long [] roleIds){
+		Admin entity = new Admin();	
+
+		entity.setCreateDate(admin.getCreateDate());
+
+		entity.setModifyDate(admin.getModifyDate());
+
+		entity.setDepartment(admin.getDepartment());
+
+		entity.setEmail(admin.getEmail());
+
+		entity.setIsEnabled(admin.getIsEnabled());
+
+		entity.setIsLocked(admin.getIsLocked());
+
+		entity.setLockedDate(admin.getLockedDate());
+
+		entity.setLoginDate(admin.getLoginDate());
+
+		entity.setLoginFailureCount(admin.getLoginFailureCount() == null ? 0 : admin.getLoginFailureCount());
+
+		entity.setLoginIp(admin.getLoginIp());
+
+		entity.setName(admin.getName());
+
+		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
+
+		entity.setUsername(admin.getUsername());
+
+		entity.setEnterprise(enterpriseService.find(enterpriseId));
+
+		entity.setGender(admin.getGender());
+
+		entity.setArea(areaService.find(areaId));
+
+		entity.setRoles(roleService.findList(roleIds));
+		
+		if (!isValid(entity, Save.class)) {
+            return Message.error("admin.data.valid");
+        }
+        try {
+            adminService.save(entity);
+            return Message.success(entity,"admin.save.success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Message.error("admin.save.error");
+        }
+	}
+
+
+	/**
+     * 删除
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public @ResponseBody
+    Message delete(Long[] ids) {
+        try {
+            adminService.delete(ids);
+            return Message.success("admin.delete.success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Message.error("admin.delete.error");
+        }
+    }
+	
+	
+	/**
+	 * 编辑
+	 */
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public String edit(Long id, ModelMap model) {
+
+		model.addAttribute("enterprises",enterpriseService.findAll());
+
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
+		model.addAttribute("genders",genders);
+
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("roles",roleService.findAll());
+
+		model.addAttribute("data",adminService.find(id));
+
+		return "/admin/admin/edit";
+	}
+
+	
+	/**
+     * 更新
+     */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
+	public Message update(Admin admin, Long areaId, Long enterpriseId, Long [] roleIds){
+		Admin entity = adminService.find(admin.getId());
+		
+		entity.setCreateDate(admin.getCreateDate());
+
+		entity.setModifyDate(admin.getModifyDate());
+
+		entity.setDepartment(admin.getDepartment());
+
+		entity.setEmail(admin.getEmail());
+
+		entity.setIsEnabled(admin.getIsEnabled());
+
+		entity.setIsLocked(admin.getIsLocked());
+
+		entity.setLockedDate(admin.getLockedDate());
+
+		entity.setLoginDate(admin.getLoginDate());
+
+		entity.setLoginFailureCount(admin.getLoginFailureCount() == null ? 0 : admin.getLoginFailureCount());
+
+		entity.setLoginIp(admin.getLoginIp());
+
+		entity.setName(admin.getName());
+
+		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
+
+		entity.setUsername(admin.getUsername());
+
+		entity.setEnterprise(enterpriseService.find(enterpriseId));
+
+		entity.setGender(admin.getGender());
+
+		entity.setArea(areaService.find(areaId));
+
+		entity.setRoles(roleService.findList(roleIds));
+		
+		if (!isValid(entity)) {
+            return Message.error("admin.data.valid");
+        }
+        try {
+            adminService.update(entity);
+            return Message.success(entity,"admin.update.success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Message.error("admin.update.error");
+        }
+	}
+	
+
+	/**
+     * 列表
+     */
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@ResponseBody
+	public Message list(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		if (gender!=null) {
+			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
+			filters.add(genderFilter);
+		}
+
+		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
+		return Message.success(PageModel.bind(page), "admin.list.success");
+	}
+	
+	
+	/**
+	 * 地区视图
+	 */
+	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
+	public String areaView(Long id, ModelMap model) {
+
+
+		model.addAttribute("area",areaService.find(id));
+		return "/admin/admin/view/areaView";
+	}
+
+
+	/**
+	 * 企业管理视图
+	 */
+	@RequestMapping(value = "/enterpriseView", method = RequestMethod.GET)
+	public String enterpriseView(Long id, ModelMap model) {
+		List<MapEntity> types = new ArrayList<>();
+		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("agent","代理商"));
+		model.addAttribute("types",types);
+
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("enterprise",enterpriseService.find(id));
+		return "/admin/admin/view/enterpriseView";
+	}
+
+
+
 }

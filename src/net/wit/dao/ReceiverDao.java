@@ -13,7 +13,7 @@ import net.wit.entity.Receiver;
 /**
  * @ClassName: ReceiverDao
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:5
  */
  
 
@@ -26,5 +26,5 @@ public interface ReceiverDao extends BaseDao<Receiver, Long> {
 	 * @param pageable
 	 * @return Page<Receiver>
 	 */
-	Page<Receiver> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Receiver> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

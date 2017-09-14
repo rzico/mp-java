@@ -13,7 +13,7 @@ import net.wit.entity.Message;
 /**
  * @ClassName: MessageDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:5
  */
  
 
@@ -26,5 +26,5 @@ public interface MessageDao extends BaseDao<Message, Long> {
 	 * @param pageable
 	 * @return Page<Message>
 	 */
-	Page<Message> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

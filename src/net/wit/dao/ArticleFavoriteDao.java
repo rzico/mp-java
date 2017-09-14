@@ -13,7 +13,7 @@ import net.wit.entity.ArticleFavorite;
 /**
  * @ClassName: ArticleFavoriteDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:58
+ * @date 2017-9-14 19:42:4
  */
  
 
@@ -26,5 +26,5 @@ public interface ArticleFavoriteDao extends BaseDao<ArticleFavorite, Long> {
 	 * @param pageable
 	 * @return Page<ArticleFavorite>
 	 */
-	Page<ArticleFavorite> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<ArticleFavorite> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

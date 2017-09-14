@@ -12,9 +12,9 @@ import net.wit.entity.Friends;
 /**
  * @ClassName: FriendsService
  * @author 降魔战队
- * @date 2017-9-3 20:35:57
+ * @date 2017-9-14 19:42:8
  */
 
 public interface FriendsService extends BaseService<Friends, Long> {
-	Page<Friends> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Friends> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

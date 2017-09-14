@@ -13,12 +13,11 @@ import net.wit.entity.PluginConfig;
 /**
  * @ClassName: PluginConfigDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:5
  */
  
 
 public interface PluginConfigDao extends BaseDao<PluginConfig, Long> {
-
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
@@ -27,25 +26,5 @@ public interface PluginConfigDao extends BaseDao<PluginConfig, Long> {
 	 * @param pageable
 	 * @return Page<PluginConfig>
 	 */
-	Page<PluginConfig> findPage(Date beginDate, Date endDate, Pageable pageable);
-
-
-	/**
-	 * 判断插件ID是否存在
-	 *
-	 * @param pluginId
-	 *            插件ID
-	 * @return 插件ID是否存在
-	 */
-	boolean pluginIdExists(String pluginId);
-
-	/**
-	 * 根据插件ID查找插件配置
-	 *
-	 * @param pluginId
-	 *            插件ID
-	 * @return 插件配置，若不存在则返回null
-	 */
-	PluginConfig findByPluginId(String pluginId);
-
+	Page<PluginConfig> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

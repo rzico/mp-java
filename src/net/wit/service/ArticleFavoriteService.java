@@ -12,9 +12,9 @@ import net.wit.entity.ArticleFavorite;
 /**
  * @ClassName: ArticleFavoriteService
  * @author 降魔战队
- * @date 2017-9-3 20:35:56
+ * @date 2017-9-14 19:42:7
  */
 
 public interface ArticleFavoriteService extends BaseService<ArticleFavorite, Long> {
-	Page<ArticleFavorite> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<ArticleFavorite> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

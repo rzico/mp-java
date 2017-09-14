@@ -27,7 +27,7 @@ import net.wit.service.TagService;
 /**
  * @ClassName: TagDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:9
  */
  
  
@@ -84,6 +84,6 @@ public class TagServiceImpl extends BaseServiceImpl<Tag, Long> implements TagSer
 	}
 
 	public Page<Tag> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return tagDao.findPage(beginDate,endDate,pageable);
+		return tagDao.findPage(beginDate,endDate,pageable);
 	}
 }

@@ -1,27 +1,20 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.service;
 
-import net.wit.entity.Sn.Type;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import net.wit.Page;
+import net.wit.Pageable;
+import net.wit.entity.Sn;
 
 /**
- * Service - 序列号
- * 
- * @author rsico Team
- * @version 3.0
+ * @ClassName: SnService
+ * @author 降魔战队
+ * @date 2017-9-14 19:42:9
  */
-public interface SnService {
 
-	/**
-	 * 生成序列号
-	 * 
-	 * @param type
-	 *            类型
-	 * @return 序列号
-	 */
-	String generate(Type type);
-
+public interface SnService extends BaseService<Sn, Long> {
+	Page<Sn> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

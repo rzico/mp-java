@@ -13,7 +13,7 @@ import net.wit.entity.ArticleLaud;
 /**
  * @ClassName: ArticleLaudDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:4
  */
  
 
@@ -26,5 +26,5 @@ public interface ArticleLaudDao extends BaseDao<ArticleLaud, Long> {
 	 * @param pageable
 	 * @return Page<ArticleLaud>
 	 */
-	Page<ArticleLaud> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<ArticleLaud> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

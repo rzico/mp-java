@@ -1,8 +1,3 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.dao;
 
 import java.math.BigDecimal;
@@ -13,36 +8,16 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Admin;
-import net.wit.entity.Area;
-import net.wit.entity.Member;
-import net.wit.entity.Payment;
+
 
 /**
- * Dao - 管理员
- * 
- * @author rsico Team
- * @version 3.0
+ * @ClassName: AdminDao
+ * @author 降魔战队
+ * @date 2017-9-14 19:42:4
  */
+ 
+
 public interface AdminDao extends BaseDao<Admin, Long> {
-
-	/**
-	 * 判断用户名是否存在
-	 * 
-	 * @param username
-	 *            用户名(忽略大小写)
-	 * @return 用户名是否存在
-	 */
-	boolean usernameExists(String username);
-
-	/**
-	 * 根据用户名查找管理员
-	 * 
-	 * @param username
-	 *            用户名(忽略大小写)
-	 * @return 管理员，若不存在则返回null
-	 */
-	Admin findByUsername(String username);
-
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

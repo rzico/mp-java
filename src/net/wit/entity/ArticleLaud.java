@@ -41,11 +41,11 @@ public class ArticleLaud extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Article article;
 
-	public Boolean getShow() {
+	public Boolean getIsShow() {
 		return isShow;
 	}
 
-	public void setShow(Boolean show) {
+	public void setIsShow(Boolean show) {
 		isShow = show;
 	}
 

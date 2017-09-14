@@ -13,7 +13,7 @@ import net.wit.entity.Smssend;
 /**
  * @ClassName: SmssendDao
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:6
  */
  
 
@@ -26,5 +26,5 @@ public interface SmssendDao extends BaseDao<Smssend, Long> {
 	 * @param pageable
 	 * @return Page<Smssend>
 	 */
-	Page<Smssend> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Smssend> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

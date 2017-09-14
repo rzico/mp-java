@@ -12,9 +12,9 @@ import net.wit.entity.Message;
 /**
  * @ClassName: MessageService
  * @author 降魔战队
- * @date 2017-9-3 20:35:58
+ * @date 2017-9-14 19:42:8
  */
 
 public interface MessageService extends BaseService<Message, Long> {
-	Page<Message> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

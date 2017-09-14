@@ -12,9 +12,9 @@ import net.wit.entity.Smssend;
 /**
  * @ClassName: SmssendService
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:9
  */
 
 public interface SmssendService extends BaseService<Smssend, Long> {
-	Page<Smssend> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Smssend> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

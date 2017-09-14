@@ -13,7 +13,7 @@ import net.wit.entity.Role;
 /**
  * @ClassName: RoleDao
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:5
  */
  
 
@@ -26,5 +26,5 @@ public interface RoleDao extends BaseDao<Role, Long> {
 	 * @param pageable
 	 * @return Page<Role>
 	 */
-	Page<Role> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Role> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

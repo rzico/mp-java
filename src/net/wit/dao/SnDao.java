@@ -1,27 +1,30 @@
-/*
- * Copyright 2005-2013 rsico. All rights reserved.
- * Support: http://www.rsico.cn
- * License: http://www.rsico.cn/license
- */
 package net.wit.dao;
 
-import net.wit.entity.Sn.Type;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import net.wit.Page;
+import net.wit.Pageable;
+import net.wit.entity.Sn;
+
 
 /**
- * Dao - 序列号
- * 
- * @author rsico Team
- * @version 3.0
+ * @ClassName: SnDao
+ * @author 降魔战队
+ * @date 2017-9-14 19:42:6
  */
-public interface SnDao {
+ 
 
+public interface SnDao extends BaseDao<Sn, Long> {
 	/**
-	 * 生成序列号
-	 * 
-	 * @param type
-	 *            类型
-	 * @return 序列号
+	 * @Title：findPage
+	 * @Description：标准代码
+	 * @param beginDate
+	 * @param endDate
+	 * @param pageable
+	 * @return Page<Sn>
 	 */
-	String generate(Type type);
-
+	Page<Sn> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

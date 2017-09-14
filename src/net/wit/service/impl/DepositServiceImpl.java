@@ -27,7 +27,7 @@ import net.wit.service.DepositService;
 /**
  * @ClassName: DepositDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:8
  */
  
  
@@ -66,31 +66,24 @@ public class DepositServiceImpl extends BaseServiceImpl<Deposit, Long> implement
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		Deposit entity = super.find(id);
-		entity.setDeleted(true);
-		super.save(entity);
+		super.delete(id);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		List<Deposit> deposits = super.findList(ids);
-		for (Deposit deposit:deposits) {
-			deposit.setDeleted(true);
-			super.save(deposit);
-		}
+		super.delete(ids);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Deposit deposit) {
-		deposit.setDeleted(true);
-		super.save(deposit);
+		super.delete(deposit);
 	}
 
 	public Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return depositDao.findPage(beginDate,endDate,pageable);
+		return depositDao.findPage(beginDate,endDate,pageable);
 	}
 }

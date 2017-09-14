@@ -24,7 +24,7 @@ import net.wit.entity.ArticleReview;
 /**
  * @ClassName: ArticleReviewDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:4
  */
  
 
@@ -54,7 +54,6 @@ public class ArticleReviewDaoImpl extends BaseDaoImpl<ArticleReview, Long> imple
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
-		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.greaterThanOrEqualTo(root.<Boolean>get("deleted"), Boolean.FALSE));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}

@@ -12,9 +12,9 @@ import net.wit.entity.ArticleReview;
 /**
  * @ClassName: ArticleReviewService
  * @author 降魔战队
- * @date 2017-9-3 20:35:57
+ * @date 2017-9-14 19:42:7
  */
 
 public interface ArticleReviewService extends BaseService<ArticleReview, Long> {
-	Page<ArticleReview> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<ArticleReview> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

@@ -3,10 +3,8 @@ package net.wit.dao.impl;
 import java.util.Calendar;
 
 import java.util.Date;
-import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -26,7 +24,7 @@ import net.wit.entity.Area;
 /**
  * @ClassName: AreaDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:58
+ * @date 2017-9-14 19:42:4
  */
  
 
@@ -58,13 +56,5 @@ public class AreaDaoImpl extends BaseDaoImpl<Area, Long> implements AreaDao {
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
-	}
-	public List<Area> findRoots(Integer count) {
-		String jpql = "select area from Area area where area.parent is null order by area.order asc";
-		TypedQuery<Area> query = entityManager.createQuery(jpql, Area.class).setFlushMode(FlushModeType.COMMIT);
-		if (count != null) {
-			query.setMaxResults(count);
-		}
-		return query.getResultList();
 	}
 }

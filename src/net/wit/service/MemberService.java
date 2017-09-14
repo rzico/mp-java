@@ -12,9 +12,9 @@ import net.wit.entity.Member;
 /**
  * @ClassName: MemberService
  * @author 降魔战队
- * @date 2017-9-3 20:35:57
+ * @date 2017-9-14 19:42:8
  */
 
 public interface MemberService extends BaseService<Member, Long> {
-	Page<Member> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Member> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

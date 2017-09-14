@@ -34,16 +34,20 @@ public class CaptchaServiceImpl implements CaptchaService {
 		return (BufferedImage) imageCaptchaService.getChallengeForID(captchaId);
 	}
 
-	public boolean isValid(String captchaId, String captcha) {
+	public boolean isValid(CaptchaType captchaType, String captchaId, String captcha) {
 		Setting setting = SettingUtils.get();
-		if (StringUtils.isNotEmpty(captchaId) && StringUtils.isNotEmpty(captcha)) {
-			try {
-				return imageCaptchaService.validateResponseForID(captchaId, captcha.toUpperCase());
-			} catch (Exception e) {
+		if (captchaType == null || ArrayUtils.contains(setting.getCaptchaTypes(), captchaType)) {
+			if (StringUtils.isNotEmpty(captchaId) && StringUtils.isNotEmpty(captcha)) {
+				try {
+					return imageCaptchaService.validateResponseForID(captchaId, captcha.toUpperCase());
+				} catch (Exception e) {
+					return false;
+				}
+			} else {
 				return false;
 			}
 		} else {
-			return false;
+			return true;
 		}
 	}
 

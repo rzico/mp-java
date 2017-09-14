@@ -12,9 +12,9 @@ import net.wit.entity.Refunds;
 /**
  * @ClassName: RefundsService
  * @author 降魔战队
- * @date 2017-9-3 20:35:59
+ * @date 2017-9-14 19:42:9
  */
 
 public interface RefundsService extends BaseService<Refunds, Long> {
-	Page<Refunds> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Refunds> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

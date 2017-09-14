@@ -27,7 +27,7 @@ import net.wit.service.ArticleReviewService;
 /**
  * @ClassName: ArticleReviewDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:7
  */
  
  
@@ -66,20 +66,13 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		ArticleReview entity = super.find(id);
-		entity.setDeleted(true);
-		super.save(entity);
+		super.delete(id);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		List<ArticleReview> reviews = super.findList(ids);
-		for (ArticleReview review:reviews) {
-			review.setDeleted(true);
-			super.save(review);
-		}
 		super.delete(ids);
 	}
 
@@ -87,11 +80,10 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleReview articleReview) {
-		articleReview.setDeleted(true);
-		super.save(articleReview);
+		super.delete(articleReview);
 	}
 
 	public Page<ArticleReview> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return articleReviewDao.findPage(beginDate,endDate,pageable);
+		return articleReviewDao.findPage(beginDate,endDate,pageable);
 	}
 }

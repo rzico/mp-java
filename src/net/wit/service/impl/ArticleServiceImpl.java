@@ -27,7 +27,7 @@ import net.wit.service.ArticleService;
 /**
  * @ClassName: ArticleDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:58
+ * @date 2017-9-14 19:42:7
  */
  
  
@@ -66,31 +66,24 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		Article entity = super.find(id);
-		entity.setDeleted(true);
-		super.save(entity);
+		super.delete(id);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		List<Article> entitys = super.findList(ids);
-		for (Article article:entitys) {
-			article.setDeleted(true);
-			super.save(article);
-		}
+		super.delete(ids);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Article article) {
-		article.setDeleted(true);
-		super.save(article);
+		super.delete(article);
 	}
 
 	public Page<Article> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return articleDao.findPage(beginDate,endDate,pageable);
+		return articleDao.findPage(beginDate,endDate,pageable);
 	}
 }

@@ -259,6 +259,22 @@ public class Coupon extends BaseEntity {
 		return getEndDate() != null && new Date().after(getEndDate());
 	}
 
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	/**
 	 * 删除前处理
 	 */

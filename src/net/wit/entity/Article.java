@@ -49,6 +49,7 @@ public class Article extends BaseEntity{
 
     /** 会员 */
     @Column(columnDefinition="bigint(20) not null comment '会员'")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     /** 标题 */
@@ -117,6 +118,7 @@ public class Article extends BaseEntity{
 
     /** 所在地 */
     @Column(columnDefinition="bigint(20) comment '所在地'")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Area area;
 
     /** 模板 */
@@ -128,7 +130,7 @@ public class Article extends BaseEntity{
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_article_tag")
     @OrderBy("order asc")
-    private Set<Tag> tags = new HashSet<Tag>();
+    private List<Tag> tags = new ArrayList<Tag>();
 
     /** 点赞者*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -235,7 +237,7 @@ public class Article extends BaseEntity{
         this.laud = laud;
     }
 
-    public Set<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
@@ -263,7 +265,7 @@ public class Article extends BaseEntity{
         this.reviews = reviews;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

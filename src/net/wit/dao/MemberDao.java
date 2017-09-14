@@ -13,7 +13,7 @@ import net.wit.entity.Member;
 /**
  * @ClassName: MemberDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:5
  */
  
 
@@ -26,5 +26,5 @@ public interface MemberDao extends BaseDao<Member, Long> {
 	 * @param pageable
 	 * @return Page<Member>
 	 */
-	Page<Member> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Member> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

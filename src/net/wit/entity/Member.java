@@ -163,6 +163,7 @@ public class Member extends BaseEntity {
 
 	/** 职业 */
 	@Column(columnDefinition="int(11) comment '职务'")
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Occupation occupation;
 
 	/** 出生日期 */

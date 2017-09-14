@@ -13,7 +13,7 @@ import net.wit.entity.Enterprise;
 /**
  * @ClassName: EnterpriseDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:4
  */
  
 
@@ -26,5 +26,5 @@ public interface EnterpriseDao extends BaseDao<Enterprise, Long> {
 	 * @param pageable
 	 * @return Page<Enterprise>
 	 */
-	Page<Enterprise> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Enterprise> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

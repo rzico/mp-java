@@ -13,7 +13,7 @@ import net.wit.entity.ArticleCatalog;
 /**
  * @ClassName: ArticleCatalogDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:58
+ * @date 2017-9-14 19:42:4
  */
  
 
@@ -26,5 +26,5 @@ public interface ArticleCatalogDao extends BaseDao<ArticleCatalog, Long> {
 	 * @param pageable
 	 * @return Page<ArticleCatalog>
 	 */
-	Page<ArticleCatalog> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<ArticleCatalog> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

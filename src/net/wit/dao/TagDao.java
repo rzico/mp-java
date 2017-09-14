@@ -13,7 +13,7 @@ import net.wit.entity.Tag;
 /**
  * @ClassName: TagDao
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:6
  */
  
 
@@ -26,5 +26,5 @@ public interface TagDao extends BaseDao<Tag, Long> {
 	 * @param pageable
 	 * @return Page<Tag>
 	 */
-	Page<Tag> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Tag> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

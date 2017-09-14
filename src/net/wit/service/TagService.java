@@ -12,9 +12,9 @@ import net.wit.entity.Tag;
 /**
  * @ClassName: TagService
  * @author 降魔战队
- * @date 2017-9-3 20:36:0
+ * @date 2017-9-14 19:42:9
  */
 
 public interface TagService extends BaseService<Tag, Long> {
-	Page<Tag> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Tag> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

@@ -12,9 +12,9 @@ import net.wit.entity.Role;
 /**
  * @ClassName: RoleService
  * @author 降魔战队
- * @date 2017-9-3 20:35:59
+ * @date 2017-9-14 19:42:9
  */
 
 public interface RoleService extends BaseService<Role, Long> {
-	Page<Role> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Role> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

@@ -27,7 +27,7 @@ import net.wit.service.ReceiverService;
 /**
  * @ClassName: ReceiverDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:9
  */
  
  
@@ -84,6 +84,6 @@ public class ReceiverServiceImpl extends BaseServiceImpl<Receiver, Long> impleme
 	}
 
 	public Page<Receiver> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return receiverDao.findPage(beginDate,endDate,pageable);
+		return receiverDao.findPage(beginDate,endDate,pageable);
 	}
 }

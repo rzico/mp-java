@@ -12,9 +12,9 @@ import net.wit.entity.Deposit;
 /**
  * @ClassName: DepositService
  * @author 降魔战队
- * @date 2017-9-3 20:35:57
+ * @date 2017-9-14 19:42:8
  */
 
 public interface DepositService extends BaseService<Deposit, Long> {
-	Page<Deposit> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

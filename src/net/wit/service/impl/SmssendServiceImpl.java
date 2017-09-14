@@ -27,7 +27,7 @@ import net.wit.service.SmssendService;
 /**
  * @ClassName: SmssendDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:55:0
+ * @date 2017-9-14 19:42:9
  */
  
  
@@ -84,6 +84,6 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 	}
 
 	public Page<Smssend> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return smssendDao.findPage(beginDate,endDate,pageable);
+		return smssendDao.findPage(beginDate,endDate,pageable);
 	}
 }

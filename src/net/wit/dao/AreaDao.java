@@ -13,7 +13,7 @@ import net.wit.entity.Area;
 /**
  * @ClassName: AreaDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:58
+ * @date 2017-9-14 19:42:4
  */
  
 
@@ -26,13 +26,5 @@ public interface AreaDao extends BaseDao<Area, Long> {
 	 * @param pageable
 	 * @return Page<Area>
 	 */
-	Page<Area> findPage(Date beginDate, Date endDate, Pageable pageable);
-	/**
-	 * 查找顶级地区
-	 *
-	 * @param count
-	 *            数量
-	 * @return 顶级地区
-	 */
-	List<Area> findRoots(Integer count);
+	Page<Area> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

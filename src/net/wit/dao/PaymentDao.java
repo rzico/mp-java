@@ -13,20 +13,11 @@ import net.wit.entity.Payment;
 /**
  * @ClassName: PaymentDao
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:5
  */
  
 
 public interface PaymentDao extends BaseDao<Payment, Long> {
-
-	/**
-	 * 根据编号查找收款单
-	 * @param sn 编号(忽略大小写)
-	 * @return 收款单，若不存在则返回null
-	 */
-	Payment findBySn(String sn);
-
-
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
@@ -35,5 +26,5 @@ public interface PaymentDao extends BaseDao<Payment, Long> {
 	 * @param pageable
 	 * @return Page<Payment>
 	 */
-	Page<Payment> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Payment> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

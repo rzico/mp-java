@@ -12,9 +12,9 @@ import net.wit.entity.Receiver;
 /**
  * @ClassName: ReceiverService
  * @author 降魔战队
- * @date 2017-9-3 20:35:58
+ * @date 2017-9-14 19:42:9
  */
 
 public interface ReceiverService extends BaseService<Receiver, Long> {
-	Page<Receiver> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Receiver> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

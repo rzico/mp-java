@@ -27,7 +27,7 @@ import net.wit.service.FriendsService;
 /**
  * @ClassName: FriendsDaoImpl
  * @author 降魔战队
- * @date 2017-9-3 21:54:59
+ * @date 2017-9-14 19:42:8
  */
  
  
@@ -84,6 +84,6 @@ public class FriendsServiceImpl extends BaseServiceImpl<Friends, Long> implement
 	}
 
 	public Page<Friends> findPage(Date beginDate,Date endDate, Pageable pageable) {
-	  return friendsDao.findPage(beginDate,endDate,pageable);
+		return friendsDao.findPage(beginDate,endDate,pageable);
 	}
 }
