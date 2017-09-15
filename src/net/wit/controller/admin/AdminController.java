@@ -163,6 +163,11 @@ public class AdminController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
+        	for (Long id:ids) {
+        		if (id==1) {
+        			return Message.error("管理员账号不能删除");
+				}
+			}
             adminService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {

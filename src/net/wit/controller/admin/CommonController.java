@@ -63,6 +63,9 @@ public class CommonController implements ServletContextAware {
 	@Resource(name = "captchaServiceImpl")
 	private CaptchaService captchaService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 	/** servletContext */
 	private ServletContext servletContext;
 
@@ -74,7 +77,8 @@ public class CommonController implements ServletContextAware {
 	 * 主页
 	 */
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String main() {
+	public String main(ModelMap model) {
+		model.addAttribute("admin",adminService.getCurrent());
 		return "/admin/common/main";
 	}
 

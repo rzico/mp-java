@@ -7,14 +7,16 @@ import java.util.Date;
 
 //文章编辑模板
 
-public class TemplateModel implements Serializable {
+public class ArticleContentModel implements Serializable {
 
     /** 媒体类型 */
     private Article.MediaType mediaType;
+    /** 缩例图 */
+    private String thumbnial;
+    /** 媒体链接 */
+    private String original;
     /** 内容 */
     private String content;
-    /** 链接 */
-    private String url;
 
     public Article.MediaType getMediaType() {
         return mediaType;
@@ -32,11 +34,24 @@ public class TemplateModel implements Serializable {
         this.content = content;
     }
 
-    public String getUrl() {
-        return url;
+    public String getThumbnial() {
+        return thumbnial;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setThumbnial(String thumbnial) {
+        this.thumbnial = thumbnial;
     }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
+
+    public ArticleContentModel() {
+
+    }
+
 }

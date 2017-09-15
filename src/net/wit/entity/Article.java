@@ -56,6 +56,10 @@ public class Article extends BaseEntity{
     @Column(columnDefinition="varchar(255) comment '标题'")
     private String title;
 
+    /** 标题模板 */
+    @Embedded
+    private ArticleTitle articleTitle;
+
     /** 缩例图 */
     @Length(max = 255)
     @Column(columnDefinition="varchar(255) comment '缩例图'")
@@ -181,6 +185,14 @@ public class Article extends BaseEntity{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public ArticleTitle getArticleTitle() {
+        return articleTitle;
+    }
+
+    public void setArticleTitle(ArticleTitle articleTitle) {
+        this.articleTitle = articleTitle;
     }
 
     public String getMusic() {
