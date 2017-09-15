@@ -26,7 +26,7 @@ public class Redis extends OrderEntity{
 
     /*value*/
     @Lob
-    @Column(nullable = false,columnDefinition="longtext not null unique comment '内容'")
+    @Column(nullable = false,columnDefinition="longtext not null comment '内容'")
     private String value;
 
     public String getKey() {
