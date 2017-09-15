@@ -249,6 +249,13 @@ public class Payment extends BaseEntity {
 		this.member = member;
 	}
 
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 
 	/**
 	 * 判断是否已过期

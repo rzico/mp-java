@@ -2,7 +2,9 @@ package net.wit.controller.website.model;
 import net.wit.entity.Tag;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TagModel implements Serializable {
@@ -30,8 +32,8 @@ public class TagModel implements Serializable {
         this.name = tag.getName();
     }
 
-    public static Set<TagModel> bindSet(Set<Tag> tags) {
-        Set<TagModel> ms = new HashSet<TagModel>();
+    public static List<TagModel> bindList(List<Tag> tags) {
+        List<TagModel> ms = new ArrayList<TagModel>();
         for (Tag tag:tags) {
           TagModel m = new TagModel();
           m.bind(tag);

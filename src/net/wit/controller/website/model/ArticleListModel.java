@@ -35,7 +35,7 @@ public class ArticleListModel implements Serializable {
     /** 谁可见 */
     private ArticleOptions.Authority authority;
     /** 标签名 */
-    private Set<TagModel> tags = new HashSet<TagModel>();
+    private List<TagModel> tags = new ArrayList<TagModel>();
 
     public void bind(Article article) {
         this.id = article.getId();

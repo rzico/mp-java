@@ -131,11 +131,11 @@ public class Message extends BaseEntity {
 		this.readed = readed;
 	}
 
-	public Boolean getShow() {
+	public Boolean getIsShow() {
 		return isShow;
 	}
 
-	public void setShow(Boolean show) {
+	public void setIsShow(Boolean show) {
 		isShow = show;
 	}
 

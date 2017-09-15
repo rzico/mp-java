@@ -2,10 +2,7 @@ package net.wit.entity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -254,7 +251,7 @@ public class Member extends BaseEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_member_tag")
 	@OrderBy("order asc")
-	private Set<Tag> tags = new HashSet<Tag>();
+	private List<Tag> tags = new ArrayList<Tag>();
 
 	/** 预存款 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -325,19 +322,19 @@ public class Member extends BaseEntity {
 		this.balance = balance;
 	}
 
-	public Boolean getEnabled() {
+	public Boolean getIsEnabled() {
 		return isEnabled;
 	}
 
-	public void setEnabled(Boolean enabled) {
+	public void setIsEnabled(Boolean enabled) {
 		isEnabled = enabled;
 	}
 
-	public Boolean getLocked() {
+	public Boolean getIsLocked() {
 		return isLocked;
 	}
 
-	public void setLocked(Boolean locked) {
+	public void setIsLocked(Boolean locked) {
 		isLocked = locked;
 	}
 
@@ -573,11 +570,11 @@ public class Member extends BaseEntity {
 		this.receivers = receivers;
 	}
 
-	public Set<Tag> getTags() {
+	public List<Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<Tag> tags) {
+	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
 

@@ -36,7 +36,7 @@ public class ArticleListModel implements Serializable {
     /** 谁可见 */
     private ArticleOptions.Authority authority;
     /** 标签名 */
-    private Set<TagModel> tags = new HashSet<TagModel>();
+    private List<TagModel> tags = new ArrayList<TagModel>();
 
     public void bind(Article article) {
         this.id = article.getId();
@@ -50,7 +50,7 @@ public class ArticleListModel implements Serializable {
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.authority = article.getArticleOptions().getAuthority();
-        this.tags = TagModel.bindSet(article.getTags());
+        this.tags = TagModel.bindList(article.getTags());
 
         this.images = null;
         this.url = null;

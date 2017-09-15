@@ -62,11 +62,11 @@ public class Role extends BaseEntity {
 		this.name = name;
 	}
 
-	public Boolean getSystem() {
+	public Boolean getIsSystem() {
 		return isSystem;
 	}
 
-	public void setSystem(Boolean system) {
+	public void setIsSystem(Boolean system) {
 		isSystem = system;
 	}
 

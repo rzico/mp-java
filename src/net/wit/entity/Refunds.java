@@ -222,6 +222,14 @@ public class Refunds extends BaseEntity {
 		this.member = member;
 	}
 
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
 			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");

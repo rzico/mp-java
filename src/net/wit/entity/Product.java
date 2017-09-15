@@ -216,19 +216,19 @@ public class Product extends BaseEntity {
 		this.point = point;
 	}
 
-	public Boolean getMarketable() {
+	public Boolean getIsMarketable() {
 		return isMarketable;
 	}
 
-	public void setMarketable(Boolean marketable) {
+	public void setIsMarketable(Boolean marketable) {
 		isMarketable = marketable;
 	}
 
-	public Boolean getList() {
+	public Boolean getIsList() {
 		return isList;
 	}
 
-	public void setList(Boolean list) {
+	public void setIsList(Boolean list) {
 		isList = list;
 	}
 
@@ -263,6 +263,7 @@ public class Product extends BaseEntity {
 	public void setProductStocks(Set<ProductStock> productStocks) {
 		this.productStocks = productStocks;
 	}
+
 
 	/**
 	 * 获取可用库存

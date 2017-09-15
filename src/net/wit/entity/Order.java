@@ -325,6 +325,14 @@ public class Order extends BaseEntity {
 		this.paymentStatus = paymentStatus;
 	}
 
+	public BigDecimal getPointDiscount() {
+		return pointDiscount;
+	}
+
+	public void setPointDiscount(BigDecimal pointDiscount) {
+		this.pointDiscount = pointDiscount;
+	}
+
 	/**
 	 * 获取配送状态
 	 * 

@@ -2,9 +2,8 @@ package net.wit.controller.weex.model;
 import net.wit.entity.Tag;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TagModel implements Serializable {
     private Long id;
@@ -31,8 +30,8 @@ public class TagModel implements Serializable {
         this.name = tag.getName();
     }
 
-    public static Set<TagModel> bindSet(Set<Tag> tags) {
-        Set<TagModel> ms = new HashSet<TagModel>();
+    public static List<TagModel> bindList(List<Tag> tags) {
+        List<TagModel> ms = new ArrayList<TagModel>();
         for (Tag tag:tags) {
           TagModel m = new TagModel();
           m.bind(tag);
