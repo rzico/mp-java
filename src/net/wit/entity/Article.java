@@ -48,7 +48,6 @@ public class Article extends BaseEntity{
     private String author;
 
     /** 会员 */
-    @Column(columnDefinition="bigint(20) not null comment '会员'")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -117,7 +116,6 @@ public class Article extends BaseEntity{
     private Location location;
 
     /** 所在地 */
-    @Column(columnDefinition="bigint(20) comment '所在地'")
     @ManyToOne(fetch = FetchType.LAZY)
     private Area area;
 
@@ -151,7 +149,7 @@ public class Article extends BaseEntity{
     /** 投票项 */
     @ElementCollection
     @CollectionTable(name = "wx_article_vote_option")
-    private List<String> voteOptions = new ArrayList<String>();
+    private List<String> options = new ArrayList<String>();
 
     public String getAuthor() {
         return author;
@@ -333,12 +331,12 @@ public class Article extends BaseEntity{
         this.template = template;
     }
 
-    public List<String> getVoteOptions() {
-        return voteOptions;
+    public List<String> getOptions() {
+        return options;
     }
 
-    public void setVoteOptions(List<String> voteOptions) {
-        this.voteOptions = voteOptions;
+    public void setOptions(List<String> options) {
+        this.options = options;
     }
 
     public MapEntity getMapTemplate() {
