@@ -1,8 +1,4 @@
-/*
- * Copyright 2005-2013 shopxx.net. All rights reserved.
- * Support: http://www.shopxx.net
- * License: http://www.shopxx.net/license
- */
+
 package net.wit;
 
 import java.util.Date;
@@ -35,8 +31,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 /**
  * 权限认证
  * 
- * @author SHOP++ Team
- * @version 3.0
  */
 public class AuthenticationRealm extends AuthorizingRealm {
 
@@ -73,26 +67,19 @@ public class AuthenticationRealm extends AuthorizingRealm {
 			}
 			Setting setting = SettingUtils.get();
 			if (admin.getIsLocked()) {
-				if (ArrayUtils.contains(setting.getAccountLockTypes(), AccountLockType.admin)) {
-					int loginFailureLockTime = setting.getAccountLockTime();
-					if (loginFailureLockTime == 0) {
-						throw new LockedAccountException();
-					}
-					Date lockedDate = admin.getLockedDate();
-					Date unlockDate = DateUtils.addMinutes(lockedDate, loginFailureLockTime);
-					if (new Date().after(unlockDate)) {
-						admin.setLoginFailureCount(0);
-						admin.setIsLocked(false);
-						admin.setLockedDate(null);
-						adminService.update(admin);
-					} else {
-						throw new LockedAccountException();
-					}
-				} else {
+				int loginFailureLockTime = setting.getAccountLockTime();
+				if (loginFailureLockTime == 0) {
+					throw new LockedAccountException();
+				}
+				Date lockedDate = admin.getLockedDate();
+				Date unlockDate = DateUtils.addMinutes(lockedDate, loginFailureLockTime);
+				if (new Date().after(unlockDate)) {
 					admin.setLoginFailureCount(0);
 					admin.setIsLocked(false);
 					admin.setLockedDate(null);
 					adminService.update(admin);
+				} else {
+					throw new LockedAccountException();
 				}
 			}
 			if (!DigestUtils.md5Hex(password).equals(admin.getPassword())) {

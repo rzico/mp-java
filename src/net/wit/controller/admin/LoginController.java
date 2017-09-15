@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.wit.*;
+import net.wit.AuthenticationToken;
 import net.wit.Message;
 import net.wit.entity.*;
 import net.wit.service.*;
+import net.wit.util.MD5Utils;
 import net.wit.util.SettingUtils;
 import net.wit.util.SpringUtils;
 
@@ -24,7 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.lucene.store.Lock.With;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -76,64 +79,24 @@ public class LoginController extends BaseController {
         try {
             String password = rsaService.decryptParameter("enPassword", request);
             rsaService.removePrivateKey(request);
-
-            if (!captchaService.isValid(captchaId, captcha)) {
-                return Message.error("admin.captcha.invalid");
-            }
-            //用户校验
-            Admin admin = adminService.findByUsername(username);
-            if (admin == null) {
-                 return Message.error("无效用户名");
-            }
-            Setting setting = SettingUtils.get();
-            if (admin.getIsLocked()) {
-                int loginFailureLockTime = setting.getAccountLockTime();
-                if (loginFailureLockTime == 0) {
-                    return Message.error("用户已锁定，请稍候再重试");
-                }
-                Date lockedDate = admin.getLockedDate();
-                Date unlockDate = DateUtils.addMinutes(lockedDate, loginFailureLockTime);
-                if (new Date().after(unlockDate)) {
-                    admin.setLoginFailureCount(0);
-                    admin.setIsLocked(false);
-                    admin.setLockedDate(null);
-                    adminService.update(admin);
-                } else {
-                    return Message.error("用户已锁定，请稍候再重试");
-                }
-            }
-            if (!admin.getPassword().equals(password)) {
-                int loginFailureCount = admin.getLoginFailureCount() + 1;
-                if (loginFailureCount >= setting.getAccountLockCount()) {
-                    admin.setIsLocked(true);
-                    admin.setLockedDate(new Date());
-                    return Message.error("密码错误次数过多，账号已锁定，请休息会再试。");
-                }
-
-                admin.setLoginFailureCount(loginFailureCount);
-                adminService.update(admin);
-                //密码错误
-                return Message.error("登录密码无效");
-            }
-            //用户禁用
-            if(!admin.getIsEnabled()){
-                return Message.error("该用户已经被禁用");
-            }
             //登出
             SecurityUtils.getSecurityManager().logout(SecurityUtils.getSubject());
             //登录后存放进shiro token
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(admin.getUsername(), admin.getPassword());
+            AuthenticationToken authenticationToken = new AuthenticationToken(username, password,captchaId,captcha,rememberMe,request.getRemoteHost());
             Subject subject = SecurityUtils.getSubject();
-            subject.login(usernamePasswordToken);
-            //更新数据库记录
-            SimpleDateFormat  reqTime =new SimpleDateFormat("yyyyMMddHHmmss");
-            admin.setLoginDate(new Date());
-            adminService.update(admin);
+            subject.login(authenticationToken);
             //登录成功后跳转到successUrl配置的链接
             return Message.success("success");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return Message.error("系统繁忙");
+        } catch (UnsupportedTokenException ex) {
+            return Message.error("无效验证码");
+        } catch (UnknownAccountException ex) {
+            return Message.error("无效账号");
+        } catch (DisabledAccountException ex) {
+            return Message.error("账号被关闭");
+        } catch (IncorrectCredentialsException ex) {
+            return Message.error("密码不正确");
+        } catch (Exception e) {
+            return Message.error("登录出错了");
         }
     }
 

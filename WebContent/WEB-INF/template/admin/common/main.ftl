@@ -90,7 +90,7 @@
         <div class="Hui-tabNav-wp">
             <ul id="min_title_list" class="acrossTab cl">
                 <li class="active">
-                    <span title="我的桌面" data-href="welcome.jhtml">我的桌面</span>
+                    <span title="我的桌面" data-href="../common/index.jhtml">我的桌面</span>
                     <em></em></li>
             </ul>
         </div>
@@ -99,7 +99,7 @@
     <div id="iframe_box" class="Hui-article">
         <div class="show_iframe">
             <div style="display:none" class="loading"></div>
-            <iframe scrolling="yes" frameborder="0" src="welcome.jhtml"></iframe>
+            <iframe scrolling="yes" frameborder="0" src="../common/index.jhtml"></iframe>
         </div>
     </div>
 </section>

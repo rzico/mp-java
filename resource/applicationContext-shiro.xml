@@ -11,11 +11,12 @@
 		<property name="unauthorizedUrl" value="/admin/unauthorized.jhtml" />
 		<property name="filterChainDefinitions">
 			<value>
-				<!--/admin/ = anon-->
-				<!--/admin/index/index.jhtml = authc-->
-				<!--/admin/login/index.jhtml = anon-->
-				<!--/admin/index.jsp = logout-->
-				<!--/admin/login/submit.jhtml = anon-->
+				/admin/ = anon
+				/admin/common/main.jhtml = authc
+				/admin/common/index.jhtml = authc
+				/admin/login/index.jhtml = anon
+				/admin/login/logout.jhtml = logout
+				/admin/login/submit.jhtml = anon
 
 				<!--/admin/user/list.jhtml = perms["admin:userList"]-->
 				<!--/admin/user/add.jhtml= perms["admin:userAdd"]-->

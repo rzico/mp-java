@@ -79,6 +79,14 @@ public class CommonController implements ServletContextAware {
 	}
 
 	/**
+	 * 桌面
+	 */
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index() {
+		return "/admin/common/index";
+	}
+
+	/**
 	 * 公钥
 	 */
 	@RequestMapping(value = "/public_key", method = RequestMethod.GET)
