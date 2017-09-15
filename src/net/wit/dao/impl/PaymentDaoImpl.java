@@ -30,15 +30,20 @@ import net.wit.entity.Payment;
 
 @Repository("paymentDaoImpl")
 public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements PaymentDao {
-	/**
-	 * @Title：findPage
-	 * @Description：标准代码
-	 * @param beginDate
-	 * @param endDate
-	 * @param pageable
-	 * @return Page<Payment>
-	 */
-	public Page<Payment> findPage(Date beginDate,Date endDate, Pageable pageable) {
+
+	public Payment findBySn(String sn) {
+		if (sn == null) {
+			return null;
+		}
+		String jpql = "select payment from Payment payment where lower(payment.sn) = lower(:sn)";
+		try {
+			return entityManager.createQuery(jpql, Payment.class).setFlushMode(FlushModeType.COMMIT).setParameter("sn", sn).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public Page<Payment> findPage(Date beginDate, Date endDate, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Payment> criteriaQuery = criteriaBuilder.createQuery(Payment.class);
 		Root<Payment> root = criteriaQuery.from(Payment.class);

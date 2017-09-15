@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
 
 /**
  * Dao - 基类
- * 
+ *
  * @author SHOP++ Team
  * @version 3.0
  */
@@ -204,11 +204,12 @@ public abstract class BaseDaoImpl<T, ID extends Serializable> implements BaseDao
 		}
 		long total = count(criteriaQuery, null);
 		int totalPages = (int) Math.ceil((double) total / (double) pageable.getPageSize());
-		if (totalPages < pageable.getPageNumber()) {
-			pageable.setPageNumber(totalPages);
-		}
+		//if (totalPages < pageable.getPageNumber()) {
+		//	pageable.setPageNumber(totalPages);
+		//}
 		TypedQuery<T> query = entityManager.createQuery(criteriaQuery).setFlushMode(FlushModeType.COMMIT);
-		query.setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize());
+		//query.setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize());
+		query.setFirstResult(pageable.getPageStart());
 		query.setMaxResults(pageable.getPageSize());
 		return new Page<T>(query.getResultList(), total, pageable);
 	}

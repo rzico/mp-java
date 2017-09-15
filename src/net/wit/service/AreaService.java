@@ -16,5 +16,20 @@ import net.wit.entity.Area;
  */
 
 public interface AreaService extends BaseService<Area, Long> {
-	Page<Area> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Page<Area> findPage(Date beginDate, Date endDate, Pageable pageable);
+	/**
+	 * 查找顶级地区
+	 *
+	 * @return 顶级地区
+	 */
+	List<Area> findRoots();
+
+	/**
+	 * 查找顶级地区
+	 *
+	 * @param count
+	 *            数量
+	 * @return 顶级地区
+	 */
+	List<Area> findRoots(Integer count);
 }

@@ -1,10 +1,11 @@
 package net.wit.controller.website.model;
+import net.wit.controller.weex.model.TagModel;
 import net.wit.entity.Member;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberModel implements Serializable {
 
@@ -24,7 +25,7 @@ public class MemberModel implements Serializable {
     /** 头像 */
     private String logo;
     /** 标签 */
-    private Set<TagModel> tags = new HashSet<TagModel>();
+    private List<net.wit.controller.weex.model.TagModel> tags = new ArrayList<net.wit.controller.weex.model.TagModel>();
 
     public Long getId() {
         return id;
@@ -90,11 +91,11 @@ public class MemberModel implements Serializable {
         this.fans = fans;
     }
 
-    public Set<TagModel> getTags() {
+    public List<net.wit.controller.weex.model.TagModel> getTags() {
         return tags;
     }
 
-    public void setTags(Set<TagModel> tags) {
+    public void setTags(List<net.wit.controller.weex.model.TagModel> tags) {
         this.tags = tags;
     }
 
@@ -107,6 +108,6 @@ public class MemberModel implements Serializable {
         this.follow = member.getFollows().size();
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
-        this.tags = TagModel.bindSet(member.getTags());
+        this.tags = TagModel.bindList(member.getTags());
      }
 }

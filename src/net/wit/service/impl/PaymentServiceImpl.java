@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 
 import net.wit.Filter;
 import net.wit.Page;
@@ -14,6 +15,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.SnDao;
+import net.wit.service.PluginService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -36,11 +39,50 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
+	@Resource(name = "pluginServiceImpl")
+	private PluginService pluginService;
+
+	@Resource(name = "snDaoImpl")
+	private SnDao snDao;
+
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
 		super.setBaseDao(paymentDao);
 	}
-	
+
+	@Transactional(readOnly = true)
+	public Payment findBySn(String sn) {
+		return paymentDao.findBySn(sn);
+	}
+
+
+	@Transactional
+	public synchronized void handle(Payment payment) throws Exception {
+		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
+		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
+			if (payment.getType() == Payment.Type.payment) {
+			} else if (payment.getType() == Payment.Type.recharge) {
+			}
+			payment.setPaymentDate(new Date());
+			paymentDao.merge(payment);
+		}
+	}
+
+
+
+	@Transactional
+	public void close(Payment payment) throws Exception {
+		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
+		if (payment != null && payment.getStatus() == Payment.Status.waiting) {
+			payment.setMemo("超时关闭");
+			payment.setStatus(Payment.Status.failure);
+			paymentDao.merge(payment);
+		};
+	}
+
+
+
+
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)

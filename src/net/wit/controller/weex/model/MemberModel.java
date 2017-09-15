@@ -3,7 +3,9 @@ import net.wit.entity.Member;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MemberModel implements Serializable {
@@ -24,7 +26,7 @@ public class MemberModel implements Serializable {
     /** 头像 */
     private String logo;
     /** 标签 */
-    private Set<TagModel> tags = new HashSet<TagModel>();
+    private List<TagModel> tags = new ArrayList<TagModel>();
 
     public Long getId() {
         return id;
@@ -90,11 +92,11 @@ public class MemberModel implements Serializable {
         this.fans = fans;
     }
 
-    public Set<TagModel> getTags() {
+    public List<TagModel> getTags() {
         return tags;
     }
 
-    public void setTags(Set<TagModel> tags) {
+    public void setTags(List<TagModel> tags) {
         this.tags = tags;
     }
 
@@ -107,6 +109,6 @@ public class MemberModel implements Serializable {
         this.follow = member.getFollows().size();
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
-        this.tags = TagModel.bindSet(member.getTags());
+        this.tags = TagModel.bindList(member.getTags());
      }
 }

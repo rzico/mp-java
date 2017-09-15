@@ -49,7 +49,7 @@ public class ArticleListModel implements Serializable {
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.authority = article.getArticleOptions().getAuthority();
-        this.tags = TagModel.bindSet(article.getTags());
+        this.tags = TagModel.bindList(article.getTags());
 
         this.images = null;
         this.url = null;

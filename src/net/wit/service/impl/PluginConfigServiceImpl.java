@@ -83,6 +83,17 @@ public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long>
 		super.delete(pluginConfig);
 	}
 
+
+	@Transactional(readOnly = true)
+	public boolean pluginIdExists(String pluginId) {
+		return pluginConfigDao.pluginIdExists(pluginId);
+	}
+
+	@Transactional(readOnly = true)
+	public PluginConfig findByPluginId(String pluginId) {
+		return pluginConfigDao.findByPluginId(pluginId);
+	}
+
 	public Page<PluginConfig> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return pluginConfigDao.findPage(beginDate,endDate,pageable);
 	}
