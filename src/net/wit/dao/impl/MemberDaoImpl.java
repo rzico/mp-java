@@ -57,4 +57,28 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements MemberDa
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	public Member findByUsername(String username) {
+		if (username == null) {
+			return null;
+		}
+		try {
+			String jpql = "select members from Member members where lower(members.username) = lower(:username)";
+			return entityManager.createQuery(jpql, Member.class).setFlushMode(FlushModeType.COMMIT).setParameter("username", username).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public Member findByMobile(String mobile) {
+		if (mobile == null) {
+			return null;
+		}
+		try {
+			String jpql = "select members from Member members where lower(members.mobile) = lower(:mobile)";
+			return entityManager.createQuery(jpql, Member.class).setFlushMode(FlushModeType.COMMIT).setParameter("mobile", mobile).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }

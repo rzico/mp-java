@@ -11,8 +11,8 @@ import java.util.Set;
 public class MemberAttributeModel implements Serializable {
 
     private Long id;
-    /** 登录名 */
-    private String username;
+    /** 账号 */
+    private String  username;
     /** 昵称 */
     private String nickName;
     /** 签名 */
@@ -24,7 +24,7 @@ public class MemberAttributeModel implements Serializable {
     /** 所在地 */
     private AreaModel area;
     /** 职业 */
-    private Occupation ccupation;
+    private OccupationModel occupation;
     /** 是否绑定手机 */
     private Boolean bindMobile;
     /** 是否绑定微信 */
@@ -88,12 +88,12 @@ public class MemberAttributeModel implements Serializable {
         this.area = area;
     }
 
-    public Occupation getCcupation() {
-        return ccupation;
+    public OccupationModel getOccupation() {
+        return occupation;
     }
 
-    public void setCcupation(Occupation ccupation) {
-        this.ccupation = ccupation;
+    public void setOccupation(OccupationModel occupation) {
+        this.occupation = occupation;
     }
 
     public Boolean getBindMobile() {
@@ -119,4 +119,26 @@ public class MemberAttributeModel implements Serializable {
     public void setHasPassword(Boolean hasPassword) {
         this.hasPassword = hasPassword;
     }
+
+    public void bind(Member member) {
+        this.id = member.getId();
+        this.autograph = member.getAutograph();
+        this.nickName = member.getNickName();
+        this.username = member.getUsername();
+        this.gender = member.getGender();
+        AreaModel area = new AreaModel();
+        if (member.getArea()!=null) {
+            area.bind(member.getArea());
+        }
+        this.area = area;
+        OccupationModel occupation = new OccupationModel();
+        if (member.getOccupation()!=null) {
+            occupation.bind(member.getOccupation());
+        }
+        this.occupation = occupation;
+        this.logo = member.getLogo();
+        this.hasPassword = (member.getPassword()!=null);
+        this.bindMobile = (member.getMobile()!=null);
+    }
+
 }

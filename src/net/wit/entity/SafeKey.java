@@ -18,6 +18,10 @@ public class SafeKey implements Serializable {
 
 	private static final long serialVersionUID = 123L;
 
+	/** 关键 */
+	@Column(name = "safe_key")
+	private String key;
+
 	/** 密钥 */
 	@Column(name = "safe_key_value")
 	private String value;
@@ -49,6 +53,15 @@ public class SafeKey implements Serializable {
 	}
 
 	// ===========================================getter/setter===========================================//
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
 	/**
 	 * 获取密钥
 	 * @return 密钥

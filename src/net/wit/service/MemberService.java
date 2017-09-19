@@ -17,4 +17,27 @@ import net.wit.entity.Member;
 
 public interface MemberService extends BaseService<Member, Long> {
 	Page<Member> findPage(Date beginDate,Date endDate, Pageable pageable);
+	/**
+	 * 根据用户名查找会员
+	 * @param username 用户名(忽略大小写)
+	 * @return 会员，若不存在则返回null
+	 */
+	Member findByUsername(String username);
+	/**
+	 * 根据手机号查找会员
+	 * @param mobile 用户名(忽略大小写)
+	 * @return 会员，若不存在则返回null
+	 */
+	Member findByMobile(String mobile);
+	/**
+	 * 判断会员是否登录
+	 * @return 会员是否登录
+	 */
+	boolean isAuthenticated();
+
+	/**
+	 * 获取当前登录会员
+	 * @return 当前登录会员，若不存在则返回null
+	 */
+	Member getCurrent();
 }

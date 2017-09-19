@@ -15,6 +15,12 @@ import net.wit.util.SpringUtils;
  */
 public class Message {
 
+	/** 无效会员 */
+	public static final String SESSION_INVAILD = "session.invaild";
+
+	/** 登录成功 */
+	public static final String LOGIN_SUCCESS = "login.success";
+
 	/**
 	 * 类型
 	 */

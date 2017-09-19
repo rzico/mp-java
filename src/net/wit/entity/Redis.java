@@ -16,17 +16,17 @@ import java.util.Set;
 @Entity
 @Table(name = "wx_redis")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_redis_sequence")
-public class Redis extends OrderEntity{
+public class Redis extends BaseEntity{
 
     private static final long serialVersionUID = 125L;
 
     /*key*/
-    @Column(nullable = false, updatable = false, unique = true,columnDefinition="varchar(50) not null unique comment '缓存'")
+    @Column(name = "redis_key",columnDefinition="varchar(80) not null unique comment '缓存'")
     private String key;
 
     /*value*/
     @Lob
-    @Column(nullable = false,columnDefinition="longtext not null comment '内容'")
+    @Column(name = "redis_value",columnDefinition="longtext not null comment '内容'")
     private String value;
 
     public String getKey() {

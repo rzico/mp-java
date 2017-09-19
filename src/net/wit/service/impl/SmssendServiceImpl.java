@@ -1,19 +1,21 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.chuanglan.sms.request.SmsSendRequest;
+import com.chuanglan.sms.response.SmsSendResponse;
+import com.chuanglan.sms.util.ChuangLanSmsUtil;
+import net.sf.json.JSON;
 import net.wit.Filter;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -85,5 +87,35 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 
 	public Page<Smssend> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return smssendDao.findPage(beginDate,endDate,pageable);
+	}
+	public String smsSend(Smssend smssend) {
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		String smsSingleRequestServerUrl = "http://smssh1.253.com/msg/send/json";
+		String msg = "【" + bundle.getString("signature") + "】"+smssend.getContent();
+		String phone = smssend.getMobile();
+		String report= "true";
+		String r = "0000";
+		try {
+			SmsSendRequest smsSingleRequest = new SmsSendRequest(bundle.getString("softwareSerialNo"), bundle.getString("password"), msg, phone, report);
+			String requestJson = JsonUtils.toJson(smsSingleRequest);
+			String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
+			SmsSendResponse smsSingleResponse = JsonUtils.toObject(response, SmsSendResponse.class);
+			if (smsSingleResponse.getCode().equals("0")) {
+				r = "0000";
+			} else {
+				r = "-"+smsSingleResponse.getErrorMsg();
+			}
+		} catch (Exception e) {
+			r = "-9999";
+		}
+		if (r.startsWith("-") || r.equals("")) {
+			smssend.setStatus(Smssend.Status.Error);
+			smssend.setDescr("短信失败，错误码=" + r);
+		} else {
+			smssend.setStatus(Smssend.Status.send);
+			smssend.setDescr("短信发送成功");
+		}
+		super.save(smssend);
+		return r;
 	}
 }

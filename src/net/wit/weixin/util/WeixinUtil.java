@@ -178,7 +178,7 @@ public class WeixinUtil {
 
 		String requestUrl = oauth2_access_token_url.replace("APPID", appid).replace("SECRET", appsecret).replace("CODE", code);
 		JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
-		System.out.println("getAccess==================="+ jsonObject.toString());
+		//System.out.println("getAccess==================="+ jsonObject.toString());
 		// 如果请求成功 
 		if (null != jsonObject) {
 			try {
@@ -209,7 +209,7 @@ public class WeixinUtil {
 		String url = menu_create_url.replace("ACCESS_TOKEN", accessToken);
 		// 将菜单对象转换成json字符串
 		String jsonMenu = JSONObject.fromObject(menu).toString();
-		System.out.println(jsonMenu);
+		//System.out.println(jsonMenu);
 		// 调用接口创建菜单
 		JSONObject jsonObject = httpRequest(url, "POST", jsonMenu);
 

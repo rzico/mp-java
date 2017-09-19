@@ -68,16 +68,13 @@ public class Member extends BaseEntity {
 	public static final String PRINCIPAL_ATTRIBUTE_NAME = "MEMBER.PRINCIPAL";
 
 	/** "用户名"Cookie名称 */
-	public static final String USERNAME_COOKIE_NAME = "username";
+	public static final String MOBILE_LOGIN_CAPTCHA = "MEMBER.LOGIN.CAPTCHA";
 
 	/** 会员注册项值属性个数 */
 	public static final int ATTRIBUTE_VALUE_PROPERTY_COUNT = 10;
 
 	/** 会员注册项值属性名称前缀 */
 	public static final String ATTRIBUTE_VALUE_PROPERTY_NAME_PREFIX = "attributeValue";
-
-	/** 最大收藏文章数 */
-	public static final Integer MAX_FAVORITE_COUNT = 50;
 
 	/** 用户名 */
 	@NotEmpty(groups = Save.class)
@@ -86,20 +83,17 @@ public class Member extends BaseEntity {
 	private String username;
 
 	/** 密码 */
-	@NotEmpty(groups = Save.class)
 	@Pattern(regexp = "^[^\\s&\"<>]+$")
 	@Column(columnDefinition="varchar(255) comment '密码'")
 	private String password;
 
 	/** E-mail */
-	@NotEmpty
 	@Email
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '邮箱'")
 	private String email;
 
 	/** 积分 */
-	@NotNull(groups = Save.class)
 	@Min(0)
 	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
 	private Long point;
@@ -183,6 +177,10 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '手机'")
 	private String mobile;
 
+	/** 设备号 */
+	@Column(columnDefinition="varchar(255) comment '设备号'")
+	private String uuid;
+
 	/** 会员注册项值0 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
@@ -232,10 +230,6 @@ public class Member extends BaseEntity {
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值9'")
 	private String attributeValue9;
-
-	/** 安全密匙 */
-	@Embedded
-	private SafeKey safeKey;
 
 	/** 定位 */
 	@Embedded
@@ -529,14 +523,6 @@ public class Member extends BaseEntity {
 		this.attributeValue9 = attributeValue9;
 	}
 
-	public SafeKey getSafeKey() {
-		return safeKey;
-	}
-
-	public void setSafeKey(SafeKey safeKey) {
-		this.safeKey = safeKey;
-	}
-
 	public Area getArea() {
 		return area;
 	}
@@ -631,6 +617,14 @@ public class Member extends BaseEntity {
 
 	public void setFriends(Set<Friends> friends) {
 		this.friends = friends;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	/**

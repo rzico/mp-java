@@ -17,4 +17,6 @@ import net.wit.entity.Smssend;
 
 public interface SmssendService extends BaseService<Smssend, Long> {
 	Page<Smssend> findPage(Date beginDate,Date endDate, Pageable pageable);
+	/**发送短信*/
+	public String smsSend(Smssend smssend);
 }
