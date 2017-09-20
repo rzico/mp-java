@@ -86,4 +86,7 @@ public class TemplateServiceImpl extends BaseServiceImpl<Template, Long> impleme
 	public Page<Template> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return templateDao.findPage(beginDate,endDate,pageable);
 	}
+	public Template findDefault(Template.Type type) {
+		return templateDao.findDefault(type);
+	}
 }

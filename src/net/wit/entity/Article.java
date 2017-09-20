@@ -111,6 +111,11 @@ public class Article extends BaseEntity{
     @Column(columnDefinition="bit comment '是否删除'")
     private Boolean deleted;
 
+    /** 是否草稿 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否草稿'")
+    private Boolean isDraft;
+
     /** 安全密匙 */
     @Embedded
     private ArticleOptions articleOptions;
@@ -245,6 +250,14 @@ public class Article extends BaseEntity{
 
     public void setLaud(Long laud) {
         this.laud = laud;
+    }
+
+    public Boolean getIsDraft() {
+        return isDraft;
+    }
+
+    public void setIsDraft(Boolean draft) {
+        isDraft = draft;
     }
 
     public List<Tag> getTags() {

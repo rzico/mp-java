@@ -54,6 +54,11 @@ public class Template extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '模板名称'")
 	private String name;
 
+	/** 缩例图 */
+	@Length(max = 255)
+	@Column(columnDefinition="varchar(255) comment '缩例图'")
+	private String thumbnial;
+
 	/** 是否免费 */
 	@NotEmpty
 	@Column(columnDefinition="bit not null comment '是否免费'")
@@ -102,5 +107,13 @@ public class Template extends OrderEntity {
 
 	public void setIsDefault(Boolean aDefault) {
 		isDefault = aDefault;
+	}
+
+	public String getThumbnial() {
+		return thumbnial;
+	}
+
+	public void setThumbnial(String thumbnial) {
+		this.thumbnial = thumbnial;
 	}
 }
