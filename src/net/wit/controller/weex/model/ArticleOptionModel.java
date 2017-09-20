@@ -1,6 +1,9 @@
 package net.wit.controller.weex.model;
 
+import net.wit.entity.Article;
 import net.wit.entity.ArticleOptions;
+import net.wit.entity.ArticleTitle;
+
 import java.io.Serializable;
 
 //文章展示输出模板 H5等
@@ -117,5 +120,30 @@ public class ArticleOptionModel implements Serializable {
     public void setArticleCategory(ArticleCategoryModel articleCategory) {
         this.articleCategory = articleCategory;
     }
+
+    public void bind(Article article) {
+        ArticleOptions options = article.getArticleOptions();
+        this.authority = options.getAuthority();
+        this.isPublish = options.getIsPublish();
+        this.isPitch = options.getIsPitch();
+        this.isReview = options.getIsReview();
+        this.isReward = options.getIsReward();
+        this.isExample = options.getIsExample();
+        this.isTop = options.getTop();
+        ArticleCatalogModel articleCatalogModel = new ArticleCatalogModel();
+        if (article.getArticleCatalog()!=null) {
+            articleCatalogModel.setId(article.getArticleCatalog().getId());
+            articleCatalogModel.setName(article.getArticleCatalog().getName());
+            articleCatalogModel.setCount(0);
+        }
+        this.articleCatalog = articleCatalogModel;
+        ArticleCategoryModel articleCategoryModel = new ArticleCategoryModel();
+        if (article.getArticleCategory()!=null) {
+            articleCategoryModel.setId(article.getArticleCategory().getId());
+            articleCategoryModel.setName(article.getArticleCategory().getName());
+            articleCatalogModel.setCount(0);
+        }
+        this.articleCatalog = articleCatalogModel;
+   }
 
 }

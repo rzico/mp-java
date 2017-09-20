@@ -33,6 +33,25 @@ public class BindUserDaoImpl extends BaseDaoImpl<BindUser, String> implements Bi
 			return null;
 		}
 	}
+
+	public BindUser findUnionId(String unionId, Type type) {
+		if (unionId == null) {
+			return null;
+		}
+		try {
+			String jpql = null;
+			jpql = "select bindUsers from BindUser bindUsers where bindUsers.unionId = :unionId and bindUsers.type=:type";
+
+			List<BindUser> bindUsers = entityManager.createQuery(jpql, BindUser.class).setFlushMode(FlushModeType.COMMIT).setParameter("unionId", unionId).setParameter("type", type).getResultList();
+			if (bindUsers.size()>0) {
+				return  bindUsers.get(0);
+			} else {
+				return  null;
+			}
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 	public BindUser findMember(Member member,String appId, Type type) {
 		if (member == null) {
 			return null;

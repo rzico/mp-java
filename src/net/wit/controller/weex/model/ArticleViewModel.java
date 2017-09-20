@@ -1,12 +1,12 @@
 package net.wit.controller.weex.model;
+import net.wit.entity.Article;
+import net.wit.util.JsonUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 //文章展示输出模板 H5等
 
@@ -34,7 +34,7 @@ public class ArticleViewModel implements Serializable {
     /** 点赞数 */
     private Long laud;
     /** 内容 */
-    private String content;
+    private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
 
     public Long getId() {
         return id;
@@ -124,11 +124,32 @@ public class ArticleViewModel implements Serializable {
         this.laud = laud;
     }
 
-    public String getContent() {
-        return content;
+    public List<ArticleContentModel> getTemplates() {
+        return templates;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setTemplates(List<ArticleContentModel> templates) {
+        this.templates = templates;
     }
+
+    public void bind(Article article) {
+        this.id = article.getId();
+        this.title = article.getTitle();
+        this.author = article.getAuthor();
+        this.music = article.getMusic();
+        this.thumbnial = article.getThumbnial();
+        this.createDate = article.getCreateDate();
+        this.hits = article.getHits();
+        this.laud = article.getLaud();
+        this.review = article.getReview();
+        MemberModel member = new MemberModel();
+        member.bind(article.getMember());
+        this.member = member;
+        List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
+        if (article.getContent()!=null) {
+            templates = JsonUtils.toObject(article.getContent(), List.class);
+        }
+        this.templates = templates;
+    }
+
 }

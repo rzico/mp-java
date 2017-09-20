@@ -21,6 +21,7 @@ public interface BindUserService extends BaseService<BindUser,String>{
 	 */
 	BindUser findOpenId(String openId,String appId, Type type);
 
+	BindUser findUnionId(String unionId,Type type);
 	/**
 	 * 根据用户名查找绑定登录会员
 	 *

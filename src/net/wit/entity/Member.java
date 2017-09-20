@@ -77,9 +77,8 @@ public class Member extends BaseEntity {
 	public static final String ATTRIBUTE_VALUE_PROPERTY_NAME_PREFIX = "attributeValue";
 
 	/** 用户名 */
-	@NotEmpty(groups = Save.class)
 	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]+$")
-	@Column(columnDefinition="varchar(50) not null unique comment '用户名'")
+	@Column(columnDefinition="varchar(50) comment '用户名'")
 	private String username;
 
 	/** 密码 */

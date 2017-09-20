@@ -1,4 +1,8 @@
 package net.wit.controller.weex.model;
+import net.wit.entity.Area;
+import net.wit.entity.Article;
+import net.wit.util.JsonUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,4 +69,21 @@ public class ArticleModel implements Serializable {
     public void setArticleTitleModel(ArticleTitleModel articleTitleModel) {
         this.articleTitleModel = articleTitleModel;
     }
+
+    public void bind(Article article) {
+        this.id = article.getId();
+        this.title = article.getTitle();
+        this.music = article.getMusic();
+        this.thumbnial = article.getThumbnial();
+        ArticleTitleModel articleTitleModel = new ArticleTitleModel();
+        articleTitleModel.bind(article.getArticleTitle());
+        this.articleTitleModel = articleTitleModel;
+        ArticleContentModel articleContentModel = new ArticleContentModel();
+        List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
+        if (article.getContent()!=null) {
+            templates = JsonUtils.toObject(article.getContent(), List.class);
+        }
+        this.templates = templates;
+    }
+
 }

@@ -32,4 +32,5 @@ public class ArticleCatalogModel implements Serializable {
     public void setCount(int count) {
         this.count = count;
     }
+
 }

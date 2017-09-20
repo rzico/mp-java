@@ -82,4 +82,15 @@ public class ArticleTitleModel implements Serializable {
     public void setImage6(String image6) {
         this.image6 = image6;
     }
+
+    public void bind(ArticleTitle articleTitle) {
+        this.titleType = articleTitle.getTitleType();
+        this.image1 = articleTitle.getImage1();
+        this.image2 = articleTitle.getImage2();
+        this.image3 = articleTitle.getImage3();
+        this.image4 = articleTitle.getImage4();
+        this.image5 = articleTitle.getImage5();
+        this.image6 = articleTitle.getImage6();
+    }
+
 }

@@ -101,20 +101,6 @@ public class BaseController {
 	}
 
 	/**
-	 * 添加瞬时消息
-	 * 
-	 * @param redirectAttributes
-	 *            RedirectAttributes
-	 * @param message
-	 *            消息
-	 */
-	protected void addFlashMessage(RedirectAttributes redirectAttributes, Message message) {
-		if (redirectAttributes != null && message != null) {
-			redirectAttributes.addFlashAttribute(FlashMessageDirective.FLASH_MESSAGE_ATTRIBUTE_NAME, message);
-		}
-	}
-
-	/**
 	 * 添加日志
 	 * 
 	 * @param content

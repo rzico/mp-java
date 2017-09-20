@@ -1,9 +1,10 @@
 package net.wit.controller.weex.model;
 
 import net.wit.entity.Article;
+import net.wit.entity.Occupation;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.*;
 
 //文章编辑模板
 
@@ -49,9 +50,4 @@ public class ArticleContentModel implements Serializable {
     public void setOriginal(String original) {
         this.original = original;
     }
-
-    public ArticleContentModel() {
-
-    }
-
 }

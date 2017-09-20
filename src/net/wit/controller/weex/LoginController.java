@@ -57,7 +57,6 @@ public class LoginController extends BaseController {
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
-
     /**
      * 手机验证码登录时，发送验证码
      * mobile 手机号
@@ -97,9 +96,6 @@ public class LoginController extends BaseController {
         try {
             String captcha = rsaService.decryptParameter("captcha", request);
             rsaService.removePrivateKey(request);
-            if (member==null) {
-                return Message.error("无效验证码");
-            }
             if (captcha==null) {
                 return Message.error("无效验证码");
             }
@@ -108,6 +104,20 @@ public class LoginController extends BaseController {
             }
             if (captcha.equals(safeKey.getValue())) {
                 return Message.error("无效验证码");
+            }
+            if (member==null) {
+                member = new Member();
+                member.setUsername(safeKey.getKey());
+                member.setMobile(safeKey.getKey());
+                member.setNickName(null);
+                member.setLogo(null);
+                member.setPoint(0L);
+                member.setBalance(BigDecimal.ZERO);
+                member.setIsEnabled(true);
+                member.setIsLocked(false);
+                member.setLoginFailureCount(0);
+                member.setRegisterIp(request.getRemoteAddr());
+                memberService.save(member);
             }
 
             Principal principal = new Principal(member.getId(),member.getUsername());
@@ -189,10 +199,13 @@ public class LoginController extends BaseController {
             return Message.error("获取用户信息失败");
         }
 
-        Member member = memberService.findByUsername(unionId);
+        BindUser bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+        Member member = null;
+        if (bindUser!=null) {
+            member = bindUser.getMember();
+        }
         if (member==null) {
             member = new Member();
-            member.setUsername(unionId);
             member.setNickName(nickName);
             member.setLogo(headImg);
             member.setPoint(0L);
@@ -204,14 +217,19 @@ public class LoginController extends BaseController {
             memberService.save(member);
         }
         try {
-            BindUser bindUser = bindUserService.findOpenId(openId,bundle.getString("app.appid"),BindUser.Type.weixin);
+            bindUser = bindUserService.findOpenId(openId,bundle.getString("app.appid"),BindUser.Type.weixin);
             if (bindUser==null) {
                 bindUser = new BindUser();
                 bindUser.setAppId(bundle.getString("app.appid"));
                 bindUser.setType(BindUser.Type.weixin);
                 bindUser.setMember(member);
                 bindUser.setOpenId(openId);
+            } else {
+                bindUser.setMember(member);
+                bindUser.setUnionId(unionId);
             }
+            bindUserService.save(bindUser);
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");

@@ -38,6 +38,9 @@ public class BindUserServiceImpl extends BaseServiceImpl<BindUser, String> imple
 	public BindUser findOpenId(String openId,String appId,Type type) {
 		return bindUserDao.findOpenId(openId,appId,type);
 	}
+	public BindUser findUnionId(String unionId,Type type) {
+		return bindUserDao.findUnionId(unionId,type);
+	}
 	public BindUser findMember(Member member, String appId, Type type) {
 		return bindUserDao.findMember(member,appId,type);
 	}

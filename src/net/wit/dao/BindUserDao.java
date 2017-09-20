@@ -14,5 +14,6 @@ import net.wit.entity.Member;
 public interface BindUserDao extends BaseDao<BindUser,String> {
 
 	BindUser findOpenId(String openId,String appId,Type type);
+	BindUser findUnionId(String openId,Type type);
 	BindUser findMember(Member member,String appId,Type type);
 }

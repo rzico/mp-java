@@ -34,6 +34,11 @@ public class BindUser extends BaseEntity {
 	@Column(nullable = false)
 	private String openId;
 
+	/** 联盟号 */
+	@NotNull
+	@Column(nullable = false)
+	private String unionId;
+
 	/** 应用 */
 	@NotNull
 	@Column(nullable = false)
@@ -56,6 +61,14 @@ public class BindUser extends BaseEntity {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public String getAppId() {
