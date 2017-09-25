@@ -58,4 +58,5 @@ public class TemplateController extends BaseController {
         List<Template> templates = templateService.findList(null,filters,null);
         return Message.success(TemplateModel.bindList(templates),"发布成功");
     }
+
 }

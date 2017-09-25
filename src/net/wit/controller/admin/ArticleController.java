@@ -173,7 +173,7 @@ public class ArticleController extends BaseController {
 
 		entity.setMember(memberService.find(memberId));
 
-		entity.setThumbnial(article.getThumbnial());
+		entity.setThumbnail(article.getThumbnail());
 
 		entity.setTemplate(templateService.find(templateId));
 
@@ -285,7 +285,7 @@ public class ArticleController extends BaseController {
 
 		entity.setMember(memberService.find(memberId));
 
-		entity.setThumbnial(article.getThumbnial());
+		entity.setThumbnail(article.getThumbnail());
 
 		entity.setTemplate(templateService.find(templateId));
 

@@ -41,6 +41,11 @@ public class Product extends BaseEntity {
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 缩略图 */
+	@Length(max = 200)
+	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
+	private String thumbnial;
+
 	/** 规格 */
 	@Length(max = 50)
 	@Column(length = 50,columnDefinition="varchar(50) comment '规格'")
@@ -264,6 +269,13 @@ public class Product extends BaseEntity {
 		this.productStocks = productStocks;
 	}
 
+	public String getThumbnial() {
+		return thumbnial;
+	}
+
+	public void setThumbnial(String thumbnial) {
+		this.thumbnial = thumbnial;
+	}
 
 	/**
 	 * 获取可用库存

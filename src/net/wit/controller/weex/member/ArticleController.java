@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 /**
@@ -42,11 +43,26 @@ public class ArticleController extends BaseController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
+    @Resource(name = "articleCatalogServiceImpl")
+    private ArticleCatalogService articleCatalogService;
+
+    @Resource(name = "articleCategoryServiceImpl")
+    private ArticleCategoryService articleCategoryService;
+
     @Resource(name = "templateServiceImpl")
     private TemplateService templateService;
 
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
+
+    @Resource(name = "productServiceImpl")
+    private ProductService productService;
+
+    @Resource(name = "articleProductServiceImpl")
+    private ArticleProductService articleProductService;
+
+    @Resource(name = "articleLaudServiceImpl")
+    private ArticleLaudService articleLaudService;
 
     /**
      * 获取文章编辑信息
@@ -58,6 +74,7 @@ public class ArticleController extends BaseController {
         if (article==null) {
             return Message.error("无效文章编号");
         }
+
         ArticleModel model =new ArticleModel();
         model.bind(article);
         return Message.success(model,"获取成功");
@@ -84,8 +101,8 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
     public Message submit(Long id,String title, String author, ArticleTitle articleTitle,
-                          String thumbnial, String music, String content,
-                          Long areaId, Long templateId,HttpServletRequest request){
+                          String thumbnail, String music, String content,
+                          Long areaId, Long templateId,Long[] productIds,String votes,HttpServletRequest request){
         Article article = null;
         if (id!=null) {
             article = articleService.find(id);
@@ -103,15 +120,16 @@ public class ArticleController extends BaseController {
             article.getArticleOptions().setIsPitch(false);
             article.getArticleOptions().setIsPublish(false);
             article.getArticleOptions().setIsReview(true);
-            article.getArticleOptions().setTop(false);
+            article.getArticleOptions().setIsTop(false);
             article.getArticleOptions().setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
         }
         article.setTitle(title);
         article.setAuthor(author);
-        article.setThumbnial(thumbnial);
+        article.setThumbnail(thumbnail);
         article.setMusic(music);
         article.setContent(content);
+        article.setVotes(votes);
         if (areaId!=null) {
             article.setArea(areaService.find(areaId));
         }
@@ -121,7 +139,20 @@ public class ArticleController extends BaseController {
         if (articleTitle!=null) {
             article.setArticleTitle(articleTitle);
         }
+
         articleService.save(article);
+
+        for (ArticleProduct product:article.getProducts()) {
+            articleProductService.delete(product);
+        }
+        List<Product> products = productService.findList(productIds);
+        for (Product product:products) {
+            ArticleProduct ap = new ArticleProduct();
+            ap.setArticle(article);
+            ap.setProduct(product);
+            articleProductService.save(ap);
+        }
+
         ArticleModel model =new ArticleModel();
         model.bind(article);
         return Message.success(model,"获取成功");
@@ -132,17 +163,29 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
-    public Message publish(Long id,ArticleOptions articleOptions,Location location,HttpServletRequest request){
+    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptions articleOptions,Location location,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
         }
         if (articleOptions!=null) {
-            article.setArticleOptions(articleOptions);
+            article.getArticleOptions().setIsReward(articleOptions.getIsReward());
+            article.getArticleOptions().setIsTop(articleOptions.getIsTop());
+            article.getArticleOptions().setIsReview(articleOptions.getIsReview());
+            article.getArticleOptions().setIsPublish(articleOptions.getIsPublish());
+            article.getArticleOptions().setAuthority(articleOptions.getAuthority());
+            article.getArticleOptions().setPassword(articleOptions.getPassword());
         }
         if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
             article.setLocation(location);
         }
+        if (articleCategoryId!=null) {
+            article.setArticleCategory(articleCategoryService.find(articleCategoryId));
+        }
+        if (articleCatalogId!=null) {
+            article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
+        }
+        article.setIsDraft(false);
         articleService.save(article);
         return Message.success("发布成功");
     }
@@ -162,6 +205,46 @@ public class ArticleController extends BaseController {
         }
         articleService.save(article);
         return Message.success("发布成功");
+    }
+
+    /**
+     *  文章点赞
+     */
+    @RequestMapping(value = "/laud", method = RequestMethod.POST)
+    @ResponseBody
+    public Message laud(Long articleId,HttpServletRequest request){
+        Article article = articleService.find(articleId);
+        if (article==null) {
+            return Message.error("无效文章编号");
+        }
+
+        Member member = memberService.getCurrent();
+        ArticleLaud laud = new ArticleLaud();
+        laud.setArticle(article);
+        laud.setIp(request.getRemoteAddr());
+        laud.setMember(member);
+        articleLaudService.save(laud);
+
+        article.setLaud(article.getLaud()+1);
+        articleService.save(article);
+        return Message.success("点赞成功");
+
+    }
+
+    /**
+     *  文章点击
+     */
+    @RequestMapping(value = "/hits", method = RequestMethod.POST)
+    @ResponseBody
+    public Message hits(Long articleId,HttpServletRequest request){
+        Article article = articleService.find(articleId);
+        if (article==null) {
+            return Message.error("无效文章编号");
+        }
+        article.setHits(article.getHits()+1);
+        articleService.save(article);
+        return Message.success("点击成功");
+
     }
 
 }

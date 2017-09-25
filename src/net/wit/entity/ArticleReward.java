@@ -27,7 +27,7 @@ public class ArticleReward extends BaseEntity {
 	public enum Status {
 
 		/** 等待支付 */
-		wait,
+		waiting,
 
 		/** 支付成功 */
 		success,

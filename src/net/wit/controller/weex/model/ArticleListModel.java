@@ -22,7 +22,7 @@ public class ArticleListModel implements Serializable {
     /** 标题 */
     private String title;
     /** 标题图 */
-    private String thumbnial;
+    private String thumbnail;
     /** 缩例图 */
     private List<String> images = new ArrayList<String>();
     /** 链接 */
@@ -45,7 +45,7 @@ public class ArticleListModel implements Serializable {
         this.author = article.getAuthor();
         this.logo = article.getMember().getLogo();
         this.title = article.getTitle();
-        this.thumbnial = article.getThumbnial();
+        this.thumbnail = article.getThumbnail();
         this.review = article.getReview();
         this.hits = article.getHits();
         this.laud = article.getLaud();

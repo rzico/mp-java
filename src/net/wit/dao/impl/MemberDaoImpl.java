@@ -81,4 +81,16 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements MemberDa
 			return null;
 		}
 	}
+
+	public Member findByUUID(String uuid) {
+		if (uuid == null) {
+			return null;
+		}
+		try {
+			String jpql = "select members from Member members where lower(members.uuid) = lower(:uuid)";
+			return entityManager.createQuery(jpql, Member.class).setFlushMode(FlushModeType.COMMIT).setParameter("uuid", uuid).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }

@@ -48,9 +48,6 @@ public class ArticleVoteController extends BaseController {
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
 
-	@Resource(name = "articleVoteOptionServiceImpl")
-	private ArticleVoteOptionService articleVoteOptionService;
-
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
@@ -79,8 +76,6 @@ public class ArticleVoteController extends BaseController {
 
 		model.addAttribute("articles",articleService.findAll());
 
-		model.addAttribute("articleVoteOptions",articleVoteOptionService.findAll());
-
 		model.addAttribute("authors",memberService.findAll());
 
 		model.addAttribute("members",memberService.findAll());
@@ -96,8 +91,6 @@ public class ArticleVoteController extends BaseController {
 	public String add(ModelMap model) {
 
 		model.addAttribute("articles",articleService.findAll());
-
-		model.addAttribute("articleVoteOptions",articleVoteOptionService.findAll());
 
 		model.addAttribute("authors",memberService.findAll());
 
@@ -124,8 +117,6 @@ public class ArticleVoteController extends BaseController {
 		entity.setValue(articleVote.getValue());
 
 		entity.setArticle(articleService.find(articleId));
-
-		entity.setArticleVoteOption(articleVoteOptionService.find(articleVoteOptionId));
 
 		entity.setAuthor(memberService.find(authorId));
 
@@ -168,8 +159,6 @@ public class ArticleVoteController extends BaseController {
 
 		model.addAttribute("articles",articleService.findAll());
 
-		model.addAttribute("articleVoteOptions",articleVoteOptionService.findAll());
-
 		model.addAttribute("authors",memberService.findAll());
 
 		model.addAttribute("members",memberService.findAll());
@@ -197,8 +186,6 @@ public class ArticleVoteController extends BaseController {
 		entity.setValue(articleVote.getValue());
 
 		entity.setArticle(articleService.find(articleId));
-
-		entity.setArticleVoteOption(articleVoteOptionService.find(articleVoteOptionId));
 
 		entity.setAuthor(memberService.find(authorId));
 
@@ -258,19 +245,6 @@ public class ArticleVoteController extends BaseController {
 		model.addAttribute("article",articleService.find(id));
 		return "/admin/articleVote/view/articleView";
 	}
-
-
-	/**
-	 * 题库管理视图
-	 */
-	@RequestMapping(value = "/articleVoteOptionView", method = RequestMethod.GET)
-	public String articleVoteOptionView(Long id, ModelMap model) {
-		model.addAttribute("articles",articleService.findAll());
-
-		model.addAttribute("articleVoteOption",articleVoteOptionService.find(id));
-		return "/admin/articleVote/view/articleVoteOptionView";
-	}
-
 
 	/**
 	 * 会员管理视图

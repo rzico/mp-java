@@ -51,7 +51,6 @@ public class PasswordController extends BaseController {
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
-
     /**
      * 发送验证码
      * mobile 手机号

@@ -173,11 +173,11 @@ public class Member extends BaseEntity {
 	private String phone;
 
 	/** 手机 */
-	@Column(columnDefinition="varchar(255) comment '手机'")
+	@Column(columnDefinition="varchar(50) comment '手机'")
 	private String mobile;
 
 	/** 设备号 */
-	@Column(columnDefinition="varchar(255) comment '设备号'")
+	@Column(columnDefinition="varchar(50) comment '设备号'")
 	private String uuid;
 
 	/** 会员注册项值0 */

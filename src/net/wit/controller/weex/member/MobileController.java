@@ -29,8 +29,8 @@ import java.util.Date;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexRegisterController")
-@RequestMapping("/weex/register")
+@Controller("weexMemberMobileController")
+@RequestMapping("/weex/member/mobile")
 public class MobileController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
@@ -47,7 +47,6 @@ public class MobileController extends BaseController {
 
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
-
 
     /**
      * 发送验证码
@@ -81,7 +80,7 @@ public class MobileController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message captcha(HttpServletRequest request){
+    public Message submit(HttpServletRequest request){
         Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");

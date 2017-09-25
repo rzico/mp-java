@@ -129,7 +129,7 @@ public class ArticleOptionModel implements Serializable {
         this.isReview = options.getIsReview();
         this.isReward = options.getIsReward();
         this.isExample = options.getIsExample();
-        this.isTop = options.getTop();
+        this.isTop = options.getIsTop();
         ArticleCatalogModel articleCatalogModel = new ArticleCatalogModel();
         if (article.getArticleCatalog()!=null) {
             articleCatalogModel.setId(article.getArticleCatalog().getId());

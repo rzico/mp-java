@@ -40,9 +40,8 @@ public class ArticleVote extends BaseEntity {
 	private Article article;
 
 	/** 题目 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '文章'")
-	private ArticleVoteOption articleVoteOption;
+	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment '题目'")
+	private String title;
 
 	/** 答案 */
 	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment '答案'")
@@ -80,12 +79,12 @@ public class ArticleVote extends BaseEntity {
 		this.article = article;
 	}
 
-	public ArticleVoteOption getArticleVoteOption() {
-		return articleVoteOption;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setArticleVoteOption(ArticleVoteOption articleVoteOption) {
-		this.articleVoteOption = articleVoteOption;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getValue() {

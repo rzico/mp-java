@@ -134,11 +134,11 @@ public class ArticleOptions implements Serializable {
 		isExample = isExample;
 	}
 
-	public Boolean getTop() {
+	public Boolean getIsTop() {
 		return isTop;
 	}
 
-	public void setTop(Boolean top) {
+	public void setIsTop(Boolean top) {
 		isTop = top;
 	}
 }

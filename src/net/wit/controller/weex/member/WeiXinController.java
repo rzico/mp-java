@@ -107,16 +107,19 @@ public class WeiXinController extends BaseController {
 
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+
             String xuid = request.getHeader("x-uid");
             if (xuid!=null) {
                 member.setUuid(xuid);
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("登录失败");
         }
     }
+
 }

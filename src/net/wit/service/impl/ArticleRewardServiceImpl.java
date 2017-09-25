@@ -48,6 +48,18 @@ public class ArticleRewardServiceImpl extends BaseServiceImpl<ArticleReward, Lon
 		super.save(articleReward);
 	}
 
+
+	@Transactional
+	//@CacheEvict(value = "authorization", allEntries = true)
+	public void saveAndPayment(ArticleReward articleReward) {
+		articleRewardDao.persist(articleReward);
+		Payment payment = new Payment();
+		payment.setAmount(articleReward.getAmount());
+		payment.setStatus(Payment.Status.waiting);
+
+		super.save(articleReward);
+	}
+
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)

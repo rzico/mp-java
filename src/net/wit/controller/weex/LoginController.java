@@ -124,6 +124,11 @@ public class LoginController extends BaseController {
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
             if (xuid!=null) {
+                Member u = memberService.findByUUID(xuid);
+                if (!u.equals(member)) {
+                    u.setUuid(null);
+                    memberService.save(u);
+                }
                 member.setUuid(xuid);
             }
             member.setLoginDate(new Date());
@@ -158,6 +163,11 @@ public class LoginController extends BaseController {
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
             if (xuid!=null) {
+                Member u = memberService.findByUUID(xuid);
+                if (!u.equals(member)) {
+                    u.setUuid(null);
+                    memberService.save(u);
+                }
                 member.setUuid(xuid);
             }
             member.setLoginDate(new Date());
@@ -223,6 +233,7 @@ public class LoginController extends BaseController {
                 bindUser.setAppId(bundle.getString("app.appid"));
                 bindUser.setType(BindUser.Type.weixin);
                 bindUser.setMember(member);
+                bindUser.setUnionId(unionId);
                 bindUser.setOpenId(openId);
             } else {
                 bindUser.setMember(member);
@@ -234,6 +245,11 @@ public class LoginController extends BaseController {
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
             if (xuid!=null) {
+                Member u = memberService.findByUUID(xuid);
+                if (!u.equals(member)) {
+                    u.setUuid(null);
+                    memberService.save(u);
+                }
                 member.setUuid(xuid);
             }
             member.setLoginDate(new Date());

@@ -24,10 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Controller - 共用
@@ -128,8 +125,20 @@ public class CommonController extends BaseController {
 	 * 检查是否登录
 	 */
 	@RequestMapping("/isAuthenticated")
+	@ResponseBody
 	public Message authorized(HttpServletRequest request, HttpServletResponse response) {
-		return Message.success(memberService.isAuthenticated(),"success");
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+		Map<String,Object> data = new HashMap<String,Object>();
+		Member member = memberService.getCurrent();
+		data.put("loginStatus",member!=null);
+		if (member!=null) {
+			data.put("uid", member.getId());
+		}
+		data.put("version","0.0.1");
+		data.put("url","http://cdn.rzico.com/weex/resources/release/0.0.1.zip");
+		data.put("key",bundle.getString("app.key"));
+		return Message.success(data,"success");
 	}
 
 }

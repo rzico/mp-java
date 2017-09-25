@@ -102,6 +102,10 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	public Member findByMobile(String mobile) {
 		return memberDao.findByMobile(mobile);
 	}
+	@Transactional(readOnly = true)
+	public Member findByUUID(String uuid) {
+		return memberDao.findByUUID(uuid);
+	}
 
 	@Transactional(readOnly = true)
 	public boolean isAuthenticated() {

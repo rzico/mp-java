@@ -63,7 +63,7 @@ public class Article extends BaseEntity{
     /** 缩例图 */
     @Length(max = 255)
     @Column(columnDefinition="varchar(255) comment '缩例图'")
-    private String thumbnial;
+    private String thumbnail;
 
     /** 类别 */
     @ManyToOne(fetch= FetchType.LAZY)
@@ -156,9 +156,7 @@ public class Article extends BaseEntity{
     private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
 
     /** 投票项 */
-    @ElementCollection
-    @CollectionTable(name = "wx_article_vote_option")
-    private List<String> options = new ArrayList<String>();
+    private String votes;
 
     public String getAuthor() {
         return author;
@@ -316,12 +314,12 @@ public class Article extends BaseEntity{
         this.deleted = deleted;
     }
 
-    public String getThumbnial() {
-        return thumbnial;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setThumbnial(String thumbnial) {
-        this.thumbnial = thumbnial;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public Member getMember() {
@@ -356,12 +354,12 @@ public class Article extends BaseEntity{
         this.template = template;
     }
 
-    public List<String> getOptions() {
-        return options;
+    public String getVotes() {
+        return votes;
     }
 
-    public void setOptions(List<String> options) {
-        this.options = options;
+    public void setVotes(String votes) {
+        this.votes = votes;
     }
 
     public MapEntity getMapTemplate() {

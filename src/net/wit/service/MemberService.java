@@ -30,6 +30,12 @@ public interface MemberService extends BaseService<Member, Long> {
 	 */
 	Member findByMobile(String mobile);
 	/**
+	 * 根据设备号查找会员
+	 * @param uuid 设备号(忽略大小写)
+	 * @return 会员，若不存在则返回null
+	 */
+	Member findByUUID(String uuid);
+	/**
 	 * 判断会员是否登录
 	 * @return 会员是否登录
 	 */

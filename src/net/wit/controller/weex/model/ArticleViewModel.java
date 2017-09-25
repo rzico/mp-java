@@ -20,7 +20,7 @@ public class ArticleViewModel implements Serializable {
     /** 标题 */
     private String title;
     /** 标题图 */
-    private String thumbnial;
+    private String thumbnail;
     /** 创建时间 */
     private Date createDate;
     /** 背景音乐 */
@@ -35,6 +35,12 @@ public class ArticleViewModel implements Serializable {
     private Long laud;
     /** 内容 */
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
+    /** 投票 */
+    private List<ArticleVoteOptionModel> voteOptions = new ArrayList<ArticleVoteOptionModel>();
+    /** 投票 */
+    private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
+    /** 商品 */
+    private List<ProductViewModel> products = new ArrayList<ProductViewModel>();
 
     public Long getId() {
         return id;
@@ -68,12 +74,12 @@ public class ArticleViewModel implements Serializable {
         this.title = title;
     }
 
-    public String getThumbnial() {
-        return thumbnial;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setThumbnial(String thumbnial) {
-        this.thumbnial = thumbnial;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public Date getCreateDate() {
@@ -132,12 +138,28 @@ public class ArticleViewModel implements Serializable {
         this.templates = templates;
     }
 
+    public List<ArticleVoteOptionModel> getVoteOptions() {
+        return voteOptions;
+    }
+
+    public void setVoteOptions(List<ArticleVoteOptionModel> voteOptions) {
+        this.voteOptions = voteOptions;
+    }
+
+    public List<ProductViewModel> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductViewModel> products) {
+        this.products = products;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
         this.author = article.getAuthor();
         this.music = article.getMusic();
-        this.thumbnial = article.getThumbnial();
+        this.thumbnail = article.getThumbnail();
         this.createDate = article.getCreateDate();
         this.hits = article.getHits();
         this.laud = article.getLaud();
@@ -149,7 +171,15 @@ public class ArticleViewModel implements Serializable {
         if (article.getContent()!=null) {
             templates = JsonUtils.toObject(article.getContent(), List.class);
         }
+
+        List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
+        if (article.getVotes()!=null) {
+            votes = JsonUtils.toObject(article.getVotes(), List.class);
+        }
+
         this.templates = templates;
+        this.votes = votes;
+        this.products = ProductViewModel.bindSet(article);
     }
 
 }
