@@ -86,4 +86,7 @@ public class FriendsServiceImpl extends BaseServiceImpl<Friends, Long> implement
 	public Page<Friends> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return friendsDao.findPage(beginDate,endDate,pageable);
 	}
+	public Friends find(Member member,Member friend) {
+		return friendsDao.find(member,friend);
+	}
 }

@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -56,5 +57,19 @@ public class FriendsDaoImpl extends BaseDaoImpl<Friends, Long> implements Friend
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
+	}
+	public Friends find(Member member,Member friend) {
+		if (member == null) {
+			return null;
+		}
+		if (friend == null) {
+			return null;
+		}
+		try {
+			String jpql = "select friends from Friends friends where friends.member=:member and friends.friend = :friend";
+			return entityManager.createQuery(jpql, Friends.class).setFlushMode(FlushModeType.COMMIT).setParameter("member", member).setParameter("friend", friend).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }

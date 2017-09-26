@@ -66,7 +66,7 @@ public class Friends extends BaseEntity {
 
 	/** 状态 */
 	@JoinColumn(columnDefinition="int(11) not null comment '状态 {ask:申请,adopt:通过,black:拉黑}'")
-	private Status Status;
+	private Status status;
 
 	/** 类型 */
 	@JoinColumn(columnDefinition="int(11) not null comment '类型 {friend:好友,customer:会员,vip1:一级代理,vip2:二级代理,vip3:三级代理}'")
@@ -83,11 +83,11 @@ public class Friends extends BaseEntity {
 	private Member friend;
 
 	public Status getStatus() {
-		return Status;
+		return status;
 	}
 
 	public void setStatus(Status status) {
-		Status = status;
+		this.status = status;
 	}
 
 	public Member getMember() {

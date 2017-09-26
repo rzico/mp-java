@@ -115,6 +115,8 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 			smssend.setStatus(Smssend.Status.send);
 			smssend.setDescr("短信发送成功");
 		}
+		smssend.setCount(1);
+		smssend.setFee(new BigDecimal("0.1"));
 		super.save(smssend);
 		return r;
 	}

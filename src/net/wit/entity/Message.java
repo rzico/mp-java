@@ -77,9 +77,9 @@ public class Message extends BaseEntity {
 	@Column(columnDefinition="bit not null comment '收件人已读'")
 	private Boolean readed;
 
-	/** 是否显示 */
-	@Column(columnDefinition="bit not null comment '是否显示'")
-	private Boolean isShow;
+	/** 是否删除 */
+	@Column(columnDefinition="bit not null comment '是否删除'")
+	private Boolean deleted;
 
 	/** 收件人 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -131,12 +131,12 @@ public class Message extends BaseEntity {
 		this.readed = readed;
 	}
 
-	public Boolean getIsShow() {
-		return isShow;
+	public Boolean getDeleted() {
+		return deleted;
 	}
 
-	public void setIsShow(Boolean show) {
-		isShow = show;
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public Member getReceiver() {

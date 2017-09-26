@@ -57,6 +57,8 @@ public class WeexInterceptor extends HandlerInterceptorAdapter {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		logger.debug("xuid="+xuid);
 		logger.debug("xtkn="+xtkn);
+		logger.debug("xtsp="+xtsp);
+		logger.debug("xtkn="+xtkn);
 
 		if (xtkn!=null && xtkn.equals(MD5Utils.getMD5Str(xuid+xapp+xtsp+bundle.getString("app.key")))) {
 			Member member = memberService.getCurrent();

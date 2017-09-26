@@ -1,6 +1,12 @@
 package net.wit.controller.weex.model;
 
+import net.wit.entity.ArticleCatalog;
+import net.wit.entity.Friends;
+import net.wit.entity.Member;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 //用户文集
 
@@ -31,6 +37,21 @@ public class ArticleCatalogModel implements Serializable {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void bind(ArticleCatalog catalog) {
+        this.id = catalog.getId();
+        this.name = catalog.getName();
+    }
+
+    public static List<ArticleCatalogModel> bindList(List<ArticleCatalog> catalogs) {
+        List<ArticleCatalogModel> fms = new ArrayList<ArticleCatalogModel>();
+        for (ArticleCatalog catalog:catalogs) {
+            ArticleCatalogModel model = new ArticleCatalogModel();
+            model.bind(catalog);
+            fms.add(model);
+        }
+        return fms;
     }
 
 }

@@ -4,8 +4,11 @@ package net.wit.controller.weex;
 import net.wit.DateEditor;
 import net.wit.Message;
 import net.wit.entity.Log;
+import net.wit.interceptor.WeexInterceptor;
 import net.wit.template.directive.FlashMessageDirective;
 import net.wit.util.SpringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -27,6 +30,7 @@ public class BaseController {
 
 	/** "验证结果"参数名称 */
 	private static final String CONSTRAINT_VIOLATIONS_ATTRIBUTE_NAME = "constraintViolations";
+	public static Logger logger = LogManager.getLogger(BaseController.class);
 
 	@Resource(name = "validator")
 	private Validator validator;

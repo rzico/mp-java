@@ -95,6 +95,7 @@ public class LoginController extends BaseController {
         Member member =memberService.findByMobile(safeKey.getKey());
         try {
             String captcha = rsaService.decryptParameter("captcha", request);
+            logger.debug("验证码："+captcha);
             rsaService.removePrivateKey(request);
             if (captcha==null) {
                 return Message.error("无效验证码");
@@ -125,7 +126,7 @@ public class LoginController extends BaseController {
             String xuid = request.getHeader("x-uid");
             if (xuid!=null) {
                 Member u = memberService.findByUUID(xuid);
-                if (!u.equals(member)) {
+                if (u!=null && !u.equals(member)) {
                     u.setUuid(null);
                     memberService.save(u);
                 }
@@ -164,7 +165,7 @@ public class LoginController extends BaseController {
             String xuid = request.getHeader("x-uid");
             if (xuid!=null) {
                 Member u = memberService.findByUUID(xuid);
-                if (!u.equals(member)) {
+                if (u!=null && !u.equals(member)) {
                     u.setUuid(null);
                     memberService.save(u);
                 }
@@ -246,7 +247,7 @@ public class LoginController extends BaseController {
             String xuid = request.getHeader("x-uid");
             if (xuid!=null) {
                 Member u = memberService.findByUUID(xuid);
-                if (!u.equals(member)) {
+                if (u!=null && !u.equals(member)) {
                     u.setUuid(null);
                     memberService.save(u);
                 }

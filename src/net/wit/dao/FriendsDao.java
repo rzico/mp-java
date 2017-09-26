@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Friends;
+import net.wit.entity.Member;
 
 
 /**
@@ -27,4 +28,12 @@ public interface FriendsDao extends BaseDao<Friends, Long> {
 	 * @return Page<Friends>
 	 */
 	Page<Friends> findPage(Date beginDate,Date endDate, Pageable pageable);
+	/**
+	 * @Title：find
+	 * @Description：标准代码
+	 * @param member
+	 * @param friend
+	 * @return Friends
+	 */
+	Friends find(Member member,Member friend);
 }
