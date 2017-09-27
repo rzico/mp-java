@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import net.wit.Setting;
+import net.wit.controller.weex.BaseController;
 import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
 import net.wit.service.PaymentService;
@@ -41,6 +42,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -51,6 +54,7 @@ import org.springframework.util.Assert;
  */
 @SuppressWarnings("deprecation")
 public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
+	public static Logger logger = LogManager.getLogger(PaymentPlugin.class);
 
 	/** 支付方式名称属性名称 */
 	public static final String PAYMENT_NAME_ATTRIBUTE_NAME = "paymentName";
@@ -131,30 +135,6 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 * @return 版本
 	 */
 	public abstract String getVersion();
-
-	/**
-	 * 获取作者
-	 * @return 作者
-	 */
-	public abstract String getAuthor();
-
-	/**
-	 * 获取网址
-	 * @return 网址
-	 */
-	public abstract String getSiteUrl();
-
-	/**
-	 * 获取安装URL
-	 * @return 安装URL
-	 */
-	public abstract String getInstallUrl();
-
-	/**
-	 * 获取un安装URL
-	 * @return un安装URL
-	 */
-	public abstract String getUninstallUrl();
 
 	/**
 	 * 获取设置URL
@@ -276,9 +256,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 * @param request httpServletRequest
 	 * @return 请求参数
 	 */
-	public abstract Map<String, Object> getParameterMap(String sn, String description, HttpServletRequest request, String root);
-
-	public abstract Map<String, Object> submit(Payment payment, String type, String safeKey,HttpServletRequest request);
+	public abstract Map<String, Object> getParameterMap(String sn, String description, HttpServletRequest request);
 	/**
 	 * 验证通知是否合法
 	 * @param sn 编号
@@ -351,12 +329,12 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 * @param notifyMethod 通知方法
 	 * @return 通知URL
 	 */
-	public String getNotifyUrl(String sn, NotifyMethod notifyMethod, String root) {
+	public String getNotifyUrl(String sn, NotifyMethod notifyMethod) {
 		Setting setting = SettingUtils.get();
 		if (notifyMethod == null) {
-			return setting.getSiteUrl()  +root+ "/payment/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
+			return setting.getSiteUrl()  + "/payment/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
 		}
-		return setting.getSiteUrl()  +root+ "/payment/notify/" + notifyMethod + "/" + sn + ".jhtml";
+		return setting.getSiteUrl()  + "/payment/notify/" + notifyMethod + "/" + sn + ".jhtml";
 	}
 
 	/**

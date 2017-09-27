@@ -117,7 +117,7 @@ public class MessageController extends BaseController {
 
 		entity.setContent(message.getContent());
 
-		entity.setIsShow(message.getIsShow());
+		entity.setDeleted(false);
 
 		entity.setReaded(message.getReaded());
 
@@ -200,7 +200,7 @@ public class MessageController extends BaseController {
 
 		entity.setContent(message.getContent());
 
-		entity.setIsShow(message.getIsShow());
+		entity.setDeleted(false);
 
 		entity.setReaded(message.getReaded());
 

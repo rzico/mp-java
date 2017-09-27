@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
@@ -67,7 +68,6 @@ public class CommonController extends BaseController {
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("modulus", Base64.encodeBase64String(publicKey.getModulus().toByteArray()));
 		data.put("exponent", Base64.encodeBase64String(publicKey.getPublicExponent().toByteArray()));
-		data.put("key", Base64.encodeBase64String(publicKey.getEncoded()));
 		return data;
 	}
 

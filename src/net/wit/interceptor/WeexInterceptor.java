@@ -72,14 +72,11 @@ public class WeexInterceptor extends HandlerInterceptorAdapter {
 					redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
 				}
 			}
+			return true;
+		} else {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return false;
 		}
-
-		response.setContentType("application/json");
-		PrintWriter out = response.getWriter();
-		out.print(Message.error(Message.SESSION_INVAILD));
-		out.flush();
-		return false;
-
 	}
 
 	@Override

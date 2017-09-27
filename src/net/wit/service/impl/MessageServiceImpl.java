@@ -8,12 +8,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
+import net.wit.entity.Message;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -66,21 +64,28 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Message m = super.find(id);
+		m.setDeleted(true);
+		super.save(m);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			Message m = super.find(id);
+			m.setDeleted(true);
+			super.save(m);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Message message) {
-		super.delete(message);
+		message.setDeleted(true);
+		super.save(message);
 	}
 
 	public Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable) {

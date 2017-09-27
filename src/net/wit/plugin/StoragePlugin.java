@@ -17,6 +17,8 @@ import net.wit.service.PluginConfigService;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Component;
  * @version 3.0
  */
 public abstract class StoragePlugin implements Comparable<StoragePlugin> {
+	public static Logger logger = LogManager.getLogger(StoragePlugin.class);
 
 	@Resource(name = "pluginConfigServiceImpl")
 	private PluginConfigService pluginConfigService;
