@@ -3,8 +3,10 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.admin.model.PageModel;
 import net.wit.controller.weex.model.ArticleModel;
 import net.wit.controller.weex.model.ArticleOptionModel;
+import net.wit.controller.weex.model.ArticleReviewModel;
 import net.wit.controller.weex.model.MemberModel;
 import net.wit.entity.*;
 import net.wit.service.*;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -63,6 +67,33 @@ public class ArticleController extends BaseController {
 
     @Resource(name = "articleLaudServiceImpl")
     private ArticleLaudService articleLaudService;
+
+
+    /**
+     *  文章列表,带分页
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public Message list(Long articleCatalogId,Long timeStamp,Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
+        List<Filter> filters = new ArrayList<Filter>();
+        if (articleCatalog==null) {
+            filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
+        }
+        if (timeStamp!=null) {
+            filters.add(new Filter("modifyDate", Filter.Operator.le,new Date(timeStamp)));
+        }
+        filters.add(new Filter("member", Filter.Operator.eq,member));
+        pageable.setFilters(filters);
+        Page<Article> page = articleService.findPage(null,null,null,pageable);
+        PageModel model = PageModel.bind(page);
+        model.setData(ArticleModel.bindList(page.getContent()));
+        return Message.success(model,"获取成功");
+    }
 
     /**
      * 获取文章编辑信息

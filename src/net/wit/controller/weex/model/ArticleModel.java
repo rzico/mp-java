@@ -131,4 +131,15 @@ public class ArticleModel implements Serializable {
 
     }
 
+
+    public static List<ArticleModel> bindList(List<Article> articles) {
+        List<ArticleModel> ms = new ArrayList<ArticleModel>();
+        for (Article article:articles) {
+            ArticleModel m = new ArticleModel();
+            m.bind(article);
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }
