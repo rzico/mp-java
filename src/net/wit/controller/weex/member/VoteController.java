@@ -2,8 +2,10 @@ package net.wit.controller.weex.member;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.ArticleReviewModel;
-import net.wit.entity.*;
+import net.wit.entity.Article;
+import net.wit.entity.ArticleReward;
+import net.wit.entity.Member;
+import net.wit.entity.Payment;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,7 @@ import java.math.BigDecimal;
  
 @Controller("weexMemberRewardController")
 @RequestMapping("/weex/member/reward")
-public class RewardController extends BaseController {
+public class VoteController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
@@ -70,7 +72,8 @@ public class RewardController extends BaseController {
         if (payment==null) {
             return Message.error("打赏失败");
         }
-        return Message.success(payment.getSn(),"发布成功",null);
+        String sn = payment.getSn();
+        return Message.success((Object) sn,"发布成功");
 
     }
 

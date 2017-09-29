@@ -83,7 +83,14 @@ public class SnServiceImpl extends BaseServiceImpl<Sn, Long> implements SnServic
 		super.delete(sn);
 	}
 
+	@Transactional
+	public String generate(Sn.Type type) {
+		return snDao.generate(type);
+	}
+
 	public Page<Sn> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return snDao.findPage(beginDate,endDate,pageable);
 	}
+
+
 }

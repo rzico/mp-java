@@ -14,6 +14,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.PaymentDao;
+import net.wit.service.SnService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,6 +35,12 @@ import net.wit.service.ArticleRewardService;
  
 @Service("articleRewardServiceImpl")
 public class ArticleRewardServiceImpl extends BaseServiceImpl<ArticleReward, Long> implements ArticleRewardService {
+	@Resource(name = "snServiceImpl")
+	private SnService snService;
+
+	@Resource(name = "paymentDaoImpl")
+	private PaymentDao paymentDao;
+
 	@Resource(name = "articleRewardDaoImpl")
 	private ArticleRewardDao articleRewardDao;
 
@@ -51,13 +59,26 @@ public class ArticleRewardServiceImpl extends BaseServiceImpl<ArticleReward, Lon
 
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void saveAndPayment(ArticleReward articleReward) {
-		articleRewardDao.persist(articleReward);
-		Payment payment = new Payment();
-		payment.setAmount(articleReward.getAmount());
-		payment.setStatus(Payment.Status.waiting);
-
-		super.save(articleReward);
+	public Payment saveAndPayment(ArticleReward articleReward) {
+		try {
+			articleRewardDao.persist(articleReward);
+			Payment payment = new Payment();
+			payment.setAmount(articleReward.getAmount());
+			payment.setStatus(Payment.Status.waiting);
+			payment.setType(Payment.Type.payment);
+			payment.setMethod(Payment.Method.online);
+			payment.setMember(articleReward.getMember());
+			payment.setSn(snService.generate(Sn.Type.payment));
+			payment.setMemo("读者打赏");
+			payment.setArticleReward(articleReward);
+			paymentDao.persist(payment);
+			articleReward.getPayments().add(payment);
+			articleRewardDao.merge(articleReward);
+			return payment;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return null;
+		}
 	}
 
 	@Override

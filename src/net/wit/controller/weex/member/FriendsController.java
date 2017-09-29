@@ -7,6 +7,8 @@ import net.wit.Pageable;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.admin.model.PageModel;
 import net.wit.controller.weex.model.FriendsModel;
+import net.wit.controller.weex.model.MemberListModel;
+import net.wit.controller.weex.model.MemberModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -77,6 +80,34 @@ public class FriendsController extends BaseController {
         PageModel model = PageModel.bind(page);
         model.setData(FriendsModel.bindList(page.getContent()));
         return Message.success(model,"获取成功");
+    }
+
+    /**
+     *  搜索好友
+     */
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @ResponseBody
+    public Message search(String keyword, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        String [] ms = keyword.split(",");
+        List<MemberListModel> mds = new ArrayList<MemberListModel>();
+        for (String m:ms) {
+            Member friend = memberService.findByMobile(keyword);
+            if (friend == null) {
+                friend = memberService.findByUsername(keyword);
+            }
+            if (friend!=null) {
+                MemberListModel md = new MemberListModel();
+                md.bind(friend);
+                mds.add(md);
+            }
+        }
+        return Message.success(mds,"搜索成功");
+
     }
 
     /**

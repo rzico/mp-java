@@ -1,6 +1,7 @@
 package net.wit.controller.weex.model;
 import net.wit.entity.Friends;
 import net.wit.entity.Member;
+import net.wit.util.MD5Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class FriendsModel implements Serializable {
     private String logo;
     /** 实我 */
     private String name;
+    /** 手机号 */
+    private String md5;
 
     public Long getId() {
         return id;
@@ -48,12 +51,21 @@ public class FriendsModel implements Serializable {
         this.name = name;
     }
 
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
+
     public void bind(Friends friends) {
         Member member = friends.getMember();
         this.id = member.getId();
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
         this.name = member.getName();
+        this.md5 = MD5Utils.getMD5Str(member.getMobile());
      }
 
     public static List<FriendsModel> bindList(List<Friends> friends) {

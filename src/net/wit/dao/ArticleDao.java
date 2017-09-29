@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Article;
+import net.wit.entity.Tag;
 
 
 /**
@@ -26,5 +27,5 @@ public interface ArticleDao extends BaseDao<Article, Long> {
 	 * @param pageable
 	 * @return Page<Article>
 	 */
-	Page<Article> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Page<Article> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable);
 }

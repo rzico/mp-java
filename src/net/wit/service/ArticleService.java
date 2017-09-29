@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Article;
+import net.wit.entity.Tag;
 
 /**
  * @ClassName: ArticleService
@@ -16,5 +17,5 @@ import net.wit.entity.Article;
  */
 
 public interface ArticleService extends BaseService<Article, Long> {
-	Page<Article> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Page<Article> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable);
 }

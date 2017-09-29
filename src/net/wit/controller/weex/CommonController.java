@@ -122,21 +122,20 @@ public class CommonController extends BaseController {
 	}
 
 	/**
-	 * 检查是否登录
+	 * 检查是版本
 	 */
-	@RequestMapping("/isAuthenticated")
+	@RequestMapping("/resources")
 	@ResponseBody
-	public Message authorized(HttpServletRequest request, HttpServletResponse response) {
+	public Message resources(HttpServletRequest request, HttpServletResponse response) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
 		Map<String,Object> data = new HashMap<String,Object>();
-		Member member = memberService.getCurrent();
-		data.put("loginStatus",member!=null);
-		if (member!=null) {
-			data.put("uid", member.getId());
-		}
-		data.put("version","0.0.1");
-		data.put("url","http://cdn.rzico.com/weex/resources/release/0.0.1.zip");
+		data.put("resVersion","0.0.1");
+		data.put("resUrl","http://cdn.rzico.com/weex/resources/release/res-0.0.1.zip");
+
+		data.put("appVersion","0.0.1");
+		data.put("appUrl","http://cdn.rzico.com/weex/resources/release/app-0.0.1.zip");
+
 		data.put("key",bundle.getString("app.key"));
 		return Message.success(data,"success");
 	}

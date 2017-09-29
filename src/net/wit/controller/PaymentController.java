@@ -92,7 +92,7 @@ public class PaymentController extends BaseController {
                         logger.error(e.getMessage());
                     }
                 }
-                response.setContentType("application/json");
+                response.setContentType("application/octet-stream");
                 PrintWriter out = response.getWriter();
                 out.print(paymentPlugin.getNotifyMessage(sn, notifyMethod, request));
                 out.flush();

@@ -18,11 +18,14 @@ import net.wit.Filter;
 import net.wit.Order;
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.controller.weex.BaseController;
 import net.wit.dao.BaseDao;
 import net.wit.entity.BaseEntity;
 import net.wit.service.BaseService;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
@@ -36,6 +39,7 @@ import org.springframework.util.Assert;
 @Transactional
 public class BaseServiceImpl<T, ID extends Serializable> implements BaseService<T, ID> {
 
+	public static Logger logger = LogManager.getLogger(BaseServiceImpl.class);
 	/** 更新忽略属性 */
 	private static final String[] UPDATE_IGNORE_PROPERTIES = new String[] { BaseEntity.ID_PROPERTY_NAME, BaseEntity.CREATE_DATE_PROPERTY_NAME, BaseEntity.MODIFY_DATE_PROPERTY_NAME };
 

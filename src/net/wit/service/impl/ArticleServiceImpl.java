@@ -66,24 +66,31 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Article article = articleDao.find(id);
+		article.setDeleted(true);
+		super.save(article);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			Article article = articleDao.find(id);
+			article.setDeleted(true);
+			super.save(article);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Article article) {
-		super.delete(article);
+		article.setDeleted(true);
+		super.save(article);
 	}
 
-	public Page<Article> findPage(Date beginDate,Date endDate, Pageable pageable) {
-		return articleDao.findPage(beginDate,endDate,pageable);
+	public Page<Article> findPage(Date beginDate,Date endDate, List<Tag> tags, Pageable pageable) {
+		return articleDao.findPage(beginDate,endDate,tags,pageable);
 	}
 }

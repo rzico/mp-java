@@ -27,7 +27,7 @@
 			</bean>
 		</mvc:interceptor>
 
-		<!-- 设置单点登陆拦截路径 -->
+		<!-- 设置拦截路径 -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<bean id="tokenInterceptor" class="net.wit.interceptor.TokenInterceptor">

@@ -1,18 +1,22 @@
 package net.wit.dao.impl;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import java.util.Date;
-import javax.persistence.FlushModeType;
-import javax.persistence.NoResultException;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import freemarker.template.TemplateException;
+import net.wit.util.FreemarkerUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import net.wit.Page;
@@ -30,6 +34,93 @@ import net.wit.entity.Sn;
 
 @Repository("snDaoImpl")
 public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao {
+
+	private HiloOptimizer paymentHiloOptimizer;
+
+	private HiloOptimizer refundsHiloOptimizer;
+
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	@Value("${sn.payment.prefix}")
+	private String paymentPrefix;
+
+	@Value("${sn.payment.maxLo}")
+	private int paymentMaxLo;
+
+	@Value("${sn.refunds.prefix}")
+	private String refundsPrefix;
+
+	@Value("${sn.refunds.maxLo}")
+	private int refundsMaxLo;
+
+
+	public void afterPropertiesSet() throws Exception {
+		paymentHiloOptimizer = new HiloOptimizer(Sn.Type.payment, paymentPrefix, paymentMaxLo);
+		refundsHiloOptimizer = new HiloOptimizer(Sn.Type.refunds, refundsPrefix, refundsMaxLo);
+	}
+
+	public String generate(Sn.Type type) {
+		Assert.notNull(type);
+		if (type == Sn.Type.payment) {
+			return paymentHiloOptimizer.generate();
+		} else if (type == Sn.Type.refunds) {
+			return refundsHiloOptimizer.generate();
+		}
+		return null;
+	}
+
+	private long getLastValue(Sn.Type type) {
+		String jpql = "select sn from Sn sn where sn.type = :type";
+		Sn sn = entityManager.createQuery(jpql, Sn.class).setFlushMode(FlushModeType.COMMIT).setLockMode(LockModeType.PESSIMISTIC_WRITE).setParameter("type", type).getSingleResult();
+		long lastValue = sn.getLastValue();
+		sn.setLastValue(lastValue + 1);
+		entityManager.merge(sn);
+		return lastValue;
+	}
+
+	/**
+	 * 高低位算法
+	 */
+	private class HiloOptimizer {
+
+		private Sn.Type type;
+
+		private String prefix;
+
+		private int maxLo;
+
+		private int lo;
+
+		private long hi;
+
+		private long lastValue;
+
+		public HiloOptimizer(Sn.Type type, String prefix, int maxLo) {
+			this.type = type;
+			this.prefix = prefix != null ? prefix.replace("{", "${") : "";
+			this.maxLo = maxLo;
+			this.lo = maxLo + 1;
+		}
+
+		public synchronized String generate() {
+			if (lo > maxLo) {
+				lastValue = getLastValue(type);
+				lo = lastValue == 0 ? 1 : 0;
+				hi = lastValue * (maxLo + 1);
+			}
+			try {
+				return FreemarkerUtils.process(prefix, null) + (hi + lo++);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (TemplateException e) {
+				e.printStackTrace();
+			}
+			return String.valueOf(hi + lo++);
+		}
+	}
+
+
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @ClassName: Article
@@ -424,5 +426,17 @@ public class Article extends BaseEntity{
 
     public void setProducts(Set<ArticleProduct> products) {
         this.products = products;
+    }
+
+    public String delHTMLTag(){
+        String str = getContent();
+        String reg = "[^\u4e00-\u9fa5]";
+        str = str.replaceAll(reg, "");
+        str = str.trim();
+        if (str.length()<50) {
+            return str;
+        } else {
+            return str.substring(0,50);
+        }
     }
 }

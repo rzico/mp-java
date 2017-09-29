@@ -10,6 +10,9 @@ import net.wit.Filter;
 import net.wit.Order;
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.service.impl.BaseServiceImpl;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * Dao - 基类
@@ -19,6 +22,7 @@ import net.wit.Pageable;
  */
 public interface BaseDao<T, ID extends Serializable> {
 
+	public static Logger logger = LogManager.getLogger(BaseDao.class);
 	/**
 	 * 查找实体对象
 	 * 

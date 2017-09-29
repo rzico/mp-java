@@ -320,7 +320,7 @@ public class ArticleController extends BaseController {
 			filters.add(mediaTypeFilter);
 		}
 
-		Page<Article> page = articleService.findPage(beginDate,endDate,pageable);
+		Page<Article> page = articleService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageModel.bind(page), "admin.list.success");
 	}
 	

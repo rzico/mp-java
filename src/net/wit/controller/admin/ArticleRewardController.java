@@ -148,8 +148,6 @@ public class ArticleRewardController extends BaseController {
 
 		entity.setMember(memberService.find(memberId));
 
-		entity.setPayment(paymentService.find(paymentId));
-		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
         }
@@ -231,8 +229,6 @@ public class ArticleRewardController extends BaseController {
 
 		entity.setMember(memberService.find(memberId));
 
-		entity.setPayment(paymentService.find(paymentId));
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }

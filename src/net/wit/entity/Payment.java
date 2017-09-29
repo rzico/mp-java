@@ -145,6 +145,11 @@ public class Payment extends BaseEntity {
 	@JoinColumn(name = "orders", nullable = false, updatable = false)
 	private Order order;
 
+	/** 订单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private ArticleReward articleReward;
+
 	public String getSn() {
 		return sn;
 	}
@@ -255,6 +260,14 @@ public class Payment extends BaseEntity {
 
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public ArticleReward getArticleReward() {
+		return articleReward;
+	}
+
+	public void setArticleReward(ArticleReward articleReward) {
+		this.articleReward = articleReward;
 	}
 
 	/**

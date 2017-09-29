@@ -6,6 +6,8 @@ import net.wit.MapEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName: ArticleReward
@@ -56,9 +58,9 @@ public class ArticleReward extends BaseEntity {
 	private Article article;
 
 	/** 付款单 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '付款单'")
-	private Payment payment;
+	@OneToMany(mappedBy = "articleReward", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OrderBy("createDate asc")
+	private Set<Payment> payments = new HashSet<Payment>();
 
 	/** 打赏金额 */
 	@Column(columnDefinition="decimal(21,6) not null comment '打赏金额'")
@@ -104,12 +106,12 @@ public class ArticleReward extends BaseEntity {
 		this.article = article;
 	}
 
-	public Payment getPayment() {
-		return payment;
+	public Set<Payment> getPayments() {
+		return payments;
 	}
 
-	public void setPayment(Payment payment) {
-		this.payment = payment;
+	public void setPayments(Set<Payment> payments) {
+		this.payments = payments;
 	}
 
 	public BigDecimal getAmount() {
