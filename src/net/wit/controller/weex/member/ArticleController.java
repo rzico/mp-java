@@ -81,7 +81,7 @@ public class ArticleController extends BaseController {
         }
         ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
         List<Filter> filters = new ArrayList<Filter>();
-        if (articleCatalog==null) {
+        if (articleCatalog!=null) {
             filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
         }
         if (timeStamp!=null) {

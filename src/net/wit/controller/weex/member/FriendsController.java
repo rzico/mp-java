@@ -1,9 +1,8 @@
 package net.wit.controller.weex.member;
 
-import net.wit.Filter;
+import net.wit.*;
 import net.wit.Message;
-import net.wit.Page;
-import net.wit.Pageable;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.admin.model.PageModel;
 import net.wit.controller.weex.model.FriendsModel;
@@ -75,7 +74,8 @@ public class FriendsController extends BaseController {
         if (timeStamp!=null) {
             filters.add(new Filter("modifyDate", Filter.Operator.le,new Date(timeStamp)));
         }
-
+        pageable.setOrderDirection(Order.Direction.desc);
+        pageable.setOrderProperty("modifyDate");
         Page<Friends> page = friendsService.findPage(null,null,pageable);
         PageModel model = PageModel.bind(page);
         model.setData(FriendsModel.bindList(page.getContent()));
@@ -85,7 +85,7 @@ public class FriendsController extends BaseController {
     /**
      *  搜索好友
      */
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     @ResponseBody
     public Message search(String keyword, HttpServletRequest request){
         Member member = memberService.getCurrent();
@@ -96,9 +96,9 @@ public class FriendsController extends BaseController {
         String [] ms = keyword.split(",");
         List<MemberListModel> mds = new ArrayList<MemberListModel>();
         for (String m:ms) {
-            Member friend = memberService.findByMobile(keyword);
+            Member friend = memberService.findByMobile(m);
             if (friend == null) {
-                friend = memberService.findByUsername(keyword);
+                friend = memberService.findByUsername(m);
             }
             if (friend!=null) {
                 MemberListModel md = new MemberListModel();

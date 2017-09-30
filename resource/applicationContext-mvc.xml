@@ -34,18 +34,18 @@
 			</bean>
 		</mvc:interceptor>
 
-		<mvc:interceptor>
-			<mvc:mapping path="/weex/**" />
-			<mvc:exclude-mapping path="/weex/common/**" />
-			<bean id="weexInterceptor" class="net.wit.interceptor.WeexInterceptor">
-			</bean>
-		</mvc:interceptor>
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/weex/**" />-->
+			<!--<mvc:exclude-mapping path="/weex/common/**" />-->
+			<!--<bean id="weexInterceptor" class="net.wit.interceptor.WeexInterceptor">-->
+			<!--</bean>-->
+		<!--</mvc:interceptor>-->
 
-		<mvc:interceptor>
-			<mvc:mapping path="/weex/member/**" />
-			<bean id="weexMemberInterceptor" class="net.wit.interceptor.WeexMemberInterceptor">
-			</bean>
-		</mvc:interceptor>
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/weex/member/**" />-->
+			<!--<bean id="weexMemberInterceptor" class="net.wit.interceptor.WeexMemberInterceptor">-->
+			<!--</bean>-->
+		<!--</mvc:interceptor>-->
 
 		<mvc:interceptor>
 			<mvc:mapping path="/admin/**" />

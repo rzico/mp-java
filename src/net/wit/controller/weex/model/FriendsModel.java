@@ -5,6 +5,7 @@ import net.wit.util.MD5Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FriendsModel implements Serializable {
@@ -18,6 +19,10 @@ public class FriendsModel implements Serializable {
     private String name;
     /** 手机号 */
     private String md5;
+    /** 时间 */
+    private Date createDate;
+    /** 状态 */
+    private Friends.Status status;
 
     public Long getId() {
         return id;
@@ -59,13 +64,33 @@ public class FriendsModel implements Serializable {
         this.md5 = md5;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Friends.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Friends.Status status) {
+        this.status = status;
+    }
+
     public void bind(Friends friends) {
-        Member member = friends.getMember();
+        Member member = friends.getFriend();
         this.id = member.getId();
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
         this.name = member.getName();
-        this.md5 = MD5Utils.getMD5Str(member.getMobile());
+        if (member.getMobile()!=null) {
+            this.md5 = MD5Utils.getMD5Str(member.getMobile());
+        }
+        this.createDate = friends.getModifyDate();
+        this.status = friends.getStatus();
      }
 
     public static List<FriendsModel> bindList(List<Friends> friends) {

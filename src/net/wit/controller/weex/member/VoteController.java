@@ -23,8 +23,8 @@ import java.math.BigDecimal;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexMemberRewardController")
-@RequestMapping("/weex/member/reward")
+@Controller("weexMemberVoteController")
+@RequestMapping("/weex/member/vote")
 public class VoteController extends BaseController {
 
     @Resource(name = "memberServiceImpl")

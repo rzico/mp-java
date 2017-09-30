@@ -70,7 +70,7 @@ public class RewardController extends BaseController {
         if (payment==null) {
             return Message.error("打赏失败");
         }
-        return Message.success(payment.getSn(),"发布成功",null);
+        return Message.success((Object) payment.getSn(),"发布成功");
 
     }
 
