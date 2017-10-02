@@ -186,7 +186,7 @@ public class MemberFollowController extends BaseController {
 	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
 
 		Page<MemberFollow> page = memberFollowService.findPage(beginDate,endDate,pageable);
-		return Message.success(PageModel.bind(page), "admin.list.success");
+		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	

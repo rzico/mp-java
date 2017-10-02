@@ -300,7 +300,7 @@ public class TopicController extends BaseController {
 		}
 
 		Page<Topic> page = topicService.findPage(beginDate,endDate,pageable);
-		return Message.success(PageModel.bind(page), "admin.list.success");
+		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	

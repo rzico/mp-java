@@ -6,7 +6,9 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,7 +36,10 @@ public class Template extends OrderEntity {
 		product,
 
 		/** 专题  */
-		topic
+		topic,
+
+		/** 模板  */
+		template
 	}
 
 	/** 模板类型 */
@@ -68,6 +73,12 @@ public class Template extends OrderEntity {
 	@NotEmpty
 	@Column(columnDefinition="bit not null comment '是否默认'")
 	private  Boolean isDefault;
+
+	/** 模板标签*/
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "wx_template_tag")
+	@OrderBy("order asc")
+	private List<Tag> tags = new ArrayList<Tag>();
 
 	public Type getType() {
 		return type;
@@ -115,5 +126,13 @@ public class Template extends OrderEntity {
 
 	public void setThumbnial(String thumbnial) {
 		this.thumbnial = thumbnial;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 }

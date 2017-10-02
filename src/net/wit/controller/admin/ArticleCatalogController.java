@@ -204,7 +204,7 @@ public class ArticleCatalogController extends BaseController {
 		}
 
 		Page<ArticleCatalog> page = articleCatalogService.findPage(beginDate,endDate,pageable);
-		return Message.success(PageModel.bind(page), "admin.list.success");
+		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	

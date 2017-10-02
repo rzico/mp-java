@@ -321,7 +321,7 @@ public class ArticleController extends BaseController {
 		}
 
 		Page<Article> page = articleService.findPage(beginDate,endDate,null,pageable);
-		return Message.success(PageModel.bind(page), "admin.list.success");
+		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	

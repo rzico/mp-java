@@ -1,5 +1,6 @@
 package net.wit.controller.weex.member;
 
+import net.wit.CacheBlock;
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
@@ -49,11 +50,11 @@ public class ArticleCatalogController extends BaseController {
     private ArticleCatalogService articleCatalogService;
 
     /**
-     *  分类列表
+     *  文集列表
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long tagIds,HttpServletRequest request){
+    public Message list(Long tagIds,String md5,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -61,7 +62,74 @@ public class ArticleCatalogController extends BaseController {
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
         List<ArticleCatalog> categories = articleCatalogService.findList(null,null,filters,null);
-        return Message.success(ArticleCatalogModel.bindList(categories),"获取成功");
+        return CacheBlock.bind(ArticleCatalogModel.bindList(categories),request);
     }
 
+
+    /**
+     *  添加文集
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
+    public Message add(String name,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        ArticleCatalog catalog = new ArticleCatalog();
+        catalog.setName(name);
+        catalog.setStatus(ArticleCatalog.Status.enabled);
+        catalog.setMember(member);
+        articleCatalogService.save(catalog);
+
+        ArticleCatalogModel model = new ArticleCatalogModel();
+        model.bind(catalog);
+        return Message.success(model,"添加成功");
+    }
+
+    /**
+     *  修改文集
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
+    public Message update(Long id,String name,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        ArticleCatalog catalog = articleCatalogService.find(id);
+        if (catalog==null) {
+            return Message.error("无效文集id");
+        }
+        catalog.setName(name);
+        catalog.setStatus(ArticleCatalog.Status.enabled);
+        catalog.setMember(member);
+        articleCatalogService.save(catalog);
+        ArticleCatalogModel model = new ArticleCatalogModel();
+        model.bind(catalog);
+        return Message.success(model,"添加成功");
+    }
+
+
+    /**
+     *  删除文集
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Message delete(Long id,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        ArticleCatalog catalog = articleCatalogService.find(id);
+        if (catalog==null) {
+            return Message.error("无效文集id");
+        }
+        if (catalog.getArticles().size()>0) {
+            return Message.error("有文章不能删");
+        }
+
+        articleCatalogService.delete(id);
+        return Message.error("删除成功");
+    }
 }

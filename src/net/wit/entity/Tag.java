@@ -26,7 +26,9 @@ public class Tag extends OrderEntity{
         /* 文章 */
         article,
         /* 会员 */
-        member
+        member,
+        /* 模板 */
+        template
     }
 
     /*名称*/
@@ -58,6 +60,14 @@ public class Tag extends OrderEntity{
     /*会员列表*/
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private Set<Member> members = new HashSet<Member>();
+
+    /*模板列表*/
+    @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
+    private Set<Template> templates = new HashSet<Template>();
+
+    /*模板列表*/
+    @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
+    private Set<Topic> topics = new HashSet<Topic>();
 
     /*删除前处理*/
     @PreRemove
@@ -125,5 +135,21 @@ public class Tag extends OrderEntity{
 
     public void setMembers(Set<Member> members) {
         this.members = members;
+    }
+
+    public Set<Template> getTemplates() {
+        return templates;
+    }
+
+    public void setTemplates(Set<Template> templates) {
+        this.templates = templates;
+    }
+
+    public Set<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(Set<Topic> topics) {
+        this.topics = topics;
     }
 }

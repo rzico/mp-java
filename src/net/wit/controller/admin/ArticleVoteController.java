@@ -212,7 +212,7 @@ public class ArticleVoteController extends BaseController {
 	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
 
 		Page<ArticleVote> page = articleVoteService.findPage(beginDate,endDate,pageable);
-		return Message.success(PageModel.bind(page), "admin.list.success");
+		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	

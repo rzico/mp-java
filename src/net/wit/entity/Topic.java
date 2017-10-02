@@ -7,7 +7,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Entity - 专栏
@@ -116,6 +118,12 @@ public class Topic extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '模板'")
     private Template template;
+
+    /** 模板标签*/
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "wx_topic_tag")
+    @OrderBy("order asc")
+    private List<Tag> tags = new ArrayList<Tag>();
 
     public Type getType() {
         return type;
@@ -237,6 +245,13 @@ public class Topic extends BaseEntity {
         this.expire = expire;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
     public MapEntity getMapTemplate() {
         if (getTemplate() != null) {

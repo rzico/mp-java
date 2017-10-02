@@ -1,11 +1,7 @@
 package net.wit.controller.weex;
 
-import net.wit.Filter;
-import net.wit.Message;
-import net.wit.Page;
-import net.wit.Pageable;
+import net.wit.*;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.admin.model.PageModel;
 import net.wit.controller.weex.model.ArticleReviewModel;
 import net.wit.controller.weex.model.ArticleViewModel;
 import net.wit.entity.Article;
@@ -64,7 +60,7 @@ public class ReviewController extends BaseController {
         filters.add(new Filter("article", Filter.Operator.eq,article));
         pageable.setFilters(filters);
         Page<ArticleReview> page = articleReviewService.findPage(null,null,pageable);
-        PageModel model = PageModel.bind(page);
+        PageBlock model = PageBlock.bind(page);
         model.setData(ArticleReviewModel.bindList(page.getContent()));
         return Message.success(model,"获取成功");
    }

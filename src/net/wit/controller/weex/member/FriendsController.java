@@ -4,7 +4,6 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.admin.model.PageModel;
 import net.wit.controller.weex.model.FriendsModel;
 import net.wit.controller.weex.model.MemberListModel;
 import net.wit.controller.weex.model.MemberModel;
@@ -77,7 +76,7 @@ public class FriendsController extends BaseController {
         pageable.setOrderDirection(Order.Direction.desc);
         pageable.setOrderProperty("modifyDate");
         Page<Friends> page = friendsService.findPage(null,null,pageable);
-        PageModel model = PageModel.bind(page);
+        PageBlock model = PageBlock.bind(page);
         model.setData(FriendsModel.bindList(page.getContent()));
         return Message.success(model,"获取成功");
     }

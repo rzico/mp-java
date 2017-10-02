@@ -1,11 +1,7 @@
 package net.wit.controller.weex.member;
 
-import net.wit.Filter;
-import net.wit.Message;
-import net.wit.Page;
-import net.wit.Pageable;
+import net.wit.*;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.admin.model.PageModel;
 import net.wit.controller.weex.model.FriendsModel;
 import net.wit.controller.weex.model.MessageModel;
 import net.wit.entity.Friends;
@@ -68,7 +64,7 @@ public class MessageController extends BaseController {
             filters.add(new Filter("readed", Filter.Operator.eq,readed));
         }
         Page<net.wit.entity.Message> page = messageService.findPage(null,null,pageable);
-        PageModel model = PageModel.bind(page);
+        PageBlock model = PageBlock.bind(page);
         model.setData(MessageModel.bindList(page.getContent()));
         return Message.success(model,"获取成功");
     }

@@ -223,7 +223,7 @@ public class TopicBillController extends BaseController {
 		}
 
 		Page<TopicBill> page = topicBillService.findPage(beginDate,endDate,pageable);
-		return Message.success(PageModel.bind(page), "admin.list.success");
+		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	

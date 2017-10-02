@@ -21,6 +21,9 @@ public class Message {
 	/** 登录成功 */
 	public static final String LOGIN_SUCCESS = "login.success";
 
+	/** 缓存没变动 */
+	public static final String CACHE_SUCCESS = "cache.success";
+
 	/**
 	 * 类型
 	 */

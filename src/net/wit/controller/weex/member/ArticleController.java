@@ -3,7 +3,6 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.admin.model.PageModel;
 import net.wit.controller.weex.model.ArticleModel;
 import net.wit.controller.weex.model.ArticleOptionModel;
 import net.wit.controller.weex.model.ArticleReviewModel;
@@ -90,7 +89,7 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
-        PageModel model = PageModel.bind(page);
+        PageBlock model = PageBlock.bind(page);
         model.setData(ArticleModel.bindList(page.getContent()));
         return Message.success(model,"获取成功");
     }

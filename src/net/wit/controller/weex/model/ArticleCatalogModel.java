@@ -42,6 +42,7 @@ public class ArticleCatalogModel implements Serializable {
     public void bind(ArticleCatalog catalog) {
         this.id = catalog.getId();
         this.name = catalog.getName();
+        this.count = catalog.getArticles().size();
     }
 
     public static List<ArticleCatalogModel> bindList(List<ArticleCatalog> catalogs) {
@@ -53,5 +54,4 @@ public class ArticleCatalogModel implements Serializable {
         }
         return fms;
     }
-
 }

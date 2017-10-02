@@ -1,11 +1,8 @@
 package net.wit.controller.weex;
 
-import net.wit.Filter;
-import net.wit.Message;
-import net.wit.Page;
-import net.wit.Pageable;
+import net.wit.*;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.admin.model.PageModel;
+import net.wit.controller.weex.model.ArticleCatalogModel;
 import net.wit.controller.weex.model.ArticleCategoryModel;
 import net.wit.controller.weex.model.MessageModel;
 import net.wit.entity.ArticleCategory;
@@ -59,7 +56,7 @@ public class ArticleCategoryController extends BaseController {
     @ResponseBody
     public Message list(Long tagIds,HttpServletRequest request){
         List<ArticleCategory> categories = articleCategoryService.findAll();
-        return Message.success(ArticleCategoryModel.bindList(categories),"获取成功");
+        return CacheBlock.bind(ArticleCategoryModel.bindList(categories),request);
     }
 
 }

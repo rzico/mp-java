@@ -1,19 +1,9 @@
-package net.wit.controller.admin.model;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.wit.Page;
-import net.wit.Pageable;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package net.wit;
 
 /**
  * Created by Jinlesoft on 2017/9/4.
  */
-public class PageModel {
+public class PageBlock {
 
     //    绘制计数器
     private int draw;
@@ -28,8 +18,8 @@ public class PageModel {
     //    返回的数据
     private Object data;
 
-    public static PageModel bind(Page page){
-        PageModel model = new PageModel();
+    public static PageBlock bind(Page page){
+        PageBlock model = new PageBlock();
         model.start = page.getPageStart();
         model.length = page.getPageSize();
         model.recordsFiltered = page.getTotal();
