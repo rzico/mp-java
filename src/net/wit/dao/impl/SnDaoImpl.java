@@ -14,6 +14,7 @@ import freemarker.template.TemplateException;
 import net.wit.util.FreemarkerUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
@@ -33,7 +34,7 @@ import net.wit.entity.Sn;
  
 
 @Repository("snDaoImpl")
-public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao {
+public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, InitializingBean {
 
 	private HiloOptimizer paymentHiloOptimizer;
 

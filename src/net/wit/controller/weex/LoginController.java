@@ -183,6 +183,22 @@ public class LoginController extends BaseController {
 	}
 
     /**
+     *  体验账号一键登录
+     */
+    @RequestMapping(value = "demo", method = RequestMethod.GET)
+    @ResponseBody
+    public Message demo(HttpServletRequest request){
+        Member member =memberService.find(1L);
+        try {
+            Principal principal = new Principal(member.getId(),member.getUsername());
+            redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+            return Message.success(Message.LOGIN_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Message.error("登录失败");
+        }
+    }
+    /**
      * 微信登录
      */
     @RequestMapping(value = "/weixin", method = RequestMethod.POST)

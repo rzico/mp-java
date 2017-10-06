@@ -142,12 +142,12 @@ public class Payment extends BaseEntity {
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orders", nullable = false, updatable = false)
+	@JoinColumn(name = "orders",updatable = false)
 	private Order order;
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(updatable = false)
 	private ArticleReward articleReward;
 
 	public String getSn() {
