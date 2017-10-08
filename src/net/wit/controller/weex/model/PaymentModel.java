@@ -1,5 +1,7 @@
 package net.wit.controller.weex.model;
 
+import net.wit.entity.Payment;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -58,5 +60,18 @@ public class PaymentModel implements Serializable {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public void bind(Payment payment) {
+        this.amount = payment.getAmount();
+        this.createDate = payment.getCreateDate();
+        this.memo = payment.getMemo();
+        if (payment.getType().equals(Payment.Type.recharge)) {
+            this.logo = payment.getMember().getLogo();
+            this.nickName = payment.getMember().getNickName();
+        } else {
+            this.logo = payment.getPayee().getLogo();
+            this.nickName = payment.getPayee().getNickName();
+        }
     }
 }

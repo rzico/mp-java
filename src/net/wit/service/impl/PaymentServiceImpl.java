@@ -64,6 +64,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			} else if (payment.getType() == Payment.Type.recharge) {
 			}
 			payment.setPaymentDate(new Date());
+			payment.setStatus(Payment.Status.success);
 			paymentDao.merge(payment);
 		}
 	}
@@ -74,7 +75,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	public void close(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
 		if (payment != null && payment.getStatus() == Payment.Status.waiting) {
-			payment.setMemo("超时关闭");
 			payment.setStatus(Payment.Status.failure);
 			paymentDao.merge(payment);
 		};

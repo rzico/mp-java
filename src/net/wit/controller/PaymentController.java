@@ -1,8 +1,10 @@
 
 package net.wit.controller;
 
+import com.sun.tools.internal.ws.wsdl.document.http.HTTPUrlEncoded;
 import net.wit.Message;
 import net.wit.Setting;
+import net.wit.controller.weex.model.PaymentModel;
 import net.wit.entity.Member;
 import net.wit.entity.Payment;
 import net.wit.entity.Payment.Method;
@@ -25,7 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * Controller - 支付
@@ -53,35 +58,82 @@ public class PaymentController extends BaseController {
     private SnService snService;
 
     /**
-     *  支付页面
+     *  H5支付页面
      *
      * @param sn              支付单号
      *
      */
 
-    @RequestMapping(value = "/h5", method = RequestMethod.GET)
-    public String h5(String sn, ModelMap model, HttpServletRequest request) {
-        Payment payment = paymentService.findBySn(sn);
-        //为空时，暂时开启测试
-        if (payment==null) {
-            payment = new Payment();
-            payment.setMethod(Method.online);
-            payment.setStatus(Status.waiting);
-            payment.setAmount(new BigDecimal("0.1"));
-            payment.setMemo("支付测试");
-            payment.setSn(snService.generate(Sn.Type.payment));
-            payment.setMember(memberService.find(1L));
-            payment.setType(Type.recharge);
-            paymentService.save(payment);
+    @RequestMapping(value = "/h5_submit", method = RequestMethod.GET)
+    public String h5(String sn, ModelMap model, HttpServletRequest request,HttpServletResponse response) {
+        try {
+            Payment payment = paymentService.findBySn(sn);
+            //为空时，暂时开启测试
+            if (payment == null) {
+                payment = new Payment();
+                payment.setMethod(Method.online);
+                payment.setStatus(Status.waiting);
+                payment.setAmount(new BigDecimal("0.1"));
+                payment.setMemo("支付测试");
+                payment.setSn(snService.generate(Sn.Type.payment));
+                payment.setMember(memberService.find(1L));
+                payment.setType(Type.recharge);
+                paymentService.save(payment);
+            }
+            String paymentPluginId = "weixinH5Plugin";
+            PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
+            payment.setPaymentPluginId(paymentPluginId);
+            payment.setPaymentMethod(paymentPlugin.getName());
+            paymentService.update(payment);
+            Map<String, Object> parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            model.addAttribute("mweb_url", parameters.get("mweb_url") + "&redirect_url=http://" + URLEncoder.encode(bundle.getString("app.url") + "/payment/h5_notify.jhtml"));
+            return "/common/submit";
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return "redirect:/payment/h5_error.jhtml";
         }
-        String paymentPluginId = "weixinH5Plugin";
-        PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
-        payment.setPaymentPluginId(paymentPluginId);
-        payment.setPaymentMethod(paymentPlugin.getName());
-        paymentService.update(payment);
-        Map<String, Object> parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
-        model.addAttribute("mweb_url",parameters.get("mweb_url"));
-        return "/common/payment";
+    }
+
+    /**
+     *  H5支付结果
+     *
+     */
+
+    @RequestMapping(value = "/h5_notify", method = RequestMethod.GET)
+    public String h5_notify(ModelMap model, HttpServletRequest request,HttpServletResponse response) {
+        model.addAttribute("notifyMessage","success");
+        return "/common/notify";
+    }
+
+    /**
+     *  H5支付失败
+     *
+     */
+
+    @RequestMapping(value = "/h5_error", method = RequestMethod.GET)
+    public String h5_error(ModelMap model, HttpServletRequest request,HttpServletResponse response) {
+        model.addAttribute("notifyMessage","error");
+        return "/common/notify";
+    }
+
+    /**
+     * 付款单信
+     *
+     * @param sn              支付单号
+     *
+     */
+
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(String sn, HttpServletRequest request) {
+        Payment payment = paymentService.findBySn(sn);
+        if (payment==null) {
+            Message.error("无效付款单");
+        }
+        PaymentModel model = new PaymentModel();
+        model.bind(payment);
+        return Message.success(model, "success");
     }
 
     /**
@@ -96,9 +148,19 @@ public class PaymentController extends BaseController {
     @ResponseBody
     public Message submit(String paymentPluginId, String sn, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
-        if (payment==null) {
-            Message.error("无效付款单");
-        }
+        //if (payment==null) {
+        //    Message.error("无效付款单");
+        //}
+        payment = new Payment();
+        payment.setMethod(Method.online);
+        payment.setStatus(Status.waiting);
+        payment.setAmount(new BigDecimal("0.1"));
+        payment.setMemo("支付测试");
+        payment.setSn(snService.generate(Sn.Type.payment));
+        payment.setMember(memberService.find(1L));
+        payment.setPayee(payment.getMember());
+        payment.setType(Type.recharge);
+        paymentService.save(payment);
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
         if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
             return Message.error("支付插件无效");
@@ -157,11 +219,11 @@ public class PaymentController extends BaseController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return Message.success("支付成功");
+                return Message.success((Object) resultCode,"支付成功");
             case "0001":
-                return Message.success("支付失败");
+                return Message.success((Object) resultCode,"支付失败");
             default:
-                return Message.success("支付中");
+                return Message.success((Object) resultCode,"支付中");
         }
     }
 

@@ -17,7 +17,7 @@ public class ArticleModel implements Serializable {
     /** 标题图 */
     private String thumbnail;
     /** 背景音乐 */
-    private String music;
+    private MusicModel music;
     /** 内容 */
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
     /** 投票 */
@@ -49,11 +49,11 @@ public class ArticleModel implements Serializable {
         this.thumbnail = thumbnail;
     }
 
-    public String getMusic() {
+    public MusicModel getMusic() {
         return music;
     }
 
-    public void setMusic(String music) {
+    public void setMusic(MusicModel music) {
         this.music = music;
     }
 
@@ -93,7 +93,11 @@ public class ArticleModel implements Serializable {
 
         this.id = article.getId();
         this.title = article.getTitle();
-        this.music = article.getMusic();
+        if (article.getMusic()!=null) {
+            this.music = JsonUtils.toObject(article.getMusic(), MusicModel.class);
+        } else {
+            this.music = new MusicModel();
+        }
         this.thumbnail = article.getThumbnail();
         ArticleTitleModel articleTitleModel = new ArticleTitleModel();
         if (article.getArticleTitle()!=null) {

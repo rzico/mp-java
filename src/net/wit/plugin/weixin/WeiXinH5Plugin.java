@@ -122,10 +122,12 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 
 		// 这里写的金额为1 分到时修改
 		packageParams.put("total_fee", payment.getAmount().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP).toString());
-		packageParams.put("spbill_create_ip", request.getRemoteAddr());
+		packageParams.put("spbill_create_ip",request.getRemoteAddr());
 		packageParams.put("notify_url", getNotifyUrl(sn, NotifyMethod.async));
 		packageParams.put("trade_type", "MWEB");
-		packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"https://weex.rzico.com\",\"wap_name\": \"众卖芸店\"}}");
+		//String xapp = request.getHeader("x-app");
+		packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://"+pluginConfig.getAttribute("host")+"\",\"wap_name\": \"睿商助手\"}}");
+		//packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"魔篇\",\"package_name\": \"com.rzico.weex\"}}");
 
 		try {
 			String sign = getSign(packageParams);
@@ -180,11 +182,11 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 			while ((iRead = buf.read(buffer)) != -1) {
 				info.append(new String(buffer, 0, iRead, "UTF-8"));
 			}
+			logger.error(info.toString());
 			map = WeiXinUtils.doXMLParse(info.toString());
-			if (map.get("result_code").toString().equals("SUCCESS")) {
+			if ("SUCCESS".equals(map.get("result_code").toString())) {
 				String sign = getSign(map);
-				if (sign.equals(map.get("sign")) && sn.equals(map.get("out_trade_no")) && map.get("appid").equals(pluginConfig.getAttribute("appId"))
-						&& payment.getAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal((String) map.get("total_fee"))) == 0) {
+				if (sign.equals(map.get("sign")) && sn.equals(map.get("out_trade_no")) && map.get("appid").equals(pluginConfig.getAttribute("appId"))) {
 					try {
 						return true;
 					} catch (Exception e) {

@@ -43,7 +43,6 @@ public class RSAServiceImpl implements RSAService {
 	/** "私钥"参数名称 */
 	private static final String PRIVATE_KEY_ATTRIBUTE_NAME = "privateKey";
 
-	@Transactional(readOnly = true)
 	public RSAPublicKey generateKey(HttpServletRequest request) {
 		Assert.notNull(request);
 		KeyPair keyPair = RSAUtils.generateKeyPair();
@@ -56,15 +55,12 @@ public class RSAServiceImpl implements RSAService {
 		return publicKey;
 	}
 
-	@Transactional(readOnly = true)
 	public void removePrivateKey(HttpServletRequest request) {
 		Assert.notNull(request);
 		redisService.remove(PRIVATE_KEY_ATTRIBUTE_NAME);
 	}
 
-	@Transactional(readOnly = true)
 	public String decryptParameter(String name, HttpServletRequest request) {
-		Assert.notNull(request);
 		if (name != null) {
 			try{
 			Redis redis = redisService.findKey(PRIVATE_KEY_ATTRIBUTE_NAME);

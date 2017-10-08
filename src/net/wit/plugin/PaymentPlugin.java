@@ -330,11 +330,11 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 * @return 通知URL
 	 */
 	public String getNotifyUrl(String sn, NotifyMethod notifyMethod) {
-		Setting setting = SettingUtils.get();
+		PluginConfig pluginConfig = getPluginConfig();
 		if (notifyMethod == null) {
-			return setting.getSiteUrl()  + "/payment/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
+			return "http://"+pluginConfig.getAttribute("host") + "/payment/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
 		}
-		return setting.getSiteUrl()  + "/payment/notify/" + notifyMethod + "/" + sn + ".jhtml";
+		return "http://"+pluginConfig.getAttribute("host") + "/payment/notify/" + notifyMethod + "/" + sn + ".jhtml";
 	}
 
 	/**

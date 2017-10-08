@@ -3,13 +3,12 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.ArticleModel;
-import net.wit.controller.weex.model.ArticleOptionModel;
-import net.wit.controller.weex.model.ArticleReviewModel;
-import net.wit.controller.weex.model.MemberModel;
+import net.wit.controller.weex.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -130,12 +129,30 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(Long id,String title, String author, ArticleTitle articleTitle,
-                          String thumbnail, String music, String content,
-                          Long areaId, Long templateId,Long[] productIds,String votes,HttpServletRequest request){
+    public Message submit(String body, HttpServletRequest request) {
+        Member member = memberService.getCurrent();
+        ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
+        Long id = model.getId();
+        String title = model.getTitle();
+        String author = member.getNickName();
+        ArticleTitle articleTitle = new ArticleTitle();
+        if (model.getArticleTitleModel()!=null) {
+            articleTitle.setImage1(model.getArticleTitleModel().getImage1());
+            articleTitle.setImage2(model.getArticleTitleModel().getImage2());
+            articleTitle.setImage3(model.getArticleTitleModel().getImage3());
+            articleTitle.setImage4(model.getArticleTitleModel().getImage4());
+            articleTitle.setImage5(model.getArticleTitleModel().getImage5());
+            articleTitle.setImage6(model.getArticleTitleModel().getImage6());
+            articleTitle.setTitleType(model.getArticleTitleModel().getTitleType());
+        }
+        String thumbnail = model.getThumbnail();
+        String music = JsonUtils.toJson(model.getMusic());
+        String content = JsonUtils.toJson(model.getTemplates());
+
+        String votes = JsonUtils.toJson(model.getVotes());
         Article article = null;
         if (id!=null) {
-            article = articleService.find(id);
+            article = articleService.find(model.getId());
         }
         if (article==null) {
             article = new Article();
@@ -160,12 +177,7 @@ public class ArticleController extends BaseController {
         article.setMusic(music);
         article.setContent(content);
         article.setVotes(votes);
-        if (areaId!=null) {
-            article.setArea(areaService.find(areaId));
-        }
-        if (templateId!=null) {
-            article.setTemplate(templateService.find(templateId));
-        }
+
         if (articleTitle!=null) {
             article.setArticleTitle(articleTitle);
         }
@@ -175,17 +187,23 @@ public class ArticleController extends BaseController {
         for (ArticleProduct product:article.getProducts()) {
             articleProductService.delete(product);
         }
-        List<Product> products = productService.findList(productIds);
-        for (Product product:products) {
-            ArticleProduct ap = new ArticleProduct();
-            ap.setArticle(article);
-            ap.setProduct(product);
-            articleProductService.save(ap);
+        if (model.getProducts()!=null) {
+            for (ProductViewModel product : model.getProducts()) {
+                Product prod = productService.find(product.getId());
+                if (prod == null) {
+                    return Message.error("无效商品");
+                }
+                ArticleProduct ap = new ArticleProduct();
+                ap.setArticle(article);
+                ap.setProduct(prod);
+                articleProductService.save(ap);
+            }
         }
 
-        ArticleModel model =new ArticleModel();
-        model.bind(article);
-        return Message.success(model,"获取成功");
+        ArticleModel entityModel =new ArticleModel();
+        entityModel.bind(article);
+        return Message.success(entityModel,"获取成功");
+
     }
 
     /**

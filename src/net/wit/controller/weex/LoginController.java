@@ -63,9 +63,12 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
     @ResponseBody
-    public Message sendMobile(String mobile, HttpServletRequest request) {
+    public Message sendMobile(HttpServletRequest request) {
         String m = rsaService.decryptParameter("mobile", request);
         rsaService.removePrivateKey(request);
+        if (m==null) {
+            return Message.error("无效手机号");
+        }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
 

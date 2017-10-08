@@ -140,6 +140,11 @@ public class Payment extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
+	/** 收款方 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private Member payee;
+
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orders",updatable = false)
@@ -270,6 +275,14 @@ public class Payment extends BaseEntity {
 		this.articleReward = articleReward;
 	}
 
+	public Member getPayee() {
+		return payee;
+	}
+
+	public void setPayee(Member payee) {
+		this.payee = payee;
+	}
+
 	/**
 	 * 判断是否已过期
 	 * 
@@ -287,6 +300,15 @@ public class Payment extends BaseEntity {
 	public void preRemove() {
 		if (getDeposit() != null) {
 			getDeposit().setPayment(null);
+		}
+	}
+
+
+	public MapEntity getMapPayee() {
+		if (getPayee() != null) {
+			return new MapEntity(getPayee().getId().toString(), getPayee().getNickName()+"("+getPayee().getName()+")");
+		} else {
+			return null;
 		}
 	}
 

@@ -68,8 +68,8 @@ public class WeexInterceptor extends HandlerInterceptorAdapter {
 			if (member==null) {
 				member = memberService.findByUUID(xuid);
 				if (member!=null) {
-					Principal principal = new Principal(member.getId(), member.getUsername());
-					redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+					//Principal principal = new Principal(member.getId(), member.getUsername());
+					//redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
 				}
 			}
 			return true;

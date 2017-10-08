@@ -1,5 +1,6 @@
 package net.wit.service.impl;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.Principal;
@@ -25,6 +26,7 @@ import java.util.Date;
  
  
 @Service("redisServiceImpl")
+@Transactional
 public class RedisServiceImpl extends BaseServiceImpl<Redis, Long> implements RedisService {
 	@Resource(name = "redisDaoImpl")
 	private RedisDao redisDao;
@@ -88,6 +90,8 @@ public class RedisServiceImpl extends BaseServiceImpl<Redis, Long> implements Re
 			String sid = request.getSession().getId();
 			String skey = sid+"#"+key;
 			redis = redisDao.findKey(skey);
+			logger.error(redis.getKey());
+			logger.error(redis.getValue());
 		}
 		return redis;
 	}
@@ -103,8 +107,13 @@ public class RedisServiceImpl extends BaseServiceImpl<Redis, Long> implements Re
 				redis = new Redis();
 				redis.setKey(skey);
 				redis.setValue(value);
+				redisDao.persist(redis);
+			} else {
+				redis.setValue(value);
+				redisDao.merge(redis);
 			}
-			redisDao.persist(redis);
+			logger.error(redis.getKey());
+			logger.error(redis.getValue());
 		}
 	}
 
