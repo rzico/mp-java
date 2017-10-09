@@ -62,6 +62,7 @@ public class RSAServiceImpl implements RSAService {
 	}
 
 	public String decryptParameter(String name, HttpServletRequest request) {
+		Assert.notNull(request);
 		if (name != null) {
 			try{
 			Redis redis = redisService.findKey(PRIVATE_KEY_ATTRIBUTE_NAME);

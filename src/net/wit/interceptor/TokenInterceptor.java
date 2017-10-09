@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import net.wit.Principal;
@@ -20,9 +22,11 @@ import net.wit.util.WebUtils;
  *
  */
 public class TokenInterceptor extends HandlerInterceptorAdapter {
+	private static Logger logger = LogManager.getLogger(TokenInterceptor.class);
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		logger.debug("JSESSIONID="+request.getSession().getId());
 		return true;
 	}
 

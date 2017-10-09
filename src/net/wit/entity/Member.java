@@ -70,6 +70,12 @@ public class Member extends BaseEntity {
 	/** "用户名"Cookie名称 */
 	public static final String MOBILE_LOGIN_CAPTCHA = "MEMBER.LOGIN.CAPTCHA";
 
+	/** "用户名"Cookie名称 */
+	public static final String MEMBER_PASSWORD_CAPTCHA = "MEMBER.PASSWORD.CAPTCHA";
+
+	/** "用户名"Cookie名称 */
+	public static final String MOBILE_BIND_CAPTCHA = "MEMBER.BIND.CAPTCHA";
+
 	/** 会员注册项值属性个数 */
 	public static final int ATTRIBUTE_VALUE_PROPERTY_COUNT = 10;
 

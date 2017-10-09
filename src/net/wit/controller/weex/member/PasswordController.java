@@ -64,13 +64,16 @@ public class PasswordController extends BaseController {
             mobile = rsaService.decryptParameter("mobile", request);
             rsaService.removePrivateKey(request);
         }
+        if (mobile==null) {
+            return Message.error("无效手机号");
+        }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
         SafeKey safeKey = new SafeKey();
         safeKey.setKey(mobile);
         safeKey.setValue(securityCode);
         safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
-        redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
+        redisService.put(Member.MEMBER_PASSWORD_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();
         smsSend.setMobile(mobile);
@@ -106,7 +109,7 @@ public class PasswordController extends BaseController {
     @RequestMapping(value = "/captcha", method = RequestMethod.POST)
     @ResponseBody
     public Message captcha(HttpServletRequest request){
-        Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
+        Redis redis = redisService.findKey(Member.MEMBER_PASSWORD_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
         }
@@ -143,11 +146,11 @@ public class PasswordController extends BaseController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
 	public Message update(HttpServletRequest request){
-        Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
+        Redis redis = redisService.findKey(Member.MEMBER_PASSWORD_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
         }
-        redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
+        redisService.remove(Member.MEMBER_PASSWORD_CAPTCHA);
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         Member member =memberService.getCurrent();
         try {

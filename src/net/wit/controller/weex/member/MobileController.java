@@ -66,7 +66,7 @@ public class MobileController extends BaseController {
         safeKey.setKey(mobile);
         safeKey.setValue(securityCode);
         safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
-        redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
+        redisService.put(Member.MOBILE_BIND_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();
         smsSend.setMobile(mobile);
@@ -81,11 +81,11 @@ public class MobileController extends BaseController {
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
     public Message submit(HttpServletRequest request){
-        Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
+        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
         }
-        redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
+        redisService.remove(Member.MOBILE_BIND_CAPTCHA);
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         Member member = memberService.getCurrent();
         try {

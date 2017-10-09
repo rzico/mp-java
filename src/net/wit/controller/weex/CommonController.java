@@ -66,7 +66,8 @@ public class CommonController extends BaseController {
 	Message publicKey(HttpServletRequest request) {
 		RSAPublicKey publicKey = rsaService.generateKey(request);
 		Map<String, String> data = new HashMap<String, String>();
-		data.put("modulus", Base64.encodeBase64String(publicKey.getModulus().toByteArray()));
+		String pm = Base64.encodeBase64String(publicKey.getModulus().toByteArray());
+		data.put("modulus", pm);
 		data.put("exponent", Base64.encodeBase64String(publicKey.getPublicExponent().toByteArray()));
 		return Message.success(data,"success");
 	}
