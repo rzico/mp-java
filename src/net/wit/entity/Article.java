@@ -31,6 +31,8 @@ public class Article extends BaseEntity{
     private static final long serialVersionUID = 103L;
 
     public static enum MediaType{
+        /** 默认 */
+        html,
         /** 图文 */
         image,
         /** 音频 */

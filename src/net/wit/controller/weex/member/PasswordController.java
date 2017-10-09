@@ -59,12 +59,13 @@ public class PasswordController extends BaseController {
     @ResponseBody
     public Message sendMobile(HttpServletRequest request) {
         Member member = memberService.getCurrent();
-        if (member.getMobile()==null) {
-            return Message.error("没有绑定手机");
+        String mobile = member.getMobile();
+        if (mobile==null) {
+            mobile = rsaService.decryptParameter("mobile", request);
+            rsaService.removePrivateKey(request);
         }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
-        String mobile = member.getMobile();
         SafeKey safeKey = new SafeKey();
         safeKey.setKey(mobile);
         safeKey.setValue(securityCode);
@@ -76,6 +77,27 @@ public class PasswordController extends BaseController {
         smsSend.setContent("验证码 :" + securityCode + ",只用于修改密码。");
         smssendService.smsSend(smsSend);
         return Message.success("发送成功");
+    }
+
+    /**
+     * 检查手机号
+     * mobile 手机号
+     */
+    @RequestMapping(value = "/check_mobile", method = RequestMethod.GET)
+    @ResponseBody
+    public Message checkMobile(HttpServletRequest request) {
+        Member member = memberService.getCurrent();
+        String mobile = rsaService.decryptParameter("mobile", request);
+        if (member.getMobile()!=null) {
+            return Message.error("已绑定手机");
+        }
+        rsaService.removePrivateKey(request);
+        if (memberService.findByMobile(mobile)!=null) {
+           if (!mobile.equals(member.getMobile())) {
+               return Message.error("手机号已被使用");
+           }
+        }
+        return Message.success("检查通过成功");
     }
 
     /**

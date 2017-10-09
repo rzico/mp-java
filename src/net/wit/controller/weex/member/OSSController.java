@@ -98,7 +98,7 @@ public class OSSController extends BaseController {
         Map<String,String> model = new HashMap<String,String>();
         try {
             final AssumeRoleResponse response = assumeRole(accessKeyId, accessKeySecret,
-                    roleArn, roleSessionName, policy, protocolType);
+                    roleArn, roleSessionName, null, protocolType);
             model.put("Expiration",response.getCredentials().getExpiration());
             model.put("AccessKeyId", response.getCredentials().getAccessKeyId());
             model.put("AccessKeySecret",response.getCredentials().getAccessKeySecret());

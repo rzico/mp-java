@@ -131,6 +131,9 @@ public class ArticleController extends BaseController {
     @ResponseBody
     public Message submit(String body, HttpServletRequest request) {
         Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
         ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
         Long id = model.getId();
         String title = model.getTitle();
@@ -162,6 +165,8 @@ public class ArticleController extends BaseController {
             article.setLaud(0L);
             article.setReview(0L);
             article.setIsDraft(true);
+            ArticleOptions options = new ArticleOptions();
+            article.setArticleOptions(options);
             article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPublic);
             article.getArticleOptions().setIsExample(false);
             article.getArticleOptions().setIsPitch(false);
@@ -177,6 +182,8 @@ public class ArticleController extends BaseController {
         article.setMusic(music);
         article.setContent(content);
         article.setVotes(votes);
+        article.setMember(member);
+        article.setMediaType(Article.MediaType.image);
 
         if (articleTitle!=null) {
             article.setArticleTitle(articleTitle);
@@ -202,7 +209,7 @@ public class ArticleController extends BaseController {
 
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
-        return Message.success(entityModel,"获取成功");
+        return Message.success(entityModel,"保存成功");
 
     }
 
@@ -267,6 +274,9 @@ public class ArticleController extends BaseController {
         }
 
         Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
         ArticleLaud laud = new ArticleLaud();
         laud.setArticle(article);
         laud.setIp(request.getRemoteAddr());

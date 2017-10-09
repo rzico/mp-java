@@ -123,13 +123,15 @@ public class ArticleOptionModel implements Serializable {
 
     public void bind(Article article) {
         ArticleOptions options = article.getArticleOptions();
-        this.authority = options.getAuthority();
-        this.isPublish = options.getIsPublish();
-        this.isPitch = options.getIsPitch();
-        this.isReview = options.getIsReview();
-        this.isReward = options.getIsReward();
-        this.isExample = options.getIsExample();
-        this.isTop = options.getIsTop();
+        if (options!=null) {
+            this.authority = options.getAuthority();
+            this.isPublish = options.getIsPublish();
+            this.isPitch = options.getIsPitch();
+            this.isReview = options.getIsReview();
+            this.isReward = options.getIsReward();
+            this.isExample = options.getIsExample();
+            this.isTop = options.getIsTop();
+        }
         ArticleCatalogModel articleCatalogModel = new ArticleCatalogModel();
         if (article.getArticleCatalog()!=null) {
             articleCatalogModel.setId(article.getArticleCatalog().getId());

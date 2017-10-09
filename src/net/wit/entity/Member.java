@@ -274,6 +274,10 @@ public class Member extends BaseEntity {
 	@OneToMany(mappedBy = "follow", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<MemberFollow> fans = new HashSet<MemberFollow>();
 
+	/** 我的专栏*/
+	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+	private Topic topic;
+
 	public String getUsername() {
 		return username;
 	}
@@ -624,6 +628,14 @@ public class Member extends BaseEntity {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public Topic getTopic() {
+		return topic;
+	}
+
+	public void setTopic(Topic topic) {
+		this.topic = topic;
 	}
 
 	/**

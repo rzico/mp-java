@@ -135,6 +135,4 @@ public class MemberController extends BaseController {
         return Message.success("获取会员信息成功");
     }
 
-
-
 }

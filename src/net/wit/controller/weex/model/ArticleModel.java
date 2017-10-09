@@ -1,5 +1,6 @@
 package net.wit.controller.weex.model;
 import net.wit.entity.Article;
+import net.wit.entity.ArticleOptions;
 import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
@@ -18,6 +19,8 @@ public class ArticleModel implements Serializable {
     private String thumbnail;
     /** 背景音乐 */
     private MusicModel music;
+    /** 文章选项 */
+    private ArticleOptionModel articleOption;
     /** 内容 */
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
     /** 投票 */
@@ -89,6 +92,14 @@ public class ArticleModel implements Serializable {
         this.products = products;
     }
 
+    public ArticleOptionModel getArticleOption() {
+        return articleOption;
+    }
+
+    public void setArticleOption(ArticleOptionModel articleOption) {
+        this.articleOption = articleOption;
+    }
+
     public void bind(Article article) {
 
         this.id = article.getId();
@@ -105,6 +116,12 @@ public class ArticleModel implements Serializable {
         }
         this.articleTitleModel = articleTitleModel;
 
+        ArticleOptionModel articleOption = new ArticleOptionModel();
+        if (article.getArticleOptions()!=null) {
+            articleOption.bind(article);
+        }
+        this.articleOption = articleOption;
+
         List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
         if (article.getContent()!=null) {
             templates = JsonUtils.toObject(article.getContent(), List.class);
@@ -113,7 +130,7 @@ public class ArticleModel implements Serializable {
             m.setMediaType(Article.MediaType.image);
             m.setContent("demo");
             m.setOriginal("https://qiniu.easyapi.com/g1.png!icon.jpg");
-            m.setThumbnial("https://qiniu.easyapi.com/g1.png!icon.jpg");
+            m.setThumbnail("https://qiniu.easyapi.com/g1.png!icon.jpg");
             templates.add(m);
         }
         this.templates = templates;

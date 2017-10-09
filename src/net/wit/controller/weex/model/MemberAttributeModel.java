@@ -25,6 +25,8 @@ public class MemberAttributeModel implements Serializable {
     private AreaModel area;
     /** 职业 */
     private OccupationModel occupation;
+    /** 生日 */
+    private Date birthday;
     /** 是否绑定手机 */
     private Boolean bindMobile;
     /** 是否绑定微信 */
@@ -120,12 +122,21 @@ public class MemberAttributeModel implements Serializable {
         this.hasPassword = hasPassword;
     }
 
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
         this.nickName = member.getNickName();
         this.username = member.getUsername();
         this.gender = member.getGender();
+        this.birthday = member.getBirth();
         AreaModel area = new AreaModel();
         if (member.getArea()!=null) {
             area.bind(member.getArea());

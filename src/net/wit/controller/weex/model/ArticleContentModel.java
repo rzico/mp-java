@@ -13,7 +13,7 @@ public class ArticleContentModel implements Serializable {
     /** 媒体类型 */
     private Article.MediaType mediaType;
     /** 缩例图 */
-    private String thumbnial;
+    private String thumbnail;
     /** 媒体链接 */
     private String original;
     /** 内容 */
@@ -35,12 +35,12 @@ public class ArticleContentModel implements Serializable {
         this.content = content;
     }
 
-    public String getThumbnial() {
-        return thumbnial;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setThumbnial(String thumbnial) {
-        this.thumbnial = thumbnial;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public String getOriginal() {

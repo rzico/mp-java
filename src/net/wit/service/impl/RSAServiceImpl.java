@@ -36,6 +36,7 @@ import org.springframework.util.Assert;
  * @version 3.0
  */
 @Service("rsaServiceImpl")
+@Transactional
 public class RSAServiceImpl implements RSAService {
 	@Resource(name = "redisServiceImpl")
 	private RedisService redisService;

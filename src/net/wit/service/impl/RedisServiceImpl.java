@@ -90,8 +90,8 @@ public class RedisServiceImpl extends BaseServiceImpl<Redis, Long> implements Re
 			String sid = request.getSession().getId();
 			String skey = sid+"#"+key;
 			redis = redisDao.findKey(skey);
-			logger.error(redis.getKey());
-			logger.error(redis.getValue());
+			//logger.error(redis.getKey());
+			//logger.error(redis.getValue());
 		}
 		return redis;
 	}
@@ -112,8 +112,8 @@ public class RedisServiceImpl extends BaseServiceImpl<Redis, Long> implements Re
 				redis.setValue(value);
 				redisDao.merge(redis);
 			}
-			logger.error(redis.getKey());
-			logger.error(redis.getValue());
+			//logger.error(redis.getKey());
+			//logger.error(redis.getValue());
 		}
 	}
 
