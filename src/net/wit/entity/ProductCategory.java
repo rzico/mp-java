@@ -62,7 +62,7 @@ public class ProductCategory extends OrderEntity {
 
 	/** 下级分类 */
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-	@OrderBy("order asc")
+	@OrderBy("orders asc")
 	private Set<ProductCategory> children = new HashSet<ProductCategory>();
 
 	/** 商品 */

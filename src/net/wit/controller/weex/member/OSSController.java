@@ -9,17 +9,12 @@ import com.aliyuncs.profile.IClientProfile;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleRequest;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import net.wit.*;
-import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.ArticleReviewModel;
-import net.wit.entity.Article;
-import net.wit.entity.ArticleReview;
-import net.wit.service.*;
+import net.wit.controller.weex.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 

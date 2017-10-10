@@ -248,7 +248,7 @@ public class Member extends BaseEntity {
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_member_tag")
-	@OrderBy("order asc")
+	@OrderBy("orders asc")
 	private List<Tag> tags = new ArrayList<Tag>();
 
 	/** 预存款 */

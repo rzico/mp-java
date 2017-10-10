@@ -77,7 +77,7 @@ public class Template extends OrderEntity {
 	/** 模板标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_template_tag")
-	@OrderBy("order asc")
+	@OrderBy("orders asc")
 	private List<Tag> tags = new ArrayList<Tag>();
 
 	public Type getType() {

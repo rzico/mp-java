@@ -122,7 +122,7 @@ public class Topic extends BaseEntity {
     /** 模板标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_topic_tag")
-    @OrderBy("order asc")
+    @OrderBy("orders asc")
     private List<Tag> tags = new ArrayList<Tag>();
 
     public Type getType() {

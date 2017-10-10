@@ -45,7 +45,7 @@ public class Area extends OrderEntity {
 
 	/** 下级地区 */
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@OrderBy("order asc")
+	@OrderBy("orders asc")
 	private Set<Area> children = new HashSet<Area>();
 
 	/**

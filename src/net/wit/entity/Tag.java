@@ -28,7 +28,9 @@ public class Tag extends OrderEntity{
         /* 会员 */
         member,
         /* 模板 */
-        template
+        template,
+        /* 商品 */
+        product
     }
 
     /*名称*/

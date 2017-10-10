@@ -20,20 +20,15 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.groups.Default;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.wit.listener.EntityListener;
 
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Resolution;
-import org.hibernate.search.annotations.Store;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @ClassName: BaseEntity
@@ -41,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Administrator
  * @date 2014年10月11日 下午5:32:42
  */
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.PUBLIC_ONLY, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.PUBLIC_ONLY, creatorVisibility = Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = Visibility.DEFAULT)
 @EntityListeners(EntityListener.class)
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
@@ -70,13 +65,11 @@ public abstract class BaseEntity implements Serializable {
 	private Long id;
 
 	/** 创建日期 */
-	@Field(store = Store.YES, index = Index.UN_TOKENIZED)
 	@DateBridge(resolution = Resolution.SECOND)
 	@Column(updatable = false,columnDefinition="datetime not null comment '创建日期'")
 	private Date createDate;
 
 	/** 修改日期 */
-	@Field(store = Store.YES, index = Index.UN_TOKENIZED)
 	@DateBridge(resolution = Resolution.SECOND)
 	@Column(columnDefinition="datetime not null comment '修改日期'")
 	private Date modifyDate;
@@ -85,7 +78,6 @@ public abstract class BaseEntity implements Serializable {
 	 * 获取ID
 	 * @return ID
 	 */
-	@JsonProperty
 	public Long getId() {
 		return id;
 	}
@@ -102,7 +94,6 @@ public abstract class BaseEntity implements Serializable {
 	 * 获取创建日期
 	 * @return 创建日期
 	 */
-	@JsonProperty
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -119,7 +110,6 @@ public abstract class BaseEntity implements Serializable {
 	 * 获取修改日期
 	 * @return 修改日期
 	 */
-	@JsonProperty
 	public Date getModifyDate() {
 		return modifyDate;
 	}

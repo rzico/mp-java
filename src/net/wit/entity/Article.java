@@ -140,7 +140,7 @@ public class Article extends BaseEntity{
     /** 文章标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_article_tag")
-    @OrderBy("order asc")
+    @OrderBy("orders asc")
     private List<Tag> tags = new ArrayList<Tag>();
 
     /** 点赞者*/
