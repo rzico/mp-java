@@ -4,10 +4,7 @@ import net.wit.Message;
 import net.wit.Principal;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.weex.model.MemberModel;
-import net.wit.entity.Member;
-import net.wit.entity.Redis;
-import net.wit.entity.SafeKey;
-import net.wit.entity.Smssend;
+import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import net.wit.util.StringUtils;
@@ -21,6 +18,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 
 /**
@@ -57,7 +56,11 @@ public class MobileController extends BaseController {
     public Message sendMobile(String mobile, HttpServletRequest request) {
         Member member = memberService.findByMobile(mobile);
         if (member!=null) {
-            return Message.error("当前手机已经注册");
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            BindUser bindUser = bindUserService.findMember(member,bundle.getString("app.appid"), BindUser.Type.weixin);
+            if (bindUser==null) {
+                return Message.error("当前手机已经注册");
+            }
         }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
@@ -100,6 +103,16 @@ public class MobileController extends BaseController {
             }
             if (captcha.equals(safeKey.getValue())) {
                 return Message.error("无效验证码");
+            }
+            Member m = memberService.findByMobile(safeKey.getKey());
+            if (m!=null) {
+                ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+                BindUser bindUser = bindUserService.findMember(m,bundle.getString("app.appid"), BindUser.Type.weixin);
+                if (bindUser==null) {
+                    return Message.error("当前手机已经注册");
+                }
+                m.setMobile(null);
+                memberService.save(m);
             }
 
             member.setMobile(safeKey.getKey());

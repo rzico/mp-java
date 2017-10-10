@@ -92,7 +92,7 @@ public class ProductCategoryController extends BaseController {
 
 		entity.setModifyDate(productCategory.getModifyDate());
 
-		entity.setOrder(productCategory.getOrder() == null ? 0 : productCategory.getOrder());
+		entity.setOrders(productCategory.getOrders() == null ? 0 : productCategory.getOrders());
 
 		entity.setGrade(productCategory.getGrade() == null ? 0 : productCategory.getGrade());
 
@@ -159,7 +159,7 @@ public class ProductCategoryController extends BaseController {
 
 		entity.setModifyDate(productCategory.getModifyDate());
 
-		entity.setOrder(productCategory.getOrder() == null ? 0 : productCategory.getOrder());
+		entity.setOrders(productCategory.getOrders() == null ? 0 : productCategory.getOrders());
 
 		entity.setGrade(productCategory.getGrade() == null ? 0 : productCategory.getGrade());
 

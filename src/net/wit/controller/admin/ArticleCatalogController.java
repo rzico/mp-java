@@ -102,7 +102,7 @@ public class ArticleCatalogController extends BaseController {
 
 		entity.setModifyDate(articleCatalog.getModifyDate());
 
-		entity.setOrder(articleCatalog.getOrder() == null ? 0 : articleCatalog.getOrder());
+		entity.setOrders(articleCatalog.getOrders() == null ? 0 : articleCatalog.getOrders());
 
 		entity.setName(articleCatalog.getName());
 
@@ -170,7 +170,7 @@ public class ArticleCatalogController extends BaseController {
 
 		entity.setModifyDate(articleCatalog.getModifyDate());
 
-		entity.setOrder(articleCatalog.getOrder() == null ? 0 : articleCatalog.getOrder());
+		entity.setOrders(articleCatalog.getOrders() == null ? 0 : articleCatalog.getOrders());
 
 		entity.setName(articleCatalog.getName());
 

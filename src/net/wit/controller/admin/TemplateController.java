@@ -89,7 +89,7 @@ public class TemplateController extends BaseController {
 
 		entity.setModifyDate(template.getModifyDate());
 
-		entity.setOrder(template.getOrder() == null ? 0 : template.getOrder());
+		entity.setOrders(template.getOrders() == null ? 0 : template.getOrders());
 
 		entity.setIsDefault(template.getIsDefault());
 
@@ -159,7 +159,7 @@ public class TemplateController extends BaseController {
 
 		entity.setModifyDate(template.getModifyDate());
 
-		entity.setOrder(template.getOrder() == null ? 0 : template.getOrder());
+		entity.setOrders(template.getOrders() == null ? 0 : template.getOrders());
 
 		entity.setIsDefault(template.getIsDefault());
 

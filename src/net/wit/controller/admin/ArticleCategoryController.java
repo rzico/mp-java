@@ -96,7 +96,7 @@ public class ArticleCategoryController extends BaseController {
 
 		entity.setModifyDate(articleCategory.getModifyDate());
 
-		entity.setOrder(articleCategory.getOrder() == null ? 0 : articleCategory.getOrder());
+		entity.setOrders(articleCategory.getOrders() == null ? 0 : articleCategory.getOrders());
 
 		entity.setGrade(articleCategory.getGrade() == null ? 0 : articleCategory.getGrade());
 
@@ -174,7 +174,7 @@ public class ArticleCategoryController extends BaseController {
 
 		entity.setModifyDate(articleCategory.getModifyDate());
 
-		entity.setOrder(articleCategory.getOrder() == null ? 0 : articleCategory.getOrder());
+		entity.setOrders(articleCategory.getOrders() == null ? 0 : articleCategory.getOrders());
 
 		entity.setGrade(articleCategory.getGrade() == null ? 0 : articleCategory.getGrade());
 

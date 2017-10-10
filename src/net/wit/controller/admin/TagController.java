@@ -89,7 +89,7 @@ public class TagController extends BaseController {
 
 		entity.setModifyDate(tag.getModifyDate());
 
-		entity.setOrder(tag.getOrder() == null ? 0 : tag.getOrder());
+		entity.setOrders(tag.getOrders() == null ? 0 : tag.getOrders());
 
 		entity.setIcon(tag.getIcon());
 
@@ -157,7 +157,7 @@ public class TagController extends BaseController {
 
 		entity.setModifyDate(tag.getModifyDate());
 
-		entity.setOrder(tag.getOrder() == null ? 0 : tag.getOrder());
+		entity.setOrders(tag.getOrders() == null ? 0 : tag.getOrders());
 
 		entity.setIcon(tag.getIcon());
 

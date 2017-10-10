@@ -27,24 +27,9 @@ import java.util.Map;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexArticleCategoryController")
-@RequestMapping("/weex/article_category")
+@Controller("articleCategoryController")
+@RequestMapping("/article_category")
 public class ArticleCategoryController extends BaseController {
-
-    @Resource(name = "memberServiceImpl")
-    private MemberService memberService;
-
-    @Resource(name = "redisServiceImpl")
-    private RedisService redisService;
-
-    @Resource(name = "rsaServiceImpl")
-    private RSAService rsaService;
-
-    @Resource(name = "smssendServiceImpl")
-    private SmssendService smssendService;
-
-    @Resource(name = "areaServiceImpl")
-    private AreaService areaService;
 
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;

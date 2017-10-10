@@ -2,10 +2,13 @@ package net.wit.controller.weex.model;
 import net.wit.entity.Occupation;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class OccupationModel implements Serializable {
+
     private Long id;
     private String name;
 
@@ -30,8 +33,8 @@ public class OccupationModel implements Serializable {
         this.name = occupation.getName();
     }
 
-    public static Set<OccupationModel> bindSet(Set<Occupation> occupations) {
-        Set<OccupationModel> ms = new HashSet<OccupationModel>();
+    public static List<OccupationModel> bindList(List<Occupation> occupations) {
+        List<OccupationModel> ms = new ArrayList<OccupationModel>();
         for (Occupation occupation:occupations) {
           OccupationModel m = new OccupationModel();
           m.bind(occupation);

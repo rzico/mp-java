@@ -89,7 +89,7 @@ public class OccupationController extends BaseController {
 
 		entity.setModifyDate(occupation.getModifyDate());
 
-		entity.setOrder(occupation.getOrder() == null ? 0 : occupation.getOrder());
+		entity.setOrders(occupation.getOrders() == null ? 0 : occupation.getOrders());
 
 		entity.setName(occupation.getName());
 
@@ -153,7 +153,7 @@ public class OccupationController extends BaseController {
 
 		entity.setModifyDate(occupation.getModifyDate());
 
-		entity.setOrder(occupation.getOrder() == null ? 0 : occupation.getOrder());
+		entity.setOrders(occupation.getOrders() == null ? 0 : occupation.getOrders());
 
 		entity.setName(occupation.getName());
 

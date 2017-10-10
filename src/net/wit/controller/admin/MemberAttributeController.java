@@ -105,7 +105,7 @@ public class MemberAttributeController extends BaseController {
 
 		entity.setModifyDate(memberAttribute.getModifyDate());
 
-		entity.setOrder(memberAttribute.getOrder() == null ? 0 : memberAttribute.getOrder());
+		entity.setOrders(memberAttribute.getOrders() == null ? 0 : memberAttribute.getOrders());
 
 		entity.setIsEnabled(memberAttribute.getIsEnabled());
 
@@ -184,7 +184,7 @@ public class MemberAttributeController extends BaseController {
 
 		entity.setModifyDate(memberAttribute.getModifyDate());
 
-		entity.setOrder(memberAttribute.getOrder() == null ? 0 : memberAttribute.getOrder());
+		entity.setOrders(memberAttribute.getOrders() == null ? 0 : memberAttribute.getOrders());
 
 		entity.setIsEnabled(memberAttribute.getIsEnabled());
 

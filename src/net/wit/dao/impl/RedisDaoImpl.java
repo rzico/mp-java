@@ -10,6 +10,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.FlushModeType;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -61,7 +62,7 @@ public class RedisDaoImpl extends BaseDaoImpl<Redis, Long> implements RedisDao {
 		}
 		try {
 			String jpql = "select redis from Redis redis where lower(redis.key) = lower(:key)";
-			return entityManager.createQuery(jpql, Redis.class).setFlushMode(FlushModeType.COMMIT).setParameter("key", key).getSingleResult();
+			return entityManager.createQuery(jpql, Redis.class).setLockMode(LockModeType.PESSIMISTIC_WRITE).setFlushMode(FlushModeType.COMMIT).setParameter("key", key).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}

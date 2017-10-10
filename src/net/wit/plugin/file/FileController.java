@@ -47,10 +47,10 @@ public class FileController extends BaseController {
 	 * 更新
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(Integer order,@RequestParam(defaultValue = "false") Boolean isEnabled, RedirectAttributes redirectAttributes) {
+	public String update(Integer orders,@RequestParam(defaultValue = "false") Boolean isEnabled, RedirectAttributes redirectAttributes) {
 		PluginConfig pluginConfig = filePlugin.getPluginConfig();
 		pluginConfig.setIsEnabled(isEnabled);
-		pluginConfig.setOrder(order);
+		pluginConfig.setOrders(orders);
 		pluginConfigService.update(pluginConfig);
 		return "redirect:/admin/storage_plugin/list.jhtml";
 	}

@@ -5,6 +5,7 @@
  */
 package net.wit.util;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import net.wit.Setting;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Utils - Spring
@@ -112,5 +114,17 @@ public class StringUtils  {
 		}
 		return result;
 	}
+
+	public static String base64Encode(byte[] binaryData) {
+		if (binaryData==null) {
+			return null;
+		}
+		try {
+			return new String(Base64.encodeBase64(binaryData, true, true), "UTF-8");
+		} catch (UnsupportedEncodingException e ){
+			return null;
+		}
+	}
+
 
 }

@@ -83,7 +83,7 @@ public class PluginConfigController extends BaseController {
 
 		entity.setModifyDate(pluginConfig.getModifyDate());
 
-		entity.setOrder(pluginConfig.getOrder() == null ? 0 : pluginConfig.getOrder());
+		entity.setOrders(pluginConfig.getOrders() == null ? 0 : pluginConfig.getOrders());
 
 		entity.setIsEnabled(pluginConfig.getIsEnabled());
 
@@ -144,7 +144,7 @@ public class PluginConfigController extends BaseController {
 
 		entity.setModifyDate(pluginConfig.getModifyDate());
 
-		entity.setOrder(pluginConfig.getOrder() == null ? 0 : pluginConfig.getOrder());
+		entity.setOrders(pluginConfig.getOrders() == null ? 0 : pluginConfig.getOrders());
 
 		entity.setIsEnabled(pluginConfig.getIsEnabled());
 

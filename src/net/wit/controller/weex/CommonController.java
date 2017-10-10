@@ -4,10 +4,11 @@ package net.wit.controller.weex;
 import net.wit.Message;
 import net.wit.entity.Area;
 import net.wit.entity.Member;
+import net.wit.entity.Redis;
 import net.wit.service.*;
+import net.wit.util.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -49,15 +50,6 @@ public class CommonController extends BaseController {
 	@Resource(name = "rsaServiceImpl")
 	private RSAService rsaService;
 
-	@Resource(name = "areaServiceImpl")
-	private AreaService areaService;
-
-	@Resource(name = "captchaServiceImpl")
-	private CaptchaService captchaService;
-
-	@Resource(name = "memberServiceImpl")
-	private MemberService memberService;
-
 	/**
 	 * 公钥
 	 */
@@ -66,9 +58,10 @@ public class CommonController extends BaseController {
 	Message publicKey(HttpServletRequest request) {
 		RSAPublicKey publicKey = rsaService.generateKey(request);
 		Map<String, String> data = new HashMap<String, String>();
-		String pm = Base64.encodeBase64String(publicKey.getModulus().toByteArray());
-		data.put("modulus", pm);
-		data.put("exponent", Base64.encodeBase64String(publicKey.getPublicExponent().toByteArray()));
+
+		data.put("modulus", StringUtils.base64Encode(publicKey.getModulus().toByteArray()));
+		data.put("exponent", StringUtils.base64Encode(publicKey.getPublicExponent().toByteArray()));
+		logger.debug("publicKey="+data);
 		return Message.success(data,"success");
 	}
 

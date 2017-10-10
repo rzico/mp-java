@@ -83,7 +83,7 @@ public class AreaController extends BaseController {
 
 		entity.setModifyDate(area.getModifyDate());
 
-		entity.setOrder(area.getOrder() == null ? 0 : area.getOrder());
+		entity.setOrders(area.getOrders() == null ? 0 : area.getOrders());
 
 		entity.setFullName(area.getFullName());
 
@@ -148,7 +148,7 @@ public class AreaController extends BaseController {
 
 		entity.setModifyDate(area.getModifyDate());
 
-		entity.setOrder(area.getOrder() == null ? 0 : area.getOrder());
+		entity.setOrders(area.getOrders() == null ? 0 : area.getOrders());
 
 		entity.setFullName(area.getFullName());
 

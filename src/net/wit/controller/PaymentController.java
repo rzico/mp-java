@@ -76,7 +76,6 @@ public class PaymentController extends BaseController {
                 payment.setAmount(new BigDecimal("0.1"));
                 payment.setMemo("支付测试");
                 payment.setSn(snService.generate(Sn.Type.payment));
-                payment.setMember(memberService.find(1L));
                 payment.setType(Type.recharge);
                 paymentService.save(payment);
             }

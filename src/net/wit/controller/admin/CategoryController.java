@@ -89,7 +89,7 @@ public class CategoryController extends BaseController {
 
 		entity.setModifyDate(category.getModifyDate());
 
-		entity.setOrder(category.getOrder() == null ? 0 : category.getOrder());
+		entity.setOrders(category.getOrders() == null ? 0 : category.getOrders());
 
 		entity.setBrokerage(category.getBrokerage());
 
@@ -155,7 +155,7 @@ public class CategoryController extends BaseController {
 
 		entity.setModifyDate(category.getModifyDate());
 
-		entity.setOrder(category.getOrder() == null ? 0 : category.getOrder());
+		entity.setOrders(category.getOrders() == null ? 0 : category.getOrders());
 
 		entity.setBrokerage(category.getBrokerage());
 

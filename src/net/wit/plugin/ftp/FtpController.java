@@ -86,7 +86,7 @@ public class FtpController extends BaseController {
 		pluginConfig.setAttribute("password", password);
 		pluginConfig.setAttribute("urlPrefix", StringUtils.removeEnd(urlPrefix, "/"));
 		pluginConfig.setIsEnabled(isEnabled);
-		pluginConfig.setOrder(order);
+		pluginConfig.setOrders(order);
 		pluginConfigService.update(pluginConfig);
 		return "redirect:/admin/storage_plugin/list.jhtml";
 	}

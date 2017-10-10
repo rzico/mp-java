@@ -69,7 +69,6 @@ public class MessageController extends BaseController {
         return Message.success(model,"获取成功");
     }
 
-
     /**
      *  会话列表
      */

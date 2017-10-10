@@ -183,7 +183,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 */
 	public Integer getOrder() {
 		PluginConfig pluginConfig = getPluginConfig();
-		return pluginConfig != null ? pluginConfig.getOrder() : null;
+		return pluginConfig != null ? pluginConfig.getOrders() : null;
 	}
 
 	/**
