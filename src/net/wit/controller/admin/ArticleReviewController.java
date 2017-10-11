@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ArticleReviewController
  * @author 降魔战队
- * @date 2017-9-14 19:42:11
+ * @date 2017-10-11 15:37:5
  */
  
 @Controller("adminArticleReviewController")
@@ -60,11 +60,14 @@ public class ArticleReviewController extends BaseController {
 	@Resource(name = "articleCategoryServiceImpl")
 	private ArticleCategoryService articleCategoryService;
 
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
+
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-	@Resource(name = "areaServiceImpl")
-	private AreaService areaService;
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 
 
@@ -207,7 +210,7 @@ public class ArticleReviewController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<ArticleReview> page = articleReviewService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
@@ -236,7 +239,20 @@ public class ArticleReviewController extends BaseController {
 
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("members",memberService.findAll());
+
 		model.addAttribute("templates",templateService.findAll());
+
+		List<MapEntity> titleTypes = new ArrayList<>();
+		titleTypes.add(new MapEntity("image1","单图"));
+		titleTypes.add(new MapEntity("image2","2张图"));
+		titleTypes.add(new MapEntity("image3","3张图"));
+		titleTypes.add(new MapEntity("image4","4张图"));
+		titleTypes.add(new MapEntity("image5","5张图"));
+		titleTypes.add(new MapEntity("image6","6张图"));
+		model.addAttribute("titleTypes",titleTypes);
 
 		model.addAttribute("tags",tagService.findAll());
 
@@ -271,6 +287,8 @@ public class ArticleReviewController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 

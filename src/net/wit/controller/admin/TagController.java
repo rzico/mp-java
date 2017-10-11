@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: TagController
  * @author 降魔战队
- * @date 2017-9-14 19:42:18
+ * @date 2017-10-11 15:37:15
  */
  
 @Controller("adminTagController")
@@ -56,6 +56,8 @@ public class TagController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("member","会员"));
+		types.add(new MapEntity("template","专栏"));
+		types.add(new MapEntity("product","商品"));
 		model.addAttribute("types",types);
 
 		return "/admin/tag/list";
@@ -71,6 +73,8 @@ public class TagController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("member","会员"));
+		types.add(new MapEntity("template","专栏"));
+		types.add(new MapEntity("product","商品"));
 		model.addAttribute("types",types);
 
 		return "/admin/tag/add";
@@ -137,6 +141,8 @@ public class TagController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("member","会员"));
+		types.add(new MapEntity("template","专栏"));
+		types.add(new MapEntity("product","商品"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("data",tagService.find(id));
@@ -185,7 +191,7 @@ public class TagController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Tag.Type type, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Tag.Type type, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);

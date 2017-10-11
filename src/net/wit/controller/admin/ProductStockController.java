@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ProductStockController
  * @author 降魔战队
- * @date 2017-9-14 19:42:16
+ * @date 2017-10-11 15:37:13
  */
  
 @Controller("adminProductStockController")
@@ -59,6 +59,9 @@ public class ProductStockController extends BaseController {
 
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
+
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -112,6 +115,8 @@ public class ProductStockController extends BaseController {
 		entity.setProduct(productService.find(productId));
 
 		entity.setSeller(memberService.find(sellerId));
+
+		entity.setDeleted(productStock.getDeleted());
 		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
@@ -177,6 +182,8 @@ public class ProductStockController extends BaseController {
 		entity.setProduct(productService.find(productId));
 
 		entity.setSeller(memberService.find(sellerId));
+
+		entity.setDeleted(productStock.getDeleted());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -196,7 +203,7 @@ public class ProductStockController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<ProductStock> page = productStockService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
@@ -229,6 +236,8 @@ public class ProductStockController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 

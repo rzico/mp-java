@@ -7,7 +7,6 @@ package net.wit.controller.admin;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 //import net.wit.entity.Area;
-import net.wit.entity.Area;
 import net.wit.service.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -54,18 +51,6 @@ public class CommonController implements ServletContextAware {
 	@Value("${system.show_powered}")
 	private Boolean systemShowPowered;
 
-	@Resource(name = "rsaServiceImpl")
-	private RSAService rsaService;
-
-	@Resource(name = "areaServiceImpl")
-	private AreaService areaService;
-
-	@Resource(name = "captchaServiceImpl")
-	private CaptchaService captchaService;
-
-	@Resource(name = "adminServiceImpl")
-	private AdminService adminService;
-
 	/** servletContext */
 	private ServletContext servletContext;
 
@@ -77,80 +62,26 @@ public class CommonController implements ServletContextAware {
 	 * 主页
 	 */
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String main(ModelMap model) {
-		model.addAttribute("admin",adminService.getCurrent());
+	public String main() {
 		return "/admin/common/main";
 	}
 
 	/**
-	 * 桌面
+	 * 首页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index() {
+	public String index(ModelMap model) {
+		model.addAttribute("systemName", systemName);
+		model.addAttribute("systemVersion", systemVersion);
+		model.addAttribute("systemDescription", systemDescription);
+		model.addAttribute("systemShowPowered", systemShowPowered);
+		model.addAttribute("javaVersion", System.getProperty("java.version"));
+		model.addAttribute("javaHome", System.getProperty("java.home"));
+		model.addAttribute("osName", System.getProperty("os.name"));
+		model.addAttribute("osArch", System.getProperty("os.arch"));
+		model.addAttribute("serverInfo", servletContext.getServerInfo());
+		model.addAttribute("servletVersion", servletContext.getMajorVersion() + "." + servletContext.getMinorVersion());
 		return "/admin/common/index";
-	}
-
-	/**
-	 * 公钥
-	 */
-	@RequestMapping(value = "/public_key", method = RequestMethod.GET)
-	public @ResponseBody
-	Map<String, String> publicKey(HttpServletRequest request) {
-		RSAPublicKey publicKey = rsaService.generateKey(request);
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("modulus", Base64.encodeBase64String(publicKey.getModulus().toByteArray()));
-		data.put("exponent", Base64.encodeBase64String(publicKey.getPublicExponent().toByteArray()));
-		return data;
-	}
-
-	/**
-	 * 验证码
-	 */
-	@RequestMapping(value = "/captcha", method = RequestMethod.GET)
-	public void image(String captchaId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (StringUtils.isEmpty(captchaId)) {
-			captchaId = request.getSession().getId();
-		}
-		String pragma = new StringBuffer().append("yB").append("-").append("der").append("ewoP").reverse().toString();
-		String value = new StringBuffer().append("ten").append(".").append("xxp").append("ohs").reverse().toString();
-		response.addHeader(pragma, value);
-		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Cache-Control", "no-cache");
-		response.setHeader("Cache-Control", "no-store");
-		response.setDateHeader("Expires", 0);
-		response.setContentType("image/jpeg");
-
-		ServletOutputStream servletOutputStream = null;
-		try {
-			servletOutputStream = response.getOutputStream();
-			BufferedImage bufferedImage = captchaService.buildImage(captchaId);
-			ImageIO.write(bufferedImage, "jpg", servletOutputStream);
-			servletOutputStream.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(servletOutputStream);
-		}
-	}
-
-	/**
-	 * 地区
-	 */
-	@RequestMapping(value = "/area", method = RequestMethod.GET)
-	public @ResponseBody
-	Map<Long, String> area(Long parentId) {
-		List<Area> areas = new ArrayList<Area>();
-		Area parent = areaService.find(parentId);
-		if (parent != null) {
-			areas = new ArrayList<Area>(parent.getChildren());
-		} else {
-			areas = areaService.findRoots();
-		}
-		Map<Long, String> options = new HashMap<Long, String>();
-		for (Area area : areas) {
-			options.put(area.getId(), area.getName());
-		}
-		return options;
 	}
 
 	/**

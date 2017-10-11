@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ShippingController
  * @author 降魔战队
- * @date 2017-9-14 19:42:17
+ * @date 2017-10-11 15:37:15
  */
  
 @Controller("adminShippingController")
@@ -53,6 +53,9 @@ public class ShippingController extends BaseController {
 
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
+
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -243,7 +246,7 @@ public class ShippingController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<Shipping> page = shippingService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
@@ -262,6 +265,8 @@ public class ShippingController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 

@@ -19,7 +19,7 @@
     <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>用户查看</title>
+    <title>企业管理查看</title>
 </head>
 <body>
 <div class="pd-20">
@@ -27,26 +27,27 @@
         <tbody>
         [#if enterprise??]
         <tr>
-            <th class="text-r" width="80">企业：</th>
-            [#if enterprise.name??]
-            <td>${enterprise.name}</td>
+            <th class="text-r" width="80">Id：</th>
+            [#if enterprise.id??]
+            <td>${enterprise.id}</td>
             [/#if]
         </tr>
         <tr>
-            <th class="text-r" width="80">类型：</th>
-        [#if types??]
-            [#list types as type]
-                [#if type.id == enterprise.type]
-                    <td>${type.name}</td>
-                [/#if]
-            [/#list]
-        [/#if]
+            <th class="text-r" width="80">创建日期：</th>
+            [#if enterprise.createDate??]
+            <td><span id="createDate">${enterprise.createDate}</span></td>
+            [/#if]
         </tr>
-
         <tr>
-            <th class="text-r" width="80">地区：</th>
-            [#if enterprise.area??]
-            <td>${enterprise.area.name}</td>
+            <th class="text-r" width="80">修改日期：</th>
+            [#if enterprise.modifyDate??]
+            <td><span id="modifyDate">${enterprise.modifyDate}</span></td>
+            [/#if]
+        </tr>
+        <tr>
+            <th class="text-r" width="80">企业名称：</th>
+            [#if enterprise.name??]
+            <td>${enterprise.name}</td>
             [/#if]
         </tr>
         <tr>
@@ -55,6 +56,27 @@
             <td>${enterprise.brokerage}</td>
             [/#if]
         </tr>
+        <tr>
+            <th class="text-r" width="80">类型：</th>
+            [#if types??]
+                [#list types as type]
+                [#if type.id == enterprise.type]
+                    <td>${type.name}</td>
+                [/#if]
+                [/#list]
+            [/#if]
+        </tr>
+        <tr>
+            <th class="text-r" width="80">城市：</th>
+            [#if types??]
+                [#list areas as area]
+                [#if area.id == enterprise.area]
+                    <td>${area.name}</td>
+                [/#if]
+                [/#list]
+            [/#if]
+        </tr>
+
         [#else]
          没有查找到数据
         [/#if]
@@ -66,6 +88,7 @@
 <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->

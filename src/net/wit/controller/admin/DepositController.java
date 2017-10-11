@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: DepositController
  * @author 降魔战队
- * @date 2017-9-14 19:42:13
+ * @date 2017-10-11 15:37:8
  */
  
 @Controller("adminDepositController")
@@ -54,11 +54,17 @@ public class DepositController extends BaseController {
 	@Resource(name = "refundsServiceImpl")
 	private RefundsService refundsService;
 
+	@Resource(name = "articleRewardServiceImpl")
+	private ArticleRewardService articleRewardService;
+
 	@Resource(name = "orderServiceImpl")
 	private OrderService orderService;
 
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
+
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -244,7 +250,7 @@ public class DepositController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Deposit.Type type, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Deposit.Type type, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
@@ -282,6 +288,10 @@ public class DepositController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
+		model.addAttribute("articleRewards",articleRewardService.findAll());
+
+		model.addAttribute("payees",memberService.findAll());
+
 		model.addAttribute("payment",paymentService.find(id));
 		return "/admin/deposit/view/paymentView";
 	}
@@ -299,6 +309,8 @@ public class DepositController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 

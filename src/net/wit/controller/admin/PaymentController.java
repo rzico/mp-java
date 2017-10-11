@@ -36,29 +36,39 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: PaymentController
  * @author 降魔战队
- * @date 2017-9-14 19:42:15
+ * @date 2017-10-11 15:37:11
  */
  
 @Controller("adminPaymentController")
 @RequestMapping("/admin/payment")
 public class PaymentController extends BaseController {
-	@Resource(name = "paymentServiceImpl")
-	private PaymentService paymentService;
-	
-	@Resource(name = "orderServiceImpl")
-	private OrderService orderService;
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "articleRewardServiceImpl")
+	private ArticleRewardService articleRewardService;
+
+	@Resource(name = "orderServiceImpl")
+	private OrderService orderService;
+
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 
-	@Resource(name = "couponCodeServiceImpl")
-	private CouponCodeService couponCodeService;
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
+
+	@Resource(name = "paymentServiceImpl")
+	private PaymentService paymentService;
+
+	@Resource(name = "articleServiceImpl")
+	private ArticleService articleService;
+
+	@Resource(name = "couponCodeServiceImpl")
+	private CouponCodeService couponCodeService;
 
 
 
@@ -88,6 +98,10 @@ public class PaymentController extends BaseController {
 		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("orderss",orderService.findAll());
+
+		model.addAttribute("articleRewards",articleRewardService.findAll());
+
+		model.addAttribute("payees",memberService.findAll());
 
 		return "/admin/payment/list";
 	}
@@ -120,6 +134,10 @@ public class PaymentController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
+		model.addAttribute("articleRewards",articleRewardService.findAll());
+
+		model.addAttribute("payees",memberService.findAll());
+
 		return "/admin/payment/add";
 	}
 
@@ -129,7 +147,7 @@ public class PaymentController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Payment payment, Long ordersId, Long memberId){
+	public Message save(Payment payment, Long memberId, Long articleRewardId, Long payeeId, Long ordersId){
 		Payment entity = new Payment();	
 
 		entity.setCreateDate(payment.getCreateDate());
@@ -161,6 +179,10 @@ public class PaymentController extends BaseController {
 		entity.setMember(memberService.find(memberId));
 
 		entity.setOrder(orderService.find(ordersId));
+
+		entity.setArticleReward(articleRewardService.find(articleRewardId));
+
+		entity.setPayee(memberService.find(payeeId));
 		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
@@ -218,6 +240,10 @@ public class PaymentController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
+		model.addAttribute("articleRewards",articleRewardService.findAll());
+
+		model.addAttribute("payees",memberService.findAll());
+
 		model.addAttribute("data",paymentService.find(id));
 
 		return "/admin/payment/edit";
@@ -229,7 +255,7 @@ public class PaymentController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Payment payment, Long ordersId, Long memberId){
+	public Message update(Payment payment, Long memberId, Long articleRewardId, Long payeeId, Long ordersId){
 		Payment entity = paymentService.find(payment.getId());
 		
 		entity.setCreateDate(payment.getCreateDate());
@@ -261,6 +287,10 @@ public class PaymentController extends BaseController {
 		entity.setMember(memberService.find(memberId));
 
 		entity.setOrder(orderService.find(ordersId));
+
+		entity.setArticleReward(articleRewardService.find(articleRewardId));
+
+		entity.setPayee(memberService.find(payeeId));
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -280,7 +310,7 @@ public class PaymentController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Payment.Method method, Payment.Status status, Payment.Type type, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Payment.Method method, Payment.Status status, Payment.Type type, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (method!=null) {
 			Filter methodFilter = new Filter("method", Filter.Operator.eq, method);
@@ -301,6 +331,52 @@ public class PaymentController extends BaseController {
 	
 	
 	/**
+	 * 会员管理视图
+	 */
+	@RequestMapping(value = "/memberView", method = RequestMethod.GET)
+	public String memberView(Long id, ModelMap model) {
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
+		model.addAttribute("genders",genders);
+
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
+
+		model.addAttribute("tags",tagService.findAll());
+
+		model.addAttribute("member",memberService.find(id));
+		return "/admin/payment/view/memberView";
+	}
+
+
+	/**
+	 * ArticleReward视图
+	 */
+	@RequestMapping(value = "/articleRewardView", method = RequestMethod.GET)
+	public String articleRewardView(Long id, ModelMap model) {
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("wait","等待支付"));
+		statuss.add(new MapEntity("success","支付成功"));
+		statuss.add(new MapEntity("failure","支付失败"));
+		model.addAttribute("statuss",statuss);
+
+		model.addAttribute("articles",articleService.findAll());
+
+		model.addAttribute("authors",memberService.findAll());
+
+		model.addAttribute("members",memberService.findAll());
+
+		model.addAttribute("payments",paymentService.findAll());
+
+		model.addAttribute("articleReward",articleRewardService.find(id));
+		return "/admin/payment/view/articleRewardView";
+	}
+
+
+	/**
 	 * 订单管理视图
 	 */
 	@RequestMapping(value = "/orderView", method = RequestMethod.GET)
@@ -315,26 +391,6 @@ public class PaymentController extends BaseController {
 
 		model.addAttribute("order",orderService.find(id));
 		return "/admin/payment/view/orderView";
-	}
-
-
-	/**
-	 * 会员管理视图
-	 */
-	@RequestMapping(value = "/memberView", method = RequestMethod.GET)
-	public String memberView(Long id, ModelMap model) {
-		List<MapEntity> genders = new ArrayList<>();
-		genders.add(new MapEntity("male","男"));
-		genders.add(new MapEntity("female","女"));
-		genders.add(new MapEntity("secrecy","保密"));
-		model.addAttribute("genders",genders);
-
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("tags",tagService.findAll());
-
-		model.addAttribute("member",memberService.find(id));
-		return "/admin/payment/view/memberView";
 	}
 
 

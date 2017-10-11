@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: CouponCodeController
  * @author 降魔战队
- * @date 2017-9-14 19:42:12
+ * @date 2017-10-11 15:37:8
  */
  
 @Controller("adminCouponCodeController")
@@ -53,6 +53,9 @@ public class CouponCodeController extends BaseController {
 
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
+
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -194,7 +197,7 @@ public class CouponCodeController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<CouponCode> page = couponCodeService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
@@ -225,6 +228,8 @@ public class CouponCodeController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 

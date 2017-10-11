@@ -11,18 +11,19 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css"/>
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css"/>
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css"/>
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin"/>
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/lib/Hui-iconfont/1.0.8/iconfont.css" />
+
+    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <style>
         .center {
             text-align: center;
         }
     </style>
-    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
     <title>管理员管理</title>
@@ -39,14 +40,15 @@
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
-    [#if genders??]
-        <select name="gender" class="select input-text" style="background-color: #FFFFFF;width:100px;">
-            <option value="">性别</option>
-            [#list genders as gender]
+		[#if genders??]
+			<select name="gender" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+				<option value="">性别</option>
+				[#list genders as gender]
                 <option value="${gender.id}">${gender.name}</option>
-            [/#list]
-        </select>
-    [/#if]
+				[/#list]
+			</select>
+		[/#if]
+
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 搜管理员
@@ -68,16 +70,16 @@
     </div>
 </div>
 <!--_footer 作为公共模版分离出去-->
-<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui.admin/js/H-ui.admin.js"></script>
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
     var table;
     var isSelectAll = false;
@@ -91,14 +93,6 @@
 
     }
     $(function () {
-//        $(":checkbox").each(function(){
-//            if($(this).prop("checked")){
-//                $(this).prop("checked",false);
-//            }else{
-//                $(this).prop("checked",true);
-//            }
-//        });
-
         $('.table').DataTable({
             "bProcessing": true,
             "bServerSide": true,
@@ -108,7 +102,7 @@
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
-                "sProcessing": "处理中...",
+                "sProcessing": "",
                 "sLengthMenu": "显示 _MENU_ 项结果",
                 "sZeroRecords": "没有匹配结果",
                 "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
@@ -132,11 +126,7 @@
                 }
             },
             "createdRow": function (row, data, dataIndex) {
-                $(row).children('td').eq(0).attr('style', 'text-align: center;')
-                $(row).children('td').eq(1).attr('style', 'text-align: right;')
-                $(row).children('td').eq(3).attr('style', 'text-align: center;')
-                $(row).children('td').eq(7).attr('style', 'text-align: center;')
-                $(row).children('td').eq(8).attr('style', 'text-align: center;')
+                $(row).children('td').attr('style', 'text-align: center;')
             },
             "aoColumns": [
                 {
@@ -150,28 +140,23 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "username",
-                    "sTitle": "用户名",
+                    "mData": "createDate",
+                    "sTitle": "创建日期",
                     "sClass": "center"
                 },
                 {
-                    "mData": "gender",
-                    "sTitle": "性别",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "email",
-                    "sTitle": "邮箱",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "name",
-                    "sTitle": "真实姓名",
+                    "mData": "modifyDate",
+                    "sTitle": "修改日期",
                     "sClass": "center"
                 },
                 {
                     "mData": "department",
                     "sTitle": "部门",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "email",
+                    "sTitle": "邮箱",
                     "sClass": "center"
                 },
                 {
@@ -185,11 +170,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "loginFailureCount",
-                    "sTitle": "登录失败次数",
-                    "sClass": "center"
-                },
-                {
                     "mData": "lockedDate",
                     "sTitle": "锁定日期",
                     "sClass": "center"
@@ -200,28 +180,53 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "loginFailureCount",
+                    "sTitle": "登录失败次数",
+                    "sClass": "center"
+                },
+                {
                     "mData": "loginIp",
                     "sTitle": "最后登录IP",
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapArea",
-                    "sTitle": "所属地区",
+                    "mData": "name",
+                    "sTitle": "真实姓名",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "password",
+                    "sTitle": "密码",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "username",
+                    "sTitle": "用户名",
                     "sClass": "center"
                 },
                 {
                     "mData": "mapEnterprise",
-                    "sTitle": "企业名",
+                    "sTitle": "Enterprise",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "gender",
+                    "sTitle": "性别",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapArea",
+                    "sTitle": "Area",
                     "sClass": "center"
                 },
                 {
                     "mData": "mapRoles",
-                    "sTitle": "角色",
+                    "sTitle": "Role",
                     "sClass": "center"
                 },
                 {
                     "mData": "id",
-                    "sTitle": "编辑",
+                    "sTitle": "操作",
                     "sClass": "center"
                 }
             ],
@@ -235,8 +240,63 @@
                             return "";
                         }
                     }
-                }, {
+                }, 
+                {
+                    "aTargets": [2],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
                     "aTargets": [3],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [6],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [7],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [8],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [9],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [15],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','enterpriseView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+                }, 
+                {
+                    "aTargets": [16],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if genders??]
@@ -250,18 +310,9 @@
                             return "";
                         }
                     }
-
-                }, {
-                    "aTargets": [7, 8],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                }, {
-                    "aTargets": [13],
+                },
+                {
+                    "aTargets": [17],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -269,21 +320,9 @@
                             return "";
                         }
                     }
-
-                }
-                , {
-                    "aTargets": [14],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','enterpriseView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-
-                }
-                , {
-                    "aTargets": [15],
+                },
+                {
+                    "aTargets": [18],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -291,13 +330,12 @@
                             return "";
                         }
                     }
-
-                }
-                , {
-                    "aTargets": [16],
+                },
+                {
+                    "aTargets": [19],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('编辑管理员','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -306,7 +344,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 13, 14, 15]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 15, 17, 18, 19]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
@@ -363,7 +401,12 @@
     }
     /*添加*/
     function add(title, url, w, h) {
-        layer_show(title, url, w, h);
+        var index = layer.open({
+            type:2,
+            title:title,
+            content:url
+        });
+        layer.full(index);
     }
     /*查看*/
     function show(title, url, id, w, h) {
@@ -371,7 +414,12 @@
     }
     /*编辑*/
     function edit(title, url, id, w, h) {
-        layer_show(title, url, w, h);
+        var index = layer.open({
+            type:2,
+            title:title,
+            content:url
+        });
+        layer.full(index);
     }
     /*提示框*/
     function toast(msg, icon) {
@@ -456,7 +504,31 @@
             });
         });
     }
-
+	
+    function DateFormat(timestamp, format) {
+        var newDate = new Date();
+        newDate.setTime(timestamp);
+        var date = {
+            "M+": newDate.getMonth() + 1,
+            "d+": newDate.getDate(),
+            "H+": newDate.getHours(),
+            "h+": newDate.getHours(),
+            "m+": newDate.getMinutes(),
+            "s+": newDate.getSeconds(),
+            "q+": Math.floor((newDate.getMonth() + 3) / 3),
+            "S+": newDate.getMilliseconds()
+        };
+        if (/(y+)/i.test(format)) {
+            format = format.replace(RegExp.$1, (newDate.getFullYear() + '').substr(4 - RegExp.$1.length));
+        }
+        for (var k in date) {
+            if (new RegExp("(" + k + ")").test(format)) {
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1
+                        ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+            }
+        }
+        return format;
+    }
 </script>
 </body>
 </html>

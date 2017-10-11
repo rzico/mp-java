@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: TemplateController
  * @author 降魔战队
- * @date 2017-9-14 19:42:18
+ * @date 2017-10-11 15:37:16
  */
  
 @Controller("adminTemplateController")
@@ -100,6 +100,8 @@ public class TemplateController extends BaseController {
 		entity.setSn(template.getSn());
 
 		entity.setType(template.getType());
+
+		entity.setThumbnial(template.getThumbnial());
 		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
@@ -170,6 +172,8 @@ public class TemplateController extends BaseController {
 		entity.setSn(template.getSn());
 
 		entity.setType(template.getType());
+
+		entity.setThumbnial(template.getThumbnial());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -189,7 +193,7 @@ public class TemplateController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Template.Type type, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Template.Type type, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);

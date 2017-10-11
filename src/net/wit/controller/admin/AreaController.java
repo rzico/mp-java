@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: AreaController
  * @author 降魔战队
- * @date 2017-9-14 19:42:10
+ * @date 2017-10-11 15:37:3
  */
  
 @Controller("adminAreaController")
@@ -176,7 +176,7 @@ public class AreaController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<Area> page = areaService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

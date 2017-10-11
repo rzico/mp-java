@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: OrderLogController
  * @author 降魔战队
- * @date 2017-9-14 19:42:15
+ * @date 2017-10-11 15:37:11
  */
  
 @Controller("adminOrderLogController")
@@ -184,7 +184,7 @@ public class OrderLogController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<OrderLog> page = orderLogService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

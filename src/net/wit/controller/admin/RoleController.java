@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: RoleController
  * @author 降魔战队
- * @date 2017-9-14 19:42:17
+ * @date 2017-10-11 15:37:14
  */
  
 @Controller("adminRoleController")
@@ -168,7 +168,7 @@ public class RoleController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<Role> page = roleService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

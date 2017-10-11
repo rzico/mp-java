@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ReceiverController
  * @author 降魔战队
- * @date 2017-9-14 19:42:16
+ * @date 2017-10-11 15:37:13
  */
  
 @Controller("adminReceiverController")
@@ -45,11 +45,14 @@ public class ReceiverController extends BaseController {
 	@Resource(name = "receiverServiceImpl")
 	private ReceiverService receiverService;
 	
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
+
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
-	@Resource(name = "areaServiceImpl")
-	private AreaService areaService;
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -89,7 +92,7 @@ public class ReceiverController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Receiver receiver, Long memberId, Long areaId){
+	public Message save(Receiver receiver, Long areaId, Long memberId){
 		Receiver entity = new Receiver();	
 
 		entity.setCreateDate(receiver.getCreateDate());
@@ -162,7 +165,7 @@ public class ReceiverController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Receiver receiver, Long memberId, Long areaId){
+	public Message update(Receiver receiver, Long areaId, Long memberId){
 		Receiver entity = receiverService.find(receiver.getId());
 		
 		entity.setCreateDate(receiver.getCreateDate());
@@ -203,13 +206,25 @@ public class ReceiverController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<Receiver> page = receiverService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	
+	/**
+	 * 地区视图
+	 */
+	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
+	public String areaView(Long id, ModelMap model) {
+
+
+		model.addAttribute("area",areaService.find(id));
+		return "/admin/receiver/view/areaView";
+	}
+
+
 	/**
 	 * 会员管理视图
 	 */
@@ -223,22 +238,12 @@ public class ReceiverController extends BaseController {
 
 		model.addAttribute("areas",areaService.findAll());
 
+		model.addAttribute("occupations",occupationService.findAll());
+
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
 		return "/admin/receiver/view/memberView";
-	}
-
-
-	/**
-	 * 地区视图
-	 */
-	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
-	public String areaView(Long id, ModelMap model) {
-
-
-		model.addAttribute("area",areaService.find(id));
-		return "/admin/receiver/view/areaView";
 	}
 
 

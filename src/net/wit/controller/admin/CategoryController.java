@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: CategoryController
  * @author 降魔战队
- * @date 2017-9-14 19:42:12
+ * @date 2017-10-11 15:37:8
  */
  
 @Controller("adminCategoryController")
@@ -181,7 +181,7 @@ public class CategoryController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Category.Status status, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Category.Status status, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);

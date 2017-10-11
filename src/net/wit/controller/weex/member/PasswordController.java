@@ -130,7 +130,7 @@ public class PasswordController extends BaseController {
             if (safeKey.hasExpired()) {
                 return Message.error("验证码已过期");
             }
-            if (captcha.equals(safeKey.getValue())) {
+            if (!captcha.equals(safeKey.getValue())) {
                 return Message.error("无效验证码");
             }
             return Message.success(member,"验证成功");

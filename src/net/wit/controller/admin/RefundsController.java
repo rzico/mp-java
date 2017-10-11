@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: RefundsController
  * @author 降魔战队
- * @date 2017-9-14 19:42:16
+ * @date 2017-10-11 15:37:13
  */
  
 @Controller("adminRefundsController")
@@ -45,23 +45,29 @@ public class RefundsController extends BaseController {
 	@Resource(name = "refundsServiceImpl")
 	private RefundsService refundsService;
 	
-	@Resource(name = "orderServiceImpl")
-	private OrderService orderService;
-
 	@Resource(name = "paymentServiceImpl")
 	private PaymentService paymentService;
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "orderServiceImpl")
+	private OrderService orderService;
+
+	@Resource(name = "articleRewardServiceImpl")
+	private ArticleRewardService articleRewardService;
+
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 
-	@Resource(name = "couponCodeServiceImpl")
-	private CouponCodeService couponCodeService;
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
+
+	@Resource(name = "couponCodeServiceImpl")
+	private CouponCodeService couponCodeService;
 
 
 
@@ -136,7 +142,7 @@ public class RefundsController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Refunds refunds, Long ordersId, Long paymentId, Long memberId){
+	public Message save(Refunds refunds, Long paymentId, Long memberId, Long ordersId){
 		Refunds entity = new Refunds();	
 
 		entity.setCreateDate(refunds.getCreateDate());
@@ -236,7 +242,7 @@ public class RefundsController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Refunds refunds, Long ordersId, Long paymentId, Long memberId){
+	public Message update(Refunds refunds, Long paymentId, Long memberId, Long ordersId){
 		Refunds entity = refundsService.find(refunds.getId());
 		
 		entity.setCreateDate(refunds.getCreateDate());
@@ -285,7 +291,7 @@ public class RefundsController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Refunds.Method method, Refunds.Status status, Refunds.Type type, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Refunds.Method method, Refunds.Status status, Refunds.Type type, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (method!=null) {
 			Filter methodFilter = new Filter("method", Filter.Operator.eq, method);
@@ -305,24 +311,6 @@ public class RefundsController extends BaseController {
 	}
 	
 	
-	/**
-	 * 订单管理视图
-	 */
-	@RequestMapping(value = "/orderView", method = RequestMethod.GET)
-	public String orderView(Long id, ModelMap model) {
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("couponCodes",couponCodeService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("sellers",memberService.findAll());
-
-		model.addAttribute("order",orderService.find(id));
-		return "/admin/refunds/view/orderView";
-	}
-
-
 	/**
 	 * 收款单视图
 	 */
@@ -349,6 +337,10 @@ public class RefundsController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
+		model.addAttribute("articleRewards",articleRewardService.findAll());
+
+		model.addAttribute("payees",memberService.findAll());
+
 		model.addAttribute("payment",paymentService.find(id));
 		return "/admin/refunds/view/paymentView";
 	}
@@ -367,10 +359,30 @@ public class RefundsController extends BaseController {
 
 		model.addAttribute("areas",areaService.findAll());
 
+		model.addAttribute("occupations",occupationService.findAll());
+
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
 		return "/admin/refunds/view/memberView";
+	}
+
+
+	/**
+	 * 订单管理视图
+	 */
+	@RequestMapping(value = "/orderView", method = RequestMethod.GET)
+	public String orderView(Long id, ModelMap model) {
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("couponCodes",couponCodeService.findAll());
+
+		model.addAttribute("members",memberService.findAll());
+
+		model.addAttribute("sellers",memberService.findAll());
+
+		model.addAttribute("order",orderService.find(id));
+		return "/admin/refunds/view/orderView";
 	}
 
 

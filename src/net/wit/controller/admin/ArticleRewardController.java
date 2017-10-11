@@ -36,23 +36,27 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ArticleRewardController
  * @author 降魔战队
- * @date 2017-9-14 19:42:11
+ * @date 2017-10-11 15:37:6
  */
  
 @Controller("adminArticleRewardController")
 @RequestMapping("/admin/articleReward")
 public class ArticleRewardController extends BaseController {
-	@Resource(name = "articleRewardServiceImpl")
-	private ArticleRewardService articleRewardService;
-	
-	@Resource(name = "articleServiceImpl")
-	private ArticleService articleService;
 
 	@Resource(name = "paymentServiceImpl")
 	private PaymentService paymentService;
 
+	@Resource(name = "articleServiceImpl")
+	private ArticleService articleService;
+
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
+
+	@Resource(name = "articleRewardServiceImpl")
+	private ArticleRewardService articleRewardService;
+
+	@Resource(name = "orderServiceImpl")
+	private OrderService orderService;
 
 	@Resource(name = "templateServiceImpl")
 	private TemplateService templateService;
@@ -63,14 +67,14 @@ public class ArticleRewardController extends BaseController {
 	@Resource(name = "articleCategoryServiceImpl")
 	private ArticleCategoryService articleCategoryService;
 
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
+
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-	@Resource(name = "orderServiceImpl")
-	private OrderService orderService;
-
-	@Resource(name = "areaServiceImpl")
-	private AreaService areaService;
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 
 
@@ -95,6 +99,7 @@ public class ArticleRewardController extends BaseController {
 		model.addAttribute("payments",paymentService.findAll());
 
 		return "/admin/articleReward/list";
+
 	}
 
 
@@ -127,7 +132,7 @@ public class ArticleRewardController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(ArticleReward articleReward, Long articleId, Long paymentId, Long authorId, Long memberId){
+	public Message save(ArticleReward articleReward, Long articleId, Long authorId, Long memberId){
 		ArticleReward entity = new ArticleReward();	
 
 		entity.setCreateDate(articleReward.getCreateDate());
@@ -208,7 +213,7 @@ public class ArticleRewardController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(ArticleReward articleReward, Long articleId, Long paymentId, Long authorId, Long memberId){
+	public Message update(ArticleReward articleReward, Long articleId, Long authorId, Long memberId){
 		ArticleReward entity = articleRewardService.find(articleReward.getId());
 		
 		entity.setCreateDate(articleReward.getCreateDate());
@@ -247,7 +252,7 @@ public class ArticleRewardController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, ArticleReward.Status status, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, ArticleReward.Status status, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
@@ -259,37 +264,6 @@ public class ArticleRewardController extends BaseController {
 	}
 	
 	
-	/**
-	 * 文章管理视图
-	 */
-	@RequestMapping(value = "/articleView", method = RequestMethod.GET)
-	public String articleView(Long id, ModelMap model) {
-		List<MapEntity> authoritys = new ArrayList<>();
-		authoritys.add(new MapEntity("isPublic","公开"));
-		authoritys.add(new MapEntity("isShare","不会开"));
-		authoritys.add(new MapEntity("isEncrypt","加密"));
-		authoritys.add(new MapEntity("isPrivate","私秘"));
-		model.addAttribute("authoritys",authoritys);
-
-		List<MapEntity> mediaTypes = new ArrayList<>();
-		mediaTypes.add(new MapEntity("image","图文"));
-		mediaTypes.add(new MapEntity("audio","音频"));
-		mediaTypes.add(new MapEntity("video","视频"));
-		model.addAttribute("mediaTypes",mediaTypes);
-
-		model.addAttribute("articleCatalogs",articleCatalogService.findAll());
-
-		model.addAttribute("articleCategorys",articleCategoryService.findAll());
-
-		model.addAttribute("templates",templateService.findAll());
-
-		model.addAttribute("tags",tagService.findAll());
-
-		model.addAttribute("article",articleService.find(id));
-		return "/admin/articleReward/view/articleView";
-	}
-
-
 	/**
 	 * 收款单视图
 	 */
@@ -316,8 +290,56 @@ public class ArticleRewardController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
+		model.addAttribute("articleRewards",articleRewardService.findAll());
+
+		model.addAttribute("payees",memberService.findAll());
+
 		model.addAttribute("payment",paymentService.find(id));
 		return "/admin/articleReward/view/paymentView";
+	}
+
+
+	/**
+	 * 文章管理视图
+	 */
+	@RequestMapping(value = "/articleView", method = RequestMethod.GET)
+	public String articleView(Long id, ModelMap model) {
+		List<MapEntity> authoritys = new ArrayList<>();
+		authoritys.add(new MapEntity("isPublic","公开"));
+		authoritys.add(new MapEntity("isShare","不会开"));
+		authoritys.add(new MapEntity("isEncrypt","加密"));
+		authoritys.add(new MapEntity("isPrivate","私秘"));
+		model.addAttribute("authoritys",authoritys);
+
+		List<MapEntity> mediaTypes = new ArrayList<>();
+		mediaTypes.add(new MapEntity("image","图文"));
+		mediaTypes.add(new MapEntity("audio","音频"));
+		mediaTypes.add(new MapEntity("video","视频"));
+		model.addAttribute("mediaTypes",mediaTypes);
+
+		model.addAttribute("articleCatalogs",articleCatalogService.findAll());
+
+		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("members",memberService.findAll());
+
+		model.addAttribute("templates",templateService.findAll());
+
+		List<MapEntity> titleTypes = new ArrayList<>();
+		titleTypes.add(new MapEntity("image1","单图"));
+		titleTypes.add(new MapEntity("image2","2张图"));
+		titleTypes.add(new MapEntity("image3","3张图"));
+		titleTypes.add(new MapEntity("image4","4张图"));
+		titleTypes.add(new MapEntity("image5","5张图"));
+		titleTypes.add(new MapEntity("image6","6张图"));
+		model.addAttribute("titleTypes",titleTypes);
+
+		model.addAttribute("tags",tagService.findAll());
+
+		model.addAttribute("article",articleService.find(id));
+		return "/admin/articleReward/view/articleView";
 	}
 
 
@@ -333,6 +355,8 @@ public class ArticleRewardController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 

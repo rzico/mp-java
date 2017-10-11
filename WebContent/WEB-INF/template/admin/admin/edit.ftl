@@ -31,120 +31,149 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-admin-add">
+    <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">部门：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.department}" placeholder="" id="department" name="department">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="@" name="email" value="${data.email}" id="email">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否启用：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="check-box">
+                    <input type="checkbox" name="isEnabled" id="isEnabled" value="true"[#if data.isEnabled?? && data.isEnabled] checked[/#if]>
+                    <input type="hidden" name="_isEnabled" value="false" />
+                    <label for="isEnabled">&nbsp;</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否锁定：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="check-box">
+                    <input type="checkbox" name="isLocked" id="isLocked" value="true"[#if data.isLocked?? && data.isLocked] checked[/#if]>
+                    <input type="hidden" name="_isLocked" value="false" />
+                    <label for="isLocked">&nbsp;</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">锁定日期：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.lockedDate}" id="lockedDate" name="lockedDate" class="input-text Wdate" style="width:180px;">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">最后登录日期：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.loginDate}" id="loginDate" name="loginDate" class="input-text Wdate" style="width:180px;">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>登录失败次数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.loginFailureCount}" placeholder="" id="loginFailureCount" name="loginFailureCount" onInput="intInit(this)">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">最后登录IP：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.loginIp}" placeholder="" id="loginIp" name="loginIp">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">真实姓名：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>密码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="password" class="input-text" value="" placeholder="" id="password" name="password">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户名：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.username}" placeholder="" id="username" name="username">
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>密码：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="password" class="input-text" value="${data.password}" placeholder="" id="password" name="password">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>邮箱：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="@" name="email" value="${data.email}" id="email">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>真实姓名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
-            </div>
-        </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">所在地：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                <span class="fieldSet">
-                    <input type="hidden" id="areaId" name="areaId" value="${(data.area.id)!}" treePath="${(data.area.treePath)!}" />
-                </span>
-                </div>
-            </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>部门：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.department}" placeholder="" id="department" name="department">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>性别：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if genders??]
-                [#list genders as gender]
-                     <div class="radio-box">
-                          <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.id}" [#if gender.id == data.gender]checked[/#if]>
-                          <label for="gender-${gender_index}">${gender.name}</label>
-                     </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否启用：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isEnabled" id="isEnabled" [#if data.isEnabled?? && data.isEnabled]checked[/#if]>
-                    <input type="hidden" name="_isEnabled" value="false" />'
-                    <label for="isEnabled">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否锁定：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isLocked" id="isLocked" [#if data.isLocked?? && data.isLocked]checked[/#if]>
-                    <input type="hidden" name="_isLocked" value="false" />'
-                    <label for="isLocked">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">锁定时间：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.lockedDate}" id="lockedDate" name="lockedDate" class="input-text Wdate" style="width:180px;">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">所属企业：</label>
+            <label class="form-label col-xs-4 col-sm-2">企业：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
                 [#if enterprises??]
 				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
                     [#list enterprises as enterprise]
-					<option [#if data.enterprise?? && enterprise.id == data.enterprise.id] selected [/#if] value="${enterprise.id}">${enterprise.name}</option>
+					<option[#if data.enterprise?? && enterprise.id == data.enterprise.id] selected[/#if] value="${enterprise.id}">${enterprise.name}</option>
                     [/#list]
 				</select>
                 [/#if]
 				</span>
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">角色：</label>
+            <label class="form-label col-xs-4 col-sm-2">性别：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if roles??]
-                    [#list roles as role]
-                <div class="check-box">
-                    [#--这里的yes 是判断 这个角色是否勾选了--]
-                    [#assign yes = "false"]
-                    [#list data.roles as dataRole]
-                        [#if dataRole.id == role.id]
-                            [#assign yes = "true"]
-                        [/#if]
-                    [/#list]
-                            <label class="">
-                                <input type="checkbox" [#if yes == "true"] checked [/#if] value="${role.id}" name="roleIds" >
-                            ${role.name}</label>
-                </div>
-                    [/#list]
+                [#if genders??]
+                [#list genders as gender]
+                    <div class="radio-box">
+                        <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.id}"[#if gender.id == data.gender] checked[/#if]>
+                        <label for="gender-${gender_index}">${gender.name}</label>
+                    </div>
+                [/#list]
                 [/#if]
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">所在地：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="fieldSet">
+                    <input type="hidden" id="areaId" name="areaId" value="${(data.area.id)!}" treePath="${(data.area.treePath)!}" />
+                </span>
+            </div>
+        </div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">roles：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				[#if roles??]
+				[#list roles as role]
+				<div class="check-box">
+					[#assign checkUp = "false"]
+					[#list data.roles as dataRole]
+					[#if dataRole.id == role.id]
+					[#assign checkUp = "true"]
+					[/#if]
+					[/#list]
+					<label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${role.id}" name="roleIds" >${role.name}</label>
+				</div>
+				[/#list]
+				[/#if]
+			</div>
+		</div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -172,41 +201,35 @@
         <script type="text/javascript">
             $(function(){
                 var $areaId = $("#areaId");
-                var $submit = $(":submit");
-                // 地区选择
                 $areaId.lSelect({
                     url: "${base}/admin/common/area.jhtml"
                 });
+
+                var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
 
-                $("#form-admin-add").validate({
+                $("#form-update").validate({
                     rules:{
+                        loginFailureCount:{
+                            required:true,
+                        },
+                        password:{
+                            required:true,
+                            minlength:8,
+                            maxlength:16
+
+                        },
                         username:{
                             required:true,
                             minlength:4,
                             maxlength:16
+
                         },
-                        password:{
-                            required:true,
-                        },
-//                        password2:{
-//                            required:true,
-//                            equalTo: "#password"
-//                        },
-                        sex:{
-                            required:true,
-                        },
-                        email:{
-                            required:true,
-                            email:true,
-                        },
-                        roles:{
-                            required:true,
-                        },
+
                     },
                     onkeyup:false,
                     focusCleanup:true,
@@ -243,11 +266,7 @@
                         });
                     }
                 });
-
-
             });
-
-
         </script>
 </body>
 </html>

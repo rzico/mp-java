@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ArticleProductController
  * @author 降魔战队
- * @date 2017-9-14 19:42:11
+ * @date 2017-10-11 15:37:5
  */
  
 @Controller("adminArticleProductController")
@@ -45,17 +45,11 @@ public class ArticleProductController extends BaseController {
 	@Resource(name = "articleProductServiceImpl")
 	private ArticleProductService articleProductService;
 	
-	@Resource(name = "productServiceImpl")
-	private ProductService productService;
-
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
 
-	@Resource(name = "goodsServiceImpl")
-	private GoodsService goodsService;
-
-	@Resource(name = "productCategoryServiceImpl")
-	private ProductCategoryService productCategoryService;
+	@Resource(name = "productServiceImpl")
+	private ProductService productService;
 
 	@Resource(name = "templateServiceImpl")
 	private TemplateService templateService;
@@ -66,8 +60,20 @@ public class ArticleProductController extends BaseController {
 	@Resource(name = "articleCategoryServiceImpl")
 	private ArticleCategoryService articleCategoryService;
 
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
+
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
+
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
+
+	@Resource(name = "goodsServiceImpl")
+	private GoodsService goodsService;
+
+	@Resource(name = "productCategoryServiceImpl")
+	private ProductCategoryService productCategoryService;
 
 
 
@@ -104,7 +110,7 @@ public class ArticleProductController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(ArticleProduct articleProduct, Long productId, Long articleId){
+	public Message save(ArticleProduct articleProduct, Long articleId, Long productId){
 		ArticleProduct entity = new ArticleProduct();	
 
 		entity.setCreateDate(articleProduct.getCreateDate());
@@ -165,7 +171,7 @@ public class ArticleProductController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(ArticleProduct articleProduct, Long productId, Long articleId){
+	public Message update(ArticleProduct articleProduct, Long articleId, Long productId){
 		ArticleProduct entity = articleProductService.find(articleProduct.getId());
 		
 		entity.setCreateDate(articleProduct.getCreateDate());
@@ -194,27 +200,13 @@ public class ArticleProductController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<ArticleProduct> page = articleProductService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	
-	/**
-	 * 产品档案视图
-	 */
-	@RequestMapping(value = "/productView", method = RequestMethod.GET)
-	public String productView(Long id, ModelMap model) {
-		model.addAttribute("goodss",goodsService.findAll());
-
-		model.addAttribute("productCategorys",productCategoryService.findAll());
-
-		model.addAttribute("product",productService.find(id));
-		return "/admin/articleProduct/view/productView";
-	}
-
-
 	/**
 	 * 文章管理视图
 	 */
@@ -237,12 +229,39 @@ public class ArticleProductController extends BaseController {
 
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("members",memberService.findAll());
+
 		model.addAttribute("templates",templateService.findAll());
+
+		List<MapEntity> titleTypes = new ArrayList<>();
+		titleTypes.add(new MapEntity("image1","单图"));
+		titleTypes.add(new MapEntity("image2","2张图"));
+		titleTypes.add(new MapEntity("image3","3张图"));
+		titleTypes.add(new MapEntity("image4","4张图"));
+		titleTypes.add(new MapEntity("image5","5张图"));
+		titleTypes.add(new MapEntity("image6","6张图"));
+		model.addAttribute("titleTypes",titleTypes);
 
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("article",articleService.find(id));
 		return "/admin/articleProduct/view/articleView";
+	}
+
+
+	/**
+	 * 产品档案视图
+	 */
+	@RequestMapping(value = "/productView", method = RequestMethod.GET)
+	public String productView(Long id, ModelMap model) {
+		model.addAttribute("goodss",goodsService.findAll());
+
+		model.addAttribute("productCategorys",productCategoryService.findAll());
+
+		model.addAttribute("product",productService.find(id));
+		return "/admin/articleProduct/view/productView";
 	}
 
 

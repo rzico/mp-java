@@ -100,7 +100,7 @@ public class LoginController extends BaseController {
         Member member =memberService.findByMobile(safeKey.getKey());
         try {
             String captcha = rsaService.decryptParameter("captcha", request);
-            logger.debug("验证码："+captcha);
+            logger.debug("登录验证码："+captcha);
             rsaService.removePrivateKey(request);
             if (captcha==null) {
                 return Message.error("无效验证码");
@@ -108,7 +108,7 @@ public class LoginController extends BaseController {
             if (safeKey.hasExpired()) {
                 return Message.error("验证码已过期");
             }
-            if (captcha.equals(safeKey.getValue())) {
+            if (!captcha.equals(safeKey.getValue())) {
                 return Message.error("无效验证码");
             }
             if (member==null) {
@@ -162,7 +162,7 @@ public class LoginController extends BaseController {
             if (password==null) {
                 return Message.error("无效密码");
             }
-            if ( MD5Utils.getMD5Str(password).equals(member.getPassword())) {
+            if (!MD5Utils.getMD5Str(password).equals(member.getPassword())) {
                 return Message.error("无效密码");
             }
             Principal principal = new Principal(member.getId(),member.getUsername());

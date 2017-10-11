@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ArticleCatalogController
  * @author 降魔战队
- * @date 2017-9-14 19:42:10
+ * @date 2017-10-11 15:37:4
  */
  
 @Controller("adminArticleCatalogController")
@@ -50,6 +50,9 @@ public class ArticleCatalogController extends BaseController {
 
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
+
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -196,7 +199,7 @@ public class ArticleCatalogController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message  list(Date beginDate, Date endDate, ArticleCatalog.Status status, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, ArticleCatalog.Status status, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
@@ -220,6 +223,8 @@ public class ArticleCatalogController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 

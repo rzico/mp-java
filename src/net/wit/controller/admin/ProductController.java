@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: ProductController
  * @author 降魔战队
- * @date 2017-9-14 19:42:15
+ * @date 2017-10-11 15:37:12
  */
  
 @Controller("adminProductController")
@@ -129,6 +129,8 @@ public class ProductController extends BaseController {
 		entity.setGoods(goodsService.find(goodsId));
 
 		entity.setProductCategory(productCategoryService.find(productCategoryId));
+
+		entity.setThumbnial(product.getThumbnial());
 		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
@@ -220,6 +222,8 @@ public class ProductController extends BaseController {
 		entity.setGoods(goodsService.find(goodsId));
 
 		entity.setProductCategory(productCategoryService.find(productCategoryId));
+
+		entity.setThumbnial(product.getThumbnial());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -239,7 +243,7 @@ public class ProductController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<Product> page = productService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

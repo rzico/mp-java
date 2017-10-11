@@ -31,87 +31,94 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-admin-add">
+    <form action="" method="post" class="form form-horizontal" id="form-add">
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户名：</label>
+            <label class="form-label col-xs-4 col-sm-2">部门：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="test" placeholder="" id="username" name="username">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>密码：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="password" class="input-text" value="123456" placeholder="" id="password" name="password">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>邮箱：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="@" name="email" value="jinlesoft@163.com" id="email">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>真实姓名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="陈金乐" placeholder="" id="name" name="name">
+                <input type="text" class="input-text" value="" placeholder="" id="department" name="department">
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>部门：</label>
+            <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="研发部" placeholder="" id="department" name="department">
+                <input type="text" class="input-text" placeholder="@" name="email" value="" id="email">
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>性别：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if genders??]
-                [#list genders as gender]
-                    <div class="radio-box">
-                        <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.id}" checked>
-                        <label for="gender-${gender_index}">${gender.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否启用：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否启用：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isEnabled" id="isEnabled" value="true" checked>
+                    <input type="checkbox" name="isEnabled" id="isEnabled" value="true">
                     <input type="hidden" name="_isEnabled" value="false" />
                     <label for="isEnabled">&nbsp;</label>
                 </div>
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否锁定：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否锁定：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isLocked" id="isLocked" value="true" checked>
-                    <input type="hidden" name="_isLocked" value="false" />'
+                    <input type="checkbox" name="isLocked" id="isLocked" value="true">
+                    <input type="hidden" name="_isLocked" value="false" />
                     <label for="isLocked">&nbsp;</label>
                 </div>
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">锁定时间：</label>
+            <label class="form-label col-xs-4 col-sm-2">锁定日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="2017-9-13 16:16:16" id="lockedDate" name="lockedDate" class="input-text Wdate" style="width:180px;">
+                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="" id="lockedDate" name="lockedDate" class="input-text Wdate" style="width:180px;">
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">所在地：</label>
+            <label class="form-label col-xs-4 col-sm-2">最后登录日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span class="fieldSet">
-                <input type="hidden" id="areaId" name="areaId" treePath="" />
-                </span>
+                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="" id="loginDate" name="loginDate" class="input-text Wdate" style="width:180px;">
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">所属企业：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>登录失败次数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="loginFailureCount" value="" placeholder="" id="loginFailureCount" onInput="intInit(this)">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">最后登录IP：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="loginIp" name="loginIp">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">真实姓名：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>密码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="password" class="input-text" value="" placeholder="" id="password" name="password">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户名：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="username" name="username">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">企业：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
                 [#if enterprises??]
 				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
@@ -123,21 +130,42 @@
 				</span>
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">角色：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if roles??]
-                    [#list roles as role]
-                <div class="check-box">
-                            <label class="">
-                                <input type="checkbox" value="${role.id}" name="roleIds" >
-                            ${role.name}</label>
-                </div>
-                    [/#list]
-                [/#if]
 
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">性别：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                [#if genders??]
+                [#list genders as gender]
+                    <div class="radio-box">
+                        <input name="gender" type="radio" id="gender-${gender_index}" value="${gender.id}">
+                        <label for="gender-${gender_index}">${gender.name}</label>
+                    </div>
+                [/#list]
+                [/#if]
+            </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">所在地：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="fieldSet">
+                    <input type="hidden" id="areaId" name="areaId" treePath="" />
+                </span>
+            </div>
         </div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">roles：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				[#if roles??]
+				[#list roles as role]
+				<div class="check-box">
+					<label class=""><input type="checkbox" value="${role.id}" name="roleIds" >${role.name}</label>
+				</div>
+				[/#list]
+				[/#if]
+			</div>
+		</div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -165,40 +193,35 @@
         <script type="text/javascript">
             $(function(){
                 var $areaId = $("#areaId");
-                var $submit = $(":submit");
-                // 地区选择
                 $areaId.lSelect({
                     url: "${base}/admin/common/area.jhtml"
                 });
+
+                var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
 
-                $("#form-admin-add").validate({
+                $("#form-add").validate({
                     rules:{
+                        loginFailureCount:{
+                            required:true,
+                        },
+                        password:{
+                            required:true,
+                            minlength:8,
+                            maxlength:16
+
+                        },
                         username:{
                             required:true,
                             minlength:4,
                             maxlength:16
+
                         },
-                        password:{
-                            required:true
-                        },
-                        areaId:{
-                            required:true
-                        },
-                        sex:{
-                            required:true
-                        },
-                        email:{
-                            required:true,
-                            email:true
-                        },
-                        roleIds:{
-                            required:true
-                        },
+
                     },
                     onkeyup:false,
                     focusCleanup:true,
@@ -226,7 +249,6 @@
                                     $submit.prop("disabled", false);
                                     layer.msg('添加失败!',{icon:2,time:1000});
                                 }
-
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
                                 $submit.prop("disabled", false);
@@ -234,14 +256,9 @@
                                 layer.msg('error!',{icon:2,time:1000});
                             }
                         });
-
                     }
                 });
-
-
             });
-
-
         </script>
 </body>
 </html>

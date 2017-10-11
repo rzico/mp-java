@@ -37,7 +37,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: AdminController
  * @author 降魔战队
- * @date 2017-9-14 19:42:9
+ * @date 2017-10-11 15:37:3
  */
  
 @Controller("adminAdminController")
@@ -163,11 +163,6 @@ public class AdminController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
-        	for (Long id:ids) {
-        		if (id==1) {
-        			return Message.error("管理员账号不能删除");
-				}
-			}
             adminService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {
@@ -261,7 +256,7 @@ public class AdminController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (gender!=null) {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);

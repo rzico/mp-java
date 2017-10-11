@@ -9,7 +9,6 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
-import net.wit.util.MD5Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -37,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: MemberController
  * @author 降魔战队
- * @date 2017-9-14 19:42:13
+ * @date 2017-10-11 15:37:9
  */
  
 @Controller("adminMemberController")
@@ -49,11 +48,12 @@ public class MemberController extends BaseController {
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
+
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-	@Resource(name = "occupationServiceImpl")
-	private OccupationService occupationService;
 
 
 	/**
@@ -69,6 +69,8 @@ public class MemberController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 
@@ -89,6 +91,8 @@ public class MemberController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 
@@ -130,8 +134,6 @@ public class MemberController extends BaseController {
 
 		entity.setAttributeValue9(member.getAttributeValue9());
 
-		entity.setBalance(member.getBalance());
-
 		entity.setBirth(member.getBirth());
 
 		entity.setEmail(member.getEmail());
@@ -150,11 +152,7 @@ public class MemberController extends BaseController {
 
 		entity.setLoginIp(member.getLoginIp());
 
-		entity.setMobile(member.getMobile());
-
 		entity.setName(member.getName());
-
-		entity.setPassword(MD5Utils.getMD5Str(member.getPassword()));
 
 		entity.setPhone(member.getPhone());
 
@@ -221,6 +219,8 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("areas",areaService.findAll());
 
+		model.addAttribute("occupations",occupationService.findAll());
+
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("data",memberService.find(id));
@@ -263,8 +263,6 @@ public class MemberController extends BaseController {
 
 		entity.setAttributeValue9(member.getAttributeValue9());
 
-		entity.setBalance(member.getBalance());
-
 		entity.setBirth(member.getBirth());
 
 		entity.setEmail(member.getEmail());
@@ -283,17 +281,11 @@ public class MemberController extends BaseController {
 
 		entity.setLoginIp(member.getLoginIp());
 
-		entity.setMobile(member.getMobile());
-
 		entity.setName(member.getName());
-
-		entity.setPassword(MD5Utils.getMD5Str(member.getPassword()));
 
 		entity.setPhone(member.getPhone());
 
 		entity.setPoint(member.getPoint() == null ? 0 : member.getPoint());
-
-		entity.setRegisterIp(member.getRegisterIp());
 
 		entity.setUsername(member.getUsername());
 
@@ -310,7 +302,7 @@ public class MemberController extends BaseController {
 		entity.setOccupation(occupationService.find(occupationId));
 
 		entity.setTags(tagService.findList(tagIds));
-
+		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -329,7 +321,7 @@ public class MemberController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Member.Gender gender, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Member.Gender gender, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (gender!=null) {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
@@ -350,6 +342,21 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("area",areaService.find(id));
 		return "/admin/member/view/areaView";
+	}
+
+
+	/**
+	 * 职业管理视图
+	 */
+	@RequestMapping(value = "/occupationView", method = RequestMethod.GET)
+	public String occupationView(Long id, ModelMap model) {
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("enabled","开启"));
+		statuss.add(new MapEntity("disabled","关闭"));
+		model.addAttribute("statuss",statuss);
+
+		model.addAttribute("occupation",occupationService.find(id));
+		return "/admin/member/view/occupationView";
 	}
 
 

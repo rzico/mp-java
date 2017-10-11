@@ -36,7 +36,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: OccupationController
  * @author 降魔战队
- * @date 2017-9-14 19:42:14
+ * @date 2017-10-11 15:37:10
  */
  
 @Controller("adminOccupationController")
@@ -177,7 +177,7 @@ public class OccupationController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Occupation.Status status, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Occupation.Status status, Pageable pageable, ModelMap model) {	
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);

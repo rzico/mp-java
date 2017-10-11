@@ -35,7 +35,7 @@ import net.wit.controller.admin.model.*;
 /**
  * @ClassName: MessageController
  * @author 降魔战队
- * @date 2017-9-14 19:42:14
+ * @date 2017-10-11 15:37:10
  */
  
 @Controller("adminMessageController")
@@ -49,6 +49,9 @@ public class MessageController extends BaseController {
 
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
+
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -108,7 +111,7 @@ public class MessageController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(net.wit.entity.Message message, Long receiverId, Long memberId){
+	public net.wit.Message save(net.wit.entity.Message message, Long memberId, Long receiverId){
 		net.wit.entity.Message entity = new net.wit.entity.Message();
 
 		entity.setCreateDate(message.getCreateDate());
@@ -116,8 +119,6 @@ public class MessageController extends BaseController {
 		entity.setModifyDate(message.getModifyDate());
 
 		entity.setContent(message.getContent());
-
-		entity.setDeleted(false);
 
 		entity.setReaded(message.getReaded());
 
@@ -130,16 +131,18 @@ public class MessageController extends BaseController {
 		entity.setMember(memberService.find(memberId));
 
 		entity.setReceiver(memberService.find(receiverId));
+
+		entity.setDeleted(message.getDeleted());
 		
 		if (!isValid(entity, Save.class)) {
-            return Message.error("admin.data.valid");
+            return net.wit.Message.error("admin.data.valid");
         }
         try {
             messageService.save(entity);
-            return Message.success(entity,"admin.save.success");
+            return net.wit.Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
-            return Message.error("admin.save.error");
+            return net.wit.Message.error("admin.save.error");
         }
 	}
 
@@ -149,13 +152,13 @@ public class MessageController extends BaseController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public @ResponseBody
-    Message delete(Long[] ids) {
+	net.wit.Message delete(Long[] ids) {
         try {
             messageService.delete(ids);
-            return Message.success("admin.delete.success");
+            return net.wit.Message.success("admin.delete.success");
         } catch (Exception e) {
             e.printStackTrace();
-            return Message.error("admin.delete.error");
+            return net.wit.Message.error("admin.delete.error");
         }
     }
 	
@@ -191,7 +194,7 @@ public class MessageController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(net.wit.entity.Message message, Long receiverId, Long memberId){
+	public net.wit.Message update(net.wit.entity.Message message, Long memberId, Long receiverId){
 		net.wit.entity.Message entity = messageService.find(message.getId());
 		
 		entity.setCreateDate(message.getCreateDate());
@@ -199,8 +202,6 @@ public class MessageController extends BaseController {
 		entity.setModifyDate(message.getModifyDate());
 
 		entity.setContent(message.getContent());
-
-		entity.setDeleted(false);
 
 		entity.setReaded(message.getReaded());
 
@@ -213,16 +214,18 @@ public class MessageController extends BaseController {
 		entity.setMember(memberService.find(memberId));
 
 		entity.setReceiver(memberService.find(receiverId));
+
+		entity.setDeleted(message.getDeleted());
 		
 		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
+            return net.wit.Message.error("admin.data.valid");
         }
         try {
             messageService.update(entity);
-            return Message.success(entity,"admin.update.success");
+            return net.wit.Message.success(entity,"admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();
-            return Message.error("admin.update.error");
+            return net.wit.Message.error("admin.update.error");
         }
 	}
 	
@@ -232,7 +235,7 @@ public class MessageController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Message.Type type, Pageable pageable, ModelMap model) {
+	public net.wit.Message list(Date beginDate, Date endDate, net.wit.entity.Message.Type type, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
@@ -240,7 +243,7 @@ public class MessageController extends BaseController {
 		}
 
 		Page<net.wit.entity.Message> page = messageService.findPage(beginDate,endDate,pageable);
-		return Message.success(PageBlock.bind(page), "admin.list.success");
+		return net.wit.Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	
@@ -256,6 +259,8 @@ public class MessageController extends BaseController {
 		model.addAttribute("genders",genders);
 
 		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
 
 		model.addAttribute("tags",tagService.findAll());
 
