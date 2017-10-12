@@ -1,5 +1,6 @@
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.wit.MapEntity;
 import org.hibernate.search.annotations.Field;
@@ -53,6 +54,7 @@ public class Article extends BaseEntity{
 
     /** 会员 */
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Member member;
 
     /** 标题 */
@@ -72,11 +74,13 @@ public class Article extends BaseEntity{
     /** 类别 */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) comment '类别 {}'")
+    @JsonIgnore
     private ArticleCategory articleCategory;
 
     /** 文集 */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) comment '文集'")
+    @JsonIgnore
     private ArticleCatalog articleCatalog;
 
     /** 背景音乐 */
@@ -130,6 +134,7 @@ public class Article extends BaseEntity{
 
     /** 所在地 */
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Area area;
 
     /** 模板 */
@@ -141,22 +146,27 @@ public class Article extends BaseEntity{
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_article_tag")
     @OrderBy("orders asc")
+    @JsonIgnore
     private List<Tag> tags = new ArrayList<Tag>();
 
     /** 点赞者*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private Set<ArticleLaud> lauds = new HashSet<ArticleLaud>();
 
     /** 收藏者*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private Set<ArticleFavorite> favorites = new HashSet<ArticleFavorite>();
 
     /** 评论者*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private Set<ArticleReview> reviews = new HashSet<ArticleReview>();
 
     /** 商品*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
 
     /** 投票项 */

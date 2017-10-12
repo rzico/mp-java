@@ -11,38 +11,37 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 
-    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <style>
         .center {
             text-align: center;
         }
     </style>
-    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>文章分类管理</title>
+    <title>文章分类</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员中心 <span
-        class="c-gray en">&gt;</span> 文章分类管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章分类 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class=""> 日期范围：
         <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin"
-               class="input-text Wdate" style="width:120px;">
+               class="input-text Wdate" style="width:120px;margin-top: 0px;">
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if statuss??]
-			<select name="status" class="select input-text" style="background-color: #FFFFFF;width:100px;">
-				<option value="">性别</option>
+			<select name="status" class="input-text" style="background-color: #FFFFFF;width:100px;position:relative; top:1.25px;">
+				<option value="">状态</option>
 				[#list statuss as status]
                 <option value="${status.id}">${status.name}</option>
 				[/#list]
@@ -51,13 +50,14 @@
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
-            <i class="Hui-iconfont">&#xe665;</i> 搜文章分类
+            <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
+		<a href="javascript:;" onclick="add('首页 &gt; 文章分类 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
+                class="Hui-iconfont">&#xe600;</i> 新增文章分类</a>
         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-		<a href="javascript:;" onclick="add('添加文章分类','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 添加文章分类</a></span></div>
+    </span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -70,16 +70,16 @@
     </div>
 </div>
 <!--_footer 作为公共模版分离出去-->
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/layer/2.4/layer.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script>
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
     var table;
     var isSelectAll = false;
@@ -130,12 +130,12 @@
             },
             "aoColumns": [
                 {
-                    "mData": "id",
+                    "mData": "id","bSortable": false,
                     "sClass": "center",
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
                     "sClass": "center"
                 },
@@ -150,53 +150,18 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "orders",
-                    "sTitle": "排序",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "grade",
-                    "sTitle": "层级",
-                    "sClass": "center"
-                },
-                {
                     "mData": "name",
                     "sTitle": "名称",
                     "sClass": "center"
                 },
                 {
-                    "mData": "seoDescription",
-                    "sTitle": "页面描述",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "seoKeywords",
-                    "sTitle": "页面关键词",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "seoTitle",
-                    "sTitle": "页面标题",
+                    "mData": "orders",
+                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
                     "mData": "status",
                     "sTitle": "状态",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "treePath",
-                    "sTitle": "TreePath",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapParent",
-                    "sTitle": "Parent",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapArticles",
-                    "sTitle": "Article",
                     "sClass": "center"
                 },
                 {
@@ -229,7 +194,7 @@
                     }
                 },
                 {
-                    "aTargets": [10],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]
@@ -244,31 +209,11 @@
                         }
                     }
                 },
-                {
-                    "aTargets": [12],
+                 {
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','articleCategoryView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [13],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [14],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('编辑文章分类','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章分类 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -277,7 +222,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 12, 13, 14]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 7]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

@@ -27,4 +27,5 @@ public interface TagDao extends BaseDao<Tag, Long> {
 	 * @return Page<Tag>
 	 */
 	Page<Tag> findPage(Date beginDate,Date endDate, Pageable pageable);
+	List<Tag> findList(Tag.Type type);
 }

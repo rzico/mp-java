@@ -86,4 +86,7 @@ public class TagServiceImpl extends BaseServiceImpl<Tag, Long> implements TagSer
 	public Page<Tag> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return tagDao.findPage(beginDate,endDate,pageable);
 	}
+	public List<Tag> findList(Tag.Type type) {
+		return tagDao.findList(type);
+	}
 }

@@ -51,8 +51,8 @@
                         <a href="#" class="dropDown_A">${admin.name}<i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-                            <li><a href="#">切换账户</a></li>
-                            <li><a href="#">退出</a></li>
+                            <li><a href="javascript:;" onClick="login()">切换账户</a></li>
+                            <li><a href="javascript:;" onClick="logout()">退出</a></li>
                         </ul>
                     </li>
                     <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
@@ -132,6 +132,25 @@
             shade:0.4,
             title: '查看信息',
             content: '<ul><li>登录账号:${admin.username}</li><li>姓名:${admin.name}</li><li>邮箱:${admin.email}</li></ul>'
+        });
+    }
+    /*切换账号*/
+    function login(){
+        location.href = "/admin/login/index.jhtml";
+    }
+    /*退出账户*/
+    function logout(){
+        $.ajax({
+            url: "${base}/admin/login/logout.jhtml",
+            type: "GET",
+            cache: false,
+            success: function (data) {
+               location.href = "/admin/login/index.jhtml";
+            },
+            error: function (message) {
+                layer.msg("系统繁忙", {icon: 1, time: 3000});
+            }
+
         });
     }
 

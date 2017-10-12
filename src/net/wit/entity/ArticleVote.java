@@ -4,6 +4,7 @@ package net.wit.entity;
 import net.wit.MapEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -17,6 +18,15 @@ import java.math.BigDecimal;
 @Table(name = "wx_article_vote")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_vote_sequence")
 public class ArticleVote extends BaseEntity {
+
+	public static enum VoteType{
+		/** 单选 */
+		 radiobox,
+		/** 多选 */
+		 checkbox,
+		/** 不限 */
+		 nolimit
+	};
 
 	private static final long serialVersionUID = 126L;
 
@@ -40,11 +50,13 @@ public class ArticleVote extends BaseEntity {
 	private Article article;
 
 	/** 题目 */
-	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment '题目'")
+	@NotNull
+	@Column(columnDefinition="varchar(255) not null comment '题目'")
 	private String title;
 
 	/** 答案 */
-	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment '答案'")
+	@NotNull
+	@Column(columnDefinition="varchar(255) not null comment '答案'")
 	private String value;
 
 	public String getIp() {

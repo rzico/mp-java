@@ -17,4 +17,5 @@ import net.wit.entity.Tag;
 
 public interface TagService extends BaseService<Tag, Long> {
 	Page<Tag> findPage(Date beginDate,Date endDate, Pageable pageable);
+	List<Tag> findList(Tag.Type type);
 }

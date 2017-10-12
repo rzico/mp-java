@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import net.wit.Filter;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.Pageable;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -56,7 +57,7 @@ public class TagController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("member","会员"));
-		types.add(new MapEntity("template","专栏"));
+		types.add(new MapEntity("template","模板"));
 		types.add(new MapEntity("product","商品"));
 		model.addAttribute("types",types);
 
@@ -73,7 +74,7 @@ public class TagController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("member","会员"));
-		types.add(new MapEntity("template","专栏"));
+		types.add(new MapEntity("template","模板"));
 		types.add(new MapEntity("product","商品"));
 		model.addAttribute("types",types);
 
@@ -141,7 +142,7 @@ public class TagController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("member","会员"));
-		types.add(new MapEntity("template","专栏"));
+		types.add(new MapEntity("template","模板"));
 		types.add(new MapEntity("product","商品"));
 		model.addAttribute("types",types);
 
@@ -198,6 +199,11 @@ public class TagController extends BaseController {
 			filters.add(typeFilter);
 		}
 
+		if (!pageable.getOrderProperty().equals("type")) {
+			pageable.getOrders().add(new Order("type", Order.Direction.asc));
+			pageable.getOrders().add(new Order(pageable.getOrderProperty(), pageable.getOrderDirection()));
+			pageable.setOrderProperty(null);
+		}
 		Page<Tag> page = tagService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

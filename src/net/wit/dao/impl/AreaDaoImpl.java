@@ -60,7 +60,7 @@ public class AreaDaoImpl extends BaseDaoImpl<Area, Long> implements AreaDao {
 		return super.findPage(criteriaQuery,pageable);
 	}
 	public List<Area> findRoots(Integer count) {
-		String jpql = "select area from Area area where area.parent is null order by area.order asc";
+		String jpql = "select area from Area area where area.parent is null order by area.orders asc";
 		TypedQuery<Area> query = entityManager.createQuery(jpql, Area.class).setFlushMode(FlushModeType.COMMIT);
 		if (count != null) {
 			query.setMaxResults(count);

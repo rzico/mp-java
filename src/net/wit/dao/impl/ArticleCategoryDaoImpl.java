@@ -83,10 +83,10 @@ public class ArticleCategoryDaoImpl extends BaseDaoImpl<ArticleCategory, Long> i
 	public List<ArticleCategory> findChildren(ArticleCategory articleCategory, Integer count) {
 		TypedQuery<ArticleCategory> query;
 		if (articleCategory != null) {
-			String jpql = "select articleCategory from ArticleCategory articleCategory where articleCategory.treePath like :treePath order by articleCategory.order asc";
+			String jpql = "select articleCategory from ArticleCategory articleCategory where articleCategory.treePath like :treePath order by articleCategory.orders asc";
 			query = entityManager.createQuery(jpql, ArticleCategory.class).setFlushMode(FlushModeType.COMMIT).setParameter("treePath", "%" + ArticleCategory.TREE_PATH_SEPARATOR + articleCategory.getId() + ArticleCategory.TREE_PATH_SEPARATOR + "%");
 		} else {
-			String jpql = "select articleCategory from ArticleCategory articleCategory order by articleCategory.order asc";
+			String jpql = "select articleCategory from ArticleCategory articleCategory order by articleCategory.orders asc";
 			query = entityManager.createQuery(jpql, ArticleCategory.class).setFlushMode(FlushModeType.COMMIT);
 		}
 		if (count != null) {

@@ -8,7 +8,7 @@
           content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="{$base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/respond.min.js"></script>
     <![endif]-->
     <link href="http://cdn.rzico.com/weex/resources/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css"/>

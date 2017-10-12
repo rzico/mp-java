@@ -34,15 +34,15 @@ public class Tag extends OrderEntity{
     }
 
     /*名称*/
-    @NotEmpty
+    @NotNull
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) not null comment '名称'")
     private String name ;
 
 
     /*类型*/
-    @NotNull(groups = Save.class)
-    @Column(columnDefinition="int(11) not null comment '类型 {article:文章,member:会员,template:专栏,product:商品}'")
+    @NotNull
+    @Column(columnDefinition="int(11) not null comment '类型 {article:文章,member:会员,template:模板,product:商品}'")
     private Type type;
 
     /*图标*/

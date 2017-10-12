@@ -4,6 +4,7 @@ package net.wit.entity;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.apache.commons.lang.builder.CompareToBuilder;

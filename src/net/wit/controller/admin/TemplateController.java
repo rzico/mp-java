@@ -44,7 +44,10 @@ import net.wit.controller.admin.model.*;
 public class TemplateController extends BaseController {
 	@Resource(name = "templateServiceImpl")
 	private TemplateService templateService;
-	
+
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
+
 
 
 	/**
@@ -56,7 +59,9 @@ public class TemplateController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("product","商品"));
+		types.add(new MapEntity("topic","专栏"));
 		model.addAttribute("types",types);
+		model.addAttribute("tags",tagService.findList(Tag.Type.template));
 
 		return "/admin/template/list";
 	}
@@ -71,7 +76,9 @@ public class TemplateController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("product","商品"));
+		types.add(new MapEntity("topic","专栏"));
 		model.addAttribute("types",types);
+		model.addAttribute("tags",tagService.findList(Tag.Type.template));
 
 		return "/admin/template/add";
 	}
@@ -82,7 +89,7 @@ public class TemplateController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Template template){
+	public Message save(Template template,Long [] tagIds){
 		Template entity = new Template();	
 
 		entity.setCreateDate(template.getCreateDate());
@@ -102,8 +109,10 @@ public class TemplateController extends BaseController {
 		entity.setType(template.getType());
 
 		entity.setThumbnial(template.getThumbnial());
-		
-		if (!isValid(entity, Save.class)) {
+
+		entity.setTags(tagService.findList(tagIds));
+
+		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {
@@ -141,9 +150,11 @@ public class TemplateController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("product","商品"));
+		types.add(new MapEntity("topic","专栏"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("data",templateService.find(id));
+		model.addAttribute("tags",tagService.findList(Tag.Type.template));
 
 		return "/admin/template/edit";
 	}
@@ -154,7 +165,7 @@ public class TemplateController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Template template){
+	public Message update(Template template,Long [] tagIds){
 		Template entity = templateService.find(template.getId());
 		
 		entity.setCreateDate(template.getCreateDate());
@@ -174,7 +185,9 @@ public class TemplateController extends BaseController {
 		entity.setType(template.getType());
 
 		entity.setThumbnial(template.getThumbnial());
-		
+
+		entity.setTags(tagService.findList(tagIds));
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }

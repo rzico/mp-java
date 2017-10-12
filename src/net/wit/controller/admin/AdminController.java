@@ -55,8 +55,6 @@ public class AdminController extends BaseController {
 	@Resource(name = "roleServiceImpl")
 	private RoleService roleService;
 
-
-
 	/**
 	 * 主页
 	 */

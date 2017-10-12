@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import net.wit.MapEntity;
 import org.apache.commons.lang.StringUtils;
@@ -46,7 +47,7 @@ public class ArticleCategory extends OrderEntity {
 	private Status status;
 
 	/** 名称 */
-	@NotEmpty
+	@NotNull
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;

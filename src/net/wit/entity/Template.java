@@ -1,11 +1,13 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,25 +38,22 @@ public class Template extends OrderEntity {
 		product,
 
 		/** 专题  */
-		topic,
-
-		/** 模板  */
-		template
+		topic
 	}
 
 	/** 模板类型 */
-	@NotEmpty
+	@NotNull
 	@Column(columnDefinition="int(11) not null comment '模板类型 {article:文章,product:商品,topic=专题}'")
 	private Type type;
 
 	/** 模板编号 */
-	@NotEmpty
+	@NotNull
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(50) not null comment '模板编号'")
 	private String sn;
 
 	/** 模板名称 */
-	@NotEmpty
+	@NotNull
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) not null comment '模板名称'")
 	private String name;
@@ -65,12 +64,12 @@ public class Template extends OrderEntity {
 	private String thumbnial;
 
 	/** 是否免费 */
-	@NotEmpty
+	@NotNull
 	@Column(columnDefinition="bit not null comment '是否免费'")
 	private  Boolean isFreed;
 
 	/** 是否默认 */
-	@NotEmpty
+	@NotNull
 	@Column(columnDefinition="bit not null comment '是否默认'")
 	private  Boolean isDefault;
 
@@ -78,6 +77,7 @@ public class Template extends OrderEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_template_tag")
 	@OrderBy("orders asc")
+	@JsonIgnore
 	private List<Tag> tags = new ArrayList<Tag>();
 
 	public Type getType() {
@@ -134,5 +134,21 @@ public class Template extends OrderEntity {
 
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public MapEntity getMapTags() {
+		String tagStr = "";
+		if (getTags() != null) {
+			for (Tag tag:getTags()) {
+				if ("".equals(tagStr)) {
+					tagStr = tag.getName();
+				} else {
+					tagStr = tagStr.concat(","+tag.getName());
+				}
+			}
+			return new MapEntity("",tagStr);
+		} else {
+			return null;
+		}
 	}
 }

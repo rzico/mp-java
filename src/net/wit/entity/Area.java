@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -46,6 +47,7 @@ public class Area extends OrderEntity {
 	/** 下级地区 */
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("orders asc")
+	@JsonIgnore
 	private Set<Area> children = new HashSet<Area>();
 
 	/**

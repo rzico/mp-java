@@ -3,6 +3,7 @@ package net.wit.dao.impl;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -57,4 +58,16 @@ public class TagDaoImpl extends BaseDaoImpl<Tag, Long> implements TagDao {
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+	public List<Tag> findList(Tag.Type type) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
+		Root<Tag> root = criteriaQuery.from(Tag.class);
+		criteriaQuery.select(root);
+		Predicate restrictions = criteriaBuilder.conjunction();
+		restrictions = criteriaBuilder.conjunction();
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Date> get("type"), type));
+		criteriaQuery.where(restrictions);
+		return super.findList(criteriaQuery,null,null,null,null);
+	}
+
 }

@@ -125,27 +125,12 @@ public class ArticleModel implements Serializable {
         List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
         if (article.getContent()!=null) {
             templates = JsonUtils.toObject(article.getContent(), List.class);
-        } else {
-            ArticleContentModel m = new ArticleContentModel();
-            m.setMediaType(Article.MediaType.image);
-            m.setContent("demo");
-            m.setOriginal("https://qiniu.easyapi.com/g1.png!icon.jpg");
-            m.setThumbnail("https://qiniu.easyapi.com/g1.png!icon.jpg");
-            templates.add(m);
         }
         this.templates = templates;
 
         List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
         if (article.getVotes()!=null) {
             votes = JsonUtils.toObject(article.getVotes(), List.class);
-        } else {
-            ArticleVoteOptionModel o = new ArticleVoteOptionModel();
-            o.setTitle("测试");
-            List<String> os = new ArrayList<String>();
-            os.add("答案1");
-            os.add("答案2");
-            o.setOptions(os);
-            votes.add(o);
         }
         this.votes = votes;
         this.products = ProductViewModel.bindSet(article);

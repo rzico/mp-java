@@ -49,7 +49,7 @@ public class Admin extends BaseEntity {
     /**
      * 用户名
      */
-    @NotEmpty(groups = Save.class)
+    @NotEmpty
     @Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]+$")
     @Length(min = 2, max = 20)
     @Column(columnDefinition = "varchar(50) not null unique comment '用户名'")
@@ -58,7 +58,7 @@ public class Admin extends BaseEntity {
     /**
      * 密码
      */
-    @NotEmpty(groups = Save.class)
+    @NotEmpty
     @Pattern(regexp = "^[^\\s&\"<>]+$")
     @Column(columnDefinition = "varchar(255) not null comment '密码'")
     private String password;
