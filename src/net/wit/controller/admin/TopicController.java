@@ -90,7 +90,9 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("templates",templateService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+
+		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
 		return "/admin/topic/list";
 	}
@@ -121,7 +123,9 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("templates",templateService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+
+		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
 		return "/admin/topic/add";
 	}
@@ -169,7 +173,7 @@ public class TopicController extends BaseController {
 
 		entity.setTemplate(templateService.find(templateId));
 		
-		if (!isValid(entity, Save.class)) {
+		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {
@@ -223,7 +227,9 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("templates",templateService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+
+		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
 		model.addAttribute("data",topicService.find(id));
 

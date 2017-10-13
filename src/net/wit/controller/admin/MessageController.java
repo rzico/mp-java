@@ -105,45 +105,58 @@ public class MessageController extends BaseController {
 		return "/admin/message/add";
 	}
 
-
 	/**
      * 保存
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public net.wit.Message save(net.wit.entity.Message message, Long memberId, Long receiverId){
-		net.wit.entity.Message entity = new net.wit.entity.Message();
+	public net.wit.Message save(net.wit.entity.Message message,String mobile){
+		net.wit.entity.Message entity = null;
+		String [] ms = mobile.split(",");
+		String s="";
+		int w=0;
+		for (String m:ms) {
+			Member member = memberService.findByMobile(m);
+			if (member!=null) {
+				w = w + 1;
+                entity =  new net.wit.entity.Message();
 
-		entity.setCreateDate(message.getCreateDate());
+				entity.setContent(message.getContent());
 
-		entity.setModifyDate(message.getModifyDate());
+				entity.setReaded(false);
 
-		entity.setContent(message.getContent());
+				entity.setTitle(message.getTitle());
 
-		entity.setReaded(message.getReaded());
+				entity.setType(message.getType());
 
-		entity.setThumbnial(message.getThumbnial());
+				entity.setMember(null);
 
-		entity.setTitle(message.getTitle());
+				entity.setReceiver(member);
 
-		entity.setType(message.getType());
+				entity.setThumbnial(message.getThumbnial());
 
-		entity.setMember(memberService.find(memberId));
+				entity.setDeleted(false);
 
-		entity.setReceiver(memberService.find(receiverId));
-
-		entity.setDeleted(message.getDeleted());
-		
-		if (!isValid(entity, Save.class)) {
-            return net.wit.Message.error("admin.data.valid");
-        }
-        try {
-            messageService.save(entity);
-            return net.wit.Message.success(entity,"admin.save.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return net.wit.Message.error("admin.save.error");
-        }
+				if (!isValid(entity)) {
+					return net.wit.Message.error("admin.data.valid");
+				}
+				try {
+					messageService.pushTo(entity);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return net.wit.Message.error("admin.save.error");
+				}
+			} else {
+				s = s + ","+m;
+			}
+		}
+		if (w==ms.length) {
+			return net.wit.Message.success(entity, "发送成功");
+		}
+		if (w==0) {
+			return net.wit.Message.error("发送失败");
+		}
+		return net.wit.Message.error(s+",部份发送失败");
 	}
 
 

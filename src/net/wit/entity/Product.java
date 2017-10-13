@@ -17,6 +17,9 @@ import java.util.TreeSet;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -30,6 +33,11 @@ import org.hibernate.validator.constraints.Length;
 public class Product extends BaseEntity {
 
 	private static final long serialVersionUID = 902L;
+
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Member member;
 
 	/** 编号 */
 	@Length(max = 50)
@@ -124,6 +132,13 @@ public class Product extends BaseEntity {
 	/** 商品库存*/
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<ProductStock> productStocks = new HashSet<ProductStock>();
+
+	/** 标签*/
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "wx_product_tag")
+	@OrderBy("orders asc")
+	@JsonIgnore
+	private List<Tag> tags = new ArrayList<Tag>();
 
 	public String getSn() {
 		return sn;
@@ -275,6 +290,46 @@ public class Product extends BaseEntity {
 
 	public void setThumbnial(String thumbnial) {
 		this.thumbnial = thumbnial;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapTags() {
+		String tagStr = "";
+		if (getTags() != null) {
+			for (Tag tag:getTags()) {
+				if ("".equals(tagStr)) {
+					tagStr = tag.getName();
+				} else {
+					tagStr = tagStr.concat(","+tag.getName());
+				}
+			}
+			return new MapEntity("",tagStr);
+		} else {
+			return null;
+		}
 	}
 
 	/**

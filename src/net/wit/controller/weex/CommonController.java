@@ -62,13 +62,13 @@ public class CommonController extends BaseController {
 		data.put("modulus", StringUtils.base64Encode(publicKey.getModulus().toByteArray()));
 		data.put("exponent", StringUtils.base64Encode(publicKey.getPublicExponent().toByteArray()));
 		logger.debug("publicKey="+data);
-		return Message.success(data,"success");
+		return Message.bind(data,request);
 	}
 
 	/**
 	 * 检查是版本
 	 */
-	@RequestMapping("/resources")
+	@RequestMapping(value = "/resources", method = RequestMethod.GET)
 	@ResponseBody
 	public Message resources(HttpServletRequest request, HttpServletResponse response) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
@@ -81,7 +81,7 @@ public class CommonController extends BaseController {
 		data.put("appUrl","http://cdn.rzico.com/weex/resources/release/app-0.0.1.zip");
 
 		data.put("key",bundle.getString("app.key"));
-		return Message.success(data,"success");
+		return Message.bind(data,request);
 	}
 
 }

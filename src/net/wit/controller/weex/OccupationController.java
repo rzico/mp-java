@@ -38,7 +38,7 @@ public class OccupationController extends BaseController {
     @ResponseBody
     public Message list(HttpServletRequest request){
         List<Occupation> occupations = occupationService.findAll();
-        return CacheBlock.bind(OccupationModel.bindList(occupations),request);
+        return Message.bind(OccupationModel.bindList(occupations),request);
     }
 
 }

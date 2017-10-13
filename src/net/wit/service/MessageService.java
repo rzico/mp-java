@@ -17,4 +17,5 @@ import net.wit.entity.Message;
 
 public interface MessageService extends BaseService<Message, Long> {
 	Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable);
+	public void pushTo(Message message);
 }

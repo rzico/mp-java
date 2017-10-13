@@ -286,7 +286,7 @@ public class LoginController extends BaseController {
     /**
      * 注销会话
      */
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
     public
     Message logout(HttpServletRequest request, HttpSession session) {

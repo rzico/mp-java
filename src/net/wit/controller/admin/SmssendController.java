@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -87,27 +88,23 @@ public class SmssendController extends BaseController {
 	public Message save(Smssend smssend){
 		Smssend entity = new Smssend();	
 
-		entity.setCreateDate(smssend.getCreateDate());
-
-		entity.setModifyDate(smssend.getModifyDate());
-
 		entity.setContent(smssend.getContent());
 
-		entity.setCount(smssend.getCount() == null ? 0 : smssend.getCount());
+		entity.setCount(1);
 
-		entity.setDescr(smssend.getDescr());
+		entity.setDescr(null);
 
-		entity.setFee(smssend.getFee());
+		entity.setFee(new BigDecimal(0.1));
 
 		entity.setMobile(smssend.getMobile());
 
-		entity.setStatus(smssend.getStatus());
-		
+		entity.setStatus(Smssend.Status.wait);
+
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
         }
         try {
-            smssendService.save(entity);
+            smssendService.smsSend(entity);
             return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,20 +154,6 @@ public class SmssendController extends BaseController {
     @ResponseBody
 	public Message update(Smssend smssend){
 		Smssend entity = smssendService.find(smssend.getId());
-		
-		entity.setCreateDate(smssend.getCreateDate());
-
-		entity.setModifyDate(smssend.getModifyDate());
-
-		entity.setContent(smssend.getContent());
-
-		entity.setCount(smssend.getCount() == null ? 0 : smssend.getCount());
-
-		entity.setDescr(smssend.getDescr());
-
-		entity.setFee(smssend.getFee());
-
-		entity.setMobile(smssend.getMobile());
 
 		entity.setStatus(smssend.getStatus());
 		

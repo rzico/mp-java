@@ -86,7 +86,7 @@ public class PasswordController extends BaseController {
      * 检查手机号
      * mobile 手机号
      */
-    @RequestMapping(value = "/check_mobile", method = RequestMethod.GET)
+    @RequestMapping(value = "/check_mobile", method = RequestMethod.POST)
     @ResponseBody
     public Message checkMobile(HttpServletRequest request) {
         Member member = memberService.getCurrent();

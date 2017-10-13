@@ -97,7 +97,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/articleCatalog/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {

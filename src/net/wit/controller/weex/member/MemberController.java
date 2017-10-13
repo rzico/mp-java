@@ -67,7 +67,7 @@ public class MemberController extends BaseController {
         }
         MemberModel model =new MemberModel();
         model.bind(member);
-        return Message.success(model,"获取会员信息成功");
+        return Message.bind(model,request);
    }
 
     /**
@@ -85,7 +85,7 @@ public class MemberController extends BaseController {
         model.bind(member);
         BindUser bindUser = bindUserService.findMember(member,bundle.getString("app.appid"), BindUser.Type.weixin);
         model.setBindWeiXin(bindUser!=null);
-        return Message.success(model,"获取会员信息成功");
+        return Message.bind(model,request);
     }
 
     /**

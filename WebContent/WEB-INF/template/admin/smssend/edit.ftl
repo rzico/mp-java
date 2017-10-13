@@ -34,31 +34,35 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>手机号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="hidden" value="${data.mobile}" placeholder="" id="mobile" name="mobile">
+                    <label style="padding: 4px">${data.mobile}</label>
+                </div>
+            </div>
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发送内容：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.content}" placeholder="" id="content" name="content">
+                <input type="hidden" value="${data.content}" placeholder="" id="content" name="content">
+                <label style="padding: 4px">${data.content}</label>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>短信条数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.count}" placeholder="" id="count" name="count" onInput="intInit(this)">
+                <input type="hidden" value="${data.count}" placeholder="" id="count" name="count">
+                <label style="padding: 4px">${data.count}</label>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">错误说明：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.descr}" placeholder="" id="descr" name="descr">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>手机号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.mobile}" placeholder="" id="mobile" name="mobile">
+                <input type="hidden" value="${data.descr}" placeholder="" id="descr" name="descr">
+                <label style="padding: 4px">${data.descr}</label>
             </div>
         </div>
 

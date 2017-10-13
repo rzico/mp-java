@@ -93,7 +93,7 @@ public class AreaController extends BaseController {
 
 		entity.setParent(areaService.find(parentId));
 		
-		if (!isValid(entity, Save.class)) {
+		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {

@@ -41,7 +41,7 @@ public class ArticleCategoryController extends BaseController {
     @ResponseBody
     public Message list(Long tagIds,HttpServletRequest request){
         List<ArticleCategory> categories = articleCategoryService.findAll();
-        return CacheBlock.bind(ArticleCategoryModel.bindList(categories),request);
+        return Message.bind(ArticleCategoryModel.bindList(categories),request);
     }
 
 }

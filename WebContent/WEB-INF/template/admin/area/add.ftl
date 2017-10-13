@@ -32,19 +32,6 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">排序：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="fullName" name="fullName">
-            </div>
-        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
@@ -54,23 +41,17 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>TreePath：</label>
+            <label class="form-label col-xs-4 col-sm-2">所属地区：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="treePath" name="treePath">
+                <span class="fieldSet">
+                    <input type="hidden" id="parentId" name="parentId" treePath="" />
+                </span>
             </div>
         </div>
-
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Parent：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if parents??]
-				<select name="parentId" class="select" style="background-color: #FFFFFF">
-                    [#list parents as parent]
-					<option value="${parent.id}">${parent.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+            <label class="form-label col-xs-4 col-sm-2">排序：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
             </div>
         </div>
         <div class="row cl">
@@ -99,6 +80,10 @@
 
         <script type="text/javascript">
             $(function(){
+                var $areaId = $("#parentId");
+                $areaId.lSelect({
+                    url: "${base}/admin/common/area.jhtml"
+                });
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',

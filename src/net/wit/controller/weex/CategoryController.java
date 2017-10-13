@@ -37,7 +37,7 @@ public class CategoryController extends BaseController {
     @ResponseBody
     public Message list(HttpServletRequest request){
         List<Category> categories = categoryService.findAll();
-        return CacheBlock.bind(CategoryModel.bindList(categories),request);
+        return Message.bind(CategoryModel.bindList(categories),request);
     }
 
 }

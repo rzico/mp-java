@@ -40,7 +40,7 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if statuss??]
-			<select name="status" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+			<select name="status" class="select input-text" style="background-color: #FFFFFF;width:100px;position:relative; top:1.25px;">
 				<option value="">状态</option>
 				[#list statuss as status]
                 <option value="${status.id}">${status.name}</option>
@@ -54,9 +54,10 @@
         </button>
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
 		<a href="javascript:;" onclick="add('首页 &gt; 行业分类 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增行业分类</a></span></div>
+                class="Hui-iconfont">&#xe600;</i> 新增行业</a>
+         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+   </span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -97,7 +98,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/category/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -149,8 +150,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "orders",
-                    "sTitle": "排序",
+                    "mData": "name",
+                    "sTitle": "名称",
                     "sClass": "center"
                 },
                 {
@@ -159,8 +160,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "name",
-                    "sTitle": "名称",
+                    "mData": "orders",
+                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {

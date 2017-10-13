@@ -40,7 +40,7 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if types??]
-			<select name="type" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+			<select name="type" class="select input-text" style="background-color: #FFFFFF;width:100px;position:relative; top:1.25px;">
 				<option value="">模板类型</option>
 				[#list types as type]
                 <option value="${type.id}">${type.name}</option>
@@ -98,7 +98,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/template/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -166,7 +166,7 @@
                 },
                 {
                     "mData": "mapTags",
-                    "sTitle": "Tag",
+                    "sTitle": "标签",
                     "sClass": "center"
                 },
                 {
@@ -230,6 +230,16 @@
                             return "<span class=\"label label-success radius\">是</span>";
                         } else {
                             return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [7],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
                         }
                     }
                 },

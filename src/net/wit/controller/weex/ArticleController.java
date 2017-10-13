@@ -52,7 +52,7 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article);
-        return Message.success(model,"获取成功");
+        return Message.bind(model,request);
    }
 
 }

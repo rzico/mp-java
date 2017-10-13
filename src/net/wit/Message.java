@@ -5,7 +5,11 @@
  */
 package net.wit;
 
+import net.wit.util.JsonUtils;
+import net.wit.util.MD5Utils;
 import net.wit.util.SpringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 消息
@@ -47,6 +51,9 @@ public class Message {
 
 	/** 数据 */
 	private Object data;
+
+	/** 缓存 */
+	private Object md5;
 
 	/**
 	 * 初始化一个新创建的 Message 对象，使其表示一个空消息。
@@ -185,4 +192,25 @@ public class Message {
 	public void setData(Object data) {
 		this.data = data;
 	}
+
+	public Object getMd5() {
+		return md5;
+	}
+
+	public void setMd5(Object md5) {
+		this.md5 = md5;
+	}
+
+	public static Message bind(Object data,HttpServletRequest request){
+		String js = JsonUtils.toJson(data);
+		String md5 = MD5Utils.getMD5Str(js);
+		String rmd5 = request.getParameter("md5");
+		if (rmd5!=null && md5.equals(rmd5)) {
+			return Message.warn(Message.CACHE_SUCCESS);
+		}
+		Message  message = Message.success(data,"success");
+		message.setMd5(MD5Utils.getMD5Str(js));
+		return message;
+	}
+
 }

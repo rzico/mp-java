@@ -97,7 +97,7 @@ public class CategoryController extends BaseController {
 
 		entity.setStatus(category.getStatus());
 		
-		if (!isValid(entity, Save.class)) {
+		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {

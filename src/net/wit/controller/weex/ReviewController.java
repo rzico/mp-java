@@ -62,7 +62,7 @@ public class ReviewController extends BaseController {
         Page<ArticleReview> page = articleReviewService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleReviewModel.bindList(page.getContent()));
-        return Message.success(model,"获取成功");
+        return Message.bind(model,request);
    }
 
 }

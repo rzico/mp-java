@@ -88,6 +88,10 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		super.save(message);
 	}
 
+	public void pushTo(Message message) {
+		super.save(message);
+	}
+
 	public Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return messageDao.findPage(beginDate,endDate,pageable);
 	}

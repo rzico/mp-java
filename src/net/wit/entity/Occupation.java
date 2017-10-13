@@ -2,11 +2,9 @@
 package net.wit.entity;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
 
 /**
  * @ClassName: Occupation
@@ -34,12 +32,12 @@ public class Occupation extends OrderEntity {
 	}
 
 	/** 状态 */
-	@NotEmpty
+	@NotNull
 	@Column(columnDefinition="int(11) not null comment '状态 {enabled:开启,disabled:关闭}'")
 	private Status status;
 
 	/** 名称 */
-	@NotEmpty
+	@NotNull
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;

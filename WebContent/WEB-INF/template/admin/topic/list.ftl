@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>专题管理</title>
+    <title>专栏管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 专题管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 专栏管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -61,10 +61,6 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-		<a href="javascript:;" onclick="add('首页 &gt; 专题管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增专题管理</a></span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -105,7 +101,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/topic/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -134,15 +130,16 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
+                $(row).children('td').eq(6).attr('style', 'text-align: left;')
             },
             "aoColumns": [
                 {
-                    "mData": "id",
+                    "mData": "id","bSortable": false,
                     "sClass": "center",
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
                     "sClass": "center"
                 },
@@ -154,6 +151,16 @@
                 {
                     "mData": "modifyDate",
                     "sTitle": "修改日期",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "shortName",
+                    "sTitle": "简称",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapMember",
+                    "sTitle": "版主",
                     "sClass": "center"
                 },
                 {
@@ -172,63 +179,28 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "license",
-                    "sTitle": "上传证件",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "licenseCode",
-                    "sTitle": "证件号",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "name",
-                    "sTitle": "全称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "scene",
-                    "sTitle": "经营场所",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "shortName",
-                    "sTitle": "简称",
-                    "sClass": "center"
-                },
-                {
                     "mData": "status",
                     "sTitle": "状态",
                     "sClass": "center"
                 },
-                {
-                    "mData": "thedoor",
-                    "sTitle": "上传门头",
-                    "sClass": "center"
-                },
-                {
+                 {
                     "mData": "type",
                     "sTitle": "类型",
                     "sClass": "center"
                 },
                 {
                     "mData": "mapArea",
-                    "sTitle": "Area",
+                    "sTitle": "所在地",
                     "sClass": "center"
                 },
                 {
                     "mData": "mapCategory",
-                    "sTitle": "Category",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
+                    "sTitle": "行业",
                     "sClass": "center"
                 },
                 {
                     "mData": "mapTemplate",
-                    "sTitle": "Template",
+                    "sTitle": "模板",
                     "sClass": "center"
                 },
                 {
@@ -261,13 +233,13 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
                 {
-                    "aTargets": [12],
+                    "aTargets": [9],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]
@@ -283,7 +255,7 @@
                     }
                 },
                 {
-                    "aTargets": [14],
+                    "aTargets": [10],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -309,7 +281,7 @@
                     }
                 },
                 {
-                    "aTargets": [16],
+                    "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','categoryView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -319,7 +291,7 @@
                     }
                 }, 
                 {
-                    "aTargets": [17],
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -327,9 +299,9 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
-                    "aTargets": [18],
+                    "aTargets": [12],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','templateView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -337,12 +309,22 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
-                    "aTargets": [19],
+                    "aTargets": [13],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 专题管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','templateView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [14],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 专栏管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -351,7 +333,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 15, 16, 17, 18, 19]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 5, 11, 12, 14]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

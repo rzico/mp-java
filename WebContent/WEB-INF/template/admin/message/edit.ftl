@@ -34,29 +34,39 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">提供者：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>[#if data.mapMember??] ${data.mapMember.nickName}[/#if]</span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">订阅者：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>[#if data.mapMember??]${data.mapReceiver.nickName}[/#if]</span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>${data.title}</span>
+                </div>
+            </div>
+
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.content}" placeholder="" id="content" name="content">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否显示：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isShow" id="isShow" value="true"[#if data.isShow?? && data.isShow] checked[/#if]>
-                    <input type="hidden" name="_isShow" value="false" />
-                    <label for="isShow">&nbsp;</label>
-                </div>
+                <span>${data.content}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>收件人已读：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="readed" id="readed" value="true"[#if data.readed?? && data.readed] checked[/#if]>
+                <div class="check-box"  disabled="disabled">
+                    <input type="checkbox" disabled="true"  name="readed" id="readed" value="true"[#if data.readed?? && data.readed] checked[/#if]>
                     <input type="hidden" name="_readed" value="false" />
                     <label for="readed">&nbsp;</label>
                 </div>
@@ -66,24 +76,17 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thumbnial}" placeholder="" id="thumbnial" name="thumbnial">
+                <span>${data.thumbnial}</span>
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
-            </div>
-        </div>
-
-        <div class="row cl">
+         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 [#if types??]
                 [#list types as type]
-                    <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
+                    <div class="radio-box" disabled="disabled" >
+                        <input name="type" disabled="true"  type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
                         <label for="type-${type_index}">${type.name}</label>
                     </div>
                 [/#list]
@@ -92,47 +95,13 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">提供者：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">订阅者：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if receivers??]
-				<select name="receiverId" class="select" style="background-color: #FFFFFF">
-                    [#list receivers as receiver]
-					<option[#if data.receiver?? && receiver.id == data.receiver.id] selected[/#if] value="${receiver.id}">${receiver.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否删除：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
+                <div class="check-box"  disabled="disabled">
+                    <input type="checkbox" disabled="true" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
                     <input type="hidden" name="_deleted" value="false" />
                     <label for="deleted">&nbsp;</label>
                 </div>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"></label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
             </div>
         </div>
             [#else]

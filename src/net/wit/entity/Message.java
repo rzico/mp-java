@@ -18,7 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -64,7 +66,7 @@ public class Message extends BaseEntity {
 	private String title;
 
 	/** 内容 */
-	@NotEmpty
+	@NotNull
 	@Length(max = 1000)
 	@Column(columnDefinition="longtext not null comment '内容'")
 	private String content;
@@ -84,11 +86,13 @@ public class Message extends BaseEntity {
 	/** 收件人 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '收件人'")
+	@JsonIgnore
 	private Member receiver;
 
 	/** 发送人 系统消息时为 null */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '发送人'")
+	@JsonIgnore
 	private Member member;
 
 	public Message.Type getType() {

@@ -3,6 +3,7 @@ package net.wit.dao.impl;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -71,5 +72,18 @@ public class TemplateDaoImpl extends BaseDaoImpl<Template, Long> implements Temp
 		} catch (NoResultException e) {
 			return null;
 		}
+	}
+
+	public List<Template> findList(Template.Type type) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Template> criteriaQuery = criteriaBuilder.createQuery(Template.class);
+		Root<Template> root = criteriaQuery.from(Template.class);
+		criteriaQuery.select(root);
+		Predicate restrictions = criteriaBuilder.conjunction();
+		restrictions = criteriaBuilder.conjunction();
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Date> get("type"), type));
+
+		criteriaQuery.where(restrictions);
+		return super.findList(criteriaQuery,null,null,null,null);
 	}
 }

@@ -66,7 +66,7 @@ public class MessageController extends BaseController {
         Page<net.wit.entity.Message> page = messageService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(MessageModel.bindList(page.getContent()));
-        return Message.success(model,"获取成功");
+        return Message.bind(model,request);
     }
 
     /**
@@ -88,7 +88,7 @@ public class MessageController extends BaseController {
         for (net.wit.entity.Message m:ms) {
             map.put(m.getType(),m);
         }
-        return Message.success(MessageModel.bindList(ms),"获取成功");
+        return Message.bind(MessageModel.bindList(ms),request);
     }
 
 }

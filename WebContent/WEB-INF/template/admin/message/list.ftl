@@ -40,7 +40,7 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if types??]
-			<select name="type" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+			<select name="type" class="select input-text" style="background-color: #FFFFFF;width:100px;position:relative; top:1.25px;">
 				<option value="">类型</option>
 				[#list types as type]
                 <option value="${type.id}">${type.name}</option>
@@ -54,9 +54,10 @@
         </button>
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
 		<a href="javascript:;" onclick="add('首页 &gt; 消息管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增消息管理</a></span></div>
+                class="Hui-iconfont">&#xe600;</i> 发送消息</a>
+        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+    </span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -97,7 +98,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/message/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -126,6 +127,7 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
+                $(row).children('td').eq(6).attr('style', 'text-align: left;')
             },
             "aoColumns": [
                 {
@@ -149,28 +151,23 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "mapReceiver",
+                    "sTitle": "收件人",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapMember",
+                    "sTitle": "发件人",
+                    "sClass": "center"
+                },
+                {
                     "mData": "content",
                     "sTitle": "内容",
                     "sClass": "center"
                 },
                 {
-                    "mData": "isShow",
-                    "sTitle": "是否显示",
-                    "sClass": "center"
-                },
-                {
                     "mData": "readed",
-                    "sTitle": "收件人已读",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "thumbnial",
-                    "sTitle": "缩例图",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "title",
-                    "sTitle": "标题",
+                    "sTitle": "已读",
                     "sClass": "center"
                 },
                 {
@@ -179,18 +176,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapReceiver",
-                    "sTitle": "Receiver",
-                    "sClass": "center"
-                },
-                {
                     "mData": "deleted",
-                    "sTitle": "是否删除",
+                    "sTitle": "删除",
                     "sClass": "center"
                 },
                 {
@@ -223,17 +210,7 @@
                     }
                 },
                 {
-                    "aTargets": [5],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [6],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -244,6 +221,16 @@
                 },
                 {
                     "aTargets": [9],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -259,37 +246,27 @@
                     }
                 },
                 {
+                    "aTargets": [4],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+                }, 
+                {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+                }, 
+                {
                     "aTargets": [10],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [11],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [12],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [13],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 消息管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -301,7 +278,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 10, 11, 13]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 4, 5, 10]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

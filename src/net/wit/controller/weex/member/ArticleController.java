@@ -90,7 +90,7 @@ public class ArticleController extends BaseController {
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleModel.bindList(page.getContent()));
-        return Message.success(model,"获取成功");
+        return Message.bind(model,request);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ArticleController extends BaseController {
 
         ArticleModel model =new ArticleModel();
         model.bind(article);
-        return Message.success(model,"获取成功");
+        return Message.bind(model,request);
    }
 
     /**
@@ -121,7 +121,7 @@ public class ArticleController extends BaseController {
         }
         ArticleOptionModel model =new ArticleOptionModel();
         model.bind(article);
-        return Message.success(model,"获取成功");
+        return Message.bind(model,request);
     }
 
     /**

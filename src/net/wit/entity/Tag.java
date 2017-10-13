@@ -30,7 +30,9 @@ public class Tag extends OrderEntity{
         /* 模板 */
         template,
         /* 商品 */
-        product
+        product,
+        /* 专栏 */
+        topic
     }
 
     /*名称*/
@@ -70,6 +72,10 @@ public class Tag extends OrderEntity{
     /*模板列表*/
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private Set<Topic> topics = new HashSet<Topic>();
+
+    /*模板列表*/
+    @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
+    private Set<Product> products = new HashSet<Product>();
 
     /*删除前处理*/
     @PreRemove
@@ -149,6 +155,14 @@ public class Tag extends OrderEntity{
 
     public Set<Topic> getTopics() {
         return topics;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     public void setTopics(Set<Topic> topics) {

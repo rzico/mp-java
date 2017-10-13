@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -34,18 +35,19 @@ public class Category extends OrderEntity {
 	}
 
 	/** 状态 */
-	@NotEmpty
+	@NotNull
 	@Column(columnDefinition="int(11) not null comment '状态 {enabled:开启,disabled:关闭}'")
 	private Status status;
 
 	/** 名称 */
-	@NotEmpty
+	@NotNull
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
 	/** 交易佣金 百分比 */
 	@Min(0)
+	@NotNull
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
 	private BigDecimal brokerage;
 

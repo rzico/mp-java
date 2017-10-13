@@ -1,11 +1,15 @@
 package net.wit.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -23,10 +27,10 @@ public class Area extends OrderEntity {
 	private static final long serialVersionUID = -102L;
 
 	/** 树路径分隔符 */
-	private static final String TREE_PATH_SEPARATOR = ",";
+	public static final String TREE_PATH_SEPARATOR = ",";
 
 	/** 名称 */
-	@NotEmpty
+	@NotNull
 	@Length(max = 100)
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
@@ -36,16 +40,17 @@ public class Area extends OrderEntity {
 	private String fullName;
 
 	/** 树路径 */
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false)
 	private String treePath;
 
 	/** 上级地区 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '上级'")
+	@JsonIgnore
 	private Area parent;
 
 	/** 下级地区 */
-	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
 	@OrderBy("orders asc")
 	@JsonIgnore
 	private Set<Area> children = new HashSet<Area>();
@@ -145,33 +150,21 @@ public class Area extends OrderEntity {
 		this.children = children;
 	}
 
-
 	/**
-	 * 持久化前处理
+	 * 获取树路径
+	 *
+	 * @return 树路径
 	 */
-	@PrePersist
-	public void prePersist() {
-		Area parent = getParent();
-		if (parent != null) {
-			setFullName(parent.getFullName() + getName());
-			setTreePath(parent.getTreePath() + parent.getId() + TREE_PATH_SEPARATOR);
-		} else {
-			setFullName(getName());
-			setTreePath(TREE_PATH_SEPARATOR);
+	@Transient
+	public List<Long> getTreePaths() {
+		List<Long> treePaths = new ArrayList<Long>();
+		String[] ids = StringUtils.split(getTreePath(), TREE_PATH_SEPARATOR);
+		if (ids != null) {
+			for (String id : ids) {
+				treePaths.add(Long.valueOf(id));
+			}
 		}
-	}
-
-	/**
-	 * 更新前处理
-	 */
-	@PreUpdate
-	public void preUpdate() {
-		Area parent = getParent();
-		if (parent != null) {
-			setFullName(parent.getFullName() + getName());
-		} else {
-			setFullName(getName());
-		}
+		return treePaths;
 	}
 
 	/**

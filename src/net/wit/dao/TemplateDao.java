@@ -29,4 +29,5 @@ public interface TemplateDao extends BaseDao<Template, Long> {
 	Page<Template> findPage(Date beginDate,Date endDate, Pageable pageable);
 
 	Template findDefault(Template.Type type);
+	List<Template> findList(Template.Type type);
 }

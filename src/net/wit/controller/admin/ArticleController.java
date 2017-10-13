@@ -96,7 +96,7 @@ public class ArticleController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("templates",templateService.findAll());
+		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
 		List<MapEntity> titleTypes = new ArrayList<>();
 		titleTypes.add(new MapEntity("image1","单图"));
@@ -107,7 +107,7 @@ public class ArticleController extends BaseController {
 		titleTypes.add(new MapEntity("image6","6张图"));
 		model.addAttribute("titleTypes",titleTypes);
 
-		model.addAttribute("tags",tagService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/list";
 	}
@@ -140,7 +140,7 @@ public class ArticleController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("templates",templateService.findAll());
+		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
 		List<MapEntity> titleTypes = new ArrayList<>();
 		titleTypes.add(new MapEntity("image1","单图"));
@@ -151,7 +151,7 @@ public class ArticleController extends BaseController {
 		titleTypes.add(new MapEntity("image6","6张图"));
 		model.addAttribute("titleTypes",titleTypes);
 
-		model.addAttribute("tags",tagService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/add";
 	}
@@ -282,7 +282,7 @@ public class ArticleController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("templates",templateService.findAll());
+		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
 		List<MapEntity> titleTypes = new ArrayList<>();
 		titleTypes.add(new MapEntity("image1","单图"));
@@ -293,7 +293,7 @@ public class ArticleController extends BaseController {
 		titleTypes.add(new MapEntity("image6","6张图"));
 		model.addAttribute("titleTypes",titleTypes);
 
-		model.addAttribute("tags",tagService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		model.addAttribute("data",articleService.find(id));
 

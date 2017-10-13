@@ -63,7 +63,13 @@
                 </span>
             </div>
         </div>
-        <div class="row cl">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">佣金（%）：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.brokerage}" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
+                </div>
+            </div>
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">

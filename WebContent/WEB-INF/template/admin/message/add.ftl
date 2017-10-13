@@ -33,38 +33,9 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容：</label>
+            <label class="form-label col-xs-4 col-sm-2">手机号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="content" name="content">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否显示：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isShow" id="isShow" value="true">
-                    <input type="hidden" name="_isShow" value="false" />
-                    <label for="isShow">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>收件人已读：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="readed" id="readed" value="true">
-                    <input type="hidden" name="_readed" value="false" />
-                    <label for="readed">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="thumbnial" name="thumbnial">
+                <input type="text" class="input-text" value="" placeholder="" id="mobile" name="mobile" >
             </div>
         </div>
 
@@ -72,6 +43,13 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" placeholder="" id="title" name="title">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="content" name="content">
             </div>
         </div>
 
@@ -89,44 +67,6 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">提供者：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">订阅者：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if receivers??]
-				<select name="receiverId" class="select" style="background-color: #FFFFFF">
-                    [#list receivers as receiver]
-					<option value="${receiver.id}">${receiver.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true">
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -168,6 +108,9 @@
                         title:{
                             required:true,
                         },
+                        mobile:{
+                            required:true,
+                        },
                         type:{
                             required:true,
                         },
@@ -194,10 +137,10 @@
 //                                    关闭当前页面
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
-                                    parent.closeWindow(index, '添加成功');
+                                    parent.closeWindow(index,  message.content);
                                 }else{
                                     $submit.prop("disabled", false);
-                                    layer.msg('添加失败!',{icon:2,time:1000});
+                                    layer.msg(message.content,{icon:2,time:1000});
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){

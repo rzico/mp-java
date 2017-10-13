@@ -78,7 +78,7 @@ public class FriendsController extends BaseController {
         Page<Friends> page = friendsService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(FriendsModel.bindList(page.getContent()));
-        return Message.success(model,"获取成功");
+        return Message.bind(model,request);
     }
 
     /**
@@ -105,7 +105,7 @@ public class FriendsController extends BaseController {
                 mds.add(md);
             }
         }
-        return Message.success(mds,"搜索成功");
+        return Message.bind(mds,request);
 
     }
 

@@ -53,10 +53,6 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-		<a href="javascript:;" onclick="add('首页 &gt; 会员管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增会员管理</a></span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -97,7 +93,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/member/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -129,12 +125,12 @@
             },
             "aoColumns": [
                 {
-                    "mData": "id",
+                    "mData": "id", "bSortable": false,
                     "sClass": "center",
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
                     "sClass": "center"
                 },
@@ -149,78 +145,38 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "address",
-                    "sTitle": "地址",
+                    "mData": "nickName",
+                    "sTitle": "昵称",
                     "sClass": "center"
                 },
                 {
-                    "mData": "attributeValue0",
-                    "sTitle": "会员注册项值0",
+                    "mData": "name",
+                    "sTitle": "真实姓名",
                     "sClass": "center"
                 },
                 {
-                    "mData": "attributeValue1",
-                    "sTitle": "会员注册项值1",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue2",
-                    "sTitle": "会员注册项值2",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue3",
-                    "sTitle": "会员注册项值3",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue4",
-                    "sTitle": "会员注册项值4",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue5",
-                    "sTitle": "会员注册项值5",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue6",
-                    "sTitle": "会员注册项值6",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue7",
-                    "sTitle": "会员注册项值7",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue8",
-                    "sTitle": "会员注册项值8",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "attributeValue9",
-                    "sTitle": "会员注册项值9",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "balance",
-                    "sTitle": "余额",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "birth",
-                    "sTitle": "出生日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "email",
-                    "sTitle": "邮箱",
+                    "mData": "mapOccupation",
+                    "sTitle": "职业",
                     "sClass": "center"
                 },
                 {
                     "mData": "gender",
                     "sTitle": "性别",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapArea",
+                    "sTitle": "所在地",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "point",
+                    "sTitle": "积分",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "balance",
+                    "sTitle": "余额",
                     "sClass": "center"
                 },
                 {
@@ -233,132 +189,7 @@
                     "sTitle": "是否锁定",
                     "sClass": "center"
                 },
-                {
-                    "mData": "lockedDate",
-                    "sTitle": "锁定日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "loginDate",
-                    "sTitle": "最后登录日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "loginFailureCount",
-                    "sTitle": "连续登录失败次数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "loginIp",
-                    "sTitle": "最后登录IP",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mobile",
-                    "sTitle": "手机",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "name",
-                    "sTitle": "姓名",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "password",
-                    "sTitle": "密码",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "phone",
-                    "sTitle": "电话",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "point",
-                    "sTitle": "积分",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "registerIp",
-                    "sTitle": "注册IP",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "safeKeyCreate",
-                    "sTitle": "SafeKeyCreate",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "safeKeyExpire",
-                    "sTitle": "SafeKeyExpire",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "safeKeyValue",
-                    "sTitle": "SafeKeyValue",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "username",
-                    "sTitle": "用户名",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "zipCode",
-                    "sTitle": "邮编",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapArea",
-                    "sTitle": "Area",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "autograph",
-                    "sTitle": "签名",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "logo",
-                    "sTitle": "头像",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "nickName",
-                    "sTitle": "昵称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "addr",
-                    "sTitle": "位置",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "lat",
-                    "sTitle": "伟度",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "lng",
-                    "sTitle": "经度",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapOccupation",
-                    "sTitle": "Occupation",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "uuid",
-                    "sTitle": "设备号",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapTags",
-                    "sTitle": "Tag",
-                    "sClass": "center"
-                },
-                {
+                 {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -388,13 +219,7 @@
                     }
                 },
                 {
-                    "aTargets": [16],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [18],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if genders??]
@@ -410,7 +235,7 @@
                     }
                 },
                 {
-                    "aTargets": [19],
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -420,7 +245,7 @@
                     }
                 },
                 {
-                    "aTargets": [20],
+                    "aTargets": [12],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -430,31 +255,7 @@
                     }
                 },
                 {
-                    "aTargets": [21],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [22],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [31],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [32],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [36],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -464,17 +265,7 @@
                     }
                 },
                 {
-                    "aTargets": [43],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','occupationView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [45],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -484,11 +275,10 @@
                     }
                 },
                 {
-                    "aTargets": [46],
+                    "aTargets": [13],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 会员管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 会员管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
                         }else{
                             return "";
                         }
@@ -496,7 +286,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 36, 43, 45, 46]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 6, 8, 13]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

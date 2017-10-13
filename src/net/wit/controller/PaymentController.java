@@ -132,7 +132,7 @@ public class PaymentController extends BaseController {
         }
         PaymentModel model = new PaymentModel();
         model.bind(payment);
-        return Message.success(model, "success");
+        return Message.bind(model,request);
     }
 
     /**

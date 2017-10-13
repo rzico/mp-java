@@ -34,52 +34,121 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">版主：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span>
+                ${data.member.nickName}
+                    <input type="hidden" value="${data.member.id}" placeholder="" id="memberId" name="memberId">
+ 				</span>
+                </div>
+            </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>简称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.shortName}" placeholder="" id="shortName" name="shortName">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if types??]
+                        [#list types as type]
+                            <div class="radio-box">
+                                <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
+                                <label for="type-${type_index}">${type.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">标签：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if tags??]
+                        [#list tags as tag]
+                            <div class="check-box">
+                                [#assign checkUp = "false"]
+                                [#list data.tags as dataTag]
+                                    [#if dataTag.id == tag.id]
+                                        [#assign checkUp = "true"]
+                                    [/#if]
+                                [/#list]
+                                <label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${tag.id}" name="tagIds" >${tag.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">所在地：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                <span class="fieldSet">
+                    <input type="hidden" id="areaId" name="areaId" value="${(data.area.id)!}" treePath="${(data.area.treePath)!}" />
+                </span>
+                </div>
+            </div>
+
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">地址：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.address}" placeholder="" id="address" name="address">
             </div>
         </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>到期日：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.expire}" id="expire" name="expire" class="input-text Wdate" style="width:180px;">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">行业：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                    [#if categorys??]
+                        <select name="categoryId" class="select" style="background-color: #FFFFFF">
+                            [#list categorys as category]
+                                <option[#if data.category?? && category.id == data.category.id] selected[/#if] value="${category.id}">${category.name}</option>
+                            [/#list]
+				</select>
+                    [/#if]
+				</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">证件号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.licenseCode}" placeholder="" id="licenseCode" name="licenseCode">
+                </div>
+            </div>
+
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">上传证件：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.license}" placeholder="" id="license" name="license">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">证件号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.licenseCode}" placeholder="" id="licenseCode" name="licenseCode">
+             <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">上传门头：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.thedoor}" placeholder="" id="thedoor" name="thedoor">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
-            </div>
-        </div>
-
-        <div class="row cl">
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">经营场所：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.scene}" placeholder="" id="scene" name="scene">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>简称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.shortName}" placeholder="" id="shortName" name="shortName">
             </div>
         </div>
 
@@ -96,78 +165,27 @@
                 [/#if]
             </div>
         </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">上传门头：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thedoor}" placeholder="" id="thedoor" name="thedoor">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>到期日：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.expire}" id="expire" name="expire" class="input-text Wdate" style="width:180px;">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if types??]
-                [#list types as type]
-                    <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
-                        <label for="type-${type_index}">${type.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">所在地：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span class="fieldSet">
-                    <input type="hidden" id="areaId" name="areaId" value="${(data.area.id)!}" treePath="${(data.area.treePath)!}" />
-                </span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">行业：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if categorys??]
-				<select name="categoryId" class="select" style="background-color: #FFFFFF">
-                    [#list categorys as category]
-					<option[#if data.category?? && category.id == data.category.id] selected[/#if] value="${category.id}">${category.name}</option>
-                    [/#list]
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">模版：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                    [#if templates??]
+                        <select name="templateId" class="select" style="background-color: #FFFFFF">
+                            [#list templates as template]
+                                <option[#if data.template?? && template.id == data.template.id] selected[/#if] value="${template.id}">${template.name}</option>
+                            [/#list]
 				</select>
-                [/#if]
+                    [/#if]
 				</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">会员：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">模版：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if templates??]
-				<select name="templateId" class="select" style="background-color: #FFFFFF">
-                    [#list templates as template]
-					<option[#if data.template?? && template.id == data.template.id] selected[/#if] value="${template.id}">${template.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">

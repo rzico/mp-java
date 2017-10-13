@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
@@ -78,15 +79,18 @@ public class ArticleCategory extends OrderEntity {
 	/** 上级分类 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '上级分类'")
+	@JsonIgnore
 	private ArticleCategory parent;
 
 	/** 下级分类 */
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
 	@OrderBy("orders asc")
+	@JsonIgnore
 	private Set<ArticleCategory> children = new HashSet<ArticleCategory>();
 
 	/** 文章 */
 	@OneToMany(mappedBy = "articleCategory", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Set<Article> articles = new HashSet<Article>();
 
 	public ArticleCategory.Status getStatus() {

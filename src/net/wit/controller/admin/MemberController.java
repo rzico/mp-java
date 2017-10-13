@@ -72,7 +72,7 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("occupations",occupationService.findAll());
 
-		model.addAttribute("tags",tagService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.member));
 
 		return "/admin/member/list";
 	}
@@ -94,7 +94,7 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("occupations",occupationService.findAll());
 
-		model.addAttribute("tags",tagService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.member));
 
 		return "/admin/member/add";
 	}
@@ -108,35 +108,9 @@ public class MemberController extends BaseController {
 	public Message save(Member member, Long areaId, Long occupationId, Long [] tagIds){
 		Member entity = new Member();	
 
-		entity.setCreateDate(member.getCreateDate());
-
-		entity.setModifyDate(member.getModifyDate());
-
 		entity.setAddress(member.getAddress());
 
-		entity.setAttributeValue0(member.getAttributeValue0());
-
-		entity.setAttributeValue1(member.getAttributeValue1());
-
-		entity.setAttributeValue2(member.getAttributeValue2());
-
-		entity.setAttributeValue3(member.getAttributeValue3());
-
-		entity.setAttributeValue4(member.getAttributeValue4());
-
-		entity.setAttributeValue5(member.getAttributeValue5());
-
-		entity.setAttributeValue6(member.getAttributeValue6());
-
-		entity.setAttributeValue7(member.getAttributeValue7());
-
-		entity.setAttributeValue8(member.getAttributeValue8());
-
-		entity.setAttributeValue9(member.getAttributeValue9());
-
 		entity.setBirth(member.getBirth());
-
-		entity.setEmail(member.getEmail());
 
 		entity.setGender(member.getGender());
 
@@ -144,23 +118,9 @@ public class MemberController extends BaseController {
 
 		entity.setIsLocked(member.getIsLocked());
 
-		entity.setLockedDate(member.getLockedDate());
-
-		entity.setLoginDate(member.getLoginDate());
-
-		entity.setLoginFailureCount(member.getLoginFailureCount() == null ? 0 : member.getLoginFailureCount());
-
-		entity.setLoginIp(member.getLoginIp());
-
 		entity.setName(member.getName());
 
 		entity.setPhone(member.getPhone());
-
-		entity.setPoint(member.getPoint() == null ? 0 : member.getPoint());
-
-		entity.setRegisterIp(member.getRegisterIp());
-
-		entity.setUsername(member.getUsername());
 
 		entity.setZipCode(member.getZipCode());
 
@@ -221,7 +181,7 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("occupations",occupationService.findAll());
 
-		model.addAttribute("tags",tagService.findAll());
+		model.addAttribute("tags",tagService.findList(Tag.Type.member));
 
 		model.addAttribute("data",memberService.find(id));
 

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
@@ -53,10 +54,12 @@ public class ArticleCatalog extends OrderEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotEmpty
 	@JoinColumn(columnDefinition="bigint(20) not null comment '点赞数'")
+	@JsonIgnore
 	private Member member;
 
 	/** 文章 */
 	@OneToMany(mappedBy = "articleCatalog", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Set<Article> articles = new HashSet<Article>();
 
 	public ArticleCatalog.Status getStatus() {

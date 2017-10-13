@@ -89,4 +89,7 @@ public class TemplateServiceImpl extends BaseServiceImpl<Template, Long> impleme
 	public Template findDefault(Template.Type type) {
 		return templateDao.findDefault(type);
 	}
+	public List<Template> findList(Template.Type type) {
+		return templateDao.findList(type);
+	}
 }

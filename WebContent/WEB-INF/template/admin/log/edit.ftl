@@ -37,44 +37,38 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">内容：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.content}" placeholder="" id="content" name="content">
+                <spen>${data.content}</spen>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">IP：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.ip}" placeholder="" id="ip" name="ip">
+                <spen>${data.ip}</spen>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>操作：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.operation}" placeholder="" id="operation" name="operation">
+                <spen>${data.operation}</spen>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>操作员：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.operator}" placeholder="" id="operator" name="operator">
+                <spen>${data.operator}</spen>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">请求参数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.parameter}" placeholder="" id="parameter" name="parameter">
+                <spen>${data.parameter}</spen>
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"></label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
-            </div>
-        </div>
-            [#else]
+             [#else]
             查找失败
         [/#if]
     </form>

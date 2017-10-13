@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.databind.SerializationConfig;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.core.JsonGenerationException;

@@ -1,11 +1,13 @@
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,11 +50,13 @@ public class Topic extends BaseEntity {
     /** 全称 */
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) not null comment '全称'")
+    @NotNull
     private String name;
 
     /** 简称 */
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) not null comment '简称'")
+    @NotNull
     private String shortName;
 
     /** 营业执照/证件号  个人时用证件号 */
@@ -78,26 +82,29 @@ public class Topic extends BaseEntity {
     /** 会员 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
+    @JsonIgnore
+    @NotNull
     private Member member;
 
     /** 状态 */
-    @NotEmpty
+    @NotNull
     @Column(columnDefinition="int(11) not null comment '状态 {waiting:等待,success:通过,failure:驳回}'")
     private Status status;
 
     /** 到期日 */
-    @NotEmpty
+    @NotNull
     @Column(columnDefinition="datetime not null comment '到期日'")
     private Date expire;
 
     /** 类型 */
-    @NotEmpty
+    @NotNull
     @Column(columnDefinition="int(11) not null comment '类型 {company:公司/企业,individual:个体工商户,personal:个人,student:学生}'")
     private Type type;
 
     /** 地区 null 代表没有区域限制 */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(columnDefinition="bigint(20) not null comment '地区'")
+    @JoinColumn(columnDefinition="bigint(20) comment '地区'")
+    @JsonIgnore
     private Area area;
 
     /** 地址 */
@@ -106,23 +113,27 @@ public class Topic extends BaseEntity {
 
     /** 行业 */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(columnDefinition="bigint(20) not null comment '行业'")
+    @JoinColumn(columnDefinition="bigint(20) comment '行业'")
+    @JsonIgnore
     private Category category;
 
     /** 交易佣金 百分比 */
     @Min(0)
+    @NotNull
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
     private BigDecimal brokerage;
 
     /** 模板 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '模板'")
+    @JsonIgnore
     private Template template;
 
     /** 模板标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_topic_tag")
     @OrderBy("orders asc")
+    @JsonIgnore
     private List<Tag> tags = new ArrayList<Tag>();
 
     public Type getType() {
@@ -285,4 +296,22 @@ public class Topic extends BaseEntity {
             return null;
         }
     }
+
+
+    public MapEntity getMapTags() {
+        String tagStr = "";
+        if (getTags() != null) {
+            for (Tag tag:getTags()) {
+                if ("".equals(tagStr)) {
+                    tagStr = tag.getName();
+                } else {
+                    tagStr = tagStr.concat(","+tag.getName());
+                }
+            }
+            return new MapEntity("",tagStr);
+        } else {
+            return null;
+        }
+    }
+
 }

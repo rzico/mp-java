@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -29,11 +30,12 @@ public class Enterprise extends BaseEntity {
 
     /** 企业 */
     @Length(max = 200)
+    @NotNull
     @Column(columnDefinition="varchar(255) not null comment '企业名称'")
     private String name;
 
     /** 类型 */
-    @NotEmpty
+    @NotNull
     @Column(columnDefinition="int(11) not null comment '类型 {operate:运营商,agent:代理商}'")
     private Type type;
 
@@ -44,6 +46,7 @@ public class Enterprise extends BaseEntity {
 
     /** 结算比例 10% */
     @Min(0)
+    @NotNull
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '结算比例'")
     private BigDecimal brokerage;
 

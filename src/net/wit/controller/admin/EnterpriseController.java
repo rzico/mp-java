@@ -104,7 +104,7 @@ public class EnterpriseController extends BaseController {
 
 		entity.setArea(areaService.find(areaId));
 		
-		if (!isValid(entity, Save.class)) {
+		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {

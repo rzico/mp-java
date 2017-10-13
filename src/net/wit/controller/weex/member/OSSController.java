@@ -98,7 +98,7 @@ public class OSSController extends BaseController {
             model.put("AccessKeyId", response.getCredentials().getAccessKeyId());
             model.put("AccessKeySecret",response.getCredentials().getAccessKeySecret());
             model.put("SecurityToken",response.getCredentials().getSecurityToken());
-            return Message.success(model,"获取成功");
+            return Message.bind(model,request);
         } catch (ClientException e) {
             return Message.error("获取令牌失败");
         }

@@ -28,6 +28,13 @@ public class ArticleModel implements Serializable {
     /** 商品 */
     private List<ProductViewModel> products = new ArrayList<ProductViewModel>();
 
+    /** 评论数 */
+    private Long review;
+    /** 阅读数 */
+    private Long hits;
+    /** 点赞数 */
+    private Long laud;
+
     public Long getId() {
         return id;
     }
@@ -100,6 +107,30 @@ public class ArticleModel implements Serializable {
         this.articleOption = articleOption;
     }
 
+    public Long getReview() {
+        return review;
+    }
+
+    public void setReview(Long review) {
+        this.review = review;
+    }
+
+    public Long getHits() {
+        return hits;
+    }
+
+    public void setHits(Long hits) {
+        this.hits = hits;
+    }
+
+    public Long getLaud() {
+        return laud;
+    }
+
+    public void setLaud(Long laud) {
+        this.laud = laud;
+    }
+
     public void bind(Article article) {
 
         this.id = article.getId();
@@ -134,6 +165,9 @@ public class ArticleModel implements Serializable {
         }
         this.votes = votes;
         this.products = ProductViewModel.bindSet(article);
+        this.hits = article.getHits();
+        this.laud = article.getLaud();
+        this.review = article.getReview();
 
     }
 

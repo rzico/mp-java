@@ -3,7 +3,14 @@
     <div class="menu_dropdown bk_2">
 
         <dl id="menu-member">
-            <dt><i class="Hui-iconfont">&#xe60d;</i> 业务管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe60d;</i> 文章管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a data-href="../article/index.jhtml" data-title="文章管理" href="javascript:;">文章管理</a></li>
+                    <li><a data-href="../payment/index.jhtml" data-title="文集管理" href="javascript:;">文集管理</a></li>
+                </ul>
+            </dd>
+            <dt><i class="Hui-iconfont">&#xe60d;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
                     <li><a data-href="../article/index.jhtml" data-title="文章管理" href="javascript:;">文章管理</a></li>
@@ -28,7 +35,8 @@
                     <li><a data-href="../tag/index.jhtml" data-title="标签管理" href="javascript:;">标签管理</a></li>
                     <li><a data-href="../articleCategory/index.jhtml" data-title="文章分类" href="javascript:;">文章分类</a></li>
                     <li><a data-href="../template/index.jhtml" data-title="模板管理" href="javascript:;">模板管理</a></li>
-                    <li><a data-href="../occupation/index.jhtml" data-title="行业分类" href="javascript:;">行业分类</a></li>
+                    <li><a data-href="../category/index.jhtml" data-title="行业分类" href="javascript:;">行业分类</a></li>
+                    <li><a data-href="../occupation/index.jhtml" data-title="职业分类" href="javascript:;">职业分类</a></li>
                     <li><a data-href="../area/index.jhtml" data-title="行政区域" href="javascript:;">行政区域</a></li>
 
                     <li><a data-href="../smssend/index.jhtml" data-title="短信管理" href="javascript:;">短信管理</a></li>

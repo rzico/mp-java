@@ -24,6 +24,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import net.wit.entity.MemberAttribute.Type;
 import net.wit.util.JsonUtils;
@@ -159,6 +160,7 @@ public class Member extends BaseEntity {
 
 	/** 职业 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Occupation occupation;
 
 	/** 出生日期 */
@@ -243,45 +245,55 @@ public class Member extends BaseEntity {
 	/** 地区 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '地区 {}'")
+	@JsonIgnore
 	private Area area;
 
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_member_tag")
 	@OrderBy("orders asc")
+	@JsonIgnore
 	private List<Tag> tags = new ArrayList<Tag>();
 
 	/** 预存款 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<Deposit> deposits = new HashSet<Deposit>();
 
 	/** 收款单 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<Payment> payments = new HashSet<Payment>();
 
 	/** 收货地址 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("isDefault desc, createDate desc")
+	@JsonIgnore
 	private Set<Receiver> receivers = new HashSet<Receiver>();
 
 	/** 收藏文章*/
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<ArticleFavorite> favorites = new HashSet<ArticleFavorite>();
 
 	/** 我的好友*/
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<Friends> friends = new HashSet<Friends>();
 
 	/** 我的关注*/
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<MemberFollow> follows = new HashSet<MemberFollow>();
 
 	/** 我的粉丝*/
 	@OneToMany(mappedBy = "follow", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<MemberFollow> fans = new HashSet<MemberFollow>();
 
 	/** 我的专栏*/
 	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Topic topic;
 
 	public String getUsername() {

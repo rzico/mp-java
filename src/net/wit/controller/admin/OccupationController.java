@@ -95,7 +95,7 @@ public class OccupationController extends BaseController {
 
 		entity.setStatus(occupation.getStatus());
 		
-		if (!isValid(entity, Save.class)) {
+		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {

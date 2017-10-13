@@ -62,7 +62,8 @@ public class ArticleCatalogController extends BaseController {
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
         List<ArticleCatalog> categories = articleCatalogService.findList(null,null,filters,null);
-        return CacheBlock.bind(ArticleCatalogModel.bindList(categories),request);
+
+        return Message.bind(ArticleCatalogModel.bindList(categories),request);
     }
 
 

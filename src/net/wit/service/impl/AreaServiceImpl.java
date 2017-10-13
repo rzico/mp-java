@@ -53,42 +53,42 @@ public class AreaServiceImpl extends BaseServiceImpl<Area, Long> implements Area
 
 	@Override
 	@Transactional
-	//@CacheEvict(value = "authorization", allEntries = true)
+//	@CacheEvict(value = "area", allEntries = true)
 	public void save(Area area) {
 		super.save(area);
 	}
 
 	@Override
 	@Transactional
-	//@CacheEvict(value = "authorization", allEntries = true)
+//	@CacheEvict(value = "area", allEntries = true)
 	public Area update(Area area) {
 		return super.update(area);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "area", allEntries = true)
+//	@CacheEvict(value = "area", allEntries = true)
 	public Area update(Area area, String... ignoreProperties) {
 		return super.update(area, ignoreProperties);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "area", allEntries = true)
+//	@CacheEvict(value = "area", allEntries = true)
 	public void delete(Long id) {
 		super.delete(id);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "area", allEntries = true)
+//	@CacheEvict(value = "area", allEntries = true)
 	public void delete(Long... ids) {
 		super.delete(ids);
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "area", allEntries = true)
+//	@CacheEvict(value = "area", allEntries = true)
 	public void delete(Area area) {
 		super.delete(area);
 	}
