@@ -58,65 +58,6 @@ public class PaymentController extends BaseController {
     private SnService snService;
 
     /**
-     *  H5支付页面
-     *
-     * @param sn              支付单号
-     *
-     */
-
-    @RequestMapping(value = "/h5_submit", method = RequestMethod.GET)
-    public String h5(String sn, ModelMap model, HttpServletRequest request,HttpServletResponse response) {
-        try {
-            Payment payment = paymentService.findBySn(sn);
-            //为空时，暂时开启测试
-            if (payment == null) {
-                payment = new Payment();
-                payment.setMethod(Method.online);
-                payment.setStatus(Status.waiting);
-                payment.setAmount(new BigDecimal("0.1"));
-                payment.setMemo("支付测试");
-                payment.setSn(snService.generate(Sn.Type.payment));
-                payment.setType(Type.recharge);
-                paymentService.save(payment);
-            }
-            String paymentPluginId = "weixinH5Plugin";
-            PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
-            payment.setPaymentPluginId(paymentPluginId);
-            payment.setPaymentMethod(paymentPlugin.getName());
-            paymentService.update(payment);
-            Map<String, Object> parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-            model.addAttribute("mweb_url", parameters.get("mweb_url") + "&redirect_url=http://" + URLEncoder.encode(bundle.getString("app.url") + "/payment/h5_notify.jhtml"));
-            return "/common/submit";
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return "redirect:/payment/h5_error.jhtml";
-        }
-    }
-
-    /**
-     *  H5支付结果
-     *
-     */
-
-    @RequestMapping(value = "/h5_notify", method = RequestMethod.GET)
-    public String h5_notify(ModelMap model, HttpServletRequest request,HttpServletResponse response) {
-        model.addAttribute("notifyMessage","success");
-        return "/common/notify";
-    }
-
-    /**
-     *  H5支付失败
-     *
-     */
-
-    @RequestMapping(value = "/h5_error", method = RequestMethod.GET)
-    public String h5_error(ModelMap model, HttpServletRequest request,HttpServletResponse response) {
-        model.addAttribute("notifyMessage","error");
-        return "/common/notify";
-    }
-
-    /**
      * 付款单信
      *
      * @param sn              支付单号
