@@ -34,13 +34,48 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>会员：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                 <span>${data.member.nickName}</span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.thumbnial}" placeholder="" id="thumbnial" name="thumbnial">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">模版：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                    [#if templates??]
+                        <select name="templateId" class="select" style="background-color: #FFFFFF">
+                            [#list templates as template]
+                                <option[#if data.template?? && template.id == data.template.id] selected[/#if] value="${template.id}">${template.name}</option>
+                            [/#list]
+				</select>
+                    [/#if]
+				</span>
+                </div>
+            </div>
+
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">谁可见：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 [#if authoritys??]
                 [#list authoritys as authority]
                     <div class="radio-box">
-                        <input name="authority" type="radio" id="authority-${authority_index}" value="${authority.id}"[#if authority.id == data.authority] checked[/#if]>
+                        <input name="articleOptions.authority" type="radio" id="authority-${authority_index}" value="${authority.id}"[#if data.articleOptions?? && authority.id == data.articleOptions.authority] checked[/#if]>
                         <label for="authority-${authority_index}">${authority.name}</label>
                     </div>
                 [/#list]
@@ -49,22 +84,11 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否精选：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isPitch" id="isPitch" value="true"[#if data.isPitch?? && data.isPitch] checked[/#if]>
-                    <input type="hidden" name="_isPitch" value="false" />
-                    <label for="isPitch">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">是否投稿：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isPublish" id="isPublish" value="true"[#if data.isPublish?? && data.isPublish] checked[/#if]>
-                    <input type="hidden" name="_isPublish" value="false" />
+                    <input type="checkbox" name="articleOptions.isPublish" id="isPublish" value="true"[#if data.articleOptions?? && data.articleOptions.isPublish] checked[/#if]>
+                    <input type="hidden" name="_articleOptions.isPublish" value="false" />
                     <label for="isPublish">&nbsp;</label>
                 </div>
             </div>
@@ -74,8 +98,8 @@
             <label class="form-label col-xs-4 col-sm-2">是否评论：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isReview" id="isReview" value="true"[#if data.isReview?? && data.isReview] checked[/#if]>
-                    <input type="hidden" name="_isReview" value="false" />
+                    <input type="checkbox" name="articleOptions.isReview" id="isReview" value="true"[#if data.articleOptions?? && data.articleOptions.isReview] checked[/#if]>
+                    <input type="hidden" name="_articleOptions.isReview" value="false" />
                     <label for="isReview">&nbsp;</label>
                 </div>
             </div>
@@ -85,28 +109,10 @@
             <label class="form-label col-xs-4 col-sm-2">是否赞赏：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isReward" id="isReward" value="true"[#if data.isReward?? && data.isReward] checked[/#if]>
-                    <input type="hidden" name="_isReward" value="false" />
+                    <input type="checkbox" name="articleOptions.isReward" id="isReward" value="true"[#if data.articleOptions?? && data.articleOptions.isReward] checked[/#if]>
+                    <input type="hidden" name="_articleOptions.isReward" value="false" />
                     <label for="isReward">&nbsp;</label>
                 </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否显示：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isShow" id="isShow" value="true"[#if data.isShow?? && data.isShow] checked[/#if]>
-                    <input type="hidden" name="_isShow" value="false" />
-                    <label for="isShow">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>密码：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="password" class="input-text" value="" placeholder="" id="password" name="password">
             </div>
         </div>
 
@@ -127,21 +133,21 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">收藏数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.favorite}" placeholder="" id="favorite" name="favorite" onInput="intInit(this)">
+                <span>${data.favorite}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">阅读数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.hits}" placeholder="" id="hits" name="hits" onInput="intInit(this)">
+                <span>${data.hits}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">点赞数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.laud}" placeholder="" id="laud" name="laud" onInput="intInit(this)">
+                <span>${data.laud}</span>
             </div>
         </div>
 
@@ -162,35 +168,21 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">背景音乐：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.music}" placeholder="" id="music" name="music">
+                <span>${data.music}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">评论数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.review}" placeholder="" id="review" name="review" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
+                <span>${data.review}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">文集：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if articleCatalogs??]
-				<select name="articleCatalogId" class="select" style="background-color: #FFFFFF">
-                    [#list articleCatalogs as articleCatalog]
-					<option[#if data.articleCatalog?? && articleCatalog.id == data.articleCatalog.id] selected[/#if] value="${articleCatalog.id}">${articleCatalog.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+            <div class="formControls col-xs-8 col-sm-9">
+                 <span>[#if data.articleCatalog??]${data.articleCatalog.name}[/#if]</span>
             </div>
         </div>
 
@@ -209,22 +201,9 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">所在地：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span class="fieldSet">
-                    <input type="hidden" id="areaId" name="areaId" value="${(data.area.id)!}" treePath="${(data.area.treePath)!}" />
-                </span>
+                <span>[#if data.area??]${data.area.name}[/#if]</span>
             </div>
         </div>
 
@@ -232,8 +211,8 @@
             <label class="form-label col-xs-4 col-sm-2">是否样例：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isExample" id="isExample" value="true"[#if data.isExample?? && data.isExample] checked[/#if]>
-                    <input type="hidden" name="_isExample" value="false" />
+                    <input type="checkbox" name="articleOptions.isExample" id="isExample" value="true"[#if data.isExample?? && data.isExample] checked[/#if]>
+                    <input type="hidden" name="_articleOptions.isExample" value="false" />
                     <label for="isExample">&nbsp;</label>
                 </div>
             </div>
@@ -243,8 +222,8 @@
             <label class="form-label col-xs-4 col-sm-2">是否置顶：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="isTop" id="isTop" value="true"[#if data.isTop?? && data.isTop] checked[/#if]>
-                    <input type="hidden" name="_isTop" value="false" />
+                    <input type="checkbox" name="articleOptions.isTop" id="isTop" value="true"[#if data.isTop?? && data.isTop] checked[/#if]>
+                    <input type="hidden" name="_articleOptions.isTop" value="false" />
                     <label for="isTop">&nbsp;</label>
                 </div>
             </div>
@@ -253,112 +232,21 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">位置：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.addr}" placeholder="" id="addr" name="addr">
-            </div>
+                <span>${data.addr}</span>
+             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">伟度：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.lat}" placeholder="" id="lat" name="lat" onInput="floatInit(this)">
+                <span>${data.lat}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">经度：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.lng}" placeholder="" id="lng" name="lng" onInput="floatInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>会员：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thumbnial}" placeholder="" id="thumbnial" name="thumbnial">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">模版：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if templates??]
-				<select name="templateId" class="select" style="background-color: #FFFFFF">
-                    [#list templates as template]
-					<option[#if data.template?? && template.id == data.template.id] selected[/#if] value="${template.id}">${template.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题图1：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.image1}" placeholder="" id="image1" name="image1">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题图2：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.image2}" placeholder="" id="image2" name="image2">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题图3：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.image3}" placeholder="" id="image3" name="image3">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题图4：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.image4}" placeholder="" id="image4" name="image4">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题图5：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.image5}" placeholder="" id="image5" name="image5">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题图6：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.image6}" placeholder="" id="image6" name="image6">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if titleTypes??]
-                [#list titleTypes as titleType]
-                    <div class="radio-box">
-                        <input name="titleType" type="radio" id="titleType-${titleType_index}" value="${titleType.id}"[#if titleType.id == data.titleType] checked[/#if]>
-                        <label for="titleType-${titleType_index}">${titleType.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+                <span>${data.lng}</span>
             </div>
         </div>
 
@@ -374,21 +262,14 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+            <label class="form-label col-xs-4 col-sm-2">投票：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thumbnail}" placeholder="" id="thumbnail" name="thumbnail">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Votes：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.votes}" placeholder="" id="votes" name="votes">
+                <span>${data.votes}</span>
             </div>
         </div>
 
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">tags：</label>
+			<label class="form-label col-xs-4 col-sm-2">检签：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				[#if tags??]
 				[#list tags as tag]
@@ -445,10 +326,6 @@
 
                 $("#form-update").validate({
                     rules:{
-                        member:{
-                            required:true,
-                        },
-
                     },
                     onkeyup:false,
                     focusCleanup:true,

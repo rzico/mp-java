@@ -77,35 +77,19 @@ public class ArticleController extends BaseController {
 
 		List<MapEntity> authoritys = new ArrayList<>();
 		authoritys.add(new MapEntity("isPublic","公开"));
-		authoritys.add(new MapEntity("isShare","不会开"));
+		authoritys.add(new MapEntity("isShare","不公开"));
 		authoritys.add(new MapEntity("isEncrypt","加密"));
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
 
 		List<MapEntity> mediaTypes = new ArrayList<>();
+		mediaTypes.add(new MapEntity("html","文本"));
 		mediaTypes.add(new MapEntity("image","图文"));
 		mediaTypes.add(new MapEntity("audio","音频"));
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-		model.addAttribute("articleCatalogs",articleCatalogService.findAll());
-
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
-
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("templates",templateService.findList(Template.Type.article));
-
-		List<MapEntity> titleTypes = new ArrayList<>();
-		titleTypes.add(new MapEntity("image1","单图"));
-		titleTypes.add(new MapEntity("image2","2张图"));
-		titleTypes.add(new MapEntity("image3","3张图"));
-		titleTypes.add(new MapEntity("image4","4张图"));
-		titleTypes.add(new MapEntity("image5","5张图"));
-		titleTypes.add(new MapEntity("image6","6张图"));
-		model.addAttribute("titleTypes",titleTypes);
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
@@ -121,35 +105,14 @@ public class ArticleController extends BaseController {
 
 		List<MapEntity> authoritys = new ArrayList<>();
 		authoritys.add(new MapEntity("isPublic","公开"));
-		authoritys.add(new MapEntity("isShare","不会开"));
+		authoritys.add(new MapEntity("isShare","不公开"));
 		authoritys.add(new MapEntity("isEncrypt","加密"));
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
 
-		List<MapEntity> mediaTypes = new ArrayList<>();
-		mediaTypes.add(new MapEntity("image","图文"));
-		mediaTypes.add(new MapEntity("audio","音频"));
-		mediaTypes.add(new MapEntity("video","视频"));
-		model.addAttribute("mediaTypes",mediaTypes);
-
-		model.addAttribute("articleCatalogs",articleCatalogService.findAll());
-
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
-
-		List<MapEntity> titleTypes = new ArrayList<>();
-		titleTypes.add(new MapEntity("image1","单图"));
-		titleTypes.add(new MapEntity("image2","2张图"));
-		titleTypes.add(new MapEntity("image3","3张图"));
-		titleTypes.add(new MapEntity("image4","4张图"));
-		titleTypes.add(new MapEntity("image5","5张图"));
-		titleTypes.add(new MapEntity("image6","6张图"));
-		model.addAttribute("titleTypes",titleTypes);
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
@@ -162,20 +125,16 @@ public class ArticleController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Article article, Long templateId, Long articleCatalogId, Long articleCategoryId, Long areaId, Long memberId, Long [] tagIds){
+	public Message save(Article article, Long templateId, Long articleCategoryId, Long areaId, Long [] tagIds){
 		Article entity = new Article();	
-
-		entity.setCreateDate(article.getCreateDate());
-
-		entity.setModifyDate(article.getModifyDate());
 
 		if (article.getArticleOptions()!=null) {
 			ArticleOptions options = new ArticleOptions();
 			options.setAuthority(article.getArticleOptions().getAuthority());
 
-			options.setIsPitch(article.getArticleOptions().getIsPitch());
+			options.setIsPitch(false);
 
-			options.setIsPublish(article.getArticleOptions().getIsPublish());
+			options.setIsPublish(true);
 
 			options.setIsReview(article.getArticleOptions().getIsReview());
 
@@ -192,41 +151,39 @@ public class ArticleController extends BaseController {
 
 		entity.setContent(article.getContent());
 
-		entity.setFavorite(article.getFavorite() == null ? 0 : article.getFavorite());
+		entity.setFavorite(0L);
 
-		entity.setHits(article.getHits() == null ? 0 : article.getHits());
+		entity.setHits(0L);
 
-		entity.setLaud(article.getLaud() == null ? 0 : article.getLaud());
+		entity.setLaud(0L);
 
-		entity.setMediaType(article.getMediaType());
+		entity.setMediaType(Article.MediaType.html);
 
 		entity.setMusic(article.getMusic());
 
-		entity.setReview(article.getReview() == null ? 0 : article.getReview());
+		entity.setReview(0L);
 
 		entity.setTitle(article.getTitle());
 
-		entity.setArticleCatalog(articleCatalogService.find(articleCatalogId));
-
 		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
 
-		entity.setDeleted(article.getDeleted());
+		entity.setDeleted(false);
 
 		entity.setArea(areaService.find(areaId));
 
-		entity.setMember(memberService.find(memberId));
+		entity.setMember(memberService.find(1L));
 
 		entity.setTemplate(templateService.find(templateId));
 
-		entity.setIsDraft(article.getIsDraft());
+		entity.setIsDraft(false);
 
 		entity.setThumbnail(article.getThumbnail());
 
-		entity.setVotes(article.getVotes());
+		entity.setVotes(null);
 
 		entity.setTags(tagService.findList(tagIds));
-		
-		if (!isValid(entity, Save.class)) {
+
+		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {
@@ -263,35 +220,21 @@ public class ArticleController extends BaseController {
 
 		List<MapEntity> authoritys = new ArrayList<>();
 		authoritys.add(new MapEntity("isPublic","公开"));
-		authoritys.add(new MapEntity("isShare","不会开"));
+		authoritys.add(new MapEntity("isShare","不公开"));
 		authoritys.add(new MapEntity("isEncrypt","加密"));
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
 
 		List<MapEntity> mediaTypes = new ArrayList<>();
+		mediaTypes.add(new MapEntity("html","文本"));
 		mediaTypes.add(new MapEntity("image","图文"));
 		mediaTypes.add(new MapEntity("audio","音频"));
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-		model.addAttribute("articleCatalogs",articleCatalogService.findAll());
-
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
-
-		List<MapEntity> titleTypes = new ArrayList<>();
-		titleTypes.add(new MapEntity("image1","单图"));
-		titleTypes.add(new MapEntity("image2","2张图"));
-		titleTypes.add(new MapEntity("image3","3张图"));
-		titleTypes.add(new MapEntity("image4","4张图"));
-		titleTypes.add(new MapEntity("image5","5张图"));
-		titleTypes.add(new MapEntity("image6","6张图"));
-		model.addAttribute("titleTypes",titleTypes);
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
@@ -308,17 +251,10 @@ public class ArticleController extends BaseController {
     @ResponseBody
 	public Message update(Article article, Long templateId, Long articleCatalogId, Long articleCategoryId, Long areaId, Long memberId, Long [] tagIds){
 		Article entity = articleService.find(article.getId());
-		
-		entity.setCreateDate(article.getCreateDate());
-
-		entity.setModifyDate(article.getModifyDate());
-
 
 		if (article.getArticleOptions()!=null) {
 			ArticleOptions options = new ArticleOptions();
 			options.setAuthority(article.getArticleOptions().getAuthority());
-
-			options.setIsPitch(article.getArticleOptions().getIsPitch());
 
 			options.setIsPublish(article.getArticleOptions().getIsPublish());
 
@@ -337,30 +273,11 @@ public class ArticleController extends BaseController {
 
 		entity.setContent(article.getContent());
 
-		entity.setFavorite(article.getFavorite() == null ? 0 : article.getFavorite());
-
-		entity.setHits(article.getHits() == null ? 0 : article.getHits());
-
-		entity.setLaud(article.getLaud() == null ? 0 : article.getLaud());
-
 		entity.setMediaType(article.getMediaType());
-
-		entity.setMusic(article.getMusic());
-
-		entity.setReview(article.getReview() == null ? 0 : article.getReview());
 
 		entity.setTitle(article.getTitle());
 
-		entity.setArticleCatalog(articleCatalogService.find(articleCatalogId));
-
 		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
-
-		entity.setDeleted(article.getDeleted());
-
-		entity.setArea(areaService.find(areaId));
-
-
-		entity.setMember(memberService.find(memberId));
 
 		entity.setTemplate(templateService.find(templateId));
 
@@ -368,13 +285,12 @@ public class ArticleController extends BaseController {
 
 		entity.setThumbnail(article.getThumbnail());
 
-		entity.setVotes(article.getVotes());
-
 		entity.setTags(tagService.findList(tagIds));
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
+
         try {
             articleService.update(entity);
             return Message.success(entity,"admin.update.success");
@@ -382,6 +298,7 @@ public class ArticleController extends BaseController {
             e.printStackTrace();
             return Message.error("admin.update.error");
         }
+
 	}
 	
 
@@ -390,7 +307,7 @@ public class ArticleController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Long tagIds, ArticleOptions.Authority authority, Article.MediaType mediaType, ArticleTitle.TitleType titleType, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Long tagIds, ArticleOptions.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (authority!=null) {
 			Filter authorityFilter = new Filter("authority", Filter.Operator.eq, authority);
@@ -399,10 +316,6 @@ public class ArticleController extends BaseController {
 		if (mediaType!=null) {
 			Filter mediaTypeFilter = new Filter("mediaType", Filter.Operator.eq, mediaType);
 			filters.add(mediaTypeFilter);
-		}
-		if (titleType!=null) {
-			Filter titleTypeFilter = new Filter("titleType", Filter.Operator.eq, titleType);
-			filters.add(titleTypeFilter);
 		}
 
 		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);

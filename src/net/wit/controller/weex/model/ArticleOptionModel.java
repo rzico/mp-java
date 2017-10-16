@@ -2,7 +2,6 @@ package net.wit.controller.weex.model;
 
 import net.wit.entity.Article;
 import net.wit.entity.ArticleOptions;
-import net.wit.entity.ArticleTitle;
 
 import java.io.Serializable;
 

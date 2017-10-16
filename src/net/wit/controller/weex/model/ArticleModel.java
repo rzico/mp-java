@@ -13,8 +13,6 @@ public class ArticleModel implements Serializable {
     private Long id;
     /** 标题 */
     private String title;
-    /** 标题模版 */
-    private ArticleTitleModel articleTitleModel;
     /** 标题图 */
     private String thumbnail;
     /** 背景音乐 */
@@ -75,14 +73,6 @@ public class ArticleModel implements Serializable {
         this.templates = templates;
     }
 
-    public ArticleTitleModel getArticleTitleModel() {
-        return articleTitleModel;
-    }
-
-    public void setArticleTitleModel(ArticleTitleModel articleTitleModel) {
-        this.articleTitleModel = articleTitleModel;
-    }
-
     public List<ArticleVoteOptionModel> getVotes() {
         return votes;
     }
@@ -141,11 +131,6 @@ public class ArticleModel implements Serializable {
             this.music = new MusicModel();
         }
         this.thumbnail = article.getThumbnail();
-        ArticleTitleModel articleTitleModel = new ArticleTitleModel();
-        if (article.getArticleTitle()!=null) {
-            articleTitleModel.bind(article.getArticleTitle());
-        }
-        this.articleTitleModel = articleTitleModel;
 
         ArticleOptionModel articleOption = new ArticleOptionModel();
         if (article.getArticleOptions()!=null) {

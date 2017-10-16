@@ -1,21 +1,14 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import net.wit.MapEntity;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @ClassName: Article
@@ -32,7 +25,7 @@ public class Article extends BaseEntity{
     private static final long serialVersionUID = 103L;
 
     public static enum MediaType{
-        /** 默认 */
+        /**   */
         html,
         /** 图文 */
         image,
@@ -43,13 +36,14 @@ public class Article extends BaseEntity{
     };
 
     /** 类型 */
-    @NotEmpty
+    @NotNull
     @Column(columnDefinition="int(11) comment '类型 {image:图文,audio:音频,video:视频}'")
     private MediaType mediaType;
 
     /** 作者 */
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) comment '作者'")
+    @JsonIgnore
     private String author;
 
     /** 会员 */
@@ -62,13 +56,10 @@ public class Article extends BaseEntity{
     @Column(columnDefinition="varchar(255) comment '标题'")
     private String title;
 
-    /** 标题模板 */
-    @Embedded
-    private ArticleTitle articleTitle;
-
     /** 缩例图 */
     @Length(max = 255)
     @Column(columnDefinition="varchar(255) comment '缩例图'")
+    @JsonIgnore
     private String thumbnail;
 
     /** 类别 */
@@ -86,11 +77,13 @@ public class Article extends BaseEntity{
     /** 背景音乐 */
     @Length(max = 255)
     @Column(columnDefinition="varchar(255) comment '背景音乐'")
+    @JsonIgnore
     private String music;
 
     /** 文章内容 */
     @Lob
     @Column(columnDefinition="longtext comment '文章内容'")
+    @JsonIgnore
     private String content;
 
     /** 收藏数 */
@@ -117,11 +110,13 @@ public class Article extends BaseEntity{
     /** 是否删除 */
     @NotNull
     @Column(columnDefinition="bit comment '是否删除'")
+    @JsonIgnore
     private Boolean deleted;
 
     /** 是否草稿 */
     @NotNull
     @Column(columnDefinition="bit comment '是否草稿'")
+    @JsonIgnore
     private Boolean isDraft;
 
     /** 安全密匙 */
@@ -130,6 +125,7 @@ public class Article extends BaseEntity{
 
     /** 定位 */
     @Embedded
+    @JsonIgnore
     private Location location;
 
     /** 所在地 */
@@ -140,6 +136,7 @@ public class Article extends BaseEntity{
     /** 模板 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '模板'")
+    @JsonIgnore
     private Template template;
 
     /** 文章标签*/
@@ -202,14 +199,6 @@ public class Article extends BaseEntity{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public ArticleTitle getArticleTitle() {
-        return articleTitle;
-    }
-
-    public void setArticleTitle(ArticleTitle articleTitle) {
-        this.articleTitle = articleTitle;
     }
 
     public String getMusic() {
@@ -402,7 +391,7 @@ public class Article extends BaseEntity{
 
     public MapEntity getMapMember() {
         if (getMember() != null) {
-            return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+            return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
         } else {
             return null;
         }

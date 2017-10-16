@@ -138,16 +138,6 @@ public class ArticleController extends BaseController {
         Long id = model.getId();
         String title = model.getTitle();
         String author = member.getNickName();
-        ArticleTitle articleTitle = new ArticleTitle();
-        if (model.getArticleTitleModel()!=null) {
-            articleTitle.setImage1(model.getArticleTitleModel().getImage1());
-            articleTitle.setImage2(model.getArticleTitleModel().getImage2());
-            articleTitle.setImage3(model.getArticleTitleModel().getImage3());
-            articleTitle.setImage4(model.getArticleTitleModel().getImage4());
-            articleTitle.setImage5(model.getArticleTitleModel().getImage5());
-            articleTitle.setImage6(model.getArticleTitleModel().getImage6());
-            articleTitle.setTitleType(model.getArticleTitleModel().getTitleType());
-        }
         String thumbnail = model.getThumbnail();
         String music = JsonUtils.toJson(model.getMusic());
         String content = JsonUtils.toJson(model.getTemplates());
@@ -184,10 +174,6 @@ public class ArticleController extends BaseController {
         article.setVotes(votes);
         article.setMember(member);
         article.setMediaType(Article.MediaType.image);
-
-        if (articleTitle!=null) {
-            article.setArticleTitle(articleTitle);
-        }
 
         articleService.save(article);
 

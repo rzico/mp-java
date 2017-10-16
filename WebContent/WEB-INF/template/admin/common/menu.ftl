@@ -22,7 +22,7 @@
             <dd>
                 <ul>
                     <li><a data-href="../member/index.jhtml" data-title="会员管理" href="javascript:;">会员管理</a></li>
-                    <li><a data-href="../enterprise/index.jhtml" data-title="企业管理" href="javascript:;">企业管理</a></li>
+                    <li><a data-href="../enterprise/index.jhtml" data-title="合作伙伴" href="javascript:;">企业管理</a></li>
                     <li><a data-href="../topic/index.jhtml" data-title="专栏管理" href="javascript:;">专栏管理</a></li>
                 </ul>
             </dd>

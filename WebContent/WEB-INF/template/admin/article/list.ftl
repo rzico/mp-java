@@ -35,44 +35,41 @@
 <div class="page-container">
     <div class=""> 日期范围：
         <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin"
-               class="input-text Wdate" style="width:120px;">
+               class="input-text Wdate" style="width:120px;height:32px;">
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
-               class="input-text Wdate" style="width:120px;">
+               class="input-text Wdate" style="width:120px;height:32px;">
 		[#if authoritys??]
-			<select name="authority" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="authority" class="select" style="background-color: #FFFFFF;">
 				<option value="">谁可见</option>
 				[#list authoritys as authority]
                 <option value="${authority.id}">${authority.name}</option>
 				[/#list]
 			</select>
+         </span>
 		[/#if]
 		[#if mediaTypes??]
-			<select name="mediaType" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="mediaType" class="select" style="background-color: #FFFFFF;">
 				<option value="">类型</option>
 				[#list mediaTypes as mediaType]
                 <option value="${mediaType.id}">${mediaType.name}</option>
 				[/#list]
 			</select>
-		[/#if]
-		[#if titleTypes??]
-			<select name="titleType" class="select input-text" style="background-color: #FFFFFF;width:100px;">
-				<option value="">类型</option>
-				[#list titleTypes as titleType]
-                <option value="${titleType.id}">${titleType.name}</option>
-				[/#list]
-			</select>
+        </span>
 		[/#if]
 
-        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
+        <input type="text" class="input-text" style="width:250px;height:32px;" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
 		<a href="javascript:;" onclick="add('首页 &gt; 文章管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增文章管理</a></span></div>
+                class="Hui-iconfont">&#xe600;</i> 新增文章</a>
+        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+    </span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -142,15 +139,16 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
+                $(row).children('td').eq(4).attr('style', 'text-align: left;')
             },
             "aoColumns": [
                 {
-                    "mData": "id",
+                    "mData": "id", "bSortable": false,
                     "sClass": "center",
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
                     "sClass": "center"
                 },
@@ -165,48 +163,38 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "authority",
-                    "sTitle": "谁可见",
+                    "mData": "title",
+                    "sTitle": "标题",
                     "sClass": "center"
                 },
                 {
-                    "mData": "isPitch",
-                    "sTitle": "是否精选",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "isPublish",
-                    "sTitle": "是否投稿",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "isReview",
-                    "sTitle": "是否评论",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "isReward",
-                    "sTitle": "是否赞赏",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "isShow",
-                    "sTitle": "是否显示",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "password",
-                    "sTitle": "密码",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "author",
+                    "mData": "mapMember",
                     "sTitle": "作者",
                     "sClass": "center"
                 },
                 {
-                    "mData": "content",
-                    "sTitle": "文章内容",
+                    "mData": "articleOptions.authority",
+                    "sTitle": "谁可见",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "articleOptions.isPitch",
+                    "sTitle": "精选",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "articleOptions.isPublish",
+                    "sTitle": "投稿",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "articleOptions.isReview",
+                    "sTitle": "评论",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "articleOptions.isReward",
+                    "sTitle": "赞赏",
                     "sClass": "center"
                 },
                 {
@@ -225,138 +213,33 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mediaType",
-                    "sTitle": "类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "music",
-                    "sTitle": "背景音乐",
-                    "sClass": "center"
-                },
-                {
                     "mData": "review",
                     "sTitle": "评论数",
                     "sClass": "center"
                 },
                 {
-                    "mData": "title",
-                    "sTitle": "标题",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapArticleCatalog",
-                    "sTitle": "ArticleCatalog",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapArticleCategory",
-                    "sTitle": "ArticleCategory",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "deleted",
-                    "sTitle": "是否删除",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapArea",
-                    "sTitle": "Area",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "isExample",
-                    "sTitle": "是否样例",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "isTop",
-                    "sTitle": "是否置顶",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "addr",
-                    "sTitle": "位置",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "lat",
-                    "sTitle": "伟度",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "lng",
-                    "sTitle": "经度",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "thumbnial",
-                    "sTitle": "缩例图",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapTemplate",
-                    "sTitle": "Template",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "image1",
-                    "sTitle": "标题图1",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "image2",
-                    "sTitle": "标题图2",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "image3",
-                    "sTitle": "标题图3",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "image4",
-                    "sTitle": "标题图4",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "image5",
-                    "sTitle": "标题图5",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "image6",
-                    "sTitle": "标题图6",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "titleType",
+                    "mData": "mediaType",
                     "sTitle": "类型",
                     "sClass": "center"
                 },
                 {
-                    "mData": "isDraft",
-                    "sTitle": "是否草稿",
+                    "mData": "mapArticleCatalog",
+                    "sTitle": "文集",
                     "sClass": "center"
                 },
                 {
-                    "mData": "thumbnail",
-                    "sTitle": "缩例图",
+                    "mData": "mapArticleCategory",
+                    "sTitle": "分类",
                     "sClass": "center"
                 },
                 {
-                    "mData": "votes",
-                    "sTitle": "Votes",
+                    "mData": "isTop",
+                    "sTitle": "置顶",
                     "sClass": "center"
                 },
                 {
                     "mData": "mapTags",
-                    "sTitle": "Tag",
+                    "sTitle": "标签",
                     "sClass": "center"
                 },
                 {
@@ -389,7 +272,7 @@
                     }
                 },
                 {
-                    "aTargets": [4],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if authoritys??]
@@ -401,26 +284,6 @@
                         [/#if]
                         }else{
                             return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [5],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [6],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
                         }
                     }
                 },
@@ -455,7 +318,17 @@
                     }
                 },
                 {
-                    "aTargets": [16],
+                    "aTargets": [10],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [15],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if mediaTypes??]
@@ -471,7 +344,7 @@
                     }
                 },
                 {
-                    "aTargets": [20],
+                    "aTargets": [16],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','articleCatalogView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -481,7 +354,7 @@
                     }
                 }, 
                 {
-                    "aTargets": [21],
+                    "aTargets": [17],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','articleCategoryView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -491,7 +364,7 @@
                     }
                 }, 
                 {
-                    "aTargets": [22],
+                    "aTargets": [18],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -501,7 +374,7 @@
                     }
                 },
                 {
-                    "aTargets": [23],
+                    "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -511,73 +384,7 @@
                     }
                 },
                 {
-                    "aTargets": [24],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [25],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [29],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [31],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','templateView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [38],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if titleTypes??]
-                            [#list titleTypes as titleType]
-                                if ("${titleType.id}" == data) {
-                                    return "${titleType.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [39],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [42],
+                    "aTargets": [19],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -587,7 +394,7 @@
                     }
                 },
                 {
-                    "aTargets": [43],
+                    "aTargets": [20],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -599,7 +406,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 20, 21, 23, 29, 31, 42, 43]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 16,17, 20]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
