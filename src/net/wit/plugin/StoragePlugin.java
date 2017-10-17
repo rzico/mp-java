@@ -6,7 +6,10 @@
 package net.wit.plugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -20,6 +23,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Plugin - 存储
@@ -62,34 +66,6 @@ public abstract class StoragePlugin implements Comparable<StoragePlugin> {
 	 * @return 作者
 	 */
 	public abstract String getAuthor();
-
-	/**
-	 * 获取网址
-	 * 
-	 * @return 网址
-	 */
-	public abstract String getSiteUrl();
-
-	/**
-	 * 获取安装URL
-	 * 
-	 * @return 安装URL
-	 */
-	public abstract String getInstallUrl();
-
-	/**
-	 * 获取卸载URL
-	 * 
-	 * @return 卸载URL
-	 */
-	public abstract String getUninstallUrl();
-
-	/**
-	 * 获取设置URL
-	 * 
-	 * @return 设置URL
-	 */
-	public abstract String getSettingUrl();
 
 	/**
 	 * 获取是否已安装
@@ -151,8 +127,33 @@ public abstract class StoragePlugin implements Comparable<StoragePlugin> {
 	 * @param contentType
 	 *            文件类型
 	 */
-	public abstract void upload(String path, File file, String contentType);
+	public abstract void upload(String path, MultipartFile file, String contentType) throws IOException;
 
+	public String getMineType(String name) {
+		Map<String ,String> data = new HashMap<String,String>();
+		data.put(".jpg","image/jpeg");
+		data.put(".jpe","image/jpeg");
+		data.put(".jpeg","image/jpeg");
+		data.put(".bmp","image/bmp");
+		data.put(".png","image/png");
+		data.put(".gif","image/gif");
+		data.put(".mp4","video/mp4");
+		data.put(".mkv","video/x-m4v");
+		data.put(".flv","video/x-flv");
+		data.put(".swf","application/x-shockwave-flash");
+		data.put(".avi","video/x-msvideo");
+		data.put(".rm","application/vnd.rn-realmedia");
+		data.put(".rmvb","application/vnd.rn-realmedia");
+		data.put(".mpeg","video/mpeg");
+		data.put(".mpg","video/mpeg");
+		data.put(".mp3","audio/mpeg");
+		data.put(".wav","audio/wav");
+		if (data.containsKey(name.toLowerCase()) ) {
+			return data.get(name.toLowerCase());
+		} else {
+			return "application/octet-stream";
+		}
+	}
 	/**
 	 * 获取访问URL
 	 * 

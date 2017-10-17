@@ -50,7 +50,18 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.thumbnial}" placeholder="" id="thumbnial" name="thumbnial">
+                    <div class="uploader-thum-container">
+                        <div id="fileList" class="uploader-list">
+                            [#if data.thumbnial??]
+                            <div class="file-item thumbnail">
+                            <img src="${data.thumbnial}"/>
+                            <div class="info"></div>
+                            </div>'
+                            [/#if]
+                        </div>
+                        <div id="filePicker">选择图片</div>
+                        <input type="hidden" value="${data.thumbnial}" id="thumbnail" name="thumbnail">
+                    </div>
                 </div>
             </div>
 
@@ -126,7 +137,12 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">文章内容：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.content}" placeholder="" id="content" name="content">
+                [#if data.mediaType=='html']
+                    <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
+                [#else]
+                        <input type="hidden" value="${data.content}" id="content" name="content">
+                    <span>${data.content}</span>
+                [/#if]
             </div>
         </div>
 
@@ -310,13 +326,25 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+
+        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
         <script type="text/javascript">
             $(function(){
                 var $areaId = $("#areaId");
                 $areaId.lSelect({
                     url: "${base}/admin/common/area.jhtml"
                 });
-
+                [#if data.mediaType=='html']
+                    var ue = UE.getEditor('content');
+                    ue.ready(function() {//编辑器初始化完成再赋值
+                        ue.setContent('${data.content}');
+                    });
+                [/#if]
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',

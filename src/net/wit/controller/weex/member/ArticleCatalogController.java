@@ -54,7 +54,7 @@ public class ArticleCatalogController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long tagIds,String md5,HttpServletRequest request){
+    public Message list(Long tagIds,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -68,16 +68,33 @@ public class ArticleCatalogController extends BaseController {
 
 
     /**
+     *  文集排序
+     */
+    @RequestMapping(value = "/sort", method = RequestMethod.POST)
+    @ResponseBody
+    public Message sort(Long[] ids,HttpServletRequest request){
+        int i=0;
+        for (Long id:ids) {
+            ArticleCatalog catalog = articleCatalogService.find(id);
+            i=i+1;
+            catalog.setOrders(i);
+            articleCatalogService.update(catalog);
+        }
+        return Message.success("success");
+    }
+
+    /**
      *  添加文集
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(String name,HttpServletRequest request){
+    public Message add(String name,Integer orders,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
         ArticleCatalog catalog = new ArticleCatalog();
+        catalog.setOrders(orders);
         catalog.setName(name);
         catalog.setStatus(ArticleCatalog.Status.enabled);
         catalog.setMember(member);
@@ -93,7 +110,7 @@ public class ArticleCatalogController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,String name,HttpServletRequest request){
+    public Message update(Long id,String name,Integer orders,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -102,6 +119,7 @@ public class ArticleCatalogController extends BaseController {
         if (catalog==null) {
             return Message.error("无效文集id");
         }
+        catalog.setOrders(orders);
         catalog.setName(name);
         catalog.setStatus(ArticleCatalog.Status.enabled);
         catalog.setMember(member);
