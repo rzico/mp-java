@@ -19,8 +19,6 @@ public class MemberModel implements Serializable {
     private int fans;
     /** 关注 */
     private int follow;
-    /** 余额 */
-    private BigDecimal balance;
     /** 签名 */
     private String autograph;
     /** 头像 */
@@ -50,14 +48,6 @@ public class MemberModel implements Serializable {
 
     public void setFavorite(int favorite) {
         this.favorite = favorite;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
     }
 
     public String getAutograph() {
@@ -103,7 +93,6 @@ public class MemberModel implements Serializable {
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
-        this.balance = member.getBalance();
         this.fans = member.getFans().size();
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();

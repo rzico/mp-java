@@ -40,12 +40,14 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if types??]
-			<select name="type" class="select input-text" style="background-color: #FFFFFF;width:100px;position:relative; top:1.25px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="type" class="select" style="background-color: #FFFFFF;">
 				<option value="">类型</option>
 				[#list types as type]
                 <option value="${type.id}">${type.name}</option>
 				[/#list]
 			</select>
+        </span>
 		[/#if]
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">

@@ -66,8 +66,8 @@ public class OSSController extends BaseController {
         // 只有 RAM用户（子账号）才能调用 AssumeRole 接口
         // 阿里云主账号的AccessKeys不能用于发起AssumeRole请求
         // 请首先在RAM控制台创建一个RAM用户，并为这个用户创建AccessKeys
-        String accessKeyId = bundle.getString("x-oss-accessKey");
-        String accessKeySecret = bundle.getString("x-oss-accessSecret");
+        String accessKeyId = bundle.getString("x-sts-accessKey");
+        String accessKeySecret = bundle.getString("x-sts-accessSecret");
         // AssumeRole API 请求参数: RoleArn, RoleSessionName, Policy, and DurationSeconds
         // RoleArn 需要在 RAM 控制台上获取
         String roleArn = "acs:ram::35516224:role/aliyunosstokengeneratorrole";

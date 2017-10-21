@@ -40,28 +40,34 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if methods??]
-			<select name="method" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="method" class="select" style="background-color: #FFFFFF;">
 				<option value="">方式</option>
 				[#list methods as method]
                 <option value="${method.id}">${method.name}</option>
 				[/#list]
 			</select>
+        </span>
 		[/#if]
 		[#if statuss??]
-			<select name="status" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="status" class="select" style="background-color: #FFFFFF;">
 				<option value="">状态</option>
 				[#list statuss as status]
                 <option value="${status.id}">${status.name}</option>
 				[/#list]
 			</select>
+        </span>
 		[/#if]
 		[#if types??]
-			<select name="type" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="type" class="select" style="background-color: #FFFFFF;">
 				<option value="">类型</option>
 				[#list types as type]
                 <option value="${type.id}">${type.name}</option>
 				[/#list]
 			</select>
+        </span>
 		[/#if]
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
@@ -69,10 +75,13 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-		<a href="javascript:;" onclick="add('首页 &gt; 收款单 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增收款单</a></span></div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+                <a href="javascript:;" onclick="add('首页 &gt; 收款单 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增收款单</a>
+                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+        </span>
+    </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -113,7 +122,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/payment/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -142,15 +151,17 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
+                $(row).children('td').eq(9).attr('style', 'text-align: left;');
+
             },
             "aoColumns": [
                 {
-                    "mData": "id",
+                    "mData": "id", "bSortable": false,
                     "sClass": "center",
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
                     "sClass": "center"
                 },
@@ -165,13 +176,28 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "sn",
+                    "sTitle": "编号",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapMember",
+                    "sTitle": "付款人",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapPayee",
+                    "sTitle": "收款人",
+                    "sClass": "center"
+                },
+                {
                     "mData": "amount",
                     "sTitle": "付款金额",
                     "sClass": "center"
                 },
                 {
-                    "mData": "expire",
-                    "sTitle": "到期时间",
+                    "mData": "type",
+                    "sTitle": "类型",
                     "sClass": "center"
                 },
                 {
@@ -185,11 +211,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "operator",
-                    "sTitle": "操作员",
-                    "sClass": "center"
-                },
-                {
                     "mData": "paymentDate",
                     "sTitle": "付款日期",
                     "sClass": "center"
@@ -200,13 +221,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "paymentPluginId",
-                    "sTitle": "支付插件",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "sn",
-                    "sTitle": "编号",
+                    "mData": "expire",
+                    "sTitle": "到期时间",
                     "sClass": "center"
                 },
                 {
@@ -215,28 +231,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "type",
-                    "sTitle": "类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapOrders",
-                    "sTitle": "Orders",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapArticleReward",
-                    "sTitle": "ArticleReward",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapPayee",
-                    "sTitle": "Payee",
+                    "mData": "operator",
+                    "sTitle": "操作员",
                     "sClass": "center"
                 },
                 {
@@ -269,29 +265,13 @@
                     }
                 },
                 {
-                    "aTargets": [5],
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
-                {
-                    "aTargets": [7],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if methods??]
-                            [#list methods as method]
-                                if ("${method.id}" == data) {
-                                    return "${method.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [9],
+                 {
+                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
@@ -313,7 +293,7 @@
                     }
                 },
                 {
-                    "aTargets": [14],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -329,47 +309,27 @@
                     }
                 },
                 {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+                }, 
+                {
+                    "aTargets": [6],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+                }, 
+                {
                     "aTargets": [15],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [16],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','orderView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [17],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','articleRewardView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [18],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [19],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 收款单 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -381,7 +341,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 15, 16, 17, 18, 19]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 5, 6, 15]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

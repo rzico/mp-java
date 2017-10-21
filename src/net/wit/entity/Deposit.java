@@ -36,11 +36,15 @@ public class Deposit extends BaseEntity {
 		/** 充值 */
 		recharge,
 
+		/** 提现 */
+		transfer,
+
 		/** 支付 */
 		payment,
 
 		/** 退款 */
 		refunds
+
 	}
 
 	/** 类型 */
@@ -82,6 +86,11 @@ public class Deposit extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '退款单'")
 	private Refunds refunds;
+
+	/** 转账单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '转账单'")
+	private Transfer transfer;
 
 	/** 是否删除 */
 	@NotNull
@@ -256,6 +265,13 @@ public class Deposit extends BaseEntity {
 		this.deleted = deleted;
 	}
 
+	public Transfer getTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(Transfer transfer) {
+		this.transfer = transfer;
+	}
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {

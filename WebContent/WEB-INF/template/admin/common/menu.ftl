@@ -7,15 +7,14 @@
             <dd>
                 <ul>
                     <li><a data-href="../article/index.jhtml" data-title="文章管理" href="javascript:;">文章管理</a></li>
-                    <li><a data-href="../payment/index.jhtml" data-title="文集管理" href="javascript:;">文集管理</a></li>
                 </ul>
             </dd>
-            <dt><i class="Hui-iconfont">&#xe60d;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe60d;</i> 账单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="../article/index.jhtml" data-title="文章管理" href="javascript:;">文章管理</a></li>
                     <li><a data-href="../payment/index.jhtml" data-title="收款管理" href="javascript:;">收款管理</a></li>
                     <li><a data-href="../refunds/index.jhtml" data-title="退款管理" href="javascript:;">退款管理</a></li>
+                    <li><a data-href="../transfer/index.jhtml" data-title="提现管理" href="javascript:;">提现管理</a></li>
                 </ul>
             </dd>
             <dt><i class="Hui-iconfont">&#xe60d;</i> 客户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>

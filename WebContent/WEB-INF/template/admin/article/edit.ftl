@@ -52,15 +52,15 @@
                 <div class="formControls col-xs-8 col-sm-9">
                     <div class="uploader-thum-container">
                         <div id="fileList" class="uploader-list">
-                            [#if data.thumbnial??]
+                            [#if data.thumbnail??]
                             <div class="file-item thumbnail">
-                            <img src="${data.thumbnial}"/>
+                            <img width="100px" height="100px" src="${data.thumbnail}"/>
                             <div class="info"></div>
                             </div>'
                             [/#if]
                         </div>
                         <div id="filePicker">选择图片</div>
-                        <input type="hidden" value="${data.thumbnial}" id="thumbnail" name="thumbnail">
+                        <input type="hidden" value="${data.thumbnail}" id="thumbnail" name="thumbnail">
                     </div>
                 </div>
             </div>
@@ -147,27 +147,6 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">收藏数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.favorite}</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">阅读数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.hits}</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">点赞数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.laud}</span>
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 [#if mediaTypes??]
@@ -178,27 +157,6 @@
                     </div>
                 [/#list]
                 [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">背景音乐：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.music}</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">评论数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.review}</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">文集：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                 <span>[#if data.articleCatalog??]${data.articleCatalog.name}[/#if]</span>
             </div>
         </div>
 
@@ -216,11 +174,23 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">所在地：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>[#if data.area??]${data.area.name}[/#if]</span>
-            </div>
+                <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">检签：</label>
+        <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+            [#if tags??]
+                [#list tags as tag]
+                <div class="check-box">
+                            [#assign checkUp = "false"]
+                            [#list data.tags as dataTag]
+                                [#if dataTag.id == tag.id]
+                                    [#assign checkUp = "true"]
+                                [/#if]
+                            [/#list]
+                        <label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${tag.id}" name="tagIds" >${tag.name}</label>
+                </div>
+                [/#list]
+            [/#if]
+        </div>
         </div>
 
         <div class="row cl">
@@ -246,6 +216,55 @@
         </div>
 
         <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">背景音乐：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.music}</span>
+                </div>
+                </div>
+
+                <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">评论数：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.review}</span>
+                </div>
+                </div>
+
+                <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">收藏数：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.favorite}</span>
+                </div>
+                </div>
+
+                <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">阅读数：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.hits}</span>
+                </div>
+                </div>
+
+                <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">点赞数：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.laud}</span>
+                </div>
+                </div>
+
+        <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">文集：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <span>[#if data.articleCatalog??]${data.articleCatalog.name}[/#if]</span>
+                </div>
+                </div>
+
+        <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">所在地：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <span>[#if data.area??]${data.area.name}[/#if]</span>
+                </div>
+                </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">位置：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span>${data.addr}</span>
@@ -266,42 +285,12 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否草稿：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isDraft" id="isDraft" value="true"[#if data.isDraft?? && data.isDraft] checked[/#if]>
-                    <input type="hidden" name="_isDraft" value="false" />
-                    <label for="isDraft">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
+         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">投票：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span>${data.votes}</span>
             </div>
         </div>
-
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">检签：</label>
-			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-				[#if tags??]
-				[#list tags as tag]
-				<div class="check-box">
-					[#assign checkUp = "false"]
-					[#list data.tags as dataTag]
-					[#if dataTag.id == tag.id]
-					[#assign checkUp = "true"]
-					[/#if]
-					[/#list]
-					<label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${tag.id}" name="tagIds" >${tag.name}</label>
-				</div>
-				[/#list]
-				[/#if]
-			</div>
-		</div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">

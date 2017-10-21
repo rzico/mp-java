@@ -12,6 +12,7 @@ import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.entity.Message;
+import net.wit.plat.aliyun.Push;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -90,6 +91,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 
 	public void pushTo(Message message) {
 		super.save(message);
+		Push.aliPush(message);
 	}
 
 	public Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable) {

@@ -88,6 +88,9 @@ public class PaymentController extends BaseController {
 		statuss.add(new MapEntity("wait","等待支付"));
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
+		statuss.add(new MapEntity("refund_waiting","等待退款"));
+		statuss.add(new MapEntity("refund_success","退款完成"));
+		statuss.add(new MapEntity("refund_failure","退款失败"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
@@ -123,6 +126,9 @@ public class PaymentController extends BaseController {
 		statuss.add(new MapEntity("wait","等待支付"));
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
+		statuss.add(new MapEntity("refund_waiting","等待退款"));
+		statuss.add(new MapEntity("refund_success","退款完成"));
+		statuss.add(new MapEntity("refund_failure","退款失败"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
@@ -229,6 +235,9 @@ public class PaymentController extends BaseController {
 		statuss.add(new MapEntity("wait","等待支付"));
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
+		statuss.add(new MapEntity("refund_waiting","等待退款"));
+		statuss.add(new MapEntity("refund_success","退款完成"));
+		statuss.add(new MapEntity("refund_failure","退款失败"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();

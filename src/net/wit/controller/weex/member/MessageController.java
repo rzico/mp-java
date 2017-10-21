@@ -56,7 +56,7 @@ public class MessageController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         List<Filter> filters = pageable.getFilters();
-        filters.add(new Filter("member", Filter.Operator.eq,member));
+        filters.add(new Filter("receiver", Filter.Operator.eq,member));
         if (type!=null) {
             filters.add(new Filter("type", Filter.Operator.eq,type));
         }
@@ -64,6 +64,12 @@ public class MessageController extends BaseController {
             filters.add(new Filter("readed", Filter.Operator.eq,readed));
         }
         Page<net.wit.entity.Message> page = messageService.findPage(null,null,pageable);
+        for (net.wit.entity.Message message:page.getContent()) {
+            if (!message.getReaded()) {
+                message.setReaded(true);
+                messageService.update(message);
+            }
+        }
         PageBlock model = PageBlock.bind(page);
         model.setData(MessageModel.bindList(page.getContent()));
         return Message.bind(model,request);
@@ -80,15 +86,11 @@ public class MessageController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("member", Filter.Operator.eq,member));
+        filters.add(new Filter("receiver", Filter.Operator.eq,member));
         filters.add(new Filter("readed", Filter.Operator.eq,false));
         filters.add(new Filter("deleted", Filter.Operator.eq,false));
         List<net.wit.entity.Message> ms = messageService.findList(null,null,filters,null);
-        Map<net.wit.entity.Message.Type, net.wit.entity.Message> map = new HashMap<net.wit.entity.Message.Type, net.wit.entity.Message>();
-        for (net.wit.entity.Message m:ms) {
-            map.put(m.getType(),m);
-        }
-        return Message.bind(MessageModel.bindList(ms),request);
+        return Message.bind(MessageModel.bindDialogue(ms),request);
     }
 
 }

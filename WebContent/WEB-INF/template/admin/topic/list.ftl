@@ -40,20 +40,24 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if statuss??]
-			<select name="status" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="status" class="select" style="background-color: #FFFFFF;">
 				<option value="">状态</option>
 				[#list statuss as status]
                 <option value="${status.id}">${status.name}</option>
 				[/#list]
 			</select>
+        </span>
 		[/#if]
 		[#if types??]
-			<select name="type" class="select input-text" style="background-color: #FFFFFF;width:100px;">
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="type" class="select" style="background-color: #FFFFFF;">
 				<option value="">类型</option>
 				[#list types as type]
                 <option value="${type.id}">${type.name}</option>
 				[/#list]
 			</select>
+        </span>
 		[/#if]
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
@@ -271,16 +275,6 @@
                     }
                 },
                 {
-                    "aTargets": [15],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
                     "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
@@ -324,8 +318,7 @@
                     "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 专栏管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 专栏管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
                         }else{
                             return "";
                         }

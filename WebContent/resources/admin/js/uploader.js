@@ -78,7 +78,6 @@ jQuery(function() {
     uploader.on( 'uploadSuccess', function( file ,response) {
         if (response.state="SUCCESS") {
             $('#' + file.id).addClass('upload-state-done');
-            alert(response.url);
             $input = $list.siblings('input');
             $input.val(response.url);
         } else {

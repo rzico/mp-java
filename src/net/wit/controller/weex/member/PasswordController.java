@@ -1,16 +1,12 @@
 package net.wit.controller.weex.member;
 
-import net.sf.json.JSONObject;
 import net.wit.Message;
-import net.wit.Principal;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import net.wit.util.MD5Utils;
 import net.wit.util.StringUtils;
-import net.wit.weixin.pojo.AccessToken;
-import net.wit.weixin.util.WeixinUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
 
 /**

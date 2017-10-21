@@ -19,7 +19,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -29,12 +28,10 @@ import net.wit.MapEntity;
 import net.wit.entity.MemberAttribute.Type;
 import net.wit.util.JsonUtils;
 
-import net.wit.weixin.message.resp.*;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Entity - 会员
@@ -187,6 +184,10 @@ public class Member extends BaseEntity {
 	/** 设备号 */
 	@Column(columnDefinition="varchar(50) comment '设备号'")
 	private String uuid;
+
+	/** 设备环境 IOS Andriod */
+	@Column(columnDefinition="varchar(255) comment '设备环境'")
+	private String scene;
 
 	/** 会员注册项值0 */
 	@Length(max = 200)
@@ -656,6 +657,14 @@ public class Member extends BaseEntity {
 		this.topic = topic;
 	}
 
+	public String getScene() {
+		return scene;
+	}
+
+	public void setScene(String scene) {
+		this.scene = scene;
+	}
+
 	/**
 	 * 获取会员注册项值
 	 * 
@@ -803,6 +812,26 @@ public class Member extends BaseEntity {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public String userId() {
+		if (getId()!=null) {
+			Long userId = getId() + 10200L;
+			return "u" + userId.toString();
+		} else {
+			return "";
+		}
+
+	}
+
+	public Long decodeUserId(String userId) {
+		if (userId!=null) {
+			String uid = userId.substring(2);
+			return Long.parseLong(uid)-10200;
+		} else {
+			return null;
+		}
+
 	}
 
 	public MapEntity getMapArea() {

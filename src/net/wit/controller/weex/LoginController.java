@@ -5,18 +5,15 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
-import net.wit.entity.BaseEntity.Save;
+import net.wit.plat.im.User;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import net.wit.util.MD5Utils;
 import net.wit.util.StringUtils;
-import net.wit.util.WebUtils;
-import net.wit.weixin.pojo.AccessToken;
-import net.wit.weixin.util.WeixinUtil;
+import net.wit.plat.weixin.pojo.AccessToken;
+import net.wit.plat.weixin.util.WeixinUtil;
 import org.apache.commons.lang.time.DateUtils;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -136,9 +133,14 @@ public class LoginController extends BaseController {
                     memberService.save(u);
                 }
                 member.setUuid(xuid);
+                String ua = request.getHeader("user-agent");
+                if (ua!=null) {
+                    member.setScene(ua);
+                }
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+            User.userAttr(member);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,9 +177,14 @@ public class LoginController extends BaseController {
                     memberService.save(u);
                 }
                 member.setUuid(xuid);
+                String ua = request.getHeader("user-agent");
+                if (ua!=null) {
+                    member.setScene(ua);
+                }
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+            User.userAttr(member);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -273,9 +280,14 @@ public class LoginController extends BaseController {
                     memberService.save(u);
                 }
                 member.setUuid(xuid);
+                String ua = request.getHeader("user-agent");
+                if (ua!=null) {
+                    member.setScene(ua);
+                }
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+            User.userAttr(member);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -293,12 +305,12 @@ public class LoginController extends BaseController {
         Member member = memberService.getCurrent();
         if (member!=null) {
             member.setUuid(null);
+            member.setScene(null);
             memberService.save(member);
         }
         redisService.remove(Member.PRINCIPAL_ATTRIBUTE_NAME);
         return Message.success("注销成功");
     }
-
 
     /**
      * 检查是否登录
@@ -311,6 +323,8 @@ public class LoginController extends BaseController {
         data.put("loginStatus",member!=null);
         if (member!=null) {
             data.put("uid", member.getId());
+            data.put("userId",member.userId());
+            data.put("userSig", User.createUserSig(member.userId()));
         }
         return Message.success(data,"success");
     }

@@ -1,0 +1,21 @@
+1.小米商城
+
+  13860431130
+  zhangsr@051204
+
+2.华为商城
+
+  zhangsr@rzico.com
+  Zhangsr051204
+
+3.vivo商城
+
+  zhangsr@rzico.com
+  zhangsr@051204
+
+5.rzico.jks 证书
+
+  Alias: rzico  Password: 123456
+  MD5: EA:AA:28:AB:4B:19:65:CE:3E:B0:D0:17:82:90:11:9C
+  SHA1: E9:31:42:34:26:CE:CE:71:07:37:FC:66:EF:2E:B3:D5:4D:D5:4F:48
+  SHA256:8A:CF:0B:F7:E9:74:1A:91:5E:32:55:AD:E5:86:98:1C:2B:2C:9B:80:6E:E3:E5:53:6D:F9:06:1C:C3:1B:84:35

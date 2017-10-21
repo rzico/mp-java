@@ -2,12 +2,14 @@
 package net.wit.entity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -110,20 +112,34 @@ public class Refunds extends BaseEntity {
 
 	/** 账单记录 */
 	@OneToOne(mappedBy = "refunds", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Deposit deposit;
+
+	/** 退款日期 */
+	@Column(columnDefinition="datetime comment '退款日期'")
+	private Date refundsDate;
 
 	/** 付款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Payment payment;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
+	@JsonIgnore
 	private Member member;
+
+	/** 收款方 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	@JsonIgnore
+	private Member payee;
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orders", nullable = false, updatable = false)
+	@JsonIgnore
 	private Order order;
 
 	public Type getType() {
@@ -230,11 +246,37 @@ public class Refunds extends BaseEntity {
 		this.order = order;
 	}
 
-	public MapEntity getMapMember() {
-		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+	public Member getPayee() {
+		return payee;
+	}
+
+	public void setPayee(Member payee) {
+		this.payee = payee;
+	}
+
+	public MapEntity getMapPayee() {
+		if (getPayee() != null) {
+			return new MapEntity(getPayee().getId().toString(), getPayee().getNickName()+(getPayee().getName()==null?"":"("+getPayee().getName()+")") );
 		} else {
 			return null;
 		}
 	}
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
+		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapPayment() {
+		if (getPayment() != null) {
+			return new MapEntity(getPayment().getId().toString(), getPayment().getSn());
+		} else {
+			return null;
+		}
+	}
+
 }

@@ -17,6 +17,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -133,26 +134,31 @@ public class Payment extends BaseEntity {
 
 	/** 账单记录 */
 	@OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Deposit deposit;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
+	@JsonIgnore
 	private Member member;
 
 	/** 收款方 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
+	@JsonIgnore
 	private Member payee;
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orders",updatable = false)
+	@JsonIgnore
 	private Order order;
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
+	@JsonIgnore
 	private ArticleReward articleReward;
 
 	public String getSn() {
@@ -306,7 +312,7 @@ public class Payment extends BaseEntity {
 
 	public MapEntity getMapPayee() {
 		if (getPayee() != null) {
-			return new MapEntity(getPayee().getId().toString(), getPayee().getNickName()+"("+getPayee().getName()+")");
+			return new MapEntity(getPayee().getId().toString(), getPayee().getNickName()+(getPayee().getName()==null?"":"("+getPayee().getName()+")") );
 		} else {
 			return null;
 		}
@@ -315,7 +321,7 @@ public class Payment extends BaseEntity {
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
 		} else {
 			return null;
 		}

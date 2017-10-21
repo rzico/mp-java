@@ -11,6 +11,8 @@ import net.wit.entity.Payment.Method;
 import net.wit.entity.Payment.Status;
 import net.wit.entity.Payment.Type;
 import net.wit.entity.Sn;
+import net.wit.entity.Transfer;
+import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.MD5Utils;
@@ -50,6 +52,9 @@ public class PaymentController extends BaseController {
 
     @Resource(name = "paymentServiceImpl")
     private PaymentService paymentService;
+
+    @Resource(name = "transferServiceImpl")
+    private TransferService transferService;
 
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
@@ -118,7 +123,7 @@ public class PaymentController extends BaseController {
      * 支付结果通知
      */
     @RequestMapping("/notify/{notifyMethod}/{sn}")
-    public boolean notify(@PathVariable PaymentPlugin.NotifyMethod notifyMethod, @PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
+    public void notify(@PathVariable PaymentPlugin.NotifyMethod notifyMethod, @PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
         Payment payment = paymentService.findBySn(sn);
         if (payment != null) {
             PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
@@ -130,14 +135,47 @@ public class PaymentController extends BaseController {
                         logger.error(e.getMessage());
                     }
                 }
-                response.setContentType("application/octet-stream");
+                response.setContentType("application/json");
                 PrintWriter out = response.getWriter();
                 out.print(paymentPlugin.getNotifyMessage(sn, notifyMethod, request));
                 out.flush();
-                return true;
+                return ;
             }
         }
-        return false;
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        out.print("error");
+        out.flush();
+
+    }
+
+    /**
+     * 转几结果通知
+     */
+    @RequestMapping("/transfer/{sn}")
+    public void notifyTransfer(@PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
+        System.out.println(sn);
+        Transfer transfer = transferService.findBySn(sn);
+
+        if (transfer != null) {
+             String resp = UnsPay.verifyNotify(sn, request);
+                if ("00".equals (resp)) {
+                    transferService.handle(transfer);
+                }
+                if ("20".equals (resp)) {
+                    transferService.refunds(transfer);
+                }
+                response.setContentType("application/json");
+                PrintWriter out = response.getWriter();
+                out.print("success");
+                out.flush();
+                return;
+         }
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        out.print("error");
+        out.flush();
+
     }
 
     /**

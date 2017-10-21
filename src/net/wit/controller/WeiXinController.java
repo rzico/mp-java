@@ -1,22 +1,17 @@
 
 package net.wit.controller;
 
-import net.wit.Message;
 import net.wit.Page;
-import net.wit.entity.Payment;
 import net.wit.entity.Tag;
-import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
-import net.wit.weixin.message.resp.Article;
-import net.wit.weixin.message.resp.NewsMessage;
-import net.wit.weixin.util.MessageUtil;
-import net.wit.weixin.util.SignUtil;
+import net.wit.plat.weixin.message.resp.Article;
+import net.wit.plat.weixin.message.resp.NewsMessage;
+import net.wit.plat.weixin.util.MessageUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

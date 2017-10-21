@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,21 +17,14 @@ import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.util.MD5Utils;
-import net.wit.util.SettingUtils;
-import net.wit.weixin.pojo.Ticket;
-import net.wit.weixin.util.WeiXinUtils;
-import net.wit.weixin.util.WeixinUtil;
+import net.wit.plat.weixin.util.WeiXinUtils;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.springframework.stereotype.Component;
 
 /**

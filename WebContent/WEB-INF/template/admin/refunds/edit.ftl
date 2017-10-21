@@ -152,6 +152,27 @@
 				</span>
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">退款日期：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.refundsDate}" id="refundsDate" name="refundsDate" class="input-text Wdate" style="width:180px;">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Payee：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                [#if payees??]
+				<select name="payeeId" class="select" style="background-color: #FFFFFF">
+                    [#list payees as payee]
+					<option[#if data.payee?? && payee.id == data.payee.id] selected[/#if] value="${payee.id}">${payee.name}</option>
+                    [/#list]
+				</select>
+                [/#if]
+				</span>
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -203,6 +224,9 @@
                             required:true,
                         },
                         orders:{
+                            required:true,
+                        },
+                        payee:{
                             required:true,
                         },
 
