@@ -7,21 +7,44 @@ package net.wit.plugin.weixin;
 
 import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
+import net.wit.entity.Refunds;
+import net.wit.plat.weixin.client.TenpayHttpClient;
 import net.wit.plugin.PaymentPlugin;
+import net.wit.util.AESUtil;
 import net.wit.util.MD5Utils;
 import net.wit.plat.weixin.util.WeiXinUtils;
+
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Component;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +57,8 @@ import java.util.Map;
 public class WeiXinH5Plugin extends PaymentPlugin {
 
 	public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	public static final String REFUNDS_ORDER_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+	public static final String REFUNDS_QUERY_URL = "https://api.mch.weixin.qq.com/pay/refundquery";
 
 	@Override
 	public String getName() {
@@ -206,7 +231,7 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 	 * 查询订单的支付结果  0000成功  9999处理中  其他的失败 
 	 */
 	@Override
-    public String queryOrder(Payment payment,HttpServletRequest request) {
+    public String queryOrder(Payment payment,HttpServletRequest request) throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
 		String createNoncestr = WeiXinUtils.CreateNoncestr();
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
@@ -218,7 +243,7 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 			parameterMap.put("sign",getSign(parameterMap));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return "9999";
+			throw new Exception("查询出错");
 		}
 		
 		String xml = WeiXinUtils.getRequestXml(parameterMap);
@@ -232,33 +257,26 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 			Map map = WeiXinUtils.doXMLParse(jsonStr);
 			String return_code = (String) map.get("return_code");
 			if (return_code.equals("SUCCESS")) {
-				String status = (String) map.get("trade_state");
-				if (status==null) {
-				   String result = (String) map.get("result_code");
-				   if (result.equals("FAIL")) {
-					   return "0001"; 
-				   } else {
-					   return "9999";
-				   }
-				}
-				if (status.equals("SUCCESS")) {
-					return "0000";
-				} else if (status.equals("USERPAYING")) {
-					return "9999";
-				} else if (status.equals("NOTPAY")) {
-					return "0001";
-				} else {
-					return "9999";
+				String result = (String) map.get("result_code");
+				if ("SUCCESS".equals(result)) {
+					String status = (String) map.get("trade_state");
+					if (status.equals("SUCCESS")) {
+						return "0000";
+					} else if (status.equals("USERPAYING")) {
+						return "9999";
+					} else {
+						return "0001";
+					}
+				} else  {
+					throw new Exception((String) map.get("err_code_des"));
 				}
 			} else
-			if (return_code.equals("FAIL")) {
-				return "0001";
-			} else {
-				return "9999";
+			{
+				throw new Exception((String) map.get("return_msg"));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return "9999";
+			throw new Exception("查询出错");
 		} finally {
 			httpClient.getConnectionManager().shutdown();
 		}
@@ -273,6 +291,154 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 	@Override
 	public Integer getTimeout() {
 		return 30;
+	}
+
+	//0000 代表申请退款成功，退款结果调查询。
+	@Override
+	public String refunds(Refunds refunds,HttpServletRequest request) throws Exception {
+		try {
+			PluginConfig pluginConfig = getPluginConfig();
+			String createNoncestr = WeiXinUtils.CreateNoncestr();
+			Payment payment = refunds.getPayment();
+			HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+			parameterMap.put("appid", pluginConfig.getAttribute("appId"));
+			parameterMap.put("mch_id", pluginConfig.getAttribute("partner"));
+			parameterMap.put("nonce_str", createNoncestr);
+			parameterMap.put("out_refund_no",refunds.getSn());
+			parameterMap.put("out_trade_no", payment.getSn());
+			parameterMap.put("total_fee", payment.getAmount().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP).toString());
+			parameterMap.put("refund_fee", refunds.getAmount().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP).toString());
+			try {
+				String sign = getSign(parameterMap);
+				parameterMap.put("sign", sign);
+			} catch (Exception e) {
+                 throw new Exception("申请失败");
+			}
+
+		    	String xml = WeiXinUtils.getRequestXml(parameterMap);
+				String jsonStr = httpsPost(REFUNDS_ORDER_URL,xml,request);
+
+				Map map = WeiXinUtils.doXMLParse(jsonStr);
+				String return_code = (String) map.get("return_code");
+				if (return_code.equals("SUCCESS") ) {
+					if ("SUCCESS".equals((String) map.get("result_code"))) {
+						return "0000";
+					} else {
+						throw new Exception( (String) map.get("err_code_des"));
+					}
+				} else {
+					throw new Exception( (String) map.get("return_msg"));
+				}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new Exception("申请失败");
+		}
+
+
+	}
+
+	/**
+	 * 申请退款
+	 */
+	public String refundsQuery(Refunds refunds,HttpServletRequest request)  throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		String createNoncestr = WeiXinUtils.CreateNoncestr();
+		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("appid", pluginConfig.getAttribute("appId"));
+		parameterMap.put("mch_id", pluginConfig.getAttribute("partner"));
+		parameterMap.put("out_refund_no", refunds.getSn());
+		parameterMap.put("nonce_str", createNoncestr);
+		try {
+			parameterMap.put("sign",getSign(parameterMap));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new Exception("查询失败");
+		}
+
+		String xml = WeiXinUtils.getRequestXml(parameterMap);
+
+		HttpClient httpClient = new DefaultHttpClient();
+		try {
+			HttpPost httpPost = new HttpPost(REFUNDS_QUERY_URL);
+			httpPost.setEntity(new StringEntity(xml, "UTF-8"));
+			HttpResponse response = httpClient.execute(httpPost);
+			String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+			Map map = WeiXinUtils.doXMLParse(jsonStr);
+			String return_code = (String) map.get("return_code");
+			if (return_code.equals("SUCCESS") ) {
+				if ("SUCCESS".equals((String) map.get("result_code"))) {
+					Long n = Long.parseLong(map.get("refund_count").toString());
+					String refund_status = (String) map.get("refund_status_" + String.valueOf(n - 1));
+					if (refund_status.equals("SUCCESS")) {
+						return "0000";
+					} else if (refund_status.equals("PROCESSING")) {
+						return "9999";
+					} else {
+						return "0001";
+					}
+				} else {
+					throw new Exception((String) map.get("err_code_des"));
+				}
+			} else
+			if (return_code.equals("FAIL")) {
+				throw new Exception((String) map.get("return_msg"));
+			} else {
+				throw new Exception("查询失败");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new Exception("查询失败");
+		} finally {
+			httpClient.getConnectionManager().shutdown();
+		}
+	}
+
+
+	/**
+	 * 申请通知
+	 */
+	public String refundsVerify(HttpServletRequest request) {
+		try {
+			PluginConfig pluginConfig = getPluginConfig();
+			HashMap<String, Object> map = new HashMap<String, Object>();
+
+			StringBuffer info = new StringBuffer();
+			InputStream in = request.getInputStream();
+			BufferedInputStream buf = new BufferedInputStream(in);
+			byte[] buffer = new byte[1024];
+			int iRead;
+			while ((iRead = buf.read(buffer)) != -1) {
+				info.append(new String(buffer, 0, iRead, "UTF-8"));
+			}
+			logger.error(info.toString());
+			map = WeiXinUtils.doXMLParse(info.toString());
+			if ("SUCCESS".equals(map.get("result_code").toString())) {
+				String sign = getSign(map);
+				if (sign.equals(map.get("sign"))) {
+					try {
+						String req_info = map.get("req_info").toString();
+                        String bmima =new String(Base64.decode(req_info),"UTF-8");
+                        String pwd = MD5Utils.getMD5Str(pluginConfig.getAttribute("key"));
+						String decr = AESUtil.decryptData(bmima,pwd);
+						Map infoMap = WeiXinUtils.doXMLParse(decr);
+						String out_refund_no = infoMap.get("out_refund_no").toString();
+						String refund_status = infoMap.get("refund_status").toString();
+                        if ("SUCCESS".equals(refund_status)) {
+                        	return out_refund_no;
+						} else {
+                        	return "";
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				}
+			}
+			return "";
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return "";
+		}
 	}
 
 }

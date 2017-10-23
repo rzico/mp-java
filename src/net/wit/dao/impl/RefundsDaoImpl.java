@@ -30,6 +30,17 @@ import net.wit.entity.Refunds;
 
 @Repository("refundsDaoImpl")
 public class RefundsDaoImpl extends BaseDaoImpl<Refunds, Long> implements RefundsDao {
+	public Refunds findBySn(String sn) {
+		if (sn == null) {
+			return null;
+		}
+		String jpql = "select refunds from Refunds refunds where lower(refunds.sn) = lower(:sn)";
+		try {
+			return entityManager.createQuery(jpql, Refunds.class).setFlushMode(FlushModeType.COMMIT).setParameter("sn", sn).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

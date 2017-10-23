@@ -5,9 +5,12 @@
  */
 package net.wit.plugin;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,12 +18,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.Resource;
+import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 
 import net.wit.Setting;
 import net.wit.controller.weex.BaseController;
 import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
+import net.wit.entity.Refunds;
 import net.wit.service.PaymentService;
 import net.wit.service.PluginConfigService;
 import net.wit.util.SettingUtils;
@@ -37,9 +42,15 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.LogManager;
@@ -319,9 +330,85 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	/**
 	 * 查询订单的支付结果  0000成功  9999处理中  其他的失败 
 	 */
-	public String queryOrder(Payment payment,HttpServletRequest request) {
+	public String queryOrder(Payment payment,HttpServletRequest request) throws Exception {
 		return "9999";
 	}
+
+
+	/**
+	 * 申请退款
+	 */
+	public String refunds(Refunds refunds,HttpServletRequest request) throws Exception {
+		return "9999";
+	}
+
+	/**
+	 * 申请退款
+	 */
+	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
+		return "9999";
+	}
+	/**
+	 * 申请通知
+	 */
+	public String refundsVerify(HttpServletRequest request) {
+		return "";
+	}
+
+	/**
+	 * https双向签名认证，用于支付申请退款
+	 *
+	 * */
+	public String httpsPost(String url,String data,HttpServletRequest request) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		String mchId = pluginConfig.getAttribute("partner");
+		//指定读取证书格式为PKCS12
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		String rootPath = request.getSession().getServletContext().getRealPath("/");
+		//读取本机存放的PKCS12证书文件
+		FileInputStream instream = new FileInputStream(new File(rootPath+"/WEB-INF/classes/cert/apiclient_cert.p12"));
+		try {
+			//指定PKCS12的密码(商户ID)
+
+			keyStore.load(instream,mchId.toCharArray());
+		} finally {
+			instream.close();
+		}
+		SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore, mchId.toCharArray()).build();
+		//指定TLS版本
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+				sslcontext,new String[] { "TLSv1" },null,
+				SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+		//设置httpclient的SSLSocketFactory
+		CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+
+
+		try {
+			HttpPost httpost = new HttpPost(url); // 设置响应头信息
+			httpost.addHeader("Connection", "keep-alive");
+			httpost.addHeader("Accept", "*/*");
+			httpost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+			httpost.addHeader("Host", "api.mch.weixin.qq.com");
+			httpost.addHeader("X-Requested-With", "XMLHttpRequest");
+			httpost.addHeader("Cache-Control", "max-age=0");
+			httpost.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
+			httpost.setEntity(new StringEntity(data, "UTF-8"));
+			CloseableHttpResponse response = httpclient.execute(httpost);
+			try {
+				HttpEntity entity = response.getEntity();
+
+
+				String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+				EntityUtils.consume(entity);
+				return jsonStr;
+			} finally {
+				response.close();
+			}
+		} finally {
+			httpclient.close();
+		}
+	}
+
 
 	/**
 	 * 获取通知URL

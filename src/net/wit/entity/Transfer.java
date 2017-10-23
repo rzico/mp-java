@@ -9,7 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Entity - 转账单
@@ -94,9 +96,9 @@ public class Transfer extends BaseEntity {
 	private String memo;
 
 	/** 账单记录 */
-	@OneToOne(mappedBy = "refunds", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "transfer", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private Deposit deposit;
+	private List<Deposit> deposits = new ArrayList<Deposit>();
 
 	/** 银行名称 */
 	@Length(max = 50)
@@ -183,14 +185,6 @@ public class Transfer extends BaseEntity {
 		this.memo = memo;
 	}
 
-	public Deposit getDeposit() {
-		return deposit;
-	}
-
-	public void setDeposit(Deposit deposit) {
-		this.deposit = deposit;
-	}
-
 	public Member getMember() {
 		return member;
 	}
@@ -237,6 +231,14 @@ public class Transfer extends BaseEntity {
 
 	public void setTransferDate(Date transferDate) {
 		this.transferDate = transferDate;
+	}
+
+	public List<Deposit> getDeposits() {
+		return deposits;
+	}
+
+	public void setDeposits(List<Deposit> deposits) {
+		this.deposits = deposits;
 	}
 
 	public BigDecimal effectiveAmount() {

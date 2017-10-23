@@ -5,10 +5,13 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.plugin.PaymentPlugin;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -70,7 +73,8 @@ public class PaymentController extends BaseController {
 	@Resource(name = "couponCodeServiceImpl")
 	private CouponCodeService couponCodeService;
 
-
+	@Resource(name = "pluginServiceImpl")
+	private PluginService pluginService;
 
 	/**
 	 * 主页
@@ -264,53 +268,43 @@ public class PaymentController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Payment payment, Long memberId, Long articleRewardId, Long payeeId, Long ordersId){
+	public Message update(Payment payment,HttpServletRequest request){
 		Payment entity = paymentService.find(payment.getId());
-		
-		entity.setCreateDate(payment.getCreateDate());
-
-		entity.setModifyDate(payment.getModifyDate());
-
-		entity.setAmount(payment.getAmount());
-
-		entity.setExpire(payment.getExpire());
-
-		entity.setMemo(payment.getMemo());
-
-		entity.setMethod(payment.getMethod());
-
-		entity.setOperator(payment.getOperator());
-
-		entity.setPaymentDate(payment.getPaymentDate());
-
-		entity.setPaymentMethod(payment.getPaymentMethod());
-
-		entity.setPaymentPluginId(payment.getPaymentPluginId());
-
-		entity.setSn(payment.getSn());
-
-		entity.setStatus(payment.getStatus());
-
-		entity.setType(payment.getType());
-
-		entity.setMember(memberService.find(memberId));
-
-		entity.setOrder(orderService.find(ordersId));
-
-		entity.setArticleReward(articleRewardService.find(articleRewardId));
-
-		entity.setPayee(memberService.find(payeeId));
-		
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
-        try {
-            paymentService.update(entity);
-            return Message.success(entity,"admin.update.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("admin.update.error");
-        }
+		try {
+			if (entity.getStatus().equals(Transfer.Status.waiting)) {
+				PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
+				String resultCode = null;
+				try {
+					resultCode = paymentPlugin.queryOrder(payment,request);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					return Message.success(e.getMessage());
+				}
+				switch (resultCode) {
+					case "0000":
+						try {
+							paymentService.handle(payment);
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+						}
+						return Message.success((Object) resultCode,"支付成功");
+					case "0001":
+						try {
+							paymentService.close(payment);
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+						}
+						return Message.success((Object) resultCode,"支付失败");
+					default:
+						return Message.success((Object) resultCode,"支付中");
+				}
+			} else {
+				return Message.error("已处理了");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error(e.getMessage());
+		}
 	}
 	
 

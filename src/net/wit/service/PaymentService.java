@@ -31,13 +31,13 @@ public interface PaymentService extends BaseService<Payment, Long> {
 	void handle(Payment payment) throws Exception;
 
 
+	Page<Payment> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+
 	/**
 	 * 支付关闭
 	 * @param payment 收款单
 	 */
 	void close(Payment payment) throws Exception;
-
-
-	Page<Payment> findPage(Date beginDate, Date endDate, Pageable pageable);
 
 }

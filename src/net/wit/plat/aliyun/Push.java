@@ -21,7 +21,8 @@ public class Push {
     // 当前 STS API 版本
     public static final String STS_API_VERSION = "2015-04-01";
     public static boolean aliPushToAndriod(Message message) {
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        try {
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
         IClientProfile profile = DefaultProfile.getProfile(REGION_CN_HANGZHOU, bundle.getString("x-sts-accessKey"), bundle.getString("x-sts-accessSecret"));
         DefaultAcsClient client = new DefaultAcsClient(profile);
@@ -38,7 +39,6 @@ public class Push {
         androidRequest.setExtParameters("{\"type\":\""+message.getType()+"\"}");
 
         PushNoticeToAndroidResponse pushNoticeToAndroidResponse = null;
-        try {
             pushNoticeToAndroidResponse = client.getAcsResponse(androidRequest);
             return true;
         } catch (ClientException e) {
@@ -47,6 +47,7 @@ public class Push {
         }
     }
     public static boolean aliPushToIOS(Message message) {
+        try {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
         IClientProfile profile = DefaultProfile.getProfile(REGION_CN_HANGZHOU, bundle.getString("x-sts-accessKey"), bundle.getString("x-sts-accessSecret"));
@@ -65,7 +66,6 @@ public class Push {
         iOSRequest.setBody(message.getContent());
         iOSRequest.setExtParameters("{\"type\":\""+message.getType()+"\"}");
 
-       try {
             PushNoticeToiOSResponse pushNoticeToiOSResponse = client.getAcsResponse(iOSRequest);
             return true;
         } catch (ClientException e) {

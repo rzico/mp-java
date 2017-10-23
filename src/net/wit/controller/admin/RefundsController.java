@@ -5,10 +5,13 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.plugin.PaymentPlugin;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -69,6 +72,8 @@ public class RefundsController extends BaseController {
 	@Resource(name = "couponCodeServiceImpl")
 	private CouponCodeService couponCodeService;
 
+	@Resource(name = "pluginServiceImpl")
+	private PluginService pluginService;
 
 
 	/**
@@ -242,47 +247,36 @@ public class RefundsController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Refunds refunds, Long paymentId, Long memberId, Long ordersId){
+	public Message update(Refunds refunds, HttpServletRequest request){
 		Refunds entity = refundsService.find(refunds.getId());
-		
-		entity.setCreateDate(refunds.getCreateDate());
-
-		entity.setModifyDate(refunds.getModifyDate());
-
-		entity.setAmount(refunds.getAmount());
-
-		entity.setMemo(refunds.getMemo());
-
-		entity.setMethod(refunds.getMethod());
-
-		entity.setOperator(refunds.getOperator());
-
-		entity.setPaymentMethod(refunds.getPaymentMethod());
-
-		entity.setPaymentPluginId(refunds.getPaymentPluginId());
-
-		entity.setSn(refunds.getSn());
-
-		entity.setStatus(refunds.getStatus());
-
-		entity.setType(refunds.getType());
-
-		entity.setMember(memberService.find(memberId));
-
-		entity.setPayment(paymentService.find(paymentId));
-
-		entity.setOrder(orderService.find(ordersId));
-		
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
-        try {
-            refundsService.update(entity);
-            return Message.success(entity,"admin.update.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("admin.update.error");
-        }
+		try {
+			if (entity.getStatus().equals(Refunds.Status.waiting)) {
+				if (refundsService.refunds(entity,request)) {
+					return Message.success(entity,"提交成功");
+				} else {
+					return Message.error("提交失败");
+				}
+			} else {
+				PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
+				String resp = paymentPlugin.refundsQuery(refunds,request);
+				if ("0000".equals(resp)) {
+					refundsService.handle(entity);
+					return Message.success(entity,"付款成功");
+				} else
+				if ("0001".equals(resp)) {
+					refundsService.close(entity);
+					return Message.success(entity,"退款失败,款项退回账号");
+				} else
+				if ("9999".equals(resp)) {
+					return Message.success(entity,"正在处理中");
+				} else {
+					return Message.error("查询失败");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error(e.getMessage());
+		}
 	}
 	
 

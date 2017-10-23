@@ -89,12 +89,46 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		super.save(message);
 	}
 
-	public void pushTo(Message message) {
-		super.save(message);
-		Push.aliPush(message);
+	@Transactional
+	public Boolean pushTo(Message message) {
+		try {
+			super.save(message);
+			Push.aliPush(message);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return messageDao.findPage(beginDate,endDate,pageable);
+	}
+	public Boolean depositPushTo(Deposit deposit) {
+        Message msg = new Message();
+        msg.setReaded(false);
+        msg.setReceiver(deposit.getMember());
+        msg.setType(Message.Type.account);
+		msg.setThumbnial("http://cdn.rzico.com/weex/resources/images/account.png");
+		msg.setTitle("账单提醒");
+		if (Deposit.Type.cashier.equals(deposit.getType())) {
+			BigDecimal amount = deposit.getCredit().subtract(deposit.getDebit());
+			if (amount.compareTo(BigDecimal.ZERO)>0) {
+				java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+				msg.setContent(deposit.getMemo()+",到账:"+df.format(amount)+"元");
+			} else {
+				java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+				msg.setContent(deposit.getMemo()+",退款:"+df.format(BigDecimal.ZERO.subtract(amount))+"元");
+			}
+		} else {
+			BigDecimal amount = deposit.getCredit().subtract(deposit.getDebit());
+			if (amount.compareTo(BigDecimal.ZERO)>0) {
+				java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+				msg.setContent("账户收入:"+df.format(amount)+"元,来源:"+deposit.getMemo());
+			} else {
+				java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+				msg.setContent("账户支出:"+df.format(BigDecimal.ZERO.subtract(amount))+"元,用途:"+deposit.getMemo());
+			}
+		}
+		return pushTo(msg);
 	}
 }

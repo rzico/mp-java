@@ -14,6 +14,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -99,7 +100,15 @@ public class User {
 
         String url = im_attr.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
-        String data ="{\"UserAttrs\":[{\"To_Account\": \""+member.userId()+"\",\"Attrs\": {\"userId\": \""+member.userId()+"\",\"logo\": \""+member.getLogo()+"\",\"nickName\": \"" + member.getNickName() + "\"}}]}";
+        Map<String,String> attrs = new HashMap<String,String>();
+        attrs.put("userId",member.getId());
+        attrs.put("logo",member.getLogo());
+        attrs.put("nickName",member.getNickName());
+        String data ="{\"UserAttrs\":"+
+                     "[{\"To_Account\": \""+member.userId()+"\","+
+                       "\"Attrs\":"+JsonUtils.toJson(attrs)+"\"}"+
+                       "}"+
+                     "]}";
         HttpClient httpClient = new DefaultHttpClient();
         try {
             HttpPost httpPost = new HttpPost(url);

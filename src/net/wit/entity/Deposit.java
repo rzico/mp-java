@@ -33,18 +33,29 @@ public class Deposit extends BaseEntity {
 	 */
 	public enum Type {
 
-		/** 充值 */
+		/** 充值  收入 */
 		recharge,
 
-		/** 提现 */
+		/** 提现  支出 */
 		transfer,
 
-		/** 支付 */
+		/** 支付  支出 */
 		payment,
 
-		/** 退款 */
-		refunds
+		/** 退款  收入 */
+		refunds,
 
+		/** 货款  收入 */
+		product,
+
+		/** 赞赏  收入 */
+		reward,
+
+		/** 返利  收入 */
+		rebate,
+
+		/** 收款  收入 */
+		cashier
 	}
 
 	/** 类型 */

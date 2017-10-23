@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
+import net.wit.entity.Refunds;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.util.MD5Utils;
 import net.wit.plat.weixin.util.WeiXinUtils;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Component;
 public class WeiXinPayPlugin extends PaymentPlugin {
 
 	public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	public static final String REFUNDS_ORDER_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
 
 	@Override
 	public String getName() {
@@ -214,7 +216,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 	 * 查询订单的支付结果  0000成功  9999处理中  其他的失败 
 	 */
 	@Override
-    public String queryOrder(Payment payment,HttpServletRequest request) {
+    public String queryOrder(Payment payment,HttpServletRequest request)  throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
 		String createNoncestr = WeiXinUtils.CreateNoncestr();
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
@@ -226,9 +228,9 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			parameterMap.put("sign",getSign(parameterMap));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return "9999";
+			throw new Exception("查询出错");
 		}
-		
+
 		String xml = WeiXinUtils.getRequestXml(parameterMap);
 
 		HttpClient httpClient = new DefaultHttpClient();
@@ -240,37 +242,29 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			Map map = WeiXinUtils.doXMLParse(jsonStr);
 			String return_code = (String) map.get("return_code");
 			if (return_code.equals("SUCCESS")) {
-				String status = (String) map.get("trade_state");
-				if (status==null) {
-				   String result = (String) map.get("result_code");
-				   if (result.equals("FAIL")) {
-					   return "0001"; 
-				   } else {
-					   return "9999";
-				   }
-				}
-				if (status.equals("SUCCESS")) {
-					return "0000";
-				} else if (status.equals("USERPAYING")) {
-					return "9999";
-				} else if (status.equals("NOTPAY")) {
-					return "0001";
-				} else {
-					return "9999";
+				String result = (String) map.get("result_code");
+				if ("SUCCESS".equals(result)) {
+					String status = (String) map.get("trade_state");
+					if (status.equals("SUCCESS")) {
+						return "0000";
+					} else if (status.equals("USERPAYING")) {
+						return "9999";
+					} else {
+						return "0001";
+					}
+				} else  {
+					throw new Exception((String) map.get("err_code_des"));
 				}
 			} else
-			if (return_code.equals("FAIL")) {
-				return "0001";
-			} else {
-				return "9999";
+			{
+				throw new Exception((String) map.get("return_msg"));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return "9999";
+			throw new Exception("查询出错");
 		} finally {
 			httpClient.getConnectionManager().shutdown();
 		}
-		
 	}
 	
 	@Override

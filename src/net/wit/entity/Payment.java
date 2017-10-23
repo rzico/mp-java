@@ -1,18 +1,11 @@
 package net.wit.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.PreRemove;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -42,11 +35,14 @@ public class Payment extends BaseEntity {
 	 */
 	public enum Type {
 
-		/** 消费支付 */
+		/** 购物支付 */
 		payment,
-
 		/** 钱包充值 */
-		recharge
+		recharge,
+		/** 文章赞赏     */
+		reward,
+		/** 线下收款     */
+		cashier
 	}
 
 	/**
@@ -133,9 +129,9 @@ public class Payment extends BaseEntity {
 	private Date expire;
 
 	/** 账单记录 */
-	@OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "payment", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private Deposit deposit;
+	private List<Deposit> deposits = new ArrayList<Deposit>();
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -249,12 +245,12 @@ public class Payment extends BaseEntity {
 		this.expire = expire;
 	}
 
-	public Deposit getDeposit() {
-		return deposit;
+	public List<Deposit> getDeposits() {
+		return deposits;
 	}
 
-	public void setDeposit(Deposit deposit) {
-		this.deposit = deposit;
+	public void setDeposits(List<Deposit> deposits) {
+		this.deposits = deposits;
 	}
 
 	public Member getMember() {
@@ -304,9 +300,6 @@ public class Payment extends BaseEntity {
 	 */
 	@PreRemove
 	public void preRemove() {
-		if (getDeposit() != null) {
-			getDeposit().setPayment(null);
-		}
 	}
 
 

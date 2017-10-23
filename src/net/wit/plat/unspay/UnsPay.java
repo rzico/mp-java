@@ -40,8 +40,9 @@ import static com.tls.tls_sigature.tls_sigature.GenTLSSignatureEx;
 
 public class UnsPay {
     public static Logger logger = LogManager.getLogger(User.class);
-    public static String url="http://180.166.114.155:8081/unspay-external/delegatePay/pay";
-    public static String queryurl="http://180.166.114.155:8081/unspay-external/delegatePay/queryOrderStatus";
+    public static String url="http://114.80.54.73:8081/unspay-external/delegatePay/pay";
+    public static String queryurl="http://114.80.54.73:8081/unspay-external/delegatePay/queryOrderStatus";
+    public static String balurl="http://114.80.54.73:8081/unspay-external/delegatePay/queryBlance";
 
     /**
      * 连接Map值
@@ -61,9 +62,7 @@ public class UnsPay {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if (org.apache.commons.lang.StringUtils.isNotEmpty(value)) {
-                list.add(key + "=" + (value != null ? value : ""));
-            }
+            list.add(key + "=" + (value != null ? value : ""));
         }
         list.add("key="+bundle.getString("x-unspay-key"));
         return  org.apache.commons.lang.StringUtils.join(list, "&");
@@ -113,7 +112,7 @@ public class UnsPay {
         params.put("01accountId", bundle.getString("x-unspay-partner"));
         String keystr = UnsPay.joinValue(params);
         params.put("08mac", MD5Utils.getMD5Str(keystr).toUpperCase());
-        String resp = get(url, params);
+        String resp = get(balurl, params);
         Map<String, String> data = JsonUtils.toObject(resp, Map.class);
         if ("0000".equals(data.get("result_code"))) {
             return new BigDecimal(data.get("balance"));
@@ -121,11 +120,38 @@ public class UnsPay {
             return BigDecimal.ZERO;
         }
     }
-    public synchronized static boolean submit(Transfer transfer) {
+    public static String getErrMsg(String errorCode) {
+        Map<String,String> data=new HashMap<String, String>();
+        data.put("0000","操作成功");
+        data.put("1111","系统异常");
+        data.put("1000","签名错误");
+        data.put("1001","商户号为空");
+        data.put("1002","目的为空");
+        data.put("1003","金额为空或金额格式错误(需大于零数字)");
+        data.put("1006","卡号为空");
+        data.put("1007","姓名为空");
+        data.put("1009","订单号为空");
+        data.put("1010","订单确认地址为空");
+        data.put("1030","订单号重复");
+        data.put("1031","卡号不正确");
+        data.put("1040","签名为空");
+        data.put("1090","金额超过单笔限额 2000 该商户号不存在");
+        data.put("2002","交易不存在");
+        data.put("2003","代付服务未开通");
+        data.put("2025","付款子账号为空");
+        data.put("2027","创建交易失败【对应错误信息】");
+        data.put("2034","未获取到卡BIN信息");
+        data.put("2033","网络繁忙，请稍候重试");
+        data.put("2035","商户已冻结");
+        data.put("2040","交易异常");
+        data.put("3000","保证金余额不足");
+        return data.get(errorCode);
+    }
+    public synchronized static String submit(Transfer transfer) {
         try {
             BigDecimal bal = queryBalance();
             if (bal.compareTo(transfer.effectiveAmount().add(BigDecimal.ONE))<=0) {
-               return false;
+               return "";
             }
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             Map<String, Object> params = new HashMap<String, Object>();
@@ -142,14 +168,10 @@ public class UnsPay {
             params.put("08mac", MD5Utils.getMD5Str(keystr).toUpperCase());
             String resp = get(url, params);
             Map<String, String> data = JsonUtils.toObject(resp, Map.class);
-            if ("0000".equals(data.get("result_code"))) {
-                return true;
-            } else {
-                return false;
-            }
+            return data.get("result_code");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return false;
+            return "9999";
         }
 
     }
@@ -191,8 +213,11 @@ public class UnsPay {
             params.put("05result_msg", result_msg);
             String keystr = UnsPay.joinValue(params);
             System.out.println(keystr);
+            System.out.println(MD5Utils.getMD5Str(keystr).toUpperCase());
             if (mac.equals(MD5Utils.getMD5Str(keystr).toUpperCase())) {
-                System.out.println(result_msg);
+                System.out.println(result_code);
+                System.out.println(orderId);
+                System.out.println(sn);
                 if ("0000".equals(result_code) && sn.equals(orderId)) {
                     return "00";
                 } else {

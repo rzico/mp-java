@@ -218,7 +218,7 @@ public class TransferController extends BaseController {
 			}
         } catch (Exception e) {
             e.printStackTrace();
-            return Message.error("admin.update.error");
+            return Message.error(e.getMessage());
         }
 	}
 	

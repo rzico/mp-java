@@ -5,13 +5,10 @@ import com.sun.tools.internal.ws.wsdl.document.http.HTTPUrlEncoded;
 import net.wit.Message;
 import net.wit.Setting;
 import net.wit.controller.weex.model.PaymentModel;
-import net.wit.entity.Member;
-import net.wit.entity.Payment;
+import net.wit.entity.*;
 import net.wit.entity.Payment.Method;
 import net.wit.entity.Payment.Status;
 import net.wit.entity.Payment.Type;
-import net.wit.entity.Sn;
-import net.wit.entity.Transfer;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
@@ -55,6 +52,9 @@ public class PaymentController extends BaseController {
 
     @Resource(name = "transferServiceImpl")
     private TransferService transferService;
+
+    @Resource(name = "refundsServiceImpl")
+    private RefundsService refundsService;
 
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
@@ -150,10 +150,10 @@ public class PaymentController extends BaseController {
     }
 
     /**
-     * 转几结果通知
+     * 转账结果通知
      */
     @RequestMapping("/transfer/{sn}")
-    public void notifyTransfer(@PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
+    public void transfer(@PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
         System.out.println(sn);
         Transfer transfer = transferService.findBySn(sn);
 
@@ -179,6 +179,31 @@ public class PaymentController extends BaseController {
     }
 
     /**
+     * 退款结果通知
+     */
+    @RequestMapping("/weixin/refunds")
+    public void refunds(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin("weixinH5Plugin");
+        if (paymentPlugin != null) {
+            String resp = paymentPlugin.refundsVerify(request);
+            if (!"".equals(resp)) {
+                Refunds refunds = refundsService.findBySn(resp);
+                refundsService.handle(refunds);
+            }
+            response.setContentType("application/json");
+            PrintWriter out = response.getWriter();
+            out.print("success");
+            out.flush();
+            return;
+        }
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        out.print("error");
+        out.flush();
+
+    }
+
+    /**
      * 查询支付状态
      */
     @RequestMapping(value = "/query", method = RequestMethod.POST)
@@ -189,16 +214,27 @@ public class PaymentController extends BaseController {
             return Message.error("无效支付单号");
         }
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
-        String resultCode = paymentPlugin.queryOrder(payment,request);
+        String resultCode = null;
+        try {
+            resultCode = paymentPlugin.queryOrder(payment,request);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return Message.success(e.getMessage());
+        }
         switch (resultCode) {
             case "0000":
                 try {
                     paymentService.handle(payment);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
                 return Message.success((Object) resultCode,"支付成功");
             case "0001":
+                try {
+                    paymentService.close(payment);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
                 return Message.success((Object) resultCode,"支付失败");
             default:
                 return Message.success((Object) resultCode,"支付中");

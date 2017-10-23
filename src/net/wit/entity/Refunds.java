@@ -2,7 +2,9 @@
 package net.wit.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -32,11 +34,14 @@ public class Refunds extends BaseEntity {
 
 	public enum Type {
 
-		/** 消费支付 */
+		/** 购物支付 */
 		payment,
-
 		/** 钱包充值 */
-		recharge
+		recharge,
+		/** 文章赞赏     */
+		reward,
+		/** 线下收款     */
+		cashier
 	}
 
 
@@ -62,6 +67,9 @@ public class Refunds extends BaseEntity {
 
 		/** 等待退款 */
 		waiting,
+
+		/** 确定提交 */
+		confirmed,
 
 		/** 退款成功 */
 		success,
@@ -111,9 +119,9 @@ public class Refunds extends BaseEntity {
 	private String memo;
 
 	/** 账单记录 */
-	@OneToOne(mappedBy = "refunds", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "refunds", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private Deposit deposit;
+	private List<Deposit> deposits = new ArrayList<Deposit>();
 
 	/** 退款日期 */
 	@Column(columnDefinition="datetime comment '退款日期'")
@@ -206,12 +214,12 @@ public class Refunds extends BaseEntity {
 		this.memo = memo;
 	}
 
-	public Deposit getDeposit() {
-		return deposit;
+	public List<Deposit> getDeposits() {
+		return deposits;
 	}
 
-	public void setDeposit(Deposit deposit) {
-		this.deposit = deposit;
+	public void setDeposits(List<Deposit> deposits) {
+		this.deposits = deposits;
 	}
 
 	public String getPaymentPluginId() {
@@ -252,6 +260,14 @@ public class Refunds extends BaseEntity {
 
 	public void setPayee(Member payee) {
 		this.payee = payee;
+	}
+
+	public Date getRefundsDate() {
+		return refundsDate;
+	}
+
+	public void setRefundsDate(Date refundsDate) {
+		this.refundsDate = refundsDate;
 	}
 
 	public MapEntity getMapPayee() {

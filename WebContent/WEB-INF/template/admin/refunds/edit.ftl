@@ -37,146 +37,83 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">备注：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.memo}" placeholder="" id="memo" name="memo">
+                <span>${data.memo}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>方式：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if methods??]
-                [#list methods as method]
-                    <div class="radio-box">
-                        <input name="method" type="radio" id="method-${method_index}" value="${method.id}"[#if method.id == data.method] checked[/#if]>
-                        <label for="method-${method_index}">${method.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+                <span> ${message("Refunds.Method."+data.method)}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">操作员：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.operator}" placeholder="" id="operator" name="operator">
-            </div>
+                <span>${data.operator}</span>
+             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">支付方式：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.paymentMethod}" placeholder="" id="paymentMethod" name="paymentMethod">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">支付插件：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.paymentPluginId}" placeholder="" id="paymentPluginId" name="paymentPluginId">
+                <span>${data.paymentMethod}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.sn}" placeholder="" id="sn" name="sn">
+                <span>${data.sn}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if statuss??]
-                [#list statuss as status]
-                    <div class="radio-box">
-                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
-                        <label for="status-${status_index}">${status.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+                <span> ${message("Refunds.Status."+data.status)}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if types??]
-                [#list types as type]
-                    <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
-                        <label for="type-${type_index}">${type.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+                <span> ${message("Refunds.Type."+data.type)}</span>
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">会员：</label>
+            <label class="form-label col-xs-4 col-sm-2">付款人：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+                <span>${data.mapMember.nickName}</span>
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Payment：</label>
+            <label class="form-label col-xs-4 col-sm-2">收款人：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if payments??]
-				<select name="paymentId" class="select" style="background-color: #FFFFFF">
-                    [#list payments as payment]
-					<option[#if data.payment?? && payment.id == data.payment.id] selected[/#if] value="${payment.id}">${payment.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+                <span>${data.mapPayee.nickName}</span>
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>订单：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if orderss??]
-				<select name="ordersId" class="select" style="background-color: #FFFFFF">
-                    [#list orderss as orders]
-					<option[#if data.orders?? && orders.id == data.orders.id] selected[/#if] value="${orders.id}">${orders.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">退款日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.refundsDate}" id="refundsDate" name="refundsDate" class="input-text Wdate" style="width:180px;">
+                <span>${data.mapPayee.refundsDate}</span>
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Payee：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if payees??]
-				<select name="payeeId" class="select" style="background-color: #FFFFFF">
-                    [#list payees as payee]
-					<option[#if data.payee?? && payee.id == data.payee.id] selected[/#if] value="${payee.id}">${payee.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
+                [#if data.status=="waiting"]
+                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交退款&nbsp;&nbsp;">
+                [/#if]
+                [#if data.status=="confirmed"]
+                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;">
+                [/#if]
             </div>
         </div>
             [#else]
@@ -252,16 +189,16 @@
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
                                     //关闭弹窗并提示
-                                    parent.closeWindow(index, '修改成功');
+                                    parent.closeWindow(index, message.content);
                                 }else{
                                     $submit.prop("disabled", false);
-                                    parent.toast('修改失败',2);
+                                    parent.toast(message.content,2);
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
                                 $submit.prop("disabled", false);
                                 layer.close(load);
-                                parent.toast('修改失败',2);
+                                parent.toast('执行失败',2);
                             }
                         });
                     }

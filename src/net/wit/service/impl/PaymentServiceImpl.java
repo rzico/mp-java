@@ -15,7 +15,10 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.DepositDao;
+import net.wit.dao.MemberDao;
 import net.wit.dao.SnDao;
+import net.wit.service.MessageService;
 import net.wit.service.PluginService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -42,8 +45,14 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "pluginServiceImpl")
 	private PluginService pluginService;
 
-	@Resource(name = "snDaoImpl")
-	private SnDao snDao;
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
 
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
@@ -60,13 +69,79 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	public synchronized void handle(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
 		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
+			//余额支付时，扣余额
+			if (payment.getMethod().equals(Payment.Method.deposit)) {
+				Member member = payment.getPayee();
+				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+				if (member.getBalance().compareTo(payment.getAmount())>=0) {
+					member.setBalance(member.getBalance().subtract(payment.getAmount()));
+					memberDao.merge(member);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.payment);
+					deposit.setMemo(payment.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(BigDecimal.ZERO);
+					deposit.setDebit(payment.getAmount());
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+				} else {
+					payment.setPaymentDate(new Date());
+					payment.setStatus(Payment.Status.failure);
+					paymentDao.merge(payment);
+					throw new Exception("余额不足");
+				}
+			}
+			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
-			} else if (payment.getType() == Payment.Type.recharge) {
+			} else
+			if (payment.getType() == Payment.Type.reward) {
+				Member member = payment.getPayee();
+				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+				member.setBalance(member.getBalance().add(payment.getAmount()));
+				memberDao.merge(member);
+				Deposit deposit = new Deposit();
+				deposit.setBalance(member.getBalance());
+				deposit.setType(Deposit.Type.reward);
+				deposit.setMemo(payment.getMemo());
+				deposit.setMember(member);
+				deposit.setCredit(payment.getAmount());
+				deposit.setDebit(BigDecimal.ZERO);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				depositDao.persist(deposit);
+				messageService.depositPushTo(deposit);
+			} else
+			if (payment.getType() == Payment.Type.recharge) {
+				Member member = payment.getPayee();
+				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+				member.setBalance(member.getBalance().add(payment.getAmount()));
+				memberDao.merge(member);
+				Deposit deposit = new Deposit();
+				deposit.setBalance(member.getBalance());
+				deposit.setType(Deposit.Type.recharge);
+				deposit.setMemo(payment.getMemo());
+				deposit.setMember(member);
+				deposit.setCredit(payment.getAmount());
+				deposit.setDebit(BigDecimal.ZERO);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				depositDao.persist(deposit);
+				messageService.depositPushTo(deposit);
 			}
 			payment.setPaymentDate(new Date());
 			payment.setStatus(Payment.Status.success);
 			paymentDao.merge(payment);
+		} else {
+			if (!payment.getStatus().equals(Payment.Status.waiting)) {
+				throw new Exception("重复提交");
+			} else {
+				throw new Exception("无效付款单");
+			}
 		}
+
 	}
 
 

@@ -121,12 +121,18 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setTransfer(transfer);
 			depositDao.persist(deposit);
 			if (transfer.getType().equals(Transfer.Type.bankcard)) {
-				if (UnsPay.submit(transfer)) {
+				String result = UnsPay.submit(transfer);
+				if ("0000".equals(result)) {
 					transfer.setStatus(Transfer.Status.confirmed);
 					transferDao.merge(transfer);
 					return true;
 				} else {
-					return false;
+					if (!"3000".equals(result)) {
+						logger.error(UnsPay.getErrMsg(result));
+						throw new Exception("提交银行失败");
+					} else {
+						return true;
+					}
 				}
 			} else {
 				throw new Exception("暂不支持");
@@ -138,17 +144,22 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 
 	@Transactional
 	public synchronized Boolean transfer(Transfer transfer) throws Exception {
-		transferDao.refresh(transfer, LockModeType.PESSIMISTIC_WRITE);
-		if (transfer != null && transfer.getStatus().equals(Transfer.Status.waiting)) {
-			if (UnsPay.submit(transfer)) {
-				transfer.setStatus(Transfer.Status.confirmed);
-				transferDao.merge(transfer);
-				return true;
-			} else {
-				return false;
+		try {
+			transferDao.refresh(transfer, LockModeType.PESSIMISTIC_WRITE);
+			if (transfer != null && transfer.getStatus().equals(Transfer.Status.waiting)) {
+				String result = UnsPay.submit(transfer);
+				if ("0000".equals(result)) {
+					transfer.setStatus(Transfer.Status.confirmed);
+					transferDao.merge(transfer);
+					return true;
+				} else {
+					throw new Exception(UnsPay.getErrMsg(result));
+				}
+			} else{
+				throw new Exception("已经提交了");
 			}
-		} else{
-			return false;
+		} catch (Exception e) {
+			throw new Exception("提交出错了");
 		}
 	}
 
@@ -185,6 +196,8 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			transfer.setTransferDate(new Date());
 			transfer.setStatus(Transfer.Status.failure);
 			transferDao.merge(transfer);
+		} else {
+			throw new Exception("重复提交");
 		}
 	}
 

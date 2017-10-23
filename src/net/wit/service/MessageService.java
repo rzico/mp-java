@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Deposit;
 import net.wit.entity.Message;
 
 /**
@@ -17,5 +18,6 @@ import net.wit.entity.Message;
 
 public interface MessageService extends BaseService<Message, Long> {
 	Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable);
-	public void pushTo(Message message);
+	public Boolean pushTo(Message message);
+	public Boolean depositPushTo(Deposit deposit);
 }

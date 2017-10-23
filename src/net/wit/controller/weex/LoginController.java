@@ -200,6 +200,7 @@ public class LoginController extends BaseController {
     public Message demo(HttpServletRequest request){
         Member member =memberService.find(1L);
         try {
+            User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             return Message.success(Message.LOGIN_SUCCESS);
