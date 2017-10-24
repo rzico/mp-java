@@ -22,8 +22,8 @@ import java.util.Date;
  * @date 2017-10-11 15:37:3
  */
  
-@Controller("adminAreaController")
-@RequestMapping("/admin/area")
+@Controller("mchAreaController")
+@RequestMapping("/mch/area")
 public class AreaController extends BaseController {
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;

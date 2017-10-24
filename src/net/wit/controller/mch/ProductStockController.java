@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:13
  */
  
-@Controller("adminProductStockController")
-@RequestMapping("/admin/productStock")
+@Controller("mchProductStockController")
+@RequestMapping("/mch/productStock")
 public class ProductStockController extends BaseController {
 	@Resource(name = "productStockServiceImpl")
 	private ProductStockService productStockService;

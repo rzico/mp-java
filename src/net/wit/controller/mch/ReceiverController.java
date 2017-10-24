@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:13
  */
  
-@Controller("adminReceiverController")
-@RequestMapping("/admin/receiver")
+@Controller("mchReceiverController")
+@RequestMapping("/mch/receiver")
 public class ReceiverController extends BaseController {
 	@Resource(name = "receiverServiceImpl")
 	private ReceiverService receiverService;

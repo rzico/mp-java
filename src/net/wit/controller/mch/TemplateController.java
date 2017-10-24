@@ -23,8 +23,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:16
  */
  
-@Controller("adminTemplateController")
-@RequestMapping("/admin/template")
+@Controller("mchTemplateController")
+@RequestMapping("/mch/template")
 public class TemplateController extends BaseController {
 	@Resource(name = "templateServiceImpl")
 	private TemplateService templateService;

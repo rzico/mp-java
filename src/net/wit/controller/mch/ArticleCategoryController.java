@@ -23,8 +23,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:4
  */
  
-@Controller("adminArticleCategoryController")
-@RequestMapping("/admin/articleCategory")
+@Controller("mchArticleCategoryController")
+@RequestMapping("/mch/articleCategory")
 public class ArticleCategoryController extends BaseController {
 	@Resource(name = "articleCategoryServiceImpl")
 	private ArticleCategoryService articleCategoryService;

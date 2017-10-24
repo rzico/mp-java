@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:5
  */
  
-@Controller("adminArticleReviewController")
-@RequestMapping("/admin/articleReview")
+@Controller("mchArticleReviewController")
+@RequestMapping("/mch/articleReview")
 public class ArticleReviewController extends BaseController {
 	@Resource(name = "articleReviewServiceImpl")
 	private ArticleReviewService articleReviewService;

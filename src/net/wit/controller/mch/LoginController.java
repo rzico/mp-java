@@ -32,8 +32,8 @@ import java.util.UUID;
  * @author rsico Team
  * @version 3.0
  */
-@Controller("adminLoginController")
-@RequestMapping("/admin/login")
+@Controller("mchLoginController")
+@RequestMapping("/mch/login")
 public class LoginController extends BaseController {
 
     @Resource(name = "rsaServiceImpl")

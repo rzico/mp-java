@@ -21,8 +21,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:8
  */
  
-@Controller("adminCategoryController")
-@RequestMapping("/admin/category")
+@Controller("mchCategoryController")
+@RequestMapping("/mch/category")
 public class CategoryController extends BaseController {
 	@Resource(name = "categoryServiceImpl")
 	private CategoryService categoryService;

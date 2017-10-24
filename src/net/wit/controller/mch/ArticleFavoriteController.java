@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:4
  */
  
-@Controller("adminArticleFavoriteController")
-@RequestMapping("/admin/articleFavorite")
+@Controller("mchArticleFavoriteController")
+@RequestMapping("/mch/articleFavorite")
 public class ArticleFavoriteController extends BaseController {
 	@Resource(name = "articleFavoriteServiceImpl")
 	private ArticleFavoriteService articleFavoriteService;

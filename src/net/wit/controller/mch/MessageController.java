@@ -21,8 +21,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:10
  */
  
-@Controller("adminMessageController")
-@RequestMapping("/admin/message")
+@Controller("mchMessageController")
+@RequestMapping("/mch/message")
 public class MessageController extends BaseController {
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;

@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:8
  */
  
-@Controller("adminDepositController")
-@RequestMapping("/admin/deposit")
+@Controller("mchDepositController")
+@RequestMapping("/mch/deposit")
 public class DepositController extends BaseController {
 	@Resource(name = "depositServiceImpl")
 	private DepositService depositService;

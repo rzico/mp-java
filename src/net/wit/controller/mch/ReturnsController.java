@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:14
  */
  
-@Controller("adminReturnsController")
-@RequestMapping("/admin/returns")
+@Controller("mchReturnsController")
+@RequestMapping("/mch/returns")
 public class ReturnsController extends BaseController {
 	@Resource(name = "returnsServiceImpl")
 	private ReturnsService returnsService;

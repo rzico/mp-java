@@ -23,8 +23,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:15
  */
  
-@Controller("adminSmssendController")
-@RequestMapping("/admin/smssend")
+@Controller("mchSmssendController")
+@RequestMapping("/mch/smssend")
 public class SmssendController extends BaseController {
 	@Resource(name = "smssendServiceImpl")
 	private SmssendService smssendService;

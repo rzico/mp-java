@@ -23,8 +23,8 @@ import java.util.Date;
  * @date 2017-10-11 15:37:9
  */
  
-@Controller("adminGoodsController")
-@RequestMapping("/admin/goods")
+@Controller("mchGoodsController")
+@RequestMapping("/mch/goods")
 public class GoodsController extends BaseController {
 	@Resource(name = "goodsServiceImpl")
 	private GoodsService goodsService;

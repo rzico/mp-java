@@ -26,8 +26,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:3
  */
  
-@Controller("adminAdminController")
-@RequestMapping("/admin/admin")
+@Controller("mchAdminController")
+@RequestMapping("/mch/admin")
 public class AdminController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;

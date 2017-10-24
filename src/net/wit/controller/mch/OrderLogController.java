@@ -23,8 +23,8 @@ import java.util.Date;
  * @date 2017-10-11 15:37:11
  */
  
-@Controller("adminOrderLogController")
-@RequestMapping("/admin/orderLog")
+@Controller("mchOrderLogController")
+@RequestMapping("/mch/orderLog")
 public class OrderLogController extends BaseController {
 	@Resource(name = "orderLogServiceImpl")
 	private OrderLogService orderLogService;

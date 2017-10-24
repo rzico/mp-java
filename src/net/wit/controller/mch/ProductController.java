@@ -26,8 +26,8 @@ import java.util.Date;
  * @date 2017-10-11 15:37:12
  */
  
-@Controller("adminProductController")
-@RequestMapping("/admin/product")
+@Controller("mchProductController")
+@RequestMapping("/mch/product")
 public class ProductController extends BaseController {
 	@Resource(name = "productServiceImpl")
 	private ProductService productService;

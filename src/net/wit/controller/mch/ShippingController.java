@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:15
  */
  
-@Controller("adminShippingController")
-@RequestMapping("/admin/shipping")
+@Controller("mchShippingController")
+@RequestMapping("/mch/shipping")
 public class ShippingController extends BaseController {
 	@Resource(name = "shippingServiceImpl")
 	private ShippingService shippingService;

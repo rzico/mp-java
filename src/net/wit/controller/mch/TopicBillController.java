@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:16
  */
  
-@Controller("adminTopicBillController")
-@RequestMapping("/admin/topicBill")
+@Controller("mchTopicBillController")
+@RequestMapping("/mch/topicBill")
 public class TopicBillController extends BaseController {
 	@Resource(name = "topicBillServiceImpl")
 	private TopicBillService topicBillService;

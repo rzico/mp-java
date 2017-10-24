@@ -43,8 +43,8 @@ import java.util.Map;
  * @author rsico Team
  * @version 3.0
  */
-@Controller("adminCommonController")
-@RequestMapping("/admin/common")
+@Controller("mchCommonController")
+@RequestMapping("/mch/common")
 public class CommonController implements ServletContextAware {
 
 	@Value("${system.name}")

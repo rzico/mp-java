@@ -23,8 +23,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:16
  */
  
-@Controller("adminTopicController")
-@RequestMapping("/admin/topic")
+@Controller("mchTopicController")
+@RequestMapping("/mch/topic")
 public class TopicController extends BaseController {
 	@Resource(name = "topicServiceImpl")
 	private TopicService topicService;

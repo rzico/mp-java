@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:15
  */
  
-@Controller("adminTagController")
-@RequestMapping("/admin/tag")
+@Controller("mchTagController")
+@RequestMapping("/mch/tag")
 public class TagController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;

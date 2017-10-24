@@ -25,8 +25,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:11
  */
  
-@Controller("adminPaymentController")
-@RequestMapping("/admin/payment")
+@Controller("mchPaymentController")
+@RequestMapping("/mch/payment")
 public class PaymentController extends BaseController {
 
 	@Resource(name = "memberServiceImpl")

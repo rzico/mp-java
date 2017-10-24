@@ -21,8 +21,8 @@ import java.util.List;
  * @date 2017-10-20 17:56:10
  */
  
-@Controller("adminBankcardController")
-@RequestMapping("/admin/bankcard")
+@Controller("mchBankcardController")
+@RequestMapping("/mch/bankcard")
 public class BankcardController extends BaseController {
 	@Resource(name = "bankcardServiceImpl")
 	private BankcardService bankcardService;

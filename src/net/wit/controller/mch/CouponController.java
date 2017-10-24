@@ -23,8 +23,8 @@ import java.util.Date;
  * @date 2017-10-11 15:37:8
  */
  
-@Controller("adminCouponController")
-@RequestMapping("/admin/coupon")
+@Controller("mchCouponController")
+@RequestMapping("/mch/coupon")
 public class CouponController extends BaseController {
 	@Resource(name = "couponServiceImpl")
 	private CouponService couponService;

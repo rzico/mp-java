@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:4
  */
  
-@Controller("adminArticleCatalogController")
-@RequestMapping("/admin/articleCatalog")
+@Controller("mchArticleCatalogController")
+@RequestMapping("/mch/articleCatalog")
 public class ArticleCatalogController extends BaseController {
 	@Resource(name = "articleCatalogServiceImpl")
 	private ArticleCatalogService articleCatalogService;

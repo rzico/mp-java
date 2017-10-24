@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-17 21:43:40
  */
  
-@Controller("adminTransferController")
-@RequestMapping("/admin/transfer")
+@Controller("mchTransferController")
+@RequestMapping("/mch/transfer")
 public class TransferController extends BaseController {
 	@Resource(name = "transferServiceImpl")
 	private TransferService transferService;

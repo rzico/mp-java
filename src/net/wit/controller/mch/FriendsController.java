@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:9
  */
  
-@Controller("adminFriendsController")
-@RequestMapping("/admin/friends")
+@Controller("mchFriendsController")
+@RequestMapping("/mch/friends")
 public class FriendsController extends BaseController {
 	@Resource(name = "friendsServiceImpl")
 	private FriendsService friendsService;

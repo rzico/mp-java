@@ -23,8 +23,8 @@ import java.util.Date;
  * @date 2017-10-11 15:37:14
  */
  
-@Controller("adminRoleController")
-@RequestMapping("/admin/role")
+@Controller("mchRoleController")
+@RequestMapping("/mch/role")
 public class RoleController extends BaseController {
 	@Resource(name = "roleServiceImpl")
 	private RoleService roleService;

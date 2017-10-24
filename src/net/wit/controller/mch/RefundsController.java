@@ -24,8 +24,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:13
  */
  
-@Controller("adminRefundsController")
-@RequestMapping("/admin/refunds")
+@Controller("mchRefundsController")
+@RequestMapping("/mch/refunds")
 public class RefundsController extends BaseController {
 	@Resource(name = "refundsServiceImpl")
 	private RefundsService refundsService;

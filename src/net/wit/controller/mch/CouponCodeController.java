@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:8
  */
  
-@Controller("adminCouponCodeController")
-@RequestMapping("/admin/couponCode")
+@Controller("mchCouponCodeController")
+@RequestMapping("/mch/couponCode")
 public class CouponCodeController extends BaseController {
 	@Resource(name = "couponCodeServiceImpl")
 	private CouponCodeService couponCodeService;

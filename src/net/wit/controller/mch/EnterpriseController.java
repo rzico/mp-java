@@ -22,8 +22,8 @@ import java.util.List;
  * @date 2017-10-11 15:37:9
  */
  
-@Controller("adminEnterpriseController")
-@RequestMapping("/admin/enterprise")
+@Controller("mchEnterpriseController")
+@RequestMapping("/mch/enterprise")
 public class EnterpriseController extends BaseController {
 	@Resource(name = "enterpriseServiceImpl")
 	private EnterpriseService enterpriseService;
