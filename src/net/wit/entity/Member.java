@@ -30,6 +30,7 @@ import net.wit.util.JsonUtils;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -260,6 +261,20 @@ public class Member extends BaseEntity {
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Deposit> deposits = new HashSet<Deposit>();
+
+	/** 优惠券 */
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	@Where(clause="isUsed=0")
+	@OrderBy("createDate desc")
+	private Set<CouponCode> couponCodes = new HashSet<CouponCode>();
+
+	/** 订单 */
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	@Where(clause="orderStatus<2")
+	@OrderBy("createDate desc")
+	private Set<Order> orders = new HashSet<Order>();
 
 	/** 收款单 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -665,6 +680,22 @@ public class Member extends BaseEntity {
 		this.scene = scene;
 	}
 
+	public Set<CouponCode> getCouponCodes() {
+		return couponCodes;
+	}
+
+	public void setCouponCodes(Set<CouponCode> couponCodes) {
+		this.couponCodes = couponCodes;
+	}
+
+	public Set<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
+
 	/**
 	 * 获取会员注册项值
 	 * 
@@ -824,7 +855,7 @@ public class Member extends BaseEntity {
 
 	}
 
-	public Long decodeUserId(String userId) {
+	public static Long decodeUserId(String userId) {
 		if (userId!=null) {
 			String uid = userId.substring(2);
 			return Long.parseLong(uid)-10200;

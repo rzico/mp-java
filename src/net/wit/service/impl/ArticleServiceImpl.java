@@ -68,7 +68,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	public void delete(Long id) {
 		Article article = articleDao.find(id);
 		article.setDeleted(true);
-		super.save(article);
+		super.update(article);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 		for (Long id:ids) {
 			Article article = articleDao.find(id);
 			article.setDeleted(true);
-			super.save(article);
+			super.update(article);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Article article) {
 		article.setDeleted(true);
-		super.save(article);
+		super.update(article);
 	}
 
 	public Page<Article> findPage(Date beginDate,Date endDate, List<Tag> tags, Pageable pageable) {

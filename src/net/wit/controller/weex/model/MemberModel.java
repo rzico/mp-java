@@ -1,4 +1,5 @@
 package net.wit.controller.weex.model;
+import net.wit.entity.CouponCode;
 import net.wit.entity.Member;
 
 import java.io.Serializable;
@@ -15,6 +16,8 @@ public class MemberModel implements Serializable {
     private String nickName;
     /** 收藏 */
     private int favorite;
+    /** 余额 */
+    private BigDecimal balance;
     /** 粉丝 */
     private int fans;
     /** 关注 */
@@ -23,6 +26,10 @@ public class MemberModel implements Serializable {
     private String autograph;
     /** 头像 */
     private String logo;
+    /** 卡包 */
+    private int coupon;
+    /** 订单 */
+    private int order;
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
 
@@ -90,6 +97,30 @@ public class MemberModel implements Serializable {
         this.tags = tags;
     }
 
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public int getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(int coupon) {
+        this.coupon = coupon;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -99,5 +130,14 @@ public class MemberModel implements Serializable {
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
-     }
+        this.balance = member.getBalance();
+        this.order = member.getOrders().size();
+        int c=0;
+        for (CouponCode couponCode:member.getCouponCodes()) {
+            if (couponCode.getEnabled()) {
+                c=c+1;
+            }
+        }
+        this.coupon = c;
+    }
 }

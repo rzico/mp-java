@@ -57,8 +57,10 @@ public class EnterpriseController extends BaseController {
 	public String index(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
+		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("agent","城市代理商"));
+		types.add(new MapEntity("personal","个人代理商"));
 		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","代理商"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());
@@ -74,8 +76,10 @@ public class EnterpriseController extends BaseController {
 	public String add(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
+		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("agent","城市代理商"));
+		types.add(new MapEntity("personal","个人代理商"));
 		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","代理商"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());
@@ -140,8 +144,10 @@ public class EnterpriseController extends BaseController {
 	public String edit(Long id, ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
+		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("agent","城市代理商"));
+		types.add(new MapEntity("personal","个人代理商"));
 		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","代理商"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());

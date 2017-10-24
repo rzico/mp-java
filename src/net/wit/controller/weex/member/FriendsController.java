@@ -7,6 +7,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.weex.model.FriendsModel;
 import net.wit.controller.weex.model.MemberListModel;
 import net.wit.controller.weex.model.MemberModel;
+import net.wit.controller.weex.model.UserModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,22 @@ public class FriendsController extends BaseController {
 
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
+
+    /**
+     * 获取好友信息
+     */
+    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public Message userInfo(String userId, HttpServletRequest request){
+        Long id = Member.decodeUserId(userId);
+        Member member = memberService.find(id);
+        if (member==null) {
+            return Message.error("无效用户号");
+        }
+        UserModel model =new UserModel();
+        model.bind(member);
+        return Message.bind(model,request);
+    }
 
     /**
      *  好友列表

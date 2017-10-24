@@ -1,5 +1,6 @@
 package net.wit.controller.weex.member;
 
+import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -47,16 +50,22 @@ public class TemplateController extends BaseController {
     @Resource(name = "templateServiceImpl")
     private TemplateService templateService;
 
+    @Resource(name = "tagServiceImpl")
+    private TagService tagService;
+
      /**
      * 获取页面模版
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Message list(Template.Type type,HttpServletRequest request){
-        List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("type", Filter.Operator.eq,type));
-        List<Template> templates = templateService.findList(null,filters,null);
-        return Message.success(TemplateModel.bindList(templates),"发布成功");
+    public Message list(Tag.Type type,HttpServletRequest request){
+        List<Tag> tags = tagService.findList(type);
+        List<Object> model = new ArrayList<Object>();
+        for (Tag tag:tags) {
+           Map<String,Object> tagModel = new HashMap<String,Object>();
+           tagModel.put(tag.getName(),TemplateModel.bindList(tag.getTemplates()));
+        }
+        return Message.success(model,"发布成功");
     }
 
 }

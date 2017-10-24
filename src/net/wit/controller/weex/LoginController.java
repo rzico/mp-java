@@ -198,7 +198,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "demo", method = RequestMethod.GET)
     @ResponseBody
     public Message demo(HttpServletRequest request){
-        Member member =memberService.find(1L);
+        Member member =memberService.find(2L);
         try {
             User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());

@@ -1,5 +1,7 @@
 package net.wit.entity;
 
+import sun.jvm.hotspot.oops.BooleanField;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -27,12 +29,12 @@ public class CouponCode extends BaseEntity {
 	@Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '号码'")
 	private String code;
 
-	/** 是否已使用 */
-	@Column(nullable = false,columnDefinition="bit not null comment '是否启用'")
+	/** 是否使用 */
+	@Column(nullable = false,columnDefinition="bit not null comment '是否使用'")
 	private Boolean isUsed;
 
 	/** 使用日期 */
-	@Column(columnDefinition="datetime comment '是否启用'")
+	@Column(columnDefinition="datetime comment '使用日期'")
 	private Date usedDate;
 
 	/** 优惠券 */
@@ -171,6 +173,10 @@ public class CouponCode extends BaseEntity {
 		if (getOrder() != null) {
 			getOrder().setCouponCode(null);
 		}
+	}
+
+	public Boolean getEnabled() {
+		return !isUsed && getCoupon().hasExpired() && getCoupon().hasExpired() && !getCoupon().getDeleted() && getCoupon().getIsEnabled();
 	}
 
 }

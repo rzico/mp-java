@@ -6,7 +6,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -59,35 +61,35 @@ public class Tag extends OrderEntity{
 
     /*文章列表*/
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
-    private Set<Article> articles = new HashSet<Article>();
+    private List<Article> articles = new ArrayList<Article>();
 
     /*会员列表*/
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
-    private Set<Member> members = new HashSet<Member>();
+    private List<Member> members = new ArrayList<Member>();
 
     /*模板列表*/
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
-    private Set<Template> templates = new HashSet<Template>();
+    private List<Template> templates = new ArrayList<Template>();
 
     /*模板列表*/
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
-    private Set<Topic> topics = new HashSet<Topic>();
+    private List<Topic> topics = new ArrayList<Topic>();
 
     /*模板列表*/
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
-    private Set<Product> products = new HashSet<Product>();
+    private List<Product> products = new ArrayList<Product>();
 
     /*删除前处理*/
     @PreRemove
     public void preRemove(){
-        Set<Article> articles = getArticles();
+        List<Article> articles = getArticles();
         if(articles!=null){
             for(Article article:articles){
                 article.getTags().remove(this);
             }
 
         }
-        Set<Member> members = getMembers();
+        List<Member> members = getMembers();
         if(members!=null){
             for(Member member:members){
                 member.getTags().remove(this);
@@ -120,15 +122,6 @@ public class Tag extends OrderEntity{
     public void setMemo(String memo) {
         this.memo = memo;
     }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
-
     public void setType(net.wit.entity.Tag.Type type) {
         this.type = type;
     }
@@ -137,35 +130,43 @@ public class Tag extends OrderEntity{
         return type;
     }
 
-    public Set<Member> getMembers() {
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
+    }
+
+    public List<Member> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<Member> members) {
+    public void setMembers(List<Member> members) {
         this.members = members;
     }
 
-    public Set<Template> getTemplates() {
+    public List<Template> getTemplates() {
         return templates;
     }
 
-    public void setTemplates(Set<Template> templates) {
+    public void setTemplates(List<Template> templates) {
         this.templates = templates;
     }
 
-    public Set<Topic> getTopics() {
+    public List<Topic> getTopics() {
         return topics;
     }
 
-    public Set<Product> getProducts() {
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
+    }
+
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
-    }
-
-    public void setTopics(Set<Topic> topics) {
-        this.topics = topics;
     }
 }

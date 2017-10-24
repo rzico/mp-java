@@ -89,7 +89,7 @@ public class Push {
                 if (ua.contains("Andriod")) {
                     aliPushToAndriod(message);
                 }
-                if (ua.contains("IOS")) {
+                if (ua.contains("iOS")) {
                     aliPushToIOS(message);
                 }
             } else {

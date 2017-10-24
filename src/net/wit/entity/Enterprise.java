@@ -1,5 +1,6 @@
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -24,8 +25,12 @@ public class Enterprise extends BaseEntity {
     public static enum Type{
         /** 运营商 */
         operate,
-        /** 代理商 */
-        agent
+        /** 城市代理商 */
+        agent,
+        /** 个人代理商 */
+        personal,
+        /** 入驻商家 */
+        customer
     };
 
     /** 企业 */
@@ -44,11 +49,17 @@ public class Enterprise extends BaseEntity {
     @JoinColumn(columnDefinition="bigint(20) comment '地区'")
     private Area area;
 
-    /** 结算比例 10% */
+    /** 结算佣金 10% */
     @Min(0)
     @NotNull
-    @Column(columnDefinition="decimal(21,6) not null default 0 comment '结算比例'")
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '结算佣金'")
     private BigDecimal brokerage;
+
+    /** 是否删除 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否删除'")
+    @JsonIgnore
+    private Boolean deleted;
 
     public Type getType() {
         return type;
@@ -82,6 +93,13 @@ public class Enterprise extends BaseEntity {
         this.brokerage = brokerage;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public MapEntity getMapArea() {
         if (getArea() != null) {

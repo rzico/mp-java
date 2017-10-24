@@ -35,13 +35,12 @@
 			</bean>
 		</mvc:interceptor>
 
-		<!--<mvc:interceptor>-->
-			<!--<mvc:mapping path="/weex/**" />-->
-			<!--<mvc:exclude-mapping path="/weex/common/**" />-->
-		    <!--<mvc:exclude-mapping path="/file.jhtml" />-->
-			<!--<bean id="weexInterceptor" class="net.wit.interceptor.WeexInterceptor">-->
-			<!--</bean>-->
-		<!--</mvc:interceptor>-->
+		<mvc:interceptor>
+			<mvc:mapping path="/weex/**" />
+			<mvc:exclude-mapping path="/weex/common/**" />
+			<bean id="weexInterceptor" class="net.wit.interceptor.WeexInterceptor">
+			</bean>
+		</mvc:interceptor>
 
 		<mvc:interceptor>
 			<mvc:mapping path="/weex/member/**" />

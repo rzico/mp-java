@@ -146,6 +146,14 @@ public class Admin extends BaseEntity {
     private Enterprise enterprise;
 
     /**
+     * 绑定会员
+     */
+    @NotNull
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+    /**
      * 角色
      */
     @JsonIgnore
@@ -278,6 +286,22 @@ public class Admin extends BaseEntity {
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public MapEntity getMapMember() {
+        if (getMember() != null) {
+            return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
+        } else {
+            return null;
+        }
     }
 
     public MapEntity getMapEnterprise() {

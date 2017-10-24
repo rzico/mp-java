@@ -68,7 +68,7 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	public void delete(Long id) {
 		ArticleReview review = articleReviewDao.find(id);
 		review.setDeleted(true);
-		super.save(review);
+		super.update(review);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 		for (Long id:ids) {
 			ArticleReview review = articleReviewDao.find(id);
 			review.setDeleted(true);
-			super.save(review);
+			super.update(review);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleReview articleReview) {
 		articleReview.setDeleted(true);
-		super.save(articleReview);
+		super.update(articleReview);
 	}
 
 	public Page<ArticleReview> findPage(Date beginDate,Date endDate, Pageable pageable) {

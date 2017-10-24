@@ -212,12 +212,12 @@ public class UnsPay {
             params.put("04result_code", result_code);
             params.put("05result_msg", result_msg);
             String keystr = UnsPay.joinValue(params);
-            System.out.println(keystr);
-            System.out.println(MD5Utils.getMD5Str(keystr).toUpperCase());
+            //System.out.println(keystr);
+            //System.out.println(MD5Utils.getMD5Str(keystr).toUpperCase());
             if (mac.equals(MD5Utils.getMD5Str(keystr).toUpperCase())) {
-                System.out.println(result_code);
-                System.out.println(orderId);
-                System.out.println(sn);
+                //System.out.println(result_code);
+                //System.out.println(orderId);
+                //System.out.println(sn);
                 if ("0000".equals(result_code) && sn.equals(orderId)) {
                     return "00";
                 } else {

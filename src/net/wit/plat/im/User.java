@@ -37,7 +37,7 @@ public class User {
             "cetLRxzP5Fw9YYe007/nQMMkLH0e3QJKMtylSsTXBz/jhhyvzNTktA==\n"+
             "-----END PUBLIC KEY-----";
     public static String im_attr="https://console.tim.qq.com/v4/openim/im_set_attr_name?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
-    public static String user_attr="https://console.tim.qq.com/v4/openim/im_set_attr?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
+    public static String user_attr="https://console.tim.qq.com/v4/im_open_login_svc/account_import?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static boolean checkUserSig(String urlSig,String username) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
@@ -98,21 +98,16 @@ public class User {
         String userSig=User.createUserSig("zhangsr");
         int random=StringUtils.Random6Code();
 
-        String url = im_attr.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+        String url = user_attr.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
         Map<String,String> attrs = new HashMap<String,String>();
-        attrs.put("userId",member.getId());
-        attrs.put("logo",member.getLogo());
-        attrs.put("nickName",member.getNickName());
-        String data ="{\"UserAttrs\":"+
-                     "[{\"To_Account\": \""+member.userId()+"\","+
-                       "\"Attrs\":"+JsonUtils.toJson(attrs)+"\"}"+
-                       "}"+
-                     "]}";
+        attrs.put("Identifier",member.userId());
+        attrs.put("FaceUrl",member.getLogo());
+        attrs.put("Nick",member.getNickName());
         HttpClient httpClient = new DefaultHttpClient();
         try {
             HttpPost httpPost = new HttpPost(url);
-            httpPost.setEntity(new StringEntity(data, "UTF-8"));
+            httpPost.setEntity(new StringEntity(JsonUtils.toJson(attrs), "UTF-8"));
             HttpResponse response = httpClient.execute(httpPost);
             String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             Map resp = JsonUtils.toObject(jsonStr,Map.class);

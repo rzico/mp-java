@@ -11,8 +11,10 @@ import javax.annotation.Resource;
 import net.wit.*;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
-import net.wit.plat.aliyun.Push;
+import net.wit.plat.im.Push;
+import net.wit.plat.im.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -34,6 +36,9 @@ import net.wit.service.MessageService;
 public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implements MessageService {
 	@Resource(name = "messageDaoImpl")
 	private MessageDao messageDao;
+
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
 
 	@Resource(name = "messageDaoImpl")
 	public void setBaseDao(MessageDao messageDao) {
@@ -67,7 +72,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	public void delete(Long id) {
 		Message m = super.find(id);
 		m.setDeleted(true);
-		super.save(m);
+		super.update(m);
 	}
 
 	@Override
@@ -77,7 +82,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		for (Long id:ids) {
 			Message m = super.find(id);
 			m.setDeleted(true);
-			super.save(m);
+			super.update(m);
 		}
 	}
 
@@ -86,14 +91,31 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Message message) {
 		message.setDeleted(true);
-		super.save(message);
+		super.update(message);
 	}
 
 	@Transactional
 	public Boolean pushTo(Message message) {
 		try {
+			String userName = "gm_"+String.valueOf(10200+message.getType().ordinal());
+			Member sender = memberDao.findByUsername(userName);
+			if (sender==null) {
+				sender = new Member();
+				sender.setUsername(userName);
+				sender.setNickName(message.getTitle());
+				sender.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
+				sender.setPoint(0L);
+				sender.setBalance(BigDecimal.ZERO);
+				sender.setIsEnabled(true);
+				sender.setIsLocked(false);
+				sender.setLoginFailureCount(0);
+				sender.setRegisterIp("127.0.0.1");
+				memberDao.persist(sender);
+				User.userAttr(sender);
+			}
+			message.setMember(sender);
 			super.save(message);
-			Push.aliPush(message);
+			Push.impush(message);
 			return true;
 		} catch (Exception e) {
 			return false;

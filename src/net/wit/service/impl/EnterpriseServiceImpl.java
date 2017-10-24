@@ -66,21 +66,28 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Enterprise enterprise = enterpriseDao.find(id);
+		enterprise.setDeleted(true);
+		super.update(enterprise);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			Enterprise enterprise = enterpriseDao.find(id);
+			enterprise.setDeleted(true);
+			super.update(enterprise);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Enterprise enterprise) {
-		super.delete(enterprise);
+		enterprise.setDeleted(true);
+		super.update(enterprise);
 	}
 
 	public Page<Enterprise> findPage(Date beginDate,Date endDate, Pageable pageable) {
