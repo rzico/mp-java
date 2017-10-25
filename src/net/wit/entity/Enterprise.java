@@ -45,6 +45,7 @@ public class Enterprise extends BaseEntity {
     private Type type;
 
     /** 地区 null 代表没有区域限制 */
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) comment '地区'")
     private Area area;

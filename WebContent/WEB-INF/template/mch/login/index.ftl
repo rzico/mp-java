@@ -9,15 +9,15 @@
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <!--[if lt IE 9]>
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
-    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/respond.min.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
     <![endif]-->
-    <link href="http://cdn.rzico.com/weex/resources/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css"/>
-    <link href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css"/>
-    <link href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="http://cdn.rzico.com/weex/resources/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet"
+    <link href="${base}/resources/admin/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/resources/admin/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/resources/admin/h-ui.admin/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet"
           type="text/css"/>
     <!--[if IE 6]>
-    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <title>后台登录</title>
