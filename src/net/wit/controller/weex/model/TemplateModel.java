@@ -15,8 +15,6 @@ public class TemplateModel implements Serializable {
     private String sn;
     /** 名称 */
     private String name;
-    /** 文件名 */
-    private String vue;
     /** 缩例图 */
     private String thumbnial;
 
@@ -44,19 +42,10 @@ public class TemplateModel implements Serializable {
         this.thumbnial = thumbnial;
     }
 
-    public String getVue() {
-        return vue;
-    }
-
-    public void setVue(String vue) {
-        this.vue = vue;
-    }
-
     public void bind(Template template) {
         this.sn = template.getSn();
         this.name = template.getName();
         this.thumbnial = template.getThumbnial();
-        this.vue = template.getVue();
     }
 
     public static List<TemplateModel> bindList(List<Template> templates) {

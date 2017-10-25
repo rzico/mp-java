@@ -130,10 +130,12 @@ public class Member extends BaseEntity {
 
 	/** 最后登录IP */
 	@Column(columnDefinition="varchar(255) comment '最后登录IP'")
+	@JsonIgnore
 	private String loginIp;
 
 	/** 最后登录日期 */
 	@Column(columnDefinition="datetime comment '最后登录日期'")
+	@JsonIgnore
 	private Date loginDate;
 
 	/** 昵称 */
@@ -180,24 +182,29 @@ public class Member extends BaseEntity {
 
 	/** 手机 */
 	@Column(columnDefinition="varchar(50) comment '手机'")
+	@JsonIgnore
 	private String mobile;
 
 	/** 设备号 */
 	@Column(columnDefinition="varchar(50) comment '设备号'")
+	@JsonIgnore
 	private String uuid;
 
 	/** 设备环境 IOS Andriod */
 	@Column(columnDefinition="varchar(255) comment '设备环境'")
+	@JsonIgnore
 	private String scene;
 
 	/** 会员注册项值0 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
+	@JsonIgnore
 	private String attributeValue0;
 
 	/** 会员注册项值1 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值1'")
+	@JsonIgnore
 	private String attributeValue1;
 
 	/** 会员注册项值2 */
@@ -208,6 +215,7 @@ public class Member extends BaseEntity {
 	/** 会员注册项值3 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值3'")
+	@JsonIgnore
 	private String attributeValue3;
 
 	/** 会员注册项值4 */
@@ -218,26 +226,30 @@ public class Member extends BaseEntity {
 	/** 会员注册项值5 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值5'")
+	@JsonIgnore
 	private String attributeValue5;
 
 	/** 会员注册项值6 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值6'")
+	@JsonIgnore
 	private String attributeValue6;
 
 	/** 会员注册项值7 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值7'")
+	@JsonIgnore
 	private String attributeValue7;
 
 	/** 会员注册项值8 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值8'")
+	@JsonIgnore
 	private String attributeValue8;
 
-	/** 会员注册项值9 */
+	/** IM状态 */
 	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值9'")
+	@Column(columnDefinition="varchar(255) comment 'IM状态'")
 	private String attributeValue9;
 
 	/** 定位 */

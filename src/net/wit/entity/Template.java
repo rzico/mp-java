@@ -58,12 +58,6 @@ public class Template extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '模板名称'")
 	private String name;
 
-	/** 模板文件 */
-	@NotNull
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) not null comment '模板文件'")
-	private String vue;
-
 	/** 缩例图 */
 	@Length(max = 255)
 	@Column(columnDefinition="varchar(255) comment '缩例图'")
@@ -140,14 +134,6 @@ public class Template extends OrderEntity {
 
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
-	}
-
-	public String getVue() {
-		return vue;
-	}
-
-	public void setVue(String vue) {
-		this.vue = vue;
 	}
 
 	public MapEntity getMapTags() {

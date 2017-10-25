@@ -24,6 +24,8 @@ public class MessageModel implements Serializable {
     private Integer unRead;
     /** 时间 */
     private Date createDate;
+    /** 来源 */
+    private Long srcId;
 
     public String getNickName() {
         return nickName;
@@ -81,6 +83,14 @@ public class MessageModel implements Serializable {
         this.userId = userId;
     }
 
+    public Long getSrcId() {
+        return srcId;
+    }
+
+    public void setSrcId(Long srcId) {
+        this.srcId = srcId;
+    }
+
     public void bind(net.wit.entity.Message message) {
         Member member = message.getReceiver();
         this.nickName = member.getNickName();
@@ -93,6 +103,7 @@ public class MessageModel implements Serializable {
         }
         this.createDate = message.getCreateDate();
         this.type = message.getType();
+        this.srcId = message.getSrcId();
      }
 
     public static List<MessageModel> bindList(List<net.wit.entity.Message> messages) {

@@ -95,6 +95,9 @@ public class Message extends BaseEntity {
 	@JsonIgnore
 	private Member member;
 
+	/** 消息来源 */
+	private Long srcId;
+
 	public Message.Type getType() {
 		return type;
 	}
@@ -159,9 +162,17 @@ public class Message extends BaseEntity {
 		this.member = member;
 	}
 
+	public Long getSrcId() {
+		return srcId;
+	}
+
+	public void setSrcId(Long srcId) {
+		this.srcId = srcId;
+	}
+
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
 		} else {
 			return null;
 		}
@@ -169,7 +180,7 @@ public class Message extends BaseEntity {
 
 	public MapEntity getMapReceiver() {
 		if (getReceiver() != null) {
-			return new MapEntity(getReceiver().getId().toString(), getReceiver().getNickName()+"("+getReceiver().getName()+")");
+			return new MapEntity(getReceiver().getId().toString(), getReceiver().getNickName()+(getReceiver().getName()==null?"":"("+getReceiver().getName()+")") );
 		} else {
 			return null;
 		}

@@ -111,8 +111,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				sender.setLoginFailureCount(0);
 				sender.setRegisterIp("127.0.0.1");
 				memberDao.persist(sender);
-				User.userAttr(sender);
 			}
+			User.userAttr(sender);
 			message.setMember(sender);
 			super.save(message);
 			Push.impush(message);

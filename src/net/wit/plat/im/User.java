@@ -14,10 +14,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 import static com.tls.tls_sigature.tls_sigature.CheckTLSSignatureEx;
@@ -38,6 +35,7 @@ public class User {
             "-----END PUBLIC KEY-----";
     public static String im_attr="https://console.tim.qq.com/v4/openim/im_set_attr_name?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_attr="https://console.tim.qq.com/v4/im_open_login_svc/account_import?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
+    public static String user_state="https://console.tim.qq.com/v4/openim/querystate?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static boolean checkUserSig(String urlSig,String username) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
@@ -112,6 +110,49 @@ public class User {
             String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             Map resp = JsonUtils.toObject(jsonStr,Map.class);
             if ("OK".equals(resp.get("ActionStatus"))) {
+                return true;
+            } else {
+                logger.error(resp.get("ErrorInfo"));
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return false;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+
+    }
+    public static boolean userState(List<Member> members) {
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String userSig=User.createUserSig("zhangsr");
+        int random=StringUtils.Random6Code();
+
+        String url = user_state.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+
+        Map<String,Object> data = new HashMap<String,Object>();
+        List<String> users = new ArrayList<String>();
+        for (Member member:members) {
+            users.add(member.userId());
+        }
+        data.put("To_Account",users);
+        HttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.setEntity(new StringEntity(JsonUtils.toJson(data), "UTF-8"));
+            HttpResponse response = httpClient.execute(httpPost);
+            String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+            Map resp = JsonUtils.toObject(jsonStr,Map.class);
+            if ("OK".equals(resp.get("ActionStatus"))) {
+                List<Map> states = new ArrayList<>();
+                states = JsonUtils.toObject(JsonUtils.toJson(resp.get("QueryResult")),List.class);
+                for (Member member:members) {
+                    for (Map m:states) {
+                        if (m.get("To_Account").toString().equals(member.userId())) {
+                            member.setAttributeValue9(m.get("State").toString());
+                        }
+                    }
+                }
                 return true;
             } else {
                 logger.error(resp.get("ErrorInfo"));

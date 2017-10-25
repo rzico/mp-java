@@ -9,16 +9,16 @@
     <link rel="Bookmark" href="/favicon.ico" >
     <link rel="Shortcut Icon" href="/favicon.ico" />
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/html5shiv.js"></script>
-    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/respond.min.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
 
     <![endif]-->
-    <link href="http://cdn.rzico.com/weex/resources/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="http://cdn.rzico.com/weex/resources/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="http://cdn.rzico.com/weex/resources/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/resources/admin/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
 
     <!--[if IE 6]>
-    <script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <title>空白页</title>
@@ -27,12 +27,12 @@
 <div class="pd-20">
     这是一个空白页
 </div>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/layer/2.4/layer.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/messages_zh.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script>
 </body>
 </html>

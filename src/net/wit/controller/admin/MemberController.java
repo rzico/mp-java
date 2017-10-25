@@ -9,6 +9,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.plat.im.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -289,6 +290,7 @@ public class MemberController extends BaseController {
 		}
 
 		Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
+		User.userState(page.getContent());
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
