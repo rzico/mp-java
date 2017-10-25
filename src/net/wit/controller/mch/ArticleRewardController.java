@@ -81,7 +81,7 @@ public class ArticleRewardController extends BaseController {
 
 		model.addAttribute("payments",paymentService.findAll());
 
-		return "/admin/articleReward/list";
+		return "/mch/articleReward/list";
 
 	}
 
@@ -106,7 +106,7 @@ public class ArticleRewardController extends BaseController {
 
 		model.addAttribute("payments",paymentService.findAll());
 
-		return "/admin/articleReward/add";
+		return "/mch/articleReward/add";
 	}
 
 
@@ -187,7 +187,7 @@ public class ArticleRewardController extends BaseController {
 
 		model.addAttribute("data",articleRewardService.find(id));
 
-		return "/admin/articleReward/edit";
+		return "/mch/articleReward/edit";
 	}
 
 	
@@ -278,7 +278,7 @@ public class ArticleRewardController extends BaseController {
 		model.addAttribute("payees",memberService.findAll());
 
 		model.addAttribute("payment",paymentService.find(id));
-		return "/admin/articleReward/view/paymentView";
+		return "/mch/articleReward/view/paymentView";
 	}
 
 
@@ -322,7 +322,7 @@ public class ArticleRewardController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("article",articleService.find(id));
-		return "/admin/articleReward/view/articleView";
+		return "/mch/articleReward/view/articleView";
 	}
 
 
@@ -344,7 +344,7 @@ public class ArticleRewardController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/articleReward/view/memberView";
+		return "/mch/articleReward/view/memberView";
 	}
 
 

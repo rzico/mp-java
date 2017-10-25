@@ -48,7 +48,7 @@ public class EnterpriseController extends BaseController {
 
 		model.addAttribute("areas",areaService.findAll());
 
-		return "/admin/enterprise/list";
+		return "/mch/enterprise/list";
 	}
 
 
@@ -67,7 +67,7 @@ public class EnterpriseController extends BaseController {
 
 		model.addAttribute("areas",areaService.findAll());
 
-		return "/admin/enterprise/add";
+		return "/mch/enterprise/add";
 	}
 
 
@@ -137,7 +137,7 @@ public class EnterpriseController extends BaseController {
 
 		model.addAttribute("data",enterpriseService.find(id));
 
-		return "/admin/enterprise/edit";
+		return "/mch/enterprise/edit";
 	}
 
 	
@@ -199,7 +199,7 @@ public class EnterpriseController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/enterprise/view/areaView";
+		return "/mch/enterprise/view/areaView";
 	}
 
 

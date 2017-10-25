@@ -55,7 +55,7 @@ public class CouponCodeController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/couponCode/list";
+		return "/mch/couponCode/list";
 	}
 
 
@@ -69,7 +69,7 @@ public class CouponCodeController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/couponCode/add";
+		return "/mch/couponCode/add";
 	}
 
 
@@ -136,7 +136,7 @@ public class CouponCodeController extends BaseController {
 
 		model.addAttribute("data",couponCodeService.find(id));
 
-		return "/admin/couponCode/edit";
+		return "/mch/couponCode/edit";
 	}
 
 	
@@ -195,7 +195,7 @@ public class CouponCodeController extends BaseController {
 
 
 		model.addAttribute("coupon",couponService.find(id));
-		return "/admin/couponCode/view/couponView";
+		return "/mch/couponCode/view/couponView";
 	}
 
 
@@ -217,7 +217,7 @@ public class CouponCodeController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/couponCode/view/memberView";
+		return "/mch/couponCode/view/memberView";
 	}
 
 

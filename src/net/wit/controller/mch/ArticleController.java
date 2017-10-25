@@ -78,7 +78,7 @@ public class ArticleController extends BaseController {
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
-		return "/admin/article/list";
+		return "/mch/article/list";
 	}
 
 
@@ -101,7 +101,7 @@ public class ArticleController extends BaseController {
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
-		return "/admin/article/add";
+		return "/mch/article/add";
 	}
 
 
@@ -225,7 +225,7 @@ public class ArticleController extends BaseController {
 
 		model.addAttribute("data",articleService.find(id));
 
-		return "/admin/article/edit";
+		return "/mch/article/edit";
 	}
 
 	
@@ -319,7 +319,7 @@ public class ArticleController extends BaseController {
 		model.addAttribute("types",types);
 
 		model.addAttribute("template",templateService.find(id));
-		return "/admin/article/view/templateView";
+		return "/mch/article/view/templateView";
 	}
 
 
@@ -336,7 +336,7 @@ public class ArticleController extends BaseController {
 		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("articleCatalog",articleCatalogService.find(id));
-		return "/admin/article/view/articleCatalogView";
+		return "/mch/article/view/articleCatalogView";
 	}
 
 
@@ -353,7 +353,7 @@ public class ArticleController extends BaseController {
 		model.addAttribute("articles",articleService.findAll());
 
 		model.addAttribute("articleCategory",articleCategoryService.find(id));
-		return "/admin/article/view/articleCategoryView";
+		return "/mch/article/view/articleCategoryView";
 	}
 
 
@@ -365,7 +365,7 @@ public class ArticleController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/article/view/areaView";
+		return "/mch/article/view/areaView";
 	}
 
 
@@ -387,7 +387,7 @@ public class ArticleController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/article/view/memberView";
+		return "/mch/article/view/memberView";
 	}
 
 

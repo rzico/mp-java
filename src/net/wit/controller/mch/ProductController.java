@@ -53,7 +53,7 @@ public class ProductController extends BaseController {
 
 		model.addAttribute("productCategorys",productCategoryService.findAll());
 
-		return "/admin/product/list";
+		return "/mch/product/list";
 	}
 
 
@@ -67,7 +67,7 @@ public class ProductController extends BaseController {
 
 		model.addAttribute("productCategorys",productCategoryService.findAll());
 
-		return "/admin/product/add";
+		return "/mch/product/add";
 	}
 
 
@@ -160,7 +160,7 @@ public class ProductController extends BaseController {
 
 		model.addAttribute("data",productService.find(id));
 
-		return "/admin/product/edit";
+		return "/mch/product/edit";
 	}
 
 	
@@ -245,7 +245,7 @@ public class ProductController extends BaseController {
 
 
 		model.addAttribute("goods",goodsService.find(id));
-		return "/admin/product/view/goodsView";
+		return "/mch/product/view/goodsView";
 	}
 
 
@@ -257,7 +257,7 @@ public class ProductController extends BaseController {
 		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("productCategory",productCategoryService.find(id));
-		return "/admin/product/view/productCategoryView";
+		return "/mch/product/view/productCategoryView";
 	}
 
 

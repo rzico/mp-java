@@ -62,7 +62,7 @@ public class OrderController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/order/list";
+		return "/mch/order/list";
 	}
 
 
@@ -80,7 +80,7 @@ public class OrderController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/order/add";
+		return "/mch/order/add";
 	}
 
 
@@ -191,7 +191,7 @@ public class OrderController extends BaseController {
 
 		model.addAttribute("data",orderService.find(id));
 
-		return "/admin/order/edit";
+		return "/mch/order/edit";
 	}
 
 	
@@ -290,7 +290,7 @@ public class OrderController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/order/view/areaView";
+		return "/mch/order/view/areaView";
 	}
 
 
@@ -312,7 +312,7 @@ public class OrderController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/order/view/memberView";
+		return "/mch/order/view/memberView";
 	}
 
 
@@ -326,7 +326,7 @@ public class OrderController extends BaseController {
 		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("couponCode",couponCodeService.find(id));
-		return "/admin/order/view/couponCodeView";
+		return "/mch/order/view/couponCodeView";
 	}
 
 

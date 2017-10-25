@@ -70,7 +70,7 @@ public class ArticleProductController extends BaseController {
 
 		model.addAttribute("products",productService.findAll());
 
-		return "/admin/articleProduct/list";
+		return "/mch/articleProduct/list";
 	}
 
 
@@ -84,7 +84,7 @@ public class ArticleProductController extends BaseController {
 
 		model.addAttribute("products",productService.findAll());
 
-		return "/admin/articleProduct/add";
+		return "/mch/articleProduct/add";
 	}
 
 
@@ -145,7 +145,7 @@ public class ArticleProductController extends BaseController {
 
 		model.addAttribute("data",articleProductService.find(id));
 
-		return "/admin/articleProduct/edit";
+		return "/mch/articleProduct/edit";
 	}
 
 	
@@ -230,7 +230,7 @@ public class ArticleProductController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("article",articleService.find(id));
-		return "/admin/articleProduct/view/articleView";
+		return "/mch/articleProduct/view/articleView";
 	}
 
 
@@ -244,7 +244,7 @@ public class ArticleProductController extends BaseController {
 		model.addAttribute("productCategorys",productCategoryService.findAll());
 
 		model.addAttribute("product",productService.find(id));
-		return "/admin/articleProduct/view/productView";
+		return "/mch/articleProduct/view/productView";
 	}
 
 

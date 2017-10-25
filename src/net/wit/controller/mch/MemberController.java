@@ -61,7 +61,7 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.member));
 
-		return "/admin/member/list";
+		return "/mch/member/list";
 	}
 
 
@@ -83,7 +83,7 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.member));
 
-		return "/admin/member/add";
+		return "/mch/member/add";
 	}
 
 
@@ -172,7 +172,7 @@ public class MemberController extends BaseController {
 
 		model.addAttribute("data",memberService.find(id));
 
-		return "/admin/member/edit";
+		return "/mch/member/edit";
 	}
 
 	
@@ -288,7 +288,7 @@ public class MemberController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/member/view/areaView";
+		return "/mch/member/view/areaView";
 	}
 
 
@@ -303,7 +303,7 @@ public class MemberController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		model.addAttribute("occupation",occupationService.find(id));
-		return "/admin/member/view/occupationView";
+		return "/mch/member/view/occupationView";
 	}
 
 

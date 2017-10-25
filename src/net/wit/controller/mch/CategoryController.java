@@ -40,7 +40,7 @@ public class CategoryController extends BaseController {
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
-		return "/admin/category/list";
+		return "/mch/category/list";
 	}
 
 
@@ -55,7 +55,7 @@ public class CategoryController extends BaseController {
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
-		return "/admin/category/add";
+		return "/mch/category/add";
 	}
 
 
@@ -121,7 +121,7 @@ public class CategoryController extends BaseController {
 
 		model.addAttribute("data",categoryService.find(id));
 
-		return "/admin/category/edit";
+		return "/mch/category/edit";
 	}
 
 	

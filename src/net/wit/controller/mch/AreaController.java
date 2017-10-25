@@ -38,7 +38,7 @@ public class AreaController extends BaseController {
 
 
 
-		return "/admin/area/list";
+		return "/mch/area/list";
 	}
 
 
@@ -50,7 +50,7 @@ public class AreaController extends BaseController {
 
 
 
-		return "/admin/area/add";
+		return "/mch/area/add";
 	}
 
 
@@ -115,7 +115,7 @@ public class AreaController extends BaseController {
 
 		model.addAttribute("data",areaService.find(id));
 
-		return "/admin/area/edit";
+		return "/mch/area/edit";
 	}
 
 	
@@ -174,7 +174,7 @@ public class AreaController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/area/view/areaView";
+		return "/mch/area/view/areaView";
 	}
 
 

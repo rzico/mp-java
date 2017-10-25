@@ -93,7 +93,7 @@ public class PaymentController extends BaseController {
 
 		model.addAttribute("payees",memberService.findAll());
 
-		return "/admin/payment/list";
+		return "/mch/payment/list";
 	}
 
 
@@ -131,7 +131,7 @@ public class PaymentController extends BaseController {
 
 		model.addAttribute("payees",memberService.findAll());
 
-		return "/admin/payment/add";
+		return "/mch/payment/add";
 	}
 
 
@@ -242,7 +242,7 @@ public class PaymentController extends BaseController {
 
 		model.addAttribute("data",paymentService.find(id));
 
-		return "/admin/payment/edit";
+		return "/mch/payment/edit";
 	}
 
 	
@@ -334,7 +334,7 @@ public class PaymentController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/payment/view/memberView";
+		return "/mch/payment/view/memberView";
 	}
 
 
@@ -358,7 +358,7 @@ public class PaymentController extends BaseController {
 		model.addAttribute("payments",paymentService.findAll());
 
 		model.addAttribute("articleReward",articleRewardService.find(id));
-		return "/admin/payment/view/articleRewardView";
+		return "/mch/payment/view/articleRewardView";
 	}
 
 
@@ -376,7 +376,7 @@ public class PaymentController extends BaseController {
 		model.addAttribute("sellers",memberService.findAll());
 
 		model.addAttribute("order",orderService.find(id));
-		return "/admin/payment/view/orderView";
+		return "/mch/payment/view/orderView";
 	}
 
 

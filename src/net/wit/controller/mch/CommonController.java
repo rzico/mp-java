@@ -81,7 +81,7 @@ public class CommonController implements ServletContextAware {
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String main(ModelMap model) {
 		model.addAttribute("admin",adminService.getCurrent());
-		return "/admin/common/main";
+		return "/mch/common/main";
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class CommonController implements ServletContextAware {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index() {
-		return "/admin/common/index";
+		return "/mch/common/index";
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class CommonController implements ServletContextAware {
 			}
 			return null;
 		}
-		return "/admin/common/unauthorized";
+		return "/mch/common/unauthorized";
 	}
 
 }

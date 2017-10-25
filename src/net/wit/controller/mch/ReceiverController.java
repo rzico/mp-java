@@ -52,7 +52,7 @@ public class ReceiverController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/receiver/list";
+		return "/mch/receiver/list";
 	}
 
 
@@ -66,7 +66,7 @@ public class ReceiverController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/receiver/add";
+		return "/mch/receiver/add";
 	}
 
 
@@ -139,7 +139,7 @@ public class ReceiverController extends BaseController {
 
 		model.addAttribute("data",receiverService.find(id));
 
-		return "/admin/receiver/edit";
+		return "/mch/receiver/edit";
 	}
 
 	
@@ -204,7 +204,7 @@ public class ReceiverController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/receiver/view/areaView";
+		return "/mch/receiver/view/areaView";
 	}
 
 
@@ -226,7 +226,7 @@ public class ReceiverController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/receiver/view/memberView";
+		return "/mch/receiver/view/memberView";
 	}
 
 

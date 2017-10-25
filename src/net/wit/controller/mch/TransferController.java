@@ -61,7 +61,7 @@ public class TransferController extends BaseController {
 		types.add(new MapEntity("bankcard","银行卡"));
 		model.addAttribute("types",types);
 
-		return "/admin/transfer/list";
+		return "/mch/transfer/list";
 	}
 
 
@@ -84,7 +84,7 @@ public class TransferController extends BaseController {
 		types.add(new MapEntity("bankcard","银行卡"));
 		model.addAttribute("types",types);
 
-		return "/admin/transfer/add";
+		return "/mch/transfer/add";
 	}
 
 
@@ -164,7 +164,7 @@ public class TransferController extends BaseController {
 
 		model.addAttribute("data",transferService.find(id));
 
-		return "/admin/transfer/edit";
+		return "/mch/transfer/edit";
 	}
 
 	
@@ -244,7 +244,7 @@ public class TransferController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/transfer/view/memberView";
+		return "/mch/transfer/view/memberView";
 	}
 
 

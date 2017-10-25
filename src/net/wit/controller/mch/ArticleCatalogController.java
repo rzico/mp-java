@@ -55,7 +55,7 @@ public class ArticleCatalogController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleCatalog/list";
+		return "/mch/articleCatalog/list";
 	}
 
 
@@ -72,7 +72,7 @@ public class ArticleCatalogController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleCatalog/add";
+		return "/mch/articleCatalog/add";
 	}
 
 
@@ -140,7 +140,7 @@ public class ArticleCatalogController extends BaseController {
 
 		model.addAttribute("data",articleCatalogService.find(id));
 
-		return "/admin/articleCatalog/edit";
+		return "/mch/articleCatalog/edit";
 	}
 
 	
@@ -212,7 +212,7 @@ public class ArticleCatalogController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/articleCatalog/view/memberView";
+		return "/mch/articleCatalog/view/memberView";
 	}
 
 

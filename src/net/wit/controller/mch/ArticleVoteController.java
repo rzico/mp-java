@@ -66,7 +66,7 @@ public class ArticleVoteController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleVote/list";
+		return "/mch/articleVote/list";
 	}
 
 
@@ -82,7 +82,7 @@ public class ArticleVoteController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleVote/add";
+		return "/mch/articleVote/add";
 	}
 
 
@@ -153,7 +153,7 @@ public class ArticleVoteController extends BaseController {
 
 		model.addAttribute("data",articleVoteService.find(id));
 
-		return "/admin/articleVote/edit";
+		return "/mch/articleVote/edit";
 	}
 
 	
@@ -246,7 +246,7 @@ public class ArticleVoteController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("article",articleService.find(id));
-		return "/admin/articleVote/view/articleView";
+		return "/mch/articleVote/view/articleView";
 	}
 
 
@@ -261,7 +261,7 @@ public class ArticleVoteController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleVote/view/articleVoteOptionView";
+		return "/mch/articleVote/view/articleVoteOptionView";
 	}
 
 
@@ -283,7 +283,7 @@ public class ArticleVoteController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/articleVote/view/memberView";
+		return "/mch/articleVote/view/memberView";
 	}
 
 

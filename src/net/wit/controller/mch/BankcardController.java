@@ -49,7 +49,7 @@ public class BankcardController extends BaseController {
 
 
 
-		return "/admin/bankcard/list";
+		return "/mch/bankcard/list";
 	}
 
 
@@ -61,7 +61,7 @@ public class BankcardController extends BaseController {
 
 
 
-		return "/admin/bankcard/add";
+		return "/mch/bankcard/add";
 	}
 
 
@@ -140,7 +140,7 @@ public class BankcardController extends BaseController {
 
 		model.addAttribute("data",bankcardService.find(id));
 
-		return "/admin/bankcard/edit";
+		return "/mch/bankcard/edit";
 	}
 
 	
@@ -223,7 +223,7 @@ public class BankcardController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/bankcard/view/memberView";
+		return "/mch/bankcard/view/memberView";
 	}
 
 

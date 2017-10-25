@@ -39,7 +39,7 @@ public class RoleController extends BaseController {
 
 
 
-		return "/admin/role/list";
+		return "/mch/role/list";
 	}
 
 
@@ -51,7 +51,7 @@ public class RoleController extends BaseController {
 
 
 
-		return "/admin/role/add";
+		return "/mch/role/add";
 	}
 
 
@@ -112,7 +112,7 @@ public class RoleController extends BaseController {
 
 		model.addAttribute("data",roleService.find(id));
 
-		return "/admin/role/edit";
+		return "/mch/role/edit";
 	}
 
 	

@@ -47,7 +47,7 @@ public class TemplateController extends BaseController {
 		model.addAttribute("types",types);
 		model.addAttribute("tags",tagService.findList(Tag.Type.template));
 
-		return "/admin/template/list";
+		return "/mch/template/list";
 	}
 
 
@@ -64,7 +64,7 @@ public class TemplateController extends BaseController {
 		model.addAttribute("types",types);
 		model.addAttribute("tags",tagService.findList(Tag.Type.template));
 
-		return "/admin/template/add";
+		return "/mch/template/add";
 	}
 
 
@@ -140,7 +140,7 @@ public class TemplateController extends BaseController {
 		model.addAttribute("data",templateService.find(id));
 		model.addAttribute("tags",tagService.findList(Tag.Type.template));
 
-		return "/admin/template/edit";
+		return "/mch/template/edit";
 	}
 
 	

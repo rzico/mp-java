@@ -60,7 +60,7 @@ public class ReturnsController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/returns/list";
+		return "/mch/returns/list";
 	}
 
 
@@ -76,7 +76,7 @@ public class ReturnsController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/returns/add";
+		return "/mch/returns/add";
 	}
 
 
@@ -165,7 +165,7 @@ public class ReturnsController extends BaseController {
 
 		model.addAttribute("data",returnsService.find(id));
 
-		return "/admin/returns/edit";
+		return "/mch/returns/edit";
 	}
 
 	
@@ -254,7 +254,7 @@ public class ReturnsController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/returns/view/memberView";
+		return "/mch/returns/view/memberView";
 	}
 
 
@@ -272,7 +272,7 @@ public class ReturnsController extends BaseController {
 		model.addAttribute("sellers",memberService.findAll());
 
 		model.addAttribute("order",orderService.find(id));
-		return "/admin/returns/view/orderView";
+		return "/mch/returns/view/orderView";
 	}
 
 

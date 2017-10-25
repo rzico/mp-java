@@ -87,7 +87,7 @@ public class RefundsController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
-		return "/admin/refunds/list";
+		return "/mch/refunds/list";
 	}
 
 
@@ -120,7 +120,7 @@ public class RefundsController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
-		return "/admin/refunds/add";
+		return "/mch/refunds/add";
 	}
 
 
@@ -220,7 +220,7 @@ public class RefundsController extends BaseController {
 
 		model.addAttribute("data",refundsService.find(id));
 
-		return "/admin/refunds/edit";
+		return "/mch/refunds/edit";
 	}
 
 	
@@ -318,7 +318,7 @@ public class RefundsController extends BaseController {
 		model.addAttribute("payees",memberService.findAll());
 
 		model.addAttribute("payment",paymentService.find(id));
-		return "/admin/refunds/view/paymentView";
+		return "/mch/refunds/view/paymentView";
 	}
 
 
@@ -340,7 +340,7 @@ public class RefundsController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/refunds/view/memberView";
+		return "/mch/refunds/view/memberView";
 	}
 
 
@@ -358,7 +358,7 @@ public class RefundsController extends BaseController {
 		model.addAttribute("sellers",memberService.findAll());
 
 		model.addAttribute("order",orderService.find(id));
-		return "/admin/refunds/view/orderView";
+		return "/mch/refunds/view/orderView";
 	}
 
 

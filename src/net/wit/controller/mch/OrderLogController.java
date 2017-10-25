@@ -51,7 +51,7 @@ public class OrderLogController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
-		return "/admin/orderLog/list";
+		return "/mch/orderLog/list";
 	}
 
 
@@ -63,7 +63,7 @@ public class OrderLogController extends BaseController {
 
 		model.addAttribute("orderss",orderService.findAll());
 
-		return "/admin/orderLog/add";
+		return "/mch/orderLog/add";
 	}
 
 
@@ -126,7 +126,7 @@ public class OrderLogController extends BaseController {
 
 		model.addAttribute("data",orderLogService.find(id));
 
-		return "/admin/orderLog/edit";
+		return "/mch/orderLog/edit";
 	}
 
 	
@@ -189,7 +189,7 @@ public class OrderLogController extends BaseController {
 		model.addAttribute("sellers",memberService.findAll());
 
 		model.addAttribute("order",orderService.find(id));
-		return "/admin/orderLog/view/orderView";
+		return "/mch/orderLog/view/orderView";
 	}
 
 

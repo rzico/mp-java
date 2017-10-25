@@ -78,7 +78,7 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
-		return "/admin/topic/list";
+		return "/mch/topic/list";
 	}
 
 
@@ -111,7 +111,7 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
-		return "/admin/topic/add";
+		return "/mch/topic/add";
 	}
 
 
@@ -217,7 +217,7 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("data",topicService.find(id));
 
-		return "/admin/topic/edit";
+		return "/mch/topic/edit";
 	}
 
 	
@@ -305,7 +305,7 @@ public class TopicController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/topic/view/areaView";
+		return "/mch/topic/view/areaView";
 	}
 
 
@@ -320,7 +320,7 @@ public class TopicController extends BaseController {
 		model.addAttribute("types",types);
 
 		model.addAttribute("template",templateService.find(id));
-		return "/admin/topic/view/templateView";
+		return "/mch/topic/view/templateView";
 	}
 
 
@@ -342,7 +342,7 @@ public class TopicController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/topic/view/memberView";
+		return "/mch/topic/view/memberView";
 	}
 
 
@@ -357,7 +357,7 @@ public class TopicController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		model.addAttribute("category",categoryService.find(id));
-		return "/admin/topic/view/categoryView";
+		return "/mch/topic/view/categoryView";
 	}
 
 

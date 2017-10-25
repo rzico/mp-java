@@ -52,7 +52,7 @@ public class MemberFollowController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/memberFollow/list";
+		return "/mch/memberFollow/list";
 	}
 
 
@@ -66,7 +66,7 @@ public class MemberFollowController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/memberFollow/add";
+		return "/mch/memberFollow/add";
 	}
 
 
@@ -129,7 +129,7 @@ public class MemberFollowController extends BaseController {
 
 		model.addAttribute("data",memberFollowService.find(id));
 
-		return "/admin/memberFollow/edit";
+		return "/mch/memberFollow/edit";
 	}
 
 	
@@ -194,7 +194,7 @@ public class MemberFollowController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/memberFollow/view/memberView";
+		return "/mch/memberFollow/view/memberView";
 	}
 
 

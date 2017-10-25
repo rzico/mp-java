@@ -64,7 +64,7 @@ public class ArticleFavoriteController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleFavorite/list";
+		return "/mch/articleFavorite/list";
 	}
 
 
@@ -78,7 +78,7 @@ public class ArticleFavoriteController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleFavorite/add";
+		return "/mch/articleFavorite/add";
 	}
 
 
@@ -143,7 +143,7 @@ public class ArticleFavoriteController extends BaseController {
 
 		model.addAttribute("data",articleFavoriteService.find(id));
 
-		return "/admin/articleFavorite/edit";
+		return "/mch/articleFavorite/edit";
 	}
 
 	
@@ -232,7 +232,7 @@ public class ArticleFavoriteController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("article",articleService.find(id));
-		return "/admin/articleFavorite/view/articleView";
+		return "/mch/articleFavorite/view/articleView";
 	}
 
 
@@ -254,7 +254,7 @@ public class ArticleFavoriteController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/articleFavorite/view/memberView";
+		return "/mch/articleFavorite/view/memberView";
 	}
 
 

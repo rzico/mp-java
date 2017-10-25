@@ -64,7 +64,7 @@ public class ArticleReviewController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleReview/list";
+		return "/mch/articleReview/list";
 	}
 
 
@@ -78,7 +78,7 @@ public class ArticleReviewController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleReview/add";
+		return "/mch/articleReview/add";
 	}
 
 
@@ -147,7 +147,7 @@ public class ArticleReviewController extends BaseController {
 
 		model.addAttribute("data",articleReviewService.find(id));
 
-		return "/admin/articleReview/edit";
+		return "/mch/articleReview/edit";
 	}
 
 	
@@ -240,7 +240,7 @@ public class ArticleReviewController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("article",articleService.find(id));
-		return "/admin/articleReview/view/articleView";
+		return "/mch/articleReview/view/articleView";
 	}
 
 
@@ -254,7 +254,7 @@ public class ArticleReviewController extends BaseController {
 		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("articleReview",articleReviewService.find(id));
-		return "/admin/articleReview/view/articleReviewView";
+		return "/mch/articleReview/view/articleReviewView";
 	}
 
 
@@ -276,7 +276,7 @@ public class ArticleReviewController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/articleReview/view/memberView";
+		return "/mch/articleReview/view/memberView";
 	}
 
 

@@ -61,7 +61,7 @@ public class MessageController extends BaseController {
 
 		model.addAttribute("receivers",memberService.findAll());
 
-		return "/admin/message/list";
+		return "/mch/message/list";
 	}
 
 
@@ -85,7 +85,7 @@ public class MessageController extends BaseController {
 
 		model.addAttribute("receivers",memberService.findAll());
 
-		return "/admin/message/add";
+		return "/mch/message/add";
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class MessageController extends BaseController {
 
 		model.addAttribute("data",messageService.find(id));
 
-		return "/admin/message/edit";
+		return "/mch/message/edit";
 	}
 
 
@@ -261,7 +261,7 @@ public class MessageController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/message/view/memberView";
+		return "/mch/message/view/memberView";
 	}
 
 

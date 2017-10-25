@@ -64,7 +64,7 @@ public class ArticleLaudController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleLaud/list";
+		return "/mch/articleLaud/list";
 	}
 
 
@@ -78,7 +78,7 @@ public class ArticleLaudController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		return "/admin/articleLaud/add";
+		return "/mch/articleLaud/add";
 	}
 
 
@@ -143,7 +143,7 @@ public class ArticleLaudController extends BaseController {
 
 		model.addAttribute("data",articleLaudService.find(id));
 
-		return "/admin/articleLaud/edit";
+		return "/mch/articleLaud/edit";
 	}
 
 	
@@ -232,7 +232,7 @@ public class ArticleLaudController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("article",articleService.find(id));
-		return "/admin/articleLaud/view/articleView";
+		return "/mch/articleLaud/view/articleView";
 	}
 
 
@@ -254,7 +254,7 @@ public class ArticleLaudController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/articleLaud/view/memberView";
+		return "/mch/articleLaud/view/memberView";
 	}
 
 

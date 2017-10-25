@@ -39,7 +39,7 @@ public class GoodsController extends BaseController {
 
 
 
-		return "/admin/goods/list";
+		return "/mch/goods/list";
 	}
 
 
@@ -51,7 +51,7 @@ public class GoodsController extends BaseController {
 
 
 
-		return "/admin/goods/add";
+		return "/mch/goods/add";
 	}
 
 
@@ -106,7 +106,7 @@ public class GoodsController extends BaseController {
 
 		model.addAttribute("data",goodsService.find(id));
 
-		return "/admin/goods/edit";
+		return "/mch/goods/edit";
 	}
 
 	

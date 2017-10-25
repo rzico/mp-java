@@ -59,7 +59,7 @@ public class AdminController extends BaseController {
 
 		model.addAttribute("roles",roleService.findAll());
 
-		return "/admin/admin/list";
+		return "/mch/admin/list";
 	}
 
 
@@ -81,7 +81,7 @@ public class AdminController extends BaseController {
 
 		model.addAttribute("roles",roleService.findAll());
 
-		return "/admin/admin/add";
+		return "/mch/admin/add";
 	}
 
 
@@ -176,7 +176,7 @@ public class AdminController extends BaseController {
 
 		model.addAttribute("data",adminService.find(id));
 
-		return "/admin/admin/edit";
+		return "/mch/admin/edit";
 	}
 
 	
@@ -260,7 +260,7 @@ public class AdminController extends BaseController {
 
 
 		model.addAttribute("area",areaService.find(id));
-		return "/admin/admin/view/areaView";
+		return "/mch/admin/view/areaView";
 	}
 
 
@@ -277,7 +277,7 @@ public class AdminController extends BaseController {
 		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("enterprise",enterpriseService.find(id));
-		return "/admin/admin/view/enterpriseView";
+		return "/mch/admin/view/enterpriseView";
 	}
 
 

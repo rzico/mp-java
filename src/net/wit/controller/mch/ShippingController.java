@@ -60,7 +60,7 @@ public class ShippingController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/shipping/list";
+		return "/mch/shipping/list";
 	}
 
 
@@ -76,7 +76,7 @@ public class ShippingController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/shipping/add";
+		return "/mch/shipping/add";
 	}
 
 
@@ -165,7 +165,7 @@ public class ShippingController extends BaseController {
 
 		model.addAttribute("data",shippingService.find(id));
 
-		return "/admin/shipping/edit";
+		return "/mch/shipping/edit";
 	}
 
 	
@@ -254,7 +254,7 @@ public class ShippingController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/shipping/view/memberView";
+		return "/mch/shipping/view/memberView";
 	}
 
 
@@ -272,7 +272,7 @@ public class ShippingController extends BaseController {
 		model.addAttribute("sellers",memberService.findAll());
 
 		model.addAttribute("order",orderService.find(id));
-		return "/admin/shipping/view/orderView";
+		return "/mch/shipping/view/orderView";
 	}
 
 

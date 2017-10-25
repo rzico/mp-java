@@ -44,7 +44,7 @@ public class TagController extends BaseController {
 		types.add(new MapEntity("topic","标签"));
 		model.addAttribute("types",types);
 
-		return "/admin/tag/list";
+		return "/mch/tag/list";
 	}
 
 
@@ -62,7 +62,7 @@ public class TagController extends BaseController {
 		types.add(new MapEntity("topic","标签"));
 		model.addAttribute("types",types);
 
-		return "/admin/tag/add";
+		return "/mch/tag/add";
 	}
 
 
@@ -133,7 +133,7 @@ public class TagController extends BaseController {
 
 		model.addAttribute("data",tagService.find(id));
 
-		return "/admin/tag/edit";
+		return "/mch/tag/edit";
 	}
 
 	

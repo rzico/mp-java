@@ -53,7 +53,7 @@ public class Push {
         Map<String,Object> ApnsInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("ApnsInfo",ApnsInfo);
         ApnsInfo.put("Sound","msg.mp3");
-        ApnsInfo.put("BadgeMode","1");
+        ApnsInfo.put("BadgeMode",1);
 
         HttpClient httpClient = new DefaultHttpClient();
         try {

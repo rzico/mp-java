@@ -39,7 +39,7 @@ public class LogController extends BaseController {
 
 
 
-		return "/admin/log/list";
+		return "/mch/log/list";
 	}
 
 
@@ -51,7 +51,7 @@ public class LogController extends BaseController {
 
 
 
-		return "/admin/log/add";
+		return "/mch/log/add";
 	}
 
 
@@ -116,7 +116,7 @@ public class LogController extends BaseController {
 
 		model.addAttribute("data",logService.find(id));
 
-		return "/admin/log/edit";
+		return "/mch/log/edit";
 	}
 
 	

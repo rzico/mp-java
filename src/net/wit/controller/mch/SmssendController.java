@@ -43,7 +43,7 @@ public class SmssendController extends BaseController {
 		statuss.add(new MapEntity("Error","失败"));
 		model.addAttribute("statuss",statuss);
 
-		return "/admin/smssend/list";
+		return "/mch/smssend/list";
 	}
 
 
@@ -59,7 +59,7 @@ public class SmssendController extends BaseController {
 		statuss.add(new MapEntity("Error","失败"));
 		model.addAttribute("statuss",statuss);
 
-		return "/admin/smssend/add";
+		return "/mch/smssend/add";
 	}
 
 
@@ -126,7 +126,7 @@ public class SmssendController extends BaseController {
 
 		model.addAttribute("data",smssendService.find(id));
 
-		return "/admin/smssend/edit";
+		return "/mch/smssend/edit";
 	}
 
 	

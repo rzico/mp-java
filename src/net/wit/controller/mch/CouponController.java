@@ -39,7 +39,7 @@ public class CouponController extends BaseController {
 
 
 
-		return "/admin/coupon/list";
+		return "/mch/coupon/list";
 	}
 
 
@@ -51,7 +51,7 @@ public class CouponController extends BaseController {
 
 
 
-		return "/admin/coupon/add";
+		return "/mch/coupon/add";
 	}
 
 
@@ -122,7 +122,7 @@ public class CouponController extends BaseController {
 
 		model.addAttribute("data",couponService.find(id));
 
-		return "/admin/coupon/edit";
+		return "/mch/coupon/edit";
 	}
 
 	

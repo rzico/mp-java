@@ -66,7 +66,7 @@ public class FriendsController extends BaseController {
 		types.add(new MapEntity("vip3","三级代理"));
 		model.addAttribute("types",types);
 
-		return "/admin/friends/list";
+		return "/mch/friends/list";
 	}
 
 
@@ -94,7 +94,7 @@ public class FriendsController extends BaseController {
 		types.add(new MapEntity("vip3","三级代理"));
 		model.addAttribute("types",types);
 
-		return "/admin/friends/add";
+		return "/mch/friends/add";
 	}
 
 
@@ -173,7 +173,7 @@ public class FriendsController extends BaseController {
 
 		model.addAttribute("data",friendsService.find(id));
 
-		return "/admin/friends/edit";
+		return "/mch/friends/edit";
 	}
 
 	
@@ -249,7 +249,7 @@ public class FriendsController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/friends/view/memberView";
+		return "/mch/friends/view/memberView";
 	}
 
 

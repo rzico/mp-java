@@ -72,7 +72,7 @@ public class DepositController extends BaseController {
 
 		model.addAttribute("refundss",refundsService.findAll());
 
-		return "/admin/deposit/list";
+		return "/mch/deposit/list";
 	}
 
 
@@ -94,7 +94,7 @@ public class DepositController extends BaseController {
 
 		model.addAttribute("refundss",refundsService.findAll());
 
-		return "/admin/deposit/add";
+		return "/mch/deposit/add";
 	}
 
 
@@ -179,7 +179,7 @@ public class DepositController extends BaseController {
 
 		model.addAttribute("data",depositService.find(id));
 
-		return "/admin/deposit/edit";
+		return "/mch/deposit/edit";
 	}
 
 	
@@ -276,7 +276,7 @@ public class DepositController extends BaseController {
 		model.addAttribute("payees",memberService.findAll());
 
 		model.addAttribute("payment",paymentService.find(id));
-		return "/admin/deposit/view/paymentView";
+		return "/mch/deposit/view/paymentView";
 	}
 
 
@@ -298,7 +298,7 @@ public class DepositController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/deposit/view/memberView";
+		return "/mch/deposit/view/memberView";
 	}
 
 
@@ -331,7 +331,7 @@ public class DepositController extends BaseController {
 		model.addAttribute("orderss",orderService.findAll());
 
 		model.addAttribute("refunds",refundsService.find(id));
-		return "/admin/deposit/view/refundsView";
+		return "/mch/deposit/view/refundsView";
 	}
 
 

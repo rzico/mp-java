@@ -61,7 +61,7 @@ public class ProductStockController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/productStock/list";
+		return "/mch/productStock/list";
 	}
 
 
@@ -75,7 +75,7 @@ public class ProductStockController extends BaseController {
 
 		model.addAttribute("sellers",memberService.findAll());
 
-		return "/admin/productStock/add";
+		return "/mch/productStock/add";
 	}
 
 
@@ -142,7 +142,7 @@ public class ProductStockController extends BaseController {
 
 		model.addAttribute("data",productStockService.find(id));
 
-		return "/admin/productStock/edit";
+		return "/mch/productStock/edit";
 	}
 
 	
@@ -203,7 +203,7 @@ public class ProductStockController extends BaseController {
 		model.addAttribute("productCategorys",productCategoryService.findAll());
 
 		model.addAttribute("product",productService.find(id));
-		return "/admin/productStock/view/productView";
+		return "/mch/productStock/view/productView";
 	}
 
 
@@ -225,7 +225,7 @@ public class ProductStockController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/productStock/view/memberView";
+		return "/mch/productStock/view/memberView";
 	}
 
 

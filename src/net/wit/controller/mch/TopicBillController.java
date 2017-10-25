@@ -67,7 +67,7 @@ public class TopicBillController extends BaseController {
 
 		model.addAttribute("payments",paymentService.findAll());
 
-		return "/admin/topicBill/list";
+		return "/mch/topicBill/list";
 	}
 
 
@@ -87,7 +87,7 @@ public class TopicBillController extends BaseController {
 
 		model.addAttribute("payments",paymentService.findAll());
 
-		return "/admin/topicBill/add";
+		return "/mch/topicBill/add";
 	}
 
 
@@ -160,7 +160,7 @@ public class TopicBillController extends BaseController {
 
 		model.addAttribute("data",topicBillService.find(id));
 
-		return "/admin/topicBill/edit";
+		return "/mch/topicBill/edit";
 	}
 
 	
@@ -247,7 +247,7 @@ public class TopicBillController extends BaseController {
 		model.addAttribute("payees",memberService.findAll());
 
 		model.addAttribute("payment",paymentService.find(id));
-		return "/admin/topicBill/view/paymentView";
+		return "/mch/topicBill/view/paymentView";
 	}
 
 
@@ -269,7 +269,7 @@ public class TopicBillController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/topicBill/view/memberView";
+		return "/mch/topicBill/view/memberView";
 	}
 
 

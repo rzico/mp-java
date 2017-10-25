@@ -56,7 +56,7 @@ public class LoginController extends BaseController {
         }
         model.addAttribute("redirectUrl", redirectUrl);
         model.addAttribute("captchaId", UUID.randomUUID().toString());
-        return "/admin/login/index";
+        return "/mch/login/index";
     }
 
     /**
@@ -96,7 +96,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/loginout", method = RequestMethod.GET)
     public String loginout(String redirectUrl, String type, HttpServletRequest request, ModelMap model) {
         SecurityUtils.getSecurityManager().logout(SecurityUtils.getSubject());
-        return "/admin/login/index";
+        return "/mch/login/index";
     }
 
 }
