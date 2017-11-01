@@ -277,14 +277,14 @@ public class Member extends BaseEntity {
 	/** 优惠券 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
-	@Where(clause="isUsed=0")
+	@Where(clause="is_used=0")
 	@OrderBy("createDate desc")
 	private Set<CouponCode> couponCodes = new HashSet<CouponCode>();
 
 	/** 订单 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
-	@Where(clause="orderStatus<2")
+	@Where(clause="order_status<2")
 	@OrderBy("createDate desc")
 	private Set<Order> orders = new HashSet<Order>();
 
@@ -858,6 +858,10 @@ public class Member extends BaseEntity {
 	}
 
 	public String userId() {
+		String uid = getUsername();
+		if (uid!=null && "gm_".equals(uid.substring(0,3))) {
+			return uid;
+		}
 		if (getId()!=null) {
 			Long userId = getId() + 10200L;
 			return "u" + userId.toString();

@@ -6,12 +6,12 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
 import net.wit.plat.im.User;
+import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import net.wit.util.MD5Utils;
 import net.wit.util.StringUtils;
 import net.wit.plat.weixin.pojo.AccessToken;
-import net.wit.plat.weixin.util.WeixinUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -197,8 +197,8 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "demo", method = RequestMethod.GET)
     @ResponseBody
-    public Message demo(HttpServletRequest request){
-        Member member =memberService.find(2L);
+    public Message demo(Long id,HttpServletRequest request){
+        Member member =memberService.find(id);
         try {
             User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());
@@ -216,14 +216,14 @@ public class LoginController extends BaseController {
     @ResponseBody
     public Message weixin(String code,HttpServletRequest request){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        AccessToken token = WeixinUtil.getOauth2AccessToken(bundle.getString("app.appid"), bundle.getString("app.secret"), code);
+        AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("app.appid"), bundle.getString("app.secret"), code);
         String openId = null;
         if (token!=null) {
             openId = token.getOpenid();
          } else {
             return Message.error("无效授权码");
         }
-        JSONObject userinfo = WeixinUtil.getUserInfoByCode(token.getToken(), openId);
+        JSONObject userinfo = WeixinApi.getUserInfoByCode(token.getToken(), openId);
         String nickName=null;
         String headImg=null;
         String unionId=null;
@@ -239,7 +239,12 @@ public class LoginController extends BaseController {
             return Message.error("获取用户信息失败");
         }
 
-        BindUser bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+        BindUser bindUser = null;
+        if (unionId!=null) {
+            bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+        } else {
+            bindUser = bindUserService.findOpenId(openId,bundle.getString("app.appid"),BindUser.Type.weixin);
+        }
         Member member = null;
         if (bindUser!=null) {
             member = bindUser.getMember();

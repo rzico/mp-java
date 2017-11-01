@@ -45,4 +45,16 @@ public interface RSAService {
 	 */
 	String decryptParameter(String name, HttpServletRequest request);
 
+	/**
+	 * 解密参数
+	 *
+	 * @param value
+	 *            参数名称
+	 * @param request
+	 *            httpServletRequest
+	 * @return 解密内容
+	 */
+	String decryptValue(String value, HttpServletRequest request);
+
+
 }

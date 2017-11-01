@@ -9,7 +9,7 @@ import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import net.wit.util.StringUtils;
 import net.wit.plat.weixin.pojo.AccessToken;
-import net.wit.plat.weixin.util.WeixinUtil;
+import net.wit.plat.weixin.util.WeixinApi;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,14 +57,14 @@ public class WeiXinController extends BaseController {
     @ResponseBody
     public Message bind(String code,HttpServletRequest request){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        AccessToken token = WeixinUtil.getOauth2AccessToken(bundle.getString("app.appid"), bundle.getString("app.secret"), code);
+        AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("app.appid"), bundle.getString("app.secret"), code);
         String openId = null;
         if (token!=null) {
             openId = token.getOpenid();
          } else {
             return Message.error("无效授权码");
         }
-        JSONObject userinfo = WeixinUtil.getUserInfoByCode(token.getToken(), openId);
+        JSONObject userinfo = WeixinApi.getUserInfoByCode(token.getToken(), openId);
         String nickName=null;
         String headImg=null;
         String unionId=null;

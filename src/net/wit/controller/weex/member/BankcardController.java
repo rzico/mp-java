@@ -50,9 +50,14 @@ public class BankcardController extends BaseController {
     /**
      * 银行信息查询
      */
-    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    @RequestMapping(value = "/query")
     @ResponseBody
-    public Message query(String banknum,HttpServletRequest request){
+    public Message query(HttpServletRequest request){
+       String banknum = rsaService.decryptParameter("banknum", request);
+       rsaService.removePrivateKey(request);
+        if (banknum==null) {
+            return Message.error("银行卡号解密为空");
+        }
         String method = "GET";
         String appcode = "7af4ab729dd345eaad8eebb918ada80c";
         Map<String, String> headers = new HashMap<String, String>();
@@ -64,7 +69,7 @@ public class BankcardController extends BaseController {
             HttpResponse response = HttpUtils.doGet(queryApi, "/api/c43", method, headers, querys);
             String resp =  EntityUtils.toString(response.getEntity());
             Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
-            if ("0".equals(data.get("error_code"))) {
+            if ("0".equals(data.get("error_code").toString())) {
                 return Message.success(data.get("result"),"success");
             } else {
                 return Message.error(data.get("reason").toString());
@@ -108,7 +113,7 @@ public class BankcardController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(String body,HttpServletRequest request){
+    public Message submit(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
         Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
         if (redis==null) {
@@ -117,8 +122,6 @@ public class BankcardController extends BaseController {
         redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         try {
-            String captcha = rsaService.decryptParameter("captcha", request);
-            logger.debug("绑定银行卡验证码："+captcha);
             rsaService.removePrivateKey(request);
             if (captcha==null) {
                 return Message.error("无效验证码");
@@ -130,9 +133,15 @@ public class BankcardController extends BaseController {
                 return Message.error("无效验证码");
             }
 
-            Map<String,String> data = JsonUtils.toObject(body,Map.class);
+            System.out.println(body);
+            String mima = rsaService.decryptValue(body, request);
+            if (mima==null) {
+                return Message.error("数据解密失败");
+            }
+            System.out.println(mima);
+            Map<String,String> data = JsonUtils.toObject(mima,Map.class);
             if (!safeKey.getKey().equals(data.get("mobile"))) {
-                return Message.error("数据验证不合法");
+                return Message.error("手机验证不合法");
             }
 
             String host = "https://aliyun-bankcard4-verify.apistore.cn";
@@ -184,7 +193,7 @@ public class BankcardController extends BaseController {
                 return Message.error(result.get("reason").toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
             return Message.error("绑定失败");
         }
     }

@@ -7,7 +7,7 @@ import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.plat.weixin.pojo.Button;
 import net.wit.plat.weixin.pojo.CommonButton;
 import net.wit.plat.weixin.pojo.Menu;
-import net.wit.plat.weixin.util.WeixinUtil;
+import net.wit.plat.weixin.util.WeixinApi;
 
 /**
  * 菜单管理器类
@@ -22,17 +22,17 @@ public class MenuManager {
 		// 第三方用户唯一凭证密钥
 		String appSecret = bundle.getString("APPSECRET");
 		// 调用接口获取access_token
-		AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
+		AccessToken at = WeixinApi.getAccessToken(appId, appSecret);
 
 		if (null != at) {
 			// 调用接口创建菜单
-		    int del = WeixinUtil.deleteMenu(at.getToken());
+		    int del = WeixinApi.deleteMenu(at.getToken());
 			if (0 == del) {
 				System.out.println("菜单创建成功！");
 			} else {
 				System.out.println("菜单创建失败！" + del);
 			}
-			int result = WeixinUtil.createMenu(getMenu(), at.getToken());
+			int result = WeixinApi.createMenu(getMenu(), at.getToken());
 			// JSONObject result = WeixinUtil.getMenu(at.getToken());
 			// System.out.println(result.toString());
 
@@ -78,7 +78,7 @@ public class MenuManager {
 		String appId = bundle.getString("APPID");//
 		// 第三方用户唯一凭证密钥
 		try {
-			url = WeixinUtil.getOauth2Code(appId, url, "snsapi_base");
+			url = WeixinApi.getOauth2Code(appId, url, "snsapi_base");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

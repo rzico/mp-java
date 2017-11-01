@@ -2,7 +2,7 @@ package net.wit.controller.weex.member;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.WalletModel;
+import net.wit.controller.model.WalletModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;

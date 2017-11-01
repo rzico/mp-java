@@ -100,6 +100,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 				data.put("code_url",(String) map.get("code_url"));
 			} else {
 				data.put("return_code", "FAIL");
+				logger.error((String) map.get("return_msg"));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());

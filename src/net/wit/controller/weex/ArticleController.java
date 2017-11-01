@@ -2,8 +2,7 @@ package net.wit.controller.weex;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.ArticleModel;
-import net.wit.controller.weex.model.ArticleViewModel;
+import net.wit.controller.model.ArticleViewModel;
 import net.wit.entity.Article;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;

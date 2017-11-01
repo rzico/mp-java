@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 
 import net.sf.json.JSONObject;
 import net.wit.plat.weixin.pojo.AccessToken;
-import net.wit.plat.weixin.util.WeixinUtil;
+import net.wit.plat.weixin.util.WeixinApi;
 
 /**
  * 菜单管理器类
@@ -20,11 +20,11 @@ public class QrcodeManager {
 		// 第三方用户唯一凭证密钥
 		String appSecret = bundle.getString("APPSECRET");
 		// 调用接口获取access_token
-		AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
+		AccessToken at = WeixinApi.getAccessToken(appId, appSecret);
 
 		if (null != at) {
 			// 调用接口创建菜单
-			JSONObject json = WeixinUtil.createQrcode(at.getToken(),data);
+			JSONObject json = WeixinApi.createQrcode(at.getToken(),data);
 			return json;
 		} else {
 			return null;

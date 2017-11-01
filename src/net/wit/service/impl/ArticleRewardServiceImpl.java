@@ -65,9 +65,10 @@ public class ArticleRewardServiceImpl extends BaseServiceImpl<ArticleReward, Lon
 			Payment payment = new Payment();
 			payment.setAmount(articleReward.getAmount());
 			payment.setStatus(Payment.Status.waiting);
-			payment.setType(Payment.Type.payment);
+			payment.setType(Payment.Type.reward);
 			payment.setMethod(Payment.Method.online);
 			payment.setMember(articleReward.getMember());
+			payment.setPayee(articleReward.getArticle().getMember());
 			payment.setSn(snService.generate(Sn.Type.payment));
 			payment.setMemo("读者打赏");
 			payment.setArticleReward(articleReward);

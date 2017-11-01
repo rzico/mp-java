@@ -121,6 +121,7 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 				data.put("mweb_url",(String) map.get("mweb_url"));
 			} else {
 				data.put("return_code", "FAIL");
+				logger.error((String) map.get("return_msg"));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());

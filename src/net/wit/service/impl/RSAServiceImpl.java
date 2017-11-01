@@ -83,4 +83,25 @@ public class RSAServiceImpl implements RSAService {
 		return null;
 	}
 
+	public String decryptValue(String value, HttpServletRequest request) {
+		Assert.notNull(request);
+		if (value != null) {
+			try{
+				Redis redis = redisService.findKey(PRIVATE_KEY_ATTRIBUTE_NAME);
+				if (redis!=null) {
+					RSAKey key = JsonUtils.toObject(redis.getValue(),RSAKey.class);
+					RSAPrivateKey privateKey = RSAUtils.getPrivateKey(
+							Base64.decodeBase64(key.getModule()),
+							Base64.decodeBase64(key.getExponent())
+					);
+					return RSAUtils.decrypt(privateKey, value);
+
+				}
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 }

@@ -1,10 +1,8 @@
 
 package net.wit.controller;
 
-import com.sun.tools.internal.ws.wsdl.document.http.HTTPUrlEncoded;
 import net.wit.Message;
-import net.wit.Setting;
-import net.wit.controller.weex.model.PaymentModel;
+import net.wit.controller.model.PaymentModel;
 import net.wit.entity.*;
 import net.wit.entity.Payment.Method;
 import net.wit.entity.Payment.Status;
@@ -12,10 +10,7 @@ import net.wit.entity.Payment.Type;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
-import net.wit.util.MD5Utils;
-import net.wit.util.SettingUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,10 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
 /**
  * Controller - 支付
@@ -89,7 +81,7 @@ public class PaymentController extends BaseController {
      *
      */
 
-    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    @RequestMapping(value = "/submit")
     @ResponseBody
     public Message submit(String paymentPluginId, String sn, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
@@ -115,7 +107,11 @@ public class PaymentController extends BaseController {
         payment.setPaymentMethod(paymentPlugin.getName());
         paymentService.update(payment);
         Map<String, Object> parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
-        return Message.success(parameters, "success");
+        if ("SUCCESS".equals(parameters.get("return_code"))) {
+            return Message.success(parameters, "success");
+        } else {
+            return Message.error("提交失败");
+        }
     }
 
 

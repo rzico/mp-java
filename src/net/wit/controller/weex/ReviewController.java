@@ -2,8 +2,7 @@ package net.wit.controller.weex;
 
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.ArticleReviewModel;
-import net.wit.controller.weex.model.ArticleViewModel;
+import net.wit.controller.model.ArticleReviewModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleReview;
 import net.wit.service.*;

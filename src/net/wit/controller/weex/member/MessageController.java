@@ -2,9 +2,7 @@ package net.wit.controller.weex.member;
 
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.FriendsModel;
-import net.wit.controller.weex.model.MessageModel;
-import net.wit.entity.Friends;
+import net.wit.controller.model.MessageModel;
 import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;

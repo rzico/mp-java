@@ -2,7 +2,7 @@ package net.wit.plat.im;
 
 import net.wit.entity.Message;
 import net.wit.plat.weixin.util.WeiXinUtils;
-import net.wit.plat.weixin.util.WeixinUtil;
+import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.util.JsonUtils;
 import net.wit.util.StringUtils;
 import org.apache.http.HttpResponse;
@@ -28,7 +28,7 @@ public class Push {
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("SyncOtherMachine",2);
-        data.put("From_Account",message.getMember().userId());
+        data.put("From_Account",message.getMember().getUsername());
         data.put("To_Account",message.getReceiver().userId());
         data.put("MsgRandom",random);
         data.put("MsgTimeStamp",message.getCreateDate().getTime() / 1000);

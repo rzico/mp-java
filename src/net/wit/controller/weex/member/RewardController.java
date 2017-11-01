@@ -2,7 +2,6 @@ package net.wit.controller.weex.member;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.ArticleReviewModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -64,8 +63,8 @@ public class RewardController extends BaseController {
         reward.setAuthor(article.getMember());
         reward.setIp(request.getRemoteAddr());
         reward.setStatus(ArticleReward.Status.waiting);
-        reward.setFee(BigDecimal.ZERO);
         reward.setMember(member);
+        reward.setFee(amount.multiply(new BigDecimal("0.05")));
         Payment payment = articleRewardService.saveAndPayment(reward);
         if (payment==null) {
             return Message.error("打赏失败");

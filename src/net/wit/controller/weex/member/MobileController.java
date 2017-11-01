@@ -1,9 +1,7 @@
 package net.wit.controller.weex.member;
 
 import net.wit.Message;
-import net.wit.Principal;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.MemberModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;

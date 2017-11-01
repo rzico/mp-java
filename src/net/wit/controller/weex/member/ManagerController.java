@@ -2,13 +2,8 @@ package net.wit.controller.weex.member;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.ManagerModel;
-import net.wit.controller.weex.model.MemberAttributeModel;
-import net.wit.controller.weex.model.MemberModel;
-import net.wit.entity.Area;
-import net.wit.entity.BindUser;
+import net.wit.controller.model.ManagerModel;
 import net.wit.entity.Member;
-import net.wit.entity.Occupation;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
 
 /**

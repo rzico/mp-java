@@ -1,22 +1,37 @@
 
 package net.wit.controller;
 
+import net.sf.json.JSONObject;
+import net.wit.Message;
 import net.wit.Page;
+import net.wit.Principal;
+import net.wit.entity.BindUser;
+import net.wit.entity.Member;
 import net.wit.entity.Tag;
+import net.wit.plat.im.User;
+import net.wit.plat.weixin.pojo.AccessToken;
+import net.wit.plat.weixin.pojo.Ticket;
+import net.wit.plat.weixin.util.WeiXinUtils;
+import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.*;
 import net.wit.plat.weixin.message.resp.Article;
 import net.wit.plat.weixin.message.resp.NewsMessage;
 import net.wit.plat.weixin.util.MessageUtil;
+import net.wit.util.JsonUtils;
+import net.wit.util.Sha1Util;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -38,8 +53,54 @@ public class WeiXinController extends BaseController {
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
 
+    @Resource(name = "bindUserServiceImpl")
+    private BindUserService bindUserService;
+
+    @Resource(name = "redisServiceImpl")
+    private RedisService redisService;
+
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
+
+    public String getSha1Sign(HashMap<String, Object> params) {
+        try {
+            String str1 = WeiXinUtils.FormatBizQueryParaMap(params, false);
+            return Sha1Util.encode(str1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 获取微信配置参数
+     *
+     * @param url
+     * @return
+     */
+    @RequestMapping(value = "/get_config")
+    @ResponseBody
+    public Message getConfig(String url,HttpServletRequest request) {
+        String noncestr = WeiXinUtils.CreateNoncestr();
+        String timeStamp = WeiXinUtils.getTimeStamp();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("noncestr", noncestr);
+        Ticket ticket = WeixinApi.getTicket();
+        if (ticket == null) {
+            return Message.error("ticket 获取失败");
+        }
+        map.put("jsapi_ticket", ticket.getTicket());
+        map.put("timestamp", timeStamp);
+        map.put("url", url);
+        String sha1Sign = getSha1Sign(map);
+        HashMap<String, Object> config = new HashMap<>();
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        config.put("appId", bundle.getString("weixin.appid"));
+        config.put("timestamp", timeStamp);
+        config.put("nonceStr", noncestr);
+        config.put("signature", sha1Sign);
+        return Message.success(config, "执行成功");
+    }
 
     /**
      * 确认请求来自微信服务器

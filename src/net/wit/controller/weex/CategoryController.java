@@ -1,12 +1,9 @@
 package net.wit.controller.weex;
 
-import net.wit.CacheBlock;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.weex.model.CategoryModel;
-import net.wit.controller.weex.model.OccupationModel;
+import net.wit.controller.model.CategoryModel;
 import net.wit.entity.Category;
-import net.wit.entity.Occupation;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

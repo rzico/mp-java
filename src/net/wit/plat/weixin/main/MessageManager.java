@@ -3,7 +3,7 @@ package net.wit.plat.weixin.main;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import net.wit.plat.weixin.util.WeixinUtil;
+import net.wit.plat.weixin.util.WeixinApi;
 
 /**
  * 菜单管理器类
@@ -21,7 +21,7 @@ public class MessageManager {
             String appSecret = bundle.getString("APPSECRET");
             //System.out.println(data);
             // 调用接口创建菜单
-            int result = WeixinUtil.sendTemplete(appId, appSecret, data);
+            int result = WeixinApi.sendTemplete(appId, appSecret, data);
             return result == 0;
         } catch (Exception e) {
             return false;
