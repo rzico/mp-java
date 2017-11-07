@@ -128,6 +128,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	public Boolean depositPushTo(Deposit deposit) {
         Message msg = new Message();
         msg.setReaded(false);
+        msg.setDeleted(false);
         msg.setReceiver(deposit.getMember());
         msg.setType(Message.Type.account);
 		msg.setThumbnial("http://cdn.rzico.com/weex/resources/images/account.png");

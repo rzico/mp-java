@@ -23,9 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.wit.Setting;
 import net.wit.controller.weex.BaseController;
-import net.wit.entity.Payment;
-import net.wit.entity.PluginConfig;
-import net.wit.entity.Refunds;
+import net.wit.entity.*;
+import net.wit.service.BindUserService;
 import net.wit.service.PaymentService;
 import net.wit.service.PluginConfigService;
 import net.wit.util.SettingUtils;
@@ -126,6 +125,9 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	@Resource(name = "paymentServiceImpl")
 	public PaymentService paymentService;
+
+	@Resource(name = "bindUserServiceImpl")
+	public BindUserService bindUserService;
 
 	/**
 	 * 获取ID
@@ -355,6 +357,10 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 		return "";
 	}
 
+	public BindUser findByUser(Member member,BindUser.Type type) {
+		PluginConfig pluginConfig = getPluginConfig();
+        return bindUserService.findMember(member,pluginConfig.getAttribute("appId"), type);
+	}
 	/**
 	 * https双向签名认证，用于支付申请退款
 	 *

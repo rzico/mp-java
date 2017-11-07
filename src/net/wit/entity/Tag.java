@@ -43,7 +43,6 @@ public class Tag extends OrderEntity{
     @Column(columnDefinition="varchar(255) not null comment '名称'")
     private String name ;
 
-
     /*类型*/
     @NotNull
     @Column(columnDefinition="int(11) not null comment '类型 {article:文章,member:会员,template:模板,product:商品}'")
@@ -93,6 +92,27 @@ public class Tag extends OrderEntity{
         if(members!=null){
             for(Member member:members){
                 member.getTags().remove(this);
+            }
+
+        }
+        List<Template> templates = getTemplates();
+        if(templates!=null){
+            for(Template template:templates){
+                template.getTags().remove(this);
+            }
+
+        }
+        List<Topic> topics = getTopics();
+        if(topics!=null){
+            for(Topic topic:topics){
+                topic.getTags().remove(this);
+            }
+
+        }
+        List<Product> products = getProducts();
+        if(products!=null){
+            for(Product product:products){
+                product.getTags().remove(this);
             }
 
         }
@@ -169,4 +189,6 @@ public class Tag extends OrderEntity{
     public void setProducts(List<Product> products) {
         this.products = products;
     }
+
+
 }

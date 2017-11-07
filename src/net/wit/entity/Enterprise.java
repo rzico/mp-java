@@ -30,7 +30,7 @@ public class Enterprise extends BaseEntity {
         /** 个人代理商 */
         personal,
         /** 入驻商家 */
-        customer
+        shop
     };
 
     /** 企业 */
@@ -38,6 +38,12 @@ public class Enterprise extends BaseEntity {
     @NotNull
     @Column(columnDefinition="varchar(255) not null comment '企业名称'")
     private String name;
+
+    /** logo */
+    @Length(max = 200)
+    @NotNull
+    @Column(columnDefinition="varchar(255) not null comment 'logo'")
+    private String logo;
 
     /** 类型 */
     @NotNull
@@ -60,6 +66,10 @@ public class Enterprise extends BaseEntity {
     @Column(columnDefinition="bit comment '是否删除'")
     @JsonIgnore
     private Boolean deleted;
+
+    /** 业主,入驻商家时不能为空 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     public Type getType() {
         return type;
@@ -99,6 +109,22 @@ public class Enterprise extends BaseEntity {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public MapEntity getMapArea() {

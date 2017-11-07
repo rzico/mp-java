@@ -15,9 +15,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
-import net.wit.dao.DepositDao;
-import net.wit.dao.MemberDao;
-import net.wit.dao.SnDao;
+import net.wit.dao.*;
 import net.wit.service.MessageService;
 import net.wit.service.PluginService;
 import org.apache.shiro.SecurityUtils;
@@ -26,7 +24,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.PaymentDao;
 import net.wit.entity.*;
 import net.wit.service.PaymentService;
 
@@ -54,12 +51,24 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
 
+	@Resource(name = "payBillDaoImpl")
+	private PayBillDao payBillDao;
+
+	@Resource(name = "cardDaoImpl")
+	private CardDao cardDao;
+
+	@Resource(name = "couponCodeDaoImpl")
+	private CouponCodeDao couponCodeDao;
+
+	@Resource(name = "cardBillDaoImpl")
+	private CardBillDao cardBillDao;
+
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
 		super.setBaseDao(paymentDao);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public Payment findBySn(String sn) {
 		return paymentDao.findBySn(sn);
 	}
@@ -96,6 +105,29 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			}
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
+			} else
+			if (payment.getType() == Payment.Type.cashier) {
+				Member member = payment.getPayee();
+				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+				PayBill payBill = payment.getPayBill();
+				BigDecimal settle = payBill.getSettleAmount();
+				if (settle.compareTo(BigDecimal.ZERO)>0) {
+					member.setBalance(member.getBalance().add(settle));
+					memberDao.merge(member);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.cashier);
+					deposit.setMemo(payment.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(settle);
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+				}
+				payBill.setStatus(PayBill.Status.success);
+				payBillDao.merge(payBill);
 			} else
 			if (payment.getType() == Payment.Type.reward) {
 				Member member = payment.getPayee();
@@ -152,6 +184,39 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		if (payment != null && payment.getStatus() == Payment.Status.waiting) {
 			payment.setStatus(Payment.Status.failure);
 			paymentDao.merge(payment);
+			if (payment.getType().equals(Payment.Type.cashier)) {
+				PayBill payBill = payment.getPayBill();
+				payBill.setStatus(PayBill.Status.failure);
+				payBillDao.merge(payBill);
+				CouponCode couponCode = payBill.getCouponCode();
+				if (couponCode!=null) {
+					couponCode.setIsUsed(false);
+					couponCode.setUsedDate(null);
+					couponCodeDao.merge(couponCode);
+				}
+				if (payBill.getCardDiscount().compareTo(BigDecimal.ZERO)>0) {
+					Card card = payBill.getCard();
+					if (card != null) {
+						cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+						card.setBalance(card.getBalance().add(payBill.getCardDiscount()));
+						cardDao.merge(card);
+						CardBill bill = new CardBill();
+						bill.setBalance(card.getBalance());
+						bill.setCard(card);
+						bill.setCredit(BigDecimal.ZERO);
+						bill.setDebit(BigDecimal.ZERO.subtract(payBill.getCardDiscount()));
+						bill.setDeleted(false);
+						bill.setType(CardBill.Type.consume);
+						bill.setMember(payBill.getMember());
+						bill.setPayBill(payBill);
+						bill.setMethod(CardBill.Method.online);
+						bill.setMemo("线下收款-取消");
+						bill.setPayment(payment);
+						bill.setOwner(payBill.getOwner());
+						cardBillDao.persist(bill);
+					}
+				}
+			}
 		};
 	}
 

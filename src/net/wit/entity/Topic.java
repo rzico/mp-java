@@ -29,7 +29,7 @@ public class Topic extends BaseEntity {
     public static enum Type{
         /** 企业 */
          company,
-        /** 个体工商户 */
+        /** 工商户 */
          individual,
         /** 个人 */
          personal,
@@ -52,32 +52,6 @@ public class Topic extends BaseEntity {
     @Column(columnDefinition="varchar(255) not null comment '全称'")
     @NotNull
     private String name;
-
-    /** 简称 */
-    @Length(max = 200)
-    @Column(columnDefinition="varchar(255) not null comment '简称'")
-    @NotNull
-    private String shortName;
-
-    /** 营业执照/证件号  个人时用证件号 */
-    @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '上传证件'")
-    private String license;
-
-    /** 营业执照号/证件号 */
-    @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '证件号'")
-    private String licenseCode;
-
-    /** 上传门头 */
-    @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '上传门头'")
-    private String thedoor;
-
-    /** 经营场所 */
-    @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '经营场所'")
-    private String scene;
 
     /** 会员 */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -129,6 +103,11 @@ public class Topic extends BaseEntity {
     @JsonIgnore
     private Template template;
 
+    /** 阅读数 */
+    @Min(0)
+    @Column(columnDefinition="bigint(20) default 0 comment '阅读数'")
+    private Long hits;
+
     /** 模板标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_topic_tag")
@@ -160,38 +139,6 @@ public class Topic extends BaseEntity {
         this.area = area;
     }
 
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getLicense() {
-        return license;
-    }
-
-    public void setLicense(String license) {
-        this.license = license;
-    }
-
-    public String getThedoor() {
-        return thedoor;
-    }
-
-    public void setThedoor(String thedoor) {
-        this.thedoor = thedoor;
-    }
-
-    public String getScene() {
-        return scene;
-    }
-
-    public void setScene(String scene) {
-        this.scene = scene;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -206,14 +153,6 @@ public class Topic extends BaseEntity {
 
     public void setBrokerage(BigDecimal brokerage) {
         this.brokerage = brokerage;
-    }
-
-    public String getLicenseCode() {
-        return licenseCode;
-    }
-
-    public void setLicenseCode(String licenseCode) {
-        this.licenseCode = licenseCode;
     }
 
     public Category getCategory() {
@@ -262,6 +201,14 @@ public class Topic extends BaseEntity {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Long getHits() {
+        return hits;
+    }
+
+    public void setHits(Long hits) {
+        this.hits = hits;
     }
 
     public MapEntity getMapTemplate() {

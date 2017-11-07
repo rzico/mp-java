@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.Topic;
 
 
@@ -27,4 +28,5 @@ public interface TopicDao extends BaseDao<Topic, Long> {
 	 * @return Page<Topic>
 	 */
 	Page<Topic> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Topic find(Member member);
 }

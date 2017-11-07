@@ -149,19 +149,9 @@ public class TopicController extends BaseController {
 
 		entity.setExpire(topic.getExpire());
 
-		entity.setLicense(topic.getLicense());
-
-		entity.setLicenseCode(topic.getLicenseCode());
-
 		entity.setName(topic.getName());
 
-		entity.setScene(topic.getScene());
-
-		entity.setShortName(topic.getShortName());
-
 		entity.setStatus(topic.getStatus());
-
-		entity.setThedoor(topic.getThedoor());
 
 		entity.setType(topic.getType());
 
@@ -255,19 +245,9 @@ public class TopicController extends BaseController {
 
 		entity.setExpire(topic.getExpire());
 
-		entity.setLicense(topic.getLicense());
-
-		entity.setLicenseCode(topic.getLicenseCode());
-
 		entity.setName(topic.getName());
 
-		entity.setScene(topic.getScene());
-
-		entity.setShortName(topic.getShortName());
-
 		entity.setStatus(topic.getStatus());
-
-		entity.setThedoor(topic.getThedoor());
 
 		entity.setType(topic.getType());
 

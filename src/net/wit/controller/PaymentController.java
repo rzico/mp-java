@@ -85,19 +85,10 @@ public class PaymentController extends BaseController {
     @ResponseBody
     public Message submit(String paymentPluginId, String sn, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
-        //if (payment==null) {
-        //    Message.error("无效付款单");
-        //}
-        payment = new Payment();
-        payment.setMethod(Method.online);
-        payment.setStatus(Status.waiting);
-        payment.setAmount(new BigDecimal("0.1"));
-        payment.setMemo("支付测试");
-        payment.setSn(snService.generate(Sn.Type.payment));
-        payment.setMember(memberService.find(1L));
-        payment.setPayee(payment.getMember());
-        payment.setType(Type.recharge);
-        paymentService.save(payment);
+        if (payment==null) {
+            Message.error("无效付款单");
+        }
+
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
         if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
             return Message.error("支付插件无效");
@@ -106,12 +97,14 @@ public class PaymentController extends BaseController {
         payment.setPaymentPluginId(paymentPluginId);
         payment.setPaymentMethod(paymentPlugin.getName());
         paymentService.update(payment);
+
         Map<String, Object> parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
         if ("SUCCESS".equals(parameters.get("return_code"))) {
             return Message.success(parameters, "success");
         } else {
             return Message.error("提交失败");
         }
+
     }
 
 

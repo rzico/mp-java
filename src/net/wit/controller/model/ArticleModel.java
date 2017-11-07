@@ -25,6 +25,8 @@ public class ArticleModel implements Serializable {
     /** 商品 */
     private List<ProductViewModel> products = new ArrayList<ProductViewModel>();
 
+    /** 是否草稿 */
+    private Boolean isDraft;
     /** 评论数 */
     private Long review;
     /** 阅读数 */
@@ -120,6 +122,14 @@ public class ArticleModel implements Serializable {
         this.laud = laud;
     }
 
+    public Boolean getIsDraft() {
+        return isDraft;
+    }
+
+    public void setIsDraft(Boolean draft) {
+        isDraft = draft;
+    }
+
     public void bind(Article article) {
 
         this.id = article.getId();
@@ -136,6 +146,7 @@ public class ArticleModel implements Serializable {
             articleOption.bind(article);
         }
         this.articleOption = articleOption;
+        this.isDraft = article.getIsDraft();
 
         List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
         if (article.getContent()!=null) {

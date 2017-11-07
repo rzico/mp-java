@@ -116,13 +116,12 @@ public class BankcardController extends BaseController {
     public Message submit(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
         Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
+        redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
         }
-        redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         try {
-            rsaService.removePrivateKey(request);
             if (captcha==null) {
                 return Message.error("无效验证码");
             }
@@ -135,6 +134,7 @@ public class BankcardController extends BaseController {
 
             System.out.println(body);
             String mima = rsaService.decryptValue(body, request);
+            rsaService.removePrivateKey(request);
             if (mima==null) {
                 return Message.error("数据解密失败");
             }

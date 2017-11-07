@@ -329,7 +329,7 @@
                     }
                 }, 
                 {
-                    "aTargets": [15],
+                    "aTargets": [16],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 收款单 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>"
@@ -340,7 +340,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 5, 6, 15]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 5, 6, 16]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

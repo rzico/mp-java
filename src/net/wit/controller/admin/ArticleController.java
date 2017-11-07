@@ -67,8 +67,6 @@ public class ArticleController extends BaseController {
 	@Resource(name = "occupationServiceImpl")
 	private OccupationService occupationService;
 
-
-
 	/**
 	 * 主页
 	 */

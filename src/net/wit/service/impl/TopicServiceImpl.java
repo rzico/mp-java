@@ -86,4 +86,7 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements To
 	public Page<Topic> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return topicDao.findPage(beginDate,endDate,pageable);
 	}
+	public Topic find(Member member) {
+		return topicDao.find(member);
+	}
 }

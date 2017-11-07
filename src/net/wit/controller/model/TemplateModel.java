@@ -47,12 +47,14 @@ public class TemplateModel implements Serializable {
         this.thumbnial = template.getThumbnial();
     }
 
-    public static List<TemplateModel> bindList(List<Template> templates) {
+    public static List<TemplateModel> bindList(List<Template> templates,Template.Type type) {
         List<TemplateModel> ms = new ArrayList<TemplateModel>();
         for (Template template:templates) {
-            TemplateModel m = new TemplateModel();
-            m.bind(template);
-            ms.add(m);
+            if (template.getType().equals(type)) {
+                TemplateModel m = new TemplateModel();
+                m.bind(template);
+                ms.add(m);
+            }
         }
         return ms;
     }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.Topic;
 
 /**
@@ -16,5 +17,6 @@ import net.wit.entity.Topic;
  */
 
 public interface TopicService extends BaseService<Topic, Long> {
+	Topic find(Member member);
 	Page<Topic> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

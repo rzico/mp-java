@@ -70,7 +70,7 @@ public class WalletController extends BaseController {
     }
 
     private BigDecimal calculate(BigDecimal amount) {
-        if (amount.compareTo(new BigDecimal(500))>=0) {
+        if (amount.compareTo(new BigDecimal(5000))>=0) {
             return BigDecimal.ZERO;
         } else {
             return BigDecimal.ONE;

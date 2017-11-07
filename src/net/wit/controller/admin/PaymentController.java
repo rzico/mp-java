@@ -89,7 +89,7 @@ public class PaymentController extends BaseController {
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("wait","等待支付"));
+		statuss.add(new MapEntity("waiting","等待支付"));
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
 		statuss.add(new MapEntity("refund_waiting","等待退款"));
@@ -100,6 +100,8 @@ public class PaymentController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("payment","消费支付"));
 		types.add(new MapEntity("recharge","钱包充值"));
+		types.add(new MapEntity("reward","文章赞赏"));
+		types.add(new MapEntity("cashier","线下收款"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("members",memberService.findAll());
@@ -127,7 +129,7 @@ public class PaymentController extends BaseController {
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("wait","等待支付"));
+		statuss.add(new MapEntity("waiting","等待支付"));
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
 		statuss.add(new MapEntity("refund_waiting","等待退款"));
@@ -138,6 +140,8 @@ public class PaymentController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("payment","消费支付"));
 		types.add(new MapEntity("recharge","钱包充值"));
+		types.add(new MapEntity("reward","文章赞赏"));
+		types.add(new MapEntity("cashier","线下收款"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("members",memberService.findAll());
@@ -236,7 +240,7 @@ public class PaymentController extends BaseController {
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("wait","等待支付"));
+		statuss.add(new MapEntity("waiting","等待支付"));
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
 		statuss.add(new MapEntity("refund_waiting","等待退款"));
@@ -247,6 +251,8 @@ public class PaymentController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("payment","消费支付"));
 		types.add(new MapEntity("recharge","钱包充值"));
+		types.add(new MapEntity("reward","文章赞赏"));
+		types.add(new MapEntity("cashier","线下收款"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("members",memberService.findAll());
@@ -271,11 +277,11 @@ public class PaymentController extends BaseController {
 	public Message update(Payment payment,HttpServletRequest request){
 		Payment entity = paymentService.find(payment.getId());
 		try {
-			if (entity.getStatus().equals(Transfer.Status.waiting)) {
-				PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
+			if (entity.getStatus().equals(Payment.Status.waiting)) {
+				PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(entity.getPaymentPluginId());
 				String resultCode = null;
 				try {
-					resultCode = paymentPlugin.queryOrder(payment,request);
+					resultCode = paymentPlugin.queryOrder(entity,request);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 					return Message.success(e.getMessage());
@@ -283,20 +289,20 @@ public class PaymentController extends BaseController {
 				switch (resultCode) {
 					case "0000":
 						try {
-							paymentService.handle(payment);
+							paymentService.handle(entity);
 						} catch (Exception e) {
 							logger.error(e.getMessage());
 						}
-						return Message.success((Object) resultCode,"支付成功");
+						return Message.success(entity,"支付成功");
 					case "0001":
 						try {
-							paymentService.close(payment);
+							paymentService.close(entity);
 						} catch (Exception e) {
 							logger.error(e.getMessage());
 						}
-						return Message.success((Object) resultCode,"支付失败");
+						return Message.success(entity,"支付失败");
 					default:
-						return Message.success((Object) resultCode,"支付中");
+						return Message.success(entity,"支付中");
 				}
 			} else {
 				return Message.error("已处理了");
@@ -361,7 +367,7 @@ public class PaymentController extends BaseController {
 	@RequestMapping(value = "/articleRewardView", method = RequestMethod.GET)
 	public String articleRewardView(Long id, ModelMap model) {
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("wait","等待支付"));
+		statuss.add(new MapEntity("waiting","等待支付"));
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
 		model.addAttribute("statuss",statuss);

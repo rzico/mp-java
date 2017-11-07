@@ -142,9 +142,8 @@ public class ArticleOptionModel implements Serializable {
         if (article.getArticleCategory()!=null) {
             articleCategoryModel.setId(article.getArticleCategory().getId());
             articleCategoryModel.setName(article.getArticleCategory().getName());
-            articleCatalogModel.setCount(0);
         }
-        this.articleCatalog = articleCatalogModel;
+        this.articleCategory = articleCategoryModel;
    }
 
 }

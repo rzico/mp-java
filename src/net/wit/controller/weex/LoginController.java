@@ -261,6 +261,15 @@ public class LoginController extends BaseController {
             member.setRegisterIp(request.getRemoteAddr());
             memberService.save(member);
         }
+        else {
+            if (nickName!=null && member.getNickName()==null) {
+                member.setNickName(nickName);
+            }
+            if (headImg!=null && member.getLogo()==null) {
+                member.setLogo(headImg);
+            }
+            memberService.update(member);
+        }
         try {
             bindUser = bindUserService.findOpenId(openId,bundle.getString("app.appid"),BindUser.Type.weixin);
             if (bindUser==null) {

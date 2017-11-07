@@ -269,6 +269,13 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private List<Tag> tags = new ArrayList<Tag>();
 
+	/** 会员卡 */
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "wx_member_card")
+	@OrderBy("modifyDate desc")
+	@JsonIgnore
+	private List<Card> cards = new ArrayList<Card>();
+
 	/** 预存款 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
@@ -320,7 +327,7 @@ public class Member extends BaseEntity {
 	private Set<MemberFollow> fans = new HashSet<MemberFollow>();
 
 	/** 我的专栏*/
-	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Topic topic;
 
@@ -706,6 +713,14 @@ public class Member extends BaseEntity {
 
 	public void setOrders(Set<Order> orders) {
 		this.orders = orders;
+	}
+
+	public List<Card> getCards() {
+		return cards;
+	}
+
+	public void setCards(List<Card> cards) {
+		this.cards = cards;
 	}
 
 	/**

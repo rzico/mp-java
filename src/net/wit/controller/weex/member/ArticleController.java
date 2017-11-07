@@ -7,6 +7,7 @@ import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
+import net.wit.util.MD5Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -140,6 +141,7 @@ public class ArticleController extends BaseController {
         String thumbnail = model.getThumbnail();
         String music = JsonUtils.toJson(model.getMusic());
         String content = JsonUtils.toJson(model.getTemplates());
+        Boolean isDraft = model.getIsDraft();
 
         String votes = JsonUtils.toJson(model.getVotes());
         Article article = null;
@@ -153,7 +155,6 @@ public class ArticleController extends BaseController {
             article.setFavorite(0L);
             article.setLaud(0L);
             article.setReview(0L);
-            article.setIsDraft(true);
             ArticleOptions options = new ArticleOptions();
             article.setArticleOptions(options);
             article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPublic);
@@ -165,6 +166,7 @@ public class ArticleController extends BaseController {
             article.getArticleOptions().setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
         }
+        article.setIsDraft(isDraft);
         article.setTitle(title);
         article.setAuthor(author);
         article.setThumbnail(thumbnail);
@@ -214,7 +216,9 @@ public class ArticleController extends BaseController {
             article.getArticleOptions().setIsReview(articleOptions.getIsReview());
             article.getArticleOptions().setIsPublish(articleOptions.getIsPublish());
             article.getArticleOptions().setAuthority(articleOptions.getAuthority());
-            article.getArticleOptions().setPassword(articleOptions.getPassword());
+            if (articleOptions.getPassword()!=null) {
+                article.getArticleOptions().setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
+            }
         }
         if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
             article.setLocation(location);
@@ -226,8 +230,11 @@ public class ArticleController extends BaseController {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
         article.setIsDraft(false);
+        article.getArticleOptions().setIsPublish(true);
         articleService.save(article);
-        return Message.success("发布成功");
+        ArticleModel entityModel =new ArticleModel();
+        entityModel.bind(article);
+        return Message.success(entityModel,"保存成功");
     }
 
     /**
@@ -235,16 +242,44 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long templateId,HttpServletRequest request){
+    public Message update(Long id,Long templateId,Long articleCatalogId,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
         }
+        Boolean edited = false;
         if (templateId!=null) {
             article.setTemplate(templateService.find(templateId));
+            edited = true;
+        }
+        if (articleCatalogId!=null) {
+            article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
+            edited = true;
+        }
+        if (!edited) {
+            return Message.error("传参不正确");
         }
         articleService.save(article);
-        return Message.success("发布成功");
+        ArticleModel entityModel =new ArticleModel();
+        entityModel.bind(article);
+        return Message.success(entityModel,"保存成功");
+    }
+
+    /**
+     * 获取显示模版
+     */
+    @RequestMapping(value = "/template", method = RequestMethod.POST)
+    @ResponseBody
+    public Message template(Long id,HttpServletRequest request){
+        Article article = articleService.find(id);
+        if (article==null) {
+            return Message.error("无效文章编号");
+        }
+        String sn="1001";
+        if (article.getTemplate()==null) {
+           sn = article.getTemplate().getSn();
+        }
+        return Message.success((Object)sn,"发布成功");
     }
 
     /**

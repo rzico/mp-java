@@ -48,15 +48,16 @@ public class MessageController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(net.wit.entity.Message.Type type,Boolean readed,Pageable pageable, HttpServletRequest request){
+    public Message list(String userId,Boolean readed,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Member sender = memberService.findByUsername(userId);
         List<Filter> filters = pageable.getFilters();
         filters.add(new Filter("receiver", Filter.Operator.eq,member));
-        if (type!=null) {
-            filters.add(new Filter("type", Filter.Operator.eq,type));
+        if (sender!=null) {
+            filters.add(new Filter("member", Filter.Operator.eq,sender));
         }
         if (readed!=null) {
             filters.add(new Filter("readed", Filter.Operator.eq,readed));

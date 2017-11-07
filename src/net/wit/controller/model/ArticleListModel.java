@@ -20,6 +20,8 @@ public class ArticleListModel implements Serializable {
     private String title;
     /** 标题图 */
     private String thumbnail;
+    /** 简说明 */
+    private String htmlTag;
     /** 内容短论 */
     private String content;
     /** 评论数 */
@@ -129,6 +131,14 @@ public class ArticleListModel implements Serializable {
         this.tags = tags;
     }
 
+    public String getHtmlTag() {
+        return htmlTag;
+    }
+
+    public void setHtmlTag(String htmlTag) {
+        this.htmlTag = htmlTag;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.createDate = article.getCreateDate();
@@ -139,8 +149,20 @@ public class ArticleListModel implements Serializable {
         this.review = article.getReview();
         this.hits = article.getHits();
         this.laud = article.getLaud();
+        this.htmlTag = article.delHTMLTag();
         this.tags = TagModel.bindList(article.getTags());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://"+bundle.getString("weixin.url")+"/article/#/t"+article.getTemplate().getId()+"?id="+article.getId();
+        this.url = "http://"+bundle.getString("weixin.url")+"/website/t"+article.getTemplate().getSn()+"?id="+article.getId();
     }
+
+    public static List<ArticleListModel> bindList(List<Article> articles) {
+        List<ArticleListModel> ms = new ArrayList<ArticleListModel>();
+        for (Article article:articles) {
+            ArticleListModel m = new ArticleListModel();
+            m.bind(article);
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }

@@ -10,6 +10,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
+import net.wit.entity.Payment;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -56,5 +58,17 @@ public class TopicDaoImpl extends BaseDaoImpl<Topic, Long> implements TopicDao {
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
+	}
+
+	public Topic find(Member member) {
+		if (member == null) {
+			return null;
+		}
+		String jpql = "select topic from Topic topic where topic.member = :member";
+		try {
+			return entityManager.createQuery(jpql, Topic.class).setFlushMode(FlushModeType.COMMIT).setParameter("member", member).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }

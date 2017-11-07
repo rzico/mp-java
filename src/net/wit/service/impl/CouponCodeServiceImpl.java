@@ -83,6 +83,11 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 		super.delete(couponCode);
 	}
 
+	@Transactional(readOnly = true)
+	public CouponCode findByCode(String code) {
+		return couponCodeDao.findByCode(code);
+	}
+
 	public Page<CouponCode> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return couponCodeDao.findPage(beginDate,endDate,pageable);
 	}

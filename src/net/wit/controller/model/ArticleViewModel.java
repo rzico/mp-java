@@ -11,13 +11,15 @@ public class ArticleViewModel implements Serializable {
     
     private Long id;
     /** 会员 */
-    private MemberModel member;
+    private MemberViewModel member;
     /** 作者 */
     private String author;
     /** 标题 */
     private String title;
     /** 标题图 */
     private String thumbnail;
+    /** 简说明 */
+    private String htmlTag;
     /** 创建时间 */
     private Date createDate;
     /** 背景音乐 */
@@ -45,11 +47,11 @@ public class ArticleViewModel implements Serializable {
         this.id = id;
     }
 
-    public MemberModel getMember() {
+    public MemberViewModel getMember() {
         return member;
     }
 
-    public void setMember(MemberModel member) {
+    public void setMember(MemberViewModel member) {
         this.member = member;
     }
 
@@ -159,7 +161,7 @@ public class ArticleViewModel implements Serializable {
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();
-        MemberModel member = new MemberModel();
+        MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;
         List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
@@ -171,12 +173,13 @@ public class ArticleViewModel implements Serializable {
         if (article.getVotes()!=null) {
             votes = JsonUtils.toObject(article.getVotes(), List.class);
         }
+        this.htmlTag = article.delHTMLTag();
 
         this.templates = templates;
         this.votes = votes;
         this.products = ProductViewModel.bindSet(article);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://"+bundle.getString("weixin.url")+"/article/#/t"+article.getTemplate().getId()+"?id="+article.getId();
+        this.url = "http://"+bundle.getString("weixin.url")+"/website/t"+article.getTemplate().getSn()+"?id="+article.getId();
     }
 
 }

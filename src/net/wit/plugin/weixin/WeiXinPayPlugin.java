@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.wit.entity.BindUser;
 import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
 import net.wit.entity.Refunds;
@@ -130,8 +131,10 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		packageParams.put("spbill_create_ip", request.getRemoteAddr());
 		packageParams.put("notify_url", getNotifyUrl(sn, NotifyMethod.async));
 		packageParams.put("trade_type", "JSAPI");
-		//payment.getMember().
-		//packageParams.put("openid", request.getSession().getAttribute(Member.MEMBER_OPENT_ID));
+	    BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
+	    if (bindUser!=null) {
+			packageParams.put("openid",bindUser.getOpenId());
+		}
 
 		try {
 			String sign = getSign(packageParams);

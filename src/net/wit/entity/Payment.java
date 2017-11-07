@@ -84,6 +84,10 @@ public class Payment extends BaseEntity {
 	@Column(columnDefinition="varchar(50) not null unique comment '编号'")
 	private String sn;
 
+	/** 三方单号 */
+	@Column(columnDefinition="varchar(50) comment '三方单号'")
+	private String  tranSn;
+
 	/** 类型 */
 	@Column(columnDefinition="int(11) not null comment '类型 {payment:消费支付,recharge:钱包充值}'")
 	private Type type;
@@ -156,6 +160,12 @@ public class Payment extends BaseEntity {
 	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private ArticleReward articleReward;
+
+	/** 收款 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private PayBill payBill;
 
 	public String getSn() {
 		return sn;
@@ -283,6 +293,22 @@ public class Payment extends BaseEntity {
 
 	public void setPayee(Member payee) {
 		this.payee = payee;
+	}
+
+	public PayBill getPayBill() {
+		return payBill;
+	}
+
+	public void setPayBill(PayBill payBill) {
+		this.payBill = payBill;
+	}
+
+	public String getTranSn() {
+		return tranSn;
+	}
+
+	public void setTranSn(String tranSn) {
+		this.tranSn = tranSn;
 	}
 
 	/**

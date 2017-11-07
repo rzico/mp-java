@@ -10,17 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -41,6 +31,35 @@ public class Coupon extends BaseEntity {
 
 	private static final long serialVersionUID = 904L;
 
+	public static enum Type{
+		/*满减 */
+		fullcut,
+		/*满折 */
+		discount,
+		/*红包 */
+		redbag,
+
+	};
+
+	public static enum Scope{
+		/*全场 */
+		all,
+		/*店内 */
+		shop,
+		/*商城 */
+		mall
+	};
+
+	/** 类型 */
+	@NotNull
+	@Column(columnDefinition="int(11) not null comment '类型 {fullcut:满减,discount:满折,redbag:红包}'")
+	private Type type;
+
+	/** 使用范围 */
+	@NotNull
+	@Column(columnDefinition="int(11) not null comment '使用范围 {all:全场,shop:店内,mall:商城}'")
+	private Scope scope;
+
 	/** 名称 */
 	@NotEmpty
 	@Length(max = 200)
@@ -55,7 +74,11 @@ public class Coupon extends BaseEntity {
 	@Column(nullable = false,columnDefinition="datetime not null comment '使用结束日期'")
 	private Date endDate;
 
-	/** 优惠金额 */
+	/** 发放者 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member distributor;
+
+	/** 优惠金额/折扣比例 */
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
 	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '优惠金额'")
@@ -64,11 +87,6 @@ public class Coupon extends BaseEntity {
 	/** 使用条件 0 代表无门槛 */
 	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '使用条件'")
 	private BigDecimal minimumPrice;
-
-	/** 是否启用 */
-	@NotNull
-	@Column(nullable = false,columnDefinition="bit not null comment '是否启用'")
-	private Boolean isEnabled;
 
 	/** 介绍 */
 	@Lob
@@ -164,25 +182,6 @@ public class Coupon extends BaseEntity {
 	}
 
 	/**
-	 * 获取是否启用
-	 * 
-	 * @return 是否启用
-	 */
-	public Boolean getIsEnabled() {
-		return isEnabled;
-	}
-
-	/**
-	 * 设置是否启用
-	 * 
-	 * @param isEnabled
-	 *            是否启用
-	 */
-	public void setIsEnabled(Boolean isEnabled) {
-		this.isEnabled = isEnabled;
-	}
-
-	/**
 	 * 获取介绍
 	 * 
 	 * @return 介绍
@@ -273,6 +272,30 @@ public class Coupon extends BaseEntity {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public Scope getScope() {
+		return scope;
+	}
+
+	public void setScope(Scope scope) {
+		this.scope = scope;
+	}
+
+	public Member getDistributor() {
+		return distributor;
+	}
+
+	public void setDistributor(Member distributor) {
+		this.distributor = distributor;
 	}
 
 	/**

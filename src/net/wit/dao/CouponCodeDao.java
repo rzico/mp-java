@@ -19,6 +19,12 @@ import net.wit.entity.CouponCode;
 
 public interface CouponCodeDao extends BaseDao<CouponCode, Long> {
 	/**
+	 * 根据编号查找优惠券
+	 * @param code 编号(忽略大小写)
+	 * @return 优惠券，若不存在则返回null
+	 */
+	CouponCode findByCode(String code);
+	/**
 	 * @Title：findPage
 	 * @Description：标准代码
 	 * @param beginDate

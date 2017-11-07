@@ -2,6 +2,7 @@ package net.wit.entity;
 
 import sun.jvm.hotspot.oops.BooleanField;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -176,7 +177,28 @@ public class CouponCode extends BaseEntity {
 	}
 
 	public Boolean getEnabled() {
-		return !isUsed && getCoupon().hasExpired() && getCoupon().hasExpired() && !getCoupon().getDeleted() && getCoupon().getIsEnabled();
+		return !isUsed && getCoupon().hasExpired() && getCoupon().hasExpired() && !getCoupon().getDeleted();
 	}
 
+	public BigDecimal calculate(BigDecimal amount) {
+      if (amount.compareTo(BigDecimal.ZERO)<0) {
+          return  BigDecimal.ZERO;
+	  }
+	  if (!getEnabled()) {
+		  return  BigDecimal.ZERO;
+	  }
+	  Coupon coupon = getCoupon();
+      BigDecimal discount = BigDecimal.ZERO;
+		if (coupon.getType().equals(Coupon.Type.fullcut)){
+			if (amount.compareTo(coupon.getMinimumPrice()) >= 0) {
+				discount = coupon.getAmount();
+			}
+		} else
+		if (coupon.getType().equals(Coupon.Type.discount)){
+			if (amount.compareTo(coupon.getMinimumPrice()) >= 0) {
+				discount = amount.multiply(coupon.getAmount()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			}
+		}
+		return discount.compareTo(amount)>0?amount:discount;
+	}
 }

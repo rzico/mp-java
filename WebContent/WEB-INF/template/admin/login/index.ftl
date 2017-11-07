@@ -69,20 +69,20 @@
 </div>
 
 <div class="footer">Copyright ${setting.company} ${setting.siteName} v1.0</div>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/lib/layer/2.4/layer.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/js/jsbn.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/js/base64.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/js/rsa.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/js/prng4.js"></script>
-<script type="text/javascript" src="http://cdn.rzico.com/weex/resources/js/rng.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/jsbn.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/base64.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/rsa.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/prng4.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/rng.js"></script>
 <script type="text/javascript"
-        src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+        src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript"
-        src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+        src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript"
-        src="http://cdn.rzico.com/weex/resources/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+        src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
 <script type="text/javascript">
     $(function () {

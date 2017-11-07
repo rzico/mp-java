@@ -44,14 +44,6 @@
                 </div>
             </div>
 
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>简称：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.shortName}" placeholder="" id="shortName" name="shortName">
-                </div>
-            </div>
-
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全称：</label>
                 <div class="formControls col-xs-8 col-sm-9">
@@ -121,36 +113,6 @@
 				</span>
                 </div>
             </div>
-
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">证件号：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.licenseCode}" placeholder="" id="licenseCode" name="licenseCode">
-                </div>
-            </div>
-
-
-            <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">上传证件：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.license}" placeholder="" id="license" name="license">
-            </div>
-        </div>
-
-             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">上传门头：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.thedoor}" placeholder="" id="thedoor" name="thedoor">
-                </div>
-            </div>
-
-            <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经营场所：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.scene}" placeholder="" id="scene" name="scene">
-            </div>
-        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>

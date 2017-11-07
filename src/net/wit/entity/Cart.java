@@ -219,7 +219,7 @@ public class Cart extends BaseEntity {
 	 */
 	@Transient
 	public boolean isValid(Coupon coupon) {
-		if (coupon == null || !coupon.getIsEnabled() || !coupon.hasBegun() || coupon.hasExpired()) {
+		if (coupon == null || coupon.getDeleted() || !coupon.hasBegun() || coupon.hasExpired()) {
 			return false;
 		}
 		if ((coupon.getMinimumPrice() != null && coupon.getMinimumPrice().compareTo(getEffectivePrice()) > 0)) {

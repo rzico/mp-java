@@ -93,8 +93,6 @@ public class CouponController extends BaseController {
 
 		entity.setIntroduction(coupon.getIntroduction());
 
-		entity.setIsEnabled(coupon.getIsEnabled());
-
 		entity.setMinimumPrice(coupon.getMinimumPrice());
 
 		entity.setName(coupon.getName());
@@ -163,8 +161,6 @@ public class CouponController extends BaseController {
 		entity.setEndDate(coupon.getEndDate());
 
 		entity.setIntroduction(coupon.getIntroduction());
-
-		entity.setIsEnabled(coupon.getIsEnabled());
 
 		entity.setMinimumPrice(coupon.getMinimumPrice());
 

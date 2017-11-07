@@ -1,4 +1,4 @@
-package net.wit.controller.weex;
+package net.wit.controller;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;

@@ -103,6 +103,11 @@ public class Deposit extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '转账单'")
 	private Transfer transfer;
 
+	/** 线下收单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '线下收单'")
+	private PayBill payBill;
+
 	/** 是否删除 */
 	@NotNull
 	@Column(columnDefinition="bit comment '是否删除'")
@@ -282,6 +287,14 @@ public class Deposit extends BaseEntity {
 
 	public void setTransfer(Transfer transfer) {
 		this.transfer = transfer;
+	}
+
+	public PayBill getPayBill() {
+		return payBill;
+	}
+
+	public void setPayBill(PayBill payBill) {
+		this.payBill = payBill;
 	}
 
 	public MapEntity getMapMember() {

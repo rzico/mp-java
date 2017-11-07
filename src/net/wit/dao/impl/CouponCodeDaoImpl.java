@@ -30,6 +30,17 @@ import net.wit.entity.CouponCode;
 
 @Repository("couponCodeDaoImpl")
 public class CouponCodeDaoImpl extends BaseDaoImpl<CouponCode, Long> implements CouponCodeDao {
+	public CouponCode findByCode(String code) {
+		if (code == null) {
+			return null;
+		}
+		String jpql = "select couponCode from CouponCode couponCode where lower(couponCode.code) = lower(:code)";
+		try {
+			return entityManager.createQuery(jpql, CouponCode.class).setFlushMode(FlushModeType.COMMIT).setParameter("code", code).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

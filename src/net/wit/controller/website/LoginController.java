@@ -5,6 +5,7 @@ import net.wit.Message;
 import net.wit.Principal;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
+import net.wit.plat.alipay.util.AlipayUtil;
 import net.wit.plat.im.User;
 import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.plat.weixin.util.WeixinApi;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+
+import static net.wit.util.ByteUtil.hexStringToString;
 
 
 /**
@@ -189,10 +194,11 @@ public class LoginController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
+        String mState = hexStringToString(state);
         if (token!=null) {
             openId = token.getOpenid();
          } else {
-            return "redirect:/website/login?redirectURL="+state;
+            return "redirect:/website/login?redirectURL="+mState;
         }
         JSONObject userinfo = WeixinApi.getUserInfoByCode(token.getToken(), openId);
         String nickName=null;
@@ -227,6 +233,14 @@ public class LoginController extends BaseController {
             member.setLoginFailureCount(0);
             member.setRegisterIp(request.getRemoteAddr());
             memberService.save(member);
+        } else {
+            if (nickName!=null && member.getNickName()==null) {
+                member.setNickName(nickName);
+            }
+            if (headImg!=null && member.getLogo()==null) {
+                member.setLogo(headImg);
+            }
+            memberService.update(member);
         }
         try {
             bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
@@ -251,11 +265,114 @@ public class LoginController extends BaseController {
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             member.setLoginDate(new Date());
+            String userAgent = request.getHeader("user-agent");
+            if (userAgent!=null) {
+                member.setScene(userAgent.substring(0, 254));
+            }
             memberService.save(member);
-            return "redirect:"+state;
+            return "redirect:"+mState;
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/website/login?redirectURL="+state;
+            return "redirect:/website/login?redirectURL="+mState;
+        }
+    }
+
+    /**
+     * 微信登录
+     */
+    @RequestMapping(value = "/alipay", method = RequestMethod.GET)
+    public String alipay(String state,String auth_code,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        System.out.println(auth_code);
+        String openId = null;
+        String nickName=null;
+        String headImg=null;
+        String unionId=null;
+        String mState = hexStringToString(state);
+        try {
+            AccessToken token = AlipayUtil.getOauth2AccessToken(auth_code);
+            if (token!=null) {
+                openId = token.getOpenid();
+            } else {
+                return "redirect:/website/login?redirectURL="+mState;
+            }
+            JSONObject userInfo = AlipayUtil.getUserInfoByToken(token.getToken());
+            if (userInfo!=null) {
+                JSONObject personInfo = userInfo.getJSONObject("alipay_user_info_share_response");
+                if (personInfo.containsKey("nickname")) {
+                    nickName = StringUtils.filterEmoji(personInfo.getString("nick_name"));
+                    headImg = personInfo.getString("avatar");
+                    unionId = personInfo.getString("user_id");
+                }
+            }
+        } catch (ServletException e) {
+            return "redirect:/website/login?redirectURL="+mState;
+        } catch (IOException e) {
+            return "redirect:/website/login?redirectURL="+mState;
+        }
+
+        BindUser bindUser = null;
+        if (unionId!=null) {
+            bindUser = bindUserService.findUnionId(unionId, BindUser.Type.alipay);
+        } else {
+            bindUser = bindUserService.findOpenId(openId,bundle.getString("alipay.appid"),BindUser.Type.alipay);
+        }
+        Member member = null;
+        if (bindUser!=null) {
+            member = bindUser.getMember();
+        }
+        if (member==null) {
+            member = new Member();
+            member.setNickName(nickName);
+            member.setLogo(headImg);
+            member.setPoint(0L);
+            member.setBalance(BigDecimal.ZERO);
+            member.setIsEnabled(true);
+            member.setIsLocked(false);
+            member.setLoginFailureCount(0);
+            member.setRegisterIp(request.getRemoteAddr());
+            memberService.save(member);
+        } else {
+            if (nickName!=null && member.getNickName()==null) {
+                member.setNickName(nickName);
+            }
+            if (headImg!=null && member.getLogo()==null) {
+                member.setLogo(headImg);
+            }
+            memberService.update(member);
+        }
+        try {
+            bindUser = bindUserService.findOpenId(openId,bundle.getString("alipay.appid"),BindUser.Type.alipay);
+            if (unionId==null) {
+                unionId = "#";
+            }
+            if (bindUser==null) {
+                bindUser = new BindUser();
+                bindUser.setAppId(bundle.getString("alipay.appid"));
+                bindUser.setType(BindUser.Type.alipay);
+                bindUser.setMember(member);
+                bindUser.setUnionId(unionId);
+                bindUser.setOpenId(openId);
+            } else {
+                bindUser.setMember(member);
+                if (!"#".equals(unionId)) {
+                    bindUser.setUnionId(unionId);
+                }
+            }
+            bindUserService.save(bindUser);
+
+            Principal principal = new Principal(member.getId(),member.getUsername());
+            redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+            member.setLoginDate(new Date());
+            String userAgent = request.getHeader("user-agent");
+            if (userAgent!=null) {
+                member.setScene(userAgent.substring(0, 254));
+            }
+            memberService.save(member);
+            return "redirect:"+mState;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/website/login?redirectURL="+mState;
         }
     }
 
@@ -283,7 +400,8 @@ public class LoginController extends BaseController {
         if (member!=null) {
             data.put("uid", member.getId());
             data.put("userId",member.userId());
-            data.put("userSig", User.createUserSig(member.userId()));
+            data.put("authed",(member.getLogo()!=null));
+            //data.put("userSig", User.createUserSig(member.userId()));
         }
         return Message.success(data,"success");
     }

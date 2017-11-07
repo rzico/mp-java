@@ -16,5 +16,11 @@ import net.wit.entity.CouponCode;
  */
 
 public interface CouponCodeService extends BaseService<CouponCode, Long> {
+	/**
+	 * 根据编号查找优惠券
+	 * @param code 编号(忽略大小写)
+	 * @return 优惠券，若不存在则返回null
+	 */
+	CouponCode findByCode(String code);
 	Page<CouponCode> findPage(Date beginDate,Date endDate, Pageable pageable);
 }

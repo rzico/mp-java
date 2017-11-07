@@ -52,16 +52,19 @@ public class TemplateController extends BaseController {
      /**
      * 获取页面模版
      */
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Tag.Type type,HttpServletRequest request){
         List<Tag> tags = tagService.findList(type);
-        List<Object> model = new ArrayList<Object>();
+        List<Map> model = new ArrayList<Map>();
         for (Tag tag:tags) {
+           List<TemplateModel> ms = TemplateModel.bindList(tag.getTemplates(),Template.Type.article);
            Map<String,Object> tagModel = new HashMap<String,Object>();
-           tagModel.put(tag.getName(),TemplateModel.bindList(tag.getTemplates()));
+            tagModel.put("name",tag.getName());
+            tagModel.put("templates",ms);
+           model.add(tagModel);
         }
-        return Message.success(model,"发布成功");
+        return Message.bind(model,request);
     }
 
 }
