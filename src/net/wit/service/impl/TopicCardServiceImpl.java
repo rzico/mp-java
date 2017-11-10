@@ -80,7 +80,7 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void save(TopicCard topicCard) throws java.lang.Exception {
+	public void save(TopicCard topicCard) {
 		JSONObject data = WeiXinUtils.createMemberCard(
 			    topicCard.getBackground(),
 				topicCard.getPrerogative(),
@@ -94,15 +94,13 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 			topicCard.setStatus(TopicCard.Status.waiting);
 			topicCard.setWeixinCardId(cardId);
 			super.save(topicCard);
-		} else {
-			throw new java.lang.Exception("保存失败");
 		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public TopicCard update(TopicCard topicCard) throws java.lang.Exception {
+	public TopicCard update(TopicCard topicCard) {
 		JSONObject data = WeiXinUtils.updateMemberCard(
 				topicCard.getWeixinCardId(),
 				topicCard.getBackground(),
@@ -115,14 +113,14 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 		if (data.getString("errcode").equals("0")){
 			return super.update(topicCard);
 		}  else {
-			throw new java.lang.Exception("修改失败");
+			return null;
 		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public TopicCard update(TopicCard topicCard, String... ignoreProperties) throws java.lang.Exception {
+	public TopicCard update(TopicCard topicCard, String... ignoreProperties) {
 		JSONObject data = WeiXinUtils.updateMemberCard(
 				topicCard.getWeixinCardId(),
 				topicCard.getBackground(),
@@ -134,8 +132,8 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 		);
 		if (data.getString("errcode").equals("0")){
 			return super.update(topicCard, ignoreProperties);
-		}   else {
-			throw new java.lang.Exception("修改失败");
+		}  else {
+			return null;
 		}
 	}
 

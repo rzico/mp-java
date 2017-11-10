@@ -332,7 +332,6 @@ public class WeiXinUtils {
 			Map<String, Object> baseInfo = new HashMap<>();
 			memberCard.put("base_info", baseInfo);//基本的卡券数据
 			baseInfo.put("logo_url", logoUrl);
-			baseInfo.put("brand_name", topicName);
 			baseInfo.put("title", title);
 			baseInfo.put("color", color);//（必填）券颜色。按色彩规范标注填写Color010-Color100
 			baseInfo.put("notice", "消费时请出示会员卡");

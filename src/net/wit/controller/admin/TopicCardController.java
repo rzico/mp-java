@@ -174,6 +174,9 @@ public class TopicCardController extends BaseController {
         }
         try {
             topicCardService.save(entity);
+            if (entity.getId()==null) {
+            	return Message.error("保存失败");
+			}
             return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -261,7 +264,9 @@ public class TopicCardController extends BaseController {
             return Message.error("admin.data.valid");
         }
         try {
-            topicCardService.update(entity);
+            if (topicCardService.update(entity)==null) {
+            	return Message.error("修改失败");
+			}
             return Message.success(entity,"admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();

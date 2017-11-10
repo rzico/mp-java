@@ -51,7 +51,7 @@ public class PluginConfigServiceImpl extends BaseServiceImpl<PluginConfig, Long>
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public PluginConfig update(PluginConfig pluginConfig) {
+	public PluginConfig update(PluginConfig pluginConfig)  {
 		return super.update(pluginConfig);
 	}
 

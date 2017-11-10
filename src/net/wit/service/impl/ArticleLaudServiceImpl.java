@@ -51,7 +51,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public ArticleLaud update(ArticleLaud articleLaud) {
+	public ArticleLaud update(ArticleLaud articleLaud)  {
 		return super.update(articleLaud);
 	}
 
@@ -62,25 +62,33 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 		return super.update(articleLaud, ignoreProperties);
 	}
 
+
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		ArticleLaud articleLaud = articleLaudDao.find(id);
+		articleLaud.setIsShow(true);
+		super.update(articleLaud);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			ArticleLaud articleLaud = articleLaudDao.find(id);
+			articleLaud.setIsShow(true);
+			super.update(articleLaud);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleLaud articleLaud) {
-		super.delete(articleLaud);
+		articleLaud.setIsShow(true);
+		super.update(articleLaud);
 	}
 
 	public Page<ArticleLaud> findPage(Date beginDate,Date endDate, Pageable pageable) {
