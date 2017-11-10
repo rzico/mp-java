@@ -20,3 +20,64 @@
 }
 /*清除ie的默认选择框样式清除，隐藏下拉箭头*/
 .citySelect::-ms-expand { display: none; }
+
+.c1 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #55BD47;
+}
+.c2 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #10AD61;
+}
+.c3 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #35A4DE;
+}
+.c4 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #3D78DA;
+}
+.c5 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #9058CB;
+}
+.c6 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #DE9C33;
+}
+.c7 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #EBAC16;
+}
+.c8 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #F9861F;
+}
+.c9 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #E75735;
+}
+.c10 {
+    width:20px;
+    height:20px;
+    display:inline-block;
+    background-color: #D54036;
+}

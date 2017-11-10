@@ -9,21 +9,24 @@
 
 package net.wit.plat.weixin.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
-import java.util.Set;
 
+import net.sf.json.JSONObject;
+import net.wit.plat.weixin.pojo.AccessToken;
+import net.wit.util.JsonUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -196,4 +199,158 @@ public class WeiXinUtils {
 	public static String getTimeStamp() {
 		return String.valueOf(System.currentTimeMillis() / 1000);
 	}
+
+	/**
+	 * 上传图片至CDN
+	 * 1.上传的图片限制文件大小限制1MB，仅支持JPG、PNG格式。
+	 * 2.调用接口获取图片url仅支持在微信相关业务下使用。
+	 */
+	public static JSONObject uploadImageToCDN(File file) {
+		JSONObject jsonObject = null;
+		try {
+			ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+			HttpClient client = new DefaultHttpClient();
+			AccessToken accessToken = WeixinApi.getAccessToken(bundle.getString("weixin.appid"),bundle.getString("weixin.secret"));
+			HttpPost filePost = new HttpPost("https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + accessToken.getToken());
+			filePost.setHeader("Content-Type", "multipart/form-data");
+			HttpEntity reqEntity = MultipartEntityBuilder.create().addPart("buffer", new FileBody(file)).build();
+			filePost.setEntity(reqEntity);
+			String res = EntityUtils.toString(client.execute(filePost).getEntity());
+			jsonObject = JSONObject.fromObject(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+
+
+
+	/**
+	 * 创建会员卡
+	 *
+	 * @param backgroundPicUrl 商家自定义会员卡背景图，须 先调用上传图片接口将背景图上传至CDN，否则报错， 卡面设计请遵循微信会员卡自定义背景设计规范  ,像素大小控制在 1000 像素 *600像素以下
+	 * @param prerogative      （必填）会员卡特权说明
+	 * @param logoUrl          （必填）卡券的商户logo，建议像素为300*300
+	 * @param title            （必填）卡券名，字数上限为9个汉字
+	 * @param description      （必填）卡券使用说明，字数上限为1024个汉字
+	 */
+	public static JSONObject createMemberCard(String backgroundPicUrl,
+											  String prerogative,
+											  String topicName,
+											  String logoUrl,
+											  String title,
+											  String description,
+											  String color
+	) {
+		JSONObject jsonObject = null;
+		try {
+			ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+			HttpClient client = new DefaultHttpClient();
+			AccessToken accessToken = WeixinApi.getAccessToken(bundle.getString("weixin.appid"),bundle.getString("weixin.secret"));
+			HttpPost post = new HttpPost("https://api.weixin.qq.com/card/create?access_token=" + accessToken.getToken());
+
+			Map<String, Object> map = new HashMap<>();
+			Map<String, Object> card = new HashMap<>();
+			map.put("card", card);//卡券
+			card.put("card_type", "MEMBER_CARD"); //（必填）会员卡类型
+			Map<String, Object> memberCard = new HashMap<>();
+			card.put("member_card", memberCard);  //会员卡
+
+			if (StringUtils.isNotBlank(backgroundPicUrl)) memberCard.put("background_pic_url", backgroundPicUrl);
+			memberCard.put("prerogative", prerogative);
+			memberCard.put("auto_activate", true);//设置为true时用户领取会员卡后系统自动将其激活，无需调用激活接口
+			memberCard.put("supply_bonus", false);//（必填）显示积分，填写true或false，如填写true，积分相关字段均为必填
+			memberCard.put("supply_balance", false);//（必填）是否支持储值，填写true或false。如填写true，储值相关字段均为必填
+
+			Map<String, Object> baseInfo = new HashMap<>();
+			memberCard.put("base_info", baseInfo);//基本的卡券数据
+			baseInfo.put("logo_url", logoUrl);
+			baseInfo.put("brand_name", topicName);
+			baseInfo.put("code_type", "CODE_TYPE_NONE");//（必填）Code展示类型，"CODE_TYPE_TEXT" 文本，"CODE_TYPE_BARCODE" 一维码，"CODE_TYPE_QRCODE" 二维码，"CODE_TYPE_ONLY_QRCODE" 仅显示二维码，"CODE_TYPE_ONLY_BARCODE" 仅显示一维码，"CODE_TYPE_NONE" 不显示任何码型
+			baseInfo.put("title", title);
+			baseInfo.put("color",color);//（必填）券颜色。按色彩规范标注填写Color010-Color100
+			baseInfo.put("notice", "消费时请出示会员卡");
+			baseInfo.put("description", description);
+			baseInfo.put("get_limit", 1);//每人可领券的数量限制，建议会员卡每人限领一张
+
+			Map<String, Object> sku = new HashMap<>();
+			baseInfo.put("sku", sku);//商品信息
+			sku.put("quantity", 1000000000);
+
+			Map<String, Object> dateInfo = new HashMap<>();
+			baseInfo.put("date_info", dateInfo);//使用日期，有效期的信息
+			dateInfo.put("type", "DATE_TYPE_PERMANENT");//使用时间的类型
+
+			baseInfo.put("center_title", "我的卡包");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_sub_title", "点击进入会员中心");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/website/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
+
+//			Map<String, Object> customCell2 = new HashMap<>();
+//			memberCard.put("custom_cell2", customCell2);//自定义会员信息类目，会员卡激活后显示。
+//			customCell2.put("name", "会员升级");
+//			customCell2.put("url", Config.getProperty("WeiXinSiteUrl") + "/weixin/qrcode/go.jhtml?type=partner");
+//			customCell2.put("tips", "让人脉变钱脉");
+//
+//			Map<String, Object> customCell1 = new HashMap<>();
+//			memberCard.put("custom_cell1", customCell1);//自定义会员信息类目，会员卡激活后显示。
+//			customCell1.put("name", "会员特价");
+//			customCell1.put("url", Config.getProperty("WeiXinSiteUrl") + "/weixin/qrcode/go.jhtml?type=index");
+//			customCell1.put("tips", "分享赚钱又省钱");
+//
+			String data = JsonUtils.toJson(map);
+			post.setEntity(new StringEntity(data, ContentType.APPLICATION_JSON));
+			String res = EntityUtils.toString(client.execute(post).getEntity());
+			jsonObject = JSONObject.fromObject(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+
+	public static JSONObject updateMemberCard(String cardId,
+											  String backgroundPicUrl,
+											  String prerogative,
+											  String topicName,
+											  String logoUrl,
+											  String title,
+											  String description,
+											  String color
+	) {
+		JSONObject jsonObject = null;
+		try {
+			ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+			HttpClient client = new DefaultHttpClient();
+			AccessToken accessToken = WeixinApi.getAccessToken(bundle.getString("weixin.appid"),bundle.getString("weixin.secret"));
+			HttpPost post = new HttpPost("https://api.weixin.qq.com/card/update?access_token=" + accessToken.getToken());
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("card_id",cardId); //（必填）会员卡类型
+			Map<String, Object> memberCard = new HashMap<>();
+			map.put("member_card", memberCard);  //会员卡
+			memberCard.put("prerogative", prerogative);
+
+			Map<String, Object> baseInfo = new HashMap<>();
+			memberCard.put("base_info", baseInfo);//基本的卡券数据
+			baseInfo.put("logo_url", logoUrl);
+			baseInfo.put("brand_name", topicName);
+			baseInfo.put("title", title);
+			baseInfo.put("color", color);//（必填）券颜色。按色彩规范标注填写Color010-Color100
+			baseInfo.put("notice", "消费时请出示会员卡");
+			baseInfo.put("description", description);
+
+			baseInfo.put("center_title", "我的卡包");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_sub_title", "点击进入会员中心");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/website/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
+
+			String data = JsonUtils.toJson(map);
+			post.setEntity(new StringEntity(data, ContentType.APPLICATION_JSON));
+			String res = EntityUtils.toString(client.execute(post).getEntity());
+			jsonObject = JSONObject.fromObject(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+
+
 }

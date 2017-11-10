@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_order_item_sequence")
 public class OrderItem extends BaseEntity {
 
-	private static final long serialVersionUID = 907L;
+	private static final long serialVersionUID = 36L;
 
 	/** 商品编号 */
 	@NotEmpty

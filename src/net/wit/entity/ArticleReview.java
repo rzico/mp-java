@@ -33,7 +33,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_review_sequence")
 public class  ArticleReview extends BaseEntity {
 
-	private static final long serialVersionUID = 109L;
+	private static final long serialVersionUID = 10L;
 
 	/** 内容 */
 	@NotEmpty

@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_shop_sequence")
 public class Shop extends BaseEntity {
 
-    private static final long serialVersionUID = 127L;
+    private static final long serialVersionUID = 53L;
 
     /** 收款码 */
     @Column(length = 100,columnDefinition="varchar(100) comment '收款码'")

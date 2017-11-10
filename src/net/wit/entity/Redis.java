@@ -18,7 +18,7 @@ import java.util.Set;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_redis_sequence")
 public class Redis extends BaseEntity{
 
-    private static final long serialVersionUID = 125L;
+    private static final long serialVersionUID = 45L;
 
     /*key*/
     @Column(name = "redis_key",columnDefinition="varchar(80) not null unique comment '缓存'")

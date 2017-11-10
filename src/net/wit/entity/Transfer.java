@@ -24,7 +24,7 @@ import java.util.List;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_transfer_sequence")
 public class Transfer extends BaseEntity {
 
-	private static final long serialVersionUID = 219L;
+	private static final long serialVersionUID = 62L;
 
 	/**
 	 * 类型

@@ -25,7 +25,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_payment_sequence")
 public class Payment extends BaseEntity {
 
-	private static final long serialVersionUID = 116L;
+	private static final long serialVersionUID = 39L;
 
 	/** 支付方式分隔符 */
 	public static final String PAYMENT_METHOD_SEPARATOR = " - ";

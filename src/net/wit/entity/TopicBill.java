@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_topic_bill_sequence")
 public class TopicBill extends BaseEntity {
 
-	private static final long serialVersionUID = 126L;
+	private static final long serialVersionUID = 59L;
 
 	/**
 	 * 状态

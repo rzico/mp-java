@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_deposit_sequence")
 public class Deposit extends BaseEntity {
 
-	private static final long serialVersionUID = 110L;
+	private static final long serialVersionUID = 23L;
 
 	/**
 	 * 类型

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @MappedSuperclass
 public abstract class OrderEntity extends BaseEntity implements Comparable<OrderEntity> {
 
-	private static final long serialVersionUID = 5995013015967525827L;
+	private static final long serialVersionUID = 35L;
 
 	/** "排序"属性名称 */
 	public static final String ORDER_PROPERTY_NAME = "orders";

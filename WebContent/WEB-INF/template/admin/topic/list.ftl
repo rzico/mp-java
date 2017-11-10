@@ -158,7 +158,7 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "shortName",
+                    "mData": "name",
                     "sTitle": "简称",
                     "sClass": "center"
                 },

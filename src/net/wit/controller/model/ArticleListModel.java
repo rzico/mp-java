@@ -22,8 +22,6 @@ public class ArticleListModel implements Serializable {
     private String thumbnail;
     /** 简说明 */
     private String htmlTag;
-    /** 内容短论 */
-    private String content;
     /** 评论数 */
     private Long review;
     /** 阅读数 */
@@ -81,14 +79,6 @@ public class ArticleListModel implements Serializable {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public Long getReview() {

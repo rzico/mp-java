@@ -44,21 +44,21 @@ public class OrderLogServiceImpl extends BaseServiceImpl<OrderLog, Long> impleme
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void save(OrderLog orderLog) {
+	public void save(OrderLog orderLog) throws Exception {
 		super.save(orderLog);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public OrderLog update(OrderLog orderLog) {
+	public OrderLog update(OrderLog orderLog) throws Exception {
 		return super.update(orderLog);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public OrderLog update(OrderLog orderLog, String... ignoreProperties) {
+	public OrderLog update(OrderLog orderLog, String... ignoreProperties) throws Exception {
 		return super.update(orderLog, ignoreProperties);
 	}
 

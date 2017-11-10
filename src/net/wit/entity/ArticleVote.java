@@ -28,7 +28,7 @@ public class ArticleVote extends BaseEntity {
 		 nolimit
 	};
 
-	private static final long serialVersionUID = 126L;
+	private static final long serialVersionUID = 13L;
 
 	/** IP */
 	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment 'IP'")

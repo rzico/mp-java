@@ -16,7 +16,7 @@ import org.apache.commons.lang.time.DateUtils;
 @Embeddable
 public class SafeKey implements Serializable {
 
-	private static final long serialVersionUID = 123L;
+	private static final long serialVersionUID = 50L;
 
 	/** 关键 */
 	@Column(name = "safe_key")

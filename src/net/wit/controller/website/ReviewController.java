@@ -62,6 +62,6 @@ public class ReviewController extends BaseController {
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleReviewModel.bindList(page.getContent()));
         return Message.bind(model,request);
-   }
+    }
 
 }

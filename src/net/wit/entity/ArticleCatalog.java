@@ -25,7 +25,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_catalog_sequence")
 public class ArticleCatalog extends OrderEntity {
 
-	private static final long serialVersionUID = 104L;
+	private static final long serialVersionUID = 4L;
 
 	/**
 	 * 状态

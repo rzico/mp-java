@@ -19,7 +19,7 @@ import java.util.List;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_card_sequence")
 public class Card extends BaseEntity {
 
-	private static final long serialVersionUID = 906L;
+	private static final long serialVersionUID = 16L;
 
 	/** 最近使用日期 */
 	@Column(columnDefinition="datetime comment '最近使用日期'")

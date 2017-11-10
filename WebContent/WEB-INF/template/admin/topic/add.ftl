@@ -82,6 +82,13 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>交易佣金：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="brokerage" value="" placeholder="" id="brokerage" onInput="floatInit(this)">
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">所在地：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="fieldSet">

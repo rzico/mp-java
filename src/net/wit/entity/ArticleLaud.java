@@ -21,7 +21,7 @@ import java.util.Set;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_laud_sequence")
 public class ArticleLaud extends BaseEntity {
 
-	private static final long serialVersionUID = 107L;
+	private static final long serialVersionUID = 7L;
 
 	/** 是否显示 */
 	@Column(nullable = false)

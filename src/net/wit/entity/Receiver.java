@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_receiver_sequence")
 public class Receiver extends BaseEntity {
 
-	private static final long serialVersionUID = 118L;
+	private static final long serialVersionUID = 44L;
 
 	/** 收货地址最大保存数 */
 	public static final Integer MAX_RECEIVER_COUNT = 8;

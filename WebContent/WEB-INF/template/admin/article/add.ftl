@@ -243,7 +243,7 @@
                                     parent.closeWindow(index, '添加成功');
                                 }else{
                                     $submit.prop("disabled", false);
-                                    layer.msg('添加失败!',{icon:2,time:1000});
+                                    layer.msg(message.content,{icon:2,time:1000});
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){

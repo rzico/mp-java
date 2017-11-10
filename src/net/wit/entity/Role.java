@@ -28,7 +28,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_role_sequence")
 public class Role extends BaseEntity {
 
-	private static final long serialVersionUID = 120L;
+	private static final long serialVersionUID = 49L;
 
 	/** 名称 */
 	@NotEmpty

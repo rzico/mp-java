@@ -22,7 +22,7 @@ import java.util.*;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_sequence")
 public class Article extends BaseEntity{
 
-    private static final long serialVersionUID = 103L;
+    private static final long serialVersionUID = 3L;
 
     public static enum MediaType{
         /**   */

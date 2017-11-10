@@ -21,7 +21,7 @@ import java.util.Set;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_tag_sequence")
 public class Tag extends OrderEntity{
 
-    private static final long serialVersionUID = 125L;
+    private static final long serialVersionUID = 56L;
 
     /*类型*/
     public enum Type{

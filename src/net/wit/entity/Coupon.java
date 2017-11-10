@@ -29,7 +29,7 @@ import freemarker.template.TemplateException;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_coupon_sequence")
 public class Coupon extends BaseEntity {
 
-	private static final long serialVersionUID = 904L;
+	private static final long serialVersionUID = 21L;
 
 	public static enum Type{
 		/*满减 */

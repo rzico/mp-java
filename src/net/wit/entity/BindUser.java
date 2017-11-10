@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_bind_user_sequence")
 public class BindUser extends BaseEntity {
 
-	private static final long serialVersionUID = -2735035962597250149L;
+	private static final long serialVersionUID = 15L;
 
 	/** 类型 */
 	public enum Type {

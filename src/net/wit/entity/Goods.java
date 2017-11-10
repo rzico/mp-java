@@ -21,7 +21,7 @@ import javax.persistence.Transient;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_goods_sequence")
 public class Goods extends BaseEntity {
 
-	private static final long serialVersionUID = 901L;
+	private static final long serialVersionUID = 26L;
 
 	/** 商品 */
 	@OneToMany(mappedBy = "goods", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

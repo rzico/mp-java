@@ -21,7 +21,7 @@ import java.util.Set;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_reward_sequence")
 public class ArticleReward extends BaseEntity {
 
-	private static final long serialVersionUID = 126L;
+	private static final long serialVersionUID = 11L;
 
 	/**
 	 * 状态

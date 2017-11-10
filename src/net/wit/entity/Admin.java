@@ -44,7 +44,7 @@ public class Admin extends BaseEntity {
         secrecy
     }
 
-    private static final long serialVersionUID = 101L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户名

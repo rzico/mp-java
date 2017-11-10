@@ -1,13 +1,12 @@
 package net.wit.controller.weex;
 
 import net.wit.*;
+import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleListModel;
+import net.wit.controller.model.ArticlePreviewModel;
 import net.wit.controller.model.ArticleViewModel;
-import net.wit.entity.Article;
-import net.wit.entity.ArticleCatalog;
-import net.wit.entity.ArticleCategory;
-import net.wit.entity.Member;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,11 +44,17 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
 
+    @Resource(name = "articleLaudServiceImpl")
+    private ArticleLaudService articleLaudService;
+
+    @Resource(name = "articleFavoriteServiceImpl")
+    private ArticleFavoriteService articleFavoriteService;
+
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;
 
     /**
-     * 文章预览信息
+     * 文章预览详情
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
@@ -62,6 +67,37 @@ public class ArticleController extends BaseController {
         model.bind(article);
         return Message.bind(model,request);
    }
+
+    /**
+     * 文章预览信息
+     */
+    @RequestMapping(value = "/preview", method = RequestMethod.GET)
+    @ResponseBody
+    public Message preview(Long id,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        Article article = articleService.find(id);
+        if (article==null) {
+            return Message.error("无效文章编号");
+        }
+        ArticlePreviewModel model =new ArticlePreviewModel();
+        model.bind(article);
+        if (member!=null) {
+
+            java.util.List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+            filters.add(new Filter("article", Filter.Operator.eq,article));
+            List<ArticleFavorite> favorites = articleFavoriteService.findList(null,null,filters,null);
+            model.setHasFavorite(favorites.size()>0);
+
+            java.util.List<Filter> laudfilters = new ArrayList<Filter>();
+            laudfilters.add(new Filter("member", Filter.Operator.eq,member));
+            laudfilters.add(new Filter("article", Filter.Operator.eq,article));
+            List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
+            model.setHasFavorite(favorites.size()>0);
+
+        }
+        return Message.bind(model,request);
+    }
 
     /**
      *  分类查询列表

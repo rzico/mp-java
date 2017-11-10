@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @Table(name = "wx_enterprise")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_enterprise_sequence")
 public class Enterprise extends BaseEntity {
-    private static final long serialVersionUID = 127L;
+    private static final long serialVersionUID = 24L;
 
     public static enum Type{
         /** 运营商 */

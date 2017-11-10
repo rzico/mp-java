@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_category_sequence")
 public class ArticleCategory extends OrderEntity {
 
-	private static final long serialVersionUID = 105L;
+	private static final long serialVersionUID = 5L;
 
 	/** 树路径分隔符 */
 	public static final String TREE_PATH_SEPARATOR = ",";

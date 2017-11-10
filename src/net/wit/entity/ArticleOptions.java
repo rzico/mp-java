@@ -19,7 +19,7 @@ import org.apache.commons.lang.time.DateUtils;
 @Embeddable
 public class ArticleOptions implements Serializable {
 
-	private static final long serialVersionUID = 108L;
+	private static final long serialVersionUID = 8L;
 
 	/**
 	 * 权限

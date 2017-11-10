@@ -54,6 +54,7 @@ public class ArticleLaudDaoImpl extends BaseDaoImpl<ArticleLaud, Long> implement
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("isShow"), true));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}

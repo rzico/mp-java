@@ -46,7 +46,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "x_member_sequence")
 public class Member extends BaseEntity {
 
-	private static final long serialVersionUID = 113L;
+	private static final long serialVersionUID = 29L;
 
 	/**
 	 * 性别
@@ -262,6 +262,13 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private Area area;
 
+	/** 专栏*/
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '地区 {}'")
+	@JsonIgnore
+	private Topic topic;
+
+
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_member_tag")
@@ -325,11 +332,6 @@ public class Member extends BaseEntity {
 	@OneToMany(mappedBy = "follow", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<MemberFollow> fans = new HashSet<MemberFollow>();
-
-	/** 我的专栏*/
-	@OneToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
-	private Topic topic;
 
 	public String getUsername() {
 		return username;

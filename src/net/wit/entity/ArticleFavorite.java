@@ -17,7 +17,7 @@ import javax.persistence.*;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_favorite_sequence")
 public class ArticleFavorite extends BaseEntity {
 
-	private static final long serialVersionUID = 106L;
+	private static final long serialVersionUID = 6L;
 
 	/** 是否显示 */
 	@Column(nullable = false)

@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_returns_item_sequence")
 public class ReturnsItem extends BaseEntity {
 
-	private static final long serialVersionUID = -4112374596087084162L;
+	private static final long serialVersionUID = 48L;
 
 	/** 商品编号 */
 	@NotEmpty

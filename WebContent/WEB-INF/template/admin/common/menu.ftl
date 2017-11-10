@@ -21,9 +21,11 @@
             <dd>
                 <ul>
                     <li><a data-href="../member/index.jhtml" data-title="会员管理" href="javascript:;">会员管理</a></li>
-                    <li><a data-href="../enterprise/index.jhtml" data-title="合作伙伴" href="javascript:;">合作伙伴</a></li>
-                    <li><a data-href="../admin/index.jhtml" data-title="登录账号" href="javascript:;">登录账号</a></li>
+                    <li><a data-href="../enterprise/index.jhtml" data-title="客户管理" href="javascript:;">客户管理</a></li>
+                    <li><a data-href="../admin/index.jhtml" data-title="账号管理" href="javascript:;">账号管理</a></li>
                     <li><a data-href="../topic/index.jhtml" data-title="专栏管理" href="javascript:;">专栏管理</a></li>
+                    <li><a data-href="../topicCard/index.jhtml" data-title="卡包管理" href="javascript:;">卡包管理</a></li>
+                    <li><a data-href="../card/index.jhtml" data-title="会员卡管理" href="javascript:;">会员卡管理</a></li>
                 </ul>
             </dd>
             <dt><i class="Hui-iconfont">&#xe60d;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>

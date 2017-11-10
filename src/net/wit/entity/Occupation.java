@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_occupation_sequence")
 public class Occupation extends OrderEntity {
 
-	private static final long serialVersionUID = 104L;
+	private static final long serialVersionUID = 33L;
 
 	/**
 	 * 状态

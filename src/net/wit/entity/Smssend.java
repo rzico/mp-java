@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_smssend_sequence")
 public class Smssend extends BaseEntity {
 
-	private static final long serialVersionUID = 121L;
+	private static final long serialVersionUID = 54L;
 
 	public static final int SMS_CONTENT_MAX_LENGTH = 255;// 短信最大长度
 

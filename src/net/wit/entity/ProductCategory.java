@@ -33,7 +33,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_product_category_sequence")
 public class ProductCategory extends OrderEntity {
 
-	private static final long serialVersionUID = 5095521437302782717L;
+	private static final long serialVersionUID = 42L;
 
 	/** 树路径分隔符 */
 	public static final String TREE_PATH_SEPARATOR = ",";

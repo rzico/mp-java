@@ -26,7 +26,7 @@ import net.wit.util.SettingUtils;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_cart_item_sequence")
 public class CartItem extends BaseEntity {
 
-	private static final long serialVersionUID = 2979296789363163144L;
+	private static final long serialVersionUID = 19L;
 
 	/** 最大数量 */
 	public static final Integer MAX_QUANTITY = 10000;

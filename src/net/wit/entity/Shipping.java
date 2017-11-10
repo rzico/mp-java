@@ -33,7 +33,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_shipping_sequence")
 public class Shipping extends BaseEntity {
 
-	private static final long serialVersionUID = -261737051893669935L;
+	private static final long serialVersionUID = 51L;
 
 	/** 卖家 */
 	@ManyToOne(fetch = FetchType.LAZY)

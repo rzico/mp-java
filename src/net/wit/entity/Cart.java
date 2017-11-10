@@ -33,7 +33,7 @@ import org.apache.commons.lang.time.DateUtils;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_cart_sequence")
 public class Cart extends BaseEntity {
 
-	private static final long serialVersionUID = -6565967051825794561L;
+	private static final long serialVersionUID = 18L;
 
 	/** 超时时间 */
 	public static final int TIMEOUT = 604800;

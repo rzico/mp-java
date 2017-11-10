@@ -62,6 +62,6 @@ public class RewardController extends BaseController {
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleRewardModel.bindList(page.getContent()));
         return Message.bind(model,request);
-   }
+    }
 
 }

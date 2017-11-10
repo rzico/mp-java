@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_order_log_sequence")
 public class OrderLog extends BaseEntity {
 
-	private static final long serialVersionUID = -2704154761295319939L;
+	private static final long serialVersionUID = 37L;
 
 	/**
 	 * 类型

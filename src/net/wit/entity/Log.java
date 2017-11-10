@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_log_sequence")
 public class Log extends BaseEntity {
 
-	private static final long serialVersionUID = 112L;
+	private static final long serialVersionUID = 28L;
 
 	/** "日志内容"属性名称 */
 	public static final String LOG_CONTENT_ATTRIBUTE_NAME = Log.class.getName() + ".CONTENT";

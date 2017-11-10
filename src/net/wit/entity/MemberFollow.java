@@ -17,7 +17,7 @@ import javax.persistence.*;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_member_follow_sequence")
 public class MemberFollow extends BaseEntity {
 
-	private static final long serialVersionUID = 128L;
+	private static final long serialVersionUID = 31L;
 
 	/** IP */
 	@Column(columnDefinition=" varchar(255) comment 'IP'")

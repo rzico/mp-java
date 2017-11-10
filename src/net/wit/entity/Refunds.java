@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_refunds_sequence")
 public class Refunds extends BaseEntity {
 
-	private static final long serialVersionUID = 119L;
+	private static final long serialVersionUID = 46L;
 
 	/**
 	 * 类型

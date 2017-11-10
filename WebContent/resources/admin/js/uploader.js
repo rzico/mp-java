@@ -80,6 +80,8 @@ jQuery(function() {
             $('#' + file.id).addClass('upload-state-done');
             $input = $list.siblings('input');
             $input.val(response.url);
+            $physicalPath = $('#physicalPath');
+            $physicalPath.val(response.physicalPath);
         } else {
             var $li = $( '#'+file.id ),
                 $error = $li.find('div.error');

@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_friends_sequence")
 public class Friends extends BaseEntity {
 
-	private static final long serialVersionUID = 111L;
+	private static final long serialVersionUID = 25L;
 
 	/**
 	 * 状态

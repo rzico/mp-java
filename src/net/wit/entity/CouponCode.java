@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_coupon_code_sequence")
 public class CouponCode extends BaseEntity {
 
-	private static final long serialVersionUID = 906L;
+	private static final long serialVersionUID = 22L;
 
 	/** 号码 */
 	@Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '号码'")

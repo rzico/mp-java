@@ -20,7 +20,7 @@ import java.util.Map;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_plugin_config_sequence")
 public class PluginConfig extends OrderEntity {
 
-	private static final long serialVersionUID = 117L;
+	private static final long serialVersionUID = 40L;
 
 	/** 插件ID */
 	@Column(columnDefinition="varchar(50) not null unique comment '插件ID'")

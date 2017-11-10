@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_product_stock_sequence")
 public class ProductStock extends BaseEntity {
 
-	private static final long serialVersionUID = 902L;
+	private static final long serialVersionUID = 43L;
 
 	/** 库存 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '库存'")

@@ -24,7 +24,7 @@ import java.util.Set;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_template_sequence")
 public class Template extends OrderEntity {
 
-	private static final long serialVersionUID = 104L;
+	private static final long serialVersionUID = 57L;
 
 	/**
 	 * 模板类型

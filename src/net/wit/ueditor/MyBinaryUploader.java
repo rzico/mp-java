@@ -62,17 +62,19 @@ public class MyBinaryUploader {
                         } else {
                             savePath = PathFormat.parse(savePath, originFileName);
 
-                            //String physicalPath = (String)conf.get("rootPath") + savePath;
-                            //InputStream is =multipartFile.getInputStream();
+                            String physicalPath = (String)conf.get("rootPath") + savePath;
+                            InputStream is =multipartFile.getInputStream();
+                            StorageManager.saveFileByInputStream(is, physicalPath, maxSize);
 
                             oss.upload(savePath,multipartFile,oss.getMineType(suffix));
 
-                            State storageState = new BaseState(true);  //StorageManager.saveFileByInputStream(is, physicalPath, maxSize);
+                            State storageState = new BaseState(true);
                             //is.close();
                             if(storageState.isSuccess()) {
                                 storageState.putInfo("url", oss.getUrl(savePath));   //"/"+PathFormat.format(savePath));
                                 storageState.putInfo("type", suffix);
                                 storageState.putInfo("original", originFileName + suffix);
+                                storageState.putInfo("physicalPath", physicalPath);   //"/"+PathFormat.format(savePath));
                             }
 
 

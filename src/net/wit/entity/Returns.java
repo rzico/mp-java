@@ -32,7 +32,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_returns_sequence")
 public class Returns extends BaseEntity {
 
-	private static final long serialVersionUID = -8019074120457087212L;
+	private static final long serialVersionUID = 47L;
 
 	/** 卖家 */
 	@ManyToOne(fetch = FetchType.LAZY)

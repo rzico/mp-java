@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_sn_sequence")
 public class Sn extends BaseEntity {
 
-	private static final long serialVersionUID = 122L;
+	private static final long serialVersionUID = 55L;
 
 	/** 类型 */
 	public enum Type {

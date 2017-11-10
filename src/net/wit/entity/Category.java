@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_category_sequence")
 public class Category extends OrderEntity {
 
-	private static final long serialVersionUID = 104L;
+	private static final long serialVersionUID = 20L;
 
 	/**
 	 * 状态

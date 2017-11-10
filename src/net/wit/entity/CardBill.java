@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_card_bill_sequence")
 public class CardBill extends BaseEntity {
 
-	private static final long serialVersionUID = 110L;
+	private static final long serialVersionUID = 17L;
 
 	/**
 	 * 类型

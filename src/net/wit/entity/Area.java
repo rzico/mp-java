@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_area_sequence")
 public class Area extends OrderEntity {
 
-	private static final long serialVersionUID = -102L;
+	private static final long serialVersionUID = 2L;
 
 	/** 树路径分隔符 */
 	public static final String TREE_PATH_SEPARATOR = ",";

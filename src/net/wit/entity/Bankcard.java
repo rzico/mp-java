@@ -19,7 +19,7 @@ import javax.persistence.*;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_bankcard_sequence")
 public class Bankcard extends BaseEntity {
 
-	private static final long serialVersionUID = 111L;
+	private static final long serialVersionUID = 14L;
 
 	/** 银行名称 */
 	@Length(max = 50)

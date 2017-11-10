@@ -42,7 +42,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_order_sequence")
 public class Order extends BaseEntity {
 
-	private static final long serialVersionUID = 8370942500343156156L;
+	private static final long serialVersionUID = 34L;
 
 	/** 订单名称分隔符 */
 	private static final String NAME_SEPARATOR = " ";

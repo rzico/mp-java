@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_article_product_sequence")
 public class ArticleProduct extends BaseEntity {
 
-	private static final long serialVersionUID = 126L;
+	private static final long serialVersionUID = 9L;
 
 	/** 文章 */
 	@ManyToOne(fetch = FetchType.LAZY)

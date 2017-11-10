@@ -25,7 +25,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_member_attribute_sequence")
 public class MemberAttribute extends OrderEntity {
 
-	private static final long serialVersionUID = 114L;
+	private static final long serialVersionUID = 30L;
 
 	/**
 	 * 类型

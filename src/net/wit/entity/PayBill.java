@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_pay_bill_sequence")
 public class PayBill extends BaseEntity {
 
-	private static final long serialVersionUID = 906L;
+	private static final long serialVersionUID = 38L;
 
 	/** 状态 */
 	public enum Status {

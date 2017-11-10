@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 @Embeddable
 public class Location implements Serializable {
+	private static final long serialVersionUID = 27L;
 	/** 伟度 x */
 	@Column(columnDefinition="double comment '伟度'")
 	private double lat;

@@ -24,7 +24,7 @@ import java.util.List;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_topic_sequence")
 public class Topic extends BaseEntity {
 
-    private static final long serialVersionUID = 127L;
+    private static final long serialVersionUID = 58L;
 
     public static enum Type{
         /** 企业 */
@@ -54,7 +54,7 @@ public class Topic extends BaseEntity {
     private String name;
 
     /** 会员 */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
     @JsonIgnore
     @NotNull
@@ -107,6 +107,10 @@ public class Topic extends BaseEntity {
     @Min(0)
     @Column(columnDefinition="bigint(20) default 0 comment '阅读数'")
     private Long hits;
+
+    /** 专栏设置 */
+    @Embedded
+    private TopicConfig config;
 
     /** 模板标签*/
     @ManyToMany(fetch = FetchType.LAZY)
@@ -259,6 +263,14 @@ public class Topic extends BaseEntity {
         } else {
             return null;
         }
+    }
+
+    public TopicConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(TopicConfig config) {
+        this.config = config;
     }
 
 }
