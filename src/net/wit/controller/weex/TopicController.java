@@ -7,6 +7,7 @@ import net.wit.controller.model.ArticleCatalogModel;
 import net.wit.controller.model.TopicViewModel;
 import net.wit.entity.ArticleCatalog;
 import net.wit.entity.Member;
+import net.wit.entity.MemberFollow;
 import net.wit.entity.Topic;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,9 @@ public class TopicController extends BaseController {
     @Resource(name = "topicServiceImpl")
     private TopicService topicService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
     /**
      * 专栏信息
      * id 会员
@@ -72,7 +76,15 @@ public class TopicController extends BaseController {
 
         List<ArticleCatalog> catalogs = articleCatalogService.findList(null,filters,null);
         model.setCatalogs(ArticleCatalogModel.bindList(catalogs));
+        Member self = memberService.getCurrent();
+        if (self!=null) {
+            List<Filter> flowfilters = new ArrayList<Filter>();
+            flowfilters.add(new Filter("member", Filter.Operator.eq, self));
+            flowfilters.add(new Filter("follow", Filter.Operator.eq, member));
+            List<MemberFollow> data = memberFollowService.findList(null, null, flowfilters, null);
+            model.setFollowed(data.size()>0);
+        }
         return Message.bind(model,request);
    }
 
-}
+ }

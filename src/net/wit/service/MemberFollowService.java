@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.MemberFollow;
 
 /**
@@ -17,4 +18,5 @@ import net.wit.entity.MemberFollow;
 
 public interface MemberFollowService extends BaseService<MemberFollow, Long> {
 	Page<MemberFollow> findPage(Date beginDate,Date endDate, Pageable pageable);
+	MemberFollow find(Member member, Member follow);
 }

@@ -50,7 +50,10 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, Long> implements Ad
 	public Admin findByUsername(String username) {
 		return adminDao.findByUsername(username);
 	}
-
+	@Transactional(readOnly = true)
+	public Admin findByMember(Member member) {
+		return adminDao.findByMember(member);
+	}
 	@Transactional(readOnly = true)
 	public List<String> findAuthorities(Long id) {
 		List<String> authorities = new ArrayList<String>();

@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 import net.wit.entity.Card;
 import net.wit.entity.Enterprise;
+import net.wit.entity.Topic;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,6 +15,10 @@ public class CardModel implements Serializable {
     private String code;
     /** 头像 */
     private String logo;
+    /** 状态 */
+    private Card.Status status;
+    /** 等级 */
+    private Card.VIP vip;
     /** 余额 */
     private BigDecimal balance;
 
@@ -59,10 +64,12 @@ public class CardModel implements Serializable {
 
     public void bind(Card card) {
         this.id = card.getId();
-        Enterprise enterprise = card.getShop().getEnterprise();
-        this.name = enterprise.getName();
+        Topic topic = card.getOwner().getTopic();
+        this.name = topic.getName();
         this.code = card.getCode();
-        this.logo = enterprise.getLogo();
+        this.logo = card.getOwner().getLogo();
         this.balance = card.getBalance();
+        this.status = card.getStatus();
+        this.vip = card.getVip();
     }
 }

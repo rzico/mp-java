@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Topic;
 import net.wit.entity.TopicCard;
 
 /**
@@ -17,4 +18,5 @@ import net.wit.entity.TopicCard;
 
 public interface TopicCardService extends BaseService<TopicCard, Long> {
 	Page<TopicCard> findPage(Date beginDate, Date endDate, Pageable pageable);
+	public TopicCard create(Topic topic);
 }

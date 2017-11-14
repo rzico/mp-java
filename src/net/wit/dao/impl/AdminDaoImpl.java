@@ -10,6 +10,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
+import net.wit.entity.Payment;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -47,6 +49,18 @@ public class AdminDaoImpl extends BaseDaoImpl<Admin, Long> implements AdminDao {
 		try {
 			String jpql = "select admin from Admin admin where lower(admin.username) = lower(:username)";
 			return entityManager.createQuery(jpql, Admin.class).setFlushMode(FlushModeType.COMMIT).setParameter("username", username).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public Admin findByMember(Member member) {
+		if (member == null) {
+			return null;
+		}
+		try {
+			String jpql = "select admin from Admin admin where admin.member = :member";
+			return entityManager.createQuery(jpql, Admin.class).setFlushMode(FlushModeType.COMMIT).setParameter("member", member).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}

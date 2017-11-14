@@ -23,6 +23,8 @@ public class TopicViewModel implements Serializable {
     private int article;
     /** 商品 */
     private int product;
+    /** 是否关注 */
+    private Boolean followed;
     /** 签名 */
     private String autograph;
     /** 头像 */
@@ -128,6 +130,14 @@ public class TopicViewModel implements Serializable {
         this.catalogs = catalogs;
     }
 
+    public Boolean getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(Boolean followed) {
+        this.followed = followed;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -137,7 +147,7 @@ public class TopicViewModel implements Serializable {
         Topic topic = member.getTopic();
         if (topic!=null) {
             this.name = topic.getName();
-            this.logo = member.getLogo();
+            this.logo = topic.getLogo();
             this.hits = topic.getHits().intValue();
         } else {
             this.name = member.getNickName();
@@ -145,5 +155,7 @@ public class TopicViewModel implements Serializable {
             this.hits = 0;
         }
         this.tags = TagModel.bindList(member.getTags());
+        this.followed = false;
+        this.setCatalogs(new ArrayList<ArticleCatalogModel>());
     }
 }

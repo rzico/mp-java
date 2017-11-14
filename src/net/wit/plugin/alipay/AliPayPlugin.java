@@ -25,18 +25,19 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
- * Plugin - 光大阿里支付
+ * Plugin - 阿里支付
  * @author rsico Team
  * @version 3.0
  */
-@Component("aliPayPlugin")
+@Component("aliPayPlugin_bk")
 public class AliPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "光大支付宝服务窗支付";
+		return "支付宝支付";
 	}
 
 	@Override
@@ -164,6 +165,94 @@ public class AliPayPlugin extends PaymentPlugin {
 	}
 
 	@Override
+	public Map<String, Object> submit(Payment payment,String safeKey,HttpServletRequest request) {
+		PluginConfig pluginConfig = getPluginConfig();
+		Map<String,Object> data = new HashMap<String,Object>();
+		SortedMap<String,String> map = XmlUtils.getParameterMap(request);
+		map.put("service", "pay.weixin.native");
+		//safekey64编码
+		map.put("auth_code", safeKey);
+		DecimalFormat decimalFormat = new DecimalFormat("#");
+		BigDecimal money = payment.getAmount().multiply(new BigDecimal(100));
+		map.put("mch_id",pluginConfig.getAttribute("partner"));
+		map.put("out_trade_no", payment.getSn());
+		map.put("body", "扫码收单");
+		map.put("total_fee", decimalFormat.format(money));
+		map.put("mch_create_ip", request.getRemoteAddr());
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+
+		Map<String,String> params = SignUtils.paraFilter(map);
+		StringBuilder buf = new StringBuilder((params.size() +1) * 10);
+		SignUtils.buildPayParams(buf,params,false);
+		String preStr = buf.toString()+"&key=" + pluginConfig.getAttribute("key");
+		String sign = MD5Utils.getMD5Str(preStr);
+		map.put("sign", sign);
+
+		String reqUrl = "https://pay.swiftpass.cn/pay/gateway";
+
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = null;
+		String res = null;
+		try {
+			HttpPost httpPost = new HttpPost(reqUrl);
+			StringEntity entityParams = new StringEntity(XmlUtils.parseXML(map),"utf-8");
+			httpPost.setEntity(entityParams);
+			httpPost.setHeader("Content-Type", "text/xml;charset=utf-8");
+			client = HttpClients.createDefault();
+			response = client.execute(httpPost);
+			if(response != null && response.getEntity() != null){
+				Map<String,String> resultMap = XmlUtils.toMap(EntityUtils.toByteArray(response.getEntity()), "utf-8");
+
+				if ("0".equals(resultMap.get("status"))) {
+					if(!SignUtils.checkParam(resultMap, pluginConfig.getAttribute("key")) ){
+						data.put("return_code", "FAIL");
+						data.put("result_msg", "验证签名不通过");
+						return data;
+					}else{
+						if("0".equals(resultMap.get("result_code"))){
+							data.put("return_code", "SUCCESS");
+							data.put("result_msg", "执行成功");
+							return data;
+						}else{
+							data.put("return_code", "FAIL");
+							data.put("result_msg", resultMap.get("message"));
+							return data;
+						}
+					}
+				}else{
+					data.put("return_code", "FAIL");
+					data.put("result_msg",resultMap.get("message"));
+					return data;
+				}
+			} else {
+				data.put("return_code", "FAIL");
+				data.put("result_msg","网络异常");
+				return data;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			data.put("return_code", "FAIL");
+			data.put("result_msg", "提交订单出现异常");
+			return data;
+		} finally {
+			if(response != null){
+				try {
+					response.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(client != null){
+				try {
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	@Override
 	public boolean verifyNotify(String sn, NotifyMethod notifyMethod, HttpServletRequest request) {
 		try {
 			PluginConfig pluginConfig = getPluginConfig();
@@ -192,7 +281,7 @@ public class AliPayPlugin extends PaymentPlugin {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return false;
 		}
 		return false;

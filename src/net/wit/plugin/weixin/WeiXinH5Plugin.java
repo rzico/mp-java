@@ -178,15 +178,18 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					finalpackage.put("return_code", "FAIL");
+					finalpackage.put("return_msg", "提交失败");
 				}
 			}
 			else {
 				logger.error("统一支付接口获取预支付订单出错");
 				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("return_msg", "提交失败");
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "提交失败");
 		}
 
 		return finalpackage;

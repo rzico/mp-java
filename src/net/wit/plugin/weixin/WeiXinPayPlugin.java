@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  * @author rsico Team
  * @version 3.0
  */
-@Component("weixinPayPlugin")
+@Component("weixinPayPlugin_bk")
 public class WeiXinPayPlugin extends PaymentPlugin {
 
 	public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
@@ -42,7 +42,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "微信公众号支付";
+		return "微信支付";
 	}
 
 	@Override
@@ -166,15 +166,18 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					finalpackage.put("return_code", "FAIL");
+					finalpackage.put("return_msg", "提交失败");
 				}
 			}
 			else {
 				logger.error("统一支付接口获取预支付订单出错");
 				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("return_msg", "提交失败");
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "提交失败");
 		}
 
 		return finalpackage;

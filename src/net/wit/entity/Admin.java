@@ -145,6 +145,14 @@ public class Admin extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Enterprise enterprise;
 
+
+    /**
+     * 所在店
+     */
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Shop shop;
+
     /**
      * 绑定会员
      */
@@ -294,6 +302,14 @@ public class Admin extends BaseEntity {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     public MapEntity getMapMember() {

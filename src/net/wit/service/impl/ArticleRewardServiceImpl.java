@@ -70,7 +70,7 @@ public class ArticleRewardServiceImpl extends BaseServiceImpl<ArticleReward, Lon
 			payment.setMember(articleReward.getMember());
 			payment.setPayee(articleReward.getArticle().getMember());
 			payment.setSn(snService.generate(Sn.Type.payment));
-			payment.setMemo("读者打赏");
+			payment.setMemo("读者赞赏");
 			payment.setArticleReward(articleReward);
 			paymentDao.persist(payment);
 			articleReward.getPayments().add(payment);

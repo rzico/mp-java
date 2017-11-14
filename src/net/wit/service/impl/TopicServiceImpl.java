@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.MemberDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +36,9 @@ import net.wit.service.TopicService;
 public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements TopicService {
 	@Resource(name = "topicDaoImpl")
 	private TopicDao topicDao;
+
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
 
 	@Resource(name = "topicDaoImpl")
 	public void setBaseDao(TopicDao topicDao) {
@@ -89,4 +93,13 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements To
 	public Topic find(Member member) {
 		return topicDao.find(member);
 	}
+
+	public Topic create(Topic topic) {
+		Member member = topic.getMember();
+		topicDao.persist(topic);
+		member.setTopic(topic);
+		memberDao.merge(member);
+		return topic;
+	}
+
 }

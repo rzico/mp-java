@@ -111,8 +111,10 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				sender.setLoginFailureCount(0);
 				sender.setRegisterIp("127.0.0.1");
 				memberDao.persist(sender);
+				User.userAttr(sender);
 			}
-			User.userAttr(sender);
+			message.setReaded(false);
+			message.setDeleted(false);
 			message.setMember(sender);
 			super.save(message);
 			Push.impush(message);
@@ -125,10 +127,88 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	public Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return messageDao.findPage(beginDate,endDate,pageable);
 	}
+
+	//赞赏提醒
+	public Boolean rewardPushTo(ArticleReward reward) {
+		Message msg = new Message();
+		msg.setReceiver(reward.getAuthor());
+		msg.setType(Message.Type.reward);
+		msg.setThumbnial(reward.getMember().getLogo());
+		msg.setTitle("赞赏提醒");
+		msg.setContent("【"+reward.getMember().getNickName()+"】赞赏你:"+reward.getAmount()+"元,文章:"+reward.getArticle().getTitle());
+		return pushTo(msg);
+	}
+
+	//收藏提醒
+	public Boolean favoritePushTo(ArticleFavorite favorite) {
+		Message msg = new Message();
+		msg.setReceiver(favorite.getArticle().getMember());
+		msg.setType(Message.Type.favorite);
+		msg.setThumbnial(favorite.getMember().getLogo());
+		msg.setTitle("收藏提醒");
+		msg.setContent("【"+favorite.getMember().getNickName()+"】收藏了您的文章:"+favorite.getArticle().getTitle());
+		return pushTo(msg);
+	}
+
+	//关注提醒
+	public Boolean followPushTo(MemberFollow follow) {
+		Message msg = new Message();
+		msg.setReceiver(follow.getFollow());
+		msg.setType(Message.Type.follow);
+		msg.setThumbnial(follow.getMember().getLogo());
+		msg.setTitle("关注提醒");
+		msg.setContent("【"+follow.getMember().getNickName()+"】关注了您，将订阅您的动态");
+		return pushTo(msg);
+	}
+
+	//点赞提醒
+	public Boolean laudPushTo(ArticleLaud laud) {
+		Message msg = new Message();
+		msg.setReceiver(laud.getArticle().getMember());
+		msg.setType(Message.Type.favorite);
+		msg.setThumbnial(laud.getMember().getLogo());
+		msg.setTitle("点赞提醒");
+		msg.setContent("【"+laud.getMember().getNickName()+"】收藏了您的文章:"+laud.getArticle().getTitle());
+		return pushTo(msg);
+	}
+
+	//评论提醒
+	public Boolean reviewPushTo(ArticleReview review) {
+		Message msg = new Message();
+		msg.setReceiver(review.getArticle().getMember());
+		msg.setType(Message.Type.favorite);
+		msg.setThumbnial(review.getMember().getLogo());
+		msg.setTitle("评论提醒");
+		msg.setContent("【"+review.getMember().getNickName()+"】评论了您的文章:"+ review.getContent());
+		return pushTo(msg);
+	}
+
+	//添加好友
+	public Boolean addFriendPushTo(Member member,Member friend) {
+		Message msg = new Message();
+		msg.setReceiver(friend);
+		msg.setType(Message.Type.message);
+		msg.setThumbnial(member.getLogo());
+		msg.setTitle("添加好友");
+		msg.setContent("【"+member.getNickName()+"】申请成为你的好友。");
+		msg.setExt("friend.add");
+		return pushTo(msg);
+	}
+
+	//同意好友
+	public Boolean adoptFriendPushTo(Member member,Member friend) {
+		Message msg = new Message();
+		msg.setReceiver(friend);
+		msg.setType(Message.Type.message);
+		msg.setThumbnial(member.getLogo());
+		msg.setTitle("添加好友");
+		msg.setContent("【"+member.getNickName()+"】同意成为你的好友。");
+		msg.setExt("friend.adopt");
+		return pushTo(msg);
+	}
+
 	public Boolean depositPushTo(Deposit deposit) {
         Message msg = new Message();
-        msg.setReaded(false);
-        msg.setDeleted(false);
         msg.setReceiver(deposit.getMember());
         msg.setType(Message.Type.account);
 		msg.setThumbnial("http://cdn.rzico.com/weex/resources/images/account.png");

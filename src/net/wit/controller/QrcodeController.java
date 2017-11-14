@@ -33,38 +33,31 @@ import java.util.UUID;
 @RequestMapping("/q")
 public class QrcodeController extends BaseController {
 
-    /**
-     * 生成二维码
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-     public Boolean qrcode(@PathVariable String id,HttpServletRequest request,HttpServletResponse response) {
-//        try {
-//            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-//            String url =bundle.getString("app.url") + "/q/"+id+".jhtml";
-//            String tempFile = System.getProperty("java.io.tmpdir") + "/upload_" + UUID.randomUUID() + ".jpg";
-//            response.reset();
-//            response.setContentType("image/jpeg;charset=utf-8");
-//            try {
-//                QRBarCodeUtil.encodeQRCode(url, tempFile, 400, 400);
-//            } catch (WriterException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            ServletOutputStream output = response.getOutputStream();// 得到输出流
-//            InputStream imageIn = new FileInputStream(new File(tempFile));
-//            // 得到输入的编码器，将文件流进行jpg格式编码
-//            JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(imageIn);
-//            // 得到编码后的图片对象
-//            BufferedImage image = decoder.decodeAsBufferedImage();
-//            // 得到输出的编码器
-//            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(output);
-//            encoder.encode(image);// 对图片进行输出编码
-//            imageIn.close();// 关闭文件流
-//            output.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        return false;
+     /**
+      * 生成二维码
+      */
+     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+     public String qrcode(@PathVariable String id,HttpServletRequest request,HttpServletResponse response) {
+         try {
+             String cmd = id.substring(0, 6);
+             //名片
+             if ("865380".equals(cmd)) {
+                 String userId = id.substring(6, 50);
+                 Long uid = Long.parseLong(userId) - 10200L;
+                 return "redirect:/website/topic?id=" + uid;
+             } else
+             /**
+              * 会员卡 空卡，跑转领卡界面,会员卡界面判断跳转
+              */
+                 if ("818801".equals(cmd)) {
+                     String code = id.substring(6, 50);
+                     return "redirect:/website/card?code=" + code;
+                 } else {
+                     return "redirect:/website";
+                 }
+         } catch (Exception e) {
+             return "redirect:/website";
+         }
      }
 
 

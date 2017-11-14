@@ -177,7 +177,7 @@ public class CouponCode extends BaseEntity {
 	}
 
 	public Boolean getEnabled() {
-		return !isUsed && getCoupon().hasExpired() && getCoupon().hasExpired() && !getCoupon().getDeleted();
+		return !isUsed && getCoupon().hasBegun() && getCoupon().hasExpired() && getCoupon().hasExpired() && !getCoupon().getDeleted();
 	}
 
 	public BigDecimal calculate(BigDecimal amount) {

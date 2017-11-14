@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Enterprise;
+import net.wit.entity.Member;
 
 
 /**
@@ -27,4 +28,6 @@ public interface EnterpriseDao extends BaseDao<Enterprise, Long> {
 	 * @return Page<Enterprise>
 	 */
 	Page<Enterprise> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+	public Enterprise find(Member member);
 }

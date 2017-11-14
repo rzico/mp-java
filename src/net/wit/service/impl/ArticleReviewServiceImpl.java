@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.ArticleDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +36,8 @@ import net.wit.service.ArticleReviewService;
 public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Long> implements ArticleReviewService {
 	@Resource(name = "articleReviewDaoImpl")
 	private ArticleReviewDao articleReviewDao;
+	@Resource(name = "articleDaoImpl")
+	private ArticleDao articleDao;
 
 	@Resource(name = "articleReviewDaoImpl")
 	public void setBaseDao(ArticleReviewDao articleReviewDao) {
@@ -45,6 +48,10 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(ArticleReview articleReview) {
+        Article article = articleReview.getArticle();
+		article.setReview(article.getReview()+1);
+		articleDao.merge(article);
+
 		super.save(articleReview);
 	}
 
@@ -68,6 +75,9 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	public void delete(Long id) {
 		ArticleReview review = articleReviewDao.find(id);
 		review.setDeleted(true);
+		Article article = review.getArticle();
+		article.setReview(article.getReview()-1);
+		articleDao.merge(article);
 		super.update(review);
 	}
 
@@ -77,6 +87,9 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	public void delete(Long... ids) {
 		for (Long id:ids) {
 			ArticleReview review = articleReviewDao.find(id);
+			Article article = review.getArticle();
+			article.setReview(article.getReview()-1);
+			articleDao.merge(article);
 			review.setDeleted(true);
 			super.update(review);
 		}
@@ -87,6 +100,9 @@ public class ArticleReviewServiceImpl extends BaseServiceImpl<ArticleReview, Lon
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleReview articleReview) {
 		articleReview.setDeleted(true);
+		Article article = articleReview.getArticle();
+		article.setReview(article.getReview()-1);
+		articleDao.merge(article);
 		super.update(articleReview);
 	}
 

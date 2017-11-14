@@ -106,13 +106,15 @@ public class PayBillController extends BaseController {
         Set<CouponCode> couponCodes = member.getCouponCodes();
         BigDecimal discount = BigDecimal.ZERO;
         for (CouponCode code:couponCodes) {
-           BigDecimal d = couponCode.calculate(amount.subtract(noDiscount));
-           if (d.compareTo(discount)>0) {
-               couponCode = couponCode;
-               discount = d;
-           }
+            if (code.getCoupon().getDistributor().equals(shop.getOwner()) && code.getEnabled()) {
+                BigDecimal d = couponCode.calculate(amount.subtract(noDiscount));
+                if (d.compareTo(discount) > 0) {
+                    couponCode = couponCode;
+                    discount = d;
+                }
+            }
         }
-        Enterprise enterprise = shop.getEnterprise();
+        Member owner = shop.getOwner();
         Map<String,Object> data =new HashMap<String,Object>();
         payBill.setAmount(amount);
         payBill.setNoDiscount(noDiscount);
@@ -121,7 +123,7 @@ public class PayBillController extends BaseController {
         Card card = null;
         BigDecimal cardDiscount = BigDecimal.ZERO;
         for (Card c:member.getCards()) {
-            if (c.getShop().getEnterprise().equals(enterprise)) {
+            if (c.getOwner().equals(owner)) {
                card = c;
                break;
             }
@@ -141,7 +143,7 @@ public class PayBillController extends BaseController {
         payBill.setCardDiscount(cardDiscount);
 
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(effective.multiply(enterprise.getBrokerage()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+        payBill.setFee(effective.multiply(shop.getEnterprise().getBrokerage()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
         return payBill;
     }
 
@@ -168,7 +170,7 @@ public class PayBillController extends BaseController {
 
     /**
      *  提交付款
-     * id shop id
+     *  shopid
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody

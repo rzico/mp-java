@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
+import net.wit.entity.ArticleFavorite;
 import net.wit.entity.ArticleOptions;
 
 import java.io.Serializable;
@@ -12,6 +13,8 @@ public class ArticleListModel implements Serializable {
     private Long id;
     /** 创建时间 */
     private Date createDate;
+    /** 作者id */
+    private Long authorId;
     /** 作者 */
     private String author;
     /** 作者头像 */
@@ -131,6 +134,7 @@ public class ArticleListModel implements Serializable {
 
     public void bind(Article article) {
         this.id = article.getId();
+        this.authorId = article.getMember().getId();
         this.createDate = article.getCreateDate();
         this.author = article.getMember().getNickName();
         this.logo = article.getMember().getLogo();
@@ -150,6 +154,16 @@ public class ArticleListModel implements Serializable {
         for (Article article:articles) {
             ArticleListModel m = new ArticleListModel();
             m.bind(article);
+            ms.add(m);
+        }
+        return ms;
+    }
+
+    public static List<ArticleListModel> bindFavorite(List<ArticleFavorite> favorites) {
+        List<ArticleListModel> ms = new ArrayList<ArticleListModel>();
+        for (ArticleFavorite favorite:favorites) {
+            ArticleListModel m = new ArticleListModel();
+            m.bind(favorite.getArticle());
             ms.add(m);
         }
         return ms;

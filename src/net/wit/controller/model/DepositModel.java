@@ -1,10 +1,13 @@
 package net.wit.controller.model;
 
+import net.wit.entity.ArticleReward;
 import net.wit.entity.Deposit;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 //文章编辑模板
 
@@ -70,4 +73,25 @@ public class DepositModel implements Serializable {
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
+
+
+    public void bind(Deposit deposit) {
+        this.type = deposit.getType();
+        this.amount = deposit.getCredit().subtract(deposit.getDebit());
+        this.logo = deposit.getMember().getLogo();
+        this.createDate = deposit.getCreateDate();
+        this.balance = deposit.getBalance();
+        this.memo = deposit.getMemo();
+    }
+
+    public static List<DepositModel> bindList(List<Deposit> deposits) {
+        List<DepositModel> ms = new ArrayList<DepositModel>();
+        for (Deposit deposit:deposits) {
+            DepositModel m = new DepositModel();
+            m.bind(deposit);
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }

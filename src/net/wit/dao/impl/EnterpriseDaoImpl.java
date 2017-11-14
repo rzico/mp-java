@@ -10,6 +10,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
+import net.wit.entity.Payment;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -58,4 +60,17 @@ public class EnterpriseDaoImpl extends BaseDaoImpl<Enterprise, Long> implements 
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	public Enterprise find(Member member) {
+		if (member == null) {
+			return null;
+		}
+		String jpql = "select enterprise from Enterprise enterprise where lower(enterprise.member) = lower(:member)";
+		try {
+			return entityManager.createQuery(jpql, Enterprise.class).setFlushMode(FlushModeType.COMMIT).setParameter("member", member).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 }

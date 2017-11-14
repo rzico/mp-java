@@ -19,4 +19,5 @@ import net.wit.entity.Topic;
 public interface TopicService extends BaseService<Topic, Long> {
 	Topic find(Member member);
 	Page<Topic> findPage(Date beginDate,Date endDate, Pageable pageable);
+	public Topic create(Topic topic);
 }

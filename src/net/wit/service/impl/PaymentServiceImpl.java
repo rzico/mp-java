@@ -78,31 +78,31 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	public synchronized void handle(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
 		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
-			//余额支付时，扣余额
-			if (payment.getMethod().equals(Payment.Method.deposit)) {
-				Member member = payment.getPayee();
-				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-				if (member.getBalance().compareTo(payment.getAmount())>=0) {
-					member.setBalance(member.getBalance().subtract(payment.getAmount()));
-					memberDao.merge(member);
-					Deposit deposit = new Deposit();
-					deposit.setBalance(member.getBalance());
-					deposit.setType(Deposit.Type.payment);
-					deposit.setMemo(payment.getMemo());
-					deposit.setMember(member);
-					deposit.setCredit(BigDecimal.ZERO);
-					deposit.setDebit(payment.getAmount());
-					deposit.setDeleted(false);
-					deposit.setOperator("system");
-					depositDao.persist(deposit);
-					messageService.depositPushTo(deposit);
-				} else {
-					payment.setPaymentDate(new Date());
-					payment.setStatus(Payment.Status.failure);
-					paymentDao.merge(payment);
-					throw new Exception("余额不足");
-				}
-			}
+//			//余额支付时，扣余额
+//			if (payment.getMethod().equals(Payment.Method.deposit)) {
+//				Member member = payment.getPayee();
+//				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+//				if (member.getBalance().compareTo(payment.getAmount())>=0) {
+//					member.setBalance(member.getBalance().subtract(payment.getAmount()));
+//					memberDao.merge(member);
+//					Deposit deposit = new Deposit();
+//					deposit.setBalance(member.getBalance());
+//					deposit.setType(Deposit.Type.payment);
+//					deposit.setMemo(payment.getMemo());
+//					deposit.setMember(member);
+//					deposit.setCredit(BigDecimal.ZERO);
+//					deposit.setDebit(payment.getAmount());
+//					deposit.setDeleted(false);
+//					deposit.setOperator("system");
+//					depositDao.persist(deposit);
+//					messageService.depositPushTo(deposit);
+//				} else {
+//					payment.setPaymentDate(new Date());
+//					payment.setStatus(Payment.Status.failure);
+//					paymentDao.merge(payment);
+//					throw new Exception("余额不足");
+//				}
+//			}
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
 			} else
@@ -123,6 +123,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					deposit.setDebit(BigDecimal.ZERO);
 					deposit.setDeleted(false);
 					deposit.setOperator("system");
+					deposit.setPayment(payment);
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 				}
@@ -143,8 +144,13 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
+				deposit.setPayment(payment);
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
+				ArticleReward reward = payment.getArticleReward();
+				if (reward!=null) {
+					messageService.rewardPushTo(reward);
+				}
 			} else
 			if (payment.getType() == Payment.Type.recharge) {
 				Member member = payment.getPayee();
@@ -160,6 +166,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
+				deposit.setPayment(payment);
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 			}

@@ -268,7 +268,6 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private Topic topic;
 
-
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_member_tag")

@@ -23,7 +23,7 @@ public class MessageModel implements Serializable {
     /** 时间 */
     private Date createDate;
     /** 来源 */
-    private Long srcId;
+    private String ext;
 
     public String getNickName() {
         return nickName;
@@ -81,12 +81,12 @@ public class MessageModel implements Serializable {
         this.userId = userId;
     }
 
-    public Long getSrcId() {
-        return srcId;
+    public String getExt() {
+        return ext;
     }
 
-    public void setSrcId(Long srcId) {
-        this.srcId = srcId;
+    public void setExt(String ext) {
+        this.ext = ext;
     }
 
     public void bind(net.wit.entity.Message message) {
@@ -102,7 +102,7 @@ public class MessageModel implements Serializable {
         }
         this.createDate = message.getCreateDate();
         this.type = message.getType();
-        this.srcId = message.getSrcId();
+        this.ext = message.getExt();
      }
 
     public static List<MessageModel> bindList(List<net.wit.entity.Message> messages) {

@@ -44,6 +44,9 @@ public class ReviewController extends BaseController {
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
 
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
+
     @Resource(name = "articleReviewServiceImpl")
     private ArticleReviewService articleReviewService;
 
@@ -66,10 +69,7 @@ public class ReviewController extends BaseController {
         review.setIp(request.getRemoteAddr());
         review.setMember(member);
         articleReviewService.save(review);
-
-        article.setReview(article.getReview()+1);
-        articleService.save(article);
-
+        messageService.reviewPushTo(review);
         ArticleReviewModel model = new ArticleReviewModel();
         model.bind(review);
         return Message.success(model,"发布成功");

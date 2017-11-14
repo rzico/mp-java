@@ -54,7 +54,9 @@ public class Message extends BaseEntity {
 		/** 关注提醒   */
 		follow,
 		/** 收藏提醒   */
-		favorite
+		favorite,
+		/** 赞赏提醒   */
+		reward
 	}
 
 	/** 类型 */
@@ -96,7 +98,7 @@ public class Message extends BaseEntity {
 	private Member member;
 
 	/** 消息来源 */
-	private Long srcId;
+	private String ext;
 
 	public Message.Type getType() {
 		return type;
@@ -162,12 +164,12 @@ public class Message extends BaseEntity {
 		this.member = member;
 	}
 
-	public Long getSrcId() {
-		return srcId;
+	public String getExt() {
+		return ext;
 	}
 
-	public void setSrcId(Long srcId) {
-		this.srcId = srcId;
+	public void setExt(String ext) {
+		this.ext = ext;
 	}
 
 	public MapEntity getMapMember() {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 import javax.servlet.http.HttpServletRequest;
 
 import net.wit.Filter;
@@ -15,6 +16,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.DepositDao;
+import net.wit.dao.PaymentDao;
 import net.wit.service.RedisService;
 import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
@@ -43,6 +46,10 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	private MemberDao memberDao;
 	@Resource(name = "redisServiceImpl")
 	private RedisService redisService;
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
+	@Resource(name = "paymentDaoImpl")
+	private PaymentDao paymentDao;
 
 	@Resource(name = "memberDaoImpl")
 	public void setBaseDao(MemberDao memberDao) {
@@ -129,4 +136,37 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		}
 		return null;
 	}
+
+
+	//支付插件专用方法
+	public void payment(Member member,Payment payment) throws Exception {
+		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+		if (member.getBalance().compareTo(payment.getAmount()) < 0) {
+			throw new Exception("余额不足");
+		}
+		try {
+			member.setBalance(member.getBalance().subtract(payment.getAmount()));
+			memberDao.merge(member);
+			Deposit deposit = new Deposit();
+			deposit.setBalance(member.getBalance());
+			deposit.setMember(member);
+			deposit.setCredit(BigDecimal.ZERO);
+			deposit.setDebit(payment.getAmount());
+			deposit.setDeleted(false);
+			deposit.setType(Deposit.Type.payment);
+			PayBill payBill = payment.getPayBill();
+			if (payBill!=null) {
+				deposit.setPayBill(payBill);
+			}
+			deposit.setMemo(payment.getMemo());
+			deposit.setPayment(payment);
+			depositDao.persist(deposit);
+			payment.setTranSn(payment.getSn());
+			payment.setMethod(Payment.Method.deposit);
+			paymentDao.merge(payment);
+		} catch (Exception  e) {
+			throw  new Exception("支付失败");
+		}
+	}
+
 }

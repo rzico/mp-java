@@ -5,6 +5,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.MemberAttributeModel;
 import net.wit.controller.model.MemberModel;
 import net.wit.entity.*;
+import net.wit.plat.im.User;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -124,6 +125,12 @@ public class MemberController extends BaseController {
                 return Message.error("无效城市代码");
             }
             member.setOccupation(occupation);
+        }
+        memberService.update(member);
+        if (nickName!=null || logo!=null) {
+           if (!User.userAttr(member)) {
+               return Message.success("上传IM失败");
+           };
         }
         return Message.success("获取会员信息成功");
     }

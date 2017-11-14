@@ -140,7 +140,9 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
-            User.userAttr(member);
+            if (!User.userAttr(member)) {
+                return Message.success("上传IM失败");
+            };
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,7 +186,9 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
-            User.userAttr(member);
+            if (!User.userAttr(member)) {
+                return Message.success("上传IM失败");
+            };
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -302,7 +306,9 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
-            User.userAttr(member);
+            if (!User.userAttr(member)) {
+                return Message.success("上传IM失败");
+            };
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();

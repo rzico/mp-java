@@ -1,8 +1,12 @@
 package net.wit.entity;
 
+import org.hibernate.search.annotations.DateBridge;
+import org.hibernate.search.annotations.Resolution;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Entity - 线下收单
@@ -37,6 +41,11 @@ public class PayBill extends BaseEntity {
 		offline
 	}
 
+	/** 业务日期 */
+	@DateBridge(resolution = Resolution.DAY)
+	@Column(updatable = false,columnDefinition="datetime not null comment '业务日期'")
+	private Date billDate;
+
 	/** 状态 */
 	@Column(columnDefinition="int(11) not null comment '状态 {none:线上结算,success:支付成功,failure:支付失败}'")
 	private Status status;
@@ -48,6 +57,10 @@ public class PayBill extends BaseEntity {
 	/** 消费者 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
+
+	/** 付款单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Payment payment;
 
 	/** 收款账户 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -196,6 +209,22 @@ public class PayBill extends BaseEntity {
 
 	public void setNoDiscount(BigDecimal noDiscount) {
 		this.noDiscount = noDiscount;
+	}
+
+	public Date getBillDate() {
+		return billDate;
+	}
+
+	public void setBillDate(Date billDate) {
+		this.billDate = billDate;
+	}
+
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
 	}
 
 	//有效付款金额

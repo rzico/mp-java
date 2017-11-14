@@ -29,7 +29,9 @@ public class Sn extends BaseEntity {
 		/** 退款单 */
 		refunds,
 		/** 转账单 */
-		transfer
+		transfer,
+		/** 会员卡 */
+		card
 	}
 
 	/** 类型 */

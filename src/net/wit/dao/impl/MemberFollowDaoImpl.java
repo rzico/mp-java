@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -57,4 +58,14 @@ public class MemberFollowDaoImpl extends BaseDaoImpl<MemberFollow, Long> impleme
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	public MemberFollow find(Member member, Member follow) {
+		String jpql = "select flw from MemberFollow flw where flw.member=:member and flw.follow=:follow";
+		try {
+			return entityManager.createQuery(jpql, MemberFollow.class).setFlushMode(FlushModeType.COMMIT).setParameter("member", member).setParameter("follow", follow).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 }

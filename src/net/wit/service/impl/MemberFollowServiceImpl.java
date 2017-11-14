@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.MemberDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +36,8 @@ import net.wit.service.MemberFollowService;
 public class MemberFollowServiceImpl extends BaseServiceImpl<MemberFollow, Long> implements MemberFollowService {
 	@Resource(name = "memberFollowDaoImpl")
 	private MemberFollowDao memberFollowDao;
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
 
 	@Resource(name = "memberFollowDaoImpl")
 	public void setBaseDao(MemberFollowDao memberFollowDao) {
@@ -86,4 +89,8 @@ public class MemberFollowServiceImpl extends BaseServiceImpl<MemberFollow, Long>
 	public Page<MemberFollow> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return memberFollowDao.findPage(beginDate,endDate,pageable);
 	}
+	public MemberFollow find(Member member, Member follow) {
+		return memberFollowDao.find(member,follow);
+	}
+
 }

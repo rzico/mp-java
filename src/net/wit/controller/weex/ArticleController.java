@@ -53,6 +53,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;
 
+    @Resource(name = "articleCatalogServiceImpl")
+    private ArticleCatalogService articleCatalogService;
+
     /**
      * 文章预览详情
      */
@@ -62,6 +65,16 @@ public class ArticleController extends BaseController {
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
+        }
+        Member member = memberService.getCurrent();
+        if (member!=null) {
+            if (!article.getMember().equals(member)) {
+                article.setHits(article.getHits()+1);
+                articleService.update(article);
+            }
+        } else {
+            article.setHits(article.getHits()+1);
+            articleService.update(article);
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article);
@@ -105,7 +118,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Long articleCategoryId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
@@ -114,6 +127,10 @@ public class ArticleController extends BaseController {
         if (authorId!=null) {
             Member member = memberService.find(authorId);
             filters.add(new Filter("member", Filter.Operator.eq,member));
+        }
+        if (articleCatalogId!=null) {
+            ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
+            filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
         }
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);

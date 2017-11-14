@@ -7,7 +7,9 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Card;
 import net.wit.entity.Member;
+import net.wit.entity.Payment;
 
 /**
  * @ClassName: MemberService
@@ -46,4 +48,8 @@ public interface MemberService extends BaseService<Member, Long> {
 	 * @return 当前登录会员，若不存在则返回null
 	 */
 	Member getCurrent();
+
+	//支付插件专用方法
+	public void payment(Member member, Payment payment) throws Exception;
+
 }

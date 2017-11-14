@@ -100,9 +100,17 @@ public class PaymentController extends BaseController {
 
         Map<String, Object> parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
         if ("SUCCESS".equals(parameters.get("return_code"))) {
+            if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId)) {
+                try {
+                    paymentService.handle(payment);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
+                }
+            }
             return Message.success(parameters, "success");
         } else {
-            return Message.error("提交失败");
+            return Message.error(parameters.get("return_msg").toString());
         }
 
     }

@@ -10,13 +10,11 @@ import javax.annotation.Resource;
 
 import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 import net.sf.json.JSONObject;
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.plat.weixin.util.WeiXinUtils;
+import net.wit.util.SettingUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -161,4 +159,22 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 	public Page<TopicCard> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return topicCardDao.findPage(beginDate,endDate,pageable);
 	}
+
+	public TopicCard create(Topic topic) {
+       TopicCard topicCard = topic.getTopicCard();
+       if (topicCard==null) {
+       	  Setting setting = SettingUtils.get();
+       	  topicCard = new TopicCard();
+       	  topicCard.setStatus(TopicCard.Status.waiting);
+       	  topicCard.setColor(TopicCard.Color.c9);
+       	  topicCard.setTopic(topic);
+       	  topicCard.setTitle(topic.getName()+setting.getSiteName()+"联名卡");
+		  topicCard.setDescription(
+		  		"储值卡余额只能使用所属商家，解悉权归发行商家所有；平台作为工具提供方不承担相关法律责任。"
+		  );
+		  topicCard.setPrerogative("持卡会员尊受商家提供的优惠折扣，分享平台商品可获取相应奖励金。");
+	   }
+       return  topicCard;
+	}
+
 }

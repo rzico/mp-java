@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Admin;
+import net.wit.entity.Member;
 
 /**
  * @ClassName: AdminService
@@ -34,6 +35,15 @@ public interface AdminService extends BaseService<Admin, Long> {
 	 * @return 管理员，若不存在则返回null
 	 */
 	Admin findByUsername(String username);
+
+	/**
+	 * 根据会员查找管理员
+	 *
+	 * @param member
+	 *            用户名(忽略大小写)
+	 * @return 管理员，若不存在则返回null
+	 */
+	Admin findByMember(Member member);
 
 	/**
 	 * 根据ID查找权限

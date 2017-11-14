@@ -46,7 +46,7 @@ public class Push {
         data.put("OfflinePushInfo",OfflinePushInfo);
         OfflinePushInfo.put("PushFlag",0);
         OfflinePushInfo.put("Desc",message.getContent());
-        OfflinePushInfo.put("Ext",message.getType());
+        OfflinePushInfo.put("Ext",message.getExt());
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
         AndroidInfo.put("Sound","msg.mp3");

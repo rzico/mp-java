@@ -47,7 +47,7 @@ public class Enterprise extends BaseEntity {
 
     /** 类型 */
     @NotNull
-    @Column(columnDefinition="int(11) not null comment '类型 {operate:运营商,agent:代理商}'")
+    @Column(columnDefinition="int(11) not null comment '类型 {operate:运营商,agent:代理商,personal:个人代理商,shop:入驻商家}'")
     private Type type;
 
     /** 地区 null 代表没有区域限制 */

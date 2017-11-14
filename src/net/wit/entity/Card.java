@@ -21,9 +21,43 @@ public class Card extends BaseEntity {
 
 	private static final long serialVersionUID = 16L;
 
+	public static enum Status{
+		/** 空卡  */
+		none,
+		/** 已激活 */
+		activate,
+		/** 已挂失 */
+		loss
+	};
+
+	public static enum  VIP{
+		/** vip1  */
+		vip1,
+		/** vip2 */
+		vip2,
+		/** vip3 */
+		vip3
+	};
+
+	/** 状态 */
+	@NotNull
+	@Column(columnDefinition="int(11) comment '状态 {none:空卡,activate:已激活,loss:已挂失}'")
+	private Status status;
+
+	/** 等级 */
+	@NotNull
+	@Column(columnDefinition="int(11) comment '等级 {vip1:VIP1,vip2:VIP2,vip3:VIP3}'")
+	private VIP vip;
+
 	/** 最近使用日期 */
 	@Column(columnDefinition="datetime comment '最近使用日期'")
 	private Date usedDate;
+
+
+	/** 所属商家 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@NotNull
+	private TopicCard topicCard;
 
 	/** 所属商家 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -32,22 +66,19 @@ public class Card extends BaseEntity {
 
 	/** 办卡门店 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@NotNull
 	private Shop shop;
 
-	/** 实体卡号 */
-	@Column(length = 100,columnDefinition="varchar(100) comment '实体卡号'")
+	/** 卡号 */
+	@Column(length = 100,columnDefinition="varchar(100) not null comment '卡号'")
 	private String code;
 
 	/** 姓名 */
 	@Column(columnDefinition="varchar(255) comment '姓名'")
-	@NotNull
 	private String name;
 
 	/** 手机 一个手机号只能办一个 */
 	@Column(columnDefinition="varchar(50) comment '手机'")
 	@JsonIgnore
-	@NotNull
 	private String mobile;
 
 	/** 安全码 */
@@ -63,6 +94,22 @@ public class Card extends BaseEntity {
 	/*  会员 */
 	@ManyToMany(mappedBy = "cards",fetch = FetchType.LAZY)
 	private List<Member> members = new ArrayList<Member>();
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public VIP getVip() {
+		return vip;
+	}
+
+	public void setVip(VIP vip) {
+		this.vip = vip;
+	}
 
 	/**
 	 * 获取号码
@@ -157,5 +204,13 @@ public class Card extends BaseEntity {
 
 	public void setMembers(List<Member> members) {
 		this.members = members;
+	}
+
+	public TopicCard getTopicCard() {
+		return topicCard;
+	}
+
+	public void setTopicCard(TopicCard topicCard) {
+		this.topicCard = topicCard;
 	}
 }

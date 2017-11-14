@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.ArticleDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +36,8 @@ import net.wit.service.ArticleLaudService;
 public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> implements ArticleLaudService {
 	@Resource(name = "articleLaudDaoImpl")
 	private ArticleLaudDao articleLaudDao;
+	@Resource(name = "articleDaoImpl")
+	private ArticleDao articleDao;
 
 	@Resource(name = "articleLaudDaoImpl")
 	public void setBaseDao(ArticleLaudDao articleLaudDao) {
@@ -45,6 +48,9 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(ArticleLaud articleLaud) {
+		Article article = articleLaud.getArticle();
+		article.setFavorite(article.getLaud()+1);
+		articleDao.merge(article);
 		super.save(articleLaud);
 	}
 
@@ -68,6 +74,9 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
 		ArticleLaud articleLaud = articleLaudDao.find(id);
+		Article article = articleLaud.getArticle();
+		article.setFavorite(article.getLaud()-1);
+		articleDao.merge(article);
 		articleLaud.setIsShow(true);
 		super.update(articleLaud);
 	}
@@ -78,6 +87,9 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	public void delete(Long... ids) {
 		for (Long id:ids) {
 			ArticleLaud articleLaud = articleLaudDao.find(id);
+			Article article = articleLaud.getArticle();
+			article.setFavorite(article.getLaud()-1);
+			articleDao.merge(article);
 			articleLaud.setIsShow(true);
 			super.update(articleLaud);
 		}
@@ -87,6 +99,9 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleLaud articleLaud) {
+		Article article = articleLaud.getArticle();
+		article.setFavorite(article.getLaud()-1);
+		articleDao.merge(article);
 		articleLaud.setIsShow(true);
 		super.update(articleLaud);
 	}

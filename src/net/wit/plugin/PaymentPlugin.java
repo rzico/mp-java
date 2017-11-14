@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.annotation.Resource;
@@ -287,6 +284,16 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 * @return 通知返回消息
 	 */
 	public abstract String getNotifyMessage(String sn, NotifyMethod notifyMethod, HttpServletRequest request);
+
+	/**
+	 * 提交扫码付
+	 */
+	public Map<String, Object> submit(Payment payment,String safeKey,HttpServletRequest request) {
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		finalpackage.put("result_msg","暂不支持");
+		finalpackage.put("return_code","FAIL");
+        return finalpackage;
+	}
 
 	/**
 	 * 获取超时时间

@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.ArticleDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +36,8 @@ import net.wit.service.ArticleFavoriteService;
 public class ArticleFavoriteServiceImpl extends BaseServiceImpl<ArticleFavorite, Long> implements ArticleFavoriteService {
 	@Resource(name = "articleFavoriteDaoImpl")
 	private ArticleFavoriteDao articleFavoriteDao;
+	@Resource(name = "articleDaoImpl")
+	private ArticleDao articleDao;
 
 	@Resource(name = "articleFavoriteDaoImpl")
 	public void setBaseDao(ArticleFavoriteDao articleFavoriteDao) {
@@ -45,6 +48,9 @@ public class ArticleFavoriteServiceImpl extends BaseServiceImpl<ArticleFavorite,
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(ArticleFavorite articleFavorite) {
+		Article article = articleFavorite.getArticle();
+		article.setFavorite(article.getFavorite()+1);
+		articleDao.merge(article);
 		super.save(articleFavorite);
 	}
 
@@ -66,20 +72,26 @@ public class ArticleFavoriteServiceImpl extends BaseServiceImpl<ArticleFavorite,
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		ArticleFavorite articleFavorite = articleFavoriteDao.find(id);
+		this.delete(articleFavorite);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			this.delete(id);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleFavorite articleFavorite) {
+		Article article = articleFavorite.getArticle();
+		article.setFavorite(article.getFavorite()-1);
+		articleDao.merge(article);
 		super.delete(articleFavorite);
 	}
 

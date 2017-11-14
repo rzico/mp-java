@@ -42,6 +42,8 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 
 	private HiloOptimizer transferHiloOptimizer;
 
+	private HiloOptimizer cardHiloOptimizer;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -63,11 +65,18 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 	@Value("${sn.transfer.maxLo}")
 	private int transferMaxLo;
 
+	@Value("${sn.card.prefix}")
+	private String cardPrefix;
+
+	@Value("${sn.card.maxLo}")
+	private int cardMaxLo;
+
 
 	public void afterPropertiesSet() throws Exception {
 		paymentHiloOptimizer = new HiloOptimizer(Sn.Type.payment, paymentPrefix, paymentMaxLo);
 		refundsHiloOptimizer = new HiloOptimizer(Sn.Type.refunds, refundsPrefix, refundsMaxLo);
 		transferHiloOptimizer = new HiloOptimizer(Sn.Type.transfer, transferPrefix, transferMaxLo);
+		cardHiloOptimizer = new HiloOptimizer(Sn.Type.card, cardPrefix, cardMaxLo);
 	}
 
 	public String generate(Sn.Type type) {
@@ -78,6 +87,8 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 			return refundsHiloOptimizer.generate();
 		} else if (type == Sn.Type.transfer) {
 			return transferHiloOptimizer.generate();
+		} else if (type == Sn.Type.card) {
+			return cardHiloOptimizer.generate();
 		}
 		return null;
 	}

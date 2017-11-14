@@ -7,6 +7,7 @@ import net.wit.controller.model.ArticleModel;
 import net.wit.controller.model.ArticleViewModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleCatalog;
+import net.wit.entity.ArticleCategory;
 import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleCatalogServiceImpl")
     private ArticleCatalogService articleCatalogService;
 
+    @Resource(name = "articleCategoryServiceImpl")
+    private ArticleCategoryService articleCategoryService;
+
     /**
      * 文章预览信息
      */
@@ -58,6 +62,16 @@ public class ArticleController extends BaseController {
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
+        }
+        Member member = memberService.getCurrent();
+        if (member!=null) {
+            if (!article.getMember().equals(member)) {
+                article.setHits(article.getHits()+1);
+                articleService.update(article);
+            }
+        } else {
+            article.setHits(article.getHits()+1);
+            articleService.update(article);
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article);
@@ -70,14 +84,20 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
-        Member member = memberService.find(authorId);
-        ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
+    public Message list(Long authorId,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
-        if (articleCatalog!=null) {
+        if (articleCategoryId!=null) {
+            ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
+            filters.add(new Filter("articleCategory", Filter.Operator.eq,articleCategory));
+        }
+        if (authorId!=null) {
+            Member member = memberService.find(authorId);
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+        }
+        if (articleCatalogId!=null) {
+            ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
             filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
         }
-        filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);

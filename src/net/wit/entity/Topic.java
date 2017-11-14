@@ -53,6 +53,11 @@ public class Topic extends BaseEntity {
     @NotNull
     private String name;
 
+    /** Logo */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment 'Logo'")
+    private String logo;
+
     /** 会员 */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
@@ -108,6 +113,12 @@ public class Topic extends BaseEntity {
     @Column(columnDefinition="bigint(20) default 0 comment '阅读数'")
     private Long hits;
 
+    /** 年费 */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '年费'")
+    private BigDecimal  fee;
+
     /** 专栏设置 */
     @Embedded
     private TopicConfig config;
@@ -118,6 +129,12 @@ public class Topic extends BaseEntity {
     @OrderBy("orders asc")
     @JsonIgnore
     private List<Tag> tags = new ArrayList<Tag>();
+
+    /** 专栏卡 */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition="bigint(20) comment '专栏卡'")
+    @JsonIgnore
+    private TopicCard topicCard;
 
     public Type getType() {
         return type;
@@ -215,6 +232,22 @@ public class Topic extends BaseEntity {
         this.hits = hits;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public BigDecimal getFee() {
+        return fee;
+    }
+
+    public void setFee(BigDecimal fee) {
+        this.fee = fee;
+    }
+
     public MapEntity getMapTemplate() {
         if (getTemplate() != null) {
             return new MapEntity(getTemplate().getId().toString(), getTemplate().getName());
@@ -273,4 +306,11 @@ public class Topic extends BaseEntity {
         this.config = config;
     }
 
+    public TopicCard getTopicCard() {
+        return topicCard;
+    }
+
+    public void setTopicCard(TopicCard topicCard) {
+        this.topicCard = topicCard;
+    }
 }
