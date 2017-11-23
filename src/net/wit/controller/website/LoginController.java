@@ -14,6 +14,7 @@ import net.wit.util.JsonUtils;
 import net.wit.util.MD5Utils;
 import net.wit.util.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.net.util.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -194,11 +196,17 @@ public class LoginController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
-        String mState = hexStringToString(state);
+        String mState = null;
+        try {
+            mState = new String(Base64.decodeBase64(state),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.debug(e.getMessage());
+            mState = "";
+        }
         if (token!=null) {
             openId = token.getOpenid();
          } else {
-            return "redirect:/website/login?redirectURL="+mState;
+            return "redirect:/login?redirectURL="+mState;
         }
         JSONObject userinfo = WeixinApi.getUserInfoByCode(token.getToken(), openId);
         String nickName=null;
