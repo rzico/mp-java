@@ -113,7 +113,7 @@ public class ShopController extends BaseController {
             shopService.update(entity);
         }
         ShopModel model = new ShopModel();
-        model.bind(shop);
+        model.bind(entity);
         return Message.success(model,"发布成功");
     }
 
