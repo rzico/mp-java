@@ -6,11 +6,11 @@
 	<setting name="siteUrl" value="http://www.rzico.com"/>
 	<setting name="logo" value="http://m.73yigou.cn/upload/images/logo.png"/>
 	<setting name="address" value=""/>
-	<setting name="phone" value="13400766646"/>
+	<setting name="phone" value="0592-6085128"/>
 	<setting name="enterpriseqq" value=""/>
 	<setting name="zipCode" value=""/>
 	<setting name="email" value=""/>
-	<setting name="certtext" value="闽ICP备10028848号-4"/>
+	<setting name="certtext" value="闽ICP备13006726号"/>
 	<setting name="isSiteEnabled" value="true" />
 	<setting name="siteCloseMessage" value="&lt;dl&gt;&lt;dt&gt;网站维护中，暂时无法访问！&lt;/dt&gt;&lt;dd&gt;本网站正在进行系统维护和技术升级，网站暂时无法访问，敬请谅解！&lt;/dd&gt;&lt;/dl&gt;" />
 	<setting name="priceScale" value="2" />
