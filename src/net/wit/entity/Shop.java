@@ -58,6 +58,11 @@ public class Shop extends BaseEntity {
     @JoinColumn(columnDefinition="bigint(20) comment '地区'")
     private Area area;
 
+    /** 行业 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition="bigint(20) comment '行业'")
+    private Category category;
+
     /** 地址 */
     @Column(columnDefinition="varchar(255) comment '地址'")
     private String address;
@@ -210,5 +215,13 @@ public class Shop extends BaseEntity {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

@@ -66,21 +66,28 @@ public class CouponServiceImpl extends BaseServiceImpl<Coupon, Long> implements 
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Coupon coupon = couponDao.find(id);
+		coupon.setDeleted(true);
+		super.update(coupon);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			Coupon coupon = couponDao.find(id);
+			coupon.setDeleted(true);
+			super.update(coupon);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Coupon coupon) {
-		super.delete(coupon);
+		coupon.setDeleted(true);
+		super.update(coupon);
 	}
 
 	public Page<Coupon> findPage(Date beginDate,Date endDate, Pageable pageable) {

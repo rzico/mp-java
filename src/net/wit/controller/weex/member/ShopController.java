@@ -50,6 +50,9 @@ public class ShopController extends BaseController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
+    @Resource(name = "categoryServiceImpl")
+    private CategoryService categoryService;
+
     @Resource(name = "payBillServiceImpl")
     private PayBillService payBillService;
 
@@ -59,7 +62,7 @@ public class ShopController extends BaseController {
 
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(Shop shop,Long areaId,Double lat,Double lng, HttpServletRequest request){
+    public Message submit(Shop shop,Long areaId,Long categoryId,Double lat,Double lng, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -69,7 +72,7 @@ public class ShopController extends BaseController {
         }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有开通收银台");
+            return Message.error("没有点亮专栏");
         }
         Enterprise enterprise = admin.getEnterprise();
         Shop entity = null;
@@ -92,12 +95,17 @@ public class ShopController extends BaseController {
         entity.setThedoor(shop.getThedoor());
         entity.setLinkman(shop.getLinkman());
         entity.setTelephone(shop.getTelephone());
+        if (categoryId!=null) {
+            entity.setCategory(categoryService.find(categoryId));
+        }
         Location lc = entity.getLocation();
         if (lc==null) {
             lc = new Location();
         }
-        lc.setLng(lng);
-        lc.setLat(lat);
+        if (lng!=null && lat!=null) {
+            lc.setLng(lng);
+            lc.setLat(lat);
+        }
         entity.setLocation(lc);
         if (isNew) {
             shopService.save(entity);
@@ -124,7 +132,7 @@ public class ShopController extends BaseController {
         }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有开通收银台");
+            return Message.error("没有点亮专栏");
         }
         Enterprise enterprise = admin.getEnterprise();
         List<Filter> filters = new ArrayList<Filter>();

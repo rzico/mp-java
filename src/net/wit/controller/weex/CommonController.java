@@ -107,7 +107,7 @@ public class CommonController extends BaseController {
 		String ua = request.getHeader("user-agent");
 
 		menu.put("home","file://view/home/index.js");
-		menu.put("add", "file://view/member/editor.js");
+		menu.put("add", "file://view/member/editor/editor.js");
 		menu.put("friend", "file://view/friend/list.js");
 		menu.put("message","file://view/message/list.js");
 		menu.put("member", "file://view/member/index.js");

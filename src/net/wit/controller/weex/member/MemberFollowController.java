@@ -71,7 +71,7 @@ public class MemberFollowController extends BaseController {
         follow.setFollow(author);
         memberFollowService.save(follow);
         messageService.followPushTo(follow);
-        return Message.success("收藏成功");
+        return Message.success("关注成功");
    }
 
 

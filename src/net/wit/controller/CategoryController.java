@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @ClassName: CategoryController
- * @author 降魔战队
+ * @author 降魔战队  行业分类
  * @date 2017-9-14 19:42:9
  */
  
@@ -28,7 +28,7 @@ public class CategoryController extends BaseController {
     private CategoryService categoryService;
 
     /**
-     *  分类列表
+     *  行业列表
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
