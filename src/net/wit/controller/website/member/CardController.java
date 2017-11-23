@@ -61,7 +61,7 @@ public class CardController extends BaseController {
     private ShopService shopService;
 
     /**
-     *  文章列表,带分页
+     *  我的会员卡
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody

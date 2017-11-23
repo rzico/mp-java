@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <wit>
-	<setting name="siteName" value="七三亿购"/>
-	<setting name="siteCompany" value="厦门亿想软件有限公司"/>
+	<setting name="siteName" value="芸店"/>
+	<setting name="siteCompany" value="厦门睿商网络科技有限公司"/>
 	<setting name="siteUrl" value="http://www.rzico.com"/>
 	<setting name="logo" value="http://m.73yigou.cn/upload/images/logo.png"/>
-	<setting name="address" value="厦门市同集中路利安门业二楼"/>
+	<setting name="address" value=""/>
 	<setting name="phone" value="13400766646"/>
 	<setting name="enterpriseqq" value=""/>
 	<setting name="zipCode" value=""/>

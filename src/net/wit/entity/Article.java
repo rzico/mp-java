@@ -107,6 +107,11 @@ public class Article extends BaseEntity{
     @Column(columnDefinition="bigint(20) default 0 comment '点赞数'")
     private Long laud;
 
+    /** 分享数 */
+    @Min(0)
+    @Column(columnDefinition="bigint(20) default 0 comment '分享数'")
+    private Long share;
+
     /** 是否删除 */
     @NotNull
     @Column(columnDefinition="bit comment '是否删除'")
@@ -363,6 +368,14 @@ public class Article extends BaseEntity{
 
     public void setVotes(String votes) {
         this.votes = votes;
+    }
+
+    public Long getShare() {
+        return share;
+    }
+
+    public void setShare(Long share) {
+        this.share = share;
     }
 
     public MapEntity getMapTemplate() {

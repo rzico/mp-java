@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @ClassName: OccupationController
- * @author 降魔战队
+ * @author 降魔战队  职业分类
  * @date 2017-9-14 19:42:9
  */
  

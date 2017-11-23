@@ -2,7 +2,9 @@ package net.wit.service.impl;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.dao.ArticleDao;
 import net.wit.dao.ArticleShareDao;
+import net.wit.entity.Article;
 import net.wit.entity.ArticleShare;
 import net.wit.service.ArticleShareService;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import java.util.Date;
 public class ArticleShareServiceImpl extends BaseServiceImpl<ArticleShare, Long> implements ArticleShareService {
 	@Resource(name = "articleShareDaoImpl")
 	private ArticleShareDao articleShareDao;
+	@Resource(name = "articleDaoImpl")
+	private ArticleDao articleDao;
 
 	@Resource(name = "articleShareDaoImpl")
 	public void setBaseDao(ArticleShareDao articleShareDao) {
@@ -32,6 +36,9 @@ public class ArticleShareServiceImpl extends BaseServiceImpl<ArticleShare, Long>
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(ArticleShare articleShare) {
+		Article article = articleShare.getArticle();
+		article.setShare(article.getShare()+1);
+		articleDao.merge(article);
 		super.save(articleShare);
 	}
 

@@ -49,7 +49,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(ArticleLaud articleLaud) {
 		Article article = articleLaud.getArticle();
-		article.setFavorite(article.getLaud()+1);
+		article.setLaud(article.getLaud()+1);
 		articleDao.merge(article);
 		super.save(articleLaud);
 	}

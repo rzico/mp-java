@@ -83,14 +83,14 @@ public class ReviewController extends BaseController {
 
 
     /**
-     *  删除投票
+     *  删除评论
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete")
     @ResponseBody
     public Message delete(Long id,HttpServletRequest request){
         ArticleReview articleReview = articleReviewService.find(id);
         if (articleReview==null) {
-            return Message.error("无效投票编号");
+            return Message.error("无效评论编号");
         }
 
         articleReviewService.delete(id);

@@ -25,6 +25,8 @@ public class ArticlePreviewModel implements Serializable {
     private Long hits;
     /** 点赞数 */
     private Long laud;
+    /** 分享数 */
+    private Long share;
     /** 是否点赞 */
     private Boolean hasLaud;
     /** 是否收藏 */
@@ -114,6 +116,7 @@ public class ArticlePreviewModel implements Serializable {
         this.id = article.getId();
         this.hits = article.getHits();
         this.laud = article.getLaud();
+        this.share = article.getShare();
         this.review = article.getReview();
         this.nickName = article.getMember().getNickName();
         this.logo = article.getMember().getLogo();
