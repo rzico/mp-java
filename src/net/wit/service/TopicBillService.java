@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Payment;
 import net.wit.entity.TopicBill;
 
 /**
@@ -17,4 +18,5 @@ import net.wit.entity.TopicBill;
 
 public interface TopicBillService extends BaseService<TopicBill, Long> {
 	Page<TopicBill> findPage(Date beginDate,Date endDate, Pageable pageable);
+	public Payment activate(TopicBill topicBill);
 }

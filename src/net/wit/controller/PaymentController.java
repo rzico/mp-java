@@ -83,7 +83,7 @@ public class PaymentController extends BaseController {
 
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(String paymentPluginId, String sn, HttpServletRequest request) {
+    public Message submit(String paymentPluginId, String sn,String safeKey, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
         if (payment==null) {
             Message.error("无效付款单");
@@ -98,7 +98,12 @@ public class PaymentController extends BaseController {
         payment.setPaymentMethod(paymentPlugin.getName());
         paymentService.update(payment);
 
-        Map<String, Object> parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
+        Map<String, Object> parameters = null;
+        if (safeKey==null) {
+            parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
+        } else {
+            parameters = paymentPlugin.submit(payment,safeKey,request);
+        }
         if ("SUCCESS".equals(parameters.get("return_code"))) {
             if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId)) {
                 try {
@@ -114,7 +119,6 @@ public class PaymentController extends BaseController {
         }
 
     }
-
 
     /**
      * 支付结果通知

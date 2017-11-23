@@ -62,81 +62,12 @@ public class WalletController extends BaseController {
         model.bind(member);
         Bankcard card = bankcardService.findDefault(member);
         if (card!=null) {
-            model.setBankinfo(card.getBankname() + "(" + card.getCardno().substring(card.getCardno().length() - 1, card.getCardno().length()) + ")");
+            model.setBinded(true);
+            model.setBankinfo(card.getBankname() + "(" + card.getCardno().substring(card.getCardno().length() - 4, card.getCardno().length()) + ")");
         } else {
             model.setBankinfo("未绑定");
         }
         return Message.bind(model,request);
-    }
-
-    private BigDecimal calculate(BigDecimal amount) {
-        if (amount.compareTo(new BigDecimal(5000))>=0) {
-            return BigDecimal.ZERO;
-        } else {
-            return BigDecimal.ONE;
-        }
-    }
-
-    /**
-     * 计算手续费
-     */
-    @RequestMapping(value = "calculateFee", method = RequestMethod.POST)
-    @ResponseBody
-    public Message calculateFee(BigDecimal amount,HttpServletRequest request){
-        return Message.success(calculate(amount),"success");
-    }
-
-    /**
-     *
-     */
-    @RequestMapping(value = "transfer", method = RequestMethod.POST)
-    @ResponseBody
-    public Message transfer(Transfer.Type type,BigDecimal amount,HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-        if (member.getBalance().compareTo(amount) < 0) {
-            return Message.error("账户余额不足");
-        }
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        Transfer transfer = new Transfer();
-        Bankcard card = bankcardService.findDefault(member);
-        if (Transfer.Type.bankcard.equals(type)) {
-            if (card==null) {
-                return Message.error("请绑定银行卡");
-            }
-            transfer.setBankname(card.getBankname());
-            transfer.setCardno(card.getCardno());
-            transfer.setCity(card.getCity());
-            transfer.setName(card.getName());
-            transfer.setMemo("提现到银行卡");
-        } else
-        if (Transfer.Type.weixin.equals(type)) {
-            transfer.setBankname("微信钱包");
-            BindUser bindUser = bindUserService.findMember(member,bundle.getString("app.appid"), BindUser.Type.weixin);
-            if (bindUser==null) {
-                return Message.error("请绑定微信号");
-            }
-            transfer.setCardno(bindUser.getOpenId());
-            transfer.setCity("全国");
-            transfer.setName(member.getNickName());
-            transfer.setMemo("提现到微信钱包");
-        } else {
-            return Message.error("不支持的类型");
-        }
-        transfer.setMember(member);
-        transfer.setStatus(Transfer.Status.waiting);
-        transfer.setAmount(amount);
-        transfer.setFee(calculate(amount));
-        transfer.setType(type);
-        transfer.setSn(snService.generate(Sn.Type.transfer));
-        try {
-            transferService.submit(transfer);
-            return Message.success("提交成功");
-        } catch (Exception e) {
-            return Message.error(e.getMessage());
-        }
     }
 
 }

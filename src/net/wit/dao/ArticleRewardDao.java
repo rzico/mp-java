@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.ArticleReward;
+import net.wit.entity.Member;
 
 
 /**
@@ -27,4 +28,5 @@ public interface ArticleRewardDao extends BaseDao<ArticleReward, Long> {
 	 * @return Page<ArticleReward>
 	 */
 	Page<ArticleReward> findPage(Date beginDate,Date endDate, Pageable pageable);
+	BigDecimal summary(Member member);
 }

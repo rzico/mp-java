@@ -69,7 +69,7 @@ public class Card extends BaseEntity {
 	private Shop shop;
 
 	/** 卡号 */
-	@Column(length = 100,columnDefinition="varchar(100) not null comment '卡号'")
+	@Column(length = 100,columnDefinition="varchar(100) not null unique comment '卡号'")
 	private String code;
 
 	/** 姓名 */

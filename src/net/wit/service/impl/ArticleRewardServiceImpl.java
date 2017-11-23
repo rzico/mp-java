@@ -120,4 +120,8 @@ public class ArticleRewardServiceImpl extends BaseServiceImpl<ArticleReward, Lon
 	public Page<ArticleReward> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return articleRewardDao.findPage(beginDate,endDate,pageable);
 	}
+	public BigDecimal summary(Member member) {
+		return articleRewardDao.summary(member);
+	}
+
 }

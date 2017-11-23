@@ -32,21 +32,6 @@ public class DepositController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
-    @Resource(name = "redisServiceImpl")
-    private RedisService redisService;
-
-    @Resource(name = "rsaServiceImpl")
-    private RSAService rsaService;
-
-    @Resource(name = "smssendServiceImpl")
-    private SmssendService smssendService;
-
-    @Resource(name = "areaServiceImpl")
-    private AreaService areaService;
-
-    @Resource(name = "articleServiceImpl")
-    private ArticleService articleService;
-
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
 
@@ -57,6 +42,9 @@ public class DepositController extends BaseController {
     @ResponseBody
     public Message list(Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);

@@ -56,7 +56,13 @@ public class Message extends BaseEntity {
 		/** 收藏提醒   */
 		favorite,
 		/** 赞赏提醒   */
-		reward
+		reward,
+		/** 分享提醒 gm_10208  */
+		share,
+		/** 添加好友 gm_10209  */
+		addfriend,
+		/** 同意好友 gm_10210  */
+		adoptfriend
 	}
 
 	/** 类型 */

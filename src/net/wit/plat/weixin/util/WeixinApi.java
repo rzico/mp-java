@@ -39,6 +39,8 @@ public class WeixinApi {
 
 	private static Ticket jsapi_ticket = null;
 
+	private static Ticket wxcard_ticket = null;
+
 	// 获取access_token的接口地址（GET） 限200（次/天） 
 	private static String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 
@@ -79,8 +81,10 @@ public class WeixinApi {
 	// 用户同意授权，获取code
 	private static String oauth2_get_code = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=123#wechat_redirect";
 
-	private static String GETTICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
- 
+	private static String GETJSAPITICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
+
+	private static String GETWXCARDTICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=wx_card";
+
 	private static String send_message = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 	
 	/**
@@ -437,7 +441,7 @@ public class WeixinApi {
 		    ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
 			AccessToken token = getAccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"));
 			if (token != null) {
-				String requestUrl = GETTICKET.replace("ACCESS_TOKEN", token.getToken());
+				String requestUrl = GETJSAPITICKET.replace("ACCESS_TOKEN", token.getToken());
 				JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
 				if (jsonObject != null) {
 					jsapi_ticket = new Ticket();
@@ -449,6 +453,25 @@ public class WeixinApi {
 			}
 		}
 		return jsapi_ticket;
+	}
+
+	public static Ticket getWxCardTicket() {
+		if (wxcard_ticket == null || wxcard_ticket.getExpire().getTime() <= (new Date()).getTime()) {
+			ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
+			AccessToken token = getAccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"));
+			if (token != null) {
+				String requestUrl = GETWXCARDTICKET.replace("ACCESS_TOKEN", token.getToken());
+				JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
+				if (jsonObject != null) {
+					wxcard_ticket = new Ticket();
+					wxcard_ticket.setTicket(jsonObject.getString("ticket"));
+					wxcard_ticket.setExpires_in(jsonObject.getInt("expires_in"));
+					wxcard_ticket.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
+					return wxcard_ticket;
+				}
+			}
+		}
+		return wxcard_ticket;
 	}
 
 }

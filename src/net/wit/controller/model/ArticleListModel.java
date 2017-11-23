@@ -132,6 +132,14 @@ public class ArticleListModel implements Serializable {
         this.htmlTag = htmlTag;
     }
 
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.authorId = article.getMember().getId();

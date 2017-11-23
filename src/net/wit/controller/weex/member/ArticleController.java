@@ -72,7 +72,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long articleCatalogId,Long timeStamp,Pageable pageable, HttpServletRequest request){
+    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -84,6 +84,9 @@ public class ArticleController extends BaseController {
         }
         if (timeStamp!=null) {
             filters.add(new Filter("modifyDate", Filter.Operator.le,new Date(timeStamp)));
+        }
+        if (isVote!=null && isVote) {
+            filters.add(new Filter().isNotNull("votes"));
         }
         filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);
@@ -139,11 +142,20 @@ public class ArticleController extends BaseController {
         String title = model.getTitle();
         String author = member.getNickName();
         String thumbnail = model.getThumbnail();
-        String music = JsonUtils.toJson(model.getMusic());
-        String content = JsonUtils.toJson(model.getTemplates());
+        String music = null;
+        if (model.getMusic()!=null) {
+            music = JsonUtils.toJson(model.getMusic());
+        }
+        String content = null;
+        if (model.getTemplates()!=null) {
+            content = JsonUtils.toJson(model.getTemplates());
+        }
         Boolean isDraft = model.getIsDraft();
 
-        String votes = JsonUtils.toJson(model.getVotes());
+        String votes = null;
+        if (model.getVotes()!=null) {
+            votes = JsonUtils.toJson(model.getVotes());
+        }
         Article article = null;
         if (id!=null) {
             article = articleService.find(model.getId());

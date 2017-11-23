@@ -116,9 +116,9 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			if (payment.getStatus().equals(Payment.Status.refund_waiting)) {
 				payment.setStatus(Payment.Status.refund_success);
 			} else if (payment.getStatus().equals(Payment.Status.refund_success)) {
-				throw new Exception("重复退款");
+				throw new RuntimeException("重复退款");
 			} else {
-				throw new Exception("退款失败");
+				throw new RuntimeException("退款失败");
 			}
 		}
 	}
@@ -135,10 +135,10 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					refundsDao.merge(refunds);
 					return true;
 				} else {
-					throw new Exception(UnsPay.getErrMsg(result));
+					throw new RuntimeException(UnsPay.getErrMsg(result));
 				}
 			} else{
-				throw new Exception("已经提交了");
+				throw new RuntimeException("已经提交了");
 			}
 	}
 
@@ -176,12 +176,12 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			if (payment.getStatus().equals(Payment.Status.refund_waiting)) {
 				payment.setStatus(Payment.Status.refund_success);
 			} else if (payment.getStatus().equals(Payment.Status.refund_success)) {
-				throw new Exception("重复退款");
+				throw new RuntimeException("重复退款");
 			} else {
-				throw new Exception("退款失败");
+				throw new RuntimeException("退款失败");
 			}
 		} else {
-			throw new Exception("重复提交");
+			throw new RuntimeException("重复提交");
 		}
 	}
 }

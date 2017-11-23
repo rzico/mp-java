@@ -86,4 +86,7 @@ public class DepositServiceImpl extends BaseServiceImpl<Deposit, Long> implement
 	public Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return depositDao.findPage(beginDate,endDate,pageable);
 	}
+	public BigDecimal summary(Deposit.Type type,Member member) {
+		return depositDao.summary(type,member);
+	}
 }

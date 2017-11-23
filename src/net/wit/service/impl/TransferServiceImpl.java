@@ -103,10 +103,10 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 		Member member = transfer.getMember();
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 		if (member.getBalance().compareTo(transfer.getAmount()) < 0) {
-			throw new Exception("账户余额不足");
+			throw new RuntimeException("账户余额不足");
 		}
-		transferDao.persist(transfer);
 		try {
+			transferDao.persist(transfer);
 			member.setBalance(member.getBalance().subtract(transfer.getAmount()));
 			memberDao.merge(member);
 			Deposit deposit = new Deposit();
@@ -120,26 +120,28 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setOperator("system");
 			deposit.setTransfer(transfer);
 			depositDao.persist(deposit);
-			if (transfer.getType().equals(Transfer.Type.bankcard)) {
-				String result = UnsPay.submit(transfer);
-				if ("0000".equals(result)) {
-					transfer.setStatus(Transfer.Status.confirmed);
-					transferDao.merge(transfer);
-					return true;
-				} else {
-					if (!"3000".equals(result)) {
-						logger.error(UnsPay.getErrMsg(result));
-						throw new Exception("提交银行失败");
-					} else {
-						return true;
-					}
-				}
-			} else {
-				throw new Exception("暂不支持");
-			}
 		} catch (Exception e) {
-			throw new Exception("提交出错了");
+			logger.debug(e.getMessage());
+			throw new RuntimeException("提交出错了");
 		}
+//		if (transfer.getType().equals(Transfer.Type.bankcard)) {
+//			String result = UnsPay.submit(transfer);
+//			if ("0000".equals(result)) {
+//				transfer.setStatus(Transfer.Status.confirmed);
+//				transferDao.merge(transfer);
+//				return true;
+//			} else {
+//				if (!"3000".equals(result)) {
+//					logger.error(UnsPay.getErrMsg(result));
+//					throw new RuntimeException("提交银行失败");
+//				} else {
+//					return true;
+//				}
+//			}
+//		} else {
+//			throw new RuntimeException("暂不支持");
+//		}
+		return true;
 	}
 
 	@Transactional
@@ -153,13 +155,13 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 					transferDao.merge(transfer);
 					return true;
 				} else {
-					throw new Exception(UnsPay.getErrMsg(result));
+					throw new RuntimeException(UnsPay.getErrMsg(result));
 				}
 			} else{
-				throw new Exception("已经提交了");
+				throw new RuntimeException("已经提交了");
 			}
 		} catch (Exception e) {
-			throw new Exception("提交出错了");
+			throw new RuntimeException("提交出错了");
 		}
 	}
 
@@ -197,7 +199,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			transfer.setStatus(Transfer.Status.failure);
 			transferDao.merge(transfer);
 		} else {
-			throw new Exception("重复提交");
+			throw new RuntimeException("重复提交");
 		}
 	}
 

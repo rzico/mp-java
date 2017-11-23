@@ -103,7 +103,7 @@ public class PayBillController extends BaseController {
         }
         PayBill payBill = new PayBill();
         CouponCode couponCode = null;
-        Set<CouponCode> couponCodes = member.getCouponCodes();
+        List<CouponCode> couponCodes = member.getCouponCodes();
         BigDecimal discount = BigDecimal.ZERO;
         for (CouponCode code:couponCodes) {
             if (code.getCoupon().getDistributor().equals(shop.getOwner()) && code.getEnabled()) {

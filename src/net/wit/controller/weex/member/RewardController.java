@@ -86,12 +86,23 @@ public class RewardController extends BaseController {
     public Message list(Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("member", Filter.Operator.eq,member));
+        filters.add(new Filter("author", Filter.Operator.eq,member));
         pageable.setFilters(filters);
         Page<ArticleReward> page = articleRewardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleRewardModel.bindList(page.getContent()));
         return Message.bind(model,request);
+    }
+
+    /**
+     *  合计
+     */
+    @RequestMapping(value = "/summary", method = RequestMethod.GET)
+    @ResponseBody
+    public Message summary(Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        BigDecimal sm = articleRewardService.summary(member);
+        return Message.bind(sm,request);
     }
 
 }

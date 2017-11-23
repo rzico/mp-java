@@ -113,6 +113,23 @@ public class ArticleController extends BaseController {
     }
 
     /**
+     * 获取显示模版
+     */
+    @RequestMapping(value = "/template", method = RequestMethod.POST)
+    @ResponseBody
+    public Message template(Long id,HttpServletRequest request){
+        Article article = articleService.find(id);
+        if (article==null) {
+            return Message.error("无效文章编号");
+        }
+        String sn="1001";
+        if (article.getTemplate()==null) {
+            sn = article.getTemplate().getSn();
+        }
+        return Message.success((Object)sn,"发布成功");
+    }
+
+    /**
      *  分类查询列表
      *  会员 id
      */

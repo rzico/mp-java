@@ -96,4 +96,9 @@ public class AreaServiceImpl extends BaseServiceImpl<Area, Long> implements Area
 	public Page<Area> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return areaDao.findPage(beginDate,endDate,pageable);
 	}
+
+	public Area find(String code) {
+		return areaDao.find(code);
+	}
+
 }

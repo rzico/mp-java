@@ -73,7 +73,6 @@ public class Admin extends BaseEntity {
     /**
      * E-mail
      */
-    @NotEmpty
     @Email
     @Length(max = 200)
     @Column(columnDefinition = "varchar(255) comment '邮箱'")

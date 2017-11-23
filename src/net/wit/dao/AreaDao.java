@@ -35,4 +35,6 @@ public interface AreaDao extends BaseDao<Area, Long> {
 	 * @return 顶级地区
 	 */
 	List<Area> findRoots(Integer count);
+
+	Area find(String code);
 }

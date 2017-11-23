@@ -60,6 +60,11 @@ public class  ArticleReview extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) comment '文章'")
 	private Article article;
 
+	/** 作者 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '作者'")
+	private Member author;
+
 	/** 评论谁 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '评论谁'")
@@ -124,6 +129,14 @@ public class  ArticleReview extends BaseEntity {
 
 	public void setReplyArtcileReviews(Set<ArticleReview> replyArtcileReviews) {
 		this.replyArtcileReviews = replyArtcileReviews;
+	}
+
+	public Member getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Member author) {
+		this.author = author;
 	}
 
 	public MapEntity getMapMember() {

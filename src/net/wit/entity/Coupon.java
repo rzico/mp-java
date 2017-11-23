@@ -50,6 +50,30 @@ public class Coupon extends BaseEntity {
 		mall
 	};
 
+
+	public enum Color {
+		/** 待审核  */
+		c1,
+		/** 待审核  */
+		c2,
+		/** 待审核  */
+		c3,
+		/** 待审核  */
+		c4,
+		/** 待审核  */
+		c5,
+		/** 待审核  */
+		c6,
+		/** 待审核  */
+		c7,
+		/** 待审核  */
+		c8,
+		/** 待审核  */
+		c9,
+		/** 待审核  */
+		c10,
+	}
+
 	/** 类型 */
 	@NotNull
 	@Column(columnDefinition="int(11) not null comment '类型 {fullcut:满减,discount:满折,redbag:红包}'")
@@ -77,6 +101,12 @@ public class Coupon extends BaseEntity {
 	/** 发放者 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member distributor;
+
+	/**
+	 * 颜色
+	 */
+	@Column(columnDefinition="int(11) not null comment '颜色'")
+	private Color color;
 
 	/** 优惠金额/折扣比例 */
 	@Min(0)
@@ -296,6 +326,14 @@ public class Coupon extends BaseEntity {
 
 	public void setDistributor(Member distributor) {
 		this.distributor = distributor;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 	/**

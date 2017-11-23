@@ -157,4 +157,15 @@ public class AreaDaoImpl extends BaseDaoImpl<Area, Long> implements AreaDao {
 			area.setFullName(area.getName());
 		}
 	}
+
+	public Area find(String code) {
+		try {
+			String jpql = "select area from Area area where area.code=:code";
+			TypedQuery<Area> query = entityManager.createQuery(jpql, Area.class).setParameter("code",code).setFlushMode(FlushModeType.COMMIT);
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 }

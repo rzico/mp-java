@@ -68,6 +68,7 @@ public class ArticleFavoriteController extends BaseController {
         favorite.setMember(member);
         favorite.setArticle(article);
         favorite.setIsShow(true);
+        favorite.setAuthor(article.getMember());
         articleFavoriteService.save(favorite);
         messageService.favoritePushTo(favorite);
         return Message.success("收藏成功");

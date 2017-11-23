@@ -1,10 +1,11 @@
 package net.wit.controller.weex.member;
 
-import net.wit.Message;
+import net.wit.*;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleReview;
+import net.wit.entity.ArticleVote;
 import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -68,12 +71,51 @@ public class ReviewController extends BaseController {
         review.setDeleted(false);
         review.setIp(request.getRemoteAddr());
         review.setMember(member);
+        review.setAuthor(article.getMember());
         articleReviewService.save(review);
         messageService.reviewPushTo(review);
         ArticleReviewModel model = new ArticleReviewModel();
         model.bind(review);
         return Message.success(model,"发布成功");
 
+    }
+
+
+
+    /**
+     *  删除投票
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Message delete(Long id,HttpServletRequest request){
+        ArticleReview articleReview = articleReviewService.find(id);
+        if (articleReview==null) {
+            return Message.error("无效投票编号");
+        }
+
+        articleReviewService.delete(id);
+        return Message.success("删除成功");
+
+    }
+
+
+    /**
+     *  我的评论
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public Message list(Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("author", Filter.Operator.eq,member));
+        pageable.setFilters(filters);
+        Page<ArticleReview> page = articleReviewService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleReviewModel.bindList(page.getContent()));
+        return Message.bind(model,request);
     }
 
 }

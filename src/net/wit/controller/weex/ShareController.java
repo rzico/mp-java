@@ -2,9 +2,12 @@ package net.wit.controller.weex;
 
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleLaudModel;
+import net.wit.controller.model.ArticleListModel;
+import net.wit.controller.model.ArticleShareModel;
 import net.wit.entity.Article;
-import net.wit.entity.ArticleLaud;
+import net.wit.entity.ArticleFavorite;
+import net.wit.entity.ArticleShare;
+import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +21,7 @@ import java.util.List;
 
 
 /**
- * @ClassName: WeexShareController
+ * @ClassName: ArticleShareController
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
@@ -42,11 +45,11 @@ public class ShareController extends BaseController {
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
 
-    @Resource(name = "articleLaudServiceImpl")
-    private ArticleLaudService articleLaudService;
+    @Resource(name = "articleShareServiceImpl")
+    private ArticleShareService articleShareService;
 
     /**
-     *  评论列表,带分页
+     *   谁分享的列表
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -58,9 +61,9 @@ public class ShareController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("article", Filter.Operator.eq,article));
         pageable.setFilters(filters);
-        Page<ArticleLaud> page = articleLaudService.findPage(null,null,pageable);
+        Page<ArticleShare> page = articleShareService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(ArticleLaudModel.bindList(page.getContent()));
+        model.setData(ArticleShareModel.bindList(page.getContent()));
         return Message.bind(model,request);
    }
 

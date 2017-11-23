@@ -15,6 +15,7 @@ import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
 import net.wit.plat.im.Push;
 import net.wit.plat.im.User;
+import net.wit.util.SettingUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -113,6 +114,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				memberDao.persist(sender);
 				User.userAttr(sender);
 			}
+			if (message.getThumbnial()==null) {
+				message.setThumbnial(sender.getLogo());
+			}
 			message.setReaded(false);
 			message.setDeleted(false);
 			message.setMember(sender);
@@ -147,6 +151,33 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setThumbnial(favorite.getMember().getLogo());
 		msg.setTitle("收藏提醒");
 		msg.setContent("【"+favorite.getMember().getNickName()+"】收藏了您的文章:"+favorite.getArticle().getTitle());
+		return pushTo(msg);
+	}
+
+	//分享提醒
+	public Boolean sharePushTo(ArticleShare share) {
+		Setting setting = SettingUtils.get();
+		Message msg = new Message();
+		msg.setReceiver(share.getArticle().getMember());
+		msg.setType(Message.Type.share);
+		msg.setThumbnial(share.getMember().getLogo());
+		msg.setTitle("分享提醒");
+		String shareDescr = "";
+		if (share.getShareType().equals(ArticleShare.ShareType.appMessage)) {
+			shareDescr = "微信好友";
+		} else
+		if (share.getShareType().equals(ArticleShare.ShareType.timeline)) {
+			shareDescr = "微信朋友圈";
+		} else
+		if (share.getShareType().equals(ArticleShare.ShareType.shareQQ)) {
+			shareDescr = "QQ好友";
+		} else
+		if (share.getShareType().equals(ArticleShare.ShareType.shareQZone)) {
+			shareDescr = "QQ空间";
+		} else {
+			shareDescr = setting.getSiteName()+"好友";
+		}
+		msg.setContent("【"+share.getMember().getNickName()+"】分享你的文件至"+shareDescr);
 		return pushTo(msg);
 	}
 
@@ -187,7 +218,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	public Boolean addFriendPushTo(Member member,Member friend) {
 		Message msg = new Message();
 		msg.setReceiver(friend);
-		msg.setType(Message.Type.message);
+		msg.setType(Message.Type.addfriend);
 		msg.setThumbnial(member.getLogo());
 		msg.setTitle("添加好友");
 		msg.setContent("【"+member.getNickName()+"】申请成为你的好友。");
@@ -199,7 +230,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	public Boolean adoptFriendPushTo(Member member,Member friend) {
 		Message msg = new Message();
 		msg.setReceiver(friend);
-		msg.setType(Message.Type.message);
+		msg.setType(Message.Type.adoptfriend);
 		msg.setThumbnial(member.getLogo());
 		msg.setTitle("添加好友");
 		msg.setContent("【"+member.getNickName()+"】同意成为你的好友。");
@@ -207,11 +238,20 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		return pushTo(msg);
 	}
 
+	//活动专栏
+	public Boolean topicPushTo(Topic topic) {
+		Message msg = new Message();
+		msg.setReceiver(topic.getMember());
+		msg.setType(Message.Type.message);
+		msg.setTitle("活动专栏");
+		msg.setContent("【"+topic.getMember().getNickName()+"】感谢您点亮专栏，您已拥有VIP特权。");
+		return pushTo(msg);
+	}
+
 	public Boolean depositPushTo(Deposit deposit) {
         Message msg = new Message();
         msg.setReceiver(deposit.getMember());
         msg.setType(Message.Type.account);
-		msg.setThumbnial("http://cdn.rzico.com/weex/resources/images/account.png");
 		msg.setTitle("账单提醒");
 		if (Deposit.Type.cashier.equals(deposit.getType())) {
 			BigDecimal amount = deposit.getCredit().subtract(deposit.getDebit());

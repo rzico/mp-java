@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.entity.summary.ArticleVoteSummary;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -85,5 +86,14 @@ public class ArticleVoteServiceImpl extends BaseServiceImpl<ArticleVote, Long> i
 
 	public Page<ArticleVote> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return articleVoteDao.findPage(beginDate,endDate,pageable);
+	}
+	/**
+	 * @Title：findPage
+	 * @Description：标准代码
+	 * @param article
+	 * @return Page<ArticleVoteSummary>
+	 */
+	public List<ArticleVoteSummary> sumPage(Article article) {
+		return articleVoteDao.sumPage(article);
 	}
 }

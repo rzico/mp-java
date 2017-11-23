@@ -70,10 +70,10 @@ public class MemberFollowController extends BaseController {
                 if (self.equals(follow)) {
                     followModel.setFollow(true);
                 } else {
-                    MemberFollow memberFollow = memberFollowService.find(member, follow);
+                    MemberFollow memberFollow = memberFollowService.find(self, follow);
                     followModel.setFollow(memberFollow!=null);
                 }
-                MemberFollow memberFollow = memberFollowService.find(follow, member);
+                MemberFollow memberFollow = memberFollowService.find(follow, self);
                 followModel.setFollowed(memberFollow!=null);
             }
         }

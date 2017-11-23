@@ -22,12 +22,16 @@ public class ArticleShare extends BaseEntity {
 	public static enum ShareType{
 		/** 朋友圈  */
 		timeline,
-		/** 群好友 */
+		/** 微信好友 */
 		appMessage,
 		/** QQ好友 */
 		shareQQ,
 		/** QQ空间 */
-		shareQZone
+		shareQZone,
+		/** 芸店好友 */
+		appWeex,
+		/** 复制链接 */
+		herf
 	};
 
 	/** 分享至 */
@@ -46,6 +50,11 @@ public class ArticleShare extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private Member member;
+
+	/** 作者 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '作者'")
+	private Member author;
 
 	/** 文章 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -90,6 +99,14 @@ public class ArticleShare extends BaseEntity {
 
 	public void setArticle(Article article) {
 		this.article = article;
+	}
+
+	public Member getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Member author) {
+		this.author = author;
 	}
 
 	public MapEntity getMapMember() {

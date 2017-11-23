@@ -1,14 +1,18 @@
 package net.wit.controller.website.member;
 
+import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
 import net.wit.controller.model.CardModel;
-import net.wit.entity.Article;
-import net.wit.entity.ArticleReview;
-import net.wit.entity.Card;
-import net.wit.entity.Member;
+import net.wit.entity.*;
+import net.wit.plat.weixin.pojo.Ticket;
+import net.wit.plat.weixin.util.WeiXinUtils;
+import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
+import net.wit.util.Sha1Util;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 
 /**
@@ -52,6 +57,22 @@ public class CardController extends BaseController {
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
+    @Resource(name = "shopServiceImpl")
+    private ShopService shopService;
+
+    /**
+     *  文章列表,带分页
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public Message list(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        return Message.bind(CardModel.bindList(member.getCards()),request);
+    }
+
      /**
      *  激活会员卡
      */
@@ -66,28 +87,146 @@ public class CardController extends BaseController {
         if (card==null) {
             return Message.error("无效卡号");
         }
-        card.setMobile(mobile);
+        if (mobile!=null) {
+            card.setMobile(mobile);
+        } else {
+            card.setMobile(member.getMobile());
+        }
+        if (name!=null) {
+            card.setName(name);
+        } else {
+            card.setName(member.getName());
+        }
         card.setName(name);
-        card.setStatus(Card.Status.activate);
-        card.setVip(Card.VIP.vip1);
         cardService.activate(card,member);
         CardModel model = new CardModel();
         model.bind(card);
-        return Message.success(model,"激活成功");
+
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("card",model);
+        data.put("mobile",member.getMobile());
+        data.put("name",member.getName());
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        int challege = StringUtils.Random6Code();
+        card.setSign(String.valueOf(challege));
+        cardService.update(card);
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege));
+
+        Ticket ticket = WeixinApi.getWxCardTicket();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("api_ticket", ticket.getTicket());
+        params.put("timestamp", WeiXinUtils.getTimeStamp());
+        params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+        params.put("card_id", card.getTopicCard().getWeixinCardId());
+        String sha1Sign1 = getCardSha1Sign(params);
+        HashMap<String, Object> cardExt = new HashMap<>();
+        cardExt.put("timestamp", params.get("timestamp"));
+        cardExt.put("nonce_str", params.get("nonce_str"));
+        cardExt.put("signature", sha1Sign1);
+        data.put("cardExt",cardExt);
+        data.put("cardId",card.getTopicCard().getWeixinCardId());
+        //System.out.println(data);
+        return Message.success(data,"激活成功");
     }
 
     /**
      *   获取会员卡
      */
-    @RequestMapping(value = "/view", method = RequestMethod.POST)
+    @RequestMapping(value = "/view")
     @ResponseBody
-    public Message view(Long cardId,HttpServletRequest request){
-        Card card = cardService.find(cardId);
+    public Message view(Long id,String code,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Card card = null;
+        if (id!=null) {
+            card = cardService.find(id);
+        } else {
+            if (code != null) {
+               Long shopId = null;
+               if (code.substring(0,2).equals("86")) {
+                   shopId = Long.parseLong(code.substring(2,11))-100000000;
+                   code = null;
+               } else
+               if (code.substring(0,2).equals("88")) {
+                   shopId = Long.parseLong(code.substring(2,11))-100000000;
+                   card = cardService.find(code);
+                   if (card!=null && !card.getStatus().equals(Card.Status.none) && !card.getMembers().contains(member)) {
+                       card = null;
+                   }
+               } else {
+                   return Message.error("无效code");
+               }
+               Shop shop = shopService.find(shopId);
+               if (shop==null) {
+                   return Message.error("无效店铺 id");
+               }
+               Member owner = shop.getOwner();
+               if (owner.getTopic()==null) {
+                   return Message.error("没有开通专栏");
+               }
+               TopicCard topicCard = owner.getTopic().getTopicCard();
+               if (topicCard==null) {
+                   return Message.error("没有开通会员卡");
+               }
+               if (card==null) {
+                   for (Card c : member.getCards()) {
+                       if (c.getTopicCard().equals(topicCard)) {
+                           card = c;
+                           break;
+                       }
+                   }
+               }
+               if (card==null) {
+                   card = cardService.create(owner.getTopic().getTopicCard(), code, member);
+               }
+            } else {
+                return Message.error("无效code");
+            }
+        }
         if (card==null) {
             return Message.error("无效卡号");
         }
         CardModel model = new CardModel();
         model.bind(card);
-        return Message.success(model,"激活成功");
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("card",model);
+        data.put("mobile",member.getMobile());
+        data.put("name",member.getName());
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        int challege = StringUtils.Random6Code();
+        card.setSign(String.valueOf(challege));
+        cardService.update(card);
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege));
+
+        Ticket ticket = WeixinApi.getWxCardTicket();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("api_ticket", ticket.getTicket());
+        params.put("timestamp", WeiXinUtils.getTimeStamp());
+        params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+        params.put("card_id", card.getTopicCard().getWeixinCardId());
+        String sha1Sign1 = getCardSha1Sign(params);
+        HashMap<String, Object> cardExt = new HashMap<>();
+        cardExt.put("timestamp", params.get("timestamp"));
+        cardExt.put("nonce_str", params.get("nonce_str"));
+        cardExt.put("signature", sha1Sign1);
+        data.put("cardExt",cardExt);
+        data.put("cardId",card.getTopicCard().getWeixinCardId());
+
+        return Message.bind(data,request);
     }
+
+    private String getCardSha1Sign(HashMap<String, Object> params) {
+        try {
+            String str1 = WeiXinUtils.signMapValue(params);
+            //System.out.println(params);
+            //System.out.println(str1);
+            return Sha1Util.encode(str1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

@@ -33,7 +33,6 @@ public class Push {
         data.put("MsgRandom",random);
         data.put("MsgTimeStamp",message.getCreateDate().getTime() / 1000);
         data.put("MsgLifeTime",3600*24);
-        //data.put("MsgTimeStamp", WeiXinUtils.getTimeStamp());
         Map<String,Object> msgBody = new HashMap<String,Object>();
         List<Object> body = new ArrayList<Object>();
         body.add(msgBody);
@@ -46,7 +45,7 @@ public class Push {
         data.put("OfflinePushInfo",OfflinePushInfo);
         OfflinePushInfo.put("PushFlag",0);
         OfflinePushInfo.put("Desc",message.getContent());
-        OfflinePushInfo.put("Ext",message.getExt());
+        OfflinePushInfo.put("Ext","");
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
         AndroidInfo.put("Sound","msg.mp3");

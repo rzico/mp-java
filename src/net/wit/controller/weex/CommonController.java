@@ -58,10 +58,8 @@ public class CommonController extends BaseController {
 	Message publicKey(HttpServletRequest request) {
 		RSAPublicKey publicKey = rsaService.generateKey(request);
 		Map<String, String> data = new HashMap<String, String>();
-
 		data.put("modulus", StringUtils.base64Encode(publicKey.getModulus().toByteArray()));
 		data.put("exponent", StringUtils.base64Encode(publicKey.getPublicExponent().toByteArray()));
-		logger.debug("publicKey="+data);
 		return Message.bind(data,request);
 	}
 
@@ -74,13 +72,46 @@ public class CommonController extends BaseController {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
 		Map<String,Object> data = new HashMap<String,Object>();
-		data.put("resVersion","0.0.1");
-		data.put("resUrl","http://cdn.rzico.com/weex/resources/release/res-0.0.1.zip");
-
-		data.put("appVersion","0.0.1");
-		data.put("appUrl","http://cdn.rzico.com/weex/resources/release/app-0.0.1.zip");
+		String ua = request.getHeader("user-agent");
+		if (ua != null) {
+			if (ua.contains("iOS")) {
+				data.put("appVersion",bundle.getString("ios.version"));
+				data.put("minVersion",bundle.getString("ios.min.version"));
+				data.put("appUrl",bundle.getString("ios.url"));
+			} else {
+				data.put("appVersion",bundle.getString("android.version"));
+				data.put("minVersion",bundle.getString("android.min.version"));
+				data.put("appUrl",bundle.getString("android.url"));
+			}
+		} else {
+			data.put("appVersion",bundle.getString("android.version"));
+			data.put("minVersion",bundle.getString("android.min.version"));
+			data.put("appUrl",bundle.getString("android.url"));
+		}
+		data.put("resVersion",bundle.getString("resource.version"));
+		data.put("resUrl",bundle.getString("resource.url"));
 
 		data.put("key",bundle.getString("app.key"));
+		return Message.bind(data,request);
+	}
+
+
+	/**
+	 * 页面路由
+	 */
+	@RequestMapping(value = "/router", method = RequestMethod.GET)
+	@ResponseBody
+	public Message router(HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> data = new HashMap<>();
+		Map<String,String> menu = new HashMap<>();
+		String ua = request.getHeader("user-agent");
+
+		menu.put("home","file://view/home/index.js");
+		menu.put("add", "file://view/member/editor.js");
+		menu.put("friend", "file://view/friend/list.js");
+		menu.put("message","file://view/message/list.js");
+		menu.put("member", "file://view/member/index.js");
+		data.put("tabnav",menu);
 		return Message.bind(data,request);
 	}
 

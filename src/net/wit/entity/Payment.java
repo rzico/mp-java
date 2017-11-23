@@ -42,7 +42,9 @@ public class Payment extends BaseEntity {
 		/** 文章赞赏     */
 		reward,
 		/** 线下收款     */
-		cashier
+		cashier,
+		/** 专栏激活     */
+		topic
 	}
 
 	/**
@@ -169,6 +171,12 @@ public class Payment extends BaseEntity {
 	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private PayBill payBill;
+
+	/** 专栏 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private TopicBill topicBill;
 
 	public String getSn() {
 		return sn;
@@ -312,6 +320,14 @@ public class Payment extends BaseEntity {
 
 	public void setTranSn(String tranSn) {
 		this.tranSn = tranSn;
+	}
+
+	public TopicBill getTopicBill() {
+		return topicBill;
+	}
+
+	public void setTopicBill(TopicBill topicBill) {
+		this.topicBill = topicBill;
 	}
 
 	/**

@@ -33,7 +33,7 @@ public class Bankcard extends BaseEntity {
 
 	/** logo */
 	@Length(max = 50)
-	@Column(columnDefinition="varchar(255) not null comment 'logo'")
+	@Column(columnDefinition="varchar(255) comment 'logo'")
 	private String bankimage;
 
 	/** 卡种 */

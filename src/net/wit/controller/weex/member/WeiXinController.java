@@ -53,7 +53,7 @@ public class WeiXinController extends BaseController {
     /**
      * 微信登录
      */
-    @RequestMapping(value = "/bind", method = RequestMethod.POST)
+    @RequestMapping(value = "/bind")
     @ResponseBody
     public Message bind(String code,HttpServletRequest request){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
@@ -95,6 +95,7 @@ public class WeiXinController extends BaseController {
                 bindUser.setType(BindUser.Type.weixin);
                 bindUser.setMember(member);
                 bindUser.setOpenId(openId);
+                bindUser.setUnionId(unionId);
             } else {
                 bindUser.setMember(member);
                 bindUser.setUnionId(unionId);

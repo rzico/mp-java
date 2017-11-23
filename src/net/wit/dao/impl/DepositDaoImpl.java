@@ -1,5 +1,6 @@
 package net.wit.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -57,5 +59,17 @@ public class DepositDaoImpl extends BaseDaoImpl<Deposit, Long> implements Deposi
 		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
+	}
+	public BigDecimal summary(Deposit.Type type,Member member) {
+		String jpql = "select sum(deposit.credit)-sum(deposit.debit) from Deposit deposit where  deposit.type =:type and deposit.member = :member";
+		try {
+			return entityManager.createQuery(jpql,BigDecimal.class)
+					.setFlushMode(FlushModeType.COMMIT)
+					.setParameter("member", member)
+					.setParameter("type", type)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }

@@ -87,25 +87,35 @@ public class CardPayPlugin extends PaymentPlugin {
 		if (card!=null) {
 			if (card.getBalance().compareTo(payment.getAmount()) > 0) {
 				try {
+					if (member.getPassword()==null) {
+						finalpackage.put("return_code", "FAIL");
+						finalpackage.put("return_msg", "没有设置密码");
+						return finalpackage;
+					}
 					String password = rsaService.decryptParameter("enPassword",request);
 					if (MD5Utils.getMD5Str(password).equals(member.getPassword())) {
 						finalpackage.put("return_code", "FAIL");
 						finalpackage.put("return_msg", "密码不正确");
+						return finalpackage;
 					}
 					cardService.payment(card,payment);
+					finalpackage.put("return_code", "SUCCESS");
+					finalpackage.put("return_msg", "提交成功");
 				} catch (Exception e) {
 					finalpackage.put("return_code", "FAIL");
 					finalpackage.put("return_msg", e.getMessage());
 				}
+				return finalpackage;
 			} else {
 				finalpackage.put("return_code", "FAIL");
 				finalpackage.put("return_msg", "卡内余额不足");
+				return finalpackage;
 			}
 		} else {
 			finalpackage.put("return_code", "FAIL");
 			finalpackage.put("return_msg", "无效会员卡");
+			return finalpackage;
 		}
-		return finalpackage;
 	}
 
 	@Override

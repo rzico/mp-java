@@ -62,10 +62,23 @@ public class Shop extends BaseEntity {
     @Column(columnDefinition="varchar(255) comment '地址'")
     private String address;
 
+    /** 联系人 */
+    @Column(columnDefinition="varchar(255) comment '联系人'")
+    private String linkman;
+
+    /** 联系电话 */
+    @Column(columnDefinition="varchar(255) comment '联系电话'")
+    private String telephone;
+
     /** 店主 */
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Member owner;
+
+    /** 定位 */
+    @Embedded
+    @JsonIgnore
+    private Location location;
 
     /** 企业 */
     @NotNull
@@ -101,6 +114,22 @@ public class Shop extends BaseEntity {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getLinkman() {
+        return linkman;
+    }
+
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
     public MapEntity getMapArea() {
@@ -173,5 +202,13 @@ public class Shop extends BaseEntity {
 
     public void setOwner(Member owner) {
         this.owner = owner;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

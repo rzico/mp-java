@@ -160,7 +160,7 @@ public class PasswordController extends BaseController {
             }
             member.setPassword(MD5Utils.getMD5Str(password));
             memberService.save(member);
-            return Message.success(member,"修改成功");
+            return Message.success("修改成功");
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("修改失败");

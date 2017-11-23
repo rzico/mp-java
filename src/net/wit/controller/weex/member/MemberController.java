@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -87,7 +88,7 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(String username, String nickName, String autograph, String logo, Member.Gender gender, Long areaId, Long occupationId, HttpServletRequest request){
+    public Message update(String username, String nickName, String autograph, Date birth, String logo, Member.Gender gender, Long areaId, Long occupationId, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -111,6 +112,9 @@ public class MemberController extends BaseController {
         }
         if (gender!=null) {
             member.setGender(gender);
+        }
+        if (birth!=null) {
+            member.setBirth(birth);
         }
         if (areaId!=null) {
             Area area = areaService.find(areaId);

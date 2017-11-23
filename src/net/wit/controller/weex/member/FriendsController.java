@@ -43,8 +43,8 @@ public class FriendsController extends BaseController {
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
-    @Resource(name = "areaServiceImpl")
-    private AreaService areaService;
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
 
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
@@ -155,6 +155,7 @@ public class FriendsController extends BaseController {
             fds.setType(Friends.Type.friend);
             friendsService.save(fds);
         }
+        messageService.addFriendPushTo(member,friend);
         return Message.success("添加成功");
 
     }
@@ -191,6 +192,7 @@ public class FriendsController extends BaseController {
             fds1.setStatus(Friends.Status.adopt);
             friendsService.save(fds1);
         }
+        messageService.adoptFriendPushTo(member,friend);
         return Message.success("同意好友");
     }
 

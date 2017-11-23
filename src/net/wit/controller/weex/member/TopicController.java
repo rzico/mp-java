@@ -61,6 +61,9 @@ public class TopicController extends BaseController {
     @Resource(name = "enterpriseServiceImpl")
     private EnterpriseService enterpriseService;
 
+    @Resource(name = "topicBillServiceImpl")
+    private TopicBillService topicBillService;
+
      /**
      *  开通专栏
      */
@@ -90,12 +93,47 @@ public class TopicController extends BaseController {
         topic.setConfig(config);
         Calendar calendar   =   new GregorianCalendar();
         calendar.setTime(new Date());
-        calendar.add(calendar.WEEK_OF_MONTH, 1);
+        calendar.add(calendar.MONTH, 1);
         topic.setExpire(calendar.getTime());
         topic.setTemplate(templateService.findDefault(Template.Type.topic));
         topicService.create(topic);
         return Message.success("发布成功");
 
+    }
+
+    /**
+     *  激活会员卡
+     */
+    @RequestMapping(value = "/activate", method = RequestMethod.POST)
+    @ResponseBody
+    public Message activate(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Topic topic = member.getTopic();
+        if (topic==null) {
+            return Message.error("请先开通专栏");
+        }
+        if (topic.getFee().compareTo(BigDecimal.ZERO)==0)  {
+            topic.setStatus(Topic.Status.success);
+            topicService.update(topic);
+            return Message.success("点亮成功");
+        } else {
+            TopicBill topicBill = new TopicBill();
+            topicBill.setAmount(topic.getFee());
+            topicBill.setIp(request.getRemoteAddr());
+            topicBill.setMember(member);
+            topicBill.setTopic(topic);
+            topicBill.setStatus(TopicBill.Status.wait);
+            try {
+                Payment payment = topicBillService.activate(topicBill);
+                return Message.success((Object) payment.getSn(), "激活成功");
+            } catch (Exception e) {
+                logger.debug(e.getMessage());
+                return Message.error(e.getMessage());
+            }
+        }
     }
 
     /**
@@ -113,10 +151,10 @@ public class TopicController extends BaseController {
             return Message.error("请先开通专栏");
         }
         if (name!=null) {
-            topic.setName(member.getNickName());
+            topic.setName(name);
         }
         if (logo!=null) {
-            topic.setLogo(member.getLogo());
+            topic.setLogo(logo);
         }
         if (areaId!=null) {
             topic.setArea(areaService.find(areaId));

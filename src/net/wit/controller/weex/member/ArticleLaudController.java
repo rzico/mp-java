@@ -70,6 +70,7 @@ public class ArticleLaudController extends BaseController {
         laud.setMember(member);
         laud.setArticle(article);
         laud.setIsShow(true);
+        laud.setAuthor(article.getMember());
         articleLaudService.save(laud);
         messageService.laudPushTo(laud);
         return Message.success("点赞成功");

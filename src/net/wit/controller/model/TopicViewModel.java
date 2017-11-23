@@ -1,4 +1,5 @@
 package net.wit.controller.model;
+import net.wit.entity.Friends;
 import net.wit.entity.Member;
 import net.wit.entity.Topic;
 
@@ -29,6 +30,8 @@ public class TopicViewModel implements Serializable {
     private String autograph;
     /** 头像 */
     private String logo;
+    /** 状态 */
+    private Friends.Status friendStatus;
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
 
@@ -136,6 +139,14 @@ public class TopicViewModel implements Serializable {
 
     public void setFollowed(Boolean followed) {
         this.followed = followed;
+    }
+
+    public Friends.Status getFriendStatus() {
+        return friendStatus;
+    }
+
+    public void setFriendStatus(Friends.Status friendStatus) {
+        this.friendStatus = friendStatus;
     }
 
     public void bind(Member member) {

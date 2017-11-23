@@ -165,7 +165,7 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			payment.setMethod(Payment.Method.deposit);
 			paymentDao.merge(payment);
 		} catch (Exception  e) {
-			throw  new Exception("支付失败");
+			throw  new RuntimeException("支付失败");
 		}
 	}
 

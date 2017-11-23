@@ -119,6 +119,7 @@
 		<filter-name>compressingFilter</filter-name>
 		<url-pattern>*.jhtml</url-pattern>
 	</filter-mapping>
+
 	<servlet>
 		<servlet-name>springmvc</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -147,6 +148,6 @@
 	</welcome-file-list>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/admin/common/resource_not_found.jhtml</location>
+		<location>/common/resource_not_found.jhtml</location>
 	</error-page>
 </web-app>

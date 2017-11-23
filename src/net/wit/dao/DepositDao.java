@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Deposit;
+import net.wit.entity.Member;
 
 
 /**
@@ -27,4 +28,5 @@ public interface DepositDao extends BaseDao<Deposit, Long> {
 	 * @return Page<Deposit>
 	 */
 	Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable);
+	BigDecimal summary(Deposit.Type type,Member member);
 }

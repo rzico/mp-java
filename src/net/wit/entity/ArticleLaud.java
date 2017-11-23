@@ -36,6 +36,11 @@ public class ArticleLaud extends BaseEntity {
 	@JoinColumn(updatable = false)
 	private Member member;
 
+	/** 作者 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '作者'")
+	private Member author;
+
 	/** 文章 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
@@ -71,6 +76,14 @@ public class ArticleLaud extends BaseEntity {
 
 	public void setArticle(Article article) {
 		this.article = article;
+	}
+
+	public Member getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Member author) {
+		this.author = author;
 	}
 
 	public MapEntity getMapMember() {

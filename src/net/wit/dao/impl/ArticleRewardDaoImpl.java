@@ -1,5 +1,6 @@
 package net.wit.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -56,5 +58,17 @@ public class ArticleRewardDaoImpl extends BaseDaoImpl<ArticleReward, Long> imple
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
+	}
+
+	public BigDecimal summary(Member member) {
+		String jpql = "select sum(reward.amount) from ArticleReward reward where reward.author = :member";
+		try {
+			return entityManager.createQuery(jpql,BigDecimal.class)
+					.setFlushMode(FlushModeType.COMMIT)
+					.setParameter("member", member)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }

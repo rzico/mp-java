@@ -31,7 +31,9 @@ public class Sn extends BaseEntity {
 		/** 转账单 */
 		transfer,
 		/** 会员卡 */
-		card
+		card,
+		/** 专栏 */
+		topic
 	}
 
 	/** 类型 */

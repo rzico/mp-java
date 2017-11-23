@@ -10,6 +10,8 @@ import java.util.List;
 //文章展示输出模板 H5等
 
 public class ArticleReviewModel implements Serializable {
+    /**  评论 id */
+    private Long id;
     /** 会员 */
     private Long memberId;
     /** 昵称 */
@@ -20,6 +22,14 @@ public class ArticleReviewModel implements Serializable {
     private Date createDate;
     /** 评论内容 */
     private String content;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getMemberId() {
         return memberId;
@@ -62,6 +72,7 @@ public class ArticleReviewModel implements Serializable {
     }
 
     public void bind(ArticleReview review) {
+        this.id = review.getId();
         this.memberId = review.getMember().getId();
         this.nickName = review.getMember().getNickName();
         this.logo = review.getMember().getLogo();

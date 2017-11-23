@@ -68,10 +68,10 @@ public class MemberFansController extends BaseController {
                 if (self.equals(follow)) {
                     followModel.setFollowed(true);
                 } else {
-                    MemberFollow memberFollow = memberFollowService.find(member, follow);
+                    MemberFollow memberFollow = memberFollowService.find(self, follow);
                     followModel.setFollowed(memberFollow!=null);
                 }
-                MemberFollow memberFollow = memberFollowService.find(follow, member);
+                MemberFollow memberFollow = memberFollowService.find(follow, self);
                 followModel.setFollow(memberFollow!=null);
             }
         }

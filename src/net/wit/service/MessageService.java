@@ -18,10 +18,14 @@ import net.wit.entity.*;
 public interface MessageService extends BaseService<Message, Long> {
 	Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable);
 	public Boolean pushTo(Message message);
+	//活动专栏
+	public Boolean topicPushTo(Topic topic);
 	//账单提醒
 	public Boolean depositPushTo(Deposit deposit);
 	//赞赏提醒
 	public Boolean rewardPushTo(ArticleReward reward);
+	//分享提醒
+	public Boolean sharePushTo(ArticleShare share);
 	//收藏提醒
 	public Boolean favoritePushTo(ArticleFavorite favorite);
 	//关注提醒

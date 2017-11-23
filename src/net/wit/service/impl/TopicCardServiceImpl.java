@@ -13,6 +13,7 @@ import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.TopicDao;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.util.SettingUtils;
 import org.apache.shiro.SecurityUtils;
@@ -36,6 +37,9 @@ import net.wit.service.TopicCardService;
 public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> implements TopicCardService {
 	@Resource(name = "topicCardDaoImpl")
 	private TopicCardDao topicCardDao;
+
+	@Resource(name = "topicDaoImpl")
+	private TopicDao topicDao;
 
 	@Resource(name = "topicCardDaoImpl")
 	public void setBaseDao(TopicCardDao topicCardDao) {
@@ -92,6 +96,9 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 			topicCard.setStatus(TopicCard.Status.waiting);
 			topicCard.setWeixinCardId(cardId);
 			super.save(topicCard);
+			Topic topic = topicCard.getTopic();
+			topic.setTopicCard(topicCard);
+			topicDao.merge(topic);
 		}
 	}
 
@@ -160,6 +167,7 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 		return topicCardDao.findPage(beginDate,endDate,pageable);
 	}
 
+	@Transactional
 	public TopicCard create(Topic topic) {
        TopicCard topicCard = topic.getTopicCard();
        if (topicCard==null) {
@@ -173,8 +181,11 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 		  		"储值卡余额只能使用所属商家，解悉权归发行商家所有；平台作为工具提供方不承担相关法律责任。"
 		  );
 		  topicCard.setPrerogative("持卡会员尊受商家提供的优惠折扣，分享平台商品可获取相应奖励金。");
+		  this.save(topicCard);
+	   } else {
+       	  this.update(topicCard);
 	   }
-       return  topicCard;
+       return topicCard;
 	}
 
 }

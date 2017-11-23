@@ -5,6 +5,7 @@
  */
 package net.wit.util;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -79,7 +80,25 @@ public final class RSAUtils {
 		try {
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", PROVIDER);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-			return cipher.doFinal(data);
+			int inputLen = data.length;
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			int offSet = 0;
+
+			for(int i = 0; inputLen - offSet > 0; offSet = i * 116) {
+				byte[] cache;
+				if(inputLen - offSet > 116) {
+					cache = cipher.doFinal(data, offSet, 116);
+				} else {
+					cache = cipher.doFinal(data, offSet, inputLen - offSet);
+				}
+
+				out.write(cache, 0, cache.length);
+				++i;
+			}
+
+			byte[] encryptedData = out.toByteArray();
+			out.close();
+			return encryptedData;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -135,7 +154,25 @@ public final class RSAUtils {
 		try {
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", PROVIDER);
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			return cipher.doFinal(data);
+
+			int inputLen = data.length;
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			int offSet = 0;
+
+			for(int i = 0; inputLen - offSet > 0; offSet = i * 128) {
+				byte[] cache;
+				if(inputLen - offSet > 128) {
+					cache = cipher.doFinal(data, offSet, 128);
+				} else {
+					cache = cipher.doFinal(data, offSet, inputLen - offSet);
+				}
+
+				out.write(cache, 0, cache.length);
+				++i;
+			}
+			byte[] decryptData = out.toByteArray();
+			out.close();
+			return decryptData;
 		} catch (Exception e) {
 			return null;
 		}

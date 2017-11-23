@@ -1,10 +1,7 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
@@ -62,6 +59,12 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 
 	@Resource(name = "cardBillDaoImpl")
 	private CardBillDao cardBillDao;
+
+	@Resource(name = "topicBillDaoImpl")
+	private TopicBillDao topicBillDao;
+
+	@Resource(name = "topicDaoImpl")
+	private TopicDao topicDao;
 
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
@@ -169,18 +172,24 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				deposit.setPayment(payment);
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
+			} else
+			if (payment.getType() == Payment.Type.topic) {
+				TopicBill topicBill = payment.getTopicBill();
+				topicBill.setStatus(TopicBill.Status.success);
+				topicBillDao.merge(topicBill);
+				Topic topic = topicBill.getTopic();
+                topic.setStatus(Topic.Status.success);
+				Calendar calendar   =   new GregorianCalendar();
+				calendar.setTime(new Date());
+				calendar.add(calendar.YEAR, 1);
+				topic.setExpire(calendar.getTime());
+				topicDao.merge(topic);
+				messageService.topicPushTo(topic);
 			}
 			payment.setPaymentDate(new Date());
 			payment.setStatus(Payment.Status.success);
 			paymentDao.merge(payment);
-		} else {
-			if (!payment.getStatus().equals(Payment.Status.waiting)) {
-				throw new Exception("重复提交");
-			} else {
-				throw new Exception("无效付款单");
-			}
 		}
-
 	}
 
 

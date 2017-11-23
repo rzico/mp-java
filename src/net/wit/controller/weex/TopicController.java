@@ -5,10 +5,7 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCatalogModel;
 import net.wit.controller.model.TopicViewModel;
-import net.wit.entity.ArticleCatalog;
-import net.wit.entity.Member;
-import net.wit.entity.MemberFollow;
-import net.wit.entity.Topic;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +52,9 @@ public class TopicController extends BaseController {
     @Resource(name = "memberFollowServiceImpl")
     private MemberFollowService memberFollowService;
 
+    @Resource(name = "friendsServiceImpl")
+    private FriendsService friendsService;
+
     /**
      * 专栏信息
      * id 会员
@@ -66,7 +66,6 @@ public class TopicController extends BaseController {
         if (member==null) {
             return Message.error("无效会员编号");
         }
-        Topic topic = topicService.find(member);
         TopicViewModel model =new TopicViewModel();
         model.bind(member);
         Long at = articleService.count(new Filter("member", Filter.Operator.eq,member));
@@ -83,7 +82,12 @@ public class TopicController extends BaseController {
             flowfilters.add(new Filter("follow", Filter.Operator.eq, member));
             List<MemberFollow> data = memberFollowService.findList(null, null, flowfilters, null);
             model.setFollowed(data.size()>0);
+            Friends friends = friendsService.find(self,member);
+            if (friends!=null) {
+                model.setFriendStatus(friends.getStatus());
+            }
         }
+
         return Message.bind(model,request);
    }
 

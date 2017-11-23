@@ -35,6 +35,12 @@ public class Area extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 城市编码 */
+	@NotNull
+	@Length(max = 100)
+	@Column(columnDefinition="varchar(255) not null default '000000' comment '城市编码'")
+	private String code;
+
 	/** 全称 */
 	@Column(columnDefinition="varchar(255) not null comment '全称'")
 	private String fullName;
@@ -148,6 +154,14 @@ public class Area extends OrderEntity {
 	 */
 	public void setChildren(Set<Area> children) {
 		this.children = children;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	/**

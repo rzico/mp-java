@@ -1,5 +1,6 @@
 package net.wit.controller.weex.member;
 
+import net.sf.json.JSONObject;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
@@ -59,7 +60,8 @@ public class BankcardController extends BaseController {
             return Message.error("银行卡号解密为空");
         }
         String method = "GET";
-        String appcode = "7af4ab729dd345eaad8eebb918ada80c";
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String appcode =  bundle.getString("bank.appcode");// "7af4ab729dd345eaad8eebb918ada80c";
         Map<String, String> headers = new HashMap<String, String>();
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
         headers.put("Authorization", "APPCODE " + appcode);
@@ -132,13 +134,12 @@ public class BankcardController extends BaseController {
                 return Message.error("无效验证码");
             }
 
-            System.out.println(body);
             String mima = rsaService.decryptValue(body, request);
             rsaService.removePrivateKey(request);
+            System.out.println(mima);
             if (mima==null) {
                 return Message.error("数据解密失败");
             }
-            System.out.println(mima);
             Map<String,String> data = JsonUtils.toObject(mima,Map.class);
             if (!safeKey.getKey().equals(data.get("mobile"))) {
                 return Message.error("手机验证不合法");
@@ -147,32 +148,37 @@ public class BankcardController extends BaseController {
             String host = "https://aliyun-bankcard4-verify.apistore.cn";
             String path = "/bank4";
             String method = "GET";
-            String appcode = "7af4ab729dd345eaad8eebb918ada80c";
+
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            String appcode =  bundle.getString("bank.appcode");// "7af4ab729dd345eaad8eebb918ada80c";
+
             Map<String, String> headers = new HashMap<String, String>();
             //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
             headers.put("Authorization", "APPCODE " + appcode);
             Map<String, String> querys = new HashMap<String, String>();
             querys.put("Mobile", data.get("mobile"));
-            querys.put("bankcard", data.get("cardNo"));
+            querys.put("bankcard", data.get("cardno"));
             querys.put("cardNo", data.get("identity"));
             querys.put("realName",data.get("name"));
             HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
             String resp =  EntityUtils.toString(response.getEntity());
-            Map<String,Object> result = JsonUtils.toObject(resp,Map.class);
-            if ("0".equals(result.get("error_code"))) {
-                Map<String,Object> inf = JsonUtils.toObject(result.get("information").toString(),Map.class);
-                if (!"1".equals(inf.get("iscreditcard"))){
+            JSONObject result = JSONObject.fromObject(resp);
+            if ("0".equals(result.getString("error_code"))) {
+                JSONObject inf = result.getJSONObject("result").getJSONObject("information");
+                if (!"1".equals(inf.getString("iscreditcard"))){
                     return Message.error("只支持借记卡");
                 }
+                Boolean isNew = false;
                 Bankcard bankcard = bankcardService.findDefault(member);
                 if (bankcard==null) {
                     bankcard = new Bankcard();
+                    isNew = true;
                 }
-                bankcard.setBankimage(data.get("bankimage"));
-                bankcard.setBankname(data.get("bankname"));
-                bankcard.setBanknum(data.get("banknum"));
-                bankcard.setCardname(data.get("cardname"));
-                bankcard.setCardtype(data.get("cardtype"));
+                bankcard.setBankimage(inf.getString("bankimage"));
+                bankcard.setBankname(inf.getString("bankname"));
+                bankcard.setBanknum(inf.getString("banknum"));
+                bankcard.setCardname(inf.getString("cardname"));
+                bankcard.setCardtype(inf.getString("cardtype"));
                 bankcard.setCity(data.get("city"));
                 bankcard.setProvince(data.get("province"));
                 bankcard.setCardno(data.get("cardno"));
@@ -181,10 +187,13 @@ public class BankcardController extends BaseController {
                 bankcard.setName(data.get("name"));
                 bankcard.setDefault(true);
                 bankcard.setMember(member);
-                if (bankcard.getId()!=null) {
-                    memberService.update(member);
+                if (!isNew) {
+                    bankcardService.update(bankcard);
                 } else {
-                    memberService.save(member);
+                    bankcardService.save(bankcard);
+                }
+                if (member.getMobile()==null) {
+                    member.setMobile(data.get("mobile"));
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);

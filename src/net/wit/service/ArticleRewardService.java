@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.ArticleReward;
+import net.wit.entity.Member;
 import net.wit.entity.Payment;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,4 +22,5 @@ public interface ArticleRewardService extends BaseService<ArticleReward, Long> {
 	//保存并发起支付
 	public Payment saveAndPayment(ArticleReward articleReward);
 	Page<ArticleReward> findPage(Date beginDate,Date endDate, Pageable pageable);
+	BigDecimal summary(Member member);
 }

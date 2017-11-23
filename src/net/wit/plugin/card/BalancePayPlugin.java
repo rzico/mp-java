@@ -71,26 +71,36 @@ public class BalancePayPlugin extends PaymentPlugin {
 		Member member = payment.getMember();
 		if (member!=null) {
 			String password = rsaService.decryptParameter("enPassword",request);
-			if (MD5Utils.getMD5Str(password).equals(member.getPassword())) {
+			if (member.getPassword()==null) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("return_msg", "没有设置密码");
+				return finalpackage;
+			}
+			if (!MD5Utils.getMD5Str(password).equals(member.getPassword())) {
 				finalpackage.put("return_code", "FAIL");
 				finalpackage.put("return_msg", "密码不正确");
+				return finalpackage;
 			}
 			if (member.getBalance().compareTo(payment.getAmount()) > 0) {
 				try {
 					memberService.payment(member,payment);
+					finalpackage.put("return_code", "SUCCESS");
+					finalpackage.put("return_msg", "提交成功");
 				} catch (Exception e) {
 					finalpackage.put("return_code", "FAIL");
 					finalpackage.put("return_msg", e.getMessage());
 				}
+				return finalpackage;
 			} else {
 				finalpackage.put("return_code", "FAIL");
 				finalpackage.put("return_msg", "卡内余额不足");
+				return finalpackage;
 			}
 		} else {
 			finalpackage.put("return_code", "FAIL");
 			finalpackage.put("return_msg", "无效会员卡");
+			return finalpackage;
 		}
-		return finalpackage;
 	}
 
 	@Override

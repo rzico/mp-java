@@ -292,7 +292,7 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	@Where(clause="is_used=0")
 	@OrderBy("createDate desc")
-	private Set<CouponCode> couponCodes = new HashSet<CouponCode>();
+	private List<CouponCode> couponCodes = new ArrayList<>();
 
 	/** 订单 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -700,11 +700,11 @@ public class Member extends BaseEntity {
 		this.scene = scene;
 	}
 
-	public Set<CouponCode> getCouponCodes() {
+	public List<CouponCode> getCouponCodes() {
 		return couponCodes;
 	}
 
-	public void setCouponCodes(Set<CouponCode> couponCodes) {
+	public void setCouponCodes(List<CouponCode> couponCodes) {
 		this.couponCodes = couponCodes;
 	}
 

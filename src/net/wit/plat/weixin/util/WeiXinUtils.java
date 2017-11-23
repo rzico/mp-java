@@ -107,6 +107,21 @@ public class WeiXinUtils {
 		return xml;
 	}
 
+	public static String signMapValue(HashMap<String, Object> paraMap) throws Exception {
+		StringBuilder buff = new StringBuilder();
+		List<Entry<String, Object>> infoIds = new ArrayList<>(paraMap.entrySet());
+		Collections.sort(infoIds, new Comparator<Entry<String, Object>>() {
+			public int compare(Entry<String, Object> o1, Entry<String, Object> o2) {
+				return (o1.getValue()).toString().compareTo(o2.getValue().toString());
+			}
+		});
+		for (Entry<String, Object> item : infoIds) {
+			String val = (String) item.getValue();
+			buff.append(val);
+		}
+		return buff.toString();
+	}
+
 	public static String FormatBizQueryParaMap(HashMap<String, Object> paraMap, boolean urlencode) throws Exception {
 
 		String buff = "";
@@ -283,7 +298,7 @@ public class WeiXinUtils {
 
 			baseInfo.put("center_title", "我的卡包");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
 			baseInfo.put("center_sub_title", "点击进入会员中心");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
-			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/website/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
 
 //			Map<String, Object> customCell2 = new HashMap<>();
 //			memberCard.put("custom_cell2", customCell2);//自定义会员信息类目，会员卡激活后显示。
@@ -339,7 +354,7 @@ public class WeiXinUtils {
 
 			baseInfo.put("center_title", "我的卡包");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
 			baseInfo.put("center_sub_title", "点击进入会员中心");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
-			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/website/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
 
 			String data = JsonUtils.toJson(map);
 			post.setEntity(new StringEntity(data, ContentType.APPLICATION_JSON));

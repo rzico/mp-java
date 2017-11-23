@@ -15,7 +15,9 @@ import net.wit.Principal;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.AdminDao;
+import net.wit.dao.RoleDao;
 import net.wit.dao.ShopDao;
+import net.wit.util.MD5Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -41,6 +43,8 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 	private AdminDao adminDao;
 	@Resource(name = "shopDaoImpl")
 	private ShopDao shopDao;
+	@Resource(name = "roleDaoImpl")
+	private RoleDao roleDao;
 
 	@Resource(name = "enterpriseDaoImpl")
 	public void setBaseDao(EnterpriseDao enterpriseDao) {
@@ -100,26 +104,42 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 		return enterpriseDao.findPage(beginDate,endDate,pageable);
 	}
 
+	@Transactional
 	public Enterprise create(Topic topic) {
         Member member = topic.getMember();
 		Enterprise enterprise = enterpriseDao.find(member);
 		if (enterprise==null) {
+			enterprise = new Enterprise();
 			enterprise.setName(topic.getName());
 			enterprise.setDeleted(false);
-			enterprise.setBrokerage(new BigDecimal("0.40"));
+			enterprise.setBrokerage(new BigDecimal("0.45"));
 			enterprise.setLogo(topic.getLogo());
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.shop);
 			enterpriseDao.persist(enterprise);
 			Admin admin = new Admin();
 			admin.setUsername(member.getMobile());
+			admin.setName(member.getName());
+			admin.setEmail(member.getEmail());
 			admin.setEnterprise(enterprise);
 			admin.setIsLocked(false);
 			admin.setIsEnabled(true);
+			admin.setLoginFailureCount(0);
 			admin.setMember(member);
+			admin.setPassword(member.getPassword());
+			if (admin.getPassword()==null) {
+				String m = admin.getUsername();
+				admin.setPassword(MD5Utils.getMD5Str(m.substring(m.length()-6,m.length())));
+			}
 			if (member.getGender()!=null) {
 				admin.setGender(Admin.Gender.valueOf(member.getGender().name()));
 			}
+			List<Role> roles = admin.getRoles();
+			if (roles!=null) {
+				roles = new ArrayList<Role>();
+			}
+			roles.add(roleDao.find(1L));
+			admin.setRoles(roles);
 			adminDao.persist(admin);
 		}
 		return enterprise;

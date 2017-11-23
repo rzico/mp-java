@@ -434,10 +434,10 @@ public class Article extends BaseEntity{
         String reg = "[^\u4e00-\u9fa5]";
         str = str.replaceAll(reg, "");
         str = str.trim();
-        if (str.length()<50) {
+        if (str.length()<100) {
             return str;
         } else {
-            return str.substring(0,50);
+            return str.substring(0,100);
         }
     }
 }

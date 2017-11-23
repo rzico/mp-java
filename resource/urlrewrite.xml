@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlrewrite>
+    <rule>
+        <from>/wap</from>
+        <to type="forward">/wap/index.html</to>
+    </rule>
+</urlrewrite>

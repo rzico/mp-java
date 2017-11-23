@@ -49,6 +49,11 @@ public class TopicBill extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '付款单'")
 	private Payment payment;
 
+	/** 专栏 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '专栏'")
+	private Topic topic;
+
 	/** 金额 */
 	@Column(columnDefinition="decimal(21,6) not null comment '金额'")
 	private BigDecimal amount;
@@ -95,6 +100,14 @@ public class TopicBill extends BaseEntity {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Topic getTopic() {
+		return topic;
+	}
+
+	public void setTopic(Topic topic) {
+		this.topic = topic;
 	}
 
 	public MapEntity getMapMember() {
