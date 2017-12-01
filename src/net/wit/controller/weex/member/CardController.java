@@ -252,26 +252,28 @@ public class CardController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有点亮专栏");
+            return Message.error("没有开通");
         }
         Shop shop = admin.getShop();
         if (shop==null) {
             return Message.error("没有分配门店");
         }
-        if (member.getTopic().getTopicCard()==null) {
+        Enterprise enterprise = admin.getEnterprise();
+        Member owner = enterprise.getMember();
+        if (owner.getTopic()==null) {
+            return Message.error("没有开通专栏");
+        }
+        if (owner.getTopic().getTopicCard()==null) {
             return Message.error("没有开通会员卡");
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> data = new HashMap<String,String>();
-        data.put("logo",member.getTopic().getLogo());
-        data.put("name",member.getTopic().getName());
-        data.put("prerogative",member.getTopic().getTopicCard().getPrerogative());
-        data.put("description",member.getTopic().getTopicCard().getDescription());
+        data.put("logo",owner.getTopic().getLogo());
+        data.put("name",owner.getTopic().getName());
+        data.put("prerogative",owner.getTopic().getTopicCard().getPrerogative());
+        data.put("description",owner.getTopic().getTopicCard().getDescription());
         Long c = 100000000+shop.getId();
         String qr = "http://"+bundle.getString("weixin.url")+"/q/818801"+"86"+String.valueOf(c);
         data.put("qrcode",qr);
@@ -288,15 +290,18 @@ public class CardController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有点亮专栏");
+            return Message.error("没有开通");
         }
         Enterprise enterprise = admin.getEnterprise();
         Member owner = enterprise.getMember();
+        if (owner.getTopic()==null) {
+            return Message.error("没有开通专栏");
+        }
+        if (owner.getTopic().getTopicCard()==null) {
+            return Message.error("没有开通会员卡");
+        }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("owner", Filter.Operator.eq,owner));
         filters.add(new Filter("status", Filter.Operator.ne,Card.Status.none));
