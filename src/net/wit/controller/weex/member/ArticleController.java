@@ -2,6 +2,7 @@ package net.wit.controller.weex.member;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.*;
 import net.wit.entity.*;
@@ -72,7 +73,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Pageable pageable, HttpServletRequest request){
+    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isDraft,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -83,13 +84,18 @@ public class ArticleController extends BaseController {
             filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
         }
         if (timeStamp!=null) {
-            filters.add(new Filter("modifyDate", Filter.Operator.le,new Date(timeStamp)));
+            filters.add(new Filter("modifyDate", Filter.Operator.ge,new Date(timeStamp)));
         }
         if (isVote!=null && isVote) {
             filters.add(new Filter().isNotNull("votes"));
         }
+        if (isDraft!=null) {
+            filters.add(new Filter("isDraft", Filter.Operator.eq,isDraft));
+        }
         filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);
+        pageable.setOrderDirection(Order.Direction.desc);
+        pageable.setOrderProperty("modifyDate");
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleModel.bindList(page.getContent()));
@@ -169,7 +175,7 @@ public class ArticleController extends BaseController {
             article.setReview(0L);
             ArticleOptions options = new ArticleOptions();
             article.setArticleOptions(options);
-            article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPublic);
+            article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPrivate);
             article.getArticleOptions().setIsExample(false);
             article.getArticleOptions().setIsPitch(false);
             article.getArticleOptions().setIsPublish(false);
@@ -335,6 +341,37 @@ public class ArticleController extends BaseController {
         articleService.save(article);
         return Message.success("点击成功");
 
+    }
+
+
+    /**
+     *  文章删除
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Message delete(Long articleId,HttpServletRequest request){
+        Article article = articleService.find(articleId);
+        if (article==null) {
+            return Message.error("无效文章编号");
+        }
+        articleService.delete(article);
+        return Message.success("删除成功");
+
+    }
+
+    /**
+     *  文章还原
+     */
+    @RequestMapping(value = "/revert", method = RequestMethod.POST)
+    @ResponseBody
+    public Message revert(Long articleId,HttpServletRequest request){
+        Article article = articleService.find(articleId);
+        if (article==null) {
+            return Message.error("无效文章编号");
+        }
+        article.setDeleted(false);
+        articleService.update(article);
+        return Message.success("还原成功");
     }
 
 }

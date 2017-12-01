@@ -8,16 +8,7 @@ package net.wit.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -57,12 +48,14 @@ public class Message extends BaseEntity {
 		favorite,
 		/** 赞赏提醒   */
 		reward,
-		/** 分享提醒 gm_10208  */
+		/** 文章分享 gm_10208  */
 		share,
 		/** 添加好友 gm_10209  */
 		addfriend,
 		/** 同意好友 gm_10210  */
-		adoptfriend
+		adoptfriend,
+		/** 客服消息 gm_10211  */
+		gmchat
 	}
 
 	/** 类型 */
@@ -97,13 +90,21 @@ public class Message extends BaseEntity {
 	@JsonIgnore
 	private Member receiver;
 
-	/** 发送人 系统消息时为 null */
+	/** gm系统会话 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) comment '发送人'")
+	@JoinColumn(columnDefinition="bigint(20) comment 'GM'")
+	@JsonIgnore
+	private Member sender;
+
+	/** 发生者 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '发生者'")
 	@JsonIgnore
 	private Member member;
 
 	/** 消息来源 */
+	@Lob
+	@Column(columnDefinition="longtext comment '消息来源'")
 	private String ext;
 
 	public Message.Type getType() {
@@ -176,6 +177,14 @@ public class Message extends BaseEntity {
 
 	public void setExt(String ext) {
 		this.ext = ext;
+	}
+
+	public Member getSender() {
+		return sender;
+	}
+
+	public void setSender(Member sender) {
+		this.sender = sender;
 	}
 
 	public MapEntity getMapMember() {

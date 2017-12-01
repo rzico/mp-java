@@ -111,8 +111,14 @@ public class CashierController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通收银台");
+        }
         PayBill payBill = new PayBill();
+        payBill.setType(PayBill.Type.cashier);
         payBill.setAmount(amount);
+        payBill.setCardAmount(amount);
         payBill.setNoDiscount(BigDecimal.ZERO);
         payBill.setCouponCode(null);
         payBill.setCouponDiscount(BigDecimal.ZERO);
@@ -125,12 +131,18 @@ public class CashierController extends BaseController {
         payBill.setMember(member);
         payBill.setOwner(shop.getOwner());
         payBill.setShop(shop);
+        payBill.setAdmin(admin);
         payBill.setEnterprise(shop.getEnterprise());
         try {
             Payment payment = payBillService.submit(payBill);
-            return Message.success((Object)payment.getSn() ,"success");
+            Map<String,Object> data = new HashMap<String,Object>();
+            data.put("id",payBill.getId());
+            data.put("sn",payment.getSn());
+            return Message.success(data,"success");
         } catch (Exception e) {
             return Message.error(e.getMessage());
         }
     }
+
+
  }

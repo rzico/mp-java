@@ -44,7 +44,9 @@ public class Payment extends BaseEntity {
 		/** 线下收款     */
 		cashier,
 		/** 专栏激活     */
-		topic
+		topic,
+		/** 会员卡    */
+		card
 	}
 
 	/**
@@ -144,7 +146,7 @@ public class Payment extends BaseEntity {
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(nullable = false)
 	@JsonIgnore
 	private Member member;
 

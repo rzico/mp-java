@@ -54,6 +54,15 @@ public class LoginController extends BaseController {
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
+    @Resource(name = "shopServiceImpl")
+    private ShopService shopService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
     /**
      * 手机验证码登录时，发送验证码
      * mobile 手机号
@@ -349,5 +358,81 @@ public class LoginController extends BaseController {
         }
         return Message.success(data,"success");
     }
+
+    /**
+     * 收钱码登录
+     */
+    @RequestMapping(value = "/code_captcha", method = RequestMethod.POST)
+    @ResponseBody
+    public Message codeCaptcha(String code,HttpServletRequest request){
+        Shop shop = shopService.find(code);
+        if (shop==null) {
+            return Message.error("收钱码没有绑定");
+        }
+        Member member = memberService.findByUsername('d'+code);
+        if (member==null) {
+            member = new Member();
+            member.setUsername('d'+code);
+            member.setNickName("收款机（"+code+"）");
+            member.setLogo("http://cdn.rzico.com/weex/resources/images/logo.png");
+            member.setPoint(0L);
+            member.setBalance(BigDecimal.ZERO);
+            member.setIsEnabled(true);
+            member.setIsLocked(false);
+            member.setLoginFailureCount(0);
+            member.setRegisterIp(request.getRemoteAddr());
+            member.setGender(Member.Gender.secrecy);
+            memberService.save(member);
+        }
+
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            admin = new Admin();
+            admin.setUsername('d'+code);
+            admin.setName("收款机（"+code+"）");
+            admin.setEmail(member.getEmail());
+            admin.setEnterprise(shop.getEnterprise());
+            admin.setIsLocked(false);
+            admin.setIsEnabled(true);
+            admin.setLoginFailureCount(0);
+            admin.setMember(member);
+            admin.setPassword(MD5Utils.getMD5Str(code));
+            admin.setGender(Admin.Gender.secrecy);
+            admin.setShop(shop);
+            List<Role> roles = admin.getRoles();
+            if (roles!=null) {
+                roles = new ArrayList<Role>();
+            }
+            roles.add(roleService.find(5L));
+            admin.setRoles(roles);
+            adminService.save(admin);
+        } else {
+            admin.setShop(shop);
+            adminService.update(admin);
+        }
+        Principal principal = new Principal(member.getId(),member.getUsername());
+        redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+        String xuid = request.getHeader("x-uid");
+        if (xuid!=null) {
+            Member u = memberService.findByUUID(xuid);
+            if (u!=null && !u.equals(member)) {
+                u.setUuid(null);
+                memberService.save(u);
+            }
+            member.setUuid(xuid);
+            String ua = request.getHeader("user-agent");
+            if (ua!=null) {
+                member.setScene(ua);
+            }
+        }
+        member.setLoginDate(new Date());
+        memberService.save(member);
+        if (!User.userAttr(member)) {
+            return Message.error("上传IM失败");
+        };
+        return Message.success(Message.LOGIN_SUCCESS);
+
+    }
+
 
 }

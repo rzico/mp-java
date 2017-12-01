@@ -176,7 +176,7 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
        	  topicCard.setStatus(TopicCard.Status.waiting);
        	  topicCard.setColor(TopicCard.Color.c9);
        	  topicCard.setTopic(topic);
-       	  topicCard.setTitle(topic.getName()+setting.getSiteName()+"联名卡");
+       	  topicCard.setTitle(topic.getName());
 		  topicCard.setDescription(
 		  		"储值卡余额只能使用所属商家，解悉权归发行商家所有；平台作为工具提供方不承担相关法律责任。"
 		  );

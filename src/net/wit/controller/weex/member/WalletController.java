@@ -66,6 +66,7 @@ public class WalletController extends BaseController {
             model.setBankinfo(card.getBankname() + "(" + card.getCardno().substring(card.getCardno().length() - 4, card.getCardno().length()) + ")");
         } else {
             model.setBankinfo("未绑定");
+            model.setBinded(false);
         }
         return Message.bind(model,request);
     }

@@ -41,6 +41,21 @@ public class PayBill extends BaseEntity {
 		offline
 	}
 
+	/**
+	 * 类型
+	 */
+	public enum Type {
+		/** 线下收款     */
+		cashier,
+		/** 线下退款    */
+		cashierRefund,
+		/** 会员卡充值     */
+		card,
+		/** 会员卡退款     */
+		cardRefund
+	}
+
+
 	/** 业务日期 */
 	@DateBridge(resolution = Resolution.DAY)
 	@Column(updatable = false,columnDefinition="datetime not null comment '业务日期'")
@@ -49,6 +64,10 @@ public class PayBill extends BaseEntity {
 	/** 状态 */
 	@Column(columnDefinition="int(11) not null comment '状态 {none:线上结算,success:支付成功,failure:支付失败}'")
 	private Status status;
+
+	/** 类型 */
+	@Column(columnDefinition="int(11) not null comment '类型 {cashier:线下收款,cashierRefund:线下退款,card:会员卡充值,cardRefund:会员卡退款}'")
+	private Type type;
 
 	/** 结算方式 */
 	@Column(columnDefinition="int(11) not null comment '结算方式 {online:线上结算,offline:线下结算}'")
@@ -62,9 +81,17 @@ public class PayBill extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Payment payment;
 
+	/** 退款单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Refunds refunds;
+
 	/** 收款账户 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member owner;
+
+	/** 收银员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Admin admin;
 
 	/** 所属企业 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -106,6 +133,19 @@ public class PayBill extends BaseEntity {
 	@Min(0)
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '手续费'")
 	private BigDecimal fee;
+
+	/** 卡入账金额 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '卡入账金额'")
+	private BigDecimal cardAmount;
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
 
 	public Method getMethod() {
 		return method;
@@ -227,9 +267,37 @@ public class PayBill extends BaseEntity {
 		this.payment = payment;
 	}
 
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
+	}
+
+	public Refunds getRefunds() {
+		return refunds;
+	}
+
+	public void setRefunds(Refunds refunds) {
+		this.refunds = refunds;
+	}
+
+	public BigDecimal getCardAmount() {
+		return cardAmount;
+	}
+
+	public void setCardAmount(BigDecimal cardAmount) {
+		this.cardAmount = cardAmount;
+	}
+
+	//有效发生金额
+	public BigDecimal getPayBillAmount() {
+		return this.getAmount().subtract(this.getCouponDiscount()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+	}
 	//有效付款金额
 	public BigDecimal getEffectiveAmount() {
-		return this.getAmount().subtract(this.getCouponDiscount()).subtract(this.getCardDiscount());
+		return this.getAmount().subtract(this.getCouponDiscount()).subtract(this.getCardDiscount()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 	}
 
 	//商户结算金额
@@ -237,7 +305,7 @@ public class PayBill extends BaseEntity {
 		if (getMethod().equals(Method.offline)) {
 			return BigDecimal.ZERO;
 		} else {
-			return this.getEffectiveAmount().subtract(this.getFee());
+			return this.getEffectiveAmount().subtract(this.getFee()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 		}
 	}
 

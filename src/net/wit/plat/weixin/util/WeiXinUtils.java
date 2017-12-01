@@ -316,6 +316,7 @@ public class WeiXinUtils {
 			post.setEntity(new StringEntity(data, ContentType.APPLICATION_JSON));
 			String res = EntityUtils.toString(client.execute(post).getEntity());
 			jsonObject = JSONObject.fromObject(res);
+			System.out.println(res);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

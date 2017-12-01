@@ -87,7 +87,7 @@ public class FriendsController extends BaseController {
         }
 
         if (timeStamp!=null) {
-            filters.add(new Filter("modifyDate", Filter.Operator.le,new Date(timeStamp)));
+            filters.add(new Filter("modifyDate", Filter.Operator.ge,new Date(timeStamp)));
         }
         pageable.setOrderDirection(Order.Direction.desc);
         pageable.setOrderProperty("modifyDate");
@@ -217,6 +217,27 @@ public class FriendsController extends BaseController {
             friendsService.save(fds);
         }
         return Message.success("拉黑成功");
+    }
+
+    /**
+     *  删除好友/包括黑名单
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Message delete(Long friendId, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Member friend = memberService.find(friendId);
+        if (friend==null) {
+            return Message.error("无效好友");
+        }
+        Friends fds = friendsService.find(member,friend);
+        if (fds!=null) {
+            friendsService.delete(fds);
+        }
+        return Message.success("删除成功");
     }
 
 }

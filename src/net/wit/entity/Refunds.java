@@ -41,7 +41,11 @@ public class Refunds extends BaseEntity {
 		/** 文章赞赏     */
 		reward,
 		/** 线下收款     */
-		cashier
+		cashier,
+		/** 专栏激活     */
+		topic,
+		/** 会员卡    */
+		card
 	}
 
 
@@ -57,7 +61,10 @@ public class Refunds extends BaseEntity {
 		offline,
 
 		/** 钱包退款 */
-		deposit
+		deposit,
+
+		/** 会员卡 */
+		card
 	}
 
 	/**
@@ -146,9 +153,32 @@ public class Refunds extends BaseEntity {
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orders", nullable = false, updatable = false)
+	@JoinColumn(name = "orders", updatable = false)
 	@JsonIgnore
 	private Order order;
+
+
+	/** 三方单号 */
+	@Column(columnDefinition="varchar(50) comment '三方单号'")
+	private String  tranSn;
+
+	/** 订单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private ArticleReward articleReward;
+
+	/** 收款 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private PayBill payBill;
+
+	/** 专栏 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private TopicBill topicBill;
 
 	public Type getType() {
 		return type;
@@ -268,6 +298,38 @@ public class Refunds extends BaseEntity {
 
 	public void setRefundsDate(Date refundsDate) {
 		this.refundsDate = refundsDate;
+	}
+
+	public ArticleReward getArticleReward() {
+		return articleReward;
+	}
+
+	public void setArticleReward(ArticleReward articleReward) {
+		this.articleReward = articleReward;
+	}
+
+	public PayBill getPayBill() {
+		return payBill;
+	}
+
+	public void setPayBill(PayBill payBill) {
+		this.payBill = payBill;
+	}
+
+	public TopicBill getTopicBill() {
+		return topicBill;
+	}
+
+	public void setTopicBill(TopicBill topicBill) {
+		this.topicBill = topicBill;
+	}
+
+	public String getTranSn() {
+		return tranSn;
+	}
+
+	public void setTranSn(String tranSn) {
+		this.tranSn = tranSn;
 	}
 
 	public MapEntity getMapPayee() {

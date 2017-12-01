@@ -86,7 +86,6 @@ public class ShopController extends BaseController {
             entity.setEnterprise(enterprise);
             isNew = true;
         }
-
         entity.setName(shop.getName());
         entity.setArea(areaService.find(areaId));
         entity.setAddress(shop.getAddress());
@@ -193,10 +192,17 @@ public class ShopController extends BaseController {
      */
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     @ResponseBody
-    public Message test(Long shopId,HttpServletRequest request){
+    public Message test(Long shopId,String code,HttpServletRequest request){
+        Shop shopCode =shopService.find(code);
+        if (shopCode==null) {
+            return Message.error("收款码没绑定");
+        }
         Shop shop = shopService.find(shopId);
         if (shop==null) {
             return Message.error("无效店铺");
+        }
+        if (!shop.equals(shopCode)) {
+            return Message.error("收钱码验证不正确");
         }
         Member member = memberService.getCurrent();
         if (member==null) {

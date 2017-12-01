@@ -8,11 +8,13 @@ package net.wit.plugin.card;
 import net.wit.entity.Card;
 import net.wit.entity.Member;
 import net.wit.entity.Payment;
+import net.wit.entity.Refunds;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.CardService;
 import net.wit.service.MemberService;
 import net.wit.service.RSAService;
 import net.wit.util.MD5Utils;
+import net.wit.util.ScanUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -103,6 +105,57 @@ public class BalancePayPlugin extends PaymentPlugin {
 		}
 	}
 
+	//safeKey 为付款码
+	@Override
+	public Map<String, Object> submit(Payment payment,String safeKey,HttpServletRequest request) {
+		HashMap<String, Object> finalpackage = new HashMap<>();
+		if (safeKey==null) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "无效付款码");
+			return finalpackage;
+		}
+
+		Map<String,String> data = ScanUtil.scanParser(safeKey);
+
+
+		if (data.get("type")!="818802") {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "无效付款码");
+			return finalpackage;
+		}
+        String code = data.get("code");
+		Long id = Long.parseLong(code.substring(0,code.length()-6))-10200;
+
+		Member member = memberService.find(id);
+		if (member==null) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "无效付款码");
+			return finalpackage;
+		}
+
+        String sign = code.substring(code.length()-6,6);
+        if (!sign.equals(member.getSign())) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "请重打开付款码");
+			return finalpackage;
+		}
+
+		if (member.getBalance().compareTo(payment.getAmount()) > 0) {
+			try {
+				memberService.payment(member,payment);
+				finalpackage.put("return_code", "SUCCESS");
+				finalpackage.put("return_msg", "提交成功");
+			} catch (Exception e) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("return_msg", e.getMessage());
+			}
+			return finalpackage;
+		} else {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "卡内余额不足");
+			return finalpackage;
+		}
+	}
 	@Override
 	public boolean verifyNotify(String sn, NotifyMethod notifyMethod, HttpServletRequest request) {
 		Payment payment = getPayment(sn);
@@ -118,10 +171,12 @@ public class BalancePayPlugin extends PaymentPlugin {
 	 */
 	@Override
     public String queryOrder(Payment payment,HttpServletRequest request)  throws Exception {
-		if (payment!=null) {
+		if (payment.getTranSn()==null) {
+			return "9999";
+		}
+		else
+		{
 			return "0000";
-		} else {
-			return "0001";
 		}
 	}
 	
@@ -133,6 +188,40 @@ public class BalancePayPlugin extends PaymentPlugin {
 	@Override
 	public Integer getTimeout() {
 		return 30;
+	}
+
+	/**
+	 * 申请退款
+	 */
+	public Map<String, Object> refunds(Refunds refunds, HttpServletRequest request) {
+		HashMap<String, Object> finalpackage = new HashMap<>();
+		Member member = refunds.getMember();
+		if (member==null) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", "无效退款单");
+			return finalpackage;
+		}
+		try {
+			memberService.refunds(member,refunds);
+			finalpackage.put("return_code", "SUCCESS");
+			finalpackage.put("return_msg", "提交成功");
+		} catch (Exception e) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("return_msg", e.getMessage());
+		}
+		return finalpackage;
+	}
+	/**
+	 * 查询退款
+	 */
+	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
+		if (refunds.getTranSn()==null) {
+			return "9999";
+		}
+		else
+		{
+			return "0000";
+		}
 	}
 
 }

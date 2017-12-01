@@ -195,6 +195,11 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private String scene;
 
+	/** 安全码 */
+	@Column(columnDefinition="varchar(50) comment '安全码'")
+	@JsonIgnore
+	private String sign;
+
 	/** 会员注册项值0 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
@@ -251,6 +256,10 @@ public class Member extends BaseEntity {
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment 'IM状态'")
 	private String attributeValue9;
+
+	/** 推广二维码 */
+	@Column(columnDefinition="varchar(255) comment '推广二维码'")
+	private String qrcode;
 
 	/** 定位 */
 	@Embedded
@@ -722,6 +731,22 @@ public class Member extends BaseEntity {
 
 	public void setCards(List<Card> cards) {
 		this.cards = cards;
+	}
+
+	public String getSign() {
+		return sign;
+	}
+
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
+
+	public String getQrcode() {
+		return qrcode;
+	}
+
+	public void setQrcode(String qrcode) {
+		this.qrcode = qrcode;
 	}
 
 	/**

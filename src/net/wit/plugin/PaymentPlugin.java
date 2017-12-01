@@ -18,12 +18,14 @@ import javax.annotation.Resource;
 import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 
+import com.sun.org.apache.regexp.internal.RE;
 import net.wit.Setting;
 import net.wit.controller.weex.BaseController;
 import net.wit.entity.*;
 import net.wit.service.BindUserService;
 import net.wit.service.PaymentService;
 import net.wit.service.PluginConfigService;
+import net.wit.service.RefundsService;
 import net.wit.util.SettingUtils;
 
 import org.apache.commons.beanutils.ConvertUtils;
@@ -122,6 +124,9 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	@Resource(name = "paymentServiceImpl")
 	public PaymentService paymentService;
+
+	@Resource(name = "refundsServiceImpl")
+	public RefundsService refundsService;
 
 	@Resource(name = "bindUserServiceImpl")
 	public BindUserService bindUserService;
@@ -347,8 +352,11 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	/**
 	 * 申请退款
 	 */
-	public String refunds(Refunds refunds,HttpServletRequest request) throws Exception {
-		return "9999";
+	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		finalpackage.put("result_msg","暂不支持");
+		finalpackage.put("return_code","FAIL");
+		return finalpackage;
 	}
 
 	/**
@@ -435,6 +443,20 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 			return "http://"+pluginConfig.getAttribute("host") + "/payment/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
 		}
 		return "http://"+pluginConfig.getAttribute("host") + "/payment/notify/" + notifyMethod + "/" + sn + ".jhtml";
+	}
+
+	/**
+	 * 获取退款通知URL
+	 * @param sn 编号
+	 * @param notifyMethod 通知方法
+	 * @return 通知URL
+	 */
+	public String getRefundsNotifyUrl(String sn, NotifyMethod notifyMethod) {
+		PluginConfig pluginConfig = getPluginConfig();
+		if (notifyMethod == null) {
+			return "http://"+pluginConfig.getAttribute("host") + "/refunds/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
+		}
+		return "http://"+pluginConfig.getAttribute("host") + "/refunds/notify/" + notifyMethod + "/" + sn + ".jhtml";
 	}
 
 	/**

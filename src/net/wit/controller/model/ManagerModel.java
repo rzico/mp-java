@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 import net.wit.entity.Member;
 import net.wit.entity.Topic;
+import net.wit.entity.TopicConfig;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,12 @@ public class ManagerModel implements Serializable {
     private String autograph;
     /** 头像 */
     private String logo;
+    /** 开通会员卡 */
+    private Boolean useCard;
+    /** 开通优惠券 */
+    private Boolean useCoupon;
+    /** 开通收银台 */
+    private Boolean useCashier;
     /** 专栏 */
     private String topic;
     /** 标签 */
@@ -68,6 +75,30 @@ public class ManagerModel implements Serializable {
         this.topic = topic;
     }
 
+    public Boolean getUseCard() {
+        return useCard;
+    }
+
+    public void setUseCard(Boolean useCard) {
+        this.useCard = useCard;
+    }
+
+    public Boolean getUseCoupon() {
+        return useCoupon;
+    }
+
+    public void setUseCoupon(Boolean useCoupon) {
+        this.useCoupon = useCoupon;
+    }
+
+    public Boolean getUseCashier() {
+        return useCashier;
+    }
+
+    public void setUseCashier(Boolean useCashier) {
+        this.useCashier = useCashier;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -78,6 +109,9 @@ public class ManagerModel implements Serializable {
         Topic topic = member.getTopic();
         if (topic==null) {
             this.topic = "未开通";
+            this.useCard = false;
+            this.useCashier = false;
+            this.useCoupon = false;
         } else {
             if (topic.getStatus().equals(Topic.Status.waiting)) {
                 this.topic = "待缴费";
@@ -88,6 +122,13 @@ public class ManagerModel implements Serializable {
             if (topic.getStatus().equals(Topic.Status.failure)) {
                 this.topic = "已过期";
             }
+            this.useCard = false;
+            this.useCashier = false;
+            this.useCoupon = false;
+            TopicConfig config = topic.getConfig();
+            config.setUseCashier(config.getUseCashier());
+            config.setUseCoupon(config.getUseCoupon());
+            config.setUseCard(config.getUseCard());
         }
      }
 }

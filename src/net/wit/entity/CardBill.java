@@ -99,6 +99,11 @@ public class CardBill extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '收款单'")
 	private Payment payment;
 
+	/** 退款单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '退款单'")
+	private Refunds refunds;
+
 	/** 线下收单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '线下收单'")
@@ -291,6 +296,14 @@ public class CardBill extends BaseEntity {
 	 */
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+
+	public Refunds getRefunds() {
+		return refunds;
+	}
+
+	public void setRefunds(Refunds refunds) {
+		this.refunds = refunds;
 	}
 
 	public Boolean getDeleted() {

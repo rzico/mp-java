@@ -155,4 +155,25 @@ public class ArticleController extends BaseController {
         model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
+
+
+    /**
+     *  文章搜索
+     *  keyword
+     */
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @ResponseBody
+    public Message search(String keyword,Pageable pageable, HttpServletRequest request){
+        if (keyword==null) {
+            return Message.error("请输入关键词");
+        }
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(Filter.like("title","%"+keyword+"%"));
+        pageable.setFilters(filters);
+        Page<Article> page = articleService.findPage(null,null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
 }

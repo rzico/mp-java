@@ -16,10 +16,10 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
-import net.wit.dao.DepositDao;
-import net.wit.dao.MemberDao;
+import net.wit.dao.*;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
+import net.wit.service.MessageService;
 import net.wit.service.PluginService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -27,7 +27,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.RefundsDao;
 import net.wit.entity.*;
 import net.wit.service.RefundsService;
 
@@ -48,6 +47,20 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 	private MemberDao memberDao;
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
+	@Resource(name = "paymentDaoImpl")
+	private PaymentDao paymentDao;
+
+	@Resource(name = "payBillDaoImpl")
+	private PayBillDao payBillDao;
+
+	@Resource(name = "cardDaoImpl")
+	private CardDao cardDao;
+
+	@Resource(name = "cardBillDaoImpl")
+	private CardBillDao cardBillDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
 
 	@Resource(name = "refundsDaoImpl")
 	public void setBaseDao(RefundsDao refundsDao) {
@@ -105,83 +118,256 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 		return refundsDao.findPage(beginDate,endDate,pageable);
 	}
 
+	//退款成功
 	@Transactional
 	public synchronized void handle(Refunds refunds) throws Exception {
 		refundsDao.refresh(refunds, LockModeType.PESSIMISTIC_WRITE);
-		Payment payment = refunds.getPayment();
-		if (refunds != null && !refunds.getStatus().equals(Payment.Status.success)) {
+		if (refunds.getStatus().equals(Refunds.Status.confirmed)) {
 			refunds.setRefundsDate(new Date());
 			refunds.setStatus(Refunds.Status.success);
 			refundsDao.merge(refunds);
-			if (payment.getStatus().equals(Payment.Status.refund_waiting)) {
-				payment.setStatus(Payment.Status.refund_success);
-			} else if (payment.getStatus().equals(Payment.Status.refund_success)) {
-				throw new RuntimeException("重复退款");
-			} else {
-				throw new RuntimeException("退款失败");
+			Payment payment = refunds.getPayment();
+			if (payment!=null) {
+				paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
+				if (payment.getStatus().equals(Payment.Status.refund_waiting)) {
+					payment.setStatus(Payment.Status.refund_success);
+					paymentDao.merge(payment);
+				}
 			}
 		}
 	}
 
+	//提交退款
 	@Transactional
 	public synchronized Boolean refunds(Refunds refunds, HttpServletRequest request) throws Exception {
 			refundsDao.refresh(refunds, LockModeType.PESSIMISTIC_WRITE);
-	    	Payment payment = refunds.getPayment();
-			if (refunds != null && refunds.getStatus().equals(Refunds.Status.waiting)) {
-				PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
-				String result = paymentPlugin.refunds(refunds,request);
-				if ("0000".equals(result)) {
-					refunds.setStatus(Refunds.Status.confirmed);
-					refundsDao.merge(refunds);
-					return true;
-				} else {
-					throw new RuntimeException(UnsPay.getErrMsg(result));
+			if (refunds.getStatus().equals(Refunds.Status.waiting)) {
+				refunds.setStatus(Refunds.Status.confirmed);
+				refundsDao.merge(refunds);
+				Payment payment = refunds.getPayment();
+				if (payment!=null) {
+					paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
+					if (payment.getStatus().equals(Payment.Status.success)) {
+						payment.setStatus(Payment.Status.refund_waiting);
+						paymentDao.merge(payment);
+					} else {
+						throw new RuntimeException("重复提交");
+					}
 				}
-			} else{
-				throw new RuntimeException("已经提交了");
+				if (refunds.getType().equals(Refunds.Type.cashier)) {
+					Member member =  refunds.getPayee();
+					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+					PayBill payBill = refunds.getPayBill();
+					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
+						payBill.setFee(BigDecimal.ZERO);
+						//线下业务，本身没有结款
+					} else {
+						BigDecimal settle = payBill.getSettleAmount();
+						if (settle.compareTo(BigDecimal.ZERO) != 0) {
+							if (member.getBalance().add(settle).compareTo(BigDecimal.ZERO)<0) {
+								throw new RuntimeException("余额不足");
+							}
+							member.setBalance(member.getBalance().add(settle));
+							memberDao.merge(member);
+							Deposit deposit = new Deposit();
+							deposit.setBalance(member.getBalance());
+							deposit.setType(Deposit.Type.cashier);
+							deposit.setMemo(refunds.getMemo());
+							deposit.setMember(member);
+							deposit.setCredit(settle);
+							deposit.setDebit(BigDecimal.ZERO);
+							deposit.setDeleted(false);
+							deposit.setOperator("system");
+							deposit.setRefunds(refunds);
+							depositDao.persist(deposit);
+							messageService.depositPushTo(deposit);
+						}
+					}
+					payBill.setMember(refunds.getMember());
+					payBill.setStatus(PayBill.Status.success);
+					payBillDao.merge(payBill);
+				}else
+				if (refunds.getType() == Refunds.Type.card) {
+					Member member =  refunds.getPayee();
+					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+					PayBill payBill = refunds.getPayBill();
+					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
+						payBill.setFee(BigDecimal.ZERO);
+						//线下业务，本身没有结款
+					} else {
+						BigDecimal settle = payBill.getSettleAmount();
+						if (settle.compareTo(BigDecimal.ZERO) != 0) {
+							if (member.getBalance().add(settle).compareTo(BigDecimal.ZERO)<0) {
+								throw new RuntimeException("余额不足");
+							}
+							member.setBalance(member.getBalance().add(settle));
+							memberDao.merge(member);
+							Deposit deposit = new Deposit();
+							deposit.setBalance(member.getBalance());
+							deposit.setType(Deposit.Type.card);
+							deposit.setMemo(refunds.getMemo());
+							deposit.setMember(member);
+							deposit.setCredit(settle);
+							deposit.setDebit(BigDecimal.ZERO);
+							deposit.setDeleted(false);
+							deposit.setOperator("system");
+							deposit.setRefunds(refunds);
+							depositDao.persist(deposit);
+							messageService.depositPushTo(deposit);
+						}
+					}
+					payBill.setMember(refunds.getMember());
+					payBill.setStatus(PayBill.Status.success);
+					payBillDao.merge(payBill);
+					if (payBill.getType().equals(PayBill.Type.cardRefund)) {
+						Card card = payBill.getCard();
+						cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+						if (card.getBalance().add(payBill.getCardAmount()).compareTo(BigDecimal.ZERO)<0) {
+							throw new RuntimeException("会员卡余额不足");
+						}
+						card.setBalance(card.getBalance().add(payBill.getCardAmount()));
+						cardDao.merge(card);
+
+						CardBill cardBill = new CardBill();
+						cardBill.setDeleted(false);
+						cardBill.setOwner(payBill.getOwner());
+						cardBill.setShop(payBill.getShop());
+						cardBill.setCredit(BigDecimal.ZERO);
+						cardBill.setDebit(BigDecimal.ZERO.subtract(payBill.getCardAmount()));
+						if (payBill.getAdmin()!=null) {
+							cardBill.setMemo("退款，操作员:"+payBill.getAdmin().getName());
+							cardBill.setOperator(payBill.getAdmin().getName());
+						} else {
+							cardBill.setMemo("自助退款");
+							cardBill.setOperator(payBill.getCard().getName());
+						}
+						if (refunds.getMethod().equals(Refunds.Method.offline)) {
+							cardBill.setMethod(CardBill.Method.offline);
+						} else {
+							cardBill.setMethod(CardBill.Method.online);
+						}
+						cardBill.setMember(card.getMembers().get(0));
+						cardBill.setCard(card);
+						cardBill.setType(CardBill.Type.refunds);
+						cardBill.setBalance(card.getBalance());
+						cardBillDao.persist(cardBill);
+					}
+				}
+				return true;
+			} else {
+				throw new RuntimeException("重复退款");
 			}
 	}
 
+	//关闭退款
 	@Transactional
 	public synchronized void close(Refunds refunds) throws Exception {
 		refundsDao.refresh(refunds, LockModeType.PESSIMISTIC_WRITE);
-		Payment payment = refunds.getPayment();
-		//退款失败，钱退回账户
-		if (refunds != null && !refunds.getStatus().equals(Refunds.Status.failure)) {
-			//开始退款
-			Member member = refunds.getMember();
-			memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-			member.setBalance(member.getBalance().add(refunds.getAmount()));
-			memberDao.merge(member);
-			Deposit deposit = new Deposit();
-			deposit.setBalance(member.getBalance());
-			if (refunds.getType().equals(Refunds.Type.cashier)) {
-				deposit.setType(Deposit.Type.cashier);
-				deposit.setCredit(BigDecimal.ZERO);
-				deposit.setDebit(BigDecimal.ZERO.subtract(refunds.getAmount()));
-			} else {
-				deposit.setType(Deposit.Type.refunds);
-				deposit.setCredit(refunds.getAmount());
-				deposit.setDebit(BigDecimal.ZERO);
-			}
-			deposit.setMemo("【退款】"+refunds.getMemo());
-			deposit.setMember(member);
-			deposit.setDeleted(false);
-			deposit.setOperator("system");
-			deposit.setRefunds(refunds);
-			depositDao.persist(deposit);
-			refunds.setRefundsDate(new Date());
+		if (refunds.getStatus().equals(Refunds.Status.confirmed)) {
 			refunds.setStatus(Refunds.Status.failure);
 			refundsDao.merge(refunds);
-			if (payment.getStatus().equals(Payment.Status.refund_waiting)) {
-				payment.setStatus(Payment.Status.refund_success);
-			} else if (payment.getStatus().equals(Payment.Status.refund_success)) {
-				throw new RuntimeException("重复退款");
-			} else {
-				throw new RuntimeException("退款失败");
+			Payment payment = refunds.getPayment();
+			if (payment!=null) {
+				paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
+				if (payment.getStatus().equals(Payment.Status.refund_waiting)) {
+					payment.setStatus(Payment.Status.success);
+					paymentDao.merge(payment);
+				} else {
+					throw new RuntimeException("重复提交");
+				}
+			}
+			if (refunds.getType().equals(Refunds.Type.cashier)) {
+				Member member =  refunds.getPayee();
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+				PayBill payBill = refunds.getPayBill();
+				if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
+					payBill.setFee(BigDecimal.ZERO);
+					//线下业务，本身没有结款
+				} else {
+					BigDecimal settle = payBill.getSettleAmount();
+					if (settle.compareTo(BigDecimal.ZERO) != 0) {
+						member.setBalance(member.getBalance().subtract(settle));
+						memberDao.merge(member);
+						Deposit deposit = new Deposit();
+						deposit.setBalance(member.getBalance());
+						deposit.setType(Deposit.Type.cashier);
+						deposit.setMemo("【撤消】"+refunds.getMemo());
+						deposit.setMember(member);
+						deposit.setCredit(BigDecimal.ZERO.subtract(settle));
+						deposit.setDebit(BigDecimal.ZERO);
+						deposit.setDeleted(false);
+						deposit.setOperator("system");
+						deposit.setRefunds(refunds);
+						depositDao.persist(deposit);
+						messageService.depositPushTo(deposit);
+					}
+				}
+				payBill.setMember(refunds.getMember());
+				payBill.setStatus(PayBill.Status.failure);
+				payBillDao.merge(payBill);
+			}else
+			if (refunds.getType() == Refunds.Type.card) {
+				Member member =  refunds.getPayee();
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+				PayBill payBill = refunds.getPayBill();
+				if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
+					payBill.setFee(BigDecimal.ZERO);
+					//线下业务，本身没有结款
+				} else {
+					BigDecimal settle = payBill.getSettleAmount();
+					if (settle.compareTo(BigDecimal.ZERO) != 0) {
+						member.setBalance(member.getBalance().subtract(settle));
+						memberDao.merge(member);
+						Deposit deposit = new Deposit();
+						deposit.setBalance(member.getBalance());
+						deposit.setType(Deposit.Type.card);
+						deposit.setMemo("【撤消】"+refunds.getMemo());
+						deposit.setMember(member);
+						deposit.setCredit(BigDecimal.ZERO.subtract(settle));
+						deposit.setDebit(BigDecimal.ZERO);
+						deposit.setDeleted(false);
+						deposit.setOperator("system");
+						deposit.setRefunds(refunds);
+						depositDao.persist(deposit);
+						messageService.depositPushTo(deposit);
+					}
+				}
+				payBill.setMember(refunds.getMember());
+				payBill.setStatus(PayBill.Status.failure);
+				payBillDao.merge(payBill);
+				if (payBill.getType().equals(PayBill.Type.cardRefund)) {
+					Card card = payBill.getCard();
+					cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+					card.setBalance(card.getBalance().subtract(payBill.getCardAmount()));
+					cardDao.merge(card);
+
+					CardBill cardBill = new CardBill();
+					cardBill.setDeleted(false);
+					cardBill.setOwner(payBill.getOwner());
+					cardBill.setShop(payBill.getShop());
+					cardBill.setCredit(BigDecimal.ZERO);
+					cardBill.setDebit(payBill.getCardAmount());
+					if (payBill.getAdmin()!=null) {
+						cardBill.setMemo("【撤消】退款，操作员:"+payBill.getAdmin().getName());
+						cardBill.setOperator(payBill.getAdmin().getName());
+					} else {
+						cardBill.setMemo("【撤消】自助退款");
+						cardBill.setOperator(payBill.getCard().getName());
+					}
+					if (refunds.getMethod().equals(Refunds.Method.offline)) {
+						cardBill.setMethod(CardBill.Method.offline);
+					} else {
+						cardBill.setMethod(CardBill.Method.online);
+					}
+					cardBill.setMember(card.getMembers().get(0));
+					cardBill.setCard(card);
+					cardBill.setType(CardBill.Type.refunds);
+					cardBill.setBalance(card.getBalance());
+					cardBillDao.persist(cardBill);
+				}
 			}
 		} else {
-			throw new RuntimeException("重复提交");
+			throw new RuntimeException("重复关闭");
 		}
 	}
 }

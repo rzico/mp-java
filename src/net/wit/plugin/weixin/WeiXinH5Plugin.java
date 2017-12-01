@@ -152,8 +152,8 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 		packageParams.put("notify_url", getNotifyUrl(sn, NotifyMethod.async));
 		packageParams.put("trade_type", "MWEB");
 		//String xapp = request.getHeader("x-app");
-		packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://"+pluginConfig.getAttribute("host")+"\",\"wap_name\": \"睿商助手\"}}");
-		//packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"魔篇\",\"package_name\": \"com.rzico.weex\"}}");
+		//packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://"+pluginConfig.getAttribute("host")+"\",\"wap_name\": \"睿商助手\"}}");
+		packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"IOS\",\"app_name\": \"魔篇\",\"package_name\": \"com.rzico.assistant\"}}");
 
 		try {
 			String sign = getSign(packageParams);
@@ -299,7 +299,8 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 
 	//0000 代表申请退款成功，退款结果调查询。
 	@Override
-	public String refunds(Refunds refunds,HttpServletRequest request) throws Exception {
+	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
+		HashMap<String, Object> finalpackage = new HashMap<>();
 		try {
 			PluginConfig pluginConfig = getPluginConfig();
 			String createNoncestr = WeiXinUtils.CreateNoncestr();
@@ -316,7 +317,10 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 				String sign = getSign(parameterMap);
 				parameterMap.put("sign", sign);
 			} catch (Exception e) {
-                 throw new Exception("申请失败");
+				logger.error(e.getMessage());
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg", "申请失败");
+				return finalpackage;
 			}
 
 		    	String xml = WeiXinUtils.getRequestXml(parameterMap);
@@ -326,16 +330,24 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 				String return_code = (String) map.get("return_code");
 				if (return_code.equals("SUCCESS") ) {
 					if ("SUCCESS".equals((String) map.get("result_code"))) {
-						return "0000";
+						finalpackage.put("return_code", "SUCCESS");
+						finalpackage.put("result_msg", "申请成功");
+						return finalpackage;
 					} else {
-						throw new Exception( (String) map.get("err_code_des"));
+						finalpackage.put("return_code", "FAIL");
+						finalpackage.put("result_msg", (String) map.get("err_code_des"));
+						return finalpackage;
 					}
 				} else {
-					throw new Exception( (String) map.get("return_msg"));
+					finalpackage.put("return_code", "FAIL");
+					finalpackage.put("result_msg", (String) map.get("return_msg"));
+					return finalpackage;
 				}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			throw new Exception("申请失败");
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg", "申请失败");
+			return finalpackage;
 		}
 
 

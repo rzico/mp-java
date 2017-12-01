@@ -176,7 +176,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		PluginConfig pluginConfig = getPluginConfig();
 		Map<String,Object> data = new HashMap<String,Object>();
 		SortedMap<String,String> map = XmlUtils.getParameterMap(request);
-		map.put("service", "pay.weixin.native");
+		map.put("service", "unified.trade.micropay");
 		//safekey64编码
 		map.put("auth_code", safeKey);
 		DecimalFormat decimalFormat = new DecimalFormat("#");
@@ -187,6 +187,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		map.put("total_fee", decimalFormat.format(money));
 		map.put("mch_create_ip", request.getRemoteAddr());
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
+//		map.put("notify_url", getNotifyUrl(payment.getSn(),NotifyMethod.async));
 
 		Map<String,String> params = SignUtils.paraFilter(map);
 		StringBuilder buf = new StringBuilder((params.size() +1) * 10);
@@ -221,8 +222,22 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 							data.put("result_msg", "执行成功");
 							return data;
 						}else{
-							data.put("return_code", "FAIL");
-							data.put("result_msg", resultMap.get("message"));
+							if (
+									resultMap.get("err_code").toString().equals("SYSTEMERROR") ||
+											resultMap.get("err_code").toString().equals("Internal error") ||
+											resultMap.get("err_code").toString().equals("BANKERROR") ||
+											resultMap.get("err_code").toString().equals("10003") ||
+											resultMap.get("err_code").toString().equals("USERPAYING") ||
+											resultMap.get("err_code").toString().equals("System error") ||
+											resultMap.get("err_code").toString().equals("aop.ACQ.SYSTEM_ERROR") ||
+											resultMap.get("err_code").toString().equals("ACQ.SYSTEM_ERROR")
+							) {
+								data.put("return_code", "SUCCESS");
+								data.put("result_msg", "待确定状态");
+							} else {
+								data.put("return_code", "FAIL");
+								data.put("result_msg", resultMap.get("message"));
+							}
 							return data;
 						}
 					}
@@ -237,7 +252,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 				return data;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			data.put("return_code", "FAIL");
 			data.put("result_msg", "提交订单出现异常");
 			return data;
@@ -384,6 +399,181 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 	@Override
 	public Integer getTimeout() {
 		return 30;
+	}
+
+	/**
+	 * 申请退款
+	 */
+	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		SortedMap<String,String> map = XmlUtils.getParameterMap(request);
+		DecimalFormat decimalFormat = new DecimalFormat("#");
+		BigDecimal money = refunds.getAmount().multiply(new BigDecimal(100));
+		map.put("service", "unified.trade.refund");
+		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("out_trade_no",refunds.getPayment().getSn());
+		map.put("out_refund_no",refunds.getSn());
+		map.put("total_fee", decimalFormat.format(money));
+		map.put("refund_fee", decimalFormat.format(money));
+		map.put("op_user_id", pluginConfig.getAttribute("partner"));
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+
+		Map<String,String> params = SignUtils.paraFilter(map);
+		StringBuilder buf = new StringBuilder((params.size() +1) * 10);
+		SignUtils.buildPayParams(buf,params,false);
+		String preStr = buf.toString()+"&key=" + pluginConfig.getAttribute("key");
+		String sign = MD5Utils.getMD5Str(preStr);
+		map.put("sign", sign);
+
+		String reqUrl = "https://pay.swiftpass.cn/pay/gateway";
+
+		//System.out.println("reqParams:" + XmlUtils.parseXML(map));
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = null;
+		String res = null;
+		try {
+			HttpPost httpPost = new HttpPost(reqUrl);
+			StringEntity entityParams = new StringEntity(XmlUtils.parseXML(map),"utf-8");
+			httpPost.setEntity(entityParams);
+			httpPost.setHeader("Content-Type", "text/xml;charset=utf-8");
+			client = HttpClients.createDefault();
+			response = client.execute(httpPost);
+			if(response != null && response.getEntity() != null){
+				Map<String,String> resultMap = XmlUtils.toMap(EntityUtils.toByteArray(response.getEntity()), "utf-8");
+				if(resultMap.containsKey("sign")){
+					if(!SignUtils.checkParam(resultMap, pluginConfig.getAttribute("key"))){
+						finalpackage.put("return_code", "FAIL");
+						finalpackage.put("result_msg", "验证签名不通过");
+						return finalpackage;
+					}else{
+						if("0".equals(resultMap.get("status")) && "0".equals(resultMap.get("result_code"))){
+							finalpackage.put("return_code", "SUCCESS");
+							finalpackage.put("result_msg", "提交成功");
+							return finalpackage;
+						}else{
+							finalpackage.put("return_code", "FAIL");
+							finalpackage.put("result_msg", resultMap.get("err_code"));
+							return finalpackage;
+						}
+					}
+				}else{
+
+					finalpackage.put("return_code", "FAIL");
+					finalpackage.put("result_msg", resultMap.get("message"));
+					return finalpackage;
+				}
+			} else {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg","提交银行出错");
+				return finalpackage;
+			}
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg","提交银行出错");
+			return finalpackage;
+		} finally {
+			if(response != null){
+				try {
+					response.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(client != null){
+				try {
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 查询退款
+	 */
+	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
+
+		map.put("mch_id",pluginConfig.getAttribute("partner"));
+		map.put("service", "unified.trade.refundquery");
+		map.put("out_refund_no", refunds.getSn());
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+
+		Map<String, String> params = SignUtils.paraFilter(map);
+		StringBuilder buf = new StringBuilder((params.size() + 1) * 10);
+		SignUtils.buildPayParams(buf, params, false);
+		String preStr = buf.toString()+"&key=" + pluginConfig.getAttribute("key");
+		String sign = MD5Utils.getMD5Str(preStr);
+		map.put("sign", sign);
+
+		String reqUrl = "https://pay.swiftpass.cn/pay/gateway";
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = null;
+		String res = null;
+		try {
+			HttpPost httpPost = new HttpPost(reqUrl);
+			StringEntity entityParams = new StringEntity(XmlUtils.parseXML(map), "utf-8");
+			httpPost.setEntity(entityParams);
+			client = HttpClients.createDefault();
+			response = client.execute(httpPost);
+			if (response != null && response.getEntity() != null) {
+				Map<String, String> resultMap = XmlUtils.toMap(EntityUtils.toByteArray(response.getEntity()), "utf-8");
+				if (resultMap.containsKey("sign")) {
+					if (!SignUtils.checkParam(resultMap, pluginConfig.getAttribute("key"))) {
+						throw new Exception("签名出错");
+					} else {
+						if ("0".equals(resultMap.get("status")) && "0".equals(resultMap.get("result_code"))) {
+							int count = Integer.parseInt(resultMap.get("refund_count"))-1;
+							if ("SUCCESS".equals(resultMap.get("refund_status_"+count))) {
+								return "0000";
+							} else if ("FAIL".equals(resultMap.get("refund_status_"+count))) {
+								return "0001";
+							} else if("CHANGE".equals(resultMap.get("refund_status_"+count))){
+								return "0001";
+							} else {
+								return "9999";
+							}
+						} else {
+							throw new Exception(resultMap.get("err_msg"));
+						}
+					}
+				} else {
+					throw new Exception(resultMap.get("message"));
+				}
+			} else {
+				throw new Exception("提交查询出错");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new Exception("提交查询出错");
+		} finally {
+			if (response != null) {
+				try {
+					response.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (client != null) {
+				try {
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 申请通知
+	 */
+	public String refundsVerify(HttpServletRequest request) {
+		return "";
 	}
 
 }

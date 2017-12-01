@@ -1,9 +1,11 @@
 package net.wit.controller.weex;
 
-import net.wit.Filter;
+import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCatalogModel;
+import net.wit.controller.model.ArticleListModel;
+import net.wit.controller.model.TopicListModel;
 import net.wit.controller.model.TopicViewModel;
 import net.wit.entity.*;
 import net.wit.service.*;
@@ -77,11 +79,8 @@ public class TopicController extends BaseController {
         model.setCatalogs(ArticleCatalogModel.bindList(catalogs));
         Member self = memberService.getCurrent();
         if (self!=null) {
-            List<Filter> flowfilters = new ArrayList<Filter>();
-            flowfilters.add(new Filter("member", Filter.Operator.eq, self));
-            flowfilters.add(new Filter("follow", Filter.Operator.eq, member));
-            List<MemberFollow> data = memberFollowService.findList(null, null, flowfilters, null);
-            model.setFollowed(data.size()>0);
+            MemberFollow follow = memberFollowService.find(self,member);
+            model.setFollowed(follow!=null);
             Friends friends = friendsService.find(self,member);
             if (friends!=null) {
                 model.setFriendStatus(friends.getStatus());
@@ -91,4 +90,38 @@ public class TopicController extends BaseController {
         return Message.bind(model,request);
    }
 
- }
+    /**
+     *  专栏搜索
+     *  keyword
+     */
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @ResponseBody
+    public Message search(String keyword, Pageable pageable, HttpServletRequest request){
+        if (keyword==null) {
+            return Message.error("请输入关键词");
+        }
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(Filter.like("name","%"+keyword+"%"));
+        pageable.setFilters(filters);
+        Page<Topic> page = topicService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        List<TopicListModel> data = TopicListModel.bindList(page.getContent());
+        model.setData(data);
+        Member self = memberService.getCurrent();
+        if (self!=null) {
+            for (TopicListModel m:data) {
+                Member follow = memberService.find(m.getId());
+                if (self.equals(follow)) {
+                    m.setFollow(true);
+                } else {
+                    MemberFollow memberFollow = memberFollowService.find(self, follow);
+                    m.setFollow(memberFollow!=null);
+                }
+                MemberFollow memberFollow = memberFollowService.find(follow, self);
+                m.setFollowed(memberFollow!=null);
+            }
+        }
+        return Message.bind(model,request);
+    }
+
+}

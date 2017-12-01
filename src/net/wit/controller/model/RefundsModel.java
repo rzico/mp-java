@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 
 import net.wit.entity.Payment;
+import net.wit.entity.Refunds;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.util.Date;
 
 //文章编辑模板
 
-public class PaymentModel implements Serializable {
+public class RefundsModel implements Serializable {
 
     /** 收款方 */
     private String nickName;
@@ -62,11 +63,11 @@ public class PaymentModel implements Serializable {
         this.createDate = createDate;
     }
 
-    public void bind(Payment payment) {
-        this.amount = payment.getAmount();
-        this.createDate = payment.getCreateDate();
-        this.memo = payment.getMemo();
-        this.logo = payment.getPayee().getLogo();
-        this.nickName = payment.getPayee().getNickName();
+    public void bind(Refunds refunds) {
+        this.amount = refunds.getAmount();
+        this.createDate = refunds.getCreateDate();
+        this.memo = refunds.getMemo();
+        this.logo = refunds.getPayee().getLogo();
+        this.nickName = refunds.getPayee().getNickName();
     }
 }

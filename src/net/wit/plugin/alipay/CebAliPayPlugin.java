@@ -165,7 +165,7 @@ public class CebAliPayPlugin extends PaymentPlugin {
 		PluginConfig pluginConfig = getPluginConfig();
 		Map<String,Object> data = new HashMap<String,Object>();
 		SortedMap<String,String> map = XmlUtils.getParameterMap(request);
-		map.put("service", "pay.weixin.native");
+		map.put("service", "unified.trade.micropay");
 		//safekey64编码
 		map.put("auth_code", safeKey);
 		DecimalFormat decimalFormat = new DecimalFormat("#");
@@ -176,6 +176,7 @@ public class CebAliPayPlugin extends PaymentPlugin {
 		map.put("total_fee", decimalFormat.format(money));
 		map.put("mch_create_ip", request.getRemoteAddr());
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
+//		map.put("notify_url", getNotifyUrl(payment.getSn(),NotifyMethod.async));
 
 		Map<String,String> params = SignUtils.paraFilter(map);
 		StringBuilder buf = new StringBuilder((params.size() +1) * 10);
@@ -210,8 +211,17 @@ public class CebAliPayPlugin extends PaymentPlugin {
 							data.put("result_msg", "执行成功");
 							return data;
 						}else{
-							data.put("return_code", "FAIL");
-							data.put("result_msg", resultMap.get("message"));
+							if (
+									resultMap.get("err_code").toString().equals("USERPAYING") ||
+											resultMap.get("err_code").toString().equals("NOTENOUGH") ||
+											resultMap.get("err_code").toString().equals("SYSTEMERROR")
+									) {
+								data.put("return_code", "SUCCESS");
+								data.put("result_msg", "待确定状态");
+							} else {
+								data.put("return_code", "FAIL");
+								data.put("result_msg", resultMap.get("message"));
+							}
 							return data;
 						}
 					}

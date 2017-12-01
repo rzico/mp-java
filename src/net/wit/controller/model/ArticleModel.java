@@ -4,12 +4,15 @@ import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //文章展示输出模板 H5等
 public class ArticleModel implements Serializable {
 
     private Long id;
+    /** 最近变动时间 */
+    private Date modifyDate;
     /** 标题 */
     private String title;
     /** 标题图 */
@@ -130,9 +133,18 @@ public class ArticleModel implements Serializable {
         isDraft = draft;
     }
 
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
     public void bind(Article article) {
 
         this.id = article.getId();
+        this.modifyDate = article.getModifyDate();
         this.title = article.getTitle();
         if (article.getMusic()!=null) {
             this.music = JsonUtils.toObject(article.getMusic(), MusicModel.class);

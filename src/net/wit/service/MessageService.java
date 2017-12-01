@@ -17,6 +17,7 @@ import net.wit.entity.*;
 
 public interface MessageService extends BaseService<Message, Long> {
 	Page<Message> findPage(Date beginDate,Date endDate, Pageable pageable);
+	public Member GMInit(Message.Type type);
 	public Boolean pushTo(Message message);
 	//活动专栏
 	public Boolean topicPushTo(Topic topic);

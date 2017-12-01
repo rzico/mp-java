@@ -37,7 +37,6 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '微信appSerect'")
 	private String wxAppSerect;
 
-
 	/** 小程序 appId */
 	@Column(columnDefinition="varchar(255) comment '小程序appId'")
 	private String appetAppId;

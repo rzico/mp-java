@@ -98,7 +98,7 @@ public class TopicBillServiceImpl extends BaseServiceImpl<TopicBill, Long> imple
 		return topicBillDao.findPage(beginDate,endDate,pageable);
 	}
 
-	public Payment activate(TopicBill topicBill) {
+	public synchronized Payment activate(TopicBill topicBill) {
 		topicBillDao.persist(topicBill);
 		String userName = "gm_"+String.valueOf(10200+Message.Type.account.ordinal());
 		Member payee = memberDao.findByUsername(userName);

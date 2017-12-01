@@ -66,6 +66,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "topicDaoImpl")
 	private TopicDao topicDao;
 
+	@Resource(name = "articleRewardDaoImpl")
+	private ArticleRewardDao articleRewardDao;
+
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
 		super.setBaseDao(paymentDao);
@@ -111,68 +114,134 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			} else
 			if (payment.getType() == Payment.Type.cashier) {
 				Member member = payment.getPayee();
-				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 				PayBill payBill = payment.getPayBill();
-				BigDecimal settle = payBill.getSettleAmount();
-				if (settle.compareTo(BigDecimal.ZERO)>0) {
-					member.setBalance(member.getBalance().add(settle));
-					memberDao.merge(member);
-					Deposit deposit = new Deposit();
-					deposit.setBalance(member.getBalance());
-					deposit.setType(Deposit.Type.cashier);
-					deposit.setMemo(payment.getMemo());
-					deposit.setMember(member);
-					deposit.setCredit(settle);
-					deposit.setDebit(BigDecimal.ZERO);
-					deposit.setDeleted(false);
-					deposit.setOperator("system");
-					deposit.setPayment(payment);
-					depositDao.persist(deposit);
-					messageService.depositPushTo(deposit);
+				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
+					payBill.setFee(BigDecimal.ZERO);
+					//线下或会员卡支付，不需要给商家结算
+				} else {
+					BigDecimal settle = payBill.getSettleAmount();
+					if (settle.compareTo(BigDecimal.ZERO) > 0) {
+						member.setBalance(member.getBalance().add(settle));
+						memberDao.merge(member);
+						Deposit deposit = new Deposit();
+						deposit.setBalance(member.getBalance());
+						deposit.setType(Deposit.Type.cashier);
+						deposit.setMemo(payment.getMemo());
+						deposit.setMember(member);
+						deposit.setCredit(settle);
+						deposit.setDebit(BigDecimal.ZERO);
+						deposit.setDeleted(false);
+						deposit.setOperator("system");
+						deposit.setPayment(payment);
+						depositDao.persist(deposit);
+						messageService.depositPushTo(deposit);
+					}
 				}
+				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
+			}else
+			if (payment.getType() == Payment.Type.card) {
+				Member member = payment.getPayee();
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+				PayBill payBill = payment.getPayBill();
+				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
+					payBill.setFee(BigDecimal.ZERO);
+					//线下或会员卡支付，不需要给商家结算
+				} else {
+					BigDecimal settle = payBill.getSettleAmount();
+					if (settle.compareTo(BigDecimal.ZERO) > 0) {
+						member.setBalance(member.getBalance().add(settle));
+						memberDao.merge(member);
+						Deposit deposit = new Deposit();
+						deposit.setBalance(member.getBalance());
+						deposit.setType(Deposit.Type.card);
+						deposit.setMemo(payment.getMemo());
+						deposit.setMember(member);
+						deposit.setCredit(settle);
+						deposit.setDebit(BigDecimal.ZERO);
+						deposit.setDeleted(false);
+						deposit.setOperator("system");
+						deposit.setPayment(payment);
+						depositDao.persist(deposit);
+						messageService.depositPushTo(deposit);
+					}
+				}
+				payBill.setMember(payment.getMember());
+				payBill.setStatus(PayBill.Status.success);
+				payBillDao.merge(payBill);
+				if (payBill.getType().equals(PayBill.Type.card)) {
+					Card card = payBill.getCard();
+					cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+					card.setBalance(card.getBalance().add(payBill.getCardAmount()));
+					cardDao.merge(card);
+
+					CardBill cardBill = new CardBill();
+					cardBill.setDeleted(false);
+					cardBill.setOwner(payBill.getOwner());
+					cardBill.setShop(payBill.getShop());
+					cardBill.setCredit(payBill.getCardAmount());
+					cardBill.setDebit(BigDecimal.ZERO);
+					if (payBill.getAdmin()!=null) {
+						cardBill.setMemo("充值，操作员:"+payBill.getAdmin().getName());
+						cardBill.setOperator(payBill.getAdmin().getName());
+					} else {
+						cardBill.setMemo("自助充值");
+						cardBill.setOperator(payBill.getCard().getName());
+					}
+					if (payment.getMethod().equals(Payment.Method.offline)) {
+						cardBill.setMethod(CardBill.Method.offline);
+					} else {
+						cardBill.setMethod(CardBill.Method.online);
+					}
+					cardBill.setMember(card.getMembers().get(0));
+					cardBill.setCard(card);
+					cardBill.setType(CardBill.Type.recharge);
+					cardBill.setBalance(card.getBalance());
+					cardBillDao.persist(cardBill);
+				}
 			} else
 			if (payment.getType() == Payment.Type.reward) {
 				Member member = payment.getPayee();
 				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-				member.setBalance(member.getBalance().add(payment.getAmount()));
+				ArticleReward reward = payment.getArticleReward();
+				member.setBalance(member.getBalance().add(reward.getAmount().subtract(reward.getFee())));
 				memberDao.merge(member);
 				Deposit deposit = new Deposit();
 				deposit.setBalance(member.getBalance());
 				deposit.setType(Deposit.Type.reward);
 				deposit.setMemo(payment.getMemo());
 				deposit.setMember(member);
-				deposit.setCredit(payment.getAmount());
+				deposit.setCredit(reward.getAmount().subtract(reward.getFee()));
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setPayment(payment);
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
-				ArticleReward reward = payment.getArticleReward();
-				if (reward!=null) {
-					messageService.rewardPushTo(reward);
-				}
+				reward.setStatus(ArticleReward.Status.success);
+				articleRewardDao.merge(reward);
+				messageService.rewardPushTo(reward);
 			} else
-			if (payment.getType() == Payment.Type.recharge) {
-				Member member = payment.getPayee();
-				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-				member.setBalance(member.getBalance().add(payment.getAmount()));
-				memberDao.merge(member);
-				Deposit deposit = new Deposit();
-				deposit.setBalance(member.getBalance());
-				deposit.setType(Deposit.Type.recharge);
-				deposit.setMemo(payment.getMemo());
-				deposit.setMember(member);
-				deposit.setCredit(payment.getAmount());
-				deposit.setDebit(BigDecimal.ZERO);
-				deposit.setDeleted(false);
-				deposit.setOperator("system");
-				deposit.setPayment(payment);
-				depositDao.persist(deposit);
-				messageService.depositPushTo(deposit);
-			} else
+//			if (payment.getType() == Payment.Type.recharge) {
+//				Member member = payment.getPayee();
+//				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+//				member.setBalance(member.getBalance().add(payment.getAmount()));
+//				memberDao.merge(member);
+//				Deposit deposit = new Deposit();
+//				deposit.setBalance(member.getBalance());
+//				deposit.setType(Deposit.Type.recharge);
+//				deposit.setMemo(payment.getMemo());
+//				deposit.setMember(member);
+//				deposit.setCredit(payment.getAmount());
+//				deposit.setDebit(BigDecimal.ZERO);
+//				deposit.setDeleted(false);
+//				deposit.setOperator("system");
+//				deposit.setPayment(payment);
+//				depositDao.persist(deposit);
+//				messageService.depositPushTo(deposit);
+//			} else
 			if (payment.getType() == Payment.Type.topic) {
 				TopicBill topicBill = payment.getTopicBill();
 				topicBill.setStatus(TopicBill.Status.success);
@@ -232,6 +301,21 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						cardBillDao.persist(bill);
 					}
 				}
+			} else
+			if (payment.getType().equals(Payment.Type.card)) {
+				PayBill payBill = payment.getPayBill();
+				payBill.setStatus(PayBill.Status.failure);
+				payBillDao.merge(payBill);
+			} else
+			if (payment.getType().equals(Payment.Type.reward)) {
+				ArticleReward reward = payment.getArticleReward();
+				reward.setStatus(ArticleReward.Status.failure);
+				articleRewardDao.merge(reward);
+			} else
+			if (payment.getType().equals(Payment.Type.topic)) {
+				TopicBill topicBill = payment.getTopicBill();
+				topicBill.setStatus(TopicBill.Status.failure);
+				topicBillDao.merge(topicBill);
 			}
 		};
 	}

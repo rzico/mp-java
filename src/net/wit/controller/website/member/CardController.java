@@ -92,7 +92,7 @@ public class CardController extends BaseController {
         } else {
             card.setMobile(member.getMobile());
         }
-        if (name!=null) {
+        if (name!=null && !"".equals(name)) {
             card.setName(name);
         } else {
             card.setName(member.getName());
@@ -188,6 +188,11 @@ public class CardController extends BaseController {
         if (card==null) {
             return Message.error("无效卡号");
         }
+        if (card.getStatus().equals(Card.Status.activate)) {
+            if (!card.getMembers().contains(member)) {
+                return Message.error("不是本人不能打开");
+            }
+        }
         CardModel model = new CardModel();
         model.bind(card);
         Map<String,Object> data = new HashMap<String,Object>();
@@ -213,7 +218,6 @@ public class CardController extends BaseController {
         cardExt.put("signature", sha1Sign1);
         data.put("cardExt",cardExt);
         data.put("cardId",card.getTopicCard().getWeixinCardId());
-
         return Message.bind(data,request);
     }
 

@@ -28,7 +28,7 @@ public class Push {
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("SyncOtherMachine",2);
-        data.put("From_Account",message.getMember().getUsername());
+        data.put("From_Account",message.getSender().getUsername());
         data.put("To_Account",message.getReceiver().userId());
         data.put("MsgRandom",random);
         data.put("MsgTimeStamp",message.getCreateDate().getTime() / 1000);

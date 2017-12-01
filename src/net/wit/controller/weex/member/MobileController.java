@@ -50,8 +50,13 @@ public class MobileController extends BaseController {
      */
     @RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
     @ResponseBody
-    public Message sendMobile(String mobile, HttpServletRequest request) {
-        Member member = memberService.findByMobile(mobile);
+    public Message sendMobile(HttpServletRequest request) {
+        String m = rsaService.decryptParameter("mobile", request);
+        rsaService.removePrivateKey(request);
+        if (m==null) {
+            return Message.error("无效手机号");
+        }
+        Member member = memberService.findByMobile(m);
         if (member!=null) {
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             BindUser bindUser = bindUserService.findMember(member,bundle.getString("app.appid"), BindUser.Type.weixin);
@@ -63,13 +68,13 @@ public class MobileController extends BaseController {
         String securityCode = String.valueOf(challege);
 
         SafeKey safeKey = new SafeKey();
-        safeKey.setKey(mobile);
+        safeKey.setKey(m);
         safeKey.setValue(securityCode);
         safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
         redisService.put(Member.MOBILE_BIND_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();
-        smsSend.setMobile(mobile);
+        smsSend.setMobile(m);
         smsSend.setContent("验证码 :" + securityCode + ",只用于注册账号。");
         smssendService.smsSend(smsSend);
         return Message.success("发送成功");

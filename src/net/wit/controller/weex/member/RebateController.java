@@ -67,6 +67,9 @@ public class RebateController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         BigDecimal sm = depositService.summary(type,member);
+        if (sm==null) {
+            sm = BigDecimal.ZERO;
+        }
         return Message.bind(sm,request);
     }
 

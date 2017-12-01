@@ -103,6 +103,19 @@ public class TopicCard extends BaseEntity {
     private String description;
 
     /**
+     *  发卡序号
+     */
+    @Column(columnDefinition="bigint(20) not null default 0 comment '发卡序号'")
+    private Long increment;
+
+
+    /** 充值活动 */
+    @Lob
+    @Column(columnDefinition="longtext comment '充值活动'")
+    @JsonIgnore
+    private String activity;
+
+    /**
      * 专栏
      */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -180,6 +193,22 @@ public class TopicCard extends BaseEntity {
 
     public void setTopic(Topic topic) {
         this.topic = topic;
+    }
+
+    public Long getIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(Long increment) {
+        this.increment = increment;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
     }
 
     public MapEntity getMapTopic() {

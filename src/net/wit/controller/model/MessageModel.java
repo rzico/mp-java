@@ -9,11 +9,15 @@ import java.util.List;
 
 public class MessageModel implements Serializable {
 
+    private Long id;
+
     private String userId;
     /** 类型 */
     private Message.Type type;
     /** 昵称 */
     private String nickName;
+    /** 标题 */
+    private String title;
     /** 头像 */
     private String logo;
     /** 内容 */
@@ -89,11 +93,24 @@ public class MessageModel implements Serializable {
         this.ext = ext;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void bind(net.wit.entity.Message message) {
+        this.id = message.getId();
         Member member = message.getMember();
+        if (member==null) {
+            member = message.getSender();
+        }
         this.userId = member.userId();
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
+        this.title = message.getTitle();
         this.content = message.getContent();
         if (message.getReaded()) {
             this.unRead = 0;

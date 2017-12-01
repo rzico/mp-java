@@ -3,9 +3,12 @@ package net.wit.listener;
 
 import java.util.logging.Logger;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
+import net.wit.entity.Message;
 import net.wit.plat.im.User;
+import net.wit.service.MessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -33,6 +36,9 @@ public class InitListener implements ServletContextAware, ApplicationListener<Co
 	@Value("${system.version}")
 	private String systemVersion;
 
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
@@ -42,6 +48,7 @@ public class InitListener implements ServletContextAware, ApplicationListener<Co
 			String info = "I|n|i|t|i|a|l|i|z|i|n|g| " + systemVersion;
 			logger.info(info.replace("|", ""));
 			User.imAttr();
+			messageService.GMInit(Message.Type.gmchat);
 		}
 	}
 

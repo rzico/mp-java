@@ -94,6 +94,7 @@ public class PaymentController extends BaseController {
             return Message.error("支付插件无效");
         }
 
+        payment.setMethod(Method.online);
         payment.setPaymentPluginId(paymentPluginId);
         payment.setPaymentMethod(paymentPlugin.getName());
         paymentService.update(payment);
@@ -105,7 +106,7 @@ public class PaymentController extends BaseController {
             parameters = paymentPlugin.submit(payment,safeKey,request);
         }
         if ("SUCCESS".equals(parameters.get("return_code"))) {
-            if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId)) {
+            if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
                 try {
                     paymentService.handle(payment);
                 } catch (Exception e) {
@@ -115,7 +116,7 @@ public class PaymentController extends BaseController {
             }
             return Message.success(parameters, "success");
         } else {
-            return Message.error(parameters.get("return_msg").toString());
+            return Message.error(parameters.get("result_msg").toString());
         }
 
     }
@@ -155,7 +156,6 @@ public class PaymentController extends BaseController {
      */
     @RequestMapping("/transfer/{sn}")
     public void transfer(@PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
-        System.out.println(sn);
         Transfer transfer = transferService.findBySn(sn);
 
         if (transfer != null) {
@@ -179,31 +179,31 @@ public class PaymentController extends BaseController {
 
     }
 
-    /**
-     * 退款结果通知
-     */
-    @RequestMapping("/weixin/refunds")
-    public void refunds(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin("weixinH5Plugin");
-        if (paymentPlugin != null) {
-            String resp = paymentPlugin.refundsVerify(request);
-            if (!"".equals(resp)) {
-                Refunds refunds = refundsService.findBySn(resp);
-                refundsService.handle(refunds);
-            }
-            response.setContentType("application/json");
-            PrintWriter out = response.getWriter();
-            out.print("success");
-            out.flush();
-            return;
-        }
-        response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
-        out.print("error");
-        out.flush();
-
-    }
-
+//    /**
+//     * 退款结果通知
+//     */
+//    @RequestMapping("/weixin/refunds")
+//    public void refunds(HttpServletRequest request,HttpServletResponse response) throws Exception {
+//        PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin("weixinH5Plugin");
+//        if (paymentPlugin != null) {
+//            String resp = paymentPlugin.refundsVerify(request);
+//            if (!"".equals(resp)) {
+//                Refunds refunds = refundsService.findBySn(resp);
+//                refundsService.handle(refunds);
+//            }
+//            response.setContentType("application/json");
+//            PrintWriter out = response.getWriter();
+//            out.print("success");
+//            out.flush();
+//            return;
+//        }
+//        response.setContentType("application/json");
+//        PrintWriter out = response.getWriter();
+//        out.print("error");
+//        out.flush();
+//
+//    }
+//
     /**
      * 查询支付状态
      */
@@ -213,6 +213,12 @@ public class PaymentController extends BaseController {
         Payment payment = paymentService.findBySn(sn);
         if (payment == null) {
             return Message.error("无效支付单号");
+        }
+        if (payment.getStatus().equals(Status.success)) {
+            return Message.success((Object) "0000","支付成功");
+        } else
+        if (payment.getStatus().equals(Status.failure)) {
+            return Message.success((Object) "0001","支付失败");
         }
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
         String resultCode = null;

@@ -57,7 +57,10 @@ public class Deposit extends BaseEntity {
 		rebate,
 
 		/** 收款  收入 */
-		cashier
+		cashier,
+
+		/** 会员卡  收入 */
+		card
 	}
 
 	/** 类型 */

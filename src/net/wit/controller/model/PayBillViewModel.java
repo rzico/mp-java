@@ -17,6 +17,10 @@ public class PayBillViewModel implements Serializable {
     private BigDecimal couponDiscount;
     /**  摘要 */
     private String memo;
+    /**  LOGO */
+    private String logo;
+    /**  昵称 */
+    private String nickName;
     /**  时间 */
     private Date createDate;
 
@@ -60,19 +64,29 @@ public class PayBillViewModel implements Serializable {
         this.createDate = createDate;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     public void bind(PayBill payBill) {
         this.id = payBill.getId();
         this.amount = payBill.getAmount().subtract(payBill.getCouponDiscount());
         this.couponDiscount = payBill.getCouponDiscount();
-        if (payBill.getCardDiscount().compareTo(BigDecimal.ZERO)==0) {
-            this.memo = "会员卡支付";
-        } else {
-            if (payBill.getMethod().equals(PayBill.Method.online)) {
-                this.memo = payBill.getPayment().getPaymentMethod();
-            } else {
-                this.memo = "现金收银";
-            }
-        }
+        this.memo = payBill.getPayment().getPaymentMethod();
+        this.logo = payBill.getMember().getLogo();
+        this.createDate = payBill.getCreateDate();
     }
 
 

@@ -10,6 +10,7 @@ import net.wit.Pageable;
 import net.wit.entity.Card;
 import net.wit.entity.Member;
 import net.wit.entity.Payment;
+import net.wit.entity.Refunds;
 
 /**
  * @ClassName: MemberService
@@ -51,5 +52,8 @@ public interface MemberService extends BaseService<Member, Long> {
 
 	//支付插件专用方法
 	public void payment(Member member, Payment payment) throws Exception;
+
+	//支付插件专用方法
+	public void refunds(Member member, Refunds refunds) throws Exception;
 
 }

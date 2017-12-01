@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.CardModel;
+import net.wit.controller.model.CardViewModel;
 import net.wit.controller.model.CouponModel;
 import net.wit.entity.*;
 import net.wit.plat.weixin.pojo.Ticket;
@@ -62,6 +63,11 @@ public class CardController extends BaseController {
     @Resource(name = "cardBillServiceImpl")
     private CardBillService cardBillService;
 
+    @Resource(name = "shopServiceImpl")
+    private ShopService shopService;
+
+    @Resource(name = "payBillServiceImpl")
+    private PayBillService payBillService;
 
     /**
      *   获取会员卡
@@ -77,12 +83,18 @@ public class CardController extends BaseController {
         if (card==null) {
             return Message.error("无效卡号");
         }
+        if (!card.getMembers().contains(member)) {
+            return Message.error("不是本人不能打开");
+        }
         CardModel model = new CardModel();
         model.bind(card);
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
+        TopicCard topicCard = card.getTopicCard();
         data.put("mobile",member.getMobile());
         data.put("name",member.getName());
+        data.put("description",topicCard.getDescription());
+        data.put("prerogative",topicCard.getPrerogative());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
@@ -91,23 +103,45 @@ public class CardController extends BaseController {
         return Message.bind(data,request);
     }
 
-
     /**
-     *  会员卡充值
+     *   获取会员卡
      */
-    @RequestMapping(value = "/fill", method = RequestMethod.POST)
+    @RequestMapping(value = "/info")
     @ResponseBody
-    public Message fill(Long id, BigDecimal amount, Pageable pageable, HttpServletRequest request){
+    public Message info(Long id,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
+        Card card = cardService.find(id);
+        if (card==null) {
+            return Message.error("无效卡号");
+        }
+        CardViewModel model = new CardViewModel();
+        model.bind(card);
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("card",model);
+        TopicCard topicCard = card.getTopicCard();
+        data.put("description",topicCard.getDescription());
+        data.put("prerogative",topicCard.getPrerogative());
+        return Message.bind(data,request);
+    }
+
+
+    /**
+     *  提交收款
+     *  id amount
+     */
+    @RequestMapping(value = "/fill", method = RequestMethod.POST)
+    @ResponseBody
+    public Message fill(Long id,BigDecimal amount,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
         }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有点亮专栏");
+            return Message.error("没有开通收银台");
         }
         Shop shop = admin.getShop();
         if (shop==null) {
@@ -117,51 +151,54 @@ public class CardController extends BaseController {
         if (card==null) {
             return Message.error("无效卡号");
         }
-        if (card.getStatus().equals(Card.Status.activate)) {
+        if (!card.getOwner().equals(shop.getOwner())) {
+            return Message.error("不是本店会员卡");
+        }
+        if (!card.getStatus().equals(Card.Status.activate)) {
             return Message.error("会员卡没激活");
         }
-        Enterprise enterprise = admin.getEnterprise();
-        Member owner = enterprise.getMember();
-
-        CardBill cardBill = new CardBill();
-        cardBill.setDeleted(false);
-        cardBill.setOwner(owner);
-        cardBill.setShop(shop);
-        cardBill.setCredit(amount);
-        cardBill.setDebit(BigDecimal.ZERO);
-        cardBill.setMemo("线下充值,操作员:"+admin.getName());
-        cardBill.setMethod(CardBill.Method.offline);
-        cardBill.setMember(card.getMembers().get(0));
-        cardBill.setCard(card);
-        cardBill.setOperator(admin.getName());
+        PayBill payBill = new PayBill();
+        payBill.setType(PayBill.Type.card);
+        payBill.setAmount(amount);
+        payBill.setCardAmount(amount);
+        payBill.setNoDiscount(BigDecimal.ZERO);
+        payBill.setCouponCode(null);
+        payBill.setCouponDiscount(BigDecimal.ZERO);
+        payBill.setCardDiscount(BigDecimal.ZERO);
+        BigDecimal effective = payBill.getEffectiveAmount();
+        payBill.setFee(effective.multiply(shop.getEnterprise().getBrokerage()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+        payBill.setMethod(PayBill.Method.online);
+        payBill.setStatus(PayBill.Status.none);
+        payBill.setMember(member);
+        payBill.setOwner(shop.getOwner());
+        payBill.setShop(shop);
+        payBill.setAdmin(admin);
+        payBill.setCard(card);
+        payBill.setEnterprise(shop.getEnterprise());
         try {
-            cardBillService.fill(cardBill);
+            Payment payment = payBillService.cardFill(payBill);
+            Map<String,Object> data = new HashMap<String,Object>();
+            data.put("id",payBill.getId());
+            data.put("sn",payment.getSn());
+            return Message.success(data,"success");
         } catch (Exception e) {
-            logger.debug(e.getMessage());
-            return Message.error("保存失败");
+            return Message.error(e.getMessage());
         }
-        CardModel model = new CardModel();
-        model.bind(card);
-        return Message.success(model,"充值成功");
     }
-
 
     /**
      *  会员卡退款
      */
-    @RequestMapping(value = "/refund", method = RequestMethod.POST)
+    @RequestMapping(value = "/refund")
     @ResponseBody
     public Message refund(Long id, BigDecimal amount, Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有点亮专栏");
+            return Message.error("没有开通收银台");
         }
         Shop shop = admin.getShop();
         if (shop==null) {
@@ -171,32 +208,38 @@ public class CardController extends BaseController {
         if (card==null) {
             return Message.error("无效卡号");
         }
-        if (card.getStatus().equals(Card.Status.activate)) {
+        if (!card.getOwner().equals(shop.getOwner())) {
+            return Message.error("不是本店会员卡");
+        }
+        if (!card.getStatus().equals(Card.Status.activate)) {
             return Message.error("会员卡没激活");
         }
-        Enterprise enterprise = admin.getEnterprise();
-        Member owner = enterprise.getMember();
-
-        CardBill cardBill = new CardBill();
-        cardBill.setDeleted(false);
-        cardBill.setOwner(owner);
-        cardBill.setShop(shop);
-        cardBill.setCredit(BigDecimal.ZERO);
-        cardBill.setDebit(amount);
-        cardBill.setMemo("线下退款,操作员:"+admin.getName());
-        cardBill.setMethod(CardBill.Method.offline);
-        cardBill.setMember(card.getMembers().get(0));
-        cardBill.setCard(card);
-        cardBill.setOperator(admin.getName());
+        PayBill payBill = new PayBill();
+        payBill.setType(PayBill.Type.cardRefund);
+        payBill.setAmount(BigDecimal.ZERO.subtract(amount));
+        payBill.setCardAmount(BigDecimal.ZERO.subtract(amount));
+        payBill.setNoDiscount(BigDecimal.ZERO);
+        payBill.setCouponCode(null);
+        payBill.setCouponDiscount(BigDecimal.ZERO);
+        payBill.setCardDiscount(BigDecimal.ZERO);
+        payBill.setFee(BigDecimal.ZERO);
+        payBill.setMethod(PayBill.Method.offline);
+        payBill.setStatus(PayBill.Status.none);
+        payBill.setMember(member);
+        payBill.setOwner(shop.getOwner());
+        payBill.setShop(shop);
+        payBill.setAdmin(admin);
+        payBill.setCard(card);
+        payBill.setEnterprise(shop.getEnterprise());
         try {
-            cardBillService.refund(cardBill);
+            Refunds refunds = payBillService.cardRefund(payBill);
+            Map<String,Object> data = new HashMap<String,Object>();
+            data.put("id",payBill.getId());
+            data.put("sn",refunds.getSn());
+            return Message.success(data,"success");
         } catch (Exception e) {
-            logger.debug(e.getMessage());
-            return Message.error("退款失败");
+            return Message.error(e.getMessage());
         }
-        CardModel model = new CardModel();
-        model.bind(card);
-        return Message.success(model,"退款成功");
     }
 
     /**
@@ -220,10 +263,19 @@ public class CardController extends BaseController {
         if (shop==null) {
             return Message.error("没有分配门店");
         }
+        if (member.getTopic().getTopicCard()==null) {
+            return Message.error("没有开通会员卡");
+        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Map<String,String> data = new HashMap<String,String>();
+        data.put("logo",member.getTopic().getLogo());
+        data.put("name",member.getTopic().getName());
+        data.put("prerogative",member.getTopic().getTopicCard().getPrerogative());
+        data.put("description",member.getTopic().getTopicCard().getDescription());
         Long c = 100000000+shop.getId();
         String qr = "http://"+bundle.getString("weixin.url")+"/q/818801"+"86"+String.valueOf(c);
-        return Message.bind(qr,request);
+        data.put("qrcode",qr);
+        return Message.bind(data,request);
     }
 
     /**
@@ -247,10 +299,11 @@ public class CardController extends BaseController {
         Member owner = enterprise.getMember();
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("owner", Filter.Operator.eq,owner));
+        filters.add(new Filter("status", Filter.Operator.ne,Card.Status.none));
         pageable.setFilters(filters);
         Page<Card> page = cardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(CardModel.bindList(page.getContent()));
+        model.setData(CardViewModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

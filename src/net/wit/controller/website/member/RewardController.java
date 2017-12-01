@@ -1,11 +1,12 @@
-package net.wit.controller.weex.member;
+package net.wit.controller.website.member;
 
 import net.wit.*;
-import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticleRewardModel;
-import net.wit.entity.*;
+import net.wit.entity.Article;
+import net.wit.entity.ArticleReward;
+import net.wit.entity.Member;
+import net.wit.entity.Payment;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,13 @@ import java.util.List;
 
 
 /**
- * @ClassName: ArticleController
+ * @ClassName: RewardController
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexMemberRewardController")
-@RequestMapping("/weex/member/reward")
+@Controller("websiteMemberRewardController")
+@RequestMapping("/website/member/reward")
 public class RewardController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
@@ -62,6 +63,9 @@ public class RewardController extends BaseController {
         }
 
         Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
         ArticleReward reward = new ArticleReward();
         reward.setArticle(article);
         reward.setAmount(amount);
@@ -69,7 +73,7 @@ public class RewardController extends BaseController {
         reward.setIp(request.getRemoteAddr());
         reward.setStatus(ArticleReward.Status.waiting);
         reward.setMember(member);
-        reward.setFee(amount.multiply(new BigDecimal("0.05")));
+        reward.setFee(amount.multiply(new BigDecimal("0.1")));
         Payment payment = articleRewardService.saveAndPayment(reward);
         if (payment==null) {
             return Message.error("打赏失败");
@@ -77,35 +81,4 @@ public class RewardController extends BaseController {
         return Message.success((Object) payment.getSn(),"发布成功");
 
     }
-
-    /**
-     *  我的赏金
-     */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @ResponseBody
-    public Message list(Pageable pageable, HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("author", Filter.Operator.eq,member));
-        pageable.setFilters(filters);
-        Page<ArticleReward> page = articleRewardService.findPage(null,null,pageable);
-        PageBlock model = PageBlock.bind(page);
-        model.setData(ArticleRewardModel.bindList(page.getContent()));
-        return Message.bind(model,request);
-    }
-
-    /**
-     *  合计
-     */
-    @RequestMapping(value = "/summary", method = RequestMethod.GET)
-    @ResponseBody
-    public Message summary(Pageable pageable, HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        BigDecimal sm = articleRewardService.summary(member);
-        if (sm==null) {
-            sm = BigDecimal.ZERO;
-        }
-        return Message.bind(sm,request);
-    }
-
 }

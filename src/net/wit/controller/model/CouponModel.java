@@ -117,6 +117,7 @@ public class CouponModel implements Serializable {
     public void bind(Coupon coupon) {
         this.id = coupon.getId();
         this.color = coupon.getColor();
+        this.scope = coupon.getScope();
         this.amount = coupon.getAmount();
         this.beginDate = coupon.getBeginDate();
         this.endDate = coupon.getEndDate();

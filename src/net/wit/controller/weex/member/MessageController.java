@@ -1,9 +1,10 @@
 package net.wit.controller.weex.member;
 
 import net.wit.*;
+import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.MessageModel;
-import net.wit.entity.Member;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,6 +91,52 @@ public class MessageController extends BaseController {
         filters.add(new Filter("deleted", Filter.Operator.eq,false));
         List<net.wit.entity.Message> ms = messageService.findList(null,null,filters,null);
         return Message.bind(MessageModel.bindDialogue(ms),request);
+    }
+
+    /**
+     *  打开链接
+     */
+    @RequestMapping(value = "/go", method = RequestMethod.GET)
+    @ResponseBody
+    public Message go(Long id,HttpServletRequest request){
+        net.wit.entity.Message message = messageService.find(id);
+        String url = "";
+        if (message.getType().equals(net.wit.entity.Message.Type.account)) {
+            url = "file://view/member/wallet/deposit.js";
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.reward)) {
+            url = "file://view/member/wallet/reward.js";
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.review)) {
+            url = "file://view/member/reviewManage.js";
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.laud)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.follow)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.favorite)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.adoptfriend)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.addfriend)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.order)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.share)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.message)) {
+            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else {
+            url = "";
+        }
+        return Message.bind(url,request);
     }
 
 }

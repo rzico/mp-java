@@ -27,7 +27,7 @@ public class AreaModel implements Serializable {
 
     public void bind(Area area) {
         this.id = area.getId();
-        this.name = area.getName();
+        this.name = area.getFullName();
     }
 
     public static Set<AreaModel> bindSet(Set<Area> areas) {

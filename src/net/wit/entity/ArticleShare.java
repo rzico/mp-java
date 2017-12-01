@@ -31,7 +31,9 @@ public class ArticleShare extends BaseEntity {
 		/** 芸店好友 */
 		appWeex,
 		/** 复制链接 */
-		herf
+		copyHref,
+		/** 浏览器 */
+		browser
 	};
 
 	/** 分享至 */

@@ -74,6 +74,9 @@ public class TopicController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        if (member.getNickName()==null) {
+            return Message.error("请完善个人资料");
+        }
         Topic topic = new Topic();
         topic.setName(member.getNickName());
         topic.setBrokerage(new BigDecimal("0.6"));
@@ -152,6 +155,9 @@ public class TopicController extends BaseController {
         }
         if (name!=null) {
             topic.setName(name);
+        }
+        if (topic.getName().length()>27) {
+            return Message.error("专栏名不能超过9个汉字");
         }
         if (logo!=null) {
             topic.setLogo(logo);
@@ -242,7 +248,7 @@ public class TopicController extends BaseController {
         }
         TopicIndexModel model = new TopicIndexModel();
         model.bind(topic);
-        return Message.success(model,"发布成功");
+        return Message.bind(model,request);
 
     }
 

@@ -18,6 +18,7 @@ import net.wit.Filter.Operator;
 
 import net.wit.dao.DepositDao;
 import net.wit.dao.PaymentDao;
+import net.wit.dao.RefundsDao;
 import net.wit.service.RedisService;
 import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
@@ -50,6 +51,8 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	private DepositDao depositDao;
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
+	@Resource(name = "refundsDaoImpl")
+	private RefundsDao refundsDao;
 
 	@Resource(name = "memberDaoImpl")
 	public void setBaseDao(MemberDao memberDao) {
@@ -161,11 +164,41 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			deposit.setMemo(payment.getMemo());
 			deposit.setPayment(payment);
 			depositDao.persist(deposit);
+			payment.setMember(member);
 			payment.setTranSn(payment.getSn());
 			payment.setMethod(Payment.Method.deposit);
 			paymentDao.merge(payment);
 		} catch (Exception  e) {
 			throw  new RuntimeException("支付失败");
+		}
+	}
+
+	//支付插件专用方法
+	public void refunds(Member member,Refunds refunds) throws Exception {
+		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+		try {
+			member.setBalance(member.getBalance().add(refunds.getAmount()));
+			memberDao.merge(member);
+			Deposit deposit = new Deposit();
+			deposit.setBalance(member.getBalance());
+			deposit.setMember(member);
+			deposit.setCredit(refunds.getAmount());
+			deposit.setDebit(BigDecimal.ZERO);
+			deposit.setDeleted(false);
+			deposit.setType(Deposit.Type.refunds);
+			PayBill payBill = refunds.getPayBill();
+			if (payBill!=null) {
+				deposit.setPayBill(payBill);
+			}
+			deposit.setMemo(refunds.getMemo());
+			deposit.setRefunds(refunds);
+			depositDao.persist(deposit);
+			refunds.setMember(member);
+			refunds.setTranSn(refunds.getSn());
+			refunds.setMethod(Refunds.Method.deposit);
+			refundsDao.merge(refunds);
+		} catch (Exception  e) {
+			throw  new RuntimeException("退款失败");
 		}
 	}
 

@@ -184,6 +184,8 @@ public class PayBillController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         PayBill payBill = calculate(member,shop,amount,noDiscount);
+        payBill.setCardAmount(amount);
+        payBill.setType(PayBill.Type.cashier);
         payBill.setMethod(PayBill.Method.online);
         payBill.setStatus(PayBill.Status.none);
         payBill.setMember(member);

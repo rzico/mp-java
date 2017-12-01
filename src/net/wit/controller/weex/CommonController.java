@@ -74,7 +74,7 @@ public class CommonController extends BaseController {
 		Map<String,Object> data = new HashMap<String,Object>();
 		String ua = request.getHeader("user-agent");
 		if (ua != null) {
-			if (ua.contains("iOS")) {
+			if (ua.indexOf("iOS")!=-1) {
 				data.put("appVersion",bundle.getString("ios.version"));
 				data.put("minVersion",bundle.getString("ios.min.version"));
 				data.put("appUrl",bundle.getString("ios.url"));
@@ -105,12 +105,19 @@ public class CommonController extends BaseController {
 		Map<String,Object> data = new HashMap<>();
 		Map<String,String> menu = new HashMap<>();
 		String ua = request.getHeader("user-agent");
-
-		menu.put("home","file://view/home/index.js");
-		menu.put("add", "file://view/member/editor/editor.js");
-		menu.put("friend", "file://view/friend/list.js");
-		menu.put("message","file://view/message/list.js");
-		menu.put("member", "file://view/member/index.js");
+		if (ua.indexOf("V1")>0) {
+			menu.put("home","file://view/shop/cashier/index.js");
+			menu.put("add", "file://view/shop/card/add.js");
+			menu.put("friend", "file://view/shop/card/list.js");
+			menu.put("message","file://view/message/list.js");
+			menu.put("member", "file://view/member/index.js");
+		} else {
+			menu.put("home","file://view/home/index.js");
+			menu.put("add", "file://view/member/editor/editor.js");
+			menu.put("friend", "file://view/friend/list.js");
+			menu.put("message","file://view/message/list.js");
+			menu.put("member", "file://view/member/index.js");
+		}
 		data.put("tabnav",menu);
 		return Message.bind(data,request);
 	}
