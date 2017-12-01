@@ -87,7 +87,9 @@ public class ShopController extends BaseController {
             isNew = true;
         }
         entity.setName(shop.getName());
-        entity.setArea(areaService.find(areaId));
+        if (areaId!=null) {
+            entity.setArea(areaService.find(areaId));
+        }
         entity.setAddress(shop.getAddress());
         entity.setLicense(shop.getLicense());
         entity.setScene(shop.getScene());
@@ -157,6 +159,21 @@ public class ShopController extends BaseController {
         ShopModel model = new ShopModel();
         model.bind(shop);
         return Message.bind(model,request);
+    }
+
+    /**
+     *  删除门店
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Message delete(Long shopId,HttpServletRequest request){
+        Shop shop = shopService.find(shopId);
+        if (shop==null) {
+            return Message.error("无效shopid");
+        }
+
+        shopService.delete(shop);
+        return Message.error("删除成功");
     }
 
     /**

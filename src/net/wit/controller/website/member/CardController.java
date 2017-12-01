@@ -179,7 +179,7 @@ public class CardController extends BaseController {
                    }
                }
                if (card==null) {
-                   card = cardService.create(owner.getTopic().getTopicCard(), code, member);
+                   card = cardService.create(owner.getTopic().getTopicCard(),shop, code, member);
                }
             } else {
                 return Message.error("无效code");

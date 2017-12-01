@@ -3,9 +3,7 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.CardModel;
-import net.wit.controller.model.CardViewModel;
-import net.wit.controller.model.CouponModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
@@ -113,9 +111,16 @@ public class CardController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
         Card card = cardService.find(id);
         if (card==null) {
             return Message.error("无效卡号");
+        }
+        if (!card.getOwner().equals(admin.getEnterprise().getMember())) {
+            return Message.error("不是本店会员卡");
         }
         CardViewModel model = new CardViewModel();
         model.bind(card);
@@ -125,6 +130,67 @@ public class CardController extends BaseController {
         data.put("description",topicCard.getDescription());
         data.put("prerogative",topicCard.getPrerogative());
         return Message.bind(data,request);
+    }
+
+    /**
+     *    通过卡号获取会员卡信息
+     */
+
+    @RequestMapping(value = "/infobycode")
+    @ResponseBody
+    public Message info(String code,HttpServletRequest request){
+        if (code==null) {
+            return Message.error("无效卡号");
+        }
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        Card card = cardService.find(code);
+        if (card==null) {
+            return Message.error("无效卡号");
+        }
+        if (!card.getOwner().equals(admin.getEnterprise().getMember())) {
+            return Message.error("不是本店会员卡");
+        }
+        CardViewModel model = new CardViewModel();
+        model.bind(card);
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("card",model);
+        TopicCard topicCard = card.getTopicCard();
+        data.put("description",topicCard.getDescription());
+        data.put("prerogative",topicCard.getPrerogative());
+        return Message.bind(data,request);
+    }
+
+    /**
+     *   设置会员卡属性
+     */
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public Message update(Long id,Card.VIP vip,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        Card card = cardService.find(id);
+        if (card==null) {
+            return Message.error("无效卡号");
+        }
+        if (!card.getOwner().equals(admin.getEnterprise().getMember())) {
+            return Message.error("不是本店会员卡");
+        }
+        card.setVip(vip);
+        cardService.update(card);
+        return Message.success("更新成功");
     }
 
 
@@ -309,6 +375,22 @@ public class CardController extends BaseController {
         Page<Card> page = cardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(CardViewModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+    /**
+     *  账单记录
+     */
+    @RequestMapping(value = "/bill", method = RequestMethod.GET)
+    @ResponseBody
+    public Message bill(Long id,Pageable pageable, HttpServletRequest request){
+        Card card = cardService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        pageable.setFilters(filters);
+        Page<CardBill> page = cardBillService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(CardBillModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

@@ -36,6 +36,12 @@ public class ShopModel implements Serializable {
     /** 地区名 */
     private String areaName;
 
+    /** 行业 id */
+    private Long categoryId;
+
+    /** 行业名称 */
+    private String categoryName;
+
     /** 地址 */
     private String address;
 
@@ -133,6 +139,22 @@ public class ShopModel implements Serializable {
         this.telephone = telephone;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public void bind(Shop shop) {
         this.id = shop.getId();
         this.address = shop.getAddress();
@@ -140,6 +162,10 @@ public class ShopModel implements Serializable {
         if (shop.getArea()!=null) {
             this.areaId = shop.getArea().getId();
             this.areaName = shop.getArea().getFullName();
+        }
+        if (shop.getCategory()!=null) {
+            this.categoryId = shop.getCategory().getId();
+            this.categoryName = shop.getCategory().getName();
         }
         this.code = shop.getCode();
         this.scene = shop.getScene();
