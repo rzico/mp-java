@@ -163,10 +163,12 @@ public class ArticleController extends BaseController {
             votes = JsonUtils.toJson(model.getVotes());
         }
         Article article = null;
+        Boolean isNew = false;
         if (id!=null) {
             article = articleService.find(model.getId());
         }
         if (article==null) {
+            isNew = true;
             article = new Article();
             article.setDeleted(false);
             article.setHits(0L);
@@ -194,7 +196,11 @@ public class ArticleController extends BaseController {
         article.setMember(member);
         article.setMediaType(Article.MediaType.image);
 
-        articleService.save(article);
+        if (isNew) {
+            articleService.save(article);
+        } else {
+            articleService.update(article);
+        }
 
         for (ArticleProduct product:article.getProducts()) {
             articleProductService.delete(product);
@@ -249,7 +255,7 @@ public class ArticleController extends BaseController {
         }
         article.setIsDraft(false);
         article.getArticleOptions().setIsPublish(true);
-        articleService.save(article);
+        articleService.update(article);
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
         return Message.success(entityModel,"保存成功");
@@ -277,7 +283,7 @@ public class ArticleController extends BaseController {
         if (!edited) {
             return Message.error("传参不正确");
         }
-        articleService.save(article);
+        articleService.update(article);
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
         return Message.success(entityModel,"保存成功");
@@ -322,7 +328,7 @@ public class ArticleController extends BaseController {
         articleLaudService.save(laud);
 
         article.setLaud(article.getLaud()+1);
-        articleService.save(article);
+        articleService.update(article);
         return Message.success("点赞成功");
 
     }
@@ -338,7 +344,7 @@ public class ArticleController extends BaseController {
             return Message.error("无效文章编号");
         }
         article.setHits(article.getHits()+1);
-        articleService.save(article);
+        articleService.update(article);
         return Message.success("点击成功");
 
     }

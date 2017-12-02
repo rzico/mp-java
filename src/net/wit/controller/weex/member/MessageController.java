@@ -58,7 +58,7 @@ public class MessageController extends BaseController {
         List<Filter> filters = pageable.getFilters();
         filters.add(new Filter("receiver", Filter.Operator.eq,member));
         if (sender!=null) {
-            filters.add(new Filter("member", Filter.Operator.eq,sender));
+            filters.add(new Filter("sender", Filter.Operator.eq,sender));
         }
         if (readed!=null) {
             filters.add(new Filter("readed", Filter.Operator.eq,readed));

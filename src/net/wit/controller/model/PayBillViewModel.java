@@ -23,6 +23,8 @@ public class PayBillViewModel implements Serializable {
     private String nickName;
     /**  时间 */
     private Date createDate;
+    /**  状态 */
+    private PayBill.Status status;
 
     public Long getId() {
         return id;
@@ -80,13 +82,26 @@ public class PayBillViewModel implements Serializable {
         this.nickName = nickName;
     }
 
+    public PayBill.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(PayBill.Status status) {
+        this.status = status;
+    }
+
     public void bind(PayBill payBill) {
         this.id = payBill.getId();
         this.amount = payBill.getAmount().subtract(payBill.getCouponDiscount());
         this.couponDiscount = payBill.getCouponDiscount();
-        this.memo = payBill.getPayment().getPaymentMethod();
+        if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
+            this.memo = payBill.getRefunds().getPaymentMethod();
+        } else {
+            this.memo = payBill.getPayment().getPaymentMethod();
+        }
         this.logo = payBill.getMember().getLogo();
         this.createDate = payBill.getCreateDate();
+        this.status = payBill.getStatus();
     }
 
 

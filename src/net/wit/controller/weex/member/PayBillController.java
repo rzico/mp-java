@@ -83,14 +83,13 @@ public class PayBillController extends BaseController {
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("shop", Filter.Operator.eq,shop));
-        filters.add(new Filter("status", Filter.Operator.eq,PayBill.Status.success));
+        filters.add(new Filter("status", Filter.Operator.ne,PayBill.Status.failure));
         pageable.setFilters(filters);
         Page<PayBill> page = payBillService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(PayBillViewModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
-
 
     /**
      *  收银汇总
@@ -224,7 +223,7 @@ public class PayBillController extends BaseController {
             byte[] data = ESCUtil.byteMerger(cmdBytes);
             return Message.bind(Base64.encodeBase64String(data),request);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Message.error("打印出错了");
         }
     }
