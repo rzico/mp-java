@@ -133,6 +133,16 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					payment.setStatus(Payment.Status.refund_success);
 					paymentDao.merge(payment);
 				}
+				PayBill paymentBill = payment.getPayBill();
+				if (paymentBill!=null) {
+					paymentBill.setStatus(PayBill.Status.refund_success);
+					payBillDao.merge(paymentBill);
+				}
+			}
+			PayBill payBill = refunds.getPayBill();
+			if (payBill!=null) {
+				payBill.setStatus(PayBill.Status.refund_success);
+				payBillDao.merge(payBill);
 			}
 		}
 	}
@@ -154,10 +164,10 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						throw new RuntimeException("重复提交");
 					}
 				}
+				PayBill payBill = refunds.getPayBill();
 				if (refunds.getType().equals(Refunds.Type.cashier)) {
 					Member member =  refunds.getPayee();
 					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
-					PayBill payBill = refunds.getPayBill();
 					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
 						payBill.setFee(BigDecimal.ZERO);
 						//线下业务，本身没有结款
@@ -184,13 +194,12 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						}
 					}
 					payBill.setMember(refunds.getMember());
-					payBill.setStatus(PayBill.Status.success);
+					payBill.setStatus(PayBill.Status.refund_waiting);
 					payBillDao.merge(payBill);
 				}else
 				if (refunds.getType() == Refunds.Type.card) {
 					Member member =  refunds.getPayee();
 					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
-					PayBill payBill = refunds.getPayBill();
 					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
 						payBill.setFee(BigDecimal.ZERO);
 						//线下业务，本身没有结款
@@ -217,7 +226,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						}
 					}
 					payBill.setMember(refunds.getMember());
-					payBill.setStatus(PayBill.Status.success);
+					payBill.setStatus(PayBill.Status.refund_waiting);
 					payBillDao.merge(payBill);
 					if (payBill.getType().equals(PayBill.Type.cardRefund)) {
 						Card card = payBill.getCard();
@@ -274,6 +283,13 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					paymentDao.merge(payment);
 				} else {
 					throw new RuntimeException("重复提交");
+				}
+				PayBill payBill = payment.getPayBill();
+				if (payBill!=null) {
+					if (payBill.getStatus().equals(PayBill.Status.refund_waiting)) {
+						payBill.setStatus(PayBill.Status.success);
+						payBillDao.merge(payBill);
+					}
 				}
 			}
 			if (refunds.getType().equals(Refunds.Type.cashier)) {

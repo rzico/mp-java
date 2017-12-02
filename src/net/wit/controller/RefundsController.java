@@ -91,6 +91,10 @@ public class RefundsController extends BaseController {
             Message.error("无效退款单");
         }
 
+        if (paymentPluginId==null) {
+            paymentPluginId = refunds.getPaymentPluginId();
+        }
+
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
         if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
             return Message.error("支付插件无效");

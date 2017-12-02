@@ -177,7 +177,7 @@ public class ArticleController extends BaseController {
             article.setReview(0L);
             ArticleOptions options = new ArticleOptions();
             article.setArticleOptions(options);
-            article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPrivate);
+            article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPublic);
             article.getArticleOptions().setIsExample(false);
             article.getArticleOptions().setIsPitch(false);
             article.getArticleOptions().setIsPublish(false);
@@ -266,7 +266,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long templateId,Long articleCatalogId,HttpServletRequest request){
+    public Message update(Long id,Long templateId,Long articleCatalogId,Boolean isTop,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
@@ -279,6 +279,11 @@ public class ArticleController extends BaseController {
         if (articleCatalogId!=null) {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
             edited = true;
+        }
+        if (isTop!=null) {
+            ArticleOptions options =article.getArticleOptions();
+            options.setIsTop(isTop);
+            article.setArticleOptions(options);
         }
         if (!edited) {
             return Message.error("传参不正确");

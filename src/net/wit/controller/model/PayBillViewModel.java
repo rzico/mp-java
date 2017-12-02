@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
 import net.wit.entity.PayBill;
+import net.wit.entity.Payment;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -94,10 +95,16 @@ public class PayBillViewModel implements Serializable {
         this.id = payBill.getId();
         this.amount = payBill.getAmount().subtract(payBill.getCouponDiscount());
         this.couponDiscount = payBill.getCouponDiscount();
-        if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
-            this.memo = payBill.getRefunds().getPaymentMethod();
+        if (payBill.getType().equals(PayBill.Type.cashierRefund)) {
+            this.memo = "退款"+payBill.getRefunds().getPaymentMethod()==null?"":(","+payBill.getRefunds().getPaymentMethod());
+        } else
+        if (payBill.getType().equals(PayBill.Type.cardRefund)){
+            this.memo = "退款(会员卡),"+payBill.getRefunds().getPaymentMethod()==null?"":(","+payBill.getRefunds().getPaymentMethod());
+        } else
+        if (payBill.getType().equals(PayBill.Type.card)) {
+            this.memo = "消费(会员卡),"+payBill.getPayment().getPaymentMethod()==null?"":(","+payBill.getPayment().getPaymentMethod());
         } else {
-            this.memo = payBill.getPayment().getPaymentMethod();
+            this.memo = "消费,"+payBill.getPayment().getPaymentMethod()==null?"":(","+payBill.getPayment().getPaymentMethod());
         }
         this.logo = payBill.getMember().getLogo();
         this.createDate = payBill.getCreateDate();

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class CouponController extends BaseController {
      /**
      *  保存优惠券
      */
-    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    @RequestMapping(value = "/submit")
     @ResponseBody
     public Message submit(Coupon coupon, HttpServletRequest request){
         Member member = memberService.getCurrent();
@@ -82,16 +83,34 @@ public class CouponController extends BaseController {
             entity.setDeleted(false);
             entity.setDistributor(owner);
             entity.setType(coupon.getType());
+            entity.setColor(Coupon.Color.c8);
             isNew = true;
         }
 
+        entity.setMinimumPrice(coupon.getMinimumPrice());
         entity.setScope(coupon.getScope());
         entity.setIntroduction(coupon.getIntroduction());
         entity.setAmount(coupon.getAmount());
         entity.setEndDate(coupon.getEndDate());
         entity.setBeginDate(coupon.getBeginDate());
-        entity.setColor(coupon.getColor());
-        entity.setName(coupon.getName());
+        if (coupon.getColor()!=null) {
+            entity.setColor(coupon.getColor());
+        }
+        String s = "";
+        if (coupon.getMinimumPrice().compareTo(BigDecimal.ZERO)==0) {
+            if (coupon.getType().equals(Coupon.Type.fullcut)) {
+                s = "无门槛抵" + coupon.getAmount() + "元";
+            } else {
+                s = "无门槛打" + coupon.getAmount() + "折";
+            }
+        } else {
+            if (coupon.getType().equals(Coupon.Type.fullcut)) {
+                s = "满" + coupon.getMinimumPrice().toString() + "减" + coupon.getAmount() + "元";
+            } else {
+                s = "满" + coupon.getMinimumPrice().toString() + "打" + coupon.getAmount() + "折";
+            }
+        }
+        entity.setName(s);
         if (isNew) {
             couponService.save(entity);
         } else {

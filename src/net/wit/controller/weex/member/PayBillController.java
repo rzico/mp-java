@@ -3,16 +3,14 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleRewardModel;
-import net.wit.controller.model.PayBillModel;
-import net.wit.controller.model.PayBillViewModel;
-import net.wit.controller.model.ShopModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.entity.summary.PayBillShopSummary;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.ESCUtil;
 import net.wit.util.SettingUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.net.util.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +59,9 @@ public class PayBillController extends BaseController {
     @Resource(name = "paymentServiceImpl")
     private PaymentService paymentService;
 
+    @Resource(name = "refundsServiceImpl")
+    private RefundsService refundsService;
+
     /**
      *  收银明细
      */
@@ -92,6 +93,43 @@ public class PayBillController extends BaseController {
     }
 
     /**
+     * 收银台
+     */
+    @RequestMapping(value = "view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(HttpServletRequest request){
+        Date d = DateUtils.truncate(new Date(), Calendar.DATE);
+        Date y = DateUtils.addDays(d,-1);
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        Shop shop = admin.getShop();
+        if (shop==null) {
+            return Message.error("没分配门店");
+        }
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
+        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
+        CashierModel model = new CashierModel();
+        model.setShopId(shop.getId());
+        if (dsum.size()>0) {
+            model.setToday(dsum.get(0).getAmount().subtract(dsum.get(0).getCouponDiscount()));
+        } else {
+            model.setToday(BigDecimal.ZERO);
+        }
+        if (ysum.size()>0) {
+            model.setYesterday(ysum.get(0).getAmount().subtract(ysum.get(0).getCouponDiscount()));
+        } else {
+            model.setYesterday(BigDecimal.ZERO);
+        }
+        return Message.bind(model,request);
+    }
+
+    /**
      *  收银汇总
      */
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
@@ -111,15 +149,34 @@ public class PayBillController extends BaseController {
 
 
     /**
-     *  打印小票
+     *  退款
      */
-    @RequestMapping(value = "/print", method = RequestMethod.GET)
+    @RequestMapping(value = "/refund")
     @ResponseBody
-    public Message print(Long id,HttpServletRequest request){
+    public Message refund(Long id,Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
         PayBill payBill = payBillService.find(id);
         if (payBill==null) {
-            return Message.error("无效id");
+            return Message.error("无效 id");
         }
+
+        if (payBill.getType().equals(PayBill.Type.cardRefund) || payBill.getType().equals(PayBill.Type.cashierRefund)) {
+            Refunds refunds = payBill.getRefunds();
+            if (refunds.getStatus().equals(Refunds.Status.waiting)) {
+                Map<String,Object> data = new HashMap<String,Object>();
+                PayBillViewModel model = new PayBillViewModel();
+                model.bind(payBill);
+                data.put("data",model);
+                data.put("sn",payBill.getRefunds().getSn());
+                return Message.success(data,"申请退款");
+            } else {
+                return Message.error("退款单，不能再退款");
+            }
+        }
+
         if (payBill.getStatus().equals(PayBill.Status.none)) {
             Payment payment = payBill.getPayment();
             PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
@@ -147,7 +204,113 @@ public class PayBillController extends BaseController {
                 default:
                     return Message.error("支付中，请稍等");
             }
+        } else {
+            if (payBill.getStatus().equals(PayBill.Status.failure)) {
+                return Message.error("付款失败的单不能退款");
+            }
+        }
 
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有绑定门店");
+        }
+
+        if (!payBill.getShop().equals(admin.getShop())) {
+            return Message.error("只能退本门店的单");
+        }
+
+        if (!admin.equals(payBill.getAdmin())) {
+            return Message.error("收款人才能退款");
+        }
+
+        //if (payBill.getBillDate().compareTo(DateUtils.truncate(new Date(), Calendar.DATE))!=0) {
+        //    return Message.error("只能退当天的收款");
+        //}
+
+        PayBill bill = null;
+        try {
+            bill = payBillService.createRefund(payBill,admin);
+        } catch (Exception e) {
+            return Message.error("退款失败");
+        }
+        Map<String,Object> data = new HashMap<String,Object>();
+        PayBillViewModel model = new PayBillViewModel();
+        model.bind(bill);
+        data.put("data",model);
+        data.put("sn",bill.getRefunds().getSn());
+        return Message.success(data,"申请退款");
+    }
+
+    /**
+     *  打印小票
+     */
+    @RequestMapping(value = "/print", method = RequestMethod.GET)
+    @ResponseBody
+    public Message print(Long id,HttpServletRequest request){
+        PayBill payBill = payBillService.find(id);
+        if (payBill==null) {
+            return Message.error("无效id");
+        }
+        if (payBill.getStatus().equals(PayBill.Status.none)) {
+            if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
+                Refunds refunds = payBill.getRefunds();
+                //还没提交，前台发起补提交退款
+                if (refunds.getStatus().equals(Refunds.Status.waiting)) {
+                    return Message.error("没有提交不能打印");
+                }
+                PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
+                String resultCode = null;
+                try {
+                    resultCode = paymentPlugin.refundsQuery(refunds,request);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    return Message.success(e.getMessage());
+                }
+                switch (resultCode) {
+                    case "0000":
+                        try {
+                            refundsService.handle(refunds);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
+                    case "0001":
+                        try {
+                            refundsService.close(refunds);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
+                        return Message.error("支付失败，不能打印");
+                }
+
+            } else {
+                Payment payment = payBill.getPayment();
+                PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
+                String resultCode = null;
+                try {
+                    resultCode = paymentPlugin.queryOrder(payment, request);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    return Message.success(e.getMessage());
+                }
+                switch (resultCode) {
+                    case "0000":
+                        try {
+                            paymentService.handle(payment);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
+                    case "0001":
+                        try {
+                            paymentService.close(payment);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
+                        return Message.error("支付失败，不能打印");
+                    default:
+                        return Message.error("支付中，请稍等");
+                }
+
+            }
         } else {
             if (payBill.getStatus().equals(PayBill.Status.failure)) {
                 return Message.error("支付失败，不能打印");

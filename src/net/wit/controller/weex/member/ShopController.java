@@ -173,7 +173,7 @@ public class ShopController extends BaseController {
         }
 
         shopService.delete(shop);
-        return Message.error("删除成功");
+        return Message.success("删除成功");
     }
 
     /**
@@ -226,6 +226,7 @@ public class ShopController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         PayBill payBill = new PayBill();
+        payBill.setType(PayBill.Type.cashier);
         payBill.setAmount(new BigDecimal("0.01"));
         payBill.setNoDiscount(BigDecimal.ZERO);
         payBill.setCouponCode(null);

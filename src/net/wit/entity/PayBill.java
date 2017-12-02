@@ -26,7 +26,11 @@ public class PayBill extends BaseEntity {
 		/** 支付成功 */
 		success,
 		/** 支付失败 */
-		failure
+		failure,
+		/** 退款中 */
+		refund_waiting,
+		/** 已退款 */
+		refund_success
 	}
 
 	/**
