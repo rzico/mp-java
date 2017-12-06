@@ -73,7 +73,7 @@ public class AdminController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         if (code!=null) {
-            id = Member.decodeUserId(code);
+            id = Long.parseLong(code)-10200L;
         }
         Member adminMember = memberService.find(id);
         if (adminMember==null) {
