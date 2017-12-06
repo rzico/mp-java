@@ -83,15 +83,13 @@ public class CashierController extends BaseController {
         List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
         CashierModel model = new CashierModel();
         model.setShopId(shop.getId());
-        if (dsum.size()>0) {
-            model.setToday(dsum.get(0).getAmount().subtract(dsum.get(0).getCouponDiscount()));
-        } else {
-            model.setToday(BigDecimal.ZERO);
+        model.setToday(BigDecimal.ZERO);
+        model.setYesterday(BigDecimal.ZERO);
+        for (PayBillShopSummary s:dsum) {
+            model.setToday(model.getToday().add(s.getAmount().subtract(s.getCouponDiscount())) );
         }
-        if (ysum.size()>0) {
-            model.setYesterday(ysum.get(0).getAmount().subtract(ysum.get(0).getCouponDiscount()));
-        } else {
-            model.setYesterday(BigDecimal.ZERO);
+        for (PayBillShopSummary s:ysum) {
+            model.setYesterday(s.getAmount().subtract(s.getCouponDiscount()) );
         }
         return Message.bind(model,request);
     }

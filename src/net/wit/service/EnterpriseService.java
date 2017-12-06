@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Admin;
 import net.wit.entity.Enterprise;
 import net.wit.entity.Member;
 import net.wit.entity.Topic;
@@ -21,4 +22,5 @@ public interface EnterpriseService extends BaseService<Enterprise, Long> {
 	Page<Enterprise> findPage(Date beginDate,Date endDate, Pageable pageable);
 
 	public Enterprise create(Topic topic);
+	public Admin addAdmin(Enterprise enterprise, Member member);
 }

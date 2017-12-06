@@ -15,6 +15,8 @@ public class MemberOptionModel implements Serializable {
     private int black;
     /**  二维码 */
     private String qrcode;
+    /**  是否开通专栏 */
+    private Boolean hasTopic;
 
     public Long getId() {
         return id;
@@ -40,11 +42,19 @@ public class MemberOptionModel implements Serializable {
         this.qrcode = qrcode;
     }
 
+    public Boolean getHasTopic() {
+        return hasTopic;
+    }
+
+    public void setHasTopic(Boolean hasTopic) {
+        this.hasTopic = hasTopic;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.black = 0;
         this.qrcode = member.getQrcode();
+        this.hasTopic = (member.getTopic()!=null);
     }
-
 
 }

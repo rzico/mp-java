@@ -237,6 +237,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		} else
 		if (share.getShareType().equals(ArticleShare.ShareType.shareQZone)) {
 			shareDescr = "QQ空间";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.copyHref)) {
+			shareDescr = "复制链接";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.browser)) {
+			shareDescr = "浏览器";
 		} else {
 			shareDescr = setting.getSiteName()+"好友";
 		}

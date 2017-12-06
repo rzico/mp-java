@@ -28,6 +28,7 @@ public class MemberModel implements Serializable {
     private int coupon;
     /** 订单 */
     private int order;
+
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
 

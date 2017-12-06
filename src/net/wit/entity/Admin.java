@@ -141,7 +141,6 @@ public class Admin extends BaseEntity {
     /**
      * 企业名
      */
-    @NotNull
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Enterprise enterprise;
@@ -351,5 +350,9 @@ public class Admin extends BaseEntity {
         } else {
             return null;
         }
+    }
+
+    public Boolean isOwner() {
+        return this.getEnterprise().getMember().equals(this.getMember());
     }
 }

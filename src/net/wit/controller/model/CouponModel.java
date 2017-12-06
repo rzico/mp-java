@@ -122,6 +122,7 @@ public class CouponModel implements Serializable {
         this.beginDate = coupon.getBeginDate();
         this.endDate = coupon.getEndDate();
         this.name = coupon.getName();
+        this.minimumPrice = coupon.getMinimumPrice();
         this.introduction = coupon.getIntroduction();
         this.type = coupon.getType();
     }

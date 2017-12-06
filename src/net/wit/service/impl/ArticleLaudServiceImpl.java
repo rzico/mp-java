@@ -77,8 +77,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 		Article article = articleLaud.getArticle();
 		article.setFavorite(article.getLaud()-1);
 		articleDao.merge(article);
-		articleLaud.setIsShow(true);
-		super.update(articleLaud);
+		super.delete(articleLaud);
 	}
 
 	@Override
@@ -90,8 +89,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 			Article article = articleLaud.getArticle();
 			article.setFavorite(article.getLaud()-1);
 			articleDao.merge(article);
-			articleLaud.setIsShow(true);
-			super.update(articleLaud);
+			super.delete(articleLaud);
 		}
 	}
 
@@ -102,8 +100,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 		Article article = articleLaud.getArticle();
 		article.setFavorite(article.getLaud()-1);
 		articleDao.merge(article);
-		articleLaud.setIsShow(true);
-		super.update(articleLaud);
+		super.delete(articleLaud);
 	}
 
 	public Page<ArticleLaud> findPage(Date beginDate,Date endDate, Pageable pageable) {

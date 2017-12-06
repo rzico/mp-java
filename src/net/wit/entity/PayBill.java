@@ -77,6 +77,10 @@ public class PayBill extends BaseEntity {
 	@Column(columnDefinition="int(11) not null comment '结算方式 {online:线上结算,offline:线下结算}'")
 	private Method method;
 
+	/** 结算插件 */
+	@Column(columnDefinition="varchar(255) comment '结算插件'")
+	private String paymentPluginId;
+
 	/** 消费者 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
@@ -293,6 +297,14 @@ public class PayBill extends BaseEntity {
 
 	public void setCardAmount(BigDecimal cardAmount) {
 		this.cardAmount = cardAmount;
+	}
+
+	public String getPaymentPluginId() {
+		return paymentPluginId;
+	}
+
+	public void setPaymentPluginId(String paymentPluginId) {
+		this.paymentPluginId = paymentPluginId;
 	}
 
 	//有效发生金额

@@ -169,4 +169,16 @@ public class CouponController extends BaseController {
         return Message.bind(model,request);
     }
 
+    /**
+     *  优惠券
+     */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(Long id,Pageable pageable, HttpServletRequest request){
+        Coupon coupon = couponService.find(id);
+        CouponModel model = new CouponModel();
+        model.bind(coupon);
+        return Message.bind(model,request);
+    }
+
 }

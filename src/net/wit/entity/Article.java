@@ -88,28 +88,33 @@ public class Article extends BaseEntity{
 
     /** 收藏数 */
     @Min(0)
-    @Column(columnDefinition="bigint(20) default 0 comment '收藏数'")
+    @NotNull
+    @Column(columnDefinition="bigint(20) not null default 0 comment '收藏数'")
     private Long favorite;
 
 
     /** 评论数 */
     @Min(0)
-    @Column(columnDefinition="bigint(20) default 0 comment '评论数'")
+    @NotNull
+    @Column(columnDefinition="bigint(20) not null default 0 comment '评论数'")
     private Long review;
 
     /** 阅读数 */
     @Min(0)
-    @Column(columnDefinition="bigint(20) default 0 comment '阅读数'")
+    @NotNull
+    @Column(columnDefinition="bigint(20) not null default 0 comment '阅读数'")
     private Long hits;
 
     /** 点赞数 */
     @Min(0)
-    @Column(columnDefinition="bigint(20) default 0 comment '点赞数'")
+    @NotNull
+    @Column(columnDefinition="bigint(20) not null default 0 comment '点赞数'")
     private Long laud;
 
     /** 分享数 */
+    @NotNull
     @Min(0)
-    @Column(columnDefinition="bigint(20) default 0 comment '分享数'")
+    @Column(columnDefinition="bigint(20) not null default 0 comment '分享数'")
     private Long share;
 
     /** 是否删除 */

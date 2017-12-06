@@ -69,7 +69,7 @@ public class ShareModel implements Serializable {
         this.title = "【"+article.getMember().getNickName()+"】"+article.getTitle();
         this.thumbnail = article.getThumbnail();
         this.descr = article.delHTMLTag();
-        if (this.descr==null) {
+        if (this.descr==null || this.descr=="") {
             this.descr = "分享来至【"+setting.getSiteName()+"】";
         }
         this.shareType = shareType;

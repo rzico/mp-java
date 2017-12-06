@@ -138,6 +138,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						messageService.depositPushTo(deposit);
 					}
 				}
+				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
@@ -168,6 +169,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						messageService.depositPushTo(deposit);
 					}
 				}
+				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
@@ -272,6 +274,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			if (payment.getType().equals(Payment.Type.cashier)) {
 				PayBill payBill = payment.getPayBill();
 				payBill.setStatus(PayBill.Status.failure);
+				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBillDao.merge(payBill);
 				CouponCode couponCode = payBill.getCouponCode();
 				if (couponCode!=null) {
@@ -304,6 +307,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			} else
 			if (payment.getType().equals(Payment.Type.card)) {
 				PayBill payBill = payment.getPayBill();
+				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setStatus(PayBill.Status.failure);
 				payBillDao.merge(payBill);
 			} else

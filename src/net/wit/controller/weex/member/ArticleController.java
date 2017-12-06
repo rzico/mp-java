@@ -175,6 +175,7 @@ public class ArticleController extends BaseController {
             article.setFavorite(0L);
             article.setLaud(0L);
             article.setReview(0L);
+            article.setShare(0L);
             ArticleOptions options = new ArticleOptions();
             article.setArticleOptions(options);
             article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPublic);

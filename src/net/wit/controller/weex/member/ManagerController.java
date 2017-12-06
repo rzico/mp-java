@@ -3,6 +3,7 @@ package net.wit.controller.weex.member;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ManagerModel;
+import net.wit.entity.Admin;
 import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,9 @@ public class ManagerController extends BaseController {
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      * 获取管理界面首页状态
      */
@@ -57,6 +61,11 @@ public class ManagerController extends BaseController {
         }
         ManagerModel model =new ManagerModel();
         model.bind(member);
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null) {
+            model.setUseCashier(true);
+        }
         return Message.bind(model,request);
    }
 

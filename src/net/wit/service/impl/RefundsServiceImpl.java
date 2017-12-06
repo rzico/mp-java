@@ -193,6 +193,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							messageService.depositPushTo(deposit);
 						}
 					}
+					payBill.setPaymentPluginId(refunds.getPaymentPluginId());
 					payBill.setMember(refunds.getMember());
 					payBill.setStatus(PayBill.Status.refund_waiting);
 					payBillDao.merge(payBill);
@@ -226,6 +227,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						}
 					}
 					payBill.setMember(refunds.getMember());
+					payBill.setPaymentPluginId(refunds.getPaymentPluginId());
 					payBill.setStatus(PayBill.Status.refund_waiting);
 					payBillDao.merge(payBill);
 					if (payBill.getType().equals(PayBill.Type.cardRefund)) {
@@ -318,6 +320,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						messageService.depositPushTo(deposit);
 					}
 				}
+				payBill.setPaymentPluginId(refunds.getPaymentPluginId());
 				payBill.setMember(refunds.getMember());
 				payBill.setStatus(PayBill.Status.failure);
 				payBillDao.merge(payBill);
@@ -349,6 +352,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					}
 				}
 				payBill.setMember(refunds.getMember());
+				payBill.setPaymentPluginId(refunds.getPaymentPluginId());
 				payBill.setStatus(PayBill.Status.failure);
 				payBillDao.merge(payBill);
 				if (payBill.getType().equals(PayBill.Type.cardRefund)) {

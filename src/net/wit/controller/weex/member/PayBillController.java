@@ -67,7 +67,7 @@ public class PayBillController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long shopId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long shopId,Date billDate,Pageable pageable, HttpServletRequest request){
         Shop shop = null;
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -83,6 +83,9 @@ public class PayBillController extends BaseController {
             shop = shopService.find(shopId);
         }
         List<Filter> filters = new ArrayList<Filter>();
+        if (billDate==null) {
+            filters.add(new Filter("billDate", Filter.Operator.le,billDate));
+        }
         filters.add(new Filter("shop", Filter.Operator.eq,shop));
         filters.add(new Filter("status", Filter.Operator.ne,PayBill.Status.failure));
         pageable.setFilters(filters);
@@ -116,15 +119,13 @@ public class PayBillController extends BaseController {
         List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
         CashierModel model = new CashierModel();
         model.setShopId(shop.getId());
-        if (dsum.size()>0) {
-            model.setToday(dsum.get(0).getAmount().subtract(dsum.get(0).getCouponDiscount()));
-        } else {
-            model.setToday(BigDecimal.ZERO);
+        model.setToday(BigDecimal.ZERO);
+        model.setYesterday(BigDecimal.ZERO);
+        for (PayBillShopSummary s:dsum) {
+            model.setToday(model.getToday().add(s.getAmount().subtract(s.getCouponDiscount())) );
         }
-        if (ysum.size()>0) {
-            model.setYesterday(ysum.get(0).getAmount().subtract(ysum.get(0).getCouponDiscount()));
-        } else {
-            model.setYesterday(BigDecimal.ZERO);
+        for (PayBillShopSummary s:ysum) {
+            model.setYesterday(model.getYesterday().add(s.getAmount().subtract(s.getCouponDiscount())) );
         }
         return Message.bind(model,request);
     }
@@ -135,16 +136,32 @@ public class PayBillController extends BaseController {
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
     public Message summary(Long shopId,Date billDate,Pageable pageable, HttpServletRequest request){
-        Shop shop = shopService.find(shopId);
-        if (shop==null) {
-            return Message.error("无效门店id");
-        }
+        Shop shop = null;
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,billDate,billDate);
-        return Message.bind(dsum,request);
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        if (shopId==null) {
+            shop = admin.getShop();
+        } else {
+            shop = shopService.find(shopId);
+        }
+        Date d = DateUtils.truncate(billDate, Calendar.DATE);
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
+        List<PayBillSummaryModel> models = PayBillSummaryModel.bindList(dsum);
+        for (PayBillSummaryModel model:models) {
+            if (model.getMethod()!=null) {
+                PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(model.getMethod());
+                model.setMethod(paymentPlugin.getName());
+            } else {
+                model.setMethod("现金（未确定）");
+            }
+        }
+        return Message.bind(models,request);
     }
 
 
@@ -223,9 +240,9 @@ public class PayBillController extends BaseController {
             return Message.error("收款人才能退款");
         }
 
-        //if (payBill.getBillDate().compareTo(DateUtils.truncate(new Date(), Calendar.DATE))!=0) {
-        //    return Message.error("只能退当天的收款");
-        //}
+        if (payBill.getBillDate().compareTo(DateUtils.truncate(new Date(), Calendar.DATE))!=0) {
+            return Message.error("只能退当天的收款");
+        }
 
         PayBill bill = null;
         try {
