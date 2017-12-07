@@ -7,6 +7,7 @@ import net.wit.Page;
 import net.wit.Principal;
 import net.wit.entity.BindUser;
 import net.wit.entity.Member;
+import net.wit.entity.Shop;
 import net.wit.entity.Tag;
 import net.wit.plat.im.User;
 import net.wit.plat.weixin.pojo.AccessToken;
@@ -18,6 +19,7 @@ import net.wit.plat.weixin.message.resp.Article;
 import net.wit.plat.weixin.message.resp.NewsMessage;
 import net.wit.plat.weixin.util.MessageUtil;
 import net.wit.util.JsonUtils;
+import net.wit.util.SettingUtils;
 import net.wit.util.Sha1Util;
 import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -61,6 +63,9 @@ public class WeiXinController extends BaseController {
 
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
+
+    @Resource(name = "shopServiceImpl")
+    private ShopService shopService;
 
     public String getSha1Sign(HashMap<String, Object> params) {
         try {
@@ -294,6 +299,22 @@ public class WeiXinController extends BaseController {
             logger.error(e.getMessage());
             return false;
         }
+    }
+
+
+    //老版本
+    @RequestMapping(value = "/qrcode/go", method = RequestMethod.GET)
+    public String go(String type, String no) {        // 调用核心业务类接收消息、处理消息
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if ("paybill".equals(type)) {
+            Shop shop = shopService.find(no);
+            if (shop!=null) {
+                return "redirect:/paybill/#/?code="+shop.getCode();
+            } else {
+                return "redirect:/";
+            }
+        }
+        return "redirect:/";
     }
 
 }

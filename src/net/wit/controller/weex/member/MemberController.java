@@ -155,7 +155,7 @@ public class MemberController extends BaseController {
         if (occupationId!=null) {
             Occupation occupation = occupationService.find(occupationId);
             if (occupation==null) {
-                return Message.error("无效城市代码");
+                return Message.error("无效职业代码");
             }
             member.setOccupation(occupation);
         }

@@ -283,7 +283,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		Message msg = new Message();
 		msg.setMember(review.getMember());
 		msg.setReceiver(review.getArticle().getMember());
-		msg.setType(Message.Type.favorite);
+		msg.setType(Message.Type.review);
 		msg.setThumbnial(review.getMember().getLogo());
 		msg.setTitle("【"+review.getMember().getNickName()+"】评论了您的文章");
 		msg.setContent("【"+review.getMember().getNickName()+"】评论了您的文章:"+review.getContent());
