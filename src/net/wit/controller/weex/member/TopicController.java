@@ -227,9 +227,6 @@ public class TopicController extends BaseController {
                 return Message.error("银行卡实名才能开通");
             }
             config.setUseCoupon(useCoupon);
-            if (useCoupon) {
-                enterpriseService.create(topic);
-            }
         }
         if (useCashier!=null) {
             if (member.getMobile()==null) {
@@ -239,9 +236,6 @@ public class TopicController extends BaseController {
                 return Message.error("银行卡实名才能开通");
             }
             config.setUseCashier(useCashier);
-            if (useCashier) {
-               enterpriseService.create(topic);
-            }
         }
         topic.setConfig(config);
         topicService.update(topic);
