@@ -228,6 +228,7 @@ public class ShopController extends BaseController {
         PayBill payBill = new PayBill();
         payBill.setType(PayBill.Type.cashier);
         payBill.setAmount(new BigDecimal("0.01"));
+        payBill.setCardAmount(new BigDecimal("0.01"));
         payBill.setNoDiscount(BigDecimal.ZERO);
         payBill.setCouponCode(null);
         payBill.setCouponDiscount(BigDecimal.ZERO);

@@ -27,6 +27,8 @@ public class MemberViewModel implements Serializable {
     private String logo;
     /** 链接 */
     private String url;
+    /** 二维码 */
+    private String qrcode;
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
 
@@ -102,6 +104,14 @@ public class MemberViewModel implements Serializable {
         this.url = url;
     }
 
+    public String getQrcode() {
+        return qrcode;
+    }
+
+    public void setQrcode(String qrcode) {
+        this.qrcode = qrcode;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -111,6 +121,7 @@ public class MemberViewModel implements Serializable {
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
+        this.qrcode = member.getQrcode();
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Topic topic = member.getTopic();
         if (topic!=null) {

@@ -73,7 +73,7 @@ public class AdminController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         if (code!=null) {
-            id = Member.decodeUserId(code);
+            id = Long.parseLong(code)-10200L;
         }
         Member adminMember = memberService.find(id);
         if (adminMember==null) {
@@ -83,10 +83,14 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+
         Enterprise enterprise = admin.getEnterprise();
 
         if (code!=null) {
-            enterpriseService.addAdmin(enterprise,adminMember);
+            Admin r = enterpriseService.addAdmin(enterprise,adminMember);
+            if (r==null) {
+                return Message.error("就业状态，请先解除就业关系");
+            }
             return Message.success("添加成功");
         } else {
             return Message.success("暂不支持");

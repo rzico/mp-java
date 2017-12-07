@@ -177,6 +177,7 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
        	  topicCard.setColor(TopicCard.Color.c9);
        	  topicCard.setTopic(topic);
        	  topicCard.setTitle(topic.getName());
+       	  topicCard.setIncrement(0L);
 		  topicCard.setDescription(
 		  		"储值卡余额只能使用所属商家，解悉权归发行商家所有；平台作为工具提供方不承担相关法律责任。"
 		  );

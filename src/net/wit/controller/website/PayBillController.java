@@ -76,17 +76,9 @@ public class PayBillController extends BaseController {
         if (code==null) {
             return Message.error("无效收钱码");
         }
-        List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("code", Filter.Operator.eq,code));
-        List<Shop> sps = shopService.findList(null,filters,null);
-        if (sps.size()==0) {
-            return Message.error("无效收钱码");
-        }
-        if (sps.size()>1) {
-            return Message.error("重复绑定，无效码");
-        }
+        Shop shop = shopService.find(code);
         ShopModel model = new ShopModel();
-        model.bind(sps.get(0));
+        model.bind(shop);
         return Message.bind(model,request);
    }
 
@@ -199,7 +191,5 @@ public class PayBillController extends BaseController {
             return Message.error(e.getMessage());
         }
     }
-
-
 
 }

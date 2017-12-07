@@ -153,7 +153,7 @@ public class LoginController extends BaseController {
             member.setLoginDate(new Date());
             memberService.save(member);
             if (!User.userAttr(member)) {
-                return Message.success("上传IM失败");
+                return Message.success(Message.LOGIN_SUCCESS);
             };
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
@@ -199,7 +199,7 @@ public class LoginController extends BaseController {
             member.setLoginDate(new Date());
             memberService.save(member);
             if (!User.userAttr(member)) {
-                return Message.success("上传IM失败");
+                return Message.success(Message.LOGIN_SUCCESS);
             };
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
@@ -319,7 +319,7 @@ public class LoginController extends BaseController {
             member.setLoginDate(new Date());
             memberService.save(member);
             if (!User.userAttr(member)) {
-                return Message.success("上传IM失败");
+                return Message.success(Message.LOGIN_SUCCESS);
             };
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
@@ -431,7 +431,7 @@ public class LoginController extends BaseController {
         member.setLoginDate(new Date());
         memberService.save(member);
         if (!User.userAttr(member)) {
-            return Message.error("上传IM失败");
+            return Message.success(Message.LOGIN_SUCCESS);
         };
         return Message.success(Message.LOGIN_SUCCESS);
 

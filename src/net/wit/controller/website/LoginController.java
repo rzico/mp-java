@@ -133,6 +133,14 @@ public class LoginController extends BaseController {
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             member.setLoginDate(new Date());
+            String userAgent = request.getHeader("user-agent");
+            if (userAgent!=null) {
+                if (userAgent.length()<254) {
+                    member.setScene(userAgent);
+                } else {
+                    member.setScene(userAgent.substring(0, 250));
+                }
+            }
             memberService.save(member);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
@@ -197,6 +205,7 @@ public class LoginController extends BaseController {
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
         String mState = null;
+        System.out.println(state);
         try {
             mState = new String(Base64.decodeBase64(state),"utf-8");
         } catch (UnsupportedEncodingException e) {
@@ -275,13 +284,17 @@ public class LoginController extends BaseController {
             member.setLoginDate(new Date());
             String userAgent = request.getHeader("user-agent");
             if (userAgent!=null) {
-                member.setScene(userAgent.substring(0, 254));
+                if (userAgent.length()<254) {
+                    member.setScene(userAgent);
+                } else {
+                    member.setScene(userAgent.substring(0, 250));
+                }
             }
             memberService.save(member);
             return "redirect:"+mState;
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/website/login?redirectURL="+mState;
+            return "redirect:/login?redirectURL="+mState;
         }
     }
 
@@ -296,13 +309,20 @@ public class LoginController extends BaseController {
         String nickName=null;
         String headImg=null;
         String unionId=null;
-        String mState = hexStringToString(state);
+        String mState = null;
+        try {
+            mState = new String(Base64.decodeBase64(state),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.debug(e.getMessage());
+            mState = "";
+        }
+        System.out.println(mState);
         try {
             AccessToken token = AlipayUtil.getOauth2AccessToken(auth_code);
             if (token!=null) {
                 openId = token.getOpenid();
             } else {
-                return "redirect:/website/login?redirectURL="+mState;
+                return "redirect:/login?redirectURL="+mState;
             }
             JSONObject userInfo = AlipayUtil.getUserInfoByToken(token.getToken());
             if (userInfo!=null) {
@@ -314,9 +334,9 @@ public class LoginController extends BaseController {
                 }
             }
         } catch (ServletException e) {
-            return "redirect:/website/login?redirectURL="+mState;
+            return "redirect:/login?redirectURL="+mState;
         } catch (IOException e) {
-            return "redirect:/website/login?redirectURL="+mState;
+            return "redirect:/login?redirectURL="+mState;
         }
 
         BindUser bindUser = null;
@@ -374,13 +394,17 @@ public class LoginController extends BaseController {
             member.setLoginDate(new Date());
             String userAgent = request.getHeader("user-agent");
             if (userAgent!=null) {
-                member.setScene(userAgent.substring(0, 254));
+                if (userAgent.length()<254) {
+                    member.setScene(userAgent);
+                } else {
+                    member.setScene(userAgent.substring(0, 250));
+                }
             }
             memberService.save(member);
             return "redirect:"+mState;
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/website/login?redirectURL="+mState;
+            return "redirect:/login?redirectURL="+mState;
         }
     }
 
