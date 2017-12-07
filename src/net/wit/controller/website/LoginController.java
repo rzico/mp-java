@@ -205,7 +205,6 @@ public class LoginController extends BaseController {
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
         String mState = null;
-        System.out.println(state);
         try {
             mState = new String(Base64.decodeBase64(state),"utf-8");
         } catch (UnsupportedEncodingException e) {
@@ -304,7 +303,6 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/alipay", method = RequestMethod.GET)
     public String alipay(String state,String auth_code,HttpServletRequest request,HttpServletResponse response){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        System.out.println(auth_code);
         String openId = null;
         String nickName=null;
         String headImg=null;

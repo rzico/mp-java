@@ -123,7 +123,7 @@ public class CashierController extends BaseController {
         payBill.setCard(null);
         payBill.setCardDiscount(BigDecimal.ZERO);
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(effective.multiply(shop.getEnterprise().getBrokerage()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+        payBill.setFee(shop.getEnterprise().calcFee(effective));
         payBill.setMethod(PayBill.Method.online);
         payBill.setStatus(PayBill.Status.none);
         payBill.setMember(member);

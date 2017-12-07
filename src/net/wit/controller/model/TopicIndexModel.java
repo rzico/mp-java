@@ -21,6 +21,10 @@ public class TopicIndexModel implements Serializable {
     private String autograph;
     /** 头像 */
     private String logo;
+    /** 是否业主 */
+    private Boolean isOwner;
+    /** 待就业 */
+    private Boolean noJob;
     /** 开通会员卡 */
     private Boolean useCard;
     /** 开通优惠券 */
@@ -100,6 +104,22 @@ public class TopicIndexModel implements Serializable {
         this.useCashier = useCashier;
     }
 
+    public Boolean getIsOwner() {
+        return isOwner;
+    }
+
+    public void setIsOwner(Boolean owner) {
+        isOwner = owner;
+    }
+
+    public Boolean getNoJob() {
+        return noJob;
+    }
+
+    public void setNoJob(Boolean noJob) {
+        this.noJob = noJob;
+    }
+
     public void bind(Topic topic) {
         this.id = topic.getId();
         this.autograph = topic.getMember().getAutograph();
@@ -117,5 +137,8 @@ public class TopicIndexModel implements Serializable {
             this.useCoupon = false;
             this.useCashier = false;
         }
+
+        this.noJob = false;
+        this.isOwner = false;
     }
 }

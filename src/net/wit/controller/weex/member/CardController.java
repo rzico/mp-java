@@ -231,8 +231,6 @@ public class CardController extends BaseController {
         payBill.setCouponCode(null);
         payBill.setCouponDiscount(BigDecimal.ZERO);
         payBill.setCardDiscount(BigDecimal.ZERO);
-        BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(effective.multiply(shop.getEnterprise().getBrokerage()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
         payBill.setMethod(PayBill.Method.online);
         payBill.setStatus(PayBill.Status.none);
         payBill.setMember(member);
@@ -241,6 +239,8 @@ public class CardController extends BaseController {
         payBill.setAdmin(admin);
         payBill.setCard(card);
         payBill.setEnterprise(shop.getEnterprise());
+        BigDecimal effective = payBill.getEffectiveAmount();
+        payBill.setFee(shop.getEnterprise().calcFee(effective));
         try {
             Payment payment = payBillService.cardFill(payBill);
             Map<String,Object> data = new HashMap<String,Object>();
@@ -288,7 +288,6 @@ public class CardController extends BaseController {
         payBill.setCouponCode(null);
         payBill.setCouponDiscount(BigDecimal.ZERO);
         payBill.setCardDiscount(BigDecimal.ZERO);
-        payBill.setFee(BigDecimal.ZERO);
         payBill.setMethod(PayBill.Method.offline);
         payBill.setStatus(PayBill.Status.none);
         payBill.setMember(member);
@@ -297,6 +296,8 @@ public class CardController extends BaseController {
         payBill.setAdmin(admin);
         payBill.setCard(card);
         payBill.setEnterprise(shop.getEnterprise());
+        BigDecimal effective = payBill.getEffectiveAmount();
+        payBill.setFee(shop.getEnterprise().calcFee(effective));
         try {
             Refunds refunds = payBillService.cardRefund(payBill);
             Map<String,Object> data = new HashMap<String,Object>();

@@ -80,11 +80,11 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		map.put("is_raw","1");
 		map.put("body", description);
 		BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
-		if (bindUser!=null) {
-			map.put("sub_openid",bindUser.getOpenId());
-		}else {
-			map.put("sub_openid","2088802153156580");
-		}
+		//if (bindUser!=null) {
+		map.put("sub_openid",bindUser.getOpenId());
+		//}else {
+		//	map.put("sub_openid","2088802153156580");
+		//}
 //        if (root!=null && root.equals("/applet")) { 小程序支付，先关了
 //			map.put("sub_appid",pluginConfig.getAttribute("appid"));
 //			map.put("is_minipg","1");
@@ -128,7 +128,6 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 							String pay_info = resultMap.get("pay_info");
 							Map<String,String> payInfo = new HashMap<>();
 							payInfo = JsonUtils.toObject(pay_info,Map.class);
-
 							finalpackage.put("appId",payInfo.get("appId"));
 							finalpackage.put("package", payInfo.get("package"));
 							finalpackage.put("nonceStr", payInfo.get("nonceStr"));

@@ -64,6 +64,9 @@ public class TopicController extends BaseController {
     @Resource(name = "topicBillServiceImpl")
     private TopicBillService topicBillService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
      /**
      *  开通专栏
      */
@@ -102,6 +105,25 @@ public class TopicController extends BaseController {
         topicService.create(topic);
         return Message.success("发布成功");
 
+    }
+
+
+    /**
+     *  申请开店
+     */
+    @RequestMapping(value = "/create_enterprise", method = RequestMethod.POST)
+    @ResponseBody
+    public Message create_enterprise(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Topic topic = member.getTopic();
+        if (topic==null) {
+            return Message.error("请先开通专栏");
+        }
+        enterpriseService.create(topic);
+        return Message.error("申请成功");
     }
 
     /**
@@ -149,6 +171,10 @@ public class TopicController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && !admin.isOwner()) {
+            return Message.error("员工账号不能操作");
+        }
         Topic topic = member.getTopic();
         if (topic==null) {
             return Message.error("请先开通专栏");
@@ -190,7 +216,6 @@ public class TopicController extends BaseController {
             }
             config.setUseCard(useCard);
             if (useCard) {
-                enterpriseService.create(topic);
                 topicCardService.create(topic);
             }
         }
@@ -248,6 +273,17 @@ public class TopicController extends BaseController {
         }
         TopicIndexModel model = new TopicIndexModel();
         model.bind(topic);
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            model.setIsOwner(admin.isOwner());
+            model.setNoJob(false);
+        } else {
+            model.setNoJob(true);
+            model.setIsOwner(false);
+        }
+
+
         return Message.bind(model,request);
 
     }

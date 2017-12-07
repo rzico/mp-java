@@ -321,7 +321,7 @@ public class PayBill extends BaseEntity {
 		if (getMethod().equals(Method.offline)) {
 			return BigDecimal.ZERO;
 		} else {
-			return this.getEffectiveAmount().subtract(this.getFee()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			return this.getEffectiveAmount().subtract(this.getFee()).setScale(4,BigDecimal.ROUND_HALF_DOWN);
 		}
 	}
 

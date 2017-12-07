@@ -117,7 +117,9 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.shop);
 			enterpriseDao.persist(enterprise);
-			Admin admin = new Admin();
+		}
+		Admin admin = adminDao.findByMember(member);
+		if (admin == null) {
 			admin.setUsername(member.getMobile());
 			admin.setName(member.getName());
 			admin.setEmail(member.getEmail());
@@ -141,6 +143,9 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			roles.add(roleDao.find(1L));
 			admin.setRoles(roles);
 			adminDao.persist(admin);
+		} else {
+			admin.setEnterprise(enterprise);
+			enterpriseDao.persist(enterprise);
 		}
 		return enterprise;
 	}

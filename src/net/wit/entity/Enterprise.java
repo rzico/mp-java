@@ -137,4 +137,9 @@ public class Enterprise extends BaseEntity {
         }
     }
 
+    public BigDecimal calcFee(BigDecimal amount) {
+        BigDecimal rate = this.brokerage.multiply(new BigDecimal("0.01"));
+        return amount.multiply(rate).setScale(4,BigDecimal.ROUND_HALF_DOWN);
+    }
+
 }

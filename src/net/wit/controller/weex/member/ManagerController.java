@@ -63,7 +63,7 @@ public class ManagerController extends BaseController {
         model.bind(member);
 
         Admin admin = adminService.findByMember(member);
-        if (admin!=null) {
+        if (admin!=null && admin.getEnterprise()!=null) {
             model.setUseCashier(true);
         }
         return Message.bind(model,request);

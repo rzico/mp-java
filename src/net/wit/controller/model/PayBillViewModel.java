@@ -95,17 +95,31 @@ public class PayBillViewModel implements Serializable {
         this.id = payBill.getId();
         this.amount = payBill.getAmount().subtract(payBill.getCouponDiscount());
         this.couponDiscount = payBill.getCouponDiscount();
+        String s = "";
         if (payBill.getType().equals(PayBill.Type.cashierRefund)) {
-            this.memo = "退款"+payBill.getRefunds().getPaymentMethod()==null?"":(","+payBill.getRefunds().getPaymentMethod());
+            this.memo = "退款";
+            if (payBill.getRefunds().getPaymentMethod()!=null) {
+                s = ","+payBill.getRefunds().getPaymentMethod();
+            }
         } else
         if (payBill.getType().equals(PayBill.Type.cardRefund)){
-            this.memo = "退款(会员卡),"+payBill.getRefunds().getPaymentMethod()==null?"":(","+payBill.getRefunds().getPaymentMethod());
+            this.memo = "退款(会员卡)";
+            if (payBill.getRefunds().getPaymentMethod()!=null) {
+                s = ","+payBill.getRefunds().getPaymentMethod();
+            }
         } else
         if (payBill.getType().equals(PayBill.Type.card)) {
-            this.memo = "消费(会员卡),"+payBill.getPayment().getPaymentMethod()==null?"":(","+payBill.getPayment().getPaymentMethod());
+            this.memo = "消费(会员卡)";
+            if (payBill.getPayment().getPaymentMethod()!=null) {
+                s = ","+payBill.getPayment().getPaymentMethod();
+            }
         } else {
-            this.memo = "消费,"+payBill.getPayment().getPaymentMethod()==null?"":(","+payBill.getPayment().getPaymentMethod());
+            this.memo = "消费";
+            if (payBill.getPayment().getPaymentMethod()!=null) {
+                s = ","+payBill.getPayment().getPaymentMethod();
+            }
         }
+        this.memo = this.memo + s;
         this.logo = payBill.getMember().getLogo();
         this.createDate = payBill.getCreateDate();
         this.status = payBill.getStatus();

@@ -353,6 +353,10 @@ public class Admin extends BaseEntity {
     }
 
     public Boolean isOwner() {
-        return this.getEnterprise().getMember().equals(this.getMember());
+        if (this.getEnterprise()==null) {
+            return true;
+        } else {
+            return this.getEnterprise().getMember().equals(this.getMember());
+        }
     }
 }

@@ -135,7 +135,7 @@ public class PayBillController extends BaseController {
         payBill.setCardDiscount(cardDiscount);
 
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(effective.multiply(shop.getEnterprise().getBrokerage()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+        payBill.setFee(shop.getEnterprise().calcFee(effective));
         return payBill;
     }
 
