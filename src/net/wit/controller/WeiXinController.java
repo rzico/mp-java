@@ -19,6 +19,7 @@ import net.wit.plat.weixin.message.resp.Article;
 import net.wit.plat.weixin.message.resp.NewsMessage;
 import net.wit.plat.weixin.util.MessageUtil;
 import net.wit.util.JsonUtils;
+import net.wit.util.SettingUtils;
 import net.wit.util.Sha1Util;
 import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -304,6 +305,7 @@ public class WeiXinController extends BaseController {
     //老版本
     @RequestMapping(value = "/qrcode/go", method = RequestMethod.GET)
     public String go(String type, String no) {        // 调用核心业务类接收消息、处理消息
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if ("paybill".equals(type)) {
             Shop shop = shopService.find(no);
             if (shop!=null) {
