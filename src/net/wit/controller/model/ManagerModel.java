@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManagerModel implements Serializable {
-
     private Long id;
     /** 昵称 */
     private String nickName;
@@ -114,5 +113,6 @@ public class ManagerModel implements Serializable {
             }
         }
         this.useCashier = false;
-     }
+    }
+
 }

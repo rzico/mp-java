@@ -83,10 +83,16 @@ public class PayBillController extends BaseController {
             shop = shopService.find(shopId);
         }
         List<Filter> filters = new ArrayList<Filter>();
-        if (billDate==null) {
+        if (billDate!=null) {
             filters.add(new Filter("billDate", Filter.Operator.le,billDate));
         }
-        filters.add(new Filter("shop", Filter.Operator.eq,shop));
+        if (shop!=null) {
+            filters.add(new Filter("shop", Filter.Operator.eq, shop));
+        } else {
+            if (!admin.isOwner()) {
+                return Message.error("没有查询权限");
+            }
+        }
         filters.add(new Filter("status", Filter.Operator.ne,PayBill.Status.failure));
         pageable.setFilters(filters);
         Page<PayBill> page = payBillService.findPage(null,null,pageable);
@@ -149,6 +155,12 @@ public class PayBillController extends BaseController {
             shop = admin.getShop();
         } else {
             shop = shopService.find(shopId);
+        }
+
+        if (shop==null) {
+            if (!admin.isOwner()) {
+                return Message.error("没有查询权限");
+            }
         }
         Date d = DateUtils.truncate(billDate, Calendar.DATE);
         List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);

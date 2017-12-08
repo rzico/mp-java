@@ -9,6 +9,7 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Deposit;
 import net.wit.entity.Member;
+import net.wit.entity.summary.DepositSummary;
 
 
 /**
@@ -29,4 +30,8 @@ public interface DepositDao extends BaseDao<Deposit, Long> {
 	 */
 	Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable);
 	BigDecimal summary(Deposit.Type type,Member member);
+
+	/**
+	 */
+	List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate);
 }

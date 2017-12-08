@@ -1,17 +1,24 @@
 package net.wit.dao.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import net.wit.entity.Member;
+import net.wit.entity.PayBill;
+import net.wit.entity.Shop;
+import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.PayBillShopSummary;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -72,4 +79,33 @@ public class DepositDaoImpl extends BaseDaoImpl<Deposit, Long> implements Deposi
 			return null;
 		}
 	}
+
+	public List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select deposit.type,sum(deposit.credit)-sum(deposit.debit) "+
+						"from Deposit deposit where deposit.createDate>=:b and deposit.createDate<:e and deposit.member=:member "+
+						"group by deposit.type order by deposit.type ";
+
+		Query query = entityManager.createQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("b", b).
+				setParameter("e", e).
+				setParameter("member",member);
+
+		List result = query.getResultList();
+		List<DepositSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			DepositSummary rw = new DepositSummary();
+			rw.setType((Deposit.Type) row[0]);
+			rw.setAmount((BigDecimal) row[1]);
+			data.add(rw);
+		}
+		return data;
+
+	}
+
 }

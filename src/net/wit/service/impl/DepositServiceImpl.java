@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.entity.summary.DepositSummary;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -88,5 +89,8 @@ public class DepositServiceImpl extends BaseServiceImpl<Deposit, Long> implement
 	}
 	public BigDecimal summary(Deposit.Type type,Member member) {
 		return depositDao.summary(type,member);
+	}
+	public List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate) {
+		return depositDao.sumPage(member,beginDate,endDate);
 	}
 }

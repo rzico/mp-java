@@ -123,7 +123,7 @@ public class TopicController extends BaseController {
             return Message.error("请先开通专栏");
         }
         enterpriseService.create(topic);
-        return Message.error("申请成功");
+        return Message.success("申请成功");
     }
 
     /**
