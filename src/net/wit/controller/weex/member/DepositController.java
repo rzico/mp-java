@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleRewardModel;
+import net.wit.controller.model.CashierModel;
 import net.wit.controller.model.DepositModel;
 import net.wit.controller.model.PayBillSummaryModel;
 import net.wit.entity.*;
@@ -20,10 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -41,6 +39,46 @@ public class DepositController extends BaseController {
 
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
+
+
+    /**
+     * 收银台
+     */
+    @RequestMapping(value = "view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(HttpServletRequest request){
+        Date d = DateUtils.truncate(new Date(), Calendar.DATE);
+        Date y = DateUtils.addDays(d,-1);
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Date b = DateUtils.truncate(new Date(),Calendar.MONTH);
+        Date e = DateUtils.truncate(new Date(),Calendar.MONTH);
+        e =DateUtils.addMonths(e,1);
+        e =DateUtils.addDays(e,-1);
+
+        List<DepositSummary> by = depositService.sumPage(member,b,e);
+
+        b =DateUtils.addMonths(e,-1);
+        e =DateUtils.addMonths(e,-1);
+
+        List<DepositSummary> sy = depositService.sumPage(member,b,e);
+
+        Map<String,Object> data = new HashMap<String,Object>();
+        BigDecimal thm = BigDecimal.ZERO;
+        for (DepositSummary s:by) {
+            thm = thm.add(s.getAmount());
+        }
+        data.put("thisMonth",thm);
+
+        BigDecimal lam = BigDecimal.ZERO;
+        for (DepositSummary l:sy) {
+            lam = lam.add(l.getAmount());
+        }
+        data.put("lastMonth",lam);
+        return Message.bind(data,request);
+    }
 
     /**
      *  我的账单

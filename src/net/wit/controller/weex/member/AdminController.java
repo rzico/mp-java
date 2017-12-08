@@ -97,6 +97,37 @@ public class AdminController extends BaseController {
         }
     }
 
+    /**
+     *  分配店铺
+     */
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public Message update(Long id,Long shopId,HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+
+        Admin adminMember = adminService.find(id);
+        if (adminMember==null) {
+            return Message.error("员工id");
+        }
+
+        Shop shop = shopService.find(shopId);
+        if (shop==null) {
+            return Message.error("店铺id无效");
+        }
+
+        adminMember.setShop(shop);
+
+        adminService.update(adminMember);
+        return Message.success("修改成功");
+    }
 
     /**
      *  删除员工

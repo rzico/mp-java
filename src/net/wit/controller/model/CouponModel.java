@@ -116,6 +116,14 @@ public class CouponModel implements Serializable {
         this.minimumPrice = minimumPrice;
     }
 
+    public Long getStock() {
+        return stock;
+    }
+
+    public void setStock(Long stock) {
+        this.stock = stock;
+    }
+
     public void bind(Coupon coupon) {
         this.id = coupon.getId();
         this.color = coupon.getColor();
