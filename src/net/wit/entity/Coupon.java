@@ -110,9 +110,16 @@ public class Coupon extends BaseEntity {
 
 	/** 优惠金额/折扣比例 */
 	@Min(0)
+	@NotNull
 	@Digits(integer = 12, fraction = 3)
 	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '优惠金额'")
 	private BigDecimal amount;
+
+	/** 发券数量 */
+	@NotNull
+	@Min(0)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '发券数量'")
+	private Long stock;
 
 	/** 使用条件 0 代表无门槛 */
 	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '使用条件'")
@@ -334,6 +341,14 @@ public class Coupon extends BaseEntity {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public Long getStock() {
+		return stock;
+	}
+
+	public void setStock(Long stock) {
+		this.stock = stock;
 	}
 
 	/**

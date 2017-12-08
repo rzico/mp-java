@@ -28,6 +28,8 @@ public class CouponModel implements Serializable {
     private Coupon.Color color;
     /** 优惠金额/折扣比例 */
     private BigDecimal amount;
+    /** 发券数量 */
+    private Long stock;
     /** 使用条件 0 代表无门槛 */
     private BigDecimal minimumPrice;
 
@@ -125,6 +127,7 @@ public class CouponModel implements Serializable {
         this.minimumPrice = coupon.getMinimumPrice();
         this.introduction = coupon.getIntroduction();
         this.type = coupon.getType();
+        this.stock = coupon.getStock();
     }
 
     public static List<CouponModel> bindList(List<Coupon> coupons) {

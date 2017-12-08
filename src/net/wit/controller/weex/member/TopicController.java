@@ -80,29 +80,32 @@ public class TopicController extends BaseController {
         if (member.getNickName()==null) {
             return Message.error("请完善个人资料");
         }
-        Topic topic = new Topic();
-        topic.setName(member.getNickName());
-        topic.setBrokerage(new BigDecimal("0.6"));
-        topic.setStatus(Topic.Status.waiting);
-        topic.setHits(0L);
-        topic.setMember(member);
-        topic.setFee(new BigDecimal("588"));
-        topic.setLogo(member.getLogo());
-        topic.setType(Topic.Type.personal);
-        TopicConfig config = topic.getConfig();
-        if (config==null) {
-            config = new TopicConfig();
-            config.setUseCard(false);
-            config.setUseCashier(false);
-            config.setUseCoupon(false);
+        Topic topic =  member.getTopic();
+        if (topic==null) {
+            topic = new Topic();
+            topic.setName(member.getNickName());
+            topic.setBrokerage(new BigDecimal("0.6"));
+            topic.setStatus(Topic.Status.waiting);
+            topic.setHits(0L);
+            topic.setMember(member);
+            topic.setFee(new BigDecimal("588"));
+            topic.setLogo(member.getLogo());
+            topic.setType(Topic.Type.personal);
+            TopicConfig config = topic.getConfig();
+            if (config==null) {
+                config = new TopicConfig();
+                config.setUseCard(false);
+                config.setUseCashier(false);
+                config.setUseCoupon(false);
+            }
+            topic.setConfig(config);
+            Calendar calendar   =   new GregorianCalendar();
+            calendar.setTime(new Date());
+            calendar.add(calendar.MONTH, 1);
+            topic.setExpire(calendar.getTime());
+            topic.setTemplate(templateService.findDefault(Template.Type.topic));
+            topicService.create(topic);
         }
-        topic.setConfig(config);
-        Calendar calendar   =   new GregorianCalendar();
-        calendar.setTime(new Date());
-        calendar.add(calendar.MONTH, 1);
-        topic.setExpire(calendar.getTime());
-        topic.setTemplate(templateService.findDefault(Template.Type.topic));
-        topicService.create(topic);
         return Message.success("发布成功");
 
     }

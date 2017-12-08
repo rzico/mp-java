@@ -93,6 +93,7 @@ public class CouponController extends BaseController {
         entity.setAmount(coupon.getAmount());
         entity.setEndDate(coupon.getEndDate());
         entity.setBeginDate(coupon.getBeginDate());
+        entity.setStock(coupon.getStock());
         if (coupon.getColor()!=null) {
             entity.setColor(coupon.getColor());
         }
