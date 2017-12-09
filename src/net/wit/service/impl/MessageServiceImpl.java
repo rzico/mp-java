@@ -275,6 +275,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setThumbnial(laud.getMember().getLogo());
 		msg.setTitle("【"+laud.getMember().getNickName()+"】点赞了您的文章");
 		msg.setContent("【"+laud.getMember().getNickName()+"】点赞了您的文章:"+laud.getArticle().getTitle());
+		ArticleListModel ext = new ArticleListModel();
+		ext.bind(laud.getArticle());
+		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
 
@@ -287,6 +290,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setThumbnial(review.getMember().getLogo());
 		msg.setTitle("【"+review.getMember().getNickName()+"】评论了您的文章");
 		msg.setContent("【"+review.getMember().getNickName()+"】评论了您的文章:"+review.getContent());
+		ArticleListModel ext = new ArticleListModel();
+		ext.bind(review.getArticle());
+		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
 

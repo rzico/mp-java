@@ -97,7 +97,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege));
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
         return Message.bind(data,request);
     }
 
@@ -342,7 +342,7 @@ public class CardController extends BaseController {
         data.put("prerogative",owner.getTopic().getTopicCard().getPrerogative());
         data.put("description",owner.getTopic().getTopicCard().getDescription());
         Long c = 100000000+shop.getId();
-        String qr = "http://"+bundle.getString("weixin.url")+"/q/818801"+"86"+String.valueOf(c);
+        String qr = "http://"+bundle.getString("weixin.url")+"/q/818801"+"86"+String.valueOf(c)+".jhtml";
         data.put("qrcode",qr);
         return Message.bind(data,request);
     }

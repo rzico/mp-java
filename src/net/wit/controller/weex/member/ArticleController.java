@@ -144,6 +144,9 @@ public class ArticleController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
+        if (model==null) {
+            return Message.error("无效数据包");
+        }
         Long id = model.getId();
         String title = model.getTitle();
         String author = member.getNickName();
