@@ -155,7 +155,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 		Admin admin = adminDao.findByMember(member);
 		if (admin==null) {
 			admin = new Admin();
-			admin.setUsername(member.getMobile());
+			admin.setUsername(member.userId());
 			admin.setName(member.getName());
 			admin.setEmail(member.getEmail());
 			admin.setEnterprise(enterprise);
@@ -166,7 +166,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			admin.setPassword(member.getPassword());
 			if (admin.getPassword()==null) {
 				String m = admin.getUsername();
-				admin.setPassword(MD5Utils.getMD5Str(m.substring(m.length()-6,m.length())));
+				admin.setPassword(MD5Utils.getMD5Str(m));
 			}
 			if (member.getGender()!=null) {
 				admin.setGender(Admin.Gender.valueOf(member.getGender().name()));

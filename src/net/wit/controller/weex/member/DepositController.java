@@ -12,6 +12,7 @@ import net.wit.entity.summary.DepositSummary;
 import net.wit.entity.summary.PayBillShopSummary;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
+import net.wit.util.DateUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,12 +86,16 @@ public class DepositController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Pageable pageable, HttpServletRequest request){
+    public Message list(Date billDate,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
         List<Filter> filters = new ArrayList<Filter>();
+        if (billDate!=null) {
+            Date d = DateUtils.addDays(DateUtils.truncate(billDate, Calendar.DATE),1);
+            filters.add(new Filter("createDate", Filter.Operator.lt,d));
+        }
         filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);
         Page<Deposit> page = depositService.findPage(null,null,pageable);

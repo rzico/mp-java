@@ -91,7 +91,9 @@ public class AdminController extends BaseController {
             if (r==null) {
                 return Message.error("就业状态，请先解除就业关系");
             }
-            return Message.success("添加成功");
+            AdminModel model = new AdminModel();
+            model.bind(r);
+            return Message.success(model,"添加成功");
         } else {
             return Message.success("暂不支持");
         }
@@ -126,7 +128,9 @@ public class AdminController extends BaseController {
         adminMember.setShop(shop);
 
         adminService.update(adminMember);
-        return Message.success("修改成功");
+        AdminModel model = new AdminModel();
+        model.bind(adminMember);
+        return Message.success(model,"修改成功");
     }
 
     /**
