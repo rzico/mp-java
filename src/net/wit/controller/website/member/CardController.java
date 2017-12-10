@@ -110,7 +110,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege));
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
 
         Ticket ticket = WeixinApi.getWxCardTicket();
         HashMap<String, Object> params = new HashMap<>();
@@ -203,7 +203,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege));
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
 
         Ticket ticket = WeixinApi.getWxCardTicket();
         HashMap<String, Object> params = new HashMap<>();

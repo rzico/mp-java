@@ -118,6 +118,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				PayBill payBill = payment.getPayBill();
 				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
 					payBill.setFee(BigDecimal.ZERO);
+					payBill.setMethod(PayBill.Method.offline);
 					//线下或会员卡支付，不需要给商家结算
 				} else {
 					BigDecimal settle = payBill.getSettleAmount();
@@ -137,6 +138,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
+					payBill.setMethod(PayBill.Method.online);
 				}
 				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setMember(payment.getMember());
@@ -149,6 +151,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				PayBill payBill = payment.getPayBill();
 				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
 					payBill.setFee(BigDecimal.ZERO);
+					payBill.setMethod(PayBill.Method.offline);
 					//线下或会员卡支付，不需要给商家结算
 				} else {
 					BigDecimal settle = payBill.getSettleAmount();
@@ -168,6 +171,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
+					payBill.setMethod(PayBill.Method.online);
 				}
 				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setMember(payment.getMember());

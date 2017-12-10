@@ -129,7 +129,7 @@ public class MemberModel implements Serializable {
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
-        this.balance = member.getBalance();
+        this.balance = member.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
         this.order = member.getOrders().size();
         int c=0;
         for (CouponCode couponCode:member.getCouponCodes()) {

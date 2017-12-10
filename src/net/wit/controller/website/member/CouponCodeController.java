@@ -104,7 +104,7 @@ public class CouponCodeController extends BaseController {
         data.put("mobile",member.getMobile());
         data.put("name",member.getName());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818803"+couponCode);
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818803"+couponCode+".jhtml");
 
         Member owner = couponCode.getCoupon().getDistributor();
         if (owner.getTopic()!=null && owner.getTopic().getTopicCard()!=null) {

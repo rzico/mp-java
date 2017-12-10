@@ -101,10 +101,12 @@ public class RefundsController extends BaseController {
         }
 
         try {
-            refunds.setMethod(Refunds.Method.online);
-            refunds.setPaymentPluginId(paymentPluginId);
-            refunds.setPaymentMethod(paymentPlugin.getName());
-            refundsService.update(refunds);
+            if (refunds.getPayment()==null) {
+                refunds.setMethod(Refunds.Method.online);
+                refunds.setPaymentPluginId(paymentPluginId);
+                refunds.setPaymentMethod(paymentPlugin.getName());
+                refundsService.update(refunds);
+            }
             refundsService.refunds(refunds,request);
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -323,13 +323,29 @@ public abstract class BaseDaoImpl<T, ID extends Serializable> implements BaseDao
 					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.notEqual(root.get(filter.getProperty()), filter.getValue()));
 				}
 			} else if (filter.getOperator() == Operator.gt && filter.getValue() != null) {
-				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.gt(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
+				if (filter.getValue().getClass().equals(Date.class) ) {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.greaterThan(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
+				} else {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.gt(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
+				}
 			} else if (filter.getOperator() == Operator.lt && filter.getValue() != null) {
-				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.lt(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
+				if (filter.getValue().getClass().equals(Date.class) ) {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.lessThan(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
+				} else {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.lt(root.<Number>get(filter.getProperty()), (Number) filter.getValue()));
+				}
 			} else if (filter.getOperator() == Operator.ge && filter.getValue() != null) {
-				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.ge(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
+				if (filter.getValue().getClass().equals(Date.class) ) {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.greaterThanOrEqualTo(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
+				} else {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.ge(root.<Number>get(filter.getProperty()), (Number) filter.getValue()));
+				}
 			} else if (filter.getOperator() == Operator.le && filter.getValue() != null) {
-				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.le(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
+				if (filter.getValue().getClass().equals(Date.class) ) {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.lessThanOrEqualTo(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
+				} else {
+					restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.le(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
+				}
 			} else if (filter.getOperator() == Operator.like && filter.getValue() != null && filter.getValue() instanceof String) {
 				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.like(root.<String> get(filter.getProperty()), (String) filter.getValue()));
 			} else if (filter.getOperator() == Operator.in && filter.getValue() != null) {
@@ -374,25 +390,25 @@ public abstract class BaseDaoImpl<T, ID extends Serializable> implements BaseDao
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.notEqual(root.get(filter.getProperty()), filter.getValue()));
 					}
 				} else if (filter.getOperator() == Operator.gt && filter.getValue() != null) {
-					if (filter.getProperty().equals("modifyDate") || filter.getProperty().equals("createDate")) {
+					if (filter.getValue().getClass().equals(Date.class) ) {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.greaterThan(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
 					} else {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.gt(root.<Number>get(filter.getProperty()), (Number) filter.getValue()));
 					}
 				} else if (filter.getOperator() == Operator.lt && filter.getValue() != null) {
-					if (filter.getProperty().equals("modifyDate") || filter.getProperty().equals("createDate")) {
+					if (filter.getValue().getClass().equals(Date.class) ) {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.lessThan(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
 					} else {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.lt(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
 					}
 				} else if (filter.getOperator() == Operator.ge && filter.getValue() != null) {
-					if (filter.getProperty().equals("modifyDate") || filter.getProperty().equals("createDate")) {
+					if (filter.getValue().getClass().equals(Date.class) ) {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.greaterThanOrEqualTo(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
 					} else {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.ge(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
 					}
 				} else if (filter.getOperator() == Operator.le && filter.getValue() != null) {
-					if (filter.getProperty().equals("modifyDate") || filter.getProperty().equals("createDate")) {
+					if (filter.getValue().getClass().equals(Date.class) ) {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.lessThanOrEqualTo(root.<Date> get(filter.getProperty()), (Date) filter.getValue()));
 					} else {
 						restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.le(root.<Number> get(filter.getProperty()), (Number) filter.getValue()));
