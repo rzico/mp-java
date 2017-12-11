@@ -124,24 +124,23 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			logger.debug(e.getMessage());
 			throw new RuntimeException("提交出错了");
 		}
-//		if (transfer.getType().equals(Transfer.Type.bankcard)) {
-//			String result = UnsPay.submit(transfer);
-//			if ("0000".equals(result)) {
-//				transfer.setStatus(Transfer.Status.confirmed);
-//				transferDao.merge(transfer);
-//				return true;
-//			} else {
-//				if (!"3000".equals(result)) {
-//					logger.error(UnsPay.getErrMsg(result));
-//					throw new RuntimeException("提交银行失败");
-//				} else {
-//					return true;
-//				}
-//			}
-//		} else {
-//			throw new RuntimeException("暂不支持");
-//		}
-		return true;
+		if (transfer.getType().equals(Transfer.Type.bankcard)) {
+			String result = UnsPay.submit(transfer);
+			if ("0000".equals(result)) {
+				transfer.setStatus(Transfer.Status.confirmed);
+				transferDao.merge(transfer);
+				return true;
+			} else {
+				if (!"3000".equals(result)) {
+					logger.error(UnsPay.getErrMsg(result));
+					throw new RuntimeException("提交银行失败");
+				} else {
+					return true;
+				}
+			}
+		} else {
+			throw new RuntimeException("暂不支持");
+		}
 	}
 
 	@Transactional
