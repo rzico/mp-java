@@ -7,7 +7,9 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Coupon;
 import net.wit.entity.CouponCode;
+import net.wit.entity.Member;
 
 /**
  * @ClassName: CouponCodeService
@@ -23,4 +25,12 @@ public interface CouponCodeService extends BaseService<CouponCode, Long> {
 	 */
 	CouponCode findByCode(String code);
 	Page<CouponCode> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+	/**
+	 * 生成优惠码
+	 * @param coupon 优惠券
+	 * @param member 会员
+	 * @return 优惠码
+	 */
+	CouponCode build(Coupon coupon, Member member) throws Exception;
 }

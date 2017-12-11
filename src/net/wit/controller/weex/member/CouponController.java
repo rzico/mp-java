@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
+import net.wit.controller.model.CouponCodeModel;
 import net.wit.controller.model.CouponModel;
 import net.wit.entity.*;
 import net.wit.service.*;
@@ -52,6 +53,10 @@ public class CouponController extends BaseController {
 
     @Resource(name = "couponServiceImpl")
     private CouponService couponService;
+
+    @Resource(name = "couponCodeServiceImpl")
+    private CouponCodeService couponCodeService;
+
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
@@ -124,6 +129,39 @@ public class CouponController extends BaseController {
     }
 
 
+    /**
+     *
+     */
+    @RequestMapping(value = "/activate")
+    @ResponseBody
+    public Message activate(Long id, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        if (member.getTopic()==null) {
+            return Message.error("没有开通专栏");
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有点亮专栏");
+        }
+        Coupon coupon = couponService.find(id);
+        if (coupon==null) {
+            return Message.error("无效优惠券id");
+        }
+        CouponCode couponCode = null;
+        try {
+            couponCode = couponCodeService.build(coupon,member);
+        } catch (Exception e) {
+            return Message.error(e.getMessage());
+        }
+
+        CouponCodeModel model = new CouponCodeModel();
+        model.bind(couponCode);
+        return Message.success(model,"保存成功");
+
+    }
 
     /**
      *  删除投票
