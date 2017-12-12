@@ -6,6 +6,7 @@ import net.wit.controller.model.AdminModel;
 import net.wit.entity.Admin;
 import net.wit.entity.Enterprise;
 import net.wit.entity.Member;
+import net.wit.entity.Role;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,6 +90,18 @@ public class EnterpriseController extends BaseController {
             data.put("shopName","未分配");
         }
         data.put("isOwner",admin.isOwner());
+        if (admin.isOwner()) {
+            data.put("roleName","店主");
+        } else {
+            String s = "";
+            for (Role role:admin.getRoles()) {
+                if (s.equals("")) {
+                    s = s + ",";
+                }
+                s = s +role.getName();
+            }
+            data.put("roleName",s);
+        }
         return Message.bind(data,request);
 
     }

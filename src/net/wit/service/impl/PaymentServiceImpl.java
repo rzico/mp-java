@@ -12,9 +12,13 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.controller.model.CardActivityModel;
+import net.wit.controller.weex.member.CardController;
 import net.wit.dao.*;
+import net.wit.entity.summary.CardActivity;
 import net.wit.service.MessageService;
 import net.wit.service.PluginService;
+import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -79,36 +83,50 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		return paymentDao.findBySn(sn);
 	}
 
+	// 自定义比较器：按书的价格排序
+	static class AmountComparator implements Comparator {
+		public int compare(Object object1, Object object2) {// 实现接口中的方法
+			CardActivityModel p1 = (CardActivityModel) object1; // 强制转换
+			CardActivityModel p2 = (CardActivityModel) object2;
+			return p1.getAmount().compareTo(p2.getAmount());
+		}
+	}
+
+	private Card.VIP calculateVip(Shop shop, BigDecimal amount) {
+		Member owner = shop.getOwner();
+		Topic topic = owner.getTopic();
+
+		if (topic==null) {
+			return null;
+		}
+
+		if (topic.getTopicCard()==null) {
+			return null;
+		}
+
+		List<CardActivity> activitys = JsonUtils.toObject(topic.getTopicCard().getActivity(),List.class);
+		Collections.sort(activitys, new AmountComparator());
+
+		CardActivity curr = null;
+		for (CardActivity model:activitys) {
+			if (model.getAmount().compareTo(amount)>0) {
+				break;
+			} else {
+				curr = model;
+			}
+		}
+
+		if (curr!=null) {
+			return curr.getVip();
+		} else {
+			return null;
+		}
+	}
 
 	@Transactional
 	public synchronized void handle(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
 		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
-//			//余额支付时，扣余额
-//			if (payment.getMethod().equals(Payment.Method.deposit)) {
-//				Member member = payment.getPayee();
-//				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-//				if (member.getBalance().compareTo(payment.getAmount())>=0) {
-//					member.setBalance(member.getBalance().subtract(payment.getAmount()));
-//					memberDao.merge(member);
-//					Deposit deposit = new Deposit();
-//					deposit.setBalance(member.getBalance());
-//					deposit.setType(Deposit.Type.payment);
-//					deposit.setMemo(payment.getMemo());
-//					deposit.setMember(member);
-//					deposit.setCredit(BigDecimal.ZERO);
-//					deposit.setDebit(payment.getAmount());
-//					deposit.setDeleted(false);
-//					deposit.setOperator("system");
-//					depositDao.persist(deposit);
-//					messageService.depositPushTo(deposit);
-//				} else {
-//					payment.setPaymentDate(new Date());
-//					payment.setStatus(Payment.Status.failure);
-//					paymentDao.merge(payment);
-//					throw new Exception("余额不足");
-//				}
-//			}
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
 			} else
@@ -180,6 +198,13 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				if (payBill.getType().equals(PayBill.Type.card)) {
 					Card card = payBill.getCard();
 					cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+
+					Card.VIP vip = calculateVip(payBill.getShop(),payBill.getAmount());
+                    if (vip!=null) {
+                    	if (card.getVip().ordinal()<vip.ordinal()) {
+                    		card.setVip(vip);
+						}
+					}
 					card.setBalance(card.getBalance().add(payBill.getCardAmount()));
 					cardDao.merge(card);
 
