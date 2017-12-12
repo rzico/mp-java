@@ -114,7 +114,7 @@ public class TopicController extends BaseController {
     /**
      *  申请开店
      */
-    @RequestMapping(value = "/create_enterprise", method = RequestMethod.POST)
+    @RequestMapping(value = "/create_enterprise")
     @ResponseBody
     public Message create_enterprise(HttpServletRequest request){
         Member member = memberService.getCurrent();

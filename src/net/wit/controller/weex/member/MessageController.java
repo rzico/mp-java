@@ -96,7 +96,7 @@ public class MessageController extends BaseController {
     /**
      *  打开链接
      */
-    @RequestMapping(value = "/go", method = RequestMethod.GET)
+    @RequestMapping(value = "/go")
     @ResponseBody
     public Message go(Long id,HttpServletRequest request){
         net.wit.entity.Message message = messageService.find(id);

@@ -188,7 +188,11 @@ public class RefundsController extends BaseController {
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
         String resultCode = null;
         try {
-            resultCode = paymentPlugin.refundsQuery(refunds,request);
+            if (paymentPlugin==null) {
+                resultCode = "0001";
+            } else {
+                resultCode = paymentPlugin.refundsQuery(refunds, request);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             return Message.success(e.getMessage());

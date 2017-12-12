@@ -25,6 +25,8 @@ public class MemberAttributeModel implements Serializable {
     private Date birthday;
     /** 是否绑定手机 */
     private Boolean bindMobile;
+    /** 手机号后几位 */
+    private String mobile;
     /** 是否绑定微信 */
     private Boolean bindWeiXin;
     /** 是否设置密码 */
@@ -126,6 +128,14 @@ public class MemberAttributeModel implements Serializable {
         this.birthday = birthday;
     }
 
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -146,6 +156,9 @@ public class MemberAttributeModel implements Serializable {
         this.logo = member.getLogo();
         this.hasPassword = (member.getPassword()!=null);
         this.bindMobile = (member.getMobile()!=null);
+        if (this.bindMobile) {
+            this.mobile = member.getMobile().substring(member.getMobile().length()-4,member.getMobile().length());
+        }
     }
 
 }

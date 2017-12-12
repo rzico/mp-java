@@ -77,7 +77,9 @@ public class CashierController extends BaseController {
         }
         Shop shop = admin.getShop();
         if (shop==null) {
-            return Message.error("没分配门店");
+            if (!admin.isOwner()) {
+                return Message.error("没分配门店");
+            }
         }
         List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
         List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
@@ -89,7 +91,7 @@ public class CashierController extends BaseController {
             model.setToday(model.getToday().add(s.getAmount().subtract(s.getCouponDiscount())) );
         }
         for (PayBillShopSummary s:ysum) {
-            model.setYesterday(s.getAmount().subtract(s.getCouponDiscount()) );
+            model.setYesterday(model.getYesterday().add(s.getAmount().subtract(s.getCouponDiscount())) );
         }
         return Message.bind(model,request);
     }

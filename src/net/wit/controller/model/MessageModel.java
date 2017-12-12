@@ -101,6 +101,14 @@ public class MessageModel implements Serializable {
         this.title = title;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void bind(net.wit.entity.Message message) {
         this.id = message.getId();
         Member member = message.getMember();
