@@ -50,6 +50,9 @@ public class CommonController extends BaseController {
 	@Resource(name = "rsaServiceImpl")
 	private RSAService rsaService;
 
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
+
 	/**
 	 * 公钥
 	 */
@@ -70,7 +73,6 @@ public class CommonController extends BaseController {
 	@ResponseBody
 	public Message resources(HttpServletRequest request, HttpServletResponse response) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-
 		Map<String,Object> data = new HashMap<String,Object>();
 		String ua = request.getHeader("user-agent");
 		if (ua != null) {
@@ -104,6 +106,7 @@ public class CommonController extends BaseController {
 	public Message router(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> data = new HashMap<>();
 		Map<String,String> menu = new HashMap<>();
+		Member member = memberService.getCurrent();
 		String ua = request.getHeader("user-agent");
 		if (ua.indexOf("V1")>0) {
 			menu.put("home","file://view/shop/cashier/index.js");
@@ -112,7 +115,11 @@ public class CommonController extends BaseController {
 			menu.put("message","file://view/message/list.js");
 			menu.put("member", "file://view/member/index.js");
 		} else {
-			menu.put("home","file://view/home/index.js");
+			if (member!=null && member.getTopic()!=null && member.getTopic().getConfig()!=null && member.getTopic().getConfig().getUseCashier()) {
+				menu.put("home","file://view/shop/cashier/index.js?index=true");
+			} else {
+				menu.put("home", "file://view/home/index.js");
+			}
 			menu.put("add", "file://view/member/editor/editor.js");
 			menu.put("friend", "file://view/friend/list.js");
 			menu.put("message","file://view/message/list.js");

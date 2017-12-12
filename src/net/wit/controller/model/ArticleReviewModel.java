@@ -22,6 +22,8 @@ public class ArticleReviewModel implements Serializable {
     private Date createDate;
     /** 评论内容 */
     private String content;
+    /** 文章标题 */
+    private String title;
 
     public Long getId() {
         return id;
@@ -71,6 +73,14 @@ public class ArticleReviewModel implements Serializable {
         this.content = content;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void bind(ArticleReview review) {
         this.id = review.getId();
         this.memberId = review.getMember().getId();
@@ -78,6 +88,7 @@ public class ArticleReviewModel implements Serializable {
         this.logo = review.getMember().getLogo();
         this.createDate = review.getCreateDate();
         this.content = review.getContent();
+        this.title = review.getArticle().getTitle();
     }
 
     public static List<ArticleReviewModel> bindList(List<ArticleReview> reviews) {

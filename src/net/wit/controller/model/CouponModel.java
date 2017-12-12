@@ -18,6 +18,10 @@ public class CouponModel implements Serializable {
     private Coupon.Type type;
     /** 使用范围 */
     private Coupon.Scope scope;
+    /** logo */
+    private String logo;
+    /** 店名 */
+    private String shopName;
     /** 名称 */
     private String name;
     /** 使用起始日期 */
@@ -124,6 +128,22 @@ public class CouponModel implements Serializable {
         this.stock = stock;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
     public void bind(Coupon coupon) {
         this.id = coupon.getId();
         this.color = coupon.getColor();
@@ -136,6 +156,12 @@ public class CouponModel implements Serializable {
         this.introduction = coupon.getIntroduction();
         this.type = coupon.getType();
         this.stock = coupon.getStock();
+        this.logo = coupon.getDistributor().getLogo();
+        if (coupon.getDistributor().getTopic()!=null) {
+            this.shopName = coupon.getDistributor().getTopic().getName();
+        } else {
+            this.shopName = "来自平台优惠券";
+        }
     }
 
     public static List<CouponModel> bindList(List<Coupon> coupons) {

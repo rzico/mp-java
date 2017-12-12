@@ -194,6 +194,25 @@ public class CardController extends BaseController {
     }
 
 
+    private BigDecimal calculate(BigDecimal amount) {
+
+
+        if (amount.compareTo(new BigDecimal(5000))>=0) {
+            return BigDecimal.ZERO;
+        } else {
+            return BigDecimal.ONE;
+        }
+    }
+
+    /**
+     * 计算手续费
+     */
+    @RequestMapping(value = "calculate", method = RequestMethod.POST)
+    @ResponseBody
+    public Message calculateFee(BigDecimal amount,HttpServletRequest request){
+        return Message.success(calculate(amount),"success");
+    }
+
     /**
      *  提交收款
      *  id amount

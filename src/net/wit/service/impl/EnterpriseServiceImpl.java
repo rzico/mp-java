@@ -120,6 +120,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 		}
 		Admin admin = adminDao.findByMember(member);
 		if (admin == null) {
+			admin = new Admin();
 			admin.setUsername(member.userId());
 			admin.setName(member.getName());
 			admin.setEmail(member.getEmail());

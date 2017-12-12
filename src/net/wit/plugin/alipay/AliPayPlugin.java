@@ -86,8 +86,6 @@ public class AliPayPlugin extends PaymentPlugin {
 		BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.alipay);
 		if (bindUser!=null) {
 			map.put("buyer_id",bindUser.getOpenId());
-		}else {
-			map.put("buyer_id","2088802153156580");
 		}
 
 		Map<String,String> params = SignUtils.paraFilter(map);

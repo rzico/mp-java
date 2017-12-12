@@ -211,7 +211,11 @@ public class PayBillController extends BaseController {
             PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
             String resultCode = null;
             try {
-                resultCode = paymentPlugin.queryOrder(payment,request);
+                if (paymentPlugin==null) {
+                    resultCode = "0001";
+                } else {
+                    resultCode = paymentPlugin.queryOrder(payment,request);
+                }
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 return Message.success(e.getMessage());
@@ -290,7 +294,11 @@ public class PayBillController extends BaseController {
                 PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
                 String resultCode = null;
                 try {
-                    resultCode = paymentPlugin.refundsQuery(refunds,request);
+                    if (paymentPlugin==null) {
+                        resultCode = "0001";
+                    } else {
+                        resultCode = paymentPlugin.refundsQuery(refunds, request);
+                    }
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                     return Message.success(e.getMessage());
@@ -316,7 +324,11 @@ public class PayBillController extends BaseController {
                 PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
                 String resultCode = null;
                 try {
-                    resultCode = paymentPlugin.queryOrder(payment, request);
+                    if (paymentPlugin==null) {
+                        resultCode = "0001";
+                    } else {
+                        resultCode = paymentPlugin.queryOrder(payment, request);
+                    }
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                     return Message.success(e.getMessage());

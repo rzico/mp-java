@@ -17,6 +17,10 @@ public class DepositModel implements Serializable {
     private Deposit.Type type;
     /** 交易方头像 */
     private String logo;
+    /** 交易方昵称 */
+    private String nickName;
+    /** 付款方式 */
+    private String method;
     /** 摘要 */
     private String memo;
     /** 变动金额 */
@@ -74,14 +78,40 @@ public class DepositModel implements Serializable {
         this.createDate = createDate;
     }
 
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
 
     public void bind(Deposit deposit) {
         this.type = deposit.getType();
         this.amount = deposit.getCredit().subtract(deposit.getDebit());
         this.logo = deposit.getMember().getLogo();
+        this.nickName = deposit.getMember().getNickName();
         this.createDate = deposit.getCreateDate();
         this.balance = deposit.getBalance();
         this.memo = deposit.getMemo();
+        if (deposit.getPayment()!=null) {
+            this.method = deposit.getPayment().getPaymentMethod();
+        } else
+        if (deposit.getRefunds()!=null) {
+            this.method = deposit.getRefunds().getPaymentMethod();
+        } else {
+            this.method = "往来结算";
+        }
+
     }
 
     public static List<DepositModel> bindList(List<Deposit> deposits) {
