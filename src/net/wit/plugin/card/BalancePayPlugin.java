@@ -15,10 +15,12 @@ import net.wit.service.MemberService;
 import net.wit.service.RSAService;
 import net.wit.util.MD5Utils;
 import net.wit.util.ScanUtil;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -172,7 +174,11 @@ public class BalancePayPlugin extends PaymentPlugin {
 	@Override
     public String queryOrder(Payment payment,HttpServletRequest request)  throws Exception {
 		if (payment.getTranSn()==null) {
-			return "9999";
+			if (DateUtils.addSeconds(payment.getCreateDate(),30).compareTo(new Date())<0) {
+				return "0001";
+			} else {
+				return "9999";
+			}
 		}
 		else
 		{
@@ -216,7 +222,11 @@ public class BalancePayPlugin extends PaymentPlugin {
 	 */
 	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
 		if (refunds.getTranSn()==null) {
-			return "9999";
+			if (DateUtils.addSeconds(refunds.getCreateDate(),30).compareTo(new Date())<0) {
+				return "0001";
+			} else {
+				return "9999";
+			}
 		}
 		else
 		{

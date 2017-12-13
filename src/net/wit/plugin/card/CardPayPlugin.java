@@ -13,6 +13,7 @@ import net.wit.service.PaymentService;
 import net.wit.service.RSAService;
 import net.wit.util.MD5Utils;
 import net.wit.util.ScanUtil;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -187,7 +189,11 @@ public class CardPayPlugin extends PaymentPlugin {
 	@Override
     public String queryOrder(Payment payment,HttpServletRequest request)  throws Exception {
 		if (payment.getTranSn()==null) {
-			return "9999";
+			if (DateUtils.addSeconds(payment.getCreateDate(),30).compareTo(new Date())<0) {
+				return "0001";
+			} else {
+				return "9999";
+			}
 		}
 		else
 		{
@@ -240,7 +246,11 @@ public class CardPayPlugin extends PaymentPlugin {
 	 */
 	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
 		if (refunds.getTranSn()==null) {
-			return "9999";
+			if (DateUtils.addSeconds(refunds.getCreateDate(),30).compareTo(new Date())<0) {
+				return "0001";
+			} else {
+				return "9999";
+			}
 		}
 		else
 		{
