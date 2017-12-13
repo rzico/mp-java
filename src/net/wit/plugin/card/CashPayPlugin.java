@@ -72,11 +72,11 @@ public class CashPayPlugin extends PaymentPlugin {
 			payment.setMethod(Payment.Method.offline);
 			paymentService.update(payment);
 			finalpackage.put("return_code", "SUCCESS");
-			finalpackage.put("return_msg", "提交成功");
+			finalpackage.put("result_msg", "提交成功");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "提交失败");
+			finalpackage.put("result_msg", "提交失败");
 		}
 		return finalpackage;
 	}
@@ -88,11 +88,11 @@ public class CashPayPlugin extends PaymentPlugin {
 			payment.setMethod(Payment.Method.offline);
 			paymentService.update(payment);
 			finalpackage.put("return_code", "SUCCESS");
-			finalpackage.put("return_msg", "提交成功");
+			finalpackage.put("result_msg", "提交成功");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "提交失败");
+			finalpackage.put("result_msg", "提交失败");
 		}
 		return finalpackage;
 	}
@@ -141,11 +141,11 @@ public class CashPayPlugin extends PaymentPlugin {
 			refunds.setTranSn(refunds.getSn());
 			refundsService.update(refunds);
 			finalpackage.put("return_code", "SUCCESS");
-			finalpackage.put("return_msg", "提交成功");
+			finalpackage.put("result_msg", "提交成功");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "提交失败");
+			finalpackage.put("result_msg", "提交失败");
 		}
 		return finalpackage;
 	}

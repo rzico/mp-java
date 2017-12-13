@@ -90,31 +90,31 @@ public class CardPayPlugin extends PaymentPlugin {
 				try {
 					if (member.getPassword()==null) {
 						finalpackage.put("return_code", "FAIL");
-						finalpackage.put("return_msg", "没有设置密码");
+						finalpackage.put("result_msg", "没有设置密码");
 						return finalpackage;
 					}
 					String password = rsaService.decryptParameter("enPassword",request);
 					if (MD5Utils.getMD5Str(password).equals(member.getPassword())) {
 						finalpackage.put("return_code", "FAIL");
-						finalpackage.put("return_msg", "密码不正确");
+						finalpackage.put("result_msg", "密码不正确");
 						return finalpackage;
 					}
 					cardService.payment(card,payment);
 					finalpackage.put("return_code", "SUCCESS");
-					finalpackage.put("return_msg", "提交成功");
+					finalpackage.put("result_msg", "提交成功");
 				} catch (Exception e) {
 					finalpackage.put("return_code", "FAIL");
-					finalpackage.put("return_msg", e.getMessage());
+					finalpackage.put("result_msg", e.getMessage());
 				}
 				return finalpackage;
 			} else {
 				finalpackage.put("return_code", "FAIL");
-				finalpackage.put("return_msg", "卡内余额不足");
+				finalpackage.put("result_msg", "卡内余额不足");
 				return finalpackage;
 			}
 		} else {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "无效会员卡");
+			finalpackage.put("result_msg", "无效会员卡");
 			return finalpackage;
 		}
 	}
@@ -125,16 +125,16 @@ public class CardPayPlugin extends PaymentPlugin {
 		HashMap<String, Object> finalpackage = new HashMap<>();
 		if (safeKey==null) {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "无效付款码");
+			finalpackage.put("result_msg", "无效付款码");
 			return finalpackage;
 		}
 
 		Map<String,String> data = ScanUtil.scanParser(safeKey);
 
 
-		if (data.get("type")!="818802") {
+		if (!data.get("type").toString().equals("818802")) {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "无效付款码");
+			finalpackage.put("result_msg", "无效付款码");
 			return finalpackage;
 		}
 		String code = data.get("code");
@@ -143,14 +143,14 @@ public class CardPayPlugin extends PaymentPlugin {
 		Card card = cardService.find(c);
 		if (card==null) {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "无效付款码");
+			finalpackage.put("result_msg", "无效付款码");
 			return finalpackage;
 		}
 
-		String sign = code.substring(code.length()-6,6);
+		String sign = code.substring(code.length()-6,code.length());
 		if (!sign.equals(card.getSign())) {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "请重打开付款码");
+			finalpackage.put("result_msg", "请重打开付款码");
 			return finalpackage;
 		}
 
@@ -158,15 +158,15 @@ public class CardPayPlugin extends PaymentPlugin {
 			try {
 				cardService.payment(card,payment);
 				finalpackage.put("return_code", "SUCCESS");
-				finalpackage.put("return_msg", "提交成功");
+				finalpackage.put("result_msg", "提交成功");
 			} catch (Exception e) {
 				finalpackage.put("return_code", "FAIL");
-				finalpackage.put("return_msg", e.getMessage());
+				finalpackage.put("result_msg", e.getMessage());
 			}
 			return finalpackage;
 		} else {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "卡内余额不足");
+			finalpackage.put("result_msg", "卡内余额不足");
 			return finalpackage;
 		}
 	}
@@ -223,15 +223,15 @@ public class CardPayPlugin extends PaymentPlugin {
 				try {
 					cardService.refunds(card,refunds);
 					finalpackage.put("return_code", "SUCCESS");
-					finalpackage.put("return_msg", "提交成功");
+					finalpackage.put("result_msg", "提交成功");
 				} catch (Exception e) {
 					finalpackage.put("return_code", "FAIL");
-					finalpackage.put("return_msg", e.getMessage());
+					finalpackage.put("result_msg", e.getMessage());
 				}
 				return finalpackage;
 		} else {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "无效会员卡");
+			finalpackage.put("result_msg", "无效会员卡");
 			return finalpackage;
 		}
 	}

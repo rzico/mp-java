@@ -137,7 +137,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 							finalpackage.put("return_code","SUCCESS");
 							return finalpackage;
 						}else{
-							finalpackage.put("return_msg",resultMap.get("err_msg"));
+							finalpackage.put("result_msg",resultMap.get("err_msg"));
 							finalpackage.put("return_code","FAIL");
 						}
 					}
