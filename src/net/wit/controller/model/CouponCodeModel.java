@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CouponCodeModel implements Serializable {
+public class CouponCodeModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 商户 */

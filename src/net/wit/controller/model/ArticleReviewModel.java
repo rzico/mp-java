@@ -9,7 +9,7 @@ import java.util.List;
 
 //文章展示输出模板 H5等
 
-public class ArticleReviewModel implements Serializable {
+public class ArticleReviewModel extends BaseModel implements Serializable {
     /**  评论 id */
     private Long id;
     /** 会员 */

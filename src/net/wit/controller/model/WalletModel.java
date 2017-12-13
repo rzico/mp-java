@@ -4,7 +4,7 @@ import net.wit.entity.Member;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class WalletModel implements Serializable {
+public class WalletModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //关联商品展示模版等
-public class ProductViewModel implements Serializable {
+public class ProductViewModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 商品名称 */

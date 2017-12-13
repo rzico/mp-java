@@ -176,7 +176,6 @@ public class PaymentController extends BaseController {
         PrintWriter out = response.getWriter();
         out.print("error");
         out.flush();
-
     }
 
 //    /**

@@ -8,7 +8,7 @@ import java.util.List;
 
 //文章编辑模板
 
-public class TemplateModel implements Serializable {
+public class TemplateModel extends BaseModel implements Serializable {
 
     /** 缩例图 */
     private String sn;

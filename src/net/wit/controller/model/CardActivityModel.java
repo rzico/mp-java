@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardActivityModel implements Serializable {
+public class CardActivityModel extends BaseModel implements Serializable {
     private Long id;
     /**  充 */
     private BigDecimal amount;

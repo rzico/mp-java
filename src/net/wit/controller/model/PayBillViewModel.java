@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PayBillViewModel implements Serializable {
+public class PayBillViewModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 交易金额 */

@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardModel implements Serializable {
+public class CardModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 商户 */

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemberModel implements Serializable {
+public class MemberModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */

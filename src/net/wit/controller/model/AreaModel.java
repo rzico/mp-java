@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AreaModel implements Serializable {
+public class AreaModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
 

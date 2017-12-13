@@ -7,7 +7,7 @@ import java.util.*;
 
 //文章展示输出模板 H5等
 
-public class ArticleViewModel implements Serializable {
+public class ArticleViewModel extends BaseModel implements Serializable {
     
     private Long id;
     /** 会员 */

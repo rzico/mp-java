@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CouponModel implements Serializable {
+public class CouponModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 类型 */

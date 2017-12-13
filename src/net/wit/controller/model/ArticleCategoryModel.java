@@ -8,7 +8,7 @@ import java.util.List;
 
 //文章分类
 
-public class ArticleCategoryModel implements Serializable {
+public class ArticleCategoryModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
 

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicViewModel implements Serializable {
+public class TopicViewModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 名称 */

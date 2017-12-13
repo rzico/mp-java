@@ -10,7 +10,7 @@ import java.util.List;
 
 //文章题库模板 H5等
 
-public class ArticleVoteOptionModel implements Serializable {
+public class ArticleVoteOptionModel extends BaseModel implements Serializable {
     /** 题目 */
     private String  title;
     /** 有效期 */

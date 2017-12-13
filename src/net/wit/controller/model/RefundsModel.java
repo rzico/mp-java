@@ -9,7 +9,7 @@ import java.util.Date;
 
 //文章编辑模板
 
-public class RefundsModel implements Serializable {
+public class RefundsModel extends BaseModel implements Serializable {
 
     /** 收款方 */
     private String nickName;

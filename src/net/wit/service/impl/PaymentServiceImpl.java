@@ -86,11 +86,12 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	// 自定义比较器：按书的价格排序
 	static class AmountComparator implements Comparator {
 		public int compare(Object object1, Object object2) {// 实现接口中的方法
-			CardActivityModel p1 = (CardActivityModel) object1; // 强制转换
-			CardActivityModel p2 = (CardActivityModel) object2;
-			return p1.getAmount().compareTo(p2.getAmount());
+			Map<String, Object> p1 = (Map<String, Object>) object1; // 强制转换
+			Map<String, Object> p2 = (Map<String, Object>) object2;
+			return new BigDecimal(p1.get("amount").toString()).compareTo(new BigDecimal(p2.get("amount").toString()));
 		}
 	}
+
 
 	private Card.VIP calculateVip(Shop shop, BigDecimal amount) {
 		Member owner = shop.getOwner();
@@ -104,12 +105,12 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			return null;
 		}
 
-		List<CardActivity> activitys = JsonUtils.toObject(topic.getTopicCard().getActivity(),List.class);
+		List<Map<String, Object>> activitys = JsonUtils.toObject(topic.getTopicCard().getActivity(),List.class);
 		Collections.sort(activitys, new AmountComparator());
 
-		CardActivity curr = null;
-		for (CardActivity model:activitys) {
-			if (model.getAmount().compareTo(amount)>0) {
+		Map<String, Object> curr = null;
+		for (Map<String, Object> model:activitys) {
+			if (new BigDecimal(model.get("amount").toString()).compareTo(amount)>0) {
 				break;
 			} else {
 				curr = model;
@@ -117,7 +118,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		}
 
 		if (curr!=null) {
-			return curr.getVip();
+			return Card.VIP.valueOf(curr.get("vip").toString());
 		} else {
 			return null;
 		}

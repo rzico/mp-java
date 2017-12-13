@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicIndexModel implements Serializable {
+public class TopicIndexModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 名称 */

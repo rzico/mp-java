@@ -8,7 +8,7 @@ import java.util.*;
 
 //文章题库模板 H5等
 
-public class ArticleVoteListModel implements Serializable {
+public class ArticleVoteListModel extends BaseModel implements Serializable {
     private Long id;
     private Long memberId;
     /** 昵称 */

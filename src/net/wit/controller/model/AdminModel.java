@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminModel implements Serializable {
+public class AdminModel extends BaseModel implements Serializable {
 
     private Long id;
 

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class PayBillShopSummary implements Serializable {
+public class PayBillShopSummary extends BaseModel implements Serializable {
     private Shop shop;
     //消费类型
     private PayBill.Type type;

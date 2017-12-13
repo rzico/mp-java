@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManagerModel implements Serializable {
+public class ManagerModel extends BaseModel implements Serializable {
     private Long id;
     /** 昵称 */
     private String nickName;

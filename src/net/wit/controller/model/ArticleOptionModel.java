@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 //文章展示输出模板 H5等
 
-public class ArticleOptionModel implements Serializable {
+public class ArticleOptionModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 是否投稿 */

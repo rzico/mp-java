@@ -3,7 +3,7 @@ import net.wit.entity.Member;
 
 import java.io.Serializable;
 
-public class UserModel implements Serializable {
+public class UserModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */

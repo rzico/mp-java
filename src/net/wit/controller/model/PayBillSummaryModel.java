@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class PayBillSummaryModel implements Serializable {
+public class PayBillSummaryModel extends BaseModel implements Serializable {
     private Long shopId;
     private String name;
     private String logo;

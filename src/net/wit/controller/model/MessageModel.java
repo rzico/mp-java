@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MessageModel implements Serializable {
+public class MessageModel extends BaseModel implements Serializable {
 
     private Long id;
 

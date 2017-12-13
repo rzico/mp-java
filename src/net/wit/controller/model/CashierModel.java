@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-public class CashierModel implements Serializable {
+public class CashierModel extends BaseModel implements Serializable {
 
     private Long shopId;
     /** 今日收银 */

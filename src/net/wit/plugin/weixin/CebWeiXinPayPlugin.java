@@ -235,7 +235,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 								data.put("result_msg", "待确定状态");
 							} else {
 								data.put("return_code", "FAIL");
-								data.put("result_msg", resultMap.get("message"));
+								data.put("result_msg", resultMap.get("err_msg"));
 							}
 							return data;
 						}
