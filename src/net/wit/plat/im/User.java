@@ -22,17 +22,6 @@ import static com.tls.tls_sigature.tls_sigature.GenTLSSignatureEx;
 
 public class User {
     public static Logger logger = LogManager.getLogger(User.class);
-//    public static String privateKey=
-//            "-----BEGIN PRIVATE KEY-----\n"+
-//            "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgilzRLbmHzOJTqgpaM5Ln\n"+
-//            "yyGZLYxr7Q0HGkm8YCz95f+hRANCAAQaFa7sPGBQbxMRrrce87loEfMH5v3+L5Rx\n"+
-//            "60tHHM/kXD1hh7TTv+dAwyQsfR7dAkoy3KVKxNcHP+OGHK/M1OS0\n"+
-//            "-----END PRIVATE KEY-----";
-//    public static String publicKey=
-//            "-----BEGIN PUBLIC KEY-----\n"+
-//            "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEGhWu7DxgUG8TEa63HvO5aBHzB+b9/i+U\n"+
-//            "cetLRxzP5Fw9YYe007/nQMMkLH0e3QJKMtylSsTXBz/jhhyvzNTktA==\n"+
-//            "-----END PUBLIC KEY-----";
     public static String privateKey=
               "-----BEGIN PRIVATE KEY-----\n"+
               "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgpPaVbL3nDotp6NYu\n"+
