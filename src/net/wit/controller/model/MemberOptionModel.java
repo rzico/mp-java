@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-public class MemberOptionModel implements Serializable {
+public class MemberOptionModel extends BaseModel implements Serializable {
 
     private Long id;
     /**  黑名单 */

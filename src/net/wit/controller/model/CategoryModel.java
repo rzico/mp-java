@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryModel implements Serializable {
+public class CategoryModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
 

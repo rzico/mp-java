@@ -8,7 +8,7 @@ import java.util.*;
 
 //文章预览页 H5等
 
-public class ArticlePreviewModel implements Serializable {
+public class ArticlePreviewModel extends BaseModel implements Serializable {
     
     private Long id;
     /** 作者 */

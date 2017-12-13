@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 //文章展示输出模板 H5等
-public class ArticleModel implements Serializable {
+public class ArticleModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 最近变动时间 */

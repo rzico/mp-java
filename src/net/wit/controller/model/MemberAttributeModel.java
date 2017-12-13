@@ -4,7 +4,7 @@ import net.wit.entity.Member;
 import java.io.Serializable;
 import java.util.Date;
 
-public class MemberAttributeModel implements Serializable {
+public class MemberAttributeModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 账号 */

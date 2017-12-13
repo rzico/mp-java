@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class DepositSummary implements Serializable {
+public class DepositSummary extends BaseModel implements Serializable {
     //消费类型
     private Deposit.Type type;
     //消费金额

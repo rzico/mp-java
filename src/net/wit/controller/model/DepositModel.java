@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import net.wit.entity.ArticleReward;
 import net.wit.entity.Deposit;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 //文章编辑模板
 
-public class DepositModel implements Serializable {
+public class DepositModel extends BaseModel implements Serializable {
 
     /** 类型 */
     private Deposit.Type type;

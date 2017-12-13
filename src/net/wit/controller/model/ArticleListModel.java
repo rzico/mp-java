@@ -8,7 +8,7 @@ import java.util.*;
 
 //文章列表图
 
-public class ArticleListModel implements Serializable {
+public class ArticleListModel extends BaseModel implements Serializable {
     
     private Long id;
     /** 创建时间 */

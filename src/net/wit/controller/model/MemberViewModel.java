@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-public class MemberViewModel implements Serializable {
+public class MemberViewModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */

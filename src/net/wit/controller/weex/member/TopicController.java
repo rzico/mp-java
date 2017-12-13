@@ -130,7 +130,7 @@ public class TopicController extends BaseController {
     }
 
     /**
-     *  激活会员卡
+     *  激活专栏
      */
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
     @ResponseBody

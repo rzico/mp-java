@@ -10,7 +10,7 @@ import java.util.List;
 
 //文章展示输出模板 H5等
 
-public class ArticleLaudModel implements Serializable {
+public class ArticleLaudModel extends BaseModel implements Serializable {
     /** 会员 */
     private Long memberId;
     /** 昵称 */

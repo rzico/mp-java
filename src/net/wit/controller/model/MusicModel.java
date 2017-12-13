@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 //用户文集
 
-public class MusicModel implements Serializable {
+public class MusicModel extends BaseModel implements Serializable {
     private String id;
     private String name;
 

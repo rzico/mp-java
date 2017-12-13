@@ -6,7 +6,7 @@ import net.wit.entity.PayBill;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class PayBillModel implements Serializable {
+public class PayBillModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 商户 */

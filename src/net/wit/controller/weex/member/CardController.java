@@ -9,6 +9,7 @@ import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
 import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -193,24 +194,55 @@ public class CardController extends BaseController {
         return Message.success("更新成功");
     }
 
-
-    private BigDecimal calculate(BigDecimal amount) {
-
-
-        if (amount.compareTo(new BigDecimal(5000))>=0) {
-            return BigDecimal.ZERO;
-        } else {
-            return BigDecimal.ONE;
+    // 自定义比较器：按书的价格排序
+    static class AmountComparator implements Comparator {
+        public int compare(Object object1, Object object2) {// 实现接口中的方法
+            Map<String, Object> p1 = (Map<String, Object>) object1; // 强制转换
+            Map<String, Object> p2 = (Map<String, Object>) object2;
+            return new BigDecimal(p1.get("amount").toString()).compareTo(new BigDecimal(p2.get("amount").toString()));
         }
+    }
+
+    private BigDecimal calculate(Shop shop,BigDecimal amount) {
+        Member owner = shop.getOwner();
+        Topic topic = owner.getTopic();
+
+        if (topic==null) {
+            return BigDecimal.ZERO;
+        }
+
+        if (topic.getTopicCard()==null) {
+            return BigDecimal.ZERO;
+        }
+
+        List<Map<String, Object>> activitys = JsonUtils.toObject(topic.getTopicCard().getActivity(),List.class);
+        Collections.sort(activitys, new AmountComparator());
+
+        Map<String, Object> curr = null;
+        for (Map<String, Object> model:activitys) {
+            if (new BigDecimal(model.get("amount").toString()).compareTo(amount)>0) {
+                break;
+            } else {
+                curr = model;
+            }
+        }
+
+        if (curr!=null) {
+            return new BigDecimal(curr.get("present").toString());
+        } else {
+            return BigDecimal.ZERO;
+        }
+
     }
 
     /**
      * 计算手续费
      */
-    @RequestMapping(value = "calculate", method = RequestMethod.POST)
+    @RequestMapping(value = "calculate")
     @ResponseBody
-    public Message calculateFee(BigDecimal amount,HttpServletRequest request){
-        return Message.success(calculate(amount),"success");
+    public Message calculateFee(Long shopId,BigDecimal amount,HttpServletRequest request){
+        Shop shop = shopService.find(shopId);
+        return Message.success(calculate(shop,amount),"success");
     }
 
     /**
@@ -245,7 +277,8 @@ public class CardController extends BaseController {
         PayBill payBill = new PayBill();
         payBill.setType(PayBill.Type.card);
         payBill.setAmount(amount);
-        payBill.setCardAmount(amount);
+        BigDecimal present = calculate(shop,amount);
+        payBill.setCardAmount(amount.add(present));
         payBill.setNoDiscount(BigDecimal.ZERO);
         payBill.setCouponCode(null);
         payBill.setCouponDiscount(BigDecimal.ZERO);

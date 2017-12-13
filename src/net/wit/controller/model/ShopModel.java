@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopModel implements Serializable {
+public class ShopModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 收款码 */

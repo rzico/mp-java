@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 //文章编辑模板
 
-public class ArticleContentModel implements Serializable {
+public class ArticleContentModel extends BaseModel implements Serializable {
 
     /** 媒体类型 */
     private Article.MediaType mediaType;

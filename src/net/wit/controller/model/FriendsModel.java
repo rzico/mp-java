@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class FriendsModel implements Serializable {
+public class FriendsModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */

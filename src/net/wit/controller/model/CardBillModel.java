@@ -11,7 +11,7 @@ import java.util.List;
 
 //文章编辑模板
 
-public class CardBillModel implements Serializable {
+public class CardBillModel extends BaseModel implements Serializable {
 
     /** 类型 */
     private CardBill.Type type;

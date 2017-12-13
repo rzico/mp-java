@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemberListModel implements Serializable {
+public class MemberListModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */

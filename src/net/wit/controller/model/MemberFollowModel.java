@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemberFollowModel implements Serializable {
+public class MemberFollowModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */

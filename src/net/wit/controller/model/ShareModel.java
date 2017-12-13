@@ -11,7 +11,7 @@ import java.util.*;
 
 //文章展示输出模板 H5等
 
-public class ShareModel implements Serializable {
+public class ShareModel extends BaseModel implements Serializable {
     /** 标题 */
     private String title;
     /** 缩例图 */
