@@ -110,8 +110,16 @@ public class CardController extends BaseController {
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
-        data.put("mobile",member.getMobile());
-        data.put("name",member.getName());
+        if (member.getMobile()==null) {
+            data.put("mobile","");
+        } else {
+            data.put("mobile",member.getMobile());
+        }
+        if (member.getName()==null) {
+            data.put("name", "");
+        } else {
+            data.put("name", member.getName());
+        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
@@ -203,8 +211,16 @@ public class CardController extends BaseController {
         model.bind(card);
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
-        data.put("mobile",member.getMobile());
-        data.put("name",member.getName());
+        if (member.getMobile()==null) {
+            data.put("mobile","");
+        } else {
+            data.put("mobile",member.getMobile());
+        }
+        if (member.getName()==null) {
+            data.put("name", "");
+        } else {
+            data.put("name", member.getName());
+        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));

@@ -230,10 +230,10 @@ public class TopicController extends BaseController {
         }
         if (useCard!=null) {
             if (member.getMobile()==null) {
-                return Message.error("绑定手机才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             if (member.getName()==null) {
-                return Message.error("银行卡实名才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             config.setUseCard(useCard);
             if (useCard) {
@@ -242,19 +242,19 @@ public class TopicController extends BaseController {
         }
         if (useCoupon!=null) {
             if (member.getMobile()==null) {
-                return Message.error("绑定手机才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             if (member.getName()==null) {
-                return Message.error("银行卡实名才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             config.setUseCoupon(useCoupon);
         }
         if (useCashier!=null) {
             if (member.getMobile()==null) {
-                return Message.error("绑定手机才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             if (member.getName()==null) {
-                return Message.error("银行卡实名才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             config.setUseCashier(useCashier);
         }

@@ -151,7 +151,7 @@ public class UnsPay {
         try {
             BigDecimal bal = queryBalance();
             if (bal.compareTo(transfer.effectiveAmount().add(BigDecimal.ONE))<=0) {
-               return "";
+               return "3000";
             }
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             Map<String, Object> params = new HashMap<String, Object>();
@@ -167,6 +167,7 @@ public class UnsPay {
             String keystr = UnsPay.joinValue(params);
             params.put("08mac", MD5Utils.getMD5Str(keystr).toUpperCase());
             String resp = get(url, params);
+            System.out.println(resp);
             Map<String, String> data = JsonUtils.toObject(resp, Map.class);
             return data.get("result_code");
         } catch (Exception e) {

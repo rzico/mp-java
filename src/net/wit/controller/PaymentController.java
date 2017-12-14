@@ -86,7 +86,7 @@ public class PaymentController extends BaseController {
     public Message submit(String paymentPluginId, String sn,String safeKey, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
         if (payment==null) {
-            Message.error("无效付款单");
+            return Message.error("无效付款单");
         }
 
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
@@ -94,6 +94,7 @@ public class PaymentController extends BaseController {
             return Message.error("支付插件无效");
         }
 
+        System.out.println(safeKey);
         payment.setMethod(Method.online);
         payment.setPaymentPluginId(paymentPluginId);
         payment.setPaymentMethod(paymentPlugin.getName());

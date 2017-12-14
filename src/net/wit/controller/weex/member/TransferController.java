@@ -92,7 +92,7 @@ public class TransferController extends BaseController {
     /**
      *
      */
-    @RequestMapping(value = "submit", method = RequestMethod.POST)
+    @RequestMapping(value = "submit")
     @ResponseBody
     public Message submit(Transfer.Type type,BigDecimal amount,HttpServletRequest request){
         Member member = memberService.getCurrent();
