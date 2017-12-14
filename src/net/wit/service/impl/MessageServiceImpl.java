@@ -338,8 +338,11 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
         msg.setReceiver(deposit.getMember());
         msg.setType(Message.Type.account);
         if (deposit.getType().equals(Deposit.Type.cashier)) {
-			msg.setMember(deposit.getPayment().getMember());
-			msg.setThumbnial(msg.getMember().getLogo());
+        	PayBill payBill = deposit.getPayBill();
+        	if (payBill!=null) {
+				msg.setMember(payBill.getOwner());
+				msg.setThumbnial(msg.getMember().getLogo());
+			}
 			msg.setTitle("线下收单");
 		} else
 		if (deposit.getType().equals(Deposit.Type.recharge)) {

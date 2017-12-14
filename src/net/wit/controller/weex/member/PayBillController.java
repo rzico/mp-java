@@ -264,7 +264,7 @@ public class PayBillController extends BaseController {
         try {
             bill = payBillService.createRefund(payBill,admin);
         } catch (Exception e) {
-            return Message.error("退款失败");
+            return Message.error(e.getMessage());
         }
         Map<String,Object> data = new HashMap<String,Object>();
         PayBillViewModel model = new PayBillViewModel();

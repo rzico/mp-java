@@ -154,6 +154,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setDeleted(false);
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
+						deposit.setPayBill(payBill);
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -187,6 +188,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setDeleted(false);
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
+						deposit.setPayBill(payBill);
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
