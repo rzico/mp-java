@@ -1,12 +1,10 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.util.JSONUtils;
 import net.wit.*;
@@ -14,12 +12,14 @@ import net.wit.Filter.Operator;
 
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.DepositModel;
+import net.wit.dao.ArticleDao;
 import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
 import net.wit.plat.im.Push;
 import net.wit.plat.im.User;
 import net.wit.util.JsonUtils;
 import net.wit.util.SettingUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -44,6 +44,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
+
+	@Resource(name = "articleDaoImpl")
+	private ArticleDao articleDao;
 
 	@Resource(name = "messageDaoImpl")
 	public void setBaseDao(MessageDao messageDao) {
@@ -385,4 +388,28 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
+
+	public void login(Member member,HttpServletRequest request) {
+		if (DateUtils.truncate(member.getCreateDate(), Calendar.DATE).equals(DateUtils.truncate(new Date(), Calendar.DATE))) {
+			Article article = articleDao.find(1L);
+			ArticleShare share = new ArticleShare();
+			share.setIp(request.getRemoteAddr());
+			share.setMember(member);
+			share.setArticle(article);
+			share.setIsShow(true);
+			share.setShareType(ArticleShare.ShareType.appWeex);
+			share.setAuthor(article.getMember());
+			sharePushTo(share);
+		}
+		if (member.getMobile()==null) {
+			Message msg = new Message();
+			msg.setMember(member);
+			msg.setReceiver(member);
+			msg.setType(Message.Type.message);
+			msg.setTitle("绑定手机号");
+			msg.setContent("接工信部要求，发布文章都必须绑定手机。");
+			pushTo(msg);
+		}
+	}
+
 }

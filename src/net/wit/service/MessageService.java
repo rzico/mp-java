@@ -9,6 +9,8 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @ClassName: MessageService
  * @author 降魔战队
@@ -39,4 +41,5 @@ public interface MessageService extends BaseService<Message, Long> {
 	public Boolean addFriendPushTo(Member member,Member friend);
 	//同意好友
 	public Boolean adoptFriendPushTo(Member member,Member friend);
+	public void login(Member member,HttpServletRequest request);
 }

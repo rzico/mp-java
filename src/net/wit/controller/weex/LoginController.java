@@ -57,6 +57,9 @@ public class LoginController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
+
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
@@ -155,6 +158,7 @@ public class LoginController extends BaseController {
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
+            messageService.login(member,request);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,6 +205,7 @@ public class LoginController extends BaseController {
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
+            messageService.login(member,request);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -321,6 +326,7 @@ public class LoginController extends BaseController {
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
+            messageService.login(member,request);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
