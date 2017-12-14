@@ -109,7 +109,7 @@ public class PayBillViewModel extends BaseModel implements Serializable {
             }
         } else
         if (payBill.getType().equals(PayBill.Type.card)) {
-            this.memo = "消费(会员卡)";
+            this.memo = "充值(会员卡)";
             if (payBill.getPayment().getPaymentMethod()!=null) {
                 s = ","+payBill.getPayment().getPaymentMethod();
             }

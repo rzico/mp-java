@@ -23,16 +23,27 @@ import static com.tls.tls_sigature.tls_sigature.GenTLSSignatureEx;
 public class User {
     public static Logger logger = LogManager.getLogger(User.class);
     public static String privateKey=
-              "-----BEGIN PRIVATE KEY-----\n"+
-              "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgpPaVbL3nDotp6NYu\n"+
-              "rRE2t6b0NbqmashEAgP3MF9rxYKhRANCAASoCYP3tz5TOlc1M56Wy505G0CQkZyl\n"+
-              "GkQu5XGhhXEprSlbgQ90afpA/L9TVwoeuWxGlzjE/wrhtn2/0QdVy3DA\n"+
-              "-----END PRIVATE KEY-----";
+            "-----BEGIN PRIVATE KEY-----\n"+
+            "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgilzRLbmHzOJTqgpaM5Ln\n"+
+            "yyGZLYxr7Q0HGkm8YCz95f+hRANCAAQaFa7sPGBQbxMRrrce87loEfMH5v3+L5Rx\n"+
+            "60tHHM/kXD1hh7TTv+dAwyQsfR7dAkoy3KVKxNcHP+OGHK/M1OS0\n"+
+            "-----END PRIVATE KEY-----";
     public static String publicKey=
-              "-----BEGIN PUBLIC KEY-----\n"+
-              "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqAmD97c+UzpXNTOelsudORtAkJGc\n"+
-              "pRpELuVxoYVxKa0pW4EPdGn6QPy/U1cKHrlsRpc4xP8K4bZ9v9EHVctwwA==\n"+
-              "-----END PUBLIC KEY-----";
+            "-----BEGIN PUBLIC KEY-----\n"+
+            "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEGhWu7DxgUG8TEa63HvO5aBHzB+b9/i+U\n"+
+            "cetLRxzP5Fw9YYe007/nQMMkLH0e3QJKMtylSsTXBz/jhhyvzNTktA==\n"+
+            "-----END PUBLIC KEY-----";
+//    public static String privateKey=
+//              "-----BEGIN PRIVATE KEY-----\n"+
+//              "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgpPaVbL3nDotp6NYu\n"+
+//              "rRE2t6b0NbqmashEAgP3MF9rxYKhRANCAASoCYP3tz5TOlc1M56Wy505G0CQkZyl\n"+
+//              "GkQu5XGhhXEprSlbgQ90afpA/L9TVwoeuWxGlzjE/wrhtn2/0QdVy3DA\n"+
+//              "-----END PRIVATE KEY-----";
+//    public static String publicKey=
+//              "-----BEGIN PUBLIC KEY-----\n"+
+//              "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqAmD97c+UzpXNTOelsudORtAkJGc\n"+
+//              "pRpELuVxoYVxKa0pW4EPdGn6QPy/U1cKHrlsRpc4xP8K4bZ9v9EHVctwwA==\n"+
+//              "-----END PUBLIC KEY-----";
     public static String im_attr="https://console.tim.qq.com/v4/openim/im_set_attr_name?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_attr="https://console.tim.qq.com/v4/im_open_login_svc/account_import?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_state="https://console.tim.qq.com/v4/openim/querystate?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";

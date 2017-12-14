@@ -414,6 +414,9 @@ public class CardController extends BaseController {
             return Message.error("没有开通");
         }
         Enterprise enterprise = admin.getEnterprise();
+        if (enterprise==null) {
+            return Message.error("没有开通店铺");
+        }
         Member owner = enterprise.getMember();
         if (owner.getTopic()==null) {
             return Message.error("没有开通专栏");

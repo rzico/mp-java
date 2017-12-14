@@ -12,10 +12,12 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.service.MemberService;
 import net.wit.service.RSAService;
 import net.wit.util.MD5Utils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,11 +74,11 @@ public class CashPayPlugin extends PaymentPlugin {
 			payment.setMethod(Payment.Method.offline);
 			paymentService.update(payment);
 			finalpackage.put("return_code", "SUCCESS");
-			finalpackage.put("return_msg", "提交成功");
+			finalpackage.put("result_msg", "提交成功");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "提交失败");
+			finalpackage.put("result_msg", "提交失败");
 		}
 		return finalpackage;
 	}
@@ -88,11 +90,11 @@ public class CashPayPlugin extends PaymentPlugin {
 			payment.setMethod(Payment.Method.offline);
 			paymentService.update(payment);
 			finalpackage.put("return_code", "SUCCESS");
-			finalpackage.put("return_msg", "提交成功");
+			finalpackage.put("result_msg", "提交成功");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "提交失败");
+			finalpackage.put("result_msg", "提交失败");
 		}
 		return finalpackage;
 	}
@@ -113,7 +115,11 @@ public class CashPayPlugin extends PaymentPlugin {
 	@Override
     public String queryOrder(Payment payment,HttpServletRequest request)  throws Exception {
 		if (payment.getTranSn()==null) {
-			return "9999";
+			if (DateUtils.addSeconds(payment.getCreateDate(),30).compareTo(new Date())<0) {
+				return "0001";
+			} else {
+				return "9999";
+			}
 		}
 		else
 			{
@@ -141,11 +147,11 @@ public class CashPayPlugin extends PaymentPlugin {
 			refunds.setTranSn(refunds.getSn());
 			refundsService.update(refunds);
 			finalpackage.put("return_code", "SUCCESS");
-			finalpackage.put("return_msg", "提交成功");
+			finalpackage.put("result_msg", "提交成功");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("return_msg", "提交失败");
+			finalpackage.put("result_msg", "提交失败");
 		}
 		return finalpackage;
 	}
@@ -154,7 +160,11 @@ public class CashPayPlugin extends PaymentPlugin {
 	 */
 	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
 		if (refunds.getTranSn()==null) {
-			return "9999";
+			if (DateUtils.addSeconds(refunds.getCreateDate(),30).compareTo(new Date())<0) {
+				return "0001";
+			} else {
+				return "9999";
+			}
 		}
 		else
 		{

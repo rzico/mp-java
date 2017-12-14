@@ -56,6 +56,9 @@ public class AdminController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
@@ -104,7 +107,7 @@ public class AdminController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Long shopId,HttpServletRequest request){
+    public Message update(Long id,Long shopId,Long roleId,HttpServletRequest request){
 
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -120,12 +123,24 @@ public class AdminController extends BaseController {
             return Message.error("员工id");
         }
 
-        Shop shop = shopService.find(shopId);
-        if (shop==null) {
-            return Message.error("店铺id无效");
-        }
+        if (shopId!=null) {
+            Shop shop = shopService.find(shopId);
+            if (shop == null) {
+                return Message.error("店铺id无效");
+            }
 
-        adminMember.setShop(shop);
+            adminMember.setShop(shop);
+        }
+        if (roleId!=null) {
+            Role role = roleService.find(roleId);
+            List<Role> roles = adminMember.getRoles();
+            if (roles==null) {
+                roles = new ArrayList<Role>();
+            }
+            roles.clear();
+            roles.add(role);
+            adminMember.setRoles(roles);
+        }
 
         adminService.update(adminMember);
         AdminModel model = new AdminModel();
