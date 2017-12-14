@@ -123,7 +123,7 @@ public class MessageController extends BaseController {
             url = "file://view/member/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.addfriend)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/friend/add.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.order)) {
             url = "file://view/member/topic/index.js?id="+message.getMember().getId();

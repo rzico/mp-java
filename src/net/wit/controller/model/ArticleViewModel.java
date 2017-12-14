@@ -32,6 +32,8 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Long hits;
     /** 点赞数 */
     private Long laud;
+    /** 是否发布 */
+    private Boolean isPublish;
     /** 内容 */
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
     /** 投票 */
@@ -151,6 +153,14 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.votes = votes;
     }
 
+    public Boolean getIsPublish() {
+        return isPublish;
+    }
+
+    public void setIsPublish(Boolean publish) {
+        isPublish = publish;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
@@ -161,6 +171,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();
+        this.isPublish = article.getArticleOptions().getIsPublish();
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;

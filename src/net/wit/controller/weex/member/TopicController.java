@@ -127,6 +127,12 @@ public class TopicController extends BaseController {
         if (topic==null) {
             return Message.error("请先开通专栏");
         }
+        if (topic.getLogo()==null) {
+            return Message.error("请设置专栏头像");
+        }
+        if (topic.getName()==null) {
+            return Message.error("请设置专栏名称");
+        }
         enterpriseService.create(topic);
         return Message.success("申请成功");
     }
@@ -186,12 +192,22 @@ public class TopicController extends BaseController {
         }
         if (name!=null) {
             topic.setName(name);
+            if (admin!=null) {
+                Enterprise enterprise = admin.getEnterprise();
+                enterprise.setName(name);
+                enterpriseService.update(enterprise);
+            }
         }
         if (topic.getName().length()>27) {
             return Message.error("专栏名不能超过9个汉字");
         }
         if (logo!=null) {
             topic.setLogo(logo);
+            if (admin!=null) {
+                Enterprise enterprise = admin.getEnterprise();
+                enterprise.setLogo(logo);
+                enterpriseService.update(enterprise);
+            }
         }
         if (areaId!=null) {
             topic.setArea(areaService.find(areaId));

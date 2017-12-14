@@ -305,7 +305,6 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setThumbnial(member.getLogo());
 		msg.setTitle(member.getNickName());
 		msg.setContent("【"+member.getNickName()+"】申请成为你的好友。");
-		msg.setExt("friend.add");
 		return pushTo(msg);
 	}
 
@@ -318,7 +317,6 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setThumbnial(member.getLogo());
 		msg.setTitle(member.getNickName());
 		msg.setContent("【"+member.getNickName()+"】同意成为你的好友。");
-		msg.setExt("friend.adopt");
 		return pushTo(msg);
 	}
 
