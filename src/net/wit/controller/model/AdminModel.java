@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 
 import net.wit.entity.Admin;
+import net.wit.entity.Role;
 import net.wit.entity.Shop;
 
 import java.io.Serializable;
@@ -20,8 +21,14 @@ public class AdminModel extends BaseModel implements Serializable {
     /** 店铺 */
     private String shopName;
 
+    /** 角色 */
+    private String roleName;
+
     /** 店铺ID */
     private Long shopId;
+
+    /** 角色ID */
+    private Long roleId;
 
     /** 手机号 */
     private String mobile;
@@ -74,6 +81,22 @@ public class AdminModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
     public void bind(Admin admin) {
         this.id = admin.getId();
         this.name = admin.getName();
@@ -89,6 +112,23 @@ public class AdminModel extends BaseModel implements Serializable {
             this.logo = admin.getMember().getLogo();
         } else {
             this.mobile = "未绑定";
+        }
+        if (admin.isOwner()) {
+            this.roleName = "店主";
+        } else {
+            String s = "";
+            for (Role role:admin.getRoles()) {
+                if (s.equals("")) {
+                    s = s + ",";
+                }
+                s = s +role.getName();
+            }
+            this.roleName = s;
+        }
+        if (admin.getRoles().size()>0) {
+            this.roleId = admin.getRoles().get(0).getId();
+        } else {
+            this.roleId = 0L;
         }
     }
 
