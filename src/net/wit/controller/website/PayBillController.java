@@ -193,7 +193,7 @@ public class PayBillController extends BaseController {
             } else {
                 data.put("card","false");
             }
-            return Message.success((Object)payment.getSn() ,"success");
+            return Message.success(data,"success");
         } catch (Exception e) {
             return Message.error(e.getMessage());
         }
