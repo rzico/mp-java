@@ -73,6 +73,43 @@ public class CardController extends BaseController {
         return Message.bind(CardModel.bindList(member.getCards()),request);
     }
 
+    /**
+     *  获取付款码
+     */
+    @RequestMapping(value = "/codepay", method = RequestMethod.POST)
+    @ResponseBody
+    public Message codepay(Long shopId,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Shop shop = shopService.find(shopId);
+        if (shop==null) {
+            return Message.error("无效门店id");
+        }
+        Member payee = shop.getOwner();
+        Card card = null;
+        for (Card c:member.getCards()) {
+            if (c.getOwner().equals(payee)) {
+                card = c;
+                break;
+            }
+        }
+
+        if (card==null) {
+            return Message.error("没有会员卡");
+        }
+
+        int challege = StringUtils.Random6Code();
+        card.setSign(String.valueOf(challege));
+        cardService.update(card);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String payCode = "http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
+
+
+        return Message.success((Object)payCode,"获取成功");
+    }
+
      /**
      *  激活会员卡
      */
