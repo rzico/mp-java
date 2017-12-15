@@ -408,6 +408,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			msg.setType(Message.Type.message);
 			msg.setTitle("绑定手机号");
 			msg.setContent("接工信部要求，发布文章都必须绑定手机。");
+			Map<String,String> ext = new HashMap<String,String>();
+			ext.put("type","mobile");
+			msg.setExt(JsonUtils.toJson(ext));
 			pushTo(msg);
 		}
 	}

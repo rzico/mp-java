@@ -55,11 +55,7 @@ public class Message extends BaseEntity {
 		/** 同意好友 gm_10210  */
 		adoptfriend,
 		/** 客服消息 gm_10211  */
-		gmchat,
-		/** 绑定银行卡  */
-		bankcard,
-		/** 绑定手机号  */
-		bindmobile
+		gmchat
 	}
 
 	/** 类型 */

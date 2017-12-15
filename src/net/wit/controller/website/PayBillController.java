@@ -186,6 +186,13 @@ public class PayBillController extends BaseController {
         payBill.setEnterprise(shop.getEnterprise());
         try {
             Payment payment = payBillService.submit(payBill);
+            Map<String,String> data = new HashMap<String,String>();
+            data.put("sn",payment.getSn());
+            if (payBill.getCardDiscount().compareTo(BigDecimal.ZERO)>0) {
+                data.put("card","true");
+            } else {
+                data.put("card","false");
+            }
             return Message.success((Object)payment.getSn() ,"success");
         } catch (Exception e) {
             return Message.error(e.getMessage());
