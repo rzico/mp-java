@@ -53,6 +53,9 @@ public class MemberController extends BaseController {
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      * 获取当前会员信息
      */
@@ -129,6 +132,15 @@ public class MemberController extends BaseController {
         }
         if (nickName!=null) {
             member.setNickName(nickName);
+            Admin admin = adminService.findByMember(member);
+            if (admin!=null) {
+                if (member.getName()!=null) {
+                    admin.setName(member.getName());
+                } else {
+                    admin.setName(nickName);
+                }
+                adminService.update(admin);
+            }
         }
         if (autograph!=null) {
             member.setAutograph(autograph);

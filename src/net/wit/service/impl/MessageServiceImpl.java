@@ -14,6 +14,7 @@ import net.wit.Filter.Operator;
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.DepositModel;
 import net.wit.controller.model.PayBillModel;
+import net.wit.controller.model.PayBillViewModel;
 import net.wit.dao.ArticleDao;
 import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
@@ -251,7 +252,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			msg.setTitle("线下收款");
 			msg.setContent("芸店收款" + payBill.getPayBillAmount() + "元");
 		}
-		PayBillModel ext = new PayBillModel();
+		PayBillViewModel ext = new PayBillViewModel();
 		ext.bind(payBill);
 		msg.setExt(JsonUtils.toJson(ext));
 		pushTo(msg);

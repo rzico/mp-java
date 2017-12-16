@@ -51,6 +51,12 @@ public class BankcardController extends BaseController {
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
+
     /**
      * 银行信息查询
      */
@@ -245,13 +251,26 @@ public class BankcardController extends BaseController {
                             m.setMobile(null);
                             memberService.save(m);
                             member.setMobile(data.get("mobile"));
+                            for (Card card:member.getCards()) {
+                                card.setMobile(member.getMobile());
+                                cardService.update(card);
+                            }
                         }
                     } else {
                         member.setMobile(data.get("mobile"));
+                        for (Card card:member.getCards()) {
+                            card.setMobile(member.getMobile());
+                            cardService.update(card);
+                        }
                     }
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);
+                Admin admin = adminService.findByMember(member);
+                if (admin!=null) {
+                    admin.setName(member.getName());
+                    adminService.update(admin);
+                }
                 return Message.success("success");
             } else {
                 return Message.error(result.get("reason").toString());

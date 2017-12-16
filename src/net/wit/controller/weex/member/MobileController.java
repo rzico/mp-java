@@ -44,6 +44,9 @@ public class MobileController extends BaseController {
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
+
     /**
      * 发送验证码
      * mobile 手机号
@@ -126,6 +129,10 @@ public class MobileController extends BaseController {
 
             member.setMobile(safeKey.getKey());
             memberService.save(member);
+            for (Card card:member.getCards()) {
+                card.setMobile(member.getMobile());
+                cardService.update(card);
+            }
             return Message.success("注册成功");
         } catch (Exception e) {
             e.printStackTrace();
