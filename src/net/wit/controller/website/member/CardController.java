@@ -204,7 +204,7 @@ public class CardController extends BaseController {
                    shopId = Long.parseLong(code.substring(2,11))-100000000;
                    card = cardService.find(code);
                    if (card!=null && !card.getStatus().equals(Card.Status.none) && !card.getMembers().contains(member)) {
-                       card = null;
+                       return Message.error("不是空卡,不能领取");
                    }
                } else {
                    return Message.error("无效code");
@@ -221,14 +221,14 @@ public class CardController extends BaseController {
                if (topicCard==null) {
                    return Message.error("没有开通会员卡");
                }
-               if (card==null) {
-                   for (Card c : member.getCards()) {
-                       if (c.getTopicCard().equals(topicCard)) {
-                           card = c;
-                           break;
-                       }
-                   }
-               }
+//               if (card==null) {
+//                   for (Card c : member.getCards()) {
+//                       if (c.getTopicCard().equals(topicCard)) {
+//                           card = c;
+//                           break;
+//                       }
+//                   }
+//               }
                if (card==null) {
                    card = cardService.create(owner.getTopic().getTopicCard(),shop, code, member);
                }

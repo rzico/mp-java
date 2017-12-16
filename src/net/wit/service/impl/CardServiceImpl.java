@@ -131,20 +131,36 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	}
 
 	public synchronized Card create(TopicCard topicCard,Shop shop,String code,Member member) {
-		Card card = new Card();
-		card.setOwner(topicCard.getTopic().getMember());
-		card.setVip(Card.VIP.vip1);
-		card.setStatus(Card.Status.none);
-		card.setTopicCard(topicCard);
-		card.setBalance(BigDecimal.ZERO);
-		if (code==null) {
-			topicCardDao.refresh(topicCard,LockModeType.PESSIMISTIC_WRITE);
-			Long no =topicCard.getIncrement()+1L;
-			topicCard.setIncrement(no);
-			topicCardDao.merge(topicCard);
-			card.setCode("86"+String.valueOf(shop.getId()+100000000L)+String.valueOf(no+10200L));
+		memberDao.lock(member,LockModeType.PESSIMISTIC_WRITE);
+		Card myCard = null;
+		for (Card c : member.getCards()) {
+			if (c.getTopicCard().equals(topicCard)) {
+				myCard = c;
+				break;
+			}
+		}
+		Card card = null;
+		if (myCard==null) {
+			card = new Card();
+			card.setOwner(topicCard.getTopic().getMember());
+			card.setVip(Card.VIP.vip1);
+			card.setStatus(Card.Status.none);
+			card.setTopicCard(topicCard);
+			card.setBalance(BigDecimal.ZERO);
+			if (code == null) {
+				topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
+				Long no = topicCard.getIncrement() + 1L;
+				topicCard.setIncrement(no);
+				topicCardDao.merge(topicCard);
+				card.setCode("86" + String.valueOf(shop.getId() + 100000000L) + String.valueOf(no + 10200L));
+			} else {
+				card.setCode(code);
+			}
 		} else {
-			card.setCode(code);
+			card = myCard;
+			if (code!=null) {
+				card.setCode(code);
+			}
 		}
 		cardDao.persist(card);
 		if (code==null) {

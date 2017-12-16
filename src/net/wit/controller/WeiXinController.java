@@ -313,6 +313,9 @@ public class WeiXinController extends BaseController {
             } else {
                 return "redirect:/";
             }
+        } else
+        if ("card_active".equals(type)) {
+            return "redirect:/card?code=" + no;
         }
         return "redirect:/";
     }

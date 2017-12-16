@@ -133,14 +133,11 @@ public class CardPayPlugin extends PaymentPlugin {
 
 		Map<String,String> data = ScanUtil.scanParser(safeKey);
 
-
-		if (!data.get("type").toString().equals("818802")) {
-			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("result_msg", "无效付款码");
-			return finalpackage;
-		}
 		String code = data.get("code");
-		String c = code.substring(0,code.length()-6);
+		String c = code;
+		if (data.get("type").toString().equals("818802")) {
+			c = code.substring(0,code.length()-6);
+		}
 
 		Card card = cardService.find(c);
 		if (card==null) {
@@ -149,10 +146,23 @@ public class CardPayPlugin extends PaymentPlugin {
 			return finalpackage;
 		}
 
-		String sign = code.substring(code.length()-6,code.length());
-		if (!sign.equals(card.getSign())) {
+		if (data.get("type").toString().equals("818801")) {
+			if (!code.substring(0,2).equals("88")) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg", "请重打开付款码");
+				return finalpackage;
+			}
+		} else
+		if (data.get("type").toString().equals("818802")) {
+			String sign = code.substring(code.length() - 6, code.length());
+			if (!sign.equals(card.getSign())) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg", "请重打开付款码");
+				return finalpackage;
+			}
+		} else {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("result_msg", "请重打开付款码");
+			finalpackage.put("result_msg", "无效付款码");
 			return finalpackage;
 		}
 
