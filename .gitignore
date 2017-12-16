@@ -1,6 +1,7 @@
 # IntelliJ project files
 .idea
 *.iml
+*.class
 out
 gen
 WebContent/WEB-INFO/classes/
