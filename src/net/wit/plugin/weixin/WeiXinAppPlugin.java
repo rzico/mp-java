@@ -38,7 +38,7 @@ public class WeiXinAppPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "微信APP支付";
+		return "微信钱包";
 	}
 
 	@Override

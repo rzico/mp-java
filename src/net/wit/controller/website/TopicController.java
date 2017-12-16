@@ -63,7 +63,10 @@ public class TopicController extends BaseController {
     public String index(Long id,HttpServletRequest request){
         Member member = memberService.find(id);
         if (member==null) {
-            return "redirect:/website";
+            member = memberService.getCurrent();
+            if (member==null) {
+                return "redirect:/";
+            }
         }
         String template="1001";
         Topic topic = topicService.find(member);
@@ -71,7 +74,7 @@ public class TopicController extends BaseController {
             template = topic.getTemplate().getSn();
         }
 
-        return "redirect:/website/c"+template+"?id="+id;
+        return "redirect:/c"+template+"?id="+id;
     }
 
     /**

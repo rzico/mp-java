@@ -10,6 +10,7 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.ESCUtil;
 import net.wit.util.SettingUtils;
+import net.wit.util.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.net.util.Base64;
 import org.springframework.stereotype.Controller;
@@ -335,7 +336,7 @@ public class PayBillController extends BaseController {
             for (PayBillSummaryModel model:models) {
                 total = total.add(model.getAmount());
                 fee = fee.add(model.getFee());
-                wallet = wallet.add(model.getAmount());
+                wallet = wallet.add(model.getAccount());
                 if (model.getMethod()!=null) {
                     PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(model.getMethod());
                     model.setMethod(paymentPlugin.getName());
@@ -361,23 +362,25 @@ public class PayBillController extends BaseController {
                 s  = s.concat(",").concat(model.getMethod());
 
                 builder.append(s);
-                builder.append(nextLine);
+                builder.append("\n");
                 NumberFormat format = NumberFormat.getInstance();
                 format.setMinimumFractionDigits( 2 );
+                format.setMaximumFractionDigits( 4 );
                 String amount =  format.format(model.getAmount());
-                builder.append(String.format("%-33s",amount));
+                builder.append(StringUtils.addSpace(amount,32-amount.length()));
             }
             byte[] content = builder.toString().getBytes("gb2312");
 
             NumberFormat format = NumberFormat.getInstance();
             format.setMinimumFractionDigits( 2 );
+            format.setMaximumFractionDigits( 4 );
             byte[] totalDiaplay = "营业额:".concat(format.format(total)).getBytes("gb2312");
             byte[] feeDiaplay = "手续费:".concat(format.format(fee)).getBytes("gb2312");
             byte[] walletDiaplay = "线下结算:".concat(format.format(wallet)).getBytes("gb2312");
             byte[] breakPartial = ESCUtil.feedPaperCutPartial();
 
             byte[][] cmdBytes = {center, fontSize1Small, boldOn, title, next2Line, boldOff, Stub, nextLine, left, shopName,
-                    nextLine, dateDisplay, nextLine, content, nextLine, boldOn, totalDiaplay, nextLine, feeDiaplay, nextLine,walletDiaplay, nextLine,boldOff,next4Line,
+                    nextLine, dateDisplay,nextLine,line, nextLine, content, nextLine, boldOn,nextLine,line, nextLine,totalDiaplay, nextLine, feeDiaplay, nextLine,walletDiaplay, nextLine,boldOff,next4Line,
                     breakPartial};
 
 

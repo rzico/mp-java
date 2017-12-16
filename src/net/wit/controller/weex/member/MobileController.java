@@ -53,16 +53,18 @@ public class MobileController extends BaseController {
     public Message sendMobile(HttpServletRequest request) {
         String m = rsaService.decryptParameter("mobile", request);
         rsaService.removePrivateKey(request);
+        Boolean binded = false;
         if (m==null) {
             Member member = memberService.getCurrent();
             if (member!=null & member.getMobile()!=null) {
                 m = member.getMobile();
+                binded = true;
             } else {
                 return Message.error("无效手机号");
             }
         }
         Member member = memberService.findByMobile(m);
-        if (member!=null) {
+        if (member!=null && !binded) {
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             BindUser bindUser = bindUserService.findMember(member,bundle.getString("app.appid"), BindUser.Type.weixin);
             if (bindUser==null) {

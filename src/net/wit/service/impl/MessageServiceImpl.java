@@ -1,5 +1,6 @@
 package net.wit.service.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -18,18 +19,24 @@ import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
 import net.wit.plat.im.Push;
 import net.wit.plat.im.User;
+import net.wit.plugin.StoragePlugin;
 import net.wit.util.JsonUtils;
 import net.wit.util.SettingUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.dao.MessageDao;
 import net.wit.entity.*;
 import net.wit.service.MessageService;
+
+import static net.wit.plat.im.Push.taskPush;
 
 /**
  * @ClassName: MessageDaoImpl
@@ -48,6 +55,10 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 
 	@Resource(name = "articleDaoImpl")
 	private ArticleDao articleDao;
+
+
+	@Resource(name = "taskExecutor")
+	private TaskExecutor taskExecutor;
 
 	@Resource(name = "messageDaoImpl")
 	public void setBaseDao(MessageDao messageDao) {
@@ -103,6 +114,21 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		super.update(message);
 	}
 
+	/**
+	 * 添加发送任务
+	 */
+	private void addTask(final String sender, final String receiver, final Long timeStamp, final String content) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+				   Push.taskPush(sender,receiver,timeStamp,content);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Member GMInit(Message.Type type) {
 		String userName = "gm_"+String.valueOf(10200+type.ordinal());
 		Member sender = memberDao.findByUsername(userName);
@@ -147,7 +173,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				title = "文章分享";
 			} else
 			if (type.equals(Message.Type.cashier)) {
-				title = "线下收款";
+				title = "线下收单";
 			} else
 			{
 				title = "系统消息";
@@ -183,7 +209,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				message.setMember(sender);
 			}
 			super.save(message);
-			Push.impush(message);
+			addTask(message.getSender().getUsername(),message.getReceiver().userId(),message.getCreateDate().getTime(),message.getContent());
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -218,8 +244,13 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		if (payBill.getMember()==null) {
 			msg.setThumbnial(payBill.getMember().getLogo());
 		}
-		msg.setTitle("线下收款");
-		msg.setContent("芸店收款"+ payBill.getPayBillAmount()+"元");
+		if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
+			msg.setTitle("退款通知");
+			msg.setContent("线下退款" + payBill.getPayBillAmount() + "元");
+		} else {
+			msg.setTitle("线下收款");
+			msg.setContent("芸店收款" + payBill.getPayBillAmount() + "元");
+		}
 		PayBillModel ext = new PayBillModel();
 		ext.bind(payBill);
 		msg.setExt(JsonUtils.toJson(ext));
@@ -242,8 +273,13 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				if (payBill.getMember()==null) {
 					mmsg.setThumbnial(payBill.getMember().getLogo());
 				}
-				mmsg.setTitle("线下收款");
-				mmsg.setContent("芸店收款"+ payBill.getPayBillAmount()+"元");
+				if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
+					mmsg.setTitle("退款通知");
+					mmsg.setContent("线下退款" + payBill.getPayBillAmount() + "元");
+				} else {
+					mmsg.setTitle("线下收款");
+					mmsg.setContent("芸店收款" + payBill.getPayBillAmount() + "元");
+				}
 				PayBillModel mext = new PayBillModel();
 				mext.bind(payBill);
 				mmsg.setExt(JsonUtils.toJson(mext));

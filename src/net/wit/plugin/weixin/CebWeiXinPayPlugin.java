@@ -38,7 +38,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "光大微信支付";
+		return "微信钱包";
 	}
 
 	@Override

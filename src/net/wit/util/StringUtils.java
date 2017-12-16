@@ -127,4 +127,14 @@ public class StringUtils  {
 	}
 
 
+	public static String addSpace(String str,int countSpace)
+	{
+		String resultStr=str;;
+		for(int i=0;i<countSpace;i++)
+		{
+			resultStr= " "+resultStr;
+		}
+		return resultStr;
+	}
+
 }

@@ -37,7 +37,7 @@ public class CashPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "现金支付";
+		return "现金";
 	}
 
 	@Override

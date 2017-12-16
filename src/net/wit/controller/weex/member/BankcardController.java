@@ -48,6 +48,9 @@ public class BankcardController extends BaseController {
     @Resource(name = "bankcardServiceImpl")
     private BankcardService bankcardService;
 
+    @Resource(name = "bindUserServiceImpl")
+    private BindUserService bindUserService;
+
     /**
      * 银行信息查询
      */
@@ -92,7 +95,12 @@ public class BankcardController extends BaseController {
         String m = rsaService.decryptParameter("mobile", request);
         rsaService.removePrivateKey(request);
         if (m==null) {
-            return Message.error("无效手机号");
+            Member member = memberService.getCurrent();
+            if (member!=null & member.getMobile()!=null) {
+                m = member.getMobile();
+            } else {
+                return Message.error("无效手机号");
+            }
         }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
@@ -101,7 +109,7 @@ public class BankcardController extends BaseController {
         safeKey.setKey(m);
         safeKey.setValue(securityCode);
         safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
-        redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
+        redisService.put(Member.MOBILE_BIND_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();
         smsSend.setMobile(m);
@@ -111,14 +119,51 @@ public class BankcardController extends BaseController {
     }
 
     /**
+     * 验证合法性
+     */
+    @RequestMapping(value = "/captcha", method = RequestMethod.POST)
+    @ResponseBody
+    public Message captcha(HttpServletRequest request){
+        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
+        if (redis==null) {
+            return Message.error("验证码已过期");
+        }
+        SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
+        Member member =memberService.getCurrent();
+        try {
+            if (!member.getMobile().equals(safeKey.getKey())) {
+                return Message.error("无效验证码");
+            }
+            String captcha = rsaService.decryptParameter("captcha", request);
+            rsaService.removePrivateKey(request);
+            if (member==null) {
+                return Message.error("无效验证码");
+            }
+            if (captcha==null) {
+                return Message.error("无效验证码");
+            }
+            if (safeKey.hasExpired()) {
+                return Message.error("验证码已过期");
+            }
+            if (!captcha.equals(safeKey.getValue())) {
+                return Message.error("无效验证码");
+            }
+            return Message.success(member,"验证成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Message.error("验证失败");
+        }
+    }
+
+    /**
      *  绑定银行卡
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
     public Message submit(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
-        Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
-        redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
+        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
+        redisService.remove(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
         }
@@ -193,7 +238,17 @@ public class BankcardController extends BaseController {
                     bankcardService.save(bankcard);
                 }
                 if (member.getMobile()==null) {
-                    member.setMobile(data.get("mobile"));
+                    Member m = memberService.findByMobile(data.get("mobile"));
+                    if (m==null) {
+                        BindUser bindUser = bindUserService.findMember(m,bundle.getString("app.appid"), BindUser.Type.weixin);
+                        if (bindUser!=null) {
+                            m.setMobile(null);
+                            memberService.save(m);
+                            member.setMobile(data.get("mobile"));
+                        }
+                    } else {
+                        member.setMobile(data.get("mobile"));
+                    }
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);

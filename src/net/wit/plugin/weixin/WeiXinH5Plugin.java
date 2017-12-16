@@ -62,7 +62,7 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "微信H5支付";
+		return "微信钱包";
 	}
 
 	@Override

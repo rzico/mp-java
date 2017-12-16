@@ -46,7 +46,7 @@ public class CardPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "会员卡支付";
+		return "会员卡";
 	}
 
 	@Override

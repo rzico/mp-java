@@ -40,7 +40,7 @@ public class BalancePayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "余额支付";
+		return "芸店钱包";
 	}
 
 	@Override

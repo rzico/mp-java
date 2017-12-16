@@ -37,7 +37,7 @@ public class AliPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "支付宝支付";
+		return "支付宝";
 	}
 
 	@Override

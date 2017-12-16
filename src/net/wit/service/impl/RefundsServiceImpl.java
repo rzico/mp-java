@@ -144,6 +144,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 				payBill.setStatus(PayBill.Status.refund_success);
 				payBillDao.merge(payBill);
 			}
+			messageService.payBillPushTo(payBill);
 		}
 	}
 

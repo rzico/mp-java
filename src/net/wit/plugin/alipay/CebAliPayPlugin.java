@@ -34,7 +34,7 @@ public class CebAliPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "光大支付宝支付";
+		return "支付宝";
 	}
 
 	@Override

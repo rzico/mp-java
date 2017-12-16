@@ -37,7 +37,7 @@ public class BankPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "刷卡支付";
+		return "线下刷卡";
 	}
 
 	@Override
