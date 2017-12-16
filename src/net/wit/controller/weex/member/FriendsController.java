@@ -135,6 +135,9 @@ public class FriendsController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        if (member.getNickName()==null) {
+            return Message.error("亲,交朋友请设置昵称");
+        }
         Member friend = memberService.find(friendId);
         if (friend==null) {
             return Message.error("无效好友");

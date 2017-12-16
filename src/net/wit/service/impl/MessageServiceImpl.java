@@ -12,6 +12,7 @@ import net.wit.Filter.Operator;
 
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.DepositModel;
+import net.wit.controller.model.PayBillModel;
 import net.wit.dao.ArticleDao;
 import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
@@ -145,6 +146,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			if (type.equals(Message.Type.share)) {
 				title = "文章分享";
 			} else
+			if (type.equals(Message.Type.cashier)) {
+				title = "线下收单";
+			} else
 			{
 				title = "系统消息";
 			}
@@ -203,6 +207,50 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		ext.bind(reward.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
+	}
+
+	//收单提醒
+	public Boolean payBillPushTo(PayBill payBill) {
+		Message msg = new Message();
+		msg.setReceiver(payBill.getOwner());
+		msg.setMember(payBill.getMember());
+		msg.setType(Message.Type.cashier);
+		if (payBill.getMember()==null) {
+			msg.setThumbnial(payBill.getMember().getLogo());
+		}
+		msg.setTitle("线下收单");
+		msg.setContent("芸店收款"+ payBill.getPayBillAmount()+"元");
+		PayBillModel ext = new PayBillModel();
+		ext.bind(payBill);
+		msg.setExt(JsonUtils.toJson(ext));
+		pushTo(msg);
+		Shop shop = payBill.getShop();
+		if (shop!=null) {
+			String c = shop.getCode();
+			if (c==null) {
+				return false;
+			}
+			List<Filter> filters = new ArrayList<Filter>();
+			filters.add(new Filter("username",Operator.eq,'d'+c));
+            List<Member> members = memberDao.findList(null,null,filters,null);
+
+            for (Member member:members) {
+				Message mmsg = new Message();
+				mmsg.setReceiver(member);
+				mmsg.setMember(payBill.getMember());
+				mmsg.setType(Message.Type.cashier);
+				if (payBill.getMember()==null) {
+					mmsg.setThumbnial(payBill.getMember().getLogo());
+				}
+				mmsg.setTitle("线下收单");
+				mmsg.setContent("芸店收款"+ payBill.getPayBillAmount()+"元");
+				PayBillModel mext = new PayBillModel();
+				mext.bind(payBill);
+				mmsg.setExt(JsonUtils.toJson(mext));
+				return pushTo(mmsg);
+			}
+		}
+		return true;
 	}
 
 	//收藏提醒

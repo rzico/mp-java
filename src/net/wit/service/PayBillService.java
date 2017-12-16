@@ -30,5 +30,4 @@ public interface PayBillService extends BaseService<PayBill, Long> {
 	 * @return Page<PayBill>
 	 */
 	List<PayBillShopSummary> sumPage(Shop shop,Date beginDate,Date endDate);
-
 }

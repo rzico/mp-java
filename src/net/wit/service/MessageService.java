@@ -42,4 +42,5 @@ public interface MessageService extends BaseService<Message, Long> {
 	//同意好友
 	public Boolean adoptFriendPushTo(Member member,Member friend);
 	public void login(Member member,HttpServletRequest request);
+	public Boolean payBillPushTo(PayBill payBill);
 }

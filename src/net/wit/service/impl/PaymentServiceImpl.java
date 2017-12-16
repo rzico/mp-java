@@ -164,6 +164,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
+				messageService.payBillPushTo(payBill);
 			}else
 			if (payment.getType() == Payment.Type.card) {
 				Member member = payment.getPayee();
@@ -235,6 +236,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					cardBill.setBalance(card.getBalance());
 					cardBillDao.persist(cardBill);
 				}
+				messageService.payBillPushTo(payBill);
 			} else
 			if (payment.getType() == Payment.Type.reward) {
 				Member member = payment.getPayee();

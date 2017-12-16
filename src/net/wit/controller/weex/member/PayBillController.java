@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -252,9 +253,9 @@ public class PayBillController extends BaseController {
             return Message.error("只能退本门店的单");
         }
 
-        if (!admin.equals(payBill.getAdmin())) {
-            return Message.error("收款人才能退款");
-        }
+        //if (!admin.equals(payBill.getAdmin())) {
+        //    return Message.error("收款人才能退款");
+        //}
 
         if (payBill.getBillDate().compareTo(DateUtils.truncate(new Date(), Calendar.DATE))!=0) {
             return Message.error("只能退当天的收款");
@@ -272,6 +273,120 @@ public class PayBillController extends BaseController {
         data.put("data",model);
         data.put("sn",bill.getRefunds().getSn());
         return Message.success(data,"申请退款");
+    }
+
+    /**
+     *  打印日报
+     */
+    @RequestMapping(value = "/summary_print", method = RequestMethod.GET)
+    @ResponseBody
+    public Message summaryPrint(Long shopId,Date billDate,HttpServletRequest request){
+        Shop shop = null;
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        if (shopId==null) {
+            shop = admin.getShop();
+        } else {
+            shop = shopService.find(shopId);
+        }
+
+        if (shop==null) {
+            if (!admin.isOwner()) {
+                return Message.error("没有查询权限");
+            }
+        }
+        Date d = DateUtils.truncate(billDate, Calendar.DATE);
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
+        List<PayBillSummaryModel> models = PayBillSummaryModel.bindList(dsum);
+
+        StringBuilder builder = new StringBuilder();
+        try {
+            byte[] nextLine = ESCUtil.nextLine(1);
+            byte[] next2Line = ESCUtil.nextLine(2);
+            byte[] next4Line = ESCUtil.nextLine(4);
+            byte[] boldOn = ESCUtil.boldOn();
+            byte[] boldOff = ESCUtil.boldOff();
+            byte[] fontSize2Big = ESCUtil.fontSizeSetBig(3);
+            byte[] fontSize2Small = ESCUtil.fontSizeSetBig(1);
+            byte[] fontSize1Big = ESCUtil.fontSizeSetBig(1);
+            byte[] fontSize1Small = ESCUtil.fontSizeSetSmall(1);
+            byte[] center = ESCUtil.alignCenter();
+            byte[] left = ESCUtil.alignLeft();
+            byte[] title = "营业日报表".getBytes("gb2312");
+            byte[] Stub = "------------商户存根------------".getBytes("gb2312");
+
+
+            byte[] shopName = "门店：".concat(shop.getName()).getBytes("gb2312");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            byte[] dateDisplay = "日期：".concat(sdf.format(d)).getBytes("gb2312");
+
+            byte[] line = "-------------------------------".getBytes("gb2312");
+
+            BigDecimal total = BigDecimal.ZERO;
+            BigDecimal fee = BigDecimal.ZERO;
+            BigDecimal wallet = BigDecimal.ZERO;
+
+            for (PayBillSummaryModel model:models) {
+                total = total.add(model.getAmount());
+                fee = fee.add(model.getFee());
+                wallet = wallet.add(model.getAmount());
+                if (model.getMethod()!=null) {
+                    PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(model.getMethod());
+                    model.setMethod(paymentPlugin.getName());
+                } else {
+                    model.setMethod("现金（未确定）");
+                }
+                String s = "";
+                if (model.getType().equals(PayBill.Type.cashier)) {
+                    s = "消费";
+                } else
+                if (model.getType().equals(PayBill.Type.cashierRefund)) {
+                    s = "退款";
+                } else
+                if (model.getType().equals(PayBill.Type.card)) {
+                    s = "充值(会员卡)";
+                } else
+                if (model.getType().equals(PayBill.Type.cardRefund)) {
+                    s = "退款(会员卡)";
+                } else {
+                    s = "未知";
+                }
+
+                s  = s.concat(",").concat(model.getMethod());
+
+                builder.append(s);
+                builder.append(nextLine);
+                NumberFormat format = NumberFormat.getInstance();
+                format.setMinimumFractionDigits( 2 );
+                String amount =  format.format(model.getAmount());
+                builder.append(String.format("%-33s",amount));
+            }
+            byte[] content = builder.toString().getBytes("gb2312");
+
+            NumberFormat format = NumberFormat.getInstance();
+            format.setMinimumFractionDigits( 2 );
+            byte[] totalDiaplay = "营业额:".concat(format.format(total)).getBytes("gb2312");
+            byte[] feeDiaplay = "手续费:".concat(format.format(fee)).getBytes("gb2312");
+            byte[] walletDiaplay = "线下结算:".concat(format.format(wallet)).getBytes("gb2312");
+            byte[] breakPartial = ESCUtil.feedPaperCutPartial();
+
+            byte[][] cmdBytes = {center, fontSize1Small, boldOn, title, next2Line, boldOff, Stub, nextLine, left, shopName,
+                    nextLine, dateDisplay, nextLine, content, nextLine, boldOn, totalDiaplay, nextLine, feeDiaplay, nextLine,walletDiaplay, nextLine,boldOff,next4Line,
+                    breakPartial};
+
+
+            byte[] data = ESCUtil.byteMerger(cmdBytes);
+            return Message.bind(Base64.encodeBase64String(data),request);
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+            return Message.error("打印出错了");
+        }
     }
 
     /**

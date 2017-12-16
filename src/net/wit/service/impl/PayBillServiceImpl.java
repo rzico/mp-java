@@ -124,7 +124,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			payment.setMethod(Payment.Method.online);
 			payment.setType(Payment.Type.cashier);
 			payment.setMemo("线下收款");
-			payment.setAmount(payBill.getEffectiveAmount());
+			payment.setAmount(payBill.getPayBillAmount());
 			payment.setSn(snService.generate(Sn.Type.payment));
 			payment.setPayBill(payBill);
 			paymentDao.persist(payment);
@@ -158,7 +158,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			payment.setMethod(Payment.Method.online);
 			payment.setType(Payment.Type.card);
 			payment.setMemo("会员卡充值");
-			payment.setAmount(payBill.getEffectiveAmount());
+			payment.setAmount(payBill.getPayBillAmount());
 			payment.setSn(snService.generate(Sn.Type.payment));
 			payment.setPayBill(payBill);
 			paymentDao.persist(payment);
@@ -186,7 +186,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			refunds.setMethod(Refunds.Method.offline);
 			refunds.setType(Refunds.Type.card);
 			refunds.setMemo("会员卡退款");
-			refunds.setAmount(BigDecimal.ZERO.subtract(payBill.getEffectiveAmount()));
+			refunds.setAmount(BigDecimal.ZERO.subtract(payBill.getPayBillAmount()));
 			refunds.setSn(snService.generate(Sn.Type.refunds));
 			refunds.setPayBill(payBill);
 			refundsDao.persist(refunds);
@@ -256,7 +256,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 		refunds.setPayment(payment);
 		refunds.setPaymentPluginId(payment.getPaymentPluginId());
 		refunds.setStatus(Refunds.Status.waiting);
-		refunds.setAmount(payBill.getAmount());
+		refunds.setAmount(payBill.getPayBillAmount());
 		refunds.setPayBill(bill);
 		refunds.setMember(payment.getMember());
 		refunds.setPayee(payment.getPayee());
