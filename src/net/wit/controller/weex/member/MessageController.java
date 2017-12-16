@@ -133,6 +133,9 @@ public class MessageController extends BaseController {
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.message)) {
             url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.cashier)) {
+            url = "file://view/shop/deposit/deposit.js?id="+message.getMember().getId();
         } else {
             url = "";
         }

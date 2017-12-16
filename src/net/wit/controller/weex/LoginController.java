@@ -417,6 +417,9 @@ public class LoginController extends BaseController {
             adminService.save(admin);
         } else {
             admin.setShop(shop);
+            admin.setEnterprise(shop.getEnterprise());
+            admin.setUsername('d'+code);
+            admin.setName("收款机（"+code+"）");
             adminService.update(admin);
         }
         Principal principal = new Principal(member.getId(),member.getUsername());

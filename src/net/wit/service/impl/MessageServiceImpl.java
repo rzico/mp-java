@@ -147,7 +147,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				title = "文章分享";
 			} else
 			if (type.equals(Message.Type.cashier)) {
-				title = "线下收单";
+				title = "线下收款";
 			} else
 			{
 				title = "系统消息";
@@ -218,7 +218,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		if (payBill.getMember()==null) {
 			msg.setThumbnial(payBill.getMember().getLogo());
 		}
-		msg.setTitle("线下收单");
+		msg.setTitle("线下收款");
 		msg.setContent("芸店收款"+ payBill.getPayBillAmount()+"元");
 		PayBillModel ext = new PayBillModel();
 		ext.bind(payBill);
@@ -242,7 +242,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				if (payBill.getMember()==null) {
 					mmsg.setThumbnial(payBill.getMember().getLogo());
 				}
-				mmsg.setTitle("线下收单");
+				mmsg.setTitle("线下收款");
 				mmsg.setContent("芸店收款"+ payBill.getPayBillAmount()+"元");
 				PayBillModel mext = new PayBillModel();
 				mext.bind(payBill);
