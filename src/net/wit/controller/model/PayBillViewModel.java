@@ -20,8 +20,6 @@ public class PayBillViewModel extends BaseModel implements Serializable {
     private String memo;
     /**  LOGO */
     private String logo;
-    /**  昵称 */
-    private String nickName;
     /**  商户名 */
     private String name;
     /**  支付方式 */
@@ -79,14 +77,6 @@ public class PayBillViewModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     public PayBill.Status getStatus() {
         return status;
     }
@@ -101,6 +91,14 @@ public class PayBillViewModel extends BaseModel implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public void bind(PayBill payBill) {
@@ -139,7 +137,6 @@ public class PayBillViewModel extends BaseModel implements Serializable {
         this.createDate = payBill.getCreateDate();
         this.status = payBill.getStatus();
         if (payBill.getMember()!=null) {
-            this.nickName = payBill.getMember().getNickName();
             this.logo = payBill.getMember().getLogo();
         }
         if (payBill.getOwner()!=null && payBill.getOwner().getTopic()!=null) {
