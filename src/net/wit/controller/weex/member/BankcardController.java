@@ -271,7 +271,7 @@ public class BankcardController extends BaseController {
                     admin.setName(member.getName());
                     adminService.update(admin);
                 }
-                return Message.success("success");
+                return Message.success("绑定成功");
             } else {
                 return Message.error(result.get("reason").toString());
             }
