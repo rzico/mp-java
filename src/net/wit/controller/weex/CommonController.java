@@ -109,7 +109,7 @@ public class CommonController extends BaseController {
 		Member member = memberService.getCurrent();
 		String ua = request.getHeader("user-agent");
 		if (ua.indexOf("V1")>0) {
-			menu.put("home","file://view/shop/cashier/index.js");
+			menu.put("home","file://view/shop/cashier/index.js?index=true");
 			menu.put("add", "file://view/shop/card/add.js");
 			menu.put("friend", "file://view/shop/card/list.js");
 			menu.put("message","file://view/message/list.js");

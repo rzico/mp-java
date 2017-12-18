@@ -264,6 +264,32 @@ public class TopicController extends BaseController {
 
     }
 
+
+    /**
+     *  获取企业专栏信息
+     */
+    @RequestMapping(value = "/owner", method = RequestMethod.GET)
+    @ResponseBody
+    public Message ower(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Long ownerId = 0L;
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            ownerId = member.getId();
+        } else {
+            if (admin.getEnterprise()==null) {
+                ownerId = member.getId();
+            } else {
+                ownerId = admin.getEnterprise().getMember().getId();
+            }
+        }
+        return Message.success(ownerId,"获取成功");
+
+    }
+
     /**
      *  获取专栏信息
      */

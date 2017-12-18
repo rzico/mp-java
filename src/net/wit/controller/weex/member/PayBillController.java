@@ -505,9 +505,9 @@ public class PayBillController extends BaseController {
             byte[] partner = builder2.append("商户号：").append(payBill.getShop().getCode()).toString().getBytes("gb2312");
             byte[] fontSize1Small = ESCUtil.fontSizeSetSmall(1);
 
-            byte[] device = builder3.append("终端号：").append(payBill.getAdmin()==null?"":payBill.getAdmin().getMember().getUuid()).toString().getBytes("gb2312");
+            byte[] device = builder3.append("终端号：").append(payBill.getAdmin()==null?"台卡二维码":payBill.getAdmin().getMember().getUuid()).toString().getBytes("gb2312");
 
-            byte[] cashierName = builder4.append("收银员：").append(payBill.getAdmin()==null?"":payBill.getAdmin().getName()).toString().getBytes("gb2312");
+            byte[] cashierName = builder4.append("收银员：").append(payBill.getAdmin()==null?"台卡扫码付":payBill.getAdmin().getName()).toString().getBytes("gb2312");
 
             byte[] line = "-------------------------------".getBytes("gb2312");
             byte[] snNumber = builder5.append("流水号：").append(String.valueOf(10200L+payBill.getId())).toString().getBytes("gb2312");
