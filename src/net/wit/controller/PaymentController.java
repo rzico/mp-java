@@ -158,7 +158,7 @@ public class PaymentController extends BaseController {
     @RequestMapping("/transfer/{sn}")
     public void transfer(@PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
         Transfer transfer = transferService.findBySn(sn);
-
+        System.out.println("transfer");
         if (transfer != null) {
              String resp = UnsPay.verifyNotify(sn, request);
                 if ("00".equals (resp)) {

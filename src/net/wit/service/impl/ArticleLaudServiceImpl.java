@@ -75,7 +75,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	public void delete(Long id) {
 		ArticleLaud articleLaud = articleLaudDao.find(id);
 		Article article = articleLaud.getArticle();
-		article.setFavorite(article.getLaud()-1);
+		article.setLaud(article.getLaud()-1);
 		articleDao.merge(article);
 		super.delete(articleLaud);
 	}
@@ -87,7 +87,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 		for (Long id:ids) {
 			ArticleLaud articleLaud = articleLaudDao.find(id);
 			Article article = articleLaud.getArticle();
-			article.setFavorite(article.getLaud()-1);
+			article.setLaud(article.getLaud()-1);
 			articleDao.merge(article);
 			super.delete(articleLaud);
 		}
@@ -98,7 +98,7 @@ public class ArticleLaudServiceImpl extends BaseServiceImpl<ArticleLaud, Long> i
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(ArticleLaud articleLaud) {
 		Article article = articleLaud.getArticle();
-		article.setFavorite(article.getLaud()-1);
+		article.setLaud(article.getLaud()-1);
 		articleDao.merge(article);
 		super.delete(articleLaud);
 	}

@@ -185,6 +185,9 @@ public class PayBillController extends BaseController {
         payBill.setShop(shop);
         payBill.setEnterprise(shop.getEnterprise());
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入付款金额");
+            }
             Payment payment = payBillService.submit(payBill);
             Map<String,String> data = new HashMap<String,String>();
             data.put("sn",payment.getSn());

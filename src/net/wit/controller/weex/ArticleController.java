@@ -149,6 +149,8 @@ public class ArticleController extends BaseController {
             ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
             filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
         }
+//        filters.add(new Filter("articleOptions.isPublish", Filter.Operator.eq,true));
+//        filters.add(new Filter("articleOptions.authority", Filter.Operator.eq, ArticleOptions.Authority.isPublic));
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);

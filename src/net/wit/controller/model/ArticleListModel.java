@@ -154,7 +154,7 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.htmlTag = article.delHTMLTag();
         this.tags = TagModel.bindList(article.getTags());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://"+bundle.getString("weixin.url")+"/website/t"+article.getTemplate().getSn()+"?id="+article.getId();
+        this.url = "http://"+bundle.getString("weixin.url")+"/t"+article.getTemplate().getSn()+"?id="+article.getId();
     }
 
     public static List<ArticleListModel> bindList(List<Article> articles) {

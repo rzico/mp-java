@@ -134,6 +134,9 @@ public class CashierController extends BaseController {
         payBill.setAdmin(admin);
         payBill.setEnterprise(shop.getEnterprise());
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入收款金额");
+            }
             Payment payment = payBillService.submit(payBill);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("id",payBill.getId());

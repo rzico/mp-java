@@ -111,28 +111,28 @@ public class MessageController extends BaseController {
             url = "file://view/member/reviewManage.js";
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.laud)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.follow)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.favorite)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.adoptfriend)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.addfriend)) {
             url = "file://view/friend/add.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.order)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.share)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.message)) {
-            url = "file://view/member/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.cashier)) {
             url = "file://view/shop/deposit/deposit.js?id="+message.getMember().getId();

@@ -294,6 +294,9 @@ public class CardController extends BaseController {
         BigDecimal effective = payBill.getEffectiveAmount();
         payBill.setFee(shop.getEnterprise().calcFee(effective));
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入充值金额");
+            }
             Payment payment = payBillService.cardFill(payBill);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("id",payBill.getId());
@@ -351,6 +354,9 @@ public class CardController extends BaseController {
         BigDecimal effective = payBill.getEffectiveAmount();
         payBill.setFee(shop.getEnterprise().calcFee(effective));
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入退款金额");
+            }
             Refunds refunds = payBillService.cardRefund(payBill);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("id",payBill.getId());

@@ -190,7 +190,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.votes = votes;
         this.products = ProductViewModel.bindSet(article);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://"+bundle.getString("weixin.url")+"/website/t"+article.getTemplate().getSn()+"?id="+article.getId();
+        this.url = "http://"+bundle.getString("weixin.url")+"/t"+article.getTemplate().getSn()+"?id="+article.getId();
     }
 
 }

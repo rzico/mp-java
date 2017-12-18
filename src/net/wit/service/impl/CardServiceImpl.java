@@ -156,6 +156,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			} else {
 				card.setCode(code);
 			}
+			card.setStatus(Card.Status.none);
 		} else {
 			card = myCard;
 			if (code!=null) {
@@ -164,12 +165,13 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		}
 		cardDao.persist(card);
 		if (code==null) {
-			card.setStatus(Card.Status.none);
 			card.setVip(Card.VIP.vip1);
 			card.getMembers().add(member);
 			cardDao.persist(card);
-			member.getCards().add(card);
-			memberDao.merge(member);
+			if (!member.getCards().contains(card)) {
+				member.getCards().add(card);
+				memberDao.merge(member);
+			}
 		}
 		return card;
 	}

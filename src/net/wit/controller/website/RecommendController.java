@@ -2,6 +2,7 @@ package net.wit.controller.website;
 
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticleModel;
 import net.wit.entity.Article;
 import net.wit.service.*;
@@ -56,7 +57,7 @@ public class RecommendController extends BaseController {
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(ArticleModel.bindList(page.getContent()));
+        model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

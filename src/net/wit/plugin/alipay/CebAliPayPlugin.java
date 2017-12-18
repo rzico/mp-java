@@ -124,7 +124,6 @@ public class CebAliPayPlugin extends PaymentPlugin {
 						}else{
 							finalpackage.put("result_msg",resultMap.get("err_msg"));
 							finalpackage.put("return_code","FAIL");
-							return finalpackage;
 						}
 					}
 				}else{
@@ -219,7 +218,7 @@ public class CebAliPayPlugin extends PaymentPlugin {
 								data.put("result_msg", "待确定状态");
 							} else {
 								data.put("return_code", "FAIL");
-								data.put("result_msg", resultMap.get("message"));
+								data.put("result_msg", resultMap.get("err_msg"));
 							}
 							return data;
 						}
