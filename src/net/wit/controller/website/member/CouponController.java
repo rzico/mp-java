@@ -60,7 +60,7 @@ public class CouponController extends BaseController {
     private AdminService adminService;
 
      /**
-     *
+     * 领取优惠券
      */
     @RequestMapping(value = "/activate")
     @ResponseBody
@@ -68,13 +68,6 @@ public class CouponController extends BaseController {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
-        }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
-        Admin admin = adminService.findByMember(member);
-        if (admin==null) {
-            return Message.error("没有点亮专栏");
         }
         Coupon coupon = couponService.find(id);
         if (coupon==null) {
@@ -91,18 +84,6 @@ public class CouponController extends BaseController {
         model.bind(couponCode);
         return Message.success(model,"保存成功");
 
-    }
-
-    /**
-     *  优惠券
-     */
-    @RequestMapping(value = "/view", method = RequestMethod.GET)
-    @ResponseBody
-    public Message view(Long id,Pageable pageable, HttpServletRequest request){
-        Coupon coupon = couponService.find(id);
-        CouponModel model = new CouponModel();
-        model.bind(coupon);
-        return Message.bind(model,request);
     }
 
 }

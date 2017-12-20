@@ -129,8 +129,6 @@ public class CouponCodeController extends BaseController {
     private String getCardSha1Sign(HashMap<String, Object> params) {
         try {
             String str1 = WeiXinUtils.signMapValue(params);
-            //System.out.println(params);
-            //System.out.println(str1);
             return Sha1Util.encode(str1);
         } catch (Exception e) {
             e.printStackTrace();
