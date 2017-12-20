@@ -215,6 +215,10 @@ public class CardController extends BaseController {
             return BigDecimal.ZERO;
         }
 
+        if (topic.getTopicCard().getActivity()==null) {
+            return BigDecimal.ZERO;
+        }
+
         List<Map<String, Object>> activitys = JsonUtils.toObject(topic.getTopicCard().getActivity(),List.class);
         Collections.sort(activitys, new AmountComparator());
 

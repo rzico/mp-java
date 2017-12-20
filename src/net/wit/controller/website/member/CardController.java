@@ -124,6 +124,8 @@ public class CardController extends BaseController {
         if (card==null) {
             return Message.error("无效卡号");
         }
+
+        System.out.println(mobile);
         if (mobile==null) {
             return Message.error("请填写手机号");
         }

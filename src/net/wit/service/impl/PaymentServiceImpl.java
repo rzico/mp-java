@@ -105,6 +105,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			return null;
 		}
 
+		if (topic.getTopicCard().getActivity()==null) {
+			return null;
+		}
+
 		List<Map<String, Object>> activitys = JsonUtils.toObject(topic.getTopicCard().getActivity(),List.class);
 		Collections.sort(activitys, new AmountComparator());
 
