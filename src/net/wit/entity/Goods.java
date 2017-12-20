@@ -1,16 +1,14 @@
 
 package net.wit.entity;
 
+import org.hibernate.annotations.Where;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * Entity - 货品
@@ -25,14 +23,16 @@ public class Goods extends BaseEntity {
 
 	/** 商品 */
 	@OneToMany(mappedBy = "goods", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Product> products = new HashSet<Product>();
+	@Where(clause="deleted=0")
+	@OrderBy("orders asc")
+	private List<Product> products = new ArrayList<Product>();
 
 	/**
 	 * 获取商品
 	 * 
 	 * @return 商品
 	 */
-	public Set<Product> getProducts() {
+	public List<Product> getProducts() {
 		return products;
 	}
 
@@ -42,7 +42,7 @@ public class Goods extends BaseEntity {
 	 * @param products
 	 *            商品
 	 */
-	public void setProducts(Set<Product> products) {
+	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
 

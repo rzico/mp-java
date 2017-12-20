@@ -30,11 +30,6 @@ public class OrderItem extends BaseEntity {
 
 	private static final long serialVersionUID = 36L;
 
-	/** 商品编号 */
-	@NotEmpty
-	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) not null comment '商品编号'")
-	private String sn;
-
 	/** 商品名称 */
 	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) not null comment '商品名称'")
 	private String name;
@@ -85,25 +80,6 @@ public class OrderItem extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orders", nullable = false, updatable = false)
 	private Order order;
-
-	/**
-	 * 获取商品编号
-	 * 
-	 * @return 商品编号
-	 */
-	public String getSn() {
-		return sn;
-	}
-
-	/**
-	 * 设置商品编号
-	 * 
-	 * @param sn
-	 *            商品编号
-	 */
-	public void setSn(String sn) {
-		this.sn = sn;
-	}
 
 	/**
 	 * 获取商品名称

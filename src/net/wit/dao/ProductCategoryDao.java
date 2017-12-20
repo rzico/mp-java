@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.ArticleCategory;
 import net.wit.entity.ProductCategory;
 
 
@@ -18,6 +19,37 @@ import net.wit.entity.ProductCategory;
  
 
 public interface ProductCategoryDao extends BaseDao<ProductCategory, Long> {
+	/**
+	 * 查找顶级文章分类
+	 *
+	 * @param count
+	 *            数量
+	 * @return 顶级文章分类
+	 */
+	List<ProductCategory> findRoots(Integer count);
+
+	/**
+	 * 查找上级文章分类
+	 *
+	 * @param productCategory
+	 *            文章分类
+	 * @param count
+	 *            数量
+	 * @return 上级文章分类
+	 */
+	List<ProductCategory> findParents(ProductCategory productCategory, Integer count);
+
+	/**
+	 * 查找下级文章分类
+	 *
+	 * @param productCategory
+	 *            文章分类
+	 * @param count
+	 *            数量
+	 * @return 下级文章分类
+	 */
+	List<ProductCategory> findChildren(ProductCategory productCategory, Integer count);
+
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

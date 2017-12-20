@@ -258,16 +258,6 @@ public class Order extends BaseEntity {
 	@OrderBy("createDate asc")
 	private Set<Refunds> refunds = new HashSet<Refunds>();
 
-	/** 发货单 */
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@OrderBy("createDate asc")
-	private Set<Shipping> shippings = new HashSet<Shipping>();
-
-	/** 退货单 */
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@OrderBy("createDate asc")
-	private Set<Returns> returns = new HashSet<Returns>();
-
 	/**
 	 * 获取订单编号
 	 * 
@@ -795,44 +785,6 @@ public class Order extends BaseEntity {
 	 */
 	public void setRefunds(Set<Refunds> refunds) {
 		this.refunds = refunds;
-	}
-
-	/**
-	 * 获取发货单
-	 * 
-	 * @return 发货单
-	 */
-	public Set<Shipping> getShippings() {
-		return shippings;
-	}
-
-	/**
-	 * 设置发货单
-	 * 
-	 * @param shippings
-	 *            发货单
-	 */
-	public void setShippings(Set<Shipping> shippings) {
-		this.shippings = shippings;
-	}
-
-	/**
-	 * 获取退货单
-	 * 
-	 * @return 退货单
-	 */
-	public Set<Returns> getReturns() {
-		return returns;
-	}
-
-	/**
-	 * 设置退货单
-	 * 
-	 * @param returns
-	 *            退货单
-	 */
-	public void setReturns(Set<Returns> returns) {
-		this.returns = returns;
 	}
 
 

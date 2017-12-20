@@ -30,7 +30,7 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "wx_product")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_product_sequence")
-public class Product extends BaseEntity {
+public class Product extends OrderEntity {
 
 	private static final long serialVersionUID = 41L;
 
@@ -54,10 +54,15 @@ public class Product extends BaseEntity {
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
 	private String thumbnial;
 
-	/** 规格 */
+	/** 规格1 */
 	@Length(max = 50)
-	@Column(length = 50,columnDefinition="varchar(50) comment '规格'")
-	private String spec;
+	@Column(length = 50,columnDefinition="varchar(50) comment '规格1'")
+	private String spec1;
+
+	/** 规格2 */
+	@Length(max = 50)
+	@Column(length = 50,columnDefinition="varchar(50) comment '规格2'")
+	private String spec2;
 
 	/** 销售价 */
 	@Min(0)
@@ -131,7 +136,7 @@ public class Product extends BaseEntity {
 
 	/** 商品库存*/
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private Set<ProductStock> productStocks = new HashSet<ProductStock>();
+	private List<ProductStock> productStocks = new ArrayList<>();
 
 	/** 标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -156,12 +161,20 @@ public class Product extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getSpec() {
-		return spec;
+	public String getSpec1() {
+		return spec1;
 	}
 
-	public void setSpec(String spec) {
-		this.spec = spec;
+	public void setSpec1(String spec1) {
+		this.spec1 = spec1;
+	}
+
+	public String getSpec2() {
+		return spec2;
+	}
+
+	public void setSpec2(String spec2) {
+		this.spec2 = spec2;
 	}
 
 	public BigDecimal getPrice() {
@@ -276,11 +289,11 @@ public class Product extends BaseEntity {
 		this.deleted = deleted;
 	}
 
-	public Set<ProductStock> getProductStocks() {
+	public List<ProductStock> getProductStocks() {
 		return productStocks;
 	}
 
-	public void setProductStocks(Set<ProductStock> productStocks) {
+	public void setProductStocks(List<ProductStock> productStocks) {
 		this.productStocks = productStocks;
 	}
 

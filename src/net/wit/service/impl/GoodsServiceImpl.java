@@ -66,21 +66,30 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements Go
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Goods goods = goodsDao.find(id);
+		for (Product product:goods.getProducts()) {
+			product.setDeleted(true);
+		}
+		super.update(goods);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			this.delete(id);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Goods goods) {
-		super.delete(goods);
+		for (Product product:goods.getProducts()) {
+			product.setDeleted(true);
+		}
+		super.update(goods);
 	}
 
 	public Page<Goods> findPage(Date beginDate,Date endDate, Pageable pageable) {

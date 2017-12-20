@@ -33,7 +33,11 @@ public class Sn extends BaseEntity {
 		/** 会员卡 */
 		card,
 		/** 专栏 */
-		topic
+		topic,
+		/** 商品 */
+		product,
+		/** 订单 */
+		order
 	}
 
 	/** 类型 */

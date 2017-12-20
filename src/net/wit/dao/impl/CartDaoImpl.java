@@ -57,4 +57,8 @@ public class CartDaoImpl extends BaseDaoImpl<Cart, Long> implements CartDao {
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+	public void evictExpired() {
+		String jpql = "delete from Cart cart where cart.modifyDate <= :expire";
+		entityManager.createQuery(jpql).setFlushMode(FlushModeType.COMMIT).setParameter("expire", DateUtils.addSeconds(new Date(), -Cart.TIMEOUT)).executeUpdate();
+	}
 }

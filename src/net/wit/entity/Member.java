@@ -271,6 +271,14 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private Area area;
 
+	/**
+	 * 获取购物车
+	 *
+	 * @return 购物车
+	 */
+	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Cart cart;
+
 	/** 专栏*/
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) comment '地区 {}'")
@@ -747,6 +755,14 @@ public class Member extends BaseEntity {
 
 	public void setQrcode(String qrcode) {
 		this.qrcode = qrcode;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 
 	/**

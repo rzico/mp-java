@@ -60,7 +60,7 @@ public class ArticleCategoryDaoImpl extends BaseDaoImpl<ArticleCategory, Long> i
 	}
 
 	public List<ArticleCategory> findRoots(Integer count) {
-		String jpql = "select articleCategory from ArticleCategory articleCategory where articleCategory.parent is null order by articleCategory.order asc";
+		String jpql = "select articleCategory from ArticleCategory articleCategory where articleCategory.parent is null order by articleCategory.orders asc";
 		TypedQuery<ArticleCategory> query = entityManager.createQuery(jpql, ArticleCategory.class).setFlushMode(FlushModeType.COMMIT);
 		if (count != null) {
 			query.setMaxResults(count);

@@ -101,7 +101,9 @@ public class ProductController extends BaseController {
 
 		entity.setSn(product.getSn());
 
-		entity.setSpec(product.getSpec());
+
+		entity.setSpec1(product.getSpec1());
+		entity.setSpec2(product.getSpec2());
 
 		entity.setUnit(product.getUnit());
 
@@ -194,7 +196,9 @@ public class ProductController extends BaseController {
 
 		entity.setSn(product.getSn());
 
-		entity.setSpec(product.getSpec());
+
+		entity.setSpec1(product.getSpec1());
+		entity.setSpec2(product.getSpec2());
 
 		entity.setUnit(product.getUnit());
 
