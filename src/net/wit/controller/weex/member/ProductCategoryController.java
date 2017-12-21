@@ -27,7 +27,7 @@ import java.util.List;
  */
  
 @Controller("weexMemberProductCategoryController")
-@RequestMapping("/weex/member/product_catalog")
+@RequestMapping("/weex/member/product_category")
 public class ProductCategoryController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
@@ -145,6 +145,6 @@ public class ProductCategoryController extends BaseController {
         }
 
         productCategoryService.delete(id);
-        return Message.error("删除成功");
+        return Message.success("删除成功");
     }
 }

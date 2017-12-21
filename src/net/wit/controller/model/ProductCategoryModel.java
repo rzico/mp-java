@@ -29,6 +29,14 @@ public class ProductCategoryModel extends BaseModel implements Serializable {
         this.name = name;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     public void bind(ProductCategory productCategory) {
         this.id = productCategory.getId();
         this.name = productCategory.getName();

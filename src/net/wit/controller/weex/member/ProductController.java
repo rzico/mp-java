@@ -104,16 +104,15 @@ public class ProductController extends BaseController {
 			}
 			product.setName(model.getName());
 			product.setUnit(model.getUnit());
-			product.setIsMarketable(true);
 			if (model.getProductCategory()!=null && model.getProductCategory().getId()!=null) {
 				product.setProductCategory(productCategoryService.find(model.getProductCategory().getId()));
 			}
 			product.setMarketPrice(pm.getPrice());
 			product.setPrice(pm.getPrice());
-			product.setVip1Price(pm.getVip1Price());
-			product.setVip2Price(pm.getVip2Price());
-			product.setVip3Price(pm.getVip3Price());
-			product.setCost(pm.getCost());
+			product.setVip1Price(pm.getPrice());
+			product.setVip2Price(pm.getPrice());
+			product.setVip3Price(pm.getPrice());
+			product.setCost(BigDecimal.ZERO);
 			product.setDeleted(false);
 			i = i+1;
 			product.setOrders(i);
@@ -122,6 +121,7 @@ public class ProductController extends BaseController {
 			} else {
 				product.setIsList(false);
 			}
+			product.setIsMarketable(true);
 			products.add(product);
 		}
 		goods.getProducts().clear();

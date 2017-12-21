@@ -14,7 +14,7 @@ public class ProductModel extends BaseModel implements Serializable {
     private Long productId;
 
     /** 缩例图 */
-    private String thumbnial;
+    private String thumbnail;
 
     /** 规格1 */
     private String spec1;
@@ -22,18 +22,18 @@ public class ProductModel extends BaseModel implements Serializable {
     /** 规格2 */
     private String spec2;
 
-    /** 重量 */
-    private Integer weight;
+//    /** 重量 */
+//    private Integer weight;
     /** 销售价 */
     private BigDecimal price;
-    /** vip1 */
-    private BigDecimal vip1Price;
-    /** vip2 */
-    private BigDecimal vip2Price;
-    /** vip3 */
-    private BigDecimal vip3Price;
-    /** 成本价 */
-    private BigDecimal cost;
+//    /** vip1 */
+//    private BigDecimal vip1Price;
+//    /** vip2 */
+//    private BigDecimal vip2Price;
+//    /** vip3 */
+//    private BigDecimal vip3Price;
+//    /** 成本价 */
+//    private BigDecimal cost;
     /** 库存 */
     private Integer stock;
 
@@ -45,12 +45,12 @@ public class ProductModel extends BaseModel implements Serializable {
         this.productId = productId;
     }
 
-    public String getThumbnial() {
-        return thumbnial;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setThumbnial(String thumbnial) {
-        this.thumbnial = thumbnial;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public String getSpec1() {
@@ -69,12 +69,12 @@ public class ProductModel extends BaseModel implements Serializable {
         this.spec2 = spec2;
     }
 
-    public Integer getWeight() {
-        return weight;
+    public Integer getStock() {
+        return stock;
     }
 
-    public void setWeight(Integer weight) {
-        this.weight = weight;
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public BigDecimal getPrice() {
@@ -85,61 +85,21 @@ public class ProductModel extends BaseModel implements Serializable {
         this.price = price;
     }
 
-    public BigDecimal getVip1Price() {
-        return vip1Price;
-    }
-
-    public void setVip1Price(BigDecimal vip1Price) {
-        this.vip1Price = vip1Price;
-    }
-
-    public BigDecimal getVip2Price() {
-        return vip2Price;
-    }
-
-    public void setVip2Price(BigDecimal vip2Price) {
-        this.vip2Price = vip2Price;
-    }
-
-    public BigDecimal getVip3Price() {
-        return vip3Price;
-    }
-
-    public void setVip3Price(BigDecimal vip3Price) {
-        this.vip3Price = vip3Price;
-    }
-
-    public BigDecimal getCost() {
-        return cost;
-    }
-
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
     public void bind(Product product) {
         this.productId = product.getId();
-        this.thumbnial = product.getThumbnial();
+        this.thumbnail = product.getThumbnail();
         ProductCategoryModel productCategoryModel = new ProductCategoryModel();
         if (product.getProductCategory()!=null) {
             productCategoryModel.bind(product.getProductCategory());
         }
         this.spec1 = product.getSpec1();
         this.spec2 = product.getSpec2();
-        this.weight = product.getWeight();
         this.price = product.getPrice();
-        this.vip1Price = product.getVip1Price();
-        this.vip2Price = product.getVip2Price();
-        this.vip3Price = product.getVip3Price();
-        this.cost = product.getCost();
+//        this.weight = product.getWeight();
+//        this.vip1Price = product.getVip1Price();
+//        this.vip2Price = product.getVip2Price();
+//        this.vip3Price = product.getVip3Price();
+//        this.cost = product.getCost();
         List<ProductStock> stocks = product.getProductStocks();
         this.stock = 0;
         for (ProductStock productStock:stocks) {

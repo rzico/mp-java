@@ -146,6 +146,6 @@ public class ArticleCatalogController extends BaseController {
         }
 
         articleCatalogService.delete(id);
-        return Message.error("删除成功");
+        return Message.success("删除成功");
     }
 }

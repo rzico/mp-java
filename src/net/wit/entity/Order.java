@@ -942,32 +942,13 @@ public class Order extends BaseEntity {
 	}
 
 	/**
-	 * 是否已过期
+	 * 是否已过期  true 过期了
 	 * 
 	 * @return 是否已过期
 	 */
 	@Transient
 	public boolean isExpired() {
 		return getExpire() != null && new Date().after(getExpire());
-	}
-
-	/**
-	 * 获取订单项
-	 * 
-	 * @param sn
-	 *            商品编号
-	 * @return 订单项
-	 */
-	@Transient
-	public OrderItem getOrderItem(String sn) {
-		if (sn != null && getOrderItems() != null) {
-			for (OrderItem orderItem : getOrderItems()) {
-				if (orderItem != null && sn.equalsIgnoreCase(orderItem.getSn())) {
-					return orderItem;
-				}
-			}
-		}
-		return null;
 	}
 
 	/**

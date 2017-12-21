@@ -131,7 +131,7 @@ public class ProductController extends BaseController {
 
 		entity.setProductCategory(productCategoryService.find(productCategoryId));
 
-		entity.setThumbnial(product.getThumbnial());
+		entity.setThumbnail(product.getThumbnail());
 		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
@@ -225,7 +225,7 @@ public class ProductController extends BaseController {
 
 		entity.setProductCategory(productCategoryService.find(productCategoryId));
 
-		entity.setThumbnial(product.getThumbnial());
+		entity.setThumbnail(product.getThumbnail());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");

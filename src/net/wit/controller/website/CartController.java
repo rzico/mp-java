@@ -110,7 +110,7 @@ public class CartController extends BaseController {
 			redisService.put(Cart.KEY_COOKIE_NAME, JsonUtils.toJson(vkey));
 		}
 		CartModel model = new CartModel();
-		model.bind(cart);
+		model.bindHeader(cart);
 		return Message.success(model,"添加成功");
 	}
 
@@ -118,9 +118,13 @@ public class CartController extends BaseController {
 	 * 列表
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public  @ResponseBody Message list(ModelMap model) {
-		model.addAttribute("cart", cartService.getCurrent());
-		return "/shop/cart/list";
+	public  @ResponseBody Message list(HttpServletRequest request) {
+		Cart cart = cartService.getCurrent();
+		CartModel model = new CartModel();
+		if (cart!=null) {
+			model.bind(cart);
+		}
+		return Message.bind(model,request);
 	}
 
 	/**
@@ -128,44 +132,31 @@ public class CartController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public @ResponseBody
-	Map<String, Object> edit(Long id, Integer quantity) {
+	Message edit(Long id, Integer quantity) {
 		Map<String, Object> data = new HashMap<String, Object>();
 		if (quantity == null || quantity < 1) {
-			data.put("message", ERROR_MESSAGE);
-			return data;
+			return Message.error("数据不能为零");
 		}
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
-			data.put("message", Message.error("shop.cart.notEmpty"));
-			return data;
+			return Message.error("购物车不能为空");
 		}
 		CartItem cartItem = cartItemService.find(id);
 		Set<CartItem> cartItems = cart.getCartItems();
 		if (cartItem == null || cartItems == null || !cartItems.contains(cartItem)) {
-			data.put("message", Message.error("shop.cart.cartItemNotExsit"));
-			return data;
+			return Message.error("商品没找到");
 		}
-		if (CartItem.MAX_QUANTITY != null && quantity > CartItem.MAX_QUANTITY) {
-			data.put("message", Message.warn("shop.cart.maxCartItemQuantity", CartItem.MAX_QUANTITY));
-			return data;
-		}
+
 		Product product = cartItem.getProduct();
-		if (product.getStock() != null && quantity > product.getAvailableStock()) {
-			data.put("message", Message.warn("shop.cart.productLowStock"));
-			return data;
+		if (quantity > product.getAvailableStock(cartItem.getSeller())) {
+			return Message.error("库存不足");
 		}
 		cartItem.setQuantity(quantity);
 		cartItemService.update(cartItem);
 
-		data.put("message", SUCCESS_MESSAGE);
-		data.put("subtotal", cartItem.getSubtotal());
-		data.put("isLowStock", cartItem.getIsLowStock());
-		data.put("quantity", cart.getQuantity());
-		data.put("effectivePoint", cart.getEffectivePoint());
-		data.put("effectivePrice", cart.getEffectivePrice());
-		data.put("promotions", cart.getPromotions());
-		data.put("giftItems", cart.getGiftItems());
-		return data;
+		CartModel model = new CartModel();
+		model.bindHeader(cart);
+		return Message.success(model,"添加成功");
 	}
 
 	/**
@@ -173,29 +164,23 @@ public class CartController extends BaseController {
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public @ResponseBody
-	Map<String, Object> delete(Long id) {
+	Message delete(Long id) {
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
-			data.put("message", Message.error("shop.cart.notEmpty"));
-			return data;
+			return Message.error("购物车不能为空");
 		}
 		CartItem cartItem = cartItemService.find(id);
 		Set<CartItem> cartItems = cart.getCartItems();
 		if (cartItem == null || cartItems == null || !cartItems.contains(cartItem)) {
-			data.put("message", Message.error("shop.cart.cartItemNotExsit"));
-			return data;
+			return Message.error("商品没找到");
 		}
 		cartItems.remove(cartItem);
 		cartItemService.delete(cartItem);
 
-		data.put("message", SUCCESS_MESSAGE);
-		data.put("quantity", cart.getQuantity());
-		data.put("effectivePoint", cart.getEffectivePoint());
-		data.put("effectivePrice", cart.getEffectivePrice());
-		data.put("promotions", cart.getPromotions());
-		data.put("isLowStock", cart.getIsLowStock());
-		return data;
+		CartModel model = new CartModel();
+		model.bindHeader(cart);
+		return Message.success(model,"添加成功");
 	}
 
 	/**
@@ -206,7 +191,7 @@ public class CartController extends BaseController {
 	Message clear() {
 		Cart cart = cartService.getCurrent();
 		cartService.delete(cart);
-		return SUCCESS_MESSAGE;
+		return Message.success("清理成功");
 	}
 
 }

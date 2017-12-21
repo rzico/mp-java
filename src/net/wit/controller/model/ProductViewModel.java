@@ -20,7 +20,7 @@ public class ProductViewModel extends BaseModel implements Serializable {
     /** 市场价 */
     private BigDecimal marketPrice;
     /** 标题图 */
-    private String thumbnial;
+    private String thumbnail;
 
     public Long getId() {
         return id;
@@ -54,12 +54,12 @@ public class ProductViewModel extends BaseModel implements Serializable {
         this.marketPrice = marketPrice;
     }
 
-    public String getThumbnial() {
-        return thumbnial;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setThumbnial(String thumbnial) {
-        this.thumbnial = thumbnial;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public void bind(Product product) {
@@ -67,7 +67,7 @@ public class ProductViewModel extends BaseModel implements Serializable {
         this.name = product.getName();
         this.price = product.getPrice();
         this.marketPrice = product.getMarketPrice();
-        this.thumbnial =product.getThumbnial();
+        this.thumbnail =product.getThumbnail();
     }
 
     public static List<ProductViewModel> bindSet(Article article) {

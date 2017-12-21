@@ -161,6 +161,14 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         isPublish = publish;
     }
 
+    public String getHtmlTag() {
+        return htmlTag;
+    }
+
+    public void setHtmlTag(String htmlTag) {
+        this.htmlTag = htmlTag;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();

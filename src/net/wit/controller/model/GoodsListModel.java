@@ -18,7 +18,7 @@ public class GoodsListModel extends BaseModel implements Serializable {
     /** 单位 */
     private String unit;
     /** 缩例图 */
-    private String thumbnial;
+    private String thumbnail;
 
     /** 销售价 */
     private BigDecimal price;
@@ -49,12 +49,12 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.unit = unit;
     }
 
-    public String getThumbnial() {
-        return thumbnial;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setThumbnial(String thumbnial) {
-        this.thumbnial = thumbnial;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public BigDecimal getPrice() {
@@ -84,7 +84,7 @@ public class GoodsListModel extends BaseModel implements Serializable {
                 this.stock = productStock.getStock();
             }
         }
-        this.setThumbnial(product.getThumbnial());
+        this.setThumbnail(product.getThumbnail());
         this.setPrice(product.getPrice());
     }
 
@@ -99,7 +99,7 @@ public class GoodsListModel extends BaseModel implements Serializable {
                 this.stock = productStock.getStock();
             }
         }
-        this.setThumbnial(product.getThumbnial());
+        this.setThumbnail(product.getThumbnail());
         this.setPrice(product.getPrice());
     }
 

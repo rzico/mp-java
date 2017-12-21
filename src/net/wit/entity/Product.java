@@ -52,7 +52,7 @@ public class Product extends OrderEntity {
 	/** 缩略图 */
 	@Length(max = 200)
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
-	private String thumbnial;
+	private String thumbnail;
 
 	/** 规格1 */
 	@Length(max = 50)
@@ -297,12 +297,12 @@ public class Product extends OrderEntity {
 		this.productStocks = productStocks;
 	}
 
-	public String getThumbnial() {
-		return thumbnial;
+	public String getThumbnail() {
+		return thumbnail;
 	}
 
-	public void setThumbnial(String thumbnial) {
-		this.thumbnial = thumbnial;
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 
 	public List<Tag> getTags() {
@@ -343,6 +343,26 @@ public class Product extends OrderEntity {
 		} else {
 			return null;
 		}
+	}
+
+
+	/**
+	 * 获取库存记录
+	 *
+	 * @return 获取库存记录
+	 */
+	@Transient
+	public ProductStock getProductStock(Member seller) {
+		ProductStock stock = null;
+		if (seller!=null) {
+			for (ProductStock productStock : getProductStocks()) {
+				if (productStock.getSeller().equals(seller)) {
+					stock = productStock;
+					break;
+				}
+			}
+		}
+		return stock;
 	}
 
 	/**
