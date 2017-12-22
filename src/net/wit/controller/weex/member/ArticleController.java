@@ -191,6 +191,7 @@ public class ArticleController extends BaseController {
             article.setTemplate(templateService.findDefault(Template.Type.article));
         }
         article.setIsDraft(isDraft);
+        article.setIsAudit(false);
         article.setTitle(title);
         article.setAuthor(author);
         article.setThumbnail(thumbnail);
