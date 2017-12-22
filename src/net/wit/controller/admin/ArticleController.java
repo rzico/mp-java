@@ -173,7 +173,7 @@ public class ArticleController extends BaseController {
 
 		entity.setTemplate(templateService.find(templateId));
 
-		entity.setIsDraft(false);
+		entity.setIsDraft(true);
 
 		entity.setThumbnail(article.getThumbnail());
 
@@ -278,8 +278,6 @@ public class ArticleController extends BaseController {
 		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
 
 		entity.setTemplate(templateService.find(templateId));
-
-		entity.setIsDraft(article.getIsDraft());
 
 		entity.setThumbnail(article.getThumbnail());
 
