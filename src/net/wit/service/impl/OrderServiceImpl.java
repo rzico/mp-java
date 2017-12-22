@@ -1,12 +1,10 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 
 import net.wit.Filter;
 import net.wit.Page;
@@ -14,15 +12,19 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.*;
+import net.wit.service.SnService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.OrderDao;
 import net.wit.entity.*;
 import net.wit.service.OrderService;
+import org.springframework.util.Assert;
 
 /**
  * @ClassName: OrderDaoImpl
@@ -35,6 +37,36 @@ import net.wit.service.OrderService;
 public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements OrderService {
 	@Resource(name = "orderDaoImpl")
 	private OrderDao orderDao;
+
+	@Resource(name = "couponCodeDaoImpl")
+	private CouponCodeDao couponCodeDao;
+
+	@Resource(name = "productStockDaoImpl")
+	private ProductStockDao productStockDao;
+
+	@Resource(name = "orderLogDaoImpl")
+	private OrderLogDao orderLogDao;
+
+	@Resource(name = "orderItemDaoImpl")
+	private OrderItemDao orderItemDao;
+
+	@Resource(name = "refundsDaoImpl")
+	private RefundsDao refundsDao;
+
+	@Resource(name = "paymentDaoImpl")
+	private PaymentDao paymentDao;
+
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
+	@Resource(name = "snServiceImpl")
+	private SnService snService;
+
+	@Resource(name = "cartDaoImpl")
+	private CartDao cartDao;
+
+	@Resource(name = "snDaoImpl")
+	private SnDao snDao;
 
 	@Resource(name = "orderDaoImpl")
 	public void setBaseDao(OrderDao orderDao) {
@@ -119,7 +151,79 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @return 订单
 	 */
 	public Order build(Cart cart, Receiver receiver, CouponCode couponCode, String memo) {
-       return null;
+		Assert.notNull(cart);
+		Assert.notNull(cart.getMember());
+		Assert.notEmpty(cart.getCartItems());
+
+		Order order = new Order();
+		order.setShippingStatus(Order.ShippingStatus.unshipped);
+		order.setFee(new BigDecimal(0));
+		order.setCouponDiscount(new BigDecimal(0));
+		order.setOffsetAmount(new BigDecimal(0));
+		order.setPoint(cart.getEffectivePoint());
+		order.setMemo(memo);
+		order.setMember(cart.getMember());
+		order.setMethod(Order.Method.online);
+
+		if (receiver != null) {
+			order.setConsignee(receiver.getConsignee());
+			order.setAreaName(receiver.getAreaName());
+			order.setAddress(receiver.getAddress());
+			order.setZipCode(receiver.getZipCode());
+			order.setPhone(receiver.getPhone());
+			order.setArea(receiver.getArea());
+		}
+
+//		BigDecimal freight = shippingMethod.calculateFreight(cart.getWeight());
+//		for (Promotion promotion : cart.getPromotions()) {
+//			if (promotion.getIsFreeShipping()) {
+//				freight = new BigDecimal(0);
+//				break;
+//			}
+//		}
+		order.setFreight(BigDecimal.ZERO);
+
+		if (couponCode != null && cart.isCouponAllowed()) {
+			couponCodeDao.lock(couponCode, LockModeType.PESSIMISTIC_WRITE);
+			if (!couponCode.getIsUsed() && couponCode.getCoupon() != null && cart.isValid(couponCode.getCoupon())) {
+				BigDecimal couponDiscount = cart.getEffectivePrice().subtract(couponCode.calculate(cart.getEffectivePrice()));
+				couponDiscount = couponDiscount.compareTo(new BigDecimal(0)) > 0 ? couponDiscount : new BigDecimal(0);
+				order.setCouponDiscount(couponDiscount);
+				order.setCouponCode(couponCode);
+			}
+		}
+
+		List<OrderItem> orderItems = order.getOrderItems();
+		for (CartItem cartItem : cart.getCartItems()) {
+			if (cartItem != null && cartItem.getProduct() != null) {
+				Product product = cartItem.getProduct();
+				OrderItem orderItem = new OrderItem();
+				orderItem.setName(product.getName());
+				orderItem.setSpec(product.getSpec());
+				orderItem.setPrice(cartItem.getPrice());
+				orderItem.setWeight(product.getWeight());
+				orderItem.setThumbnail(product.getThumbnail());
+				orderItem.setIsGift(false);
+				orderItem.setQuantity(cartItem.getQuantity());
+				orderItem.setShippedQuantity(0);
+				orderItem.setReturnQuantity(0);
+				orderItem.setProduct(product);
+				orderItem.setOrder(order);
+				orderItems.add(orderItem);
+				order.setSeller(cartItem.getSeller());
+			}
+		}
+
+		order.setAmountPaid(new BigDecimal(0));
+
+
+		order.setOrderStatus(Order.OrderStatus.unconfirmed);
+		order.setPaymentStatus(Order.PaymentStatus.unpaid);
+
+        //30分钟不付款过期
+		order.setExpire(DateUtils.addMinutes(new Date(),30));
+
+		return order;
 	}
 
 	/**
@@ -138,7 +242,49 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @return 订单
 	 */
 	public Order create(Cart cart, Receiver receiver, CouponCode couponCode, String memo, Admin operator) {
-		return null;
+		Assert.notNull(cart);
+		Assert.notNull(cart.getMember());
+		Assert.notEmpty(cart.getCartItems());
+		Assert.notNull(receiver);
+
+		Order order = build(cart, receiver, couponCode, memo);
+
+		order.setSn(snDao.generate(Sn.Type.order));
+
+		order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
+		order.setOperator(cart.getMember().userId());
+
+		if (order.getCouponCode() != null) {
+			couponCode.setIsUsed(true);
+			couponCode.setUsedDate(new Date());
+			couponCodeDao.merge(couponCode);
+		}
+
+		order.setIsAllocatedStock(true);
+
+		orderDao.persist(order);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.create);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		orderLogDao.persist(orderLog);
+
+		//下单就锁定库存
+		for (OrderItem orderItem : order.getOrderItems()) {
+			if (orderItem != null) {
+				Product product = orderItem.getProduct();
+				ProductStock productStock = product.getProductStock(order.getSeller());
+				productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+				if (productStock != null && productStock.getStock() != null) {
+					productStock.setAllocatedStock(productStock.getAllocatedStock() + (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+					productStockDao.merge(productStock);
+					orderDao.flush();
+				}
+			}
+		}
+		cartDao.remove(cart);
+		return order;
 	}
 
 	/**
@@ -161,7 +307,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void confirm(Order order, Admin operator) {
+	public void confirm(Order order, Admin operator)  throws Exception {
+		Assert.notNull(order);
+
+		order.setOrderStatus(Order.OrderStatus.confirmed);
+		orderDao.merge(order);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.confirm);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		orderLogDao.persist(orderLog);
 		return ;
 	}
 
@@ -173,8 +329,58 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void complete(Order order, Admin operator) {
+	public void complete(Order order, Admin operator)  throws Exception {
+		Assert.notNull(order);
+
+		Member member = order.getMember();
+		memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
+
+		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			member.setPoint(member.getPoint() + order.getPoint());
+		}
+
+		if (order.getShippingStatus() == Order.ShippingStatus.unshipped || order.getShippingStatus() == Order.ShippingStatus.returned) {
+			CouponCode couponCode = order.getCouponCode();
+			if (couponCode != null) {
+				couponCode.setIsUsed(false);
+				couponCode.setUsedDate(null);
+				couponCodeDao.merge(couponCode);
+
+				order.setCouponCode(null);
+				orderDao.merge(order);
+			}
+		}
+
+		member.setAmount(member.getAmount().add(order.getAmountPaid()));
+		memberDao.merge(member);
+
+		if (order.getIsAllocatedStock()) {
+			for (OrderItem orderItem : order.getOrderItems()) {
+				if (orderItem != null) {
+					Product product = orderItem.getProduct();
+					ProductStock productStock = product.getProductStock(order.getSeller());
+					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+					if (productStock != null && productStock.getStock() != null) {
+						productStock.setAllocatedStock(productStock.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+						productStockDao.merge(productStock);
+						orderDao.flush();
+					}
+				}
+			}
+			order.setIsAllocatedStock(false);
+		}
+
+		order.setOrderStatus(Order.OrderStatus.completed);
+		order.setExpire(null);
+		orderDao.merge(order);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.complete);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		orderLogDao.persist(orderLog);
 		return ;
+
 	}
 
 	/**
@@ -185,8 +391,45 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void cancel(Order order, Admin operator) {
-		return ;
+	public void cancel(Order order, Admin operator)  throws Exception {
+		Assert.notNull(order);
+
+		CouponCode couponCode = order.getCouponCode();
+		if (couponCode != null) {
+			couponCode.setIsUsed(false);
+			couponCode.setUsedDate(null);
+			couponCodeDao.merge(couponCode);
+
+			order.setCouponCode(null);
+			orderDao.merge(order);
+		}
+
+		if (order.getIsAllocatedStock()) {
+			for (OrderItem orderItem : order.getOrderItems()) {
+				if (orderItem != null) {
+					Product product = orderItem.getProduct();
+					ProductStock productStock = product.getProductStock(order.getSeller());
+					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+					if (productStock != null && productStock.getStock() != null) {
+						productStock.setAllocatedStock(productStock.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+						productStockDao.merge(productStock);
+						orderDao.flush();
+					}
+				}
+			}
+			order.setIsAllocatedStock(false);
+		}
+
+		order.setOrderStatus(Order.OrderStatus.cancelled);
+		order.setExpire(null);
+		orderDao.merge(order);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.cancel);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		orderLogDao.persist(orderLog);
+		return;
 	}
 
 	/**
@@ -194,27 +437,27 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *
 	 * @param order
 	 *            订单
-	 * @param payment
-	 *            收款单
 	 * @param operator
 	 *            操作员
 	 */
-	public void payment(Order order, Payment payment, Admin operator) {
-		return;
-	}
+	public Payment payment(Order order,Admin operator) throws Exception {
+		Assert.notNull(order);
 
-	/**
-	 * 订单退款
-	 *
-	 * @param order
-	 *            订单
-	 * @param refunds
-	 *            退款单
-	 * @param operator
-	 *            操作员
-	 */
-	public void refunds(Order order, Refunds refunds, Admin operator) {
-		return;
+		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		Payment payment = new Payment();
+		payment.setPayee(order.getSeller());
+		payment.setMember(order.getMember());
+		payment.setStatus(Payment.Status.waiting);
+		payment.setMethod(Payment.Method.online);
+		payment.setType(Payment.Type.payment);
+		payment.setMemo("订单付款");
+		payment.setAmount(order.getAmount());
+		payment.setSn(snService.generate(Sn.Type.payment));
+		payment.setOrder(order);
+		paymentDao.persist(payment);
+		return payment;
+
 	}
 
 	/**
@@ -225,8 +468,83 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void shipping(Order order, Admin operator) {
+	public void shipping(Order order, Admin operator) throws Exception {
+		Assert.notNull(order);
+
+		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		for (OrderItem orderItem:order.getOrderItems()) {
+			orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);
+			orderItem.setShippedQuantity(orderItem.getQuantity());
+		}
+
+		if (order.getIsAllocatedStock()) {
+			for (OrderItem orderItem : order.getOrderItems()) {
+				if (orderItem != null) {
+					Product product = orderItem.getProduct();
+					ProductStock productStock = product.getProductStock(order.getSeller());
+					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+					if (productStock != null && productStock.getStock() != null) {
+						productStock.setAllocatedStock(productStock.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+						productStockDao.merge(productStock);
+						orderDao.flush();
+					}
+				}
+			}
+			order.setIsAllocatedStock(false);
+		}
+
+		order.setShippingStatus(Order.ShippingStatus.shipped);
+		order.setExpire(null);
+		orderDao.merge(order);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.shipping);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		orderLogDao.persist(orderLog);
 		return;
+	}
+
+	public void refunds(Order order,Admin operator) throws Exception {
+		Assert.notNull(order);
+
+		orderDao.refresh(order, LockModeType.PESSIMISTIC_WRITE);
+
+		if (!order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
+			throw new RuntimeException("不能重复操作");
+		}
+
+		order.setAmountPaid(order.getAmountPaid());
+		order.setExpire(null);
+		order.setPaymentStatus(Order.PaymentStatus.refunding);
+		orderDao.merge(order);
+
+		for (Payment payment:order.getPayments()) {
+			if (payment.getStatus().equals(Payment.Status.success)) {
+				Refunds refunds = new Refunds();
+				refunds.setPaymentMethod(payment.getPaymentMethod());
+				refunds.setPayment(payment);
+				refunds.setPaymentPluginId(payment.getPaymentPluginId());
+				refunds.setStatus(Refunds.Status.waiting);
+				refunds.setAmount(payment.getAmount());
+				refunds.setOrder(order);
+				refunds.setMember(payment.getMember());
+				refunds.setPayee(payment.getPayee());
+				refunds.setMemo("订单退款");
+				refunds.setMethod(Refunds.Method.values()[payment.getMethod().ordinal()]);
+				refunds.setType(Refunds.Type.values()[payment.getType().ordinal()]);
+				refunds.setSn(snService.generate(Sn.Type.refunds));
+				refundsDao.persist(refunds);
+			}
+		}
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.refunds);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		orderLogDao.persist(orderLog);
+
 	}
 
 	/**
@@ -237,9 +555,60 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void returns(Order order, Admin operator) {
-		return;
-	}
 
+	public void returns(Order order, Admin operator)  throws Exception {
+		Assert.notNull(order);
+
+		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		for (OrderItem orderItem : order.getOrderItems()) {
+			if (orderItem != null) {
+				orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);
+				orderItem.setReturnQuantity(orderItem.getShippedQuantity());
+			}
+		}
+		order.setShippingStatus(Order.ShippingStatus.returned);
+		order.setExpire(null);
+		orderDao.merge(order);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.returns);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		orderLogDao.persist(orderLog);
+
+		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
+
+			order.setAmountPaid(order.getAmountPaid());
+			order.setExpire(null);
+			order.setPaymentStatus(Order.PaymentStatus.refunding);
+			orderDao.merge(order);
+
+			for (Payment payment:order.getPayments()) {
+				if (payment.getStatus().equals(Payment.Status.success)) {
+					Refunds refunds = new Refunds();
+					refunds.setPaymentMethod(payment.getPaymentMethod());
+					refunds.setPayment(payment);
+					refunds.setPaymentPluginId(payment.getPaymentPluginId());
+					refunds.setStatus(Refunds.Status.waiting);
+					refunds.setAmount(payment.getAmount());
+					refunds.setOrder(order);
+					refunds.setMember(payment.getMember());
+					refunds.setPayee(payment.getPayee());
+					refunds.setMemo("订单退款");
+					refunds.setMethod(Refunds.Method.values()[payment.getMethod().ordinal()]);
+					refunds.setType(Refunds.Type.values()[payment.getType().ordinal()]);
+					refunds.setSn(snService.generate(Sn.Type.refunds));
+					refundsDao.persist(refunds);
+				}
+			}
+
+			OrderLog orderLog1 = new OrderLog();
+			orderLog1.setType(OrderLog.Type.refunds);
+			orderLog1.setOperator(operator != null ? operator.getUsername() : null);
+			orderLog1.setOrder(order);
+			orderLogDao.persist(orderLog1);
+		}
+	}
 
 }

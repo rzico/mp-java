@@ -410,5 +410,16 @@ public class Product extends OrderEntity {
 			return stock.getIsOutOfStock();
 		}
 	}
+	@Transient
+	public String getSpec() {
+        if (getSpec1()!=null && getSpec2()!=null) {
+	       return getSpec1().concat(getSpec2());
+		} else
+			if (getSpec1()!=null){
+        	return getSpec1();
+		} else {
+				return getSpec2();
+			}
+	}
 
 }

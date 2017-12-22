@@ -30,6 +30,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -46,6 +47,18 @@ public class Order extends BaseEntity {
 
 	/** 订单名称分隔符 */
 	private static final String NAME_SEPARATOR = " ";
+
+	/**
+	 * 结算方式
+	 */
+	public enum Method {
+
+		/** 线上结算 */
+		online,
+
+		/** 线下结算 */
+		offline
+	}
 
 	/**
 	 * 订单状态
@@ -116,6 +129,16 @@ public class Order extends BaseEntity {
 	/** 配送状态 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '配送状态'")
 	private ShippingStatus shippingStatus;
+
+	/** 付款方式 */
+	@Column(nullable = false,columnDefinition="int(11) not null comment '付款方式'")
+	private Method method;
+
+	/** 是否删除 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否删除'")
+	@JsonIgnore
+	private Boolean deleted;
 
 	/** 交易佣金 */
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '交易佣金'")
@@ -294,6 +317,14 @@ public class Order extends BaseEntity {
 	 */
 	public void setOrderStatus(OrderStatus orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+	public Method getMethod() {
+		return method;
+	}
+
+	public void setMethod(Method method) {
+		this.method = method;
 	}
 
 	/**
@@ -568,6 +599,14 @@ public class Order extends BaseEntity {
 	 */
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	/**
@@ -988,6 +1027,40 @@ public class Order extends BaseEntity {
 	 */
 	@PreRemove
 	public void preRemove() {
+	}
+
+
+	public String getStatusDescr() {
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
+			return "待付款";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+			return "待发货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+			return "已发货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
+			return "退款中";
+		} else {
+			return "已完成";
+		}
+	}
+	public String getStatus() {
+	   if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
+	   	  return  "unpaid";
+	   } else
+	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+		   return "unshipped";
+	   } else
+	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+		   return "shipped";
+	   } else
+	   if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
+		   return "refunding";
+	   } else {
+	   	   return "completed";
+	   }
 	}
 
 }

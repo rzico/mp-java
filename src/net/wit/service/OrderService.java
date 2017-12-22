@@ -82,7 +82,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	 * @param operator
 	 *            操作员
 	 */
-	void confirm(Order order, Admin operator);
+	void confirm(Order order, Admin operator) throws Exception;
 
 	/**
 	 * 订单完成
@@ -92,7 +92,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	 * @param operator
 	 *            操作员
 	 */
-	void complete(Order order, Admin operator);
+	void complete(Order order, Admin operator) throws Exception;
 
 	/**
 	 * 订单取消
@@ -102,41 +102,37 @@ public interface OrderService extends BaseService<Order, Long> {
 	 * @param operator
 	 *            操作员
 	 */
-	void cancel(Order order, Admin operator);
+	void cancel(Order order, Admin operator) throws Exception;
 
 	/**
 	 * 订单支付
 	 *
 	 * @param order
 	 *            订单
-	 * @param payment
-	 *            收款单
 	 * @param operator
 	 *            操作员
 	 */
-	void payment(Order order, Payment payment, Admin operator);
+	Payment payment(Order order, Admin operator) throws Exception;
 
 	/**
 	 * 订单退款
 	 *
 	 * @param order
 	 *            订单
-	 * @param refunds
-	 *            退款单
 	 * @param operator
 	 *            操作员
 	 */
-	void refunds(Order order, Refunds refunds, Admin operator);
+	public void refunds(Order order,Admin operator) throws Exception;
 
-	/**
-	 * 订单发货
-	 *
-	 * @param order
-	 *            订单
-	 * @param operator
-	 *            操作员
-	 */
-	void shipping(Order order, Admin operator);
+		/**
+         * 订单发货
+         *
+         * @param order
+         *            订单
+         * @param operator
+         *            操作员
+         */
+	void shipping(Order order, Admin operator) throws Exception;
 
 	/**
 	 * 订单退货
@@ -146,7 +142,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	 * @param operator
 	 *            操作员
 	 */
-	void returns(Order order, Admin operator);
+	void returns(Order order, Admin operator) throws Exception;
 
 
 }

@@ -1,6 +1,8 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.MessageService;
 import net.wit.service.PluginService;
+import net.wit.service.SmssendService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -49,6 +52,9 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 	private DepositDao depositDao;
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
+
+	@Resource(name = "smssendServiceImpl")
+	private SmssendService smssendService;
 
 	@Resource(name = "payBillDaoImpl")
 	private PayBillDao payBillDao;
@@ -265,6 +271,19 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						cardBill.setType(CardBill.Type.refunds);
 						cardBill.setBalance(card.getBalance());
 						cardBillDao.persist(cardBill);
+
+						if (card.getMobile()!=null && card.getMobile().length()==11) {
+							String content = "";
+							DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
+							df.setMaximumFractionDigits(2);
+							if (payBill.getAmount().equals(payBill.getCardAmount())) {
+								content = "会员卡退款:"+df.format(payBill.getAmount())+"元";
+							} else {
+								content = "会员卡退款:"+df.format(payBill.getAmount())+"元,减:"+df.format(payBill.getCardDiscount().subtract(payBill.getAmount()))+"元";
+							}
+							smssendService.send(payBill.getOwner(), card.getMobile(),content);
+						}
+
 					}
 				}
 				return true;

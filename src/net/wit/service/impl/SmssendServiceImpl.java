@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 
 import com.chuanglan.sms.request.SmsSendRequest;
 import com.chuanglan.sms.response.SmsSendResponse;
@@ -15,10 +16,15 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.DepositDao;
+import net.wit.dao.MemberDao;
+import net.wit.plat.im.Push;
+import net.wit.service.MessageService;
 import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +43,18 @@ import net.wit.service.SmssendService;
 public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implements SmssendService {
 	@Resource(name = "smssendDaoImpl")
 	private SmssendDao smssendDao;
+
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
+
+	@Resource(name = "taskExecutor")
+	private TaskExecutor taskExecutor;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
 
 	@Resource(name = "smssendDaoImpl")
 	public void setBaseDao(SmssendDao smssendDao) {
@@ -85,39 +103,78 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 		super.delete(smssend);
 	}
 
+	/**
+	 * 添加发送任务
+	 */
+	private void addTask(final String mobile,final String content) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+					ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+					String smsSingleRequestServerUrl = "http://smssh1.253.com/msg/send/json";
+					String msg = "【" + bundle.getString("signature") + "】"+content;
+					String phone = mobile;
+					String report= "true";
+					String r = "0000";
+					try {
+						SmsSendRequest smsSingleRequest = new SmsSendRequest(bundle.getString("softwareSerialNo"), bundle.getString("password"), msg, phone, report);
+						String requestJson = JsonUtils.toJson(smsSingleRequest);
+						String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
+						SmsSendResponse smsSingleResponse = JsonUtils.toObject(response, SmsSendResponse.class);
+						if (smsSingleResponse.getCode().equals("0")) {
+							r = "0000";
+						} else {
+							r = "-"+smsSingleResponse.getErrorMsg();
+						}
+					} catch (Exception e) {
+						r = "-9999";
+					}
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Page<Smssend> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return smssendDao.findPage(beginDate,endDate,pageable);
 	}
+
 	public String smsSend(Smssend smssend) {
-		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-		String smsSingleRequestServerUrl = "http://smssh1.253.com/msg/send/json";
-		String msg = "【" + bundle.getString("signature") + "】"+smssend.getContent();
-		String phone = smssend.getMobile();
-		String report= "true";
-		String r = "0000";
-		try {
-			SmsSendRequest smsSingleRequest = new SmsSendRequest(bundle.getString("softwareSerialNo"), bundle.getString("password"), msg, phone, report);
-			String requestJson = JsonUtils.toJson(smsSingleRequest);
-			String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
-			SmsSendResponse smsSingleResponse = JsonUtils.toObject(response, SmsSendResponse.class);
-			if (smsSingleResponse.getCode().equals("0")) {
-				r = "0000";
-			} else {
-				r = "-"+smsSingleResponse.getErrorMsg();
-			}
-		} catch (Exception e) {
-			r = "-9999";
-		}
-		if (r.startsWith("-") || r.equals("")) {
-			smssend.setStatus(Smssend.Status.Error);
-			smssend.setDescr("短信失败，错误码=" + r);
-		} else {
-			smssend.setStatus(Smssend.Status.send);
-			smssend.setDescr("短信发送成功");
-		}
-		smssend.setCount(1);
-		smssend.setFee(new BigDecimal("0.1"));
+		smssend.setFee(BigDecimal.ZERO);
 		super.save(smssend);
-		return r;
+		this.addTask(smssend.getMobile(),smssend.getContent());
+		return "true";
 	}
+
+	public String send(Member member,String mobile,String content) {
+		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+		if (member.getBalance().compareTo(new BigDecimal("0.1"))>=0) {
+			Smssend smssend = new Smssend();
+			smssend.setMobile(mobile);
+			smssend.setContent(content);
+			smssend.setMember(member);
+			smssend.setFee(new BigDecimal("0.1"));
+			super.save(smssend);
+			member.setBalance(member.getBalance().subtract(smssend.getFee()));
+			memberDao.merge(member);
+			Deposit deposit = new Deposit();
+			deposit.setBalance(member.getBalance());
+			deposit.setType(Deposit.Type.smsSend);
+			deposit.setMemo("手机短信");
+			deposit.setMember(member);
+			deposit.setCredit(BigDecimal.ZERO);
+			deposit.setDebit(smssend.getFee());
+			deposit.setDeleted(false);
+			deposit.setOperator("system");
+			depositDao.persist(deposit);
+
+			this.addTask(smssend.getMobile(),smssend.getContent());
+			messageService.depositPushTo(deposit);
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+
 }

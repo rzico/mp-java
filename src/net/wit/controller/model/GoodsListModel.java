@@ -15,8 +15,6 @@ public class GoodsListModel extends BaseModel implements Serializable {
 
     /** 名称 */
     private String name;
-    /** 单位 */
-    private String unit;
     /** 缩例图 */
     private String thumbnail;
 
@@ -39,14 +37,6 @@ public class GoodsListModel extends BaseModel implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
     }
 
     public String getThumbnail() {
