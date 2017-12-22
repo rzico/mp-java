@@ -86,7 +86,7 @@ public class CardController extends BaseController {
             data.put("useCard","false");
             data.put("url","");
         }
-        return Message.bind(CardModel.bindList(member.getCards()),request);
+        return Message.bind(data,request);
     }
 
 }

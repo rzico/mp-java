@@ -119,15 +119,21 @@ public class Article extends BaseEntity{
 
     /** 是否删除 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否删除'")
+    @Column(columnDefinition="bit not null default 0 comment '是否删除'")
     @JsonIgnore
     private Boolean deleted;
 
     /** 是否草稿 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否草稿'")
+    @Column(columnDefinition="bit not null default 1 comment '是否草稿'")
     @JsonIgnore
     private Boolean isDraft;
+
+    /** 是否审核 */
+    @NotNull
+    @Column(columnDefinition="bit not null default 0 comment '是否审核'")
+    @JsonIgnore
+    private Boolean isAudit;
 
     /** 安全密匙 */
     @Embedded
@@ -381,6 +387,14 @@ public class Article extends BaseEntity{
 
     public void setShare(Long share) {
         this.share = share;
+    }
+
+    public Boolean getIsAudit() {
+        return isAudit;
+    }
+
+    public void setIsAudit(Boolean audit) {
+        isAudit = audit;
     }
 
     public MapEntity getMapTemplate() {
