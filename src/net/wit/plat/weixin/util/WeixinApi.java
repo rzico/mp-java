@@ -411,9 +411,7 @@ public class WeixinApi {
 	public static int sendTemplete(String appid, String appsecret, String message) {
 		int result = 0;
 		AccessToken token = WeixinApi.getAccessToken(appid, appsecret);
-		System.out.println(token.getToken());
 		String requestUrl = send_message.replace("ACCESS_TOKEN", token.getToken());
-		System.out.println(requestUrl);
 		JSONObject jsonObject = httpRequest(requestUrl, "POST", message);
 		if (null != jsonObject) {
 			if (0 != jsonObject.getInt("errcode")) {

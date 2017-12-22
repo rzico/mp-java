@@ -129,6 +129,12 @@ public class Article extends BaseEntity{
     @JsonIgnore
     private Boolean isDraft;
 
+    /** 是否审核 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否审核'")
+    @JsonIgnore
+    private Boolean isAudit;
+
     /** 安全密匙 */
     @Embedded
     private ArticleOptions articleOptions;
@@ -381,6 +387,14 @@ public class Article extends BaseEntity{
 
     public void setShare(Long share) {
         this.share = share;
+    }
+
+    public Boolean getIsAudit() {
+        return isAudit;
+    }
+
+    public void setIsAudit(Boolean audit) {
+        isAudit = audit;
     }
 
     public MapEntity getMapTemplate() {
