@@ -119,19 +119,19 @@ public class Article extends BaseEntity{
 
     /** 是否删除 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否删除'")
+    @Column(columnDefinition="bit not null default 0 comment '是否删除'")
     @JsonIgnore
     private Boolean deleted;
 
     /** 是否草稿 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否草稿'")
+    @Column(columnDefinition="bit not null default 1 comment '是否草稿'")
     @JsonIgnore
     private Boolean isDraft;
 
     /** 是否审核 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否审核'")
+    @Column(columnDefinition="bit not null default 0 comment '是否审核'")
     @JsonIgnore
     private Boolean isAudit;
 
