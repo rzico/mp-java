@@ -1,7 +1,5 @@
 package net.wit.entity;
 
-import sun.jvm.hotspot.oops.BooleanField;
-
 import java.math.BigDecimal;
 import java.util.Date;
 

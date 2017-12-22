@@ -60,7 +60,10 @@ public class Deposit extends BaseEntity {
 		cashier,
 
 		/** 会员卡  收入 */
-		card
+		card,
+
+		/** 手机短信 支出 */
+		smsSend
 	}
 
 	/** 类型 */

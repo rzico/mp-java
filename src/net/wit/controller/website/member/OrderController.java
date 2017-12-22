@@ -207,7 +207,11 @@ public class OrderController extends BaseController {
 			if (order.isLocked(null)) {
 				return Message.warn("shop.member.order.locked");
 			}
-			orderService.cancel(order, null);
+			try {
+				orderService.cancel(order, null);
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
 		}
 		return Message.success("");
 	}

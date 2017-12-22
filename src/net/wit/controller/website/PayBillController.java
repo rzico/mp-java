@@ -98,7 +98,7 @@ public class PayBillController extends BaseController {
         List<CouponCode> couponCodes = member.getCouponCodes();
         BigDecimal discount = BigDecimal.ZERO;
         for (CouponCode code:couponCodes) {
-            if (code.getCoupon().getDistributor().equals(shop.getOwner()) && code.getEnabled()) {
+            if (code.getCoupon().getDistributor().equals(shop.getOwner()) && code.getEnabled() && !code.getCoupon().getScope().equals(Coupon.Scope.mall)) {
                 BigDecimal d = couponCode.calculate(amount.subtract(noDiscount));
                 if (d.compareTo(discount) > 0) {
                     couponCode = couponCode;

@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.ProductDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +36,8 @@ import net.wit.service.GoodsService;
 public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements GoodsService {
 	@Resource(name = "goodsDaoImpl")
 	private GoodsDao goodsDao;
+	@Resource(name = "productDaoImpl")
+	private ProductDao productDao;
 
 	@Resource(name = "goodsDaoImpl")
 	public void setBaseDao(GoodsDao goodsDao) {
@@ -69,8 +72,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements Go
 		Goods goods = goodsDao.find(id);
 		for (Product product:goods.getProducts()) {
 			product.setDeleted(true);
+			productDao.merge(product);
 		}
-		super.update(goods);
 	}
 
 	@Override
@@ -78,7 +81,11 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements Go
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
 		for (Long id:ids) {
-			this.delete(id);
+			Goods goods = goodsDao.find(id);
+			for (Product product:goods.getProducts()) {
+				product.setDeleted(true);
+				productDao.merge(product);
+			}
 		}
 	}
 
@@ -88,8 +95,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements Go
 	public void delete(Goods goods) {
 		for (Product product:goods.getProducts()) {
 			product.setDeleted(true);
+			productDao.merge(product);
 		}
-		super.update(goods);
 	}
 
 	public Page<Goods> findPage(Date beginDate,Date endDate, Pageable pageable) {

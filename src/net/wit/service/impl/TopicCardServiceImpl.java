@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Filter.Operator;

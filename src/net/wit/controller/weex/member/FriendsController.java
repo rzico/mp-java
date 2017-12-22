@@ -189,7 +189,7 @@ public class FriendsController extends BaseController {
             fds1.setFriend(member);
             fds1.setMember(friend);
             fds1.setStatus(Friends.Status.adopt);
-            fds.setType(Friends.Type.friend);
+            fds1.setType(Friends.Type.friend);
             friendsService.save(fds1);
         } else {
             fds1.setStatus(Friends.Status.adopt);

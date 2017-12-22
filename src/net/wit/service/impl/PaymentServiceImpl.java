@@ -1,6 +1,8 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import net.wit.dao.*;
 import net.wit.entity.summary.CardActivity;
 import net.wit.service.MessageService;
 import net.wit.service.PluginService;
+import net.wit.service.SmssendService;
 import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -46,14 +49,23 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
 
+	@Resource(name = "orderDaoImpl")
+	private OrderDao orderDao;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
+
+	@Resource(name = "smssendServiceImpl")
+	private SmssendService smssendService;
 
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
 
 	@Resource(name = "payBillDaoImpl")
 	private PayBillDao payBillDao;
+
+	@Resource(name = "orderLogDaoImpl")
+	private OrderLogDao orderLogDao;
 
 	@Resource(name = "cardDaoImpl")
 	private CardDao cardDao;
@@ -134,6 +146,28 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
+				Order order = payment.getOrder();
+				orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+				payment.setOrder(order);
+				paymentDao.merge(payment);
+
+				order.setAmountPaid(order.getAmountPaid().add(payment.getAmount()));
+				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
+					order.setFee(BigDecimal.ZERO);
+				}
+				order.setExpire(null);
+				if (order.getAmountPaid().compareTo(order.getAmount()) >= 0) {
+					order.setOrderStatus(Order.OrderStatus.confirmed);
+					order.setPaymentStatus(Order.PaymentStatus.paid);
+				}
+				orderDao.merge(order);
+
+				OrderLog orderLog = new OrderLog();
+				orderLog.setType(OrderLog.Type.payment);
+				orderLog.setOperator(payment.getMember().userId());
+				orderLog.setOrder(order);
+				orderLogDao.persist(orderLog);
 			} else
 			if (payment.getType() == Payment.Type.cashier) {
 				Member member = payment.getPayee();
@@ -239,6 +273,17 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					cardBill.setType(CardBill.Type.recharge);
 					cardBill.setBalance(card.getBalance());
 					cardBillDao.persist(cardBill);
+                    if (card.getMobile()!=null && card.getMobile().length()==11) {
+                    	String content = "";
+						DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
+						df.setMaximumFractionDigits(2);
+						if (payBill.getAmount().equals(payBill.getCardAmount())) {
+                    		content = "会员卡充值:"+df.format(payBill.getAmount())+"元";
+						} else {
+							content = "会员卡充值:"+df.format(payBill.getAmount())+"元,送:"+df.format(payBill.getCardDiscount().subtract(payBill.getAmount()))+"元";
+						}
+						smssendService.send(payBill.getOwner(), card.getMobile(),content);
+					}
 				}
 				messageService.payBillPushTo(payBill);
 			} else

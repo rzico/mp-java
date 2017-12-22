@@ -457,8 +457,11 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		} else
 		if (deposit.getType().equals(Deposit.Type.rebate)) {
 			msg.setTitle("奖励收入");
+		} else
+		if (deposit.getType().equals(Deposit.Type.smsSend)) {
+			msg.setTitle("营销短信");
 		} else {
-			msg.setTitle("账单提醒");
+			msg.setTitle("其他费用");
 		}
 		BigDecimal amount = deposit.getCredit().subtract(deposit.getDebit());
 		if (amount.compareTo(BigDecimal.ZERO)>0) {

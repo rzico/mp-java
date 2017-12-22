@@ -90,15 +90,9 @@ public class SmssendController extends BaseController {
 
 		entity.setContent(smssend.getContent());
 
-		entity.setCount(1);
-
-		entity.setDescr(null);
-
 		entity.setFee(new BigDecimal(0.1));
 
 		entity.setMobile(smssend.getMobile());
-
-		entity.setStatus(Smssend.Status.wait);
 
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
@@ -155,8 +149,6 @@ public class SmssendController extends BaseController {
 	public Message update(Smssend smssend){
 		Smssend entity = smssendService.find(smssend.getId());
 
-		entity.setStatus(smssend.getStatus());
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -175,13 +167,7 @@ public class SmssendController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Smssend.Status status, Pageable pageable, ModelMap model) {	
-		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		if (status!=null) {
-			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
-			filters.add(statusFilter);
-		}
-
+	public Message list(Date beginDate, Date endDate,Pageable pageable, ModelMap model) {
 		Page<Smssend> page = smssendService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
