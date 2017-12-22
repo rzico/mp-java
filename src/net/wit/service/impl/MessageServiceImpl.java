@@ -2,6 +2,8 @@ package net.wit.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -16,10 +18,12 @@ import net.wit.controller.model.DepositModel;
 import net.wit.controller.model.PayBillModel;
 import net.wit.controller.model.PayBillViewModel;
 import net.wit.dao.ArticleDao;
+import net.wit.dao.BindUserDao;
 import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
 import net.wit.plat.im.Push;
 import net.wit.plat.im.User;
+import net.wit.plat.weixin.main.MessageManager;
 import net.wit.plugin.StoragePlugin;
 import net.wit.util.JsonUtils;
 import net.wit.util.SettingUtils;
@@ -53,6 +57,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
+
+	@Resource(name = "bindUserDaoImpl")
+	private BindUserDao bindUserDao;
 
 	@Resource(name = "articleDaoImpl")
 	private ArticleDao articleDao;
@@ -123,6 +130,25 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			taskExecutor.execute(new Runnable() {
 				public void run() {
 				   Push.taskPush(sender,receiver,timeStamp,content);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 添加模版发送任务
+	 */
+	private void addWXTask(final String openId, final String title, final Date timeStamp, final BigDecimal amount,final BigDecimal balance,final String content) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					NumberFormat nf = NumberFormat.getCurrencyInstance();
+					String data = MessageManager.createDepositTempelete(openId,title,"",
+							formatter.format(timeStamp),nf.format(amount),nf.format(balance),content);
+					MessageManager.sendMsg(data);
 				}
 			});
 		} catch (Exception e) {
@@ -474,7 +500,13 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		DepositModel ext = new DepositModel();
 		ext.bind(deposit);
 		msg.setExt(JsonUtils.toJson(ext));
-		return pushTo(msg);
+		pushTo(msg);
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		BindUser bindUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("weixin.appid"), BindUser.Type.weixin);
+		if (bindUser!=null) {
+			addWXTask(bindUser.getOpenId(),msg.getTitle(),deposit.getCreateDate(),amount,deposit.getBalance(),msg.getContent());
+		}
+		return true;
 	}
 
 	public void login(Member member,HttpServletRequest request) {
