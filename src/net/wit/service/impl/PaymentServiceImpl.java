@@ -143,7 +143,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Transactional
 	public synchronized void handle(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
-		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
+		if (payment != null && payment.getStatus().equals(Payment.Status.waiting)) {
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
 				Order order = payment.getOrder();
@@ -202,6 +202,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
+				if (payBill.getCouponCode()!=null) {
+					CouponCode couponCode = payBill.getCouponCode();
+					couponCode.setIsUsed(true);
+					couponCodeDao.merge(couponCode);
+				}
 				messageService.payBillPushTo(payBill);
 			}else
 			if (payment.getType() == Payment.Type.card) {
