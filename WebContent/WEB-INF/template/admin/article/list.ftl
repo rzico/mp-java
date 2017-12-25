@@ -243,7 +243,7 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapIdAudit",
+                    "mData": "mapIsAudit",
                     "sTitle": "发布",
                     "sClass": "center"
                 },
