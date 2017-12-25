@@ -243,6 +243,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "mapIdAudit",
+                    "sTitle": "发布",
+                    "sClass": "center"
+                },
+                {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -394,13 +399,24 @@
                     }
                 },
                 {
-                    "aTargets": [20],
+                    "aTargets": [21],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [20],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data.name == 'true') {
+                            return "<span class=\"label label-success radius\">已发布</span>";
+                        } else {
+                            <!-- return "<span class=\"label label-success radius\">点我发布</span>"; -->
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"publish(this,'"+data.id+"');\" name=\"\">点我发布</button>"
                         }
                     }
 
@@ -437,6 +453,8 @@
                     async: false,
                     success: function (message) {
                         layer.close(index);
+                        console.log(message);
+
                         if (message.type == "success") {
                             fnCallback(message.data);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
                         } else {
@@ -570,7 +588,38 @@
             });
         });
     }
-	
+
+    /*发布*/
+    function publish(obj, id) {
+        layer.confirm('确认要发布吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    articleId: id
+                },
+                url: '${base}/admin/article/publish.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        $(obj).parents("tr").addClass("publish");
+                        table.row('.publish').remove().draw( false );
+                        layer.msg('已发布!', {icon: 1, time: 1000});
+                    } else {
+                        layer.msg('发布失败!', {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);
