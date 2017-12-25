@@ -453,6 +453,14 @@ public class Article extends BaseEntity{
         }
     }
 
+    public MapEntity getMapIsAudit() {
+        if ((getId() != null)&&(getIsAudit() != null)) {
+            return new MapEntity(getId().toString(), getIsAudit().toString());
+        } else {
+            return null;
+        }
+    }
+
     public Set<ArticleProduct> getProducts() {
         return products;
     }
