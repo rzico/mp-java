@@ -282,6 +282,8 @@ public class ArticleController extends BaseController {
 		entity.setThumbnail(article.getThumbnail());
 
 		entity.setTags(tagService.findList(tagIds));
+
+		entity.setIsAudit(false);
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -296,7 +298,34 @@ public class ArticleController extends BaseController {
         }
 
 	}
-	
+
+
+	/**
+	 * 发布
+	 */
+	@RequestMapping(value = "/publish", method = RequestMethod.POST)
+	@ResponseBody
+	public Message publish(Long articleId){
+		Article entity = articleService.find(articleId);
+
+		entity.setIsDraft(false);
+
+		entity.setIsAudit(true);
+
+		if (!isValid(entity)) {
+			return Message.error("admin.data.valid");
+		}
+
+		try {
+			articleService.update(entity);
+			return Message.success(entity,"发布成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("发布失败");
+		}
+
+	}
+
 
 	/**
      * 列表
