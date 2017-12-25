@@ -107,7 +107,7 @@ public class TopicBillServiceImpl extends BaseServiceImpl<TopicBill, Long> imple
 			payee.setUsername(userName);
 			payee.setNickName("账单提醒");
 			payee.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
-			payee.setPoint(0L);
+//			payee.setPoint(0L);
 			payee.setBalance(BigDecimal.ZERO);
 			payee.setIsEnabled(true);
 			payee.setIsLocked(false);

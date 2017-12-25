@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.Setting;
 import net.wit.util.SettingUtils;
 
@@ -53,10 +54,12 @@ public class Cart extends BaseEntity {
 
 	/** 买方 */
 	@OneToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Member member;
 
 	/** 购物车项 */
 	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<CartItem> cartItems = new HashSet<CartItem>();
 
 	/**

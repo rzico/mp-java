@@ -277,10 +277,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
                     	String content = "";
 						DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
 						df.setMaximumFractionDigits(2);
-						if (payBill.getAmount().compareTo(payBill.getCardAmount())>=0) {
-                    		content = card.getTopicCard().getTopic().getName() + ",会员卡充值"+df.format(payBill.getAmount())+"元";
+						if (payBill.getAmount().compareTo(payBill.getCardAmount())==0) {
+                    		content = card.getTopicCard().getTopic().getName() + ",会员卡充值"+df.format(payBill.getAmount())+"元,余额:"+df.format(card.getBalance());
 						} else {
-							content = card.getTopicCard().getTopic().getName() + ",会员卡充值"+df.format(payBill.getAmount())+"元,送"+df.format(payBill.getCardDiscount().subtract(payBill.getAmount()))+"元";
+							content = card.getTopicCard().getTopic().getName() + ",会员卡充值"+df.format(payBill.getAmount())+"送"+df.format(payBill.getCardAmount().subtract(payBill.getAmount()))+"元,余额:"+df.format(card.getBalance());
 						}
 						smssendService.send(payBill.getOwner(), card.getMobile(),content);
 					}

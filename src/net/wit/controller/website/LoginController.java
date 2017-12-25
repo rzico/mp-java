@@ -121,8 +121,8 @@ public class LoginController extends BaseController {
                 member.setMobile(safeKey.getKey());
                 member.setNickName(null);
                 member.setLogo(null);
-                member.setPoint(0L);
-                member.setAmount(BigDecimal.ZERO);
+//                member.setPoint(0L);
+//                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setIsEnabled(true);
                 member.setIsLocked(false);
@@ -201,13 +201,13 @@ public class LoginController extends BaseController {
      * 微信登录
      */
     @RequestMapping(value = "/weixin", method = RequestMethod.GET)
-    public String weixin(String code,String state,HttpServletRequest request){
+    public String weixin(String code,String redirectURL,HttpServletRequest request){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
         String mState = null;
         try {
-            mState = new String(Base64.decodeBase64(state),"utf-8");
+            mState = new String(Base64.decodeBase64(redirectURL),"utf-8");
         } catch (UnsupportedEncodingException e) {
             logger.debug(e.getMessage());
             mState = "";
@@ -243,8 +243,8 @@ public class LoginController extends BaseController {
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
-            member.setPoint(0L);
-            member.setAmount(BigDecimal.ZERO);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
@@ -303,7 +303,7 @@ public class LoginController extends BaseController {
      * 微信登录
      */
     @RequestMapping(value = "/alipay", method = RequestMethod.GET)
-    public String alipay(String state,String auth_code,HttpServletRequest request,HttpServletResponse response){
+    public String alipay(String redirectURL,String auth_code,HttpServletRequest request,HttpServletResponse response){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String openId = null;
         String nickName=null;
@@ -311,12 +311,11 @@ public class LoginController extends BaseController {
         String unionId=null;
         String mState = null;
         try {
-            mState = new String(Base64.decodeBase64(state),"utf-8");
+            mState = new String(Base64.decodeBase64(redirectURL),"utf-8");
         } catch (UnsupportedEncodingException e) {
             logger.debug(e.getMessage());
             mState = "";
         }
-        System.out.println(mState);
         try {
             AccessToken token = AlipayUtil.getOauth2AccessToken(auth_code);
             if (token!=null) {
@@ -353,8 +352,8 @@ public class LoginController extends BaseController {
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
-            member.setPoint(0L);
-            member.setAmount(BigDecimal.ZERO);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);

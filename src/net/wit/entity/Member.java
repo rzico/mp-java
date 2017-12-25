@@ -4,21 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -90,22 +76,22 @@ public class Member extends BaseEntity {
 	@Pattern(regexp = "^[^\\s&\"<>]+$")
 	@Column(columnDefinition="varchar(255) comment '密码'")
 	private String password;
-
-	/** E-mail */
-	@Email
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '邮箱'")
-	private String email;
-
-	/** 积分 */
-	@Min(0)
-	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
-	private Long point;
-
-	/** 消费金额 */
-	@Min(0)
-	@Column(columnDefinition="decimal(21,6) default 0 comment '消费金额'")
-	private BigDecimal amount;
+//
+//	/** E-mail */
+//	@Email
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '邮箱'")
+//	private String email;
+//
+//	/** 积分 */
+//	@Min(0)
+//	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
+//	private Long point;
+//
+//	/** 消费金额 */
+//	@Min(0)
+//	@Column(columnDefinition="decimal(21,6) default 0 comment '消费金额'")
+//	private BigDecimal amount;
 
 	/** 余额 */
 	@Min(0)
@@ -172,18 +158,18 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="datetime comment '出生日期'")
 	private Date birth;
 
-	/** 地址 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '地址'")
-	private String address;
-
-	/** 邮编 */
-	@Column(columnDefinition="varchar(255) comment '邮编'")
-	private String zipCode;
-
-	/** 电话 */
-	@Column(columnDefinition="varchar(255) comment '电话'")
-	private String phone;
+//	/** 地址 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '地址'")
+//	private String address;
+//
+//	/** 邮编 */
+//	@Column(columnDefinition="varchar(255) comment '邮编'")
+//	private String zipCode;
+//
+//	/** 电话 */
+//	@Column(columnDefinition="varchar(255) comment '电话'")
+//	private String phone;
 
 	/** 手机 */
 	@Column(columnDefinition="varchar(50) comment '手机'")
@@ -196,7 +182,8 @@ public class Member extends BaseEntity {
 	private String uuid;
 
 	/** 设备环境 IOS Andriod */
-	@Column(columnDefinition="varchar(255) comment '设备环境'")
+	@Lob
+	@Column(columnDefinition="longtext comment '设备环境'")
 	@JsonIgnore
 	private String scene;
 
@@ -205,57 +192,57 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private String sign;
 
-	/** 会员注册项值0 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
-	@JsonIgnore
-	private String attributeValue0;
-
-	/** 会员注册项值1 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值1'")
-	@JsonIgnore
-	private String attributeValue1;
-
-	/** 会员注册项值2 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值2'")
-	private String attributeValue2;
-
-	/** 会员注册项值3 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值3'")
-	@JsonIgnore
-	private String attributeValue3;
-
-	/** 会员注册项值4 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值4'")
-	private String attributeValue4;
-
-	/** 会员注册项值5 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值5'")
-	@JsonIgnore
-	private String attributeValue5;
-
-	/** 会员注册项值6 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值6'")
-	@JsonIgnore
-	private String attributeValue6;
-
-	/** 会员注册项值7 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值7'")
-	@JsonIgnore
-	private String attributeValue7;
-
-	/** 会员注册项值8 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '会员注册项值8'")
-	@JsonIgnore
-	private String attributeValue8;
+//	/** 会员注册项值0 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
+//	@JsonIgnore
+//	private String attributeValue0;
+//
+//	/** 会员注册项值1 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值1'")
+//	@JsonIgnore
+//	private String attributeValue1;
+//
+//	/** 会员注册项值2 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值2'")
+//	private String attributeValue2;
+//
+//	/** 会员注册项值3 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值3'")
+//	@JsonIgnore
+//	private String attributeValue3;
+//
+//	/** 会员注册项值4 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值4'")
+//	private String attributeValue4;
+//
+//	/** 会员注册项值5 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值5'")
+//	@JsonIgnore
+//	private String attributeValue5;
+//
+//	/** 会员注册项值6 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值6'")
+//	@JsonIgnore
+//	private String attributeValue6;
+//
+//	/** 会员注册项值7 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值7'")
+//	@JsonIgnore
+//	private String attributeValue7;
+//
+//	/** 会员注册项值8 */
+//	@Length(max = 200)
+//	@Column(columnDefinition="varchar(255) comment '会员注册项值8'")
+//	@JsonIgnore
+//	private String attributeValue8;
 
 	/** IM状态 */
 	@Length(max = 200)
@@ -282,11 +269,12 @@ public class Member extends BaseEntity {
 	 * @return 购物车
 	 */
 	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Cart cart;
 
 	/** 专栏*/
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) comment '地区 {}'")
+	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) comment '专栏'")
 	@JsonIgnore
 	private Topic topic;
 
@@ -370,22 +358,22 @@ public class Member extends BaseEntity {
 		this.password = password;
 	}
 
-	public String getEmail() {
-		return email;
-	}
+//	public String getEmail() {
+//		return email;
+//	}
+//
+//	public void setEmail(String email) {
+//		this.email = email;
+//	}
+//
+//	public Long getPoint() {
+//		return point;
+//	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Long getPoint() {
-		return point;
-	}
-
-	public void setPoint(Long point) {
-		this.point = point;
-	}
-
+//	public void setPoint(Long point) {
+//		this.point = point;
+//	}
+//
 	public BigDecimal getBalance() {
 		return balance;
 	}
@@ -489,31 +477,31 @@ public class Member extends BaseEntity {
 	public void setBirth(Date birth) {
 		this.birth = birth;
 	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getZipCode() {
-		return zipCode;
-	}
-
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
+//
+//	public String getAddress() {
+//		return address;
+//	}
+//
+//	public void setAddress(String address) {
+//		this.address = address;
+//	}
+//
+//	public String getZipCode() {
+//		return zipCode;
+//	}
+//
+//	public void setZipCode(String zipCode) {
+//		this.zipCode = zipCode;
+//	}
+//
+//	public String getPhone() {
+//		return phone;
+//	}
+//
+//	public void setPhone(String phone) {
+//		this.phone = phone;
+//	}
+//
 	public String getMobile() {
 		return mobile;
 	}
@@ -522,77 +510,77 @@ public class Member extends BaseEntity {
 		this.mobile = mobile;
 	}
 
-	public String getAttributeValue0() {
-		return attributeValue0;
-	}
-
-	public void setAttributeValue0(String attributeValue0) {
-		this.attributeValue0 = attributeValue0;
-	}
-
-	public String getAttributeValue1() {
-		return attributeValue1;
-	}
-
-	public void setAttributeValue1(String attributeValue1) {
-		this.attributeValue1 = attributeValue1;
-	}
-
-	public String getAttributeValue2() {
-		return attributeValue2;
-	}
-
-	public void setAttributeValue2(String attributeValue2) {
-		this.attributeValue2 = attributeValue2;
-	}
-
-	public String getAttributeValue3() {
-		return attributeValue3;
-	}
-
-	public void setAttributeValue3(String attributeValue3) {
-		this.attributeValue3 = attributeValue3;
-	}
-
-	public String getAttributeValue4() {
-		return attributeValue4;
-	}
-
-	public void setAttributeValue4(String attributeValue4) {
-		this.attributeValue4 = attributeValue4;
-	}
-
-	public String getAttributeValue5() {
-		return attributeValue5;
-	}
-
-	public void setAttributeValue5(String attributeValue5) {
-		this.attributeValue5 = attributeValue5;
-	}
-
-	public String getAttributeValue6() {
-		return attributeValue6;
-	}
-
-	public void setAttributeValue6(String attributeValue6) {
-		this.attributeValue6 = attributeValue6;
-	}
-
-	public String getAttributeValue7() {
-		return attributeValue7;
-	}
-
-	public void setAttributeValue7(String attributeValue7) {
-		this.attributeValue7 = attributeValue7;
-	}
-
-	public String getAttributeValue8() {
-		return attributeValue8;
-	}
-
-	public void setAttributeValue8(String attributeValue8) {
-		this.attributeValue8 = attributeValue8;
-	}
+//	public String getAttributeValue0() {
+//		return attributeValue0;
+//	}
+//
+//	public void setAttributeValue0(String attributeValue0) {
+//		this.attributeValue0 = attributeValue0;
+//	}
+//
+//	public String getAttributeValue1() {
+//		return attributeValue1;
+//	}
+//
+//	public void setAttributeValue1(String attributeValue1) {
+//		this.attributeValue1 = attributeValue1;
+//	}
+//
+//	public String getAttributeValue2() {
+//		return attributeValue2;
+//	}
+//
+//	public void setAttributeValue2(String attributeValue2) {
+//		this.attributeValue2 = attributeValue2;
+//	}
+//
+//	public String getAttributeValue3() {
+//		return attributeValue3;
+//	}
+//
+//	public void setAttributeValue3(String attributeValue3) {
+//		this.attributeValue3 = attributeValue3;
+//	}
+//
+//	public String getAttributeValue4() {
+//		return attributeValue4;
+//	}
+//
+//	public void setAttributeValue4(String attributeValue4) {
+//		this.attributeValue4 = attributeValue4;
+//	}
+//
+//	public String getAttributeValue5() {
+//		return attributeValue5;
+//	}
+//
+//	public void setAttributeValue5(String attributeValue5) {
+//		this.attributeValue5 = attributeValue5;
+//	}
+//
+//	public String getAttributeValue6() {
+//		return attributeValue6;
+//	}
+//
+//	public void setAttributeValue6(String attributeValue6) {
+//		this.attributeValue6 = attributeValue6;
+//	}
+//
+//	public String getAttributeValue7() {
+//		return attributeValue7;
+//	}
+//
+//	public void setAttributeValue7(String attributeValue7) {
+//		this.attributeValue7 = attributeValue7;
+//	}
+//
+//	public String getAttributeValue8() {
+//		return attributeValue8;
+//	}
+//
+//	public void setAttributeValue8(String attributeValue8) {
+//		this.attributeValue8 = attributeValue8;
+//	}
 
 	public String getAttributeValue9() {
 		return attributeValue9;
@@ -769,15 +757,15 @@ public class Member extends BaseEntity {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-
-	public BigDecimal getAmount() {
-		return amount;
-	}
-
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
-
+//
+//	public BigDecimal getAmount() {
+//		return amount;
+//	}
+//
+//	public void setAmount(BigDecimal amount) {
+//		this.amount = amount;
+//	}
+//
 	/**
 	 * 获取会员注册项值
 	 * 
@@ -796,12 +784,12 @@ public class Member extends BaseEntity {
 				return getBirth();
 			} else if (memberAttribute.getType() == Type.area) {
 				return getArea();
-			} else if (memberAttribute.getType() == Type.address) {
-				return getAddress();
-			} else if (memberAttribute.getType() == Type.zipCode) {
-				return getZipCode();
-			} else if (memberAttribute.getType() == Type.phone) {
-				return getPhone();
+//			} else if (memberAttribute.getType() == Type.address) {
+//				return getAddress();
+//			} else if (memberAttribute.getType() == Type.zipCode) {
+//				return getZipCode();
+//			} else if (memberAttribute.getType() == Type.phone) {
+//				return getPhone();
 			} else if (memberAttribute.getType() == Type.mobile) {
 				return getMobile();
 			} else if (memberAttribute.getType() == Type.checkbox) {
@@ -860,12 +848,12 @@ public class Member extends BaseEntity {
 				setBirth((Date) attributeValue);
 			} else if (memberAttribute.getType() == Type.area && (attributeValue instanceof Area || attributeValue == null)) {
 				setArea((Area) attributeValue);
-			} else if (memberAttribute.getType() == Type.address && (attributeValue instanceof String || attributeValue == null)) {
-				setAddress((String) attributeValue);
-			} else if (memberAttribute.getType() == Type.zipCode && (attributeValue instanceof String || attributeValue == null)) {
-				setZipCode((String) attributeValue);
-			} else if (memberAttribute.getType() == Type.phone && (attributeValue instanceof String || attributeValue == null)) {
-				setPhone((String) attributeValue);
+//			} else if (memberAttribute.getType() == Type.address && (attributeValue instanceof String || attributeValue == null)) {
+//				setAddress((String) attributeValue);
+//			} else if (memberAttribute.getType() == Type.zipCode && (attributeValue instanceof String || attributeValue == null)) {
+//				setZipCode((String) attributeValue);
+//			} else if (memberAttribute.getType() == Type.phone && (attributeValue instanceof String || attributeValue == null)) {
+//				setPhone((String) attributeValue);
 			} else if (memberAttribute.getType() == Type.mobile && (attributeValue instanceof String || attributeValue == null)) {
 				setMobile((String) attributeValue);
 			} else if (memberAttribute.getType() == Type.checkbox && (attributeValue instanceof List || attributeValue == null)) {
@@ -909,9 +897,9 @@ public class Member extends BaseEntity {
 		setGender(null);
 		setBirth(null);
 		setArea(null);
-		setAddress(null);
-		setZipCode(null);
-		setPhone(null);
+//		setAddress(null);
+//		setZipCode(null);
+//		setPhone(null);
 		setMobile(null);
 		for (int i = 0; i < ATTRIBUTE_VALUE_PROPERTY_COUNT; i++) {
 			String propertyName = ATTRIBUTE_VALUE_PROPERTY_NAME_PREFIX + i;

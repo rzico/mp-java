@@ -67,9 +67,9 @@ public class OrderController extends BaseController {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 		Order order = orderService.findBySn(sn);
-		if (order != null && memberService.getCurrent().equals(order.getMember()) && !order.isExpired() && !order.isLocked( member.userId())) {
+		if (order != null && member.equals(order.getMember()) && !order.isExpired() && !order.isLocked(member.userId())) {
 			order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
-			order.setOperator(null);
+			order.setOperator(member.userId());
 			orderService.update(order);
 			return Message.success(true,"true");
 		}

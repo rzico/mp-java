@@ -116,7 +116,7 @@ public class TopicCard extends BaseEntity {
     private String activity;
 
     /** 短信提醒 */
-    @Column(columnDefinition="longtext comment '充值活动'")
+    @Column(columnDefinition="longtext comment '短信提醒'")
     private Boolean usegsm;
 
     /**

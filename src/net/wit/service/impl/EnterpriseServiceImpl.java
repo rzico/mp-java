@@ -123,7 +123,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			admin = new Admin();
 			admin.setUsername(member.userId());
 			admin.setName(member.getName());
-			admin.setEmail(member.getEmail());
+//			admin.setEmail(member.getEmail());
 			admin.setEnterprise(enterprise);
 			admin.setIsLocked(false);
 			admin.setIsEnabled(true);
@@ -158,7 +158,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			admin = new Admin();
 			admin.setUsername(member.userId());
 			admin.setName(member.getName());
-			admin.setEmail(member.getEmail());
+//			admin.setEmail(member.getEmail());
 			admin.setEnterprise(enterprise);
 			admin.setIsLocked(false);
 			admin.setIsEnabled(true);
