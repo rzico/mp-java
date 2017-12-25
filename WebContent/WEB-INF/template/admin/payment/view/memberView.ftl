@@ -85,13 +85,13 @@
         <tr>
             <th class="text-r" width="120">地址：</th>
             [#if member.address??]
-            <td>${member.address}</td>
+                <td>${member.address}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">余额：</th>
             [#if member.balance??]
-            <td>${member.balance}</td>
+                <td>${member.balance}</td>
             [/#if]
         </tr>
         <tr>
@@ -103,7 +103,7 @@
         <tr>
             <th class="text-r" width="120">出生日期：</th>
             [#if member.birth??]
-            <td><span id="birth">${member.birth}</span></td>
+                <td><span id="birth">${member.birth}</span></td>
             [/#if]
         </tr>
         <tr>
@@ -125,37 +125,37 @@
         <tr>
             <th class="text-r" width="120">邮箱：</th>
             [#if member.email??]
-            <td>${member.email}</td>
+                <td>${member.email}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">是否启用：</th>
             [#if member.isEnabled??]
-            <td>
-            [#if member.isEnabled == 'true']
-            <span class=\"label label-success radius\">是</span>
-            [#else]
-            <span class=\"label label-success radius\">否</span>
-            [/#if]
-            </td>
+                <td>
+                    [#if member.isEnabled == 'true']
+                        <span class=\"label label-success radius\">是</span>
+                    [#else]
+                        <span class=\"label label-success radius\">否</span>
+                    [/#if]
+                </td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">是否锁定：</th>
             [#if member.isLocked??]
-            <td>
-            [#if member.isLocked]
-            <span class=\"label label-success radius\">是</span>
-            [#else]
-            <span class=\"label label-success radius\">否</span>
-            [/#if]
-            </td>
+                <td>
+                    [#if member.isLocked]
+                        <span class=\"label label-success radius\">是</span>
+                    [#else]
+                        <span class=\"label label-success radius\">否</span>
+                    [/#if]
+                </td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">锁定日期：</th>
             [#if member.lockedDate??]
-            <td><span id="lockedDate">${member.lockedDate}</span></td>
+                <td><span id="lockedDate">${member.lockedDate}</span></td>
             [/#if]
         </tr>
         <tr>
@@ -167,43 +167,43 @@
         <tr>
             <th class="text-r" width="120">最后登录日期：</th>
             [#if member.loginDate??]
-            <td><span id="loginDate">${member.loginDate}</span></td>
+                <td><span id="loginDate">${member.loginDate}</span></td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">最后登录IP：</th>
             [#if member.loginIp??]
-            <td>${member.loginIp}</td>
+                <td>${member.loginIp}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">注册IP：</th>
             [#if member.registerIp??]
-            <td>${member.registerIp}</td>
+                <td>${member.registerIp}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">位置：</th>
             [#if member.addr??]
-            <td>${member.addr}</td>
+                <td>${member.addr}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">伟度：</th>
             [#if member.lat??]
-            <td>${member.lat}</td>
+                <td>${member.lat}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">经度：</th>
             [#if member.lng??]
-            <td>${member.lng}</td>
+                <td>${member.lng}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="120">设备号：</th>
             [#if member.uuid??]
-            <td>${member.uuid}</td>
+                <td>${member.uuid}</td>
             [/#if]
         </tr>
         <tr>
@@ -219,7 +219,7 @@
             [/#if]
         </tr>
         [#else]
-         没有查找到数据
+        没有查找到数据
         [/#if]
         </tbody>
     </table>
