@@ -76,12 +76,14 @@
         </button>
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
-        <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 收款单 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增收款单</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-        </span>
-    </div>
+        <!--
+            <span class="l">
+                    <a href="javascript:;" onclick="add('首页 &gt; 收款单 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                    <i class="Hui-iconfont">&#xe600;</i> 新增收款单</a>
+                    <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+            </span>
+        -->
+        </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -267,13 +269,21 @@
                 {
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if (data != null){
+                            return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        }else{
+                            return "";
+                        }
                     }
                 },
                  {
                     "aTargets": [13],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if (data != null){
+                            return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        }else{
+                            return "";
+                        }
                     }
                 },
                 {
