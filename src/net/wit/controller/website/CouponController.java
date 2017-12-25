@@ -56,8 +56,8 @@ public class CouponController extends BaseController {
         }
         Date today = DateUtils.truncate(new Date(), Calendar.DATE);
         filters.add(new Filter("beginDate", Filter.Operator.ge,today));
-        filters.add(new Filter("endDate", Filter.Operator.le,today));
-        filters.add(new Filter("stock", Filter.Operator.ge,0L));
+        filters.add(new Filter("endDate", Filter.Operator.ge,today));
+        filters.add(new Filter("stock", Filter.Operator.ge,0));
         pageable.setFilters(filters);
         Page<Coupon> page = couponService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);

@@ -67,7 +67,6 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleLaudServiceImpl")
     private ArticleLaudService articleLaudService;
 
-
     /**
      *  文章列表,带分页
      */

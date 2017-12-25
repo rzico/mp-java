@@ -32,7 +32,9 @@ public class Article extends BaseEntity{
         /** 音频 */
         audio,
         /** 视频 */
-        video
+        video,
+        /** 商品 */
+        product
     };
 
     /** 类型 */
