@@ -91,6 +91,13 @@ public class CardPayPlugin extends PaymentPlugin {
 			}
 		}
 		if (card!=null) {
+
+			if (!card.getOwner().equals(payment.getPayee())) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg", "不是本店会员卡");
+				return finalpackage;
+			}
+
 			if (card.getBalance().compareTo(payment.getAmount()) > 0) {
 				try {
 					if (member.getPassword()==null) {
@@ -167,6 +174,12 @@ public class CardPayPlugin extends PaymentPlugin {
 		} else {
 			finalpackage.put("return_code", "FAIL");
 			finalpackage.put("result_msg", "无效付款码");
+			return finalpackage;
+		}
+
+		if (!card.getOwner().equals(payment.getPayee())) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg", "不是本店会员卡");
 			return finalpackage;
 		}
 

@@ -276,11 +276,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							String content = "";
 							DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
 							df.setMaximumFractionDigits(2);
-							if (payBill.getAmount().compareTo(payBill.getCardAmount())>=0) {
-								content = card.getTopicCard().getTopic().getName() + ",会员卡退款"+df.format(payBill.getAmount())+"元";
-							} else {
-								content = card.getTopicCard().getTopic().getName() + ",会员卡退款"+df.format(payBill.getAmount())+"元,减赠送"+df.format(payBill.getCardDiscount().subtract(payBill.getAmount()))+"元";
-							}
+							content = card.getTopicCard().getTopic().getName() + ",会员卡退款"+df.format(payBill.getCardDiscount())+"元,余额:"+df.format(card.getBalance());
 							smssendService.send(payBill.getOwner(), card.getMobile(),content);
 						}
 

@@ -108,8 +108,8 @@ public class MemberController extends BaseController {
     @ResponseBody
 	public Message save(Member member, Long areaId, Long occupationId, Long [] tagIds){
 		Member entity = new Member();	
-
-		entity.setAddress(member.getAddress());
+//
+//		entity.setAddress(member.getAddress());
 
 		entity.setBirth(member.getBirth());
 
@@ -120,10 +120,10 @@ public class MemberController extends BaseController {
 		entity.setIsLocked(member.getIsLocked());
 
 		entity.setName(member.getName());
-
-		entity.setPhone(member.getPhone());
-
-		entity.setZipCode(member.getZipCode());
+//
+//		entity.setPhone(member.getPhone());
+//
+//		entity.setZipCode(member.getZipCode());
 
 		entity.setArea(areaService.find(areaId));
 
@@ -201,32 +201,32 @@ public class MemberController extends BaseController {
 		entity.setCreateDate(member.getCreateDate());
 
 		entity.setModifyDate(member.getModifyDate());
+//
+//		entity.setAddress(member.getAddress());
 
-		entity.setAddress(member.getAddress());
-
-		entity.setAttributeValue0(member.getAttributeValue0());
-
-		entity.setAttributeValue1(member.getAttributeValue1());
-
-		entity.setAttributeValue2(member.getAttributeValue2());
-
-		entity.setAttributeValue3(member.getAttributeValue3());
-
-		entity.setAttributeValue4(member.getAttributeValue4());
-
-		entity.setAttributeValue5(member.getAttributeValue5());
-
-		entity.setAttributeValue6(member.getAttributeValue6());
-
-		entity.setAttributeValue7(member.getAttributeValue7());
-
-		entity.setAttributeValue8(member.getAttributeValue8());
+//		entity.setAttributeValue0(member.getAttributeValue0());
+//
+//		entity.setAttributeValue1(member.getAttributeValue1());
+//
+//		entity.setAttributeValue2(member.getAttributeValue2());
+//
+//		entity.setAttributeValue3(member.getAttributeValue3());
+//
+//		entity.setAttributeValue4(member.getAttributeValue4());
+//
+//		entity.setAttributeValue5(member.getAttributeValue5());
+//
+//		entity.setAttributeValue6(member.getAttributeValue6());
+//
+//		entity.setAttributeValue7(member.getAttributeValue7());
+//
+//		entity.setAttributeValue8(member.getAttributeValue8());
 
 		entity.setAttributeValue9(member.getAttributeValue9());
 
 		entity.setBirth(member.getBirth());
-
-		entity.setEmail(member.getEmail());
+//
+//		entity.setEmail(member.getEmail());
 
 		entity.setGender(member.getGender());
 
@@ -243,14 +243,14 @@ public class MemberController extends BaseController {
 		entity.setLoginIp(member.getLoginIp());
 
 		entity.setName(member.getName());
-
-		entity.setPhone(member.getPhone());
-
-		entity.setPoint(member.getPoint() == null ? 0 : member.getPoint());
+//
+//		entity.setPhone(member.getPhone());
+//
+//		entity.setPoint(member.getPoint() == null ? 0 : member.getPoint());
 
 		entity.setUsername(member.getUsername());
-
-		entity.setZipCode(member.getZipCode());
+//
+//		entity.setZipCode(member.getZipCode());
 
 		entity.setArea(areaService.find(areaId));
 

@@ -12,6 +12,7 @@ import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import net.wit.util.MD5Utils;
 import net.wit.util.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -67,7 +68,7 @@ public class LoginController extends BaseController {
     @Resource(name = "roleServiceImpl")
     private RoleService roleService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "")
     public
     @ResponseBody
     Message login(String code, HttpServletRequest request, HttpServletResponse response) {
@@ -100,8 +101,8 @@ public class LoginController extends BaseController {
                 member = new Member();
                 member.setNickName(null);
                 member.setLogo(null);
-                member.setPoint(0L);
-                member.setAmount(BigDecimal.ZERO);
+//                member.setPoint(0L);
+//                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setIsEnabled(true);
                 member.setIsLocked(false);
@@ -148,7 +149,8 @@ public class LoginController extends BaseController {
                 Map<String,String> data = new HashMap<>();
                 data.put("jsessionId",sessionId);
                 data.put("session_key",sessionKey);
-                return Message.success(Message.LOGIN_SUCCESS);
+//                data.put("userId", Base64.encodeBase64String(openId.getBytes()));
+                return Message.success(data,Message.LOGIN_SUCCESS);
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -334,10 +334,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		Member member = order.getMember();
 		memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
-
-		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
-			member.setPoint(member.getPoint() + order.getPoint());
-		}
+//
+//		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
+//			member.setPoint(member.getPoint() + order.getPoint());
+//		}
 
 		if (order.getShippingStatus() == Order.ShippingStatus.unshipped || order.getShippingStatus() == Order.ShippingStatus.returned) {
 			CouponCode couponCode = order.getCouponCode();
@@ -351,7 +351,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 
-		member.setAmount(member.getAmount().add(order.getAmountPaid()));
+//		member.setAmount(member.getAmount().add(order.getAmountPaid()));
 		memberDao.merge(member);
 
 		if (order.getIsAllocatedStock()) {

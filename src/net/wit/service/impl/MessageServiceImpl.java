@@ -207,7 +207,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			}
 			sender.setNickName( title);
 			sender.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
-			sender.setPoint(0L);
+//			sender.setPoint(0L);
 			sender.setBalance(BigDecimal.ZERO);
 			sender.setIsEnabled(true);
 			sender.setIsLocked(false);
@@ -504,6 +504,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		BindUser bindUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("weixin.appid"), BindUser.Type.weixin);
 		if (bindUser!=null) {
+			System.out.println("公众号，账单推送");
 			addWXTask(bindUser.getOpenId(),msg.getTitle(),deposit.getCreateDate(),amount,deposit.getBalance(),msg.getContent());
 		}
 		return true;

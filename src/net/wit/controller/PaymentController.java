@@ -94,7 +94,6 @@ public class PaymentController extends BaseController {
             return Message.error("支付插件无效");
         }
 
-        System.out.println(safeKey);
         payment.setMethod(Method.online);
         payment.setPaymentPluginId(paymentPluginId);
         payment.setPaymentMethod(paymentPlugin.getName());

@@ -136,6 +136,7 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = "/notify",method = RequestMethod.POST)
     public Boolean notify_post(HttpServletRequest request, HttpServletResponse response, ModelMap model) {		// 调用核心业务类接收消息、处理消息
         try {
+            System.out.println("weixin.notify");
             Map<String, String> requestMap = MessageUtil.parseXml(request);
             // 发送方帐号（open_id）
             String fromUserName = requestMap.get("FromUserName");

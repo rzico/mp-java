@@ -220,8 +220,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 				DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
 				df.setMaximumFractionDigits(2);
 				String content =
-						card.getTopicCard().getTopic().getName()+",会员卡消费"+df.format(payment.getAmount())+"元";
-				smssendService.send(payment.getMember(), card.getMobile(),content);
+						card.getTopicCard().getTopic().getName()+",会员卡消费"+df.format(payment.getAmount())+"元,余额:"+df.format(card.getBalance());
+				smssendService.send(payment.getPayee(), card.getMobile(),content);
 			}
 
 		} catch (Exception  e) {
@@ -265,8 +265,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 				DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
 				df.setMaximumFractionDigits(2);
 				String content =
-						card.getTopicCard().getTopic().getName()+",会员卡退款"+df.format(refunds.getAmount())+"元";
-				smssendService.send(refunds.getMember(), card.getMobile(),content);
+						card.getTopicCard().getTopic().getName()+",会员卡退款"+df.format(refunds.getAmount())+"元,余额:"+df.format(card.getBalance());
+				smssendService.send(refunds.getPayee(), card.getMobile(),content);
 			}
 
 		} catch (Exception  e) {

@@ -129,8 +129,8 @@ public class LoginController extends BaseController {
                 member.setMobile(safeKey.getKey());
                 member.setNickName(null);
                 member.setLogo(null);
-                member.setPoint(0L);
-                member.setAmount(BigDecimal.ZERO);
+//                member.setPoint(0L);
+//                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setIsEnabled(true);
                 member.setIsLocked(false);
@@ -275,8 +275,8 @@ public class LoginController extends BaseController {
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
-            member.setPoint(0L);
-            member.setAmount(BigDecimal.ZERO);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
@@ -386,8 +386,8 @@ public class LoginController extends BaseController {
             member.setUsername('d'+code);
             member.setNickName("收款机（"+code+"）");
             member.setLogo("http://cdn.rzico.com/weex/resources/images/logo.png");
-            member.setPoint(0L);
-            member.setAmount(BigDecimal.ZERO);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
@@ -402,7 +402,7 @@ public class LoginController extends BaseController {
             admin = new Admin();
             admin.setUsername('d'+code);
             admin.setName("收款机（"+code+"）");
-            admin.setEmail(member.getEmail());
+//            admin.setEmail(member.getEmail());
             admin.setEnterprise(shop.getEnterprise());
             admin.setIsLocked(false);
             admin.setIsEnabled(true);
