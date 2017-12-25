@@ -11,6 +11,7 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.service.CardService;
 import net.wit.service.PaymentService;
 import net.wit.service.RSAService;
+import net.wit.service.SmssendService;
 import net.wit.util.MD5Utils;
 import net.wit.util.ScanUtil;
 import org.apache.commons.lang.time.DateUtils;
@@ -27,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -104,6 +107,7 @@ public class CardPayPlugin extends PaymentPlugin {
 					cardService.payment(card,payment);
 					finalpackage.put("return_code", "SUCCESS");
 					finalpackage.put("result_msg", "提交成功");
+
 				} catch (Exception e) {
 					finalpackage.put("return_code", "FAIL");
 					finalpackage.put("result_msg", e.getMessage());

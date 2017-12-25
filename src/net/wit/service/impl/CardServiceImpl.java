@@ -1,6 +1,8 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +18,7 @@ import net.wit.Principal;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.*;
+import net.wit.service.SmssendService;
 import net.wit.service.SnService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -49,6 +52,9 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 
 	@Resource(name = "refundsDaoImpl")
 	private RefundsDao refundsDao;
+
+	@Resource(name = "smssendServiceImpl")
+	private SmssendService smssendService;
 
 	@Resource(name = "topicCardDaoImpl")
 	private TopicCardDao topicCardDao;
@@ -209,6 +215,15 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			payment.setTranSn(payment.getSn());
 			payment.setMethod(Payment.Method.card);
 			paymentDao.merge(payment);
+
+			if (card.getMobile()!=null && card.getMobile().length()==11) {
+				DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
+				df.setMaximumFractionDigits(2);
+				String content =
+						card.getTopicCard().getTopic().getName()+",会员卡消费"+df.format(payment.getAmount())+"元";
+				smssendService.send(payment.getMember(), card.getMobile(),content);
+			}
+
 		} catch (Exception  e) {
 			throw  new RuntimeException("支付失败");
 		}
@@ -244,6 +259,16 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			refunds.setTranSn(refunds.getSn());
 			refunds.setMethod(Refunds.Method.card);
 			refundsDao.merge(refunds);
+
+
+			if (card.getMobile()!=null && card.getMobile().length()==11) {
+				DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
+				df.setMaximumFractionDigits(2);
+				String content =
+						card.getTopicCard().getTopic().getName()+",会员卡退款"+df.format(refunds.getAmount())+"元";
+				smssendService.send(refunds.getMember(), card.getMobile(),content);
+			}
+
 		} catch (Exception  e) {
 			throw  new RuntimeException("支付失败");
 		}
