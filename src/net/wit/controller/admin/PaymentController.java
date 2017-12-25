@@ -86,6 +86,7 @@ public class PaymentController extends BaseController {
 		methods.add(new MapEntity("online","在线支付"));
 		methods.add(new MapEntity("offline","线下支付"));
 		methods.add(new MapEntity("deposit","钱包支付"));
+		methods.add(new MapEntity("card","会员卡"));
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -98,10 +99,12 @@ public class PaymentController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("payment","消费支付"));
+		types.add(new MapEntity("payment","购物支付"));
 		types.add(new MapEntity("recharge","钱包充值"));
 		types.add(new MapEntity("reward","文章赞赏"));
 		types.add(new MapEntity("cashier","线下收款"));
+		types.add(new MapEntity("topic","专栏激活"));
+		types.add(new MapEntity("card","会员卡"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("members",memberService.findAll());

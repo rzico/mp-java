@@ -309,6 +309,22 @@
                     }
                 },
                 {
+                    "aTargets": [10],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                        [#if methods??]
+                            [#list methods as method]
+                                if ("${method.id}" == data) {
+                                    return "${method.name}";
+                                }
+                            [/#list]
+                        [/#if]
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
                     "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){

@@ -100,7 +100,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">付款人：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span> ${data.mapMember}</span>
+                <span> ${data.mapMember.name}</span>
             </div>
         </div>
 
@@ -108,7 +108,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>收款人：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                 <span> ${data.mapPayee}</span>
+                 <span> ${data.mapPayee.name}</span>
             </div>
         </div>
         <div class="row cl">
