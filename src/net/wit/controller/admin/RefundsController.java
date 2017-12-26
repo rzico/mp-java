@@ -34,8 +34,6 @@ import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.controller.admin.model.*;
 
-
-
 /**
  * @ClassName: RefundsController
  * @author 降魔战队
@@ -86,24 +84,24 @@ public class RefundsController extends BaseController {
 		methods.add(new MapEntity("online","在线退款"));
 		methods.add(new MapEntity("offline","线下退款"));
 		methods.add(new MapEntity("deposit","钱包退款"));
+		methods.add(new MapEntity("card","会员卡退款"));
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("wait","等待支付"));
-		statuss.add(new MapEntity("success","支付成功"));
-		statuss.add(new MapEntity("failure","支付失败"));
+		statuss.add(new MapEntity("waiting","等待退款"));
+		statuss.add(new MapEntity("confirmed","确定提交"));
+		statuss.add(new MapEntity("success","退款成功"));
+		statuss.add(new MapEntity("failure","退款失败"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("payment","消费支付"));
+		types.add(new MapEntity("payment","购物支付"));
 		types.add(new MapEntity("recharge","钱包充值"));
+		types.add(new MapEntity("reward","文章赞赏"));
+		types.add(new MapEntity("cashier","线下收款"));
+		types.add(new MapEntity("topic","专栏激活"));
+		types.add(new MapEntity("card","会员卡"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("payments",paymentService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
 
 		return "/admin/refunds/list";
 	}

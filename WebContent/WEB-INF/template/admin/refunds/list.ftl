@@ -326,14 +326,19 @@
                 {
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if(data != null){
+                            return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        }else{
+                            return "";
+                        }
+
                     }
                 },
                 {
                     "aTargets": [15],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 退款单 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
+                            return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 退款单 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>";
                         }else{
                             return "";
                         }
@@ -411,7 +416,9 @@
     }
     /*查看*/
     function show(title, url, id, w, h) {
-        layer_show(title, url, w, h);
+        var w_1 = window.innerWidth * 0.5;
+        var h_1 = window.innerHeight * 0.6;
+        layer_show(title, url, w_1, h_1);
     }
     /*编辑*/
     function edit(title, url, id, w, h) {

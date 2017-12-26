@@ -43,35 +43,35 @@
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>申请人</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>申请人：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.member.nickName}</span>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开户名</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开户名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.name}</span>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>账号</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>账号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.cardNo}</span>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.bankname}</span>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>城市</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>城市：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.city}</span>
                 </div>
@@ -107,7 +107,9 @@
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 [#if data.status=="waiting"]
+                <!--
                     <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交付款&nbsp;&nbsp;">
+                -->
                 [/#if]
                 [#if data.status=="confirmed"]
                     <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;">
