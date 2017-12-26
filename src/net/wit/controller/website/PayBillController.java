@@ -101,7 +101,7 @@ public class PayBillController extends BaseController {
             if (code.getCoupon().getDistributor().equals(shop.getOwner()) && code.getEnabled() && !code.getCoupon().getScope().equals(Coupon.Scope.mall)) {
                 BigDecimal d = code.calculate(amount.subtract(noDiscount));
                 if (d.compareTo(discount) > 0) {
-                    couponCode = couponCode;
+                    couponCode = code;
                     discount = d;
                 }
             }
@@ -114,6 +114,7 @@ public class PayBillController extends BaseController {
         payBill.setCouponDiscount(discount);
         Card card = null;
         BigDecimal cardDiscount = BigDecimal.ZERO;
+
         for (Card c:member.getCards()) {
             if (c.getOwner().equals(owner)) {
                card = c;
@@ -129,8 +130,6 @@ public class PayBillController extends BaseController {
             }
         }
 
-        payBill.setCouponCode(couponCode);
-        payBill.setCouponDiscount(discount);
         payBill.setCard(card);
         payBill.setCardDiscount(cardDiscount);
 

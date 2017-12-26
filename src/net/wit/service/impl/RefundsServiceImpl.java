@@ -132,6 +132,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			refunds.setRefundsDate(new Date());
 			refunds.setStatus(Refunds.Status.success);
 			refundsDao.merge(refunds);
+			refundsDao.flush();
 			Payment payment = refunds.getPayment();
 			if (payment!=null) {
 				paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
@@ -161,6 +162,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			if (refunds.getStatus().equals(Refunds.Status.waiting)) {
 				refunds.setStatus(Refunds.Status.confirmed);
 				refundsDao.merge(refunds);
+				refundsDao.flush();
 				Payment payment = refunds.getPayment();
 				if (payment!=null) {
 					paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
@@ -295,6 +297,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 		if (refunds.getStatus().equals(Refunds.Status.confirmed)) {
 			refunds.setStatus(Refunds.Status.failure);
 			refundsDao.merge(refunds);
+			refundsDao.flush();
 			Payment payment = refunds.getPayment();
 			if (payment!=null) {
 				paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);

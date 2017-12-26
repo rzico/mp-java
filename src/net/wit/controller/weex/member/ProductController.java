@@ -200,7 +200,7 @@ public class ProductController extends BaseController {
 			filters.add(new Filter("productCategory", Filter.Operator.eq,productCategory));
 		}
         if (keyword!=null) {
-		    filters.add(Filter.like("title","%"+keyword+"%"));
+		    filters.add(Filter.like("name","%"+keyword+"%"));
 		}
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
