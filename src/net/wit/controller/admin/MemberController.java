@@ -203,7 +203,7 @@ public class MemberController extends BaseController {
 		entity.setModifyDate(member.getModifyDate());
 //
 //		entity.setAddress(member.getAddress());
-
+//
 //		entity.setAttributeValue0(member.getAttributeValue0());
 //
 //		entity.setAttributeValue1(member.getAttributeValue1());
@@ -256,7 +256,7 @@ public class MemberController extends BaseController {
 
 		entity.setAutograph(member.getAutograph());
 
-		entity.setLogo(member.getLogo());
+//		entity.setLogo(member.getLogo());
 
 		entity.setNickName(member.getNickName());
 
