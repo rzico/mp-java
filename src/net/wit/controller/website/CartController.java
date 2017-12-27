@@ -194,4 +194,58 @@ public class CartController extends BaseController {
 		return Message.success("清理成功");
 	}
 
+	/**
+	 * 立即购买
+	 */
+	@RequestMapping(value = "/buy", method = RequestMethod.POST)
+	public @ResponseBody
+	Message buy(Long id, Integer quantity, HttpServletRequest request, HttpServletResponse response) {
+		if (quantity == null || quantity < 1) {
+			return Message.error("请输入购买数量");
+		}
+		Product product = productService.find(id);
+		if (product == null) {
+			return Message.error("无效商品id");
+		}
+		if (!product.getIsMarketable()) {
+			return Message.error("商品已下架");
+		}
+
+		Cart cart = cartService.getCurrent();
+		Member member = memberService.getCurrent();
+
+		if (cart == null) {
+			cart = new Cart();
+			cart.setKey(UUID.randomUUID().toString() + DigestUtils.md5Hex(RandomStringUtils.randomAlphabetic(30)));
+			cart.setMember(member);
+			cartService.save(cart);
+		} else {
+			for (CartItem cartItem:cart.getCartItems()) {
+				cartItemService.delete(cartItem);
+			}
+			cart.getCartItems().clear();
+ 		}
+
+		if (quantity > product.getAvailableStock(product.getMember())) {
+			return Message.warn("库存不足,稍等试试");
+		}
+		CartItem cartItem = new CartItem();
+		cartItem.setQuantity(quantity);
+		cartItem.setProduct(product);
+		cartItem.setCart(cart);
+		cartItem.setSeller(product.getMember());
+		cartItemService.save(cartItem);
+		cart.getCartItems().add(cartItem);
+
+		if (member == null) {
+			Map<String,String> vkey = new HashMap<>();
+			vkey.put("id",cart.getId().toString());
+			vkey.put("key",cart.getKey());
+			redisService.put(Cart.KEY_COOKIE_NAME, JsonUtils.toJson(vkey));
+		}
+		CartModel model = new CartModel();
+		model.bindHeader(cart);
+		return Message.success(model,"添加成功");
+	}
+
 }

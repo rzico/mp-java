@@ -154,11 +154,17 @@ public class WeixinApi {
 	 *  * 获取access_token  *   * @param appid 凭证  * @param appsecret 密钥  * @return access_token  
 	 */
 	public static AccessToken getAccessToken(String appid, String appsecret) {
-		if (accessToken == null || accessToken.getExpire().getTime() <= (new Date()).getTime()) {
+		try {
+			if (accessToken != null && accessToken.getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return accessToken;
+			}
+		} catch (Exception e) {
+			accessToken = null;
+		}
 			String requestUrl = access_token_url.replace("APPID", appid).replace("APPSECRET", appsecret);
 			JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
 			// 如果请求成功 
-			if (null != jsonObject) {
+			if (jsonObject!=null) {
 				try {
 					accessToken = new AccessToken();
 					accessToken.setToken(jsonObject.getString("access_token"));
@@ -170,7 +176,6 @@ public class WeixinApi {
 					log.error("获取token失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
 				}
 			}
-		}
 		return accessToken;
 	}
 
@@ -435,41 +440,51 @@ public class WeixinApi {
 	}
 
 	public static Ticket getTicket() {
-		if (jsapi_ticket == null || jsapi_ticket.getExpire().getTime() <= (new Date()).getTime()) {
-		    ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
-			AccessToken token = getAccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"));
-			if (token != null) {
-				String requestUrl = GETJSAPITICKET.replace("ACCESS_TOKEN", token.getToken());
-				JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
-				if (jsonObject != null) {
-					jsapi_ticket = new Ticket();
-					jsapi_ticket.setTicket(jsonObject.getString("ticket"));
-					jsapi_ticket.setExpires_in(jsonObject.getInt("expires_in"));
-					jsapi_ticket.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
-					return jsapi_ticket;
-				}
+		try {
+			if (jsapi_ticket != null || jsapi_ticket.getExpire().getTime() > (new Date()).getTime()-2000) {
+				return jsapi_ticket;
+			}
+		} catch (Exception e) {
+			wxcard_ticket = null;
+		}
+		ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
+		AccessToken token = getAccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"));
+		if (token != null) {
+			String requestUrl = GETJSAPITICKET.replace("ACCESS_TOKEN", token.getToken());
+			JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
+			if (jsonObject != null) {
+				jsapi_ticket = new Ticket();
+				jsapi_ticket.setTicket(jsonObject.getString("ticket"));
+				jsapi_ticket.setExpires_in(jsonObject.getInt("expires_in"));
+				jsapi_ticket.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
+				return jsapi_ticket;
 			}
 		}
-		return jsapi_ticket;
+		return null;
 	}
 
 	public static Ticket getWxCardTicket() {
-		if (wxcard_ticket == null || wxcard_ticket.getExpire().getTime() <= (new Date()).getTime()) {
-			ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
-			AccessToken token = getAccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"));
-			if (token != null) {
-				String requestUrl = GETWXCARDTICKET.replace("ACCESS_TOKEN", token.getToken());
-				JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
-				if (jsonObject != null) {
-					wxcard_ticket = new Ticket();
-					wxcard_ticket.setTicket(jsonObject.getString("ticket"));
-					wxcard_ticket.setExpires_in(jsonObject.getInt("expires_in"));
-					wxcard_ticket.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
-					return wxcard_ticket;
-				}
+		try {
+			if (wxcard_ticket != null || wxcard_ticket.getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return wxcard_ticket;
+			}
+		} catch (Exception e) {
+			wxcard_ticket = null;
+		}
+		ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
+		AccessToken token = getAccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"));
+		if (token != null) {
+			String requestUrl = GETWXCARDTICKET.replace("ACCESS_TOKEN", token.getToken());
+			JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
+			if (jsonObject != null) {
+				wxcard_ticket = new Ticket();
+				wxcard_ticket.setTicket(jsonObject.getString("ticket"));
+				wxcard_ticket.setExpires_in(jsonObject.getInt("expires_in"));
+				wxcard_ticket.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
+				return wxcard_ticket;
 			}
 		}
-		return wxcard_ticket;
+		return null;
 	}
 
 }

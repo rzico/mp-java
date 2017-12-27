@@ -13,9 +13,11 @@ import javax.servlet.http.HttpSession;
 import net.wit.Message;
 import net.wit.Principal;
 import net.wit.entity.BindUser;
+import net.wit.entity.Cart;
 import net.wit.entity.Member;
 
 import net.wit.service.BindUserService;
+import net.wit.service.CartService;
 import net.wit.service.MemberService;
 import net.wit.service.RedisService;
 import net.wit.util.JsonUtils;
@@ -46,6 +48,9 @@ public class WeexInterceptor extends HandlerInterceptorAdapter {
 	@Resource(name = "redisServiceImpl")
 	private RedisService redisService;
 
+	@Resource(name = "cartServiceImpl")
+	private CartService cartService;
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -64,6 +69,16 @@ public class WeexInterceptor extends HandlerInterceptorAdapter {
 			if (member==null) {
 				member = memberService.findByUUID(xuid);
 				if (member!=null) {
+
+
+					Cart cart = cartService.getCurrent();
+					if (cart != null) {
+						if (cart.getMember() == null) {
+							cartService.merge(member, cart);
+							redisService.remove(Cart.KEY_COOKIE_NAME);
+						}
+					}
+
 					Principal principal = new Principal(member.getId(), member.getUsername());
 					redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
 				}

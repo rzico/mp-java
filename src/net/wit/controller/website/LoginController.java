@@ -55,6 +55,9 @@ public class LoginController extends BaseController {
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
+    @Resource(name = "cartServiceImpl")
+    private CartService cartService;
+
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
@@ -131,6 +134,14 @@ public class LoginController extends BaseController {
                 memberService.save(member);
             }
 
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             member.setLoginDate(new Date());
@@ -143,6 +154,9 @@ public class LoginController extends BaseController {
                 }
             }
             memberService.save(member);
+            if (cart!=null) {
+
+            }
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,6 +183,15 @@ public class LoginController extends BaseController {
             if (!MD5Utils.getMD5Str(password).equals(member.getPassword())) {
                 return Message.error("无效密码");
             }
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             member.setLoginDate(new Date());
@@ -188,6 +211,15 @@ public class LoginController extends BaseController {
     public Message demo(Long id,HttpServletRequest request){
         Member member =memberService.find(id);
         try {
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
@@ -279,6 +311,16 @@ public class LoginController extends BaseController {
                 }
             }
             bindUserService.save(bindUser);
+
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
 
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
@@ -389,6 +431,15 @@ public class LoginController extends BaseController {
             }
             bindUserService.save(bindUser);
 
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             member.setLoginDate(new Date());
@@ -416,7 +467,13 @@ public class LoginController extends BaseController {
     public
     Message logout(HttpServletRequest request, HttpSession session) {
         Member member = memberService.getCurrent();
+
         redisService.remove(Member.PRINCIPAL_ATTRIBUTE_NAME);
+        Cart cart = cartService.getCurrent();
+        if (cart!=null) {
+            cartService.delete(cart);
+        }
+
         return Message.success("注销成功");
     }
 

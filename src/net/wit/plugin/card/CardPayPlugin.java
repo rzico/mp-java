@@ -98,7 +98,7 @@ public class CardPayPlugin extends PaymentPlugin {
 				return finalpackage;
 			}
 
-			if (card.getBalance().compareTo(payment.getAmount()) > 0) {
+			if (card.getBalance().compareTo(payment.getAmount()) >= 0) {
 				try {
 					if (member.getPassword()==null) {
 						finalpackage.put("return_code", "FAIL");
@@ -183,7 +183,7 @@ public class CardPayPlugin extends PaymentPlugin {
 			return finalpackage;
 		}
 
-		if (card.getBalance().compareTo(payment.getAmount()) > 0) {
+		if (card.getBalance().compareTo(payment.getAmount()) >= 0) {
 			try {
 				cardService.payment(card,payment);
 				finalpackage.put("return_code", "SUCCESS");

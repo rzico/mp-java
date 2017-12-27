@@ -50,6 +50,9 @@ public class LoginController extends BaseController {
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
+    @Resource(name = "cartServiceImpl")
+    private CartService cartService;
+
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
@@ -124,6 +127,15 @@ public class LoginController extends BaseController {
                     bindUser.setUnionId(unionId);
                 }
                 bindUserService.save(bindUser);
+
+
+                Cart cart = cartService.getCurrent();
+                if (cart != null) {
+                    if (cart.getMember() == null) {
+                        cartService.merge(member, cart);
+                        redisService.remove(Cart.KEY_COOKIE_NAME);
+                    }
+                }
 
                 Principal principal = new Principal(member.getId(),member.getUsername());
                 redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
