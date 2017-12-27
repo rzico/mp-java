@@ -32,7 +32,9 @@ public class Article extends BaseEntity{
         /** 音频 */
         audio,
         /** 视频 */
-        video
+        video,
+        /** 商品 */
+        product
     };
 
     /** 类型 */
@@ -176,11 +178,11 @@ public class Article extends BaseEntity{
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<ArticleReview> reviews = new HashSet<ArticleReview>();
-
-    /** 商品*/
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
+//
+//    /** 商品*/
+//    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    @JsonIgnore
+//    private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
 
     /** 投票项 */
     private String votes;
@@ -452,22 +454,14 @@ public class Article extends BaseEntity{
             return null;
         }
     }
-
-    public MapEntity getMapIsAudit() {
-        if ((getId() != null)&&(getIsAudit() != null)) {
-            return new MapEntity(getId().toString(), getIsAudit().toString());
-        } else {
-            return null;
-        }
-    }
-
-    public Set<ArticleProduct> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<ArticleProduct> products) {
-        this.products = products;
-    }
+//
+//    public Set<ArticleProduct> getProducts() {
+//        return products;
+//    }
+//
+//    public void setProducts(Set<ArticleProduct> products) {
+//        this.products = products;
+//    }
 
     public String delHTMLTag(){
         String str = getContent();

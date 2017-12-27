@@ -166,17 +166,19 @@ public class CardController extends BaseController {
         data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
 
         Ticket ticket = WeixinApi.getWxCardTicket();
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("api_ticket", ticket.getTicket());
-        params.put("timestamp", WeiXinUtils.getTimeStamp());
-        params.put("nonce_str", WeiXinUtils.CreateNoncestr());
-        params.put("card_id", card.getTopicCard().getWeixinCardId());
-        String sha1Sign1 = getCardSha1Sign(params);
-        HashMap<String, Object> cardExt = new HashMap<>();
-        cardExt.put("timestamp", params.get("timestamp"));
-        cardExt.put("nonce_str", params.get("nonce_str"));
-        cardExt.put("signature", sha1Sign1);
-        data.put("cardExt",cardExt);
+        if (ticket!=null) {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("api_ticket", ticket.getTicket());
+            params.put("timestamp", WeiXinUtils.getTimeStamp());
+            params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+            params.put("card_id", card.getTopicCard().getWeixinCardId());
+            String sha1Sign1 = getCardSha1Sign(params);
+            HashMap<String, Object> cardExt = new HashMap<>();
+            cardExt.put("timestamp", params.get("timestamp"));
+            cardExt.put("nonce_str", params.get("nonce_str"));
+            cardExt.put("signature", sha1Sign1);
+            data.put("cardExt", cardExt);
+        }
         data.put("cardId",card.getTopicCard().getWeixinCardId());
         //System.out.println(data);
         return Message.success(data,"激活成功");
@@ -267,17 +269,19 @@ public class CardController extends BaseController {
         data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
 
         Ticket ticket = WeixinApi.getWxCardTicket();
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("api_ticket", ticket.getTicket());
-        params.put("timestamp", WeiXinUtils.getTimeStamp());
-        params.put("nonce_str", WeiXinUtils.CreateNoncestr());
-        params.put("card_id", card.getTopicCard().getWeixinCardId());
-        String sha1Sign1 = getCardSha1Sign(params);
-        HashMap<String, Object> cardExt = new HashMap<>();
-        cardExt.put("timestamp", params.get("timestamp"));
-        cardExt.put("nonce_str", params.get("nonce_str"));
-        cardExt.put("signature", sha1Sign1);
-        data.put("cardExt",cardExt);
+        if (ticket!=null) {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("api_ticket", ticket.getTicket());
+            params.put("timestamp", WeiXinUtils.getTimeStamp());
+            params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+            params.put("card_id", card.getTopicCard().getWeixinCardId());
+            String sha1Sign1 = getCardSha1Sign(params);
+            HashMap<String, Object> cardExt = new HashMap<>();
+            cardExt.put("timestamp", params.get("timestamp"));
+            cardExt.put("nonce_str", params.get("nonce_str"));
+            cardExt.put("signature", sha1Sign1);
+            data.put("cardExt",cardExt);
+        }
         data.put("cardId",card.getTopicCard().getWeixinCardId());
         return Message.bind(data,request);
     }

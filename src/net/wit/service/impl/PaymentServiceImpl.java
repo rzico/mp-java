@@ -143,7 +143,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Transactional
 	public synchronized void handle(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
-		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
+		if (payment != null && payment.getStatus().equals(Payment.Status.waiting)) {
+			payment.setPaymentDate(new Date());
+			payment.setStatus(Payment.Status.success);
+			paymentDao.merge(payment);
+			paymentDao.flush();
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
 				Order order = payment.getOrder();
@@ -202,6 +206,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
+				if (payBill.getCouponCode()!=null) {
+					CouponCode couponCode = payBill.getCouponCode();
+					couponCode.setIsUsed(true);
+					couponCodeDao.merge(couponCode);
+				}
 				messageService.payBillPushTo(payBill);
 			}else
 			if (payment.getType() == Payment.Type.card) {
@@ -340,9 +349,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				topicDao.merge(topic);
 				messageService.topicPushTo(topic);
 			}
-			payment.setPaymentDate(new Date());
-			payment.setStatus(Payment.Status.success);
-			paymentDao.merge(payment);
 		}
 	}
 
@@ -354,6 +360,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		if (payment != null && payment.getStatus() == Payment.Status.waiting) {
 			payment.setStatus(Payment.Status.failure);
 			paymentDao.merge(payment);
+			paymentDao.flush();
 			if (payment.getType().equals(Payment.Type.cashier)) {
 				PayBill payBill = payment.getPayBill();
 				payBill.setStatus(PayBill.Status.failure);

@@ -82,7 +82,7 @@ public class CouponController extends BaseController {
 
         CouponCodeModel model = new CouponCodeModel();
         model.bind(couponCode);
-        return Message.success(model,"保存成功");
+        return Message.success(model,"领取成功,已放入卡包");
 
     }
 

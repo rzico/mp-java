@@ -185,7 +185,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(Long productCategoryId,Pageable pageable,HttpServletRequest request) {
+	Message list(Long productCategoryId,String keyword,Pageable pageable,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -198,6 +198,9 @@ public class ProductController extends BaseController {
 		List<Filter> filters = new ArrayList<Filter>();
 		if (productCategory!=null) {
 			filters.add(new Filter("productCategory", Filter.Operator.eq,productCategory));
+		}
+        if (keyword!=null) {
+		    filters.add(Filter.like("name","%"+keyword+"%"));
 		}
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));

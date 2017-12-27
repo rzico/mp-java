@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 
 import net.wit.Message;
 import net.wit.controller.model.CouponCodeModel;
+import net.wit.controller.model.OrderModel;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.service.*;
@@ -77,43 +78,6 @@ public class OrderController extends BaseController {
 	}
 
 	/**
-	 * 优惠券信息
-	 */
-	@RequestMapping(value = "/coupon_info", method = RequestMethod.POST)
-	public @ResponseBody
-	Message couponInfo(String code) {
-		Map<String, Object> data = new HashMap<String, Object>();
-		Cart cart = cartService.getCurrent();
-		if (cart == null || cart.isEmpty()) {
-			return Message.error("购物车为空");
-		}
-		if (!cart.isCouponAllowed()) {
-			return Message.error("不允许使用");
-		}
-		CouponCode couponCode = couponCodeService.findByCode(code);
-		if (couponCode != null && couponCode.getCoupon() != null) {
-			Coupon coupon = couponCode.getCoupon();
-			if (!coupon.hasBegun()) {
-				return Message.error("没有开始");
-			}
-			if (coupon.hasExpired()) {
-				return Message.error("已经过期");
-			}
-			if (!cart.isValid(coupon)) {
-				return Message.error("无效过期");
-			}
-			if (couponCode.getIsUsed()) {
-				return Message.error("已经使用过");
-			}
-			CouponCodeModel model = new CouponCodeModel();
-			model.bind(couponCode);
-			return Message.success(model,"获取优惠券");
-		} else {
-			return Message.error("无效券号");
-		}
-	}
-
-	/**
 	 *  获取订单信息
 	 */
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
@@ -123,7 +87,9 @@ public class OrderController extends BaseController {
 			return Message.error("购物车为空");
 		}
 		Order order = orderService.build(cart, null, null, null);
-		return Message.success(order,"");
+		OrderModel model = new OrderModel();
+		model.bind(order);
+		return Message.success(model,"success");
 	}
 
 	/**
@@ -131,25 +97,18 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
 	public @ResponseBody
-	Map<String, Object> calculate(String code) {
+	Message calculate(String code) {
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
-			data.put("message", Message.error("shop.order.cartNotEmpty"));
-			return data;
+			return Message.error("购物车为空");
 		}
 		CouponCode couponCode = couponCodeService.findByCode(code);
 		Order order = orderService.build(cart, null, null, null);
 
-//		data.put("message", SUCCESS_MESSAGE);
-//		data.put("quantity", order.getQuantity());
-//		data.put("price", order.getPrice());
-//		data.put("freight", order.getFreight());
-//		data.put("promotionDiscount", order.getPromotionDiscount());
-//		data.put("couponDiscount", order.getCouponDiscount());
-//		data.put("tax", order.getTax());
-//		data.put("amountPayable", order.getAmountPayable());
-		return data;
+		OrderModel model = new OrderModel();
+		model.bindHeader(order);
+		return Message.success(model,"success");
 	}
 
 	/**
@@ -157,63 +116,112 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public @ResponseBody
-	Message create(String cartToken, Long receiverId,String code,String memo) {
+	Message create(Long receiverId,String code,String memo) {
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
-			return Message.warn("shop.order.cartNotEmpty");
-		}
-		if (!StringUtils.equals(cart.getToken(), cartToken)) {
-			return Message.warn("shop.order.cartHasChanged");
+			return Message.error("购物车为空");
 		}
 		if (cart.getIsLowStock()) {
-			return Message.warn("shop.order.cartLowStock");
+			return Message.error("库存不足");
 		}
 		Receiver receiver = receiverService.find(receiverId);
 		if (receiver == null) {
-			return Message.error("shop.order.receiverNotExsit");
+			return Message.error("无效地址");
 		}
 		CouponCode couponCode = couponCodeService.findByCode(code);
 		Order order = orderService.create(cart, receiver,couponCode,memo, null);
-		return Message.success(order.getSn());
+
+		OrderModel model = new OrderModel();
+		model.bindHeader(order);
+		return Message.success(model,"success");
 	}
 
 	/**
 	 * 支付
 	 */
 	@RequestMapping(value = "/payment", method = RequestMethod.GET)
-	public @ResponseBody String payment(String sn, ModelMap model) {
+	public @ResponseBody Message payment(String sn, ModelMap model) {
+		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
-		return "/shop/member/order/payment";
+		if (order==null) {
+			return Message.error("无效订单号");
+		}
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		try {
+			if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
+				Payment payment = orderService.payment(order, null);
+				return Message.success((Object) payment.getSn(), "发起成功");
+			} else {
+				return Message.error("不是待付款订单");
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			return Message.error(e.getMessage());
+		}
 	}
 
 	/**
 	 * 查看
 	 */
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
-	public String view(String sn, ModelMap model) {
+	public @ResponseBody
+	Message view(String sn) {
 		Order order = orderService.findBySn(sn);
-		model.addAttribute("order", order);
-		return "shop/member/order/view";
+		if (order==null) {
+			return Message.error("无效订单号");
+		}
+
+		OrderModel model = new OrderModel();
+		model.bindHeader(order);
+		return Message.success(model,"success");
 	}
 
 	/**
-	 * 取消
+	 * 关闭
 	 */
 	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
 	public @ResponseBody
 	Message cancel(String sn) {
+		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
-		if (order != null && memberService.getCurrent().equals(order.getMember()) && !order.isExpired() && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
-			if (order.isLocked(null)) {
-				return Message.warn("shop.member.order.locked");
-			}
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
 			try {
 				orderService.cancel(order, null);
+				return Message.success("关闭成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());
 			}
+		} else {
+			return Message.success("不能关闭订单");
 		}
-		return Message.success("");
+	}
+
+	/**
+	 * 签收
+	 */
+	@RequestMapping(value = "/completed", method = RequestMethod.POST)
+	public @ResponseBody
+	Message completed(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			try {
+				orderService.cancel(order, null);
+				return Message.success("关闭成功");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else {
+			return Message.success("不能签收订单");
+		}
 	}
 
 	/**
@@ -221,9 +229,9 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/delivery_query", method = RequestMethod.GET)
 	public @ResponseBody
-	Map<String, Object> deliveryQuery(String sn) {
+	Message deliveryQuery(String sn) {
 		Map<String, Object> data = new HashMap<String, Object>();
-		return data;
+		return Message.success(data,"查询成功");
 	}
 
 }

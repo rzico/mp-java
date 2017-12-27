@@ -235,6 +235,7 @@ public class PaymentController extends BaseController {
         switch (resultCode) {
             case "0000":
                 try {
+
                     paymentService.handle(payment);
                 } catch (Exception e) {
                     logger.error(e.getMessage());

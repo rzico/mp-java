@@ -111,9 +111,9 @@ public class CouponController extends BaseController {
             }
         } else {
             if (coupon.getType().equals(Coupon.Type.fullcut)) {
-                s = "满" + coupon.getMinimumPrice().toString() + "减" + coupon.getAmount() + "元";
+                s = "满" + coupon.getMinimumPrice().toString() + "元减" + coupon.getAmount() + "元";
             } else {
-                s = "满" + coupon.getMinimumPrice().toString() + "打" + coupon.getAmount() + "折";
+                s = "满" + coupon.getMinimumPrice().toString() + "元打" + coupon.getAmount() + "折";
             }
         }
         entity.setName(s);

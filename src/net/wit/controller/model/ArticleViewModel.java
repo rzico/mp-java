@@ -38,8 +38,6 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
     /** 投票 */
     private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
-    /** 商品 */
-    private List<ProductViewModel> products = new ArrayList<ProductViewModel>();
 
     public Long getId() {
         return id;
@@ -137,14 +135,6 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.templates = templates;
     }
 
-    public List<ProductViewModel> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductViewModel> products) {
-        this.products = products;
-    }
-
     public List<ArticleVoteOptionModel> getVotes() {
         return votes;
     }
@@ -196,7 +186,6 @@ public class ArticleViewModel extends BaseModel implements Serializable {
 
         this.templates = templates;
         this.votes = votes;
-        this.products = ProductViewModel.bindSet(article);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         this.url = "http://"+bundle.getString("weixin.url")+"/t"+article.getTemplate().getSn()+"?id="+article.getId();
     }

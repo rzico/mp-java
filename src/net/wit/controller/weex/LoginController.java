@@ -48,6 +48,9 @@ public class LoginController extends BaseController {
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
+    @Resource(name = "cartServiceImpl")
+    private CartService cartService;
+
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
@@ -139,6 +142,16 @@ public class LoginController extends BaseController {
                 memberService.save(member);
             }
 
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
@@ -186,6 +199,16 @@ public class LoginController extends BaseController {
             if (!MD5Utils.getMD5Str(password).equals(member.getPassword())) {
                 return Message.error("无效密码");
             }
+
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
@@ -222,6 +245,15 @@ public class LoginController extends BaseController {
     public Message demo(Long id,HttpServletRequest request){
         Member member =memberService.find(id);
         try {
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
@@ -308,6 +340,15 @@ public class LoginController extends BaseController {
             }
             bindUserService.save(bindUser);
 
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
@@ -348,6 +389,10 @@ public class LoginController extends BaseController {
             member.setUuid(null);
             member.setScene(null);
             memberService.save(member);
+        }
+        Cart cart = cartService.getCurrent();
+        if (cart!=null) {
+            cartService.delete(cart);
         }
         redisService.remove(Member.PRINCIPAL_ATTRIBUTE_NAME);
         return Message.success("注销成功");
@@ -425,6 +470,16 @@ public class LoginController extends BaseController {
             admin.setName("收款机（"+code+"）");
             adminService.update(admin);
         }
+
+
+        Cart cart = cartService.getCurrent();
+        if (cart != null) {
+            if (cart.getMember() == null) {
+                cartService.merge(member, cart);
+                redisService.remove(Cart.KEY_COOKIE_NAME);
+            }
+        }
+
         Principal principal = new Principal(member.getId(),member.getUsername());
         redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
         String xuid = request.getHeader("x-uid");

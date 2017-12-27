@@ -25,8 +25,6 @@ public class ArticleModel extends BaseModel implements Serializable {
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
     /** 投票 */
     private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
-    /** 商品 */
-    private List<ProductViewModel> products = new ArrayList<ProductViewModel>();
 
     /** 是否草稿 */
     private Boolean isDraft;
@@ -83,14 +81,6 @@ public class ArticleModel extends BaseModel implements Serializable {
 
     public void setVotes(List<ArticleVoteOptionModel> votes) {
         this.votes = votes;
-    }
-
-    public List<ProductViewModel> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductViewModel> products) {
-        this.products = products;
     }
 
     public ArticleOptionModel getArticleOption() {
@@ -171,7 +161,6 @@ public class ArticleModel extends BaseModel implements Serializable {
             votes = JsonUtils.toObject(article.getVotes(), List.class);
         }
         this.votes = votes;
-        this.products = ProductViewModel.bindSet(article);
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();

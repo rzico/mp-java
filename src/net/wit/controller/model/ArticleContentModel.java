@@ -16,6 +16,10 @@ public class ArticleContentModel extends BaseModel implements Serializable {
     private String original;
     /** 内容 */
     private String content;
+    /** 对像 id */
+    private Long id;
+    /** 第三方链接 */
+    private String url;
 
     public Article.MediaType getMediaType() {
         return mediaType;
@@ -47,5 +51,21 @@ public class ArticleContentModel extends BaseModel implements Serializable {
 
     public void setOriginal(String original) {
         this.original = original;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

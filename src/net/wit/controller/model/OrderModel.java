@@ -92,4 +92,17 @@ public class OrderModel extends BaseModel implements Serializable {
 
 
     }
+
+
+    public void bindHeader(Order order) {
+        this.id = order.getId();
+        this.createDate = order.getCreateDate();
+        this.sn = order.getSn();
+        this.logo = order.getMember().getLogo();
+        this.name = order.getMember().getNickName();
+        this.status = order.getStatus();
+        this.statusDescr = order.getStatusDescr();
+
+    }
+
 }
