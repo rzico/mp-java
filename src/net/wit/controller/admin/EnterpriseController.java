@@ -31,8 +31,6 @@ import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.controller.admin.model.*;
 
-
-
 /**
  * @ClassName: EnterpriseController
  * @author 降魔战队
@@ -57,10 +55,10 @@ public class EnterpriseController extends BaseController {
 	public String index(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());
@@ -76,10 +74,10 @@ public class EnterpriseController extends BaseController {
 	public String add(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());
@@ -95,12 +93,13 @@ public class EnterpriseController extends BaseController {
     @ResponseBody
 	public Message save(Enterprise enterprise, Long areaId){
 		Enterprise entity = new Enterprise();	
-
-		entity.setCreateDate(enterprise.getCreateDate());
-
-		entity.setModifyDate(enterprise.getModifyDate());
-
+		//entity.setCreateDate(enterprise.getCreateDate());
+		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
+
+		entity.setLogo(enterprise.getLogo());
+
+		entity.setDeleted(false);
 
 		entity.setBrokerage(enterprise.getBrokerage());
 
@@ -144,10 +143,10 @@ public class EnterpriseController extends BaseController {
 	public String edit(Long id, ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());
@@ -165,11 +164,8 @@ public class EnterpriseController extends BaseController {
     @ResponseBody
 	public Message update(Enterprise enterprise, Long areaId){
 		Enterprise entity = enterpriseService.find(enterprise.getId());
-		
-		entity.setCreateDate(enterprise.getCreateDate());
-
-		entity.setModifyDate(enterprise.getModifyDate());
-
+		//entity.setCreateDate(enterprise.getCreateDate());
+		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
 
 		entity.setBrokerage(enterprise.getBrokerage());
@@ -213,9 +209,8 @@ public class EnterpriseController extends BaseController {
 	 */
 	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
 	public String areaView(Long id, ModelMap model) {
-
-
 		model.addAttribute("area",areaService.find(id));
+
 		return "/admin/enterprise/view/areaView";
 	}
 

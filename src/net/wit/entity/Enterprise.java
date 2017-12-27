@@ -24,7 +24,7 @@ import java.util.Set;
 public class Enterprise extends BaseEntity {
     private static final long serialVersionUID = 24L;
 
-    public static enum Type{
+    public enum Type{
         /** 运营商 */
         operate,
         /** 城市代理商 */
@@ -55,6 +55,7 @@ public class Enterprise extends BaseEntity {
     /** 地区 null 代表没有区域限制 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) comment '地区'")
+    @JsonIgnore
     private Area area;
 
     /** 结算佣金 10% */
@@ -71,6 +72,7 @@ public class Enterprise extends BaseEntity {
 
     /** 业主,入驻商家时不能为空 */
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Member member;
 
     public Type getType() {
@@ -140,6 +142,14 @@ public class Enterprise extends BaseEntity {
     public BigDecimal calcFee(BigDecimal amount) {
         BigDecimal rate = this.brokerage.multiply(new BigDecimal("0.01"));
         return amount.multiply(rate).setScale(4,BigDecimal.ROUND_HALF_DOWN);
+    }
+
+    public MapEntity getMapMember() {
+        if (getMember() != null) {
+            return new MapEntity(getMember().getId().toString(), getMember().getName());
+        } else {
+            return null;
+        }
     }
 
 }
