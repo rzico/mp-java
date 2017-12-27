@@ -163,7 +163,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setPoint(cart.getEffectivePoint());
 		order.setMemo(memo);
 		order.setMember(cart.getMember());
-		order.setMethod(Order.Method.online);
+		order.setPaymentMethod(Order.PaymentMethod.online);
 
 		if (receiver != null) {
 			order.setConsignee(receiver.getConsignee());

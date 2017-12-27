@@ -206,22 +206,6 @@ public class ArticleController extends BaseController {
             articleService.update(article);
         }
 
-        for (ArticleProduct product:article.getProducts()) {
-            articleProductService.delete(product);
-        }
-        if (model.getProducts()!=null) {
-            for (ProductViewModel product : model.getProducts()) {
-                Product prod = productService.find(product.getId());
-                if (prod == null) {
-                    return Message.error("无效商品");
-                }
-                ArticleProduct ap = new ArticleProduct();
-                ap.setArticle(article);
-                ap.setProduct(prod);
-                articleProductService.save(ap);
-            }
-        }
-
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
         return Message.success(entityModel,"保存成功");

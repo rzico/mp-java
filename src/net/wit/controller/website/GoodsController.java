@@ -2,8 +2,10 @@ package net.wit.controller.website;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.GoodsListModel;
 import net.wit.entity.Admin;
 import net.wit.entity.Article;
+import net.wit.entity.Goods;
 import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -20,14 +22,14 @@ import java.util.ResourceBundle;
 
 
 /**
- * @ClassName: ProductController
+ * @ClassName: GoodsController
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("websiteProductController")
-@RequestMapping("/website/product")
-public class ProductController extends BaseController {
+@Controller("websiteGoodsController")
+@RequestMapping("/website/goods")
+public class GoodsController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
@@ -44,8 +46,8 @@ public class ProductController extends BaseController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
-    @Resource(name = "articleServiceImpl")
-    private ArticleService articleService;
+    @Resource(name = "goodsServiceImpl")
+    private GoodsService goodsService;
 
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
@@ -64,25 +66,14 @@ public class ProductController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message  view(Long articleId,HttpServletRequest request){
-        Article article = articleService.find(articleId);
-        if (article==null) {
-            return Message.error("无效文章编号");
+    public Message view(Long id,HttpServletRequest request){
+        Goods goods = goodsService.find(id);
+        if (goods==null) {
+            return Message.error("无效商品编号");
         }
-        Map<String,String> data = new HashMap<>();
-        Member member = article.getMember();
-        Admin admin = adminService.findByMember(member);
-        if (member.getTopic()!=null && member.getTopic().getConfig().getUseCard() && admin!=null && admin.getShop()!=null) {
-            data.put("useCard","true");
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-            Long c = 100000000+admin.getShop().getId();
-            String url = "http://"+bundle.getString("weixin.url")+"/card?code="+"86"+String.valueOf(c);
-            data.put("url",url);
-        } else {
-            data.put("useCard","false");
-            data.put("url","");
-        }
-        return Message.bind(data,request);
+        GoodsListModel model = new GoodsListModel();
+        model.bind(goods);
+        return Message.bind(model,request);
     }
 
 }

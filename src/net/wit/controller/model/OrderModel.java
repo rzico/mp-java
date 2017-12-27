@@ -1,8 +1,10 @@
 package net.wit.controller.model;
 
 import net.wit.entity.Order;
+import net.wit.entity.Payment;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +30,29 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  状态描述 */
     private String status;
 
+    /**  优惠券 */
+    private String couponName;
+
+    /**  支付方式 */
+    private Order.PaymentMethod paymentMethod;
+
+    /**  配送方式 */
+    private Order.ShippingMethod shippingMethod;
+
+    /**  商品合计 */
+    private BigDecimal price;
+
+    /**  订单金额 */
+    private BigDecimal amount;
+
+    /**  优惠券折扣 */
+    private BigDecimal couponDiscount;
+
     /** 商品 */
     private List<OrderItemModel> orderItems;
+
+    /** 日志 */
+    private List<OrderLogModel> orderLogs;
 
     public Long getId() {
         return id;
@@ -79,6 +102,78 @@ public class OrderModel extends BaseModel implements Serializable {
         this.orderItems = orderItems;
     }
 
+    public List<OrderLogModel> getOrderLogs() {
+        return orderLogs;
+    }
+
+    public void setOrderLogs(List<OrderLogModel> orderLogs) {
+        this.orderLogs = orderLogs;
+    }
+
+    public BigDecimal getCouponDiscount() {
+        return couponDiscount;
+    }
+
+    public void setCouponDiscount(BigDecimal couponDiscount) {
+        this.couponDiscount = couponDiscount;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCouponName() {
+        return couponName;
+    }
+
+    public void setCouponName(String couponName) {
+        this.couponName = couponName;
+    }
+
+    public Order.PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(Order.PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public Order.ShippingMethod getShippingMethod() {
+        return shippingMethod;
+    }
+
+    public void setShippingMethod(Order.ShippingMethod shippingMethod) {
+        this.shippingMethod = shippingMethod;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -90,6 +185,16 @@ public class OrderModel extends BaseModel implements Serializable {
 
         this.orderItems = OrderItemModel.bindList(order.getOrderItems());
 
+        this.orderLogs = OrderLogModel.bindList(order.getOrderLogs());
+
+        this.amount = order.getAmount();
+        this.price = order.getPrice();
+        if (order.getCouponCode()!=null) {
+            this.couponName = order.getCouponCode().getCoupon().getName();
+        }
+        this.couponDiscount = order.getCouponDiscount();
+        this.paymentMethod = order.getPaymentMethod();
+        this.shippingMethod = order.getShippingMethod();
 
     }
 
@@ -102,6 +207,16 @@ public class OrderModel extends BaseModel implements Serializable {
         this.name = order.getMember().getNickName();
         this.status = order.getStatus();
         this.statusDescr = order.getStatusDescr();
+
+        this.amount = order.getAmount();
+        this.price = order.getPrice();
+        if (order.getCouponCode()!=null) {
+            this.couponName = order.getCouponCode().getCoupon().getName();
+        }
+        this.couponDiscount = order.getCouponDiscount();
+        this.couponDiscount = order.getCouponDiscount();
+        this.paymentMethod = order.getPaymentMethod();
+        this.shippingMethod = order.getShippingMethod();
 
     }
 

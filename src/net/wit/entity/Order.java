@@ -51,13 +51,25 @@ public class Order extends BaseEntity {
 	/**
 	 * 结算方式
 	 */
-	public enum Method {
+	public enum PaymentMethod {
 
 		/** 线上结算 */
 		online,
 
 		/** 线下结算 */
 		offline
+	}
+
+	/**
+	 * 配送方式
+	 */
+	public enum ShippingMethod {
+
+		/** 卖家配送 */
+		shipping,
+
+		/** 线下提货 */
+		pickup
 	}
 
 	/**
@@ -132,7 +144,11 @@ public class Order extends BaseEntity {
 
 	/** 付款方式 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '付款方式'")
-	private Method method;
+	private PaymentMethod paymentMethod;
+
+	/** 配送方式 */
+	@Column(nullable = false,columnDefinition="int(11) not null comment '配送方式'")
+	private ShippingMethod shippingMethod;
 
 	/** 是否删除 */
 	@NotNull
@@ -269,7 +285,7 @@ public class Order extends BaseEntity {
 	/** 订单日志 */
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
-	private Set<OrderLog> orderLogs = new HashSet<OrderLog>();
+	private List<OrderLog> orderLogs = new ArrayList<OrderLog>();
 
 	/** 收款单 */
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -319,12 +335,13 @@ public class Order extends BaseEntity {
 		this.orderStatus = orderStatus;
 	}
 
-	public Method getMethod() {
-		return method;
+
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
 	}
 
-	public void setMethod(Method method) {
-		this.method = method;
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 	/**
@@ -774,7 +791,7 @@ public class Order extends BaseEntity {
 	 * 
 	 * @return 订单日志
 	 */
-	public Set<OrderLog> getOrderLogs() {
+	public List<OrderLog> getOrderLogs() {
 		return orderLogs;
 	}
 
@@ -784,7 +801,7 @@ public class Order extends BaseEntity {
 	 * @param orderLogs
 	 *            订单日志
 	 */
-	public void setOrderLogs(Set<OrderLog> orderLogs) {
+	public void setOrderLogs(List<OrderLog> orderLogs) {
 		this.orderLogs = orderLogs;
 	}
 
@@ -833,6 +850,14 @@ public class Order extends BaseEntity {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public ShippingMethod getShippingMethod() {
+		return shippingMethod;
+	}
+
+	public void setShippingMethod(ShippingMethod shippingMethod) {
+		this.shippingMethod = shippingMethod;
 	}
 
 	/**

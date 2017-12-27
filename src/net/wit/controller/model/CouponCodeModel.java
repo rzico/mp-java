@@ -22,6 +22,8 @@ public class CouponCodeModel extends BaseModel implements Serializable {
     private String introduction;
     /** 范围 */
     private String descr;
+    /** 金额 */
+    private String amount;
 
     public Long getId() {
         return id;
@@ -79,6 +81,14 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         this.introduction = introduction;
     }
 
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
     public void bind(CouponCode couponCode) {
         this.id = couponCode.getId();
         Coupon coupon = couponCode.getCoupon();
@@ -111,6 +121,11 @@ public class CouponCodeModel extends BaseModel implements Serializable {
             }
         }
         this.color = coupon.getColor();
+        if (coupon.getType().equals(Coupon.Type.discount)) {
+            this.amount = coupon.getAmount()+"元";
+        } else {
+            this.amount = coupon.getAmount()+"折";
+        }
     }
 
 

@@ -77,6 +77,7 @@ public class ProductDaoImpl extends BaseDaoImpl<Product, Long> implements Produc
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}

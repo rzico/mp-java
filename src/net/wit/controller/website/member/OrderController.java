@@ -104,7 +104,7 @@ public class OrderController extends BaseController {
 			return Message.error("购物车为空");
 		}
 		CouponCode couponCode = couponCodeService.findByCode(code);
-		Order order = orderService.build(cart, null, null, null);
+		Order order = orderService.build(cart, null, couponCode, null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -139,7 +139,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 支付
 	 */
-	@RequestMapping(value = "/payment", method = RequestMethod.GET)
+	@RequestMapping(value = "/payment", method = RequestMethod.POST)
 	public @ResponseBody Message payment(String sn, ModelMap model) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
@@ -174,7 +174,7 @@ public class OrderController extends BaseController {
 		}
 
 		OrderModel model = new OrderModel();
-		model.bindHeader(order);
+		model.bind(order);
 		return Message.success(model,"success");
 	}
 
