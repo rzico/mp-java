@@ -188,4 +188,10 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
        return topicCard;
 	}
 
+
+	public TopicCard find(String cardId) {
+	  return topicCardDao.find(cardId);
+	}
+
+
 }

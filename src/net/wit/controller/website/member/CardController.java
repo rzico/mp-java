@@ -54,6 +54,9 @@ public class CardController extends BaseController {
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
+    @Resource(name = "topicCardServiceImpl")
+    private TopicCardService topicCardService;
+
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
@@ -125,7 +128,6 @@ public class CardController extends BaseController {
             return Message.error("无效卡号");
         }
 
-        System.out.println(mobile);
         if (mobile==null) {
             return Message.error("请填写手机号");
         }
@@ -185,6 +187,40 @@ public class CardController extends BaseController {
     }
 
     /**
+     *   获取卡包
+     */
+    @RequestMapping(value = "/bkg")
+    @ResponseBody
+    public Message bkg(String cardId,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        TopicCard topicCard = topicCardService.find(cardId);
+        if (topicCard==null) {
+            return Message.error("没有开通会员卡");
+        }
+        Card card = null;
+        for (Card c:member.getCards()) {
+            if (c.getTopicCard().equals(topicCard)) {
+                card = c;
+                break;
+            }
+        }
+
+        CardModel model = new CardModel();
+        model.bind(card);
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("card",model);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        int challege = StringUtils.Random6Code();
+        card.setSign(String.valueOf(challege));
+        cardService.update(card);
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        return Message.bind(data,request);
+    }
+
+    /**
      *   获取会员卡
      */
     @RequestMapping(value = "/view")
@@ -225,14 +261,6 @@ public class CardController extends BaseController {
                if (topicCard==null) {
                    return Message.error("没有开通会员卡");
                }
-//               if (card==null) {
-//                   for (Card c : member.getCards()) {
-//                       if (c.getTopicCard().equals(topicCard)) {
-//                           card = c;
-//                           break;
-//                       }
-//                   }
-//               }
                if (card==null) {
                    card = cardService.create(owner.getTopic().getTopicCard(),shop, code, member);
                }
