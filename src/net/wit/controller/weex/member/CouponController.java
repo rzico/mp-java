@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,18 +103,20 @@ public class CouponController extends BaseController {
         if (coupon.getColor()!=null) {
             entity.setColor(coupon.getColor());
         }
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        nf.setMaximumFractionDigits(1);
         String s = "";
         if (coupon.getMinimumPrice().compareTo(BigDecimal.ZERO)==0) {
             if (coupon.getType().equals(Coupon.Type.fullcut)) {
-                s = "无门槛抵" + coupon.getAmount() + "元";
+                s = "无门槛抵" + nf.format(coupon.getAmount()) + "元";
             } else {
-                s = "无门槛打" + coupon.getAmount() + "折";
+                s = "无门槛打" + nf.format(coupon.getAmount()) + "折";
             }
         } else {
             if (coupon.getType().equals(Coupon.Type.fullcut)) {
-                s = "满" + coupon.getMinimumPrice().toString() + "元减" + coupon.getAmount() + "元";
+                s = "满" + nf.format(coupon.getMinimumPrice()) + "元减" + nf.format(coupon.getAmount()) + "元";
             } else {
-                s = "满" + coupon.getMinimumPrice().toString() + "元打" + coupon.getAmount() + "折";
+                s = "满" + nf.format(coupon.getMinimumPrice()) + "元打" + nf.format(coupon.getAmount()) + "折";
             }
         }
         entity.setName(s);

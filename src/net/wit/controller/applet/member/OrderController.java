@@ -3,39 +3,34 @@
  * Support: http://www.shopxx.net
  * License: http://www.shopxx.net/license
  */
-package net.wit.controller.website.member;
-
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+package net.wit.controller.applet.member;
 
 import net.wit.*;
 import net.wit.Message;
-import net.wit.controller.model.CouponCodeModel;
 import net.wit.controller.model.OrderListModel;
 import net.wit.controller.model.OrderModel;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.entity.Order;
 import net.wit.service.*;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller - 会员中心 - 订单
  * 
  * @version 3.0
  */
-@Controller("websiteMemberOrderController")
-@RequestMapping("/website/member/order")
+@Controller("appletMemberOrderController")
+@RequestMapping("/applet/member/order")
 public class OrderController extends BaseController {
 
 	/** 每页记录数 */
@@ -260,20 +255,20 @@ public class OrderController extends BaseController {
 
 		List<Filter> filters = new ArrayList<Filter>();
 		if ("unpaid".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.unconfirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.unpaid));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.unconfirmed));
+			filters.add(new Filter("paymentStatus", Filter.Operator.eq, Order.PaymentStatus.unpaid));
 		}
 		if ("unshipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.unshipped));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
+			filters.add(new Filter("shippingStatus", Filter.Operator.eq, Order.ShippingStatus.unshipped));
 		}
 		if ("shipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.shipped));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
+			filters.add(new Filter("shippingStatus", Filter.Operator.eq, Order.ShippingStatus.shipped));
 		}
 		if ("refunding".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.refunding));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
+			filters.add(new Filter("paymentStatus", Filter.Operator.eq, Order.PaymentStatus.refunding));
 		}
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 

@@ -200,6 +200,7 @@ public class CardController extends BaseController {
         if (topicCard==null) {
             return Message.error("没有开通会员卡");
         }
+
         Card card = null;
         for (Card c:member.getCards()) {
             if (c.getTopicCard().equals(topicCard)) {
@@ -218,6 +219,7 @@ public class CardController extends BaseController {
         cardService.update(card);
         data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
         return Message.bind(data,request);
+
     }
 
     /**
