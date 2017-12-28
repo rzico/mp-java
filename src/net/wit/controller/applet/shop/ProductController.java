@@ -32,8 +32,8 @@ import java.util.List;
  * Controller - 商品
  * 
  */
-@Controller("weexShopProductController")
-@RequestMapping("/weex/shop/product")
+@Controller("appletShopProductController")
+@RequestMapping("/applet/shop/product")
 public class ProductController extends BaseController {
 
 	@Resource(name = "adminServiceImpl")

@@ -1,9 +1,10 @@
 package net.wit.controller.website.member;
 
-import net.wit.Filter;
+import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
+import net.wit.controller.model.CardBillModel;
 import net.wit.controller.model.CardModel;
 import net.wit.entity.*;
 import net.wit.plat.weixin.pojo.Ticket;
@@ -62,6 +63,9 @@ public class CardController extends BaseController {
 
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
+
+    @Resource(name = "cardBillServiceImpl")
+    private CardBillService cardBillService;
 
     /**
      *  我的会员卡
@@ -326,6 +330,23 @@ public class CardController extends BaseController {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    /**
+     *  账单记录
+     */
+    @RequestMapping(value = "/bill", method = RequestMethod.GET)
+    @ResponseBody
+    public Message bill(Long id,Pageable pageable, HttpServletRequest request){
+        Card card = cardService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        pageable.setFilters(filters);
+        Page<CardBill> page = cardBillService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(CardBillModel.bindList(page.getContent()));
+        return Message.bind(model,request);
     }
 
 }

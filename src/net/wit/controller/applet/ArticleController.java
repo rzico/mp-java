@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -78,41 +80,32 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article);
-        return Message.bind(model,request);
-   }
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("article",model);
 
-    /**
-     * 文章预览信息
-     */
-    @RequestMapping(value = "/preview", method = RequestMethod.GET)
-    @ResponseBody
-    public Message preview(Long id,HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        Article article = articleService.find(id);
-        if (article==null) {
-            return Message.error("无效文章编号");
-        }
-        ArticlePreviewModel model =new ArticlePreviewModel();
-        model.bind(article);
+        ArticlePreviewModel option =new ArticlePreviewModel();
+        option.bind(article);
         if (member!=null) {
 
             List<Filter> filters = new ArrayList<Filter>();
             filters.add(new Filter("member", Filter.Operator.eq,member));
             filters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleFavorite> favorites = articleFavoriteService.findList(null,null,filters,null);
-            model.setHasFavorite(favorites.size()>0);
+            option.setHasFavorite(favorites.size()>0);
 
             List<Filter> laudfilters = new ArrayList<Filter>();
             laudfilters.add(new Filter("member", Filter.Operator.eq,member));
             laudfilters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
-            model.setHasFavorite(favorites.size()>0);
+            option.setHasFavorite(favorites.size()>0);
 
         }
-        return Message.bind(model,request);
-    }
+        data.put("option",option);
 
-    /**
+        return Message.bind(data,request);
+   }
+
+     /**
      * 获取显示模版
      */
     @RequestMapping(value = "/template", method = RequestMethod.POST)

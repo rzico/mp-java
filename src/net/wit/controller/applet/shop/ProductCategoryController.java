@@ -24,8 +24,8 @@ import java.util.List;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexShopProductCategoryController")
-@RequestMapping("/weex/shop/product_category")
+@Controller("appletShopProductCategoryController")
+@RequestMapping("/applet/shop/product_category")
 public class ProductCategoryController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
