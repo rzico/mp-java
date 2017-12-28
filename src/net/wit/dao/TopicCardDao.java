@@ -18,6 +18,9 @@ import net.wit.entity.TopicCard;
  
 
 public interface TopicCardDao extends BaseDao<TopicCard, Long> {
+
+	TopicCard find(String cardId);
+
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

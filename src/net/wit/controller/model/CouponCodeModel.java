@@ -3,6 +3,7 @@ package net.wit.controller.model;
 import net.wit.entity.*;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,10 +122,12 @@ public class CouponCodeModel extends BaseModel implements Serializable {
             }
         }
         this.color = coupon.getColor();
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        nf.setMaximumFractionDigits(1);
         if (coupon.getType().equals(Coupon.Type.discount)) {
-            this.amount = coupon.getAmount()+"元";
+            this.amount = nf.format(coupon.getAmount())+"折";
         } else {
-            this.amount = coupon.getAmount()+"折";
+            this.amount = nf.format(coupon.getAmount())+"元";
         }
     }
 

@@ -10,6 +10,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
+import net.wit.entity.Product;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -30,6 +32,19 @@ import net.wit.entity.TopicCard;
 
 @Repository("topicCardDaoImpl")
 public class TopicCardDaoImpl extends BaseDaoImpl<TopicCard, Long> implements TopicCardDao {
+
+	public TopicCard find(String cardId) {
+		if (cardId == null) {
+			return null;
+		}
+		String jpql = "select topicCard from TopicCard topicCard where lower(topicCard.weixinCardId) = lower(:cardId)";
+		try {
+			return entityManager.createQuery(jpql, TopicCard.class).setFlushMode(FlushModeType.COMMIT).setParameter("cardId",cardId).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

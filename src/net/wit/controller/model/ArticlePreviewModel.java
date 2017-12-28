@@ -123,6 +123,7 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.memberId = article.getMember().getId();
         this.hasFavorite = false;
         this.hasLaud = false;
+        this.template = article.getTemplate().getSn();
     }
 
 }

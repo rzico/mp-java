@@ -39,13 +39,11 @@ public interface OrderService extends BaseService<Order, Long> {
 	 *            购物车
 	 * @param receiver
 	 *            收货地址
-	 * @param couponCode
-	 *            优惠码
 	 * @param memo
 	 *            附言
 	 * @return 订单
 	 */
-	Order build(Cart cart, Receiver receiver, CouponCode couponCode, String memo);
+	Order build(Product product, Integer quantity, Cart cart, Receiver receiver,String memo);
 
 	/**
 	 * 创建订单
@@ -54,15 +52,13 @@ public interface OrderService extends BaseService<Order, Long> {
 	 *            购物车
 	 * @param receiver
 	 *            收货地址
-	 * @param couponCode
-	 *            优惠码
 	 * @param memo
 	 *            附言
 	 * @param operator
 	 *            操作员
 	 * @return 订单
 	 */
-	Order create(Cart cart, Receiver receiver, CouponCode couponCode, String memo, Admin operator);
+	Order create(Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Admin operator);
 
 	/**
 	 * 更新订单

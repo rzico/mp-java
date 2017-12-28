@@ -441,7 +441,7 @@ public class WeixinApi {
 
 	public static Ticket getTicket() {
 		try {
-			if (jsapi_ticket != null || jsapi_ticket.getExpire().getTime() > (new Date()).getTime()-2000) {
+			if (jsapi_ticket != null && jsapi_ticket.getExpire().getTime() > (new Date()).getTime()-2000) {
 				return jsapi_ticket;
 			}
 		} catch (Exception e) {
@@ -465,7 +465,7 @@ public class WeixinApi {
 
 	public static Ticket getWxCardTicket() {
 		try {
-			if (wxcard_ticket != null || wxcard_ticket.getExpire().getTime() > (new Date()).getTime() - 2000) {
+			if (wxcard_ticket != null && wxcard_ticket.getExpire().getTime() > (new Date()).getTime() - 2000) {
 				return wxcard_ticket;
 			}
 		} catch (Exception e) {
