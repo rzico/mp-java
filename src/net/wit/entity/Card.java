@@ -1,6 +1,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -57,14 +58,17 @@ public class Card extends BaseEntity {
 	/** 所属商家 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
+	@JsonIgnore
 	private TopicCard topicCard;
 
 	/** 所属商家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	private Member owner;
 
 	/** 办卡门店 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Shop shop;
 
@@ -78,12 +82,11 @@ public class Card extends BaseEntity {
 
 	/** 手机 一个手机号只能办一个 */
 	@Column(columnDefinition="varchar(50) comment '手机'")
-	@JsonIgnore
 	private String mobile;
 
 	/** 安全码 */
-	@Column(columnDefinition="varchar(50) comment '安全码'")
 	@JsonIgnore
+	@Column(columnDefinition="varchar(50) comment '安全码'")
 	private String sign;
 
 	/** 余额 */
@@ -92,6 +95,7 @@ public class Card extends BaseEntity {
 	private BigDecimal balance;
 
 	/*  会员 */
+	@JsonIgnore
 	@ManyToMany(mappedBy = "cards",fetch = FetchType.LAZY)
 	private List<Member> members = new ArrayList<Member>();
 
@@ -212,5 +216,21 @@ public class Card extends BaseEntity {
 
 	public void setTopicCard(TopicCard topicCard) {
 		this.topicCard = topicCard;
+	}
+
+	public MapEntity getMapOwner(){
+		if(getOwner() != null){
+			return new MapEntity(getOwner().getId().toString(),getOwner().getName());
+		}else{
+			return null;
+		}
+	}
+
+	public MapEntity getMapShop(){
+		if(getShop() != null){
+			return new MapEntity(getShop().getId().toString(),getShop().getName());
+		}else{
+			return null;
+		}
 	}
 }

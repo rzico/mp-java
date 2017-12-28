@@ -34,6 +34,13 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">姓名：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
+                </div>
+            </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">手机：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -41,36 +48,30 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">姓名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
-            </div>
-        </div>
-
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">实体卡号：</label>
+                <label class="form-label col-xs-4 col-sm-2">会员卡号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="${data.code}" placeholder="" id="code" name="code">
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">Shop：</label>
-                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                <label class="form-label col-xs-4 col-sm-2">所属门店：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
                     [#if shops??]
                         <select name="shopId" class="select" style="background-color: #FFFFFF">
                             [#list shops as shop]
                                 <option[#if data.shop?? && shop.id == data.shop.id] selected[/#if] value="${shop.id}">${shop.name}</option>
                             [/#list]
-				</select>
+				        </select>
                     [/#if]
 				</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">Owner：</label>
+                <label class="form-label col-xs-4 col-sm-2">店主：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <span>${data.owner.nickName}</span>
+                    <span>${data.owner.name}</span>
                 </div>
             </div>
 
