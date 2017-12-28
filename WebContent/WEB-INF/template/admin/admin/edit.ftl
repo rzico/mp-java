@@ -37,13 +37,13 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.username}" placeholder="" id="username" name="username" readonly="readonly">
+                    <input type="text" class="input-text" value="${data.username}" placeholder="" id="username" name="username" readonly="readonly" style="background-color:#E6E6FA">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">真实姓名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name" [#if data.id=="1"] readonly="readonly" [/#if]>
+                    <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name" [#if data.id=="1"] readonly="readonly" style="background-color:#E6E6FA"[/#if]>
                 </div>
             </div>
             <div class="row cl">
