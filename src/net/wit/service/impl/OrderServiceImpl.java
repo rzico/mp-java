@@ -161,6 +161,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setCouponDiscount(new BigDecimal(0));
 		order.setOffsetAmount(new BigDecimal(0));
 		order.setPoint(0L);
+		order.setPointDiscount(BigDecimal.ZERO);
 		order.setMemo(memo);
 		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);
@@ -291,6 +292,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.create);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setContent("订单创建成功");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 
@@ -342,6 +344,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.confirm);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setContent("卖家已经接单");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 		return ;
@@ -403,6 +406,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.complete);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setContent("订单交易完成");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 		return ;
@@ -453,6 +457,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.cancel);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setContent("关闭订单成功");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 		return;

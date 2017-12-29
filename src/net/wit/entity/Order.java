@@ -272,7 +272,7 @@ public class Order extends BaseEntity {
 
 	/** 优惠码 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(updatable = false)
 	private CouponCode couponCode;
 
 	/** 优惠券 */

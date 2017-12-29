@@ -50,11 +50,11 @@ public class OrderItem extends BaseEntity {
 	private Integer weight;
 
 	/** 商品缩略图 */
-	@Column(updatable = false,columnDefinition="decimal(21,6) not null comment '商品缩略图'")
+	@Column(updatable = false,columnDefinition="varchar(255) not null comment '商品缩略图'")
 	private String thumbnail;
 
 	/** 是否为赠品 */
-	@Column(nullable = false, updatable = false,columnDefinition="decimal(21,6) not null comment '是否为赠品'")
+	@Column(nullable = false, updatable = false,columnDefinition="bit not null comment '是否为赠品'")
 	private Boolean isGift;
 
 	/** 数量 */
