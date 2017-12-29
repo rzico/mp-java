@@ -51,7 +51,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">会员卡号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.code}" placeholder="" id="code" name="code">
+                    <input type="text" class="input-text" value="${data.code}" placeholder="" id="code" name="code" readonly="readonly" style="background-color:#E6E6FA">
                 </div>
             </div>
             <div class="row cl">
@@ -70,10 +70,23 @@
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">店主：</label>
-                <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9 ">
                     <span>${data.owner.name}</span>
                 </div>
             </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">卡状态：</label>
+            <div class="formcontrols col-xs-8 col-sm-9 skin-minimal">
+                [#if statuss??]
+                    [#list statuss as status]
+                        <div class="radio-box">
+                            <input name="status" type="radio" id="status-${status_index}" value="${status.id}" [#if data.status?? && data.status == status.id]checked[/#if]>
+                            <label for="status-${status_index}">${status.name}</label>
+                        </div>
+                    [/#list]
+                [/#if]
+            </div>
+        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">最近使用日期：</label>

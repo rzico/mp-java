@@ -154,6 +154,11 @@ public class CardController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("none","空卡"));
+		statuss.add(new MapEntity("activate","已激活"));
+		statuss.add(new MapEntity("loss","已挂失"));
+		model.addAttribute("statuss",statuss);
 
 		model.addAttribute("shops",shopService.findAll());
 
@@ -175,7 +180,7 @@ public class CardController extends BaseController {
 		//entity.setBalance(card.getBalance());
 
 		entity.setCode(card.getCode());
-
+		entity.setStatus(card.getStatus());
 		entity.setMobile(card.getMobile());
 
 		entity.setName(card.getName());
