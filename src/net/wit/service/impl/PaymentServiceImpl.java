@@ -8,20 +8,20 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
 
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.controller.model.CardActivityModel;
 import net.wit.controller.weex.member.CardController;
 import net.wit.dao.*;
+import net.wit.entity.Order;
 import net.wit.entity.summary.CardActivity;
 import net.wit.service.MessageService;
 import net.wit.service.PluginService;
 import net.wit.service.SmssendService;
+import net.wit.util.DateUtil;
 import net.wit.util.JsonUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -462,4 +462,16 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	public Page<Payment> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return paymentDao.findPage(beginDate,endDate,pageable);
 	}
+
+	/**
+	 * 查询状态
+	 */
+	public void query() {
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("status", Filter.Operator.eq,Payment.Status.waiting));
+		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
+		List<Payment> data = paymentDao.findList(null,null,filters,null);
+
+	}
+
 }

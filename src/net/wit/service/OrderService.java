@@ -43,7 +43,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	 *            附言
 	 * @return 订单
 	 */
-	Order build(Product product, Integer quantity, Cart cart, Receiver receiver,String memo);
+	Order build(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver,String memo);
 
 	/**
 	 * 创建订单
@@ -58,7 +58,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	 *            操作员
 	 * @return 订单
 	 */
-	Order create(Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Admin operator);
+	Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Admin operator);
 
 	/**
 	 * 更新订单

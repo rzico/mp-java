@@ -106,7 +106,7 @@ public class ArticleController extends BaseController {
             laudfilters.add(new Filter("member", Filter.Operator.eq,member));
             laudfilters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
-            model.setHasFavorite(favorites.size()>0);
+            model.setHasLaud(lauds.size()>0);
 
         }
         return Message.bind(model,request);

@@ -60,7 +60,7 @@ public class OrderLog extends BaseEntity {
 	private Type type;
 
 	/** 操作员 */
-	@Column(updatable = false,columnDefinition="varchar(255) not null comment '操作员'")
+	@Column(updatable = false,columnDefinition="varchar(255) comment '操作员'")
 	private String operator;
 
 	/** 内容 */

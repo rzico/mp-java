@@ -6,6 +6,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticlePreviewModel;
 import net.wit.controller.model.ArticleViewModel;
+import net.wit.controller.model.GoodsListModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,9 @@ public class ArticleController extends BaseController {
 
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
+
+    @Resource(name = "goodsServiceImpl")
+    private GoodsService goodsService;
 
     @Resource(name = "articleLaudServiceImpl")
     private ArticleLaudService articleLaudService;
@@ -97,7 +101,7 @@ public class ArticleController extends BaseController {
             laudfilters.add(new Filter("member", Filter.Operator.eq,member));
             laudfilters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
-            option.setHasFavorite(favorites.size()>0);
+            option.setHasLaud(lauds.size()>0);
 
         }
         data.put("option",option);
@@ -170,5 +174,22 @@ public class ArticleController extends BaseController {
         model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
+
+
+    /**
+     *  商品信息
+     */
+    @RequestMapping(value = "/goods", method = RequestMethod.GET)
+    @ResponseBody
+    public Message goods(Long id,HttpServletRequest request){
+        Goods goods = goodsService.find(id);
+        if (goods==null) {
+            return Message.error("无效商品编号");
+        }
+        GoodsListModel model = new GoodsListModel();
+        model.bind(goods);
+        return Message.bind(model,request);
+    }
+
 
 }

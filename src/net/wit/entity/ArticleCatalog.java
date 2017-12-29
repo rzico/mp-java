@@ -31,7 +31,7 @@ public class ArticleCatalog extends OrderEntity {
 	/**
 	 * 状态
 	 */
-	public enum Status {
+	public static enum Status {
 
 		/** 开启  */
 		enabled,

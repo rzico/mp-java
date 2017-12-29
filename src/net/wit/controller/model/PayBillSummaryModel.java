@@ -24,6 +24,8 @@ public class PayBillSummaryModel extends BaseModel implements Serializable {
     private BigDecimal fee;
     //入账金额
     private BigDecimal account;
+    //赠送金额
+    private BigDecimal present;
 
     public Long getShopId() {
         return shopId;
@@ -89,6 +91,14 @@ public class PayBillSummaryModel extends BaseModel implements Serializable {
         this.account = account;
     }
 
+    public BigDecimal getPresent() {
+        return present;
+    }
+
+    public void setPresent(BigDecimal present) {
+        this.present = present;
+    }
+
     public void bind(PayBillShopSummary summary) {
         this.shopId = summary.getShop().getId();
         this.name = summary.getShop().getName();
@@ -101,6 +111,12 @@ public class PayBillSummaryModel extends BaseModel implements Serializable {
             this.account = BigDecimal.ZERO;
         } else {
             this.account = this.amount.subtract(this.fee);
+        }
+
+        if (summary.getCardAmount().compareTo(summary.getAmount())>0) {
+            this.present = summary.getCardAmount().subtract(summary.getAmount());
+        } else {
+            this.present = BigDecimal.ZERO;
         }
     }
 
