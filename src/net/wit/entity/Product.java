@@ -124,11 +124,18 @@ public class Product extends OrderEntity {
 
 	/** 商品分类 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private ProductCategory productCategory;
 
 	/** 货品 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Goods goods;
+
+	/** 分销方式  */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Distribution distribution;
 
 	/** 是否删除 */
 	@Column(nullable = false,columnDefinition="bit not null comment '是否删除'")
@@ -136,6 +143,7 @@ public class Product extends OrderEntity {
 
 	/** 商品库存*/
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private List<ProductStock> productStocks = new ArrayList<>();
 
 	/** 标签*/
@@ -319,6 +327,15 @@ public class Product extends OrderEntity {
 
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+
+	public Distribution getDistribution() {
+		return distribution;
+	}
+
+	public void setDistribution(Distribution distribution) {
+		this.distribution = distribution;
 	}
 
 	public MapEntity getMapMember() {

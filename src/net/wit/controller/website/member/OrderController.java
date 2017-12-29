@@ -87,11 +87,12 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	public @ResponseBody Message info() {
+		Member member = memberService.getCurrent();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
 			return Message.error("购物车为空");
 		}
-		Order order = orderService.build(null,null, cart, null, null);
+		Order order = orderService.build(member,null,null, cart, null, null);
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		return Message.success(model,"success");
@@ -103,6 +104,7 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
 	public @ResponseBody
 	Message calculate(Long id,Integer quantity) {
+		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
@@ -112,7 +114,7 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
-		Order order = orderService.build(product,quantity,cart, null,null);
+		Order order = orderService.build(member,product,quantity,cart, null,null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -122,15 +124,19 @@ public class OrderController extends BaseController {
 	/**
 	 * 创建
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/create")
 	public @ResponseBody
 	Message create(Long id,Integer quantity,Long receiverId,String memo) {
-		Cart cart = cartService.getCurrent();
-		if (cart == null || cart.isEmpty()) {
-			return Message.error("购物车为空");
-		}
-		if (cart.getIsLowStock()) {
-			return Message.error("库存不足");
+		Member member = memberService.getCurrent();
+		Cart cart = null;
+		if (id==null) {
+			cart = cartService.getCurrent();
+			if (cart == null || cart.isEmpty()) {
+				return Message.error("购物车为空");
+			}
+			if (cart.getIsLowStock()) {
+				return Message.error("库存不足");
+			}
 		}
 		Receiver receiver = receiverService.find(receiverId);
 		if (receiver == null) {
@@ -140,7 +146,7 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
-		Order order = orderService.create(product,quantity,cart, receiver,memo, null);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);

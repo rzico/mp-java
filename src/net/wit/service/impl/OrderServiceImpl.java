@@ -148,23 +148,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            附言
 	 * @return 订单
 	 */
-	public Order build(Product product, Integer quantity, Cart cart, Receiver receiver,String memo) {
+	public Order build(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver,String memo) {
 
-		Assert.notNull(cart);
-		Assert.notNull(cart.getMember());
-		Assert.notEmpty(cart.getCartItems());
-
-		Member member = cart.getMember();
+//		Assert.notNull(cart);
+//		Assert.notNull(cart.getMember());
+//		Assert.notEmpty(cart.getCartItems());
 
 		Order order = new Order();
+		order.setPaymentStatus(Order.PaymentStatus.unpaid);
 		order.setShippingStatus(Order.ShippingStatus.unshipped);
 		order.setFee(new BigDecimal(0));
 		order.setCouponDiscount(new BigDecimal(0));
 		order.setOffsetAmount(new BigDecimal(0));
-		order.setPoint(cart.getEffectivePoint());
+		order.setPoint(0L);
 		order.setMemo(memo);
-		order.setMember(cart.getMember());
+		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);
+		order.setShippingMethod(Order.ShippingMethod.shipping);
 
 		if (receiver != null) {
 			order.setConsignee(receiver.getConsignee());
@@ -223,14 +223,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		order.setFreight(BigDecimal.ZERO);
 
-		List<CouponCode> couponCodes = member.getCouponCodes();
-		BigDecimal discount = BigDecimal.ZERO;
-		for (CouponCode code:couponCodes) {
-			if (code.getCoupon().getDistributor().equals(order.getSeller()) && code.getEnabled() && !code.getCoupon().getScope().equals(Coupon.Scope.shop)) {
-				BigDecimal d = code.calculate(order.getPrice());
-				if (d.compareTo(discount) > 0) {
-					order.setCouponDiscount(d);
-					order.setCouponCode(code);
+		if (member != null) {
+			List<CouponCode> couponCodes = member.getCouponCodes();
+			BigDecimal discount = BigDecimal.ZERO;
+			for (CouponCode code : couponCodes) {
+				if (code.getCoupon().getDistributor().equals(order.getSeller()) && code.getEnabled() && !code.getCoupon().getScope().equals(Coupon.Scope.shop)) {
+					BigDecimal d = code.calculate(order.getPrice());
+					if (d.compareTo(discount) > 0) {
+						order.setCouponDiscount(d);
+						order.setCouponCode(code);
+					}
 				}
 			}
 		}
@@ -261,19 +263,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 * @return 订单
 	 */
-	public Order create(Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Admin operator) {
+	public Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Admin operator) {
 
-		Assert.notNull(cart);
-		Assert.notNull(cart.getMember());
-		Assert.notEmpty(cart.getCartItems());
+//		Assert.notNull(cart);
+//		Assert.notNull(cart.getMember());
+//		Assert.notEmpty(cart.getCartItems());
 		Assert.notNull(receiver);
 
-		Order order = build(product ,quantity ,cart, receiver, memo);
+		Order order = build(member,product ,quantity ,cart, receiver, memo);
 
 		order.setSn(snDao.generate(Sn.Type.order));
 
 		order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
-		order.setOperator(cart.getMember().userId());
+		order.setOperator(member.userId());
 
 		if (order.getCouponCode() != null) {
 			CouponCode couponCode = order.getCouponCode();
@@ -297,15 +299,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (orderItem != null) {
 				Product orderProduct = orderItem.getProduct();
 				ProductStock productStock = orderProduct.getProductStock(order.getSeller());
-				productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
-				if (productStock != null && productStock.getStock() != null) {
-					productStock.setAllocatedStock(productStock.getAllocatedStock() + (orderItem.getQuantity() - orderItem.getShippedQuantity()));
-					productStockDao.merge(productStock);
-					orderDao.flush();
+				if (productStock!=null) {
+					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+					if (productStock != null && productStock.getStock() != null) {
+						productStock.setAllocatedStock(productStock.getAllocatedStock() + (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+						productStockDao.merge(productStock);
+						orderDao.flush();
+					}
 				}
 			}
 		}
-		cartDao.remove(cart);
+//		cartDao.remove(cart);
 		return order;
 	}
 

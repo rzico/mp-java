@@ -5,28 +5,33 @@
  */
 package net.wit.controller.applet.member;
 
+import java.util.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+
 import net.wit.*;
 import net.wit.Message;
+import net.wit.controller.model.CouponCodeModel;
 import net.wit.controller.model.OrderListModel;
 import net.wit.controller.model.OrderModel;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.entity.Order;
 import net.wit.service.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * Controller - 会员中心 - 订单
- * 
+ *
  * @version 3.0
  */
 @Controller("appletMemberOrderController")
@@ -82,11 +87,12 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	public @ResponseBody Message info() {
+		Member member = memberService.getCurrent();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
 			return Message.error("购物车为空");
 		}
-		Order order = orderService.build(null,null, cart, null, null);
+		Order order = orderService.build(member,null,null, cart, null, null);
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		return Message.success(model,"success");
@@ -98,6 +104,7 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
 	public @ResponseBody
 	Message calculate(Long id,Integer quantity) {
+		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
@@ -107,7 +114,7 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
-		Order order = orderService.build(product,quantity,cart, null,null);
+		Order order = orderService.build(member,product,quantity,cart, null,null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -117,15 +124,19 @@ public class OrderController extends BaseController {
 	/**
 	 * 创建
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/create")
 	public @ResponseBody
 	Message create(Long id,Integer quantity,Long receiverId,String memo) {
-		Cart cart = cartService.getCurrent();
-		if (cart == null || cart.isEmpty()) {
-			return Message.error("购物车为空");
-		}
-		if (cart.getIsLowStock()) {
-			return Message.error("库存不足");
+		Member member = memberService.getCurrent();
+		Cart cart = null;
+		if (id==null) {
+			cart = cartService.getCurrent();
+			if (cart == null || cart.isEmpty()) {
+				return Message.error("购物车为空");
+			}
+			if (cart.getIsLowStock()) {
+				return Message.error("库存不足");
+			}
 		}
 		Receiver receiver = receiverService.find(receiverId);
 		if (receiver == null) {
@@ -135,7 +146,7 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
-		Order order = orderService.create(product,quantity,cart, receiver,memo, null);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -255,20 +266,20 @@ public class OrderController extends BaseController {
 
 		List<Filter> filters = new ArrayList<Filter>();
 		if ("unpaid".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.unconfirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, Order.PaymentStatus.unpaid));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.unconfirmed));
+			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.unpaid));
 		}
 		if ("unshipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, Order.ShippingStatus.unshipped));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
+			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.unshipped));
 		}
 		if ("shipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, Order.ShippingStatus.shipped));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
+			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.shipped));
 		}
 		if ("refunding".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, Order.PaymentStatus.refunding));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
+			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.refunding));
 		}
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 

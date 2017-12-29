@@ -265,6 +265,11 @@ public class Order extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Member seller;
 
+	/** 推广 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	private Member promoter;
+
 	/** 优惠码 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
@@ -858,6 +863,14 @@ public class Order extends BaseEntity {
 
 	public void setShippingMethod(ShippingMethod shippingMethod) {
 		this.shippingMethod = shippingMethod;
+	}
+
+	public Member getPromoter() {
+		return promoter;
+	}
+
+	public void setPromoter(Member promoter) {
+		this.promoter = promoter;
 	}
 
 	/**

@@ -1,14 +1,13 @@
 package net.wit.controller.website;
 
 import net.wit.*;
+import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticleModel;
 import net.wit.controller.model.ArticleViewModel;
-import net.wit.entity.Article;
-import net.wit.entity.ArticleCatalog;
-import net.wit.entity.ArticleCategory;
-import net.wit.entity.Member;
+import net.wit.controller.model.GoodsListModel;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +45,9 @@ public class ArticleController extends BaseController {
 
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
+
+    @Resource(name = "goodsServiceImpl")
+    private GoodsService goodsService;
 
     @Resource(name = "articleCatalogServiceImpl")
     private ArticleCatalogService articleCatalogService;
@@ -104,4 +106,20 @@ public class ArticleController extends BaseController {
         model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
+
+    /**
+     *  商品信息
+     */
+    @RequestMapping(value = "/goods", method = RequestMethod.GET)
+    @ResponseBody
+    public Message goods(Long id,HttpServletRequest request){
+        Goods goods = goodsService.find(id);
+        if (goods==null) {
+            return Message.error("无效商品编号");
+        }
+        GoodsListModel model = new GoodsListModel();
+        model.bind(goods);
+        return Message.bind(model,request);
+    }
+
 }

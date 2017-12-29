@@ -40,4 +40,9 @@ public interface PaymentService extends BaseService<Payment, Long> {
 	 */
 	void close(Payment payment) throws Exception;
 
+	/**
+	 * 查询状态
+	 */
+	void query();
+
 }

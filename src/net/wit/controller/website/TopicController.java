@@ -86,6 +86,9 @@ public class TopicController extends BaseController {
     public Message view(Long id,HttpServletRequest request){
         Member member = memberService.find(id);
         if (member==null) {
+            member = memberService.getCurrent();
+        }
+        if (member==null) {
             return Message.error("无效会员编号");
         }
         Topic topic = topicService.find(member);
