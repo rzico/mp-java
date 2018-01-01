@@ -24,6 +24,7 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.service.MessageService;
 import net.wit.service.PluginService;
 import net.wit.service.SmssendService;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -413,4 +414,46 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			throw new RuntimeException("重复关闭");
 		}
 	}
+
+
+
+	/**
+	 * 查询状态
+	 */
+	public void query() {
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("status", Filter.Operator.eq,Refunds.Status.confirmed));
+		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
+		List<Refunds> data = refundsDao.findList(null,null,filters,null);
+		for (Refunds refunds:data) {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				if (paymentPlugin == null) {
+					resultCode = "0001";
+				} else {
+					resultCode = paymentPlugin.refundsQuery(refunds,null);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					try {
+						this.handle(refunds);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				case "0001":
+					try {
+						this.close(refunds);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+			}
+		}
+
+	}
+
+
 }

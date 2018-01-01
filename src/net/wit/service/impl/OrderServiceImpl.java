@@ -303,11 +303,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				ProductStock productStock = orderProduct.getProductStock(order.getSeller());
 				if (productStock!=null) {
 					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
-					if (productStock != null && productStock.getStock() != null) {
-						productStock.setAllocatedStock(productStock.getAllocatedStock() + (orderItem.getQuantity() - orderItem.getShippedQuantity()));
-						productStockDao.merge(productStock);
-						orderDao.flush();
-					}
+					productStock.setAllocatedStock(productStock.getAllocatedStock() + orderItem.getQuantity());
+					productStockDao.merge(productStock);
+					orderDao.flush();
 				}
 			}
 		}
@@ -388,9 +386,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				if (orderItem != null) {
 					Product product = orderItem.getProduct();
 					ProductStock productStock = product.getProductStock(order.getSeller());
-					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
-					if (productStock != null && productStock.getStock() != null) {
-						productStock.setAllocatedStock(productStock.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+					if (productStock != null) {
+     					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+						productStock.setAllocatedStock(productStock.getAllocatedStock() - orderItem.getQuantity());
 						productStockDao.merge(productStock);
 						orderDao.flush();
 					}
@@ -439,9 +437,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				if (orderItem != null) {
 					Product product = orderItem.getProduct();
 					ProductStock productStock = product.getProductStock(order.getSeller());
-					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
-					if (productStock != null && productStock.getStock() != null) {
-						productStock.setAllocatedStock(productStock.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+					if (productStock != null) {
+    					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+						productStock.setAllocatedStock(productStock.getAllocatedStock() - orderItem.getQuantity());
 						productStockDao.merge(productStock);
 						orderDao.flush();
 					}
@@ -476,7 +474,29 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
+		Card card = null;
 		Payment payment = new Payment();
+
+		for (Card c:order.getMember().getCards()) {
+			if (c.getOwner().equals(order.getSeller())) {
+				card = c;
+				break;
+			}
+		}
+
+		if (card!=null) {
+			if (card.getBalance().compareTo(order.getAmount()) >= 0) {
+				payment.setPaymentPluginId("cardPayPlugin");
+			}
+		}
+
+		if (payment.getPaymentPluginId()==null) {
+			Member member = order.getMember();
+			if (member.getBalance().compareTo(order.getAmount())>=0) {
+				payment.setPaymentPluginId("balancePayPlugin");
+			}
+		}
+
 		payment.setPayee(order.getSeller());
 		payment.setMember(order.getMember());
 		payment.setStatus(Payment.Status.waiting);
@@ -514,9 +534,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				if (orderItem != null) {
 					Product product = orderItem.getProduct();
 					ProductStock productStock = product.getProductStock(order.getSeller());
-					productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
-					if (productStock != null && productStock.getStock() != null) {
-						productStock.setAllocatedStock(productStock.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
+					if (productStock != null) {
+					    productStockDao.lock(productStock, LockModeType.PESSIMISTIC_WRITE);
+						productStock.setStock(productStock.getStock() - orderItem.getQuantity() );
+						productStock.setAllocatedStock(productStock.getAllocatedStock() - orderItem.getQuantity());
 						productStockDao.merge(productStock);
 						orderDao.flush();
 					}
@@ -532,6 +553,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.shipping);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setContent("卖家已发货");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 		return;
@@ -574,6 +596,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setType(OrderLog.Type.refunds);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
 		orderLog.setOrder(order);
+		orderLog.setContent("已提交退款");
 		orderLogDao.persist(orderLog);
 
 	}
@@ -598,6 +621,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				orderItem.setReturnQuantity(orderItem.getShippedQuantity());
 			}
 		}
+
 		order.setShippingStatus(Order.ShippingStatus.returned);
 		order.setExpire(null);
 		orderDao.merge(order);
@@ -605,6 +629,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.returns);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setContent("订单已退货");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 
@@ -637,6 +662,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			OrderLog orderLog1 = new OrderLog();
 			orderLog1.setType(OrderLog.Type.refunds);
 			orderLog1.setOperator(operator != null ? operator.getUsername() : null);
+			orderLog1.setContent("已提交退款");
 			orderLog1.setOrder(order);
 			orderLogDao.persist(orderLog1);
 		}

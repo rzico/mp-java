@@ -11,11 +11,13 @@ import javax.persistence.LockModeType;
 import net.wit.*;
 import net.wit.Filter.Operator;
 
+import net.wit.Message;
 import net.wit.controller.model.CardActivityModel;
 import net.wit.controller.weex.member.CardController;
 import net.wit.dao.*;
 import net.wit.entity.Order;
 import net.wit.entity.summary.CardActivity;
+import net.wit.plugin.PaymentPlugin;
 import net.wit.service.MessageService;
 import net.wit.service.PluginService;
 import net.wit.service.SmssendService;
@@ -170,6 +172,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				OrderLog orderLog = new OrderLog();
 				orderLog.setType(OrderLog.Type.payment);
 				orderLog.setOperator(payment.getMember().userId());
+				orderLog.setContent("买家付款成功");
 				orderLog.setOrder(order);
 				orderLogDao.persist(orderLog);
 			} else
@@ -471,6 +474,33 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		filters.add(new Filter("status", Filter.Operator.eq,Payment.Status.waiting));
 		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
 		List<Payment> data = paymentDao.findList(null,null,filters,null);
+		for (Payment payment:data) {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				if (paymentPlugin == null) {
+					resultCode = "0001";
+				} else {
+					resultCode = paymentPlugin.queryOrder(payment,null);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					try {
+						this.handle(payment);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				case "0001":
+					try {
+						this.close(payment);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+			}
+		}
 
 	}
 

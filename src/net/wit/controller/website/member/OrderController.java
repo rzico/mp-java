@@ -16,6 +16,7 @@ import net.wit.Message;
 import net.wit.controller.model.CouponCodeModel;
 import net.wit.controller.model.OrderListModel;
 import net.wit.controller.model.OrderModel;
+import net.wit.controller.model.PaymentModel;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.entity.Order;
@@ -107,9 +108,6 @@ public class OrderController extends BaseController {
 		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
-		if (cart == null || cart.isEmpty()) {
-			return Message.error("购物车为空");
-		}
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
@@ -157,7 +155,7 @@ public class OrderController extends BaseController {
 	 * 支付
 	 */
 	@RequestMapping(value = "/payment", method = RequestMethod.POST)
-	public @ResponseBody Message payment(String sn, ModelMap model) {
+	public @ResponseBody Message payment(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
 		if (order==null) {
@@ -169,7 +167,9 @@ public class OrderController extends BaseController {
 		try {
 			if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
 				Payment payment = orderService.payment(order, null);
-				return Message.success((Object) payment.getSn(), "发起成功");
+				PaymentModel model = new PaymentModel();
+				model.bind(payment);
+				return Message.success(model, "发起成功");
 			} else {
 				return Message.error("不是待付款订单");
 			}
