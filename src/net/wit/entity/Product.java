@@ -100,6 +100,14 @@ public class Product extends OrderEntity {
 	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '市场价'")
 	private BigDecimal marketPrice;
 
+	/** 库存 */
+	@Column(nullable = false,columnDefinition="int(11) not null default 0 comment '库存'")
+	private Integer stock;
+
+	/** 已分配库存 */
+	@Column(nullable = false,columnDefinition="int(11) not null default 0 comment '已分配库存'")
+	private Integer allocatedStock;
+
 	/** 单位 */
 	@Length(max = 10)
 	@Column(nullable = false,columnDefinition="varchar(10) not null comment '单位'")
@@ -338,6 +346,22 @@ public class Product extends OrderEntity {
 		this.distribution = distribution;
 	}
 
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public Integer getAllocatedStock() {
+		return allocatedStock;
+	}
+
+	public void setAllocatedStock(Integer allocatedStock) {
+		this.allocatedStock = allocatedStock;
+	}
+
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
 			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
@@ -362,6 +386,22 @@ public class Product extends OrderEntity {
 		}
 	}
 
+	/**
+	 * 获取可用库存
+	 *
+	 * @return 可用库存
+	 */
+	@Transient
+	public Integer getAvailableStock() {
+		Integer availableStock = null;
+		if (getStock() != null && getAllocatedStock() != null) {
+			availableStock = getStock() - getAllocatedStock();
+			if (availableStock < 0) {
+				availableStock = 0;
+			}
+		}
+		return availableStock;
+	}
 
 	/**
 	 * 获取库存记录

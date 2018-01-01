@@ -330,17 +330,17 @@ public class OrderController extends BaseController {
 						//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
 					}
 				}
-//				return Message.success(parameters, "success");
-//			} else {
-//				try {
-//					refundsService.close(refunds);
-//				} catch (Exception e) {
-//					logger.error(e.getMessage());
-//					parameters.put("return_code","success");
-//					parameters.put("result_msg","撤消退款失败");
-//					return Message.success(parameters,"退款已提交，客服会尽快处理");
-//				}
-//				return Message.error(parameters.get("result_msg").toString());
+				return Message.success(parameters, "success");
+			} else {
+				try {
+					refundsService.close(refunds);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					parameters.put("return_code","success");
+					parameters.put("result_msg","撤消退款失败");
+					return Message.success(parameters,"退款已提交，客服会尽快处理");
+				}
+				return Message.error(parameters.get("result_msg").toString());
 			}
 
 		}
