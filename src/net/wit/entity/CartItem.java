@@ -169,29 +169,29 @@ public class CartItem extends BaseEntity {
 	public BigDecimal getPrice() {
 		if (getProduct() != null && getProduct().getPrice() != null) {
 			Setting setting = SettingUtils.get();
-			BigDecimal price = BigDecimal.ZERO;
-			Friends.Type vip = friendsType();
-			if (vip.equals(Friends.Type.friend)) {
-				price = getProduct().getPrice();
-			} else
-			if (vip.equals(Friends.Type.customer)) {
-				price = getProduct().getPrice();
-			} else
-			if (vip.equals(Friends.Type.vip1)) {
-				price = getProduct().getVip1Price();
-			} else
-			if (vip.equals(Friends.Type.vip2)) {
-				price = getProduct().getVip2Price();
-			} else
-			if (vip.equals(Friends.Type.vip3)) {
-				price = getProduct().getVip3Price();
-			}
-			if (price==null || price.compareTo(BigDecimal.ZERO)==0) {
-				price = getProduct().getPrice();
-			}
+//			BigDecimal price = BigDecimal.ZERO;
+//			Friends.Type vip = friendsType();
+//			if (vip.equals(Friends.Type.friend)) {
+//				price = getProduct().getPrice();
+//			} else
+//			if (vip.equals(Friends.Type.customer)) {
+//				price = getProduct().getPrice();
+//			} else
+//			if (vip.equals(Friends.Type.vip1)) {
+//				price = getProduct().getVip1Price();
+//			} else
+//			if (vip.equals(Friends.Type.vip2)) {
+//				price = getProduct().getVip2Price();
+//			} else
+//			if (vip.equals(Friends.Type.vip3)) {
+//				price = getProduct().getVip3Price();
+//			}
+//			if (price==null || price.compareTo(BigDecimal.ZERO)==0) {
+//				price = getProduct().getPrice();
+//			}
 			return setting.setScale(getProduct().getPrice());
 		} else {
-			return new BigDecimal(0);
+			return BigDecimal.ZERO;
 		}
 	}
 

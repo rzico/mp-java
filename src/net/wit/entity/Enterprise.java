@@ -13,11 +13,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ *
  * Entity - 账单记录
  *
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
+ *
  */
+
 @Entity
 @Table(name = "wx_enterprise")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_enterprise_sequence")
@@ -27,11 +30,11 @@ public class Enterprise extends BaseEntity {
     public enum Type{
         /** 运营商 */
         operate,
-        /** 城市代理商 */
+        /** 代理商 */
         agent,
-        /** 个人代理商 */
+        /** 个人 */
         personal,
-        /** 入驻商家 */
+        /** 商家 */
         shop
     };
 

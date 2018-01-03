@@ -6,14 +6,14 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
 
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.*;
+import net.wit.entity.Order;
+import net.wit.service.MessageService;
 import net.wit.service.SnService;
+import net.wit.util.SettingUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
@@ -59,8 +59,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
 
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
+
 	@Resource(name = "snServiceImpl")
 	private SnService snService;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
 
 	@Resource(name = "cartDaoImpl")
 	private CartDao cartDao;
@@ -166,6 +172,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);
 		order.setShippingMethod(Order.ShippingMethod.shipping);
+		order.setIsAllocatedStock(false);
+		order.setIsDistribution(false);
 
 		if (receiver != null) {
 			order.setConsignee(receiver.getConsignee());
@@ -348,6 +356,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		return ;
 	}
 
+
 	/**
 	 * 订单完成
 	 *
@@ -406,6 +415,42 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("订单交易完成");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
+
+		//计算分润
+		if (order.getShippingStatus() == Order.ShippingStatus.shipped && order.getPromoter()!=null) {
+			BigDecimal d = order.getDistribution();
+			if (d.compareTo(BigDecimal.ZERO)>0) {
+				//扣除商家分配佣金
+				Member seller = order.getSeller();
+				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
+				seller.setBalance(seller.getBalance().subtract(d));
+				if (seller.getBalance().compareTo(BigDecimal.ZERO)>=0) {
+					memberDao.merge(member);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.rebate);
+					deposit.setMemo("支付分销返利金");
+					deposit.setMember(member);
+					deposit.setCredit(BigDecimal.ZERO.subtract(d));
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+
+					order.setIsDistribution(true);
+					orderDao.merge(order);
+
+					for (OrderItem orderItem : order.getOrderItems()) {
+						if (orderItem != null) {
+
+						}
+					}
+
+				}
+			}
+		}
+
 		return ;
 
 	}
@@ -611,73 +656,100 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public void returns(Order order, Admin operator)  throws Exception {
 		Assert.notNull(order);
 
-		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+		orderDao.refresh(order, LockModeType.PESSIMISTIC_WRITE);
 
-		for (OrderItem orderItem : order.getOrderItems()) {
-			if (orderItem != null) {
-				orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);
-				orderItem.setReturnQuantity(orderItem.getShippedQuantity());
+		if (operator==null) {
+			if (order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+				throw new RuntimeException("不在发货状态");
+			}
+		} else {
+			if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped) && !order.getShippingStatus().equals(Order.ShippingStatus.returning)) {
+				throw new RuntimeException("不在发货状态");
 			}
 		}
 
-		if (order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+		if (operator!=null) {
+
 			for (OrderItem orderItem : order.getOrderItems()) {
 				if (orderItem != null) {
-					Product product = orderItem.getProduct();
-					if (product != null) {
-						productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
-						product.setStock(product.getStock() + orderItem.getQuantity() );
-						productDao.merge(product);
-						orderDao.flush();
+					orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);
+					orderItem.setReturnQuantity(orderItem.getShippedQuantity());
+				}
+			}
+
+			if (order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+				for (OrderItem orderItem : order.getOrderItems()) {
+					if (orderItem != null) {
+						Product product = orderItem.getProduct();
+						if (product != null) {
+							productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+							product.setStock(product.getStock() + orderItem.getQuantity() );
+							productDao.merge(product);
+							orderDao.flush();
+						}
 					}
 				}
 			}
-		}
 
-		order.setShippingStatus(Order.ShippingStatus.returned);
-		order.setExpire(null);
-		orderDao.merge(order);
-
-		OrderLog orderLog = new OrderLog();
-		orderLog.setType(OrderLog.Type.returns);
-		orderLog.setOperator(operator != null ? operator.getUsername() : null);
-		orderLog.setContent("订单已退货");
-		orderLog.setOrder(order);
-		orderLogDao.persist(orderLog);
-
-		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
-
-			order.setAmountPaid(order.getAmountPaid());
+			order.setShippingStatus(Order.ShippingStatus.returned);
 			order.setExpire(null);
-			order.setPaymentStatus(Order.PaymentStatus.refunding);
 			orderDao.merge(order);
+			OrderLog orderLog = new OrderLog();
+			orderLog.setType(OrderLog.Type.returns);
+			orderLog.setOperator(operator != null ? operator.getUsername() : null);
+			orderLog.setContent("卖家确定退货");
+			orderLog.setOrder(order);
+			orderLogDao.persist(orderLog);
 
-			for (Payment payment:order.getPayments()) {
-				if (payment.getStatus().equals(Payment.Status.success)) {
-					Refunds refunds = new Refunds();
-					refunds.setPaymentMethod(payment.getPaymentMethod());
-					refunds.setPayment(payment);
-					refunds.setPaymentPluginId(payment.getPaymentPluginId());
-					refunds.setStatus(Refunds.Status.waiting);
-					refunds.setAmount(payment.getAmount());
-					refunds.setOrder(order);
-					refunds.setMember(payment.getMember());
-					refunds.setPayee(payment.getPayee());
-					refunds.setMemo("订单退款");
-					refunds.setMethod(Refunds.Method.values()[payment.getMethod().ordinal()]);
-					refunds.setType(Refunds.Type.values()[payment.getType().ordinal()]);
-					refunds.setSn(snService.generate(Sn.Type.refunds));
-					refundsDao.persist(refunds);
+			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
+
+				order.setAmountPaid(order.getAmountPaid());
+				order.setExpire(null);
+				order.setPaymentStatus(Order.PaymentStatus.refunding);
+				orderDao.merge(order);
+
+				for (Payment payment:order.getPayments()) {
+					if (payment.getStatus().equals(Payment.Status.success)) {
+						Refunds refunds = new Refunds();
+						refunds.setPaymentMethod(payment.getPaymentMethod());
+						refunds.setPayment(payment);
+						refunds.setPaymentPluginId(payment.getPaymentPluginId());
+						refunds.setStatus(Refunds.Status.waiting);
+						refunds.setAmount(payment.getAmount());
+						refunds.setOrder(order);
+						refunds.setMember(payment.getMember());
+						refunds.setPayee(payment.getPayee());
+						refunds.setMemo("订单退款");
+						refunds.setMethod(Refunds.Method.values()[payment.getMethod().ordinal()]);
+						refunds.setType(Refunds.Type.values()[payment.getType().ordinal()]);
+						refunds.setSn(snService.generate(Sn.Type.refunds));
+						refundsDao.persist(refunds);
+					}
 				}
+
+				OrderLog orderLog1 = new OrderLog();
+				orderLog1.setType(OrderLog.Type.refunds);
+				orderLog1.setOperator(operator != null ? operator.getUsername() : null);
+				orderLog1.setContent("已提交退款");
+				orderLog1.setOrder(order);
+				orderLogDao.persist(orderLog1);
+
 			}
 
-			OrderLog orderLog1 = new OrderLog();
-			orderLog1.setType(OrderLog.Type.refunds);
-			orderLog1.setOperator(operator != null ? operator.getUsername() : null);
-			orderLog1.setContent("已提交退款");
-			orderLog1.setOrder(order);
-			orderLogDao.persist(orderLog1);
+		} else {
+			order.setShippingStatus(Order.ShippingStatus.returning);
+			order.setExpire(null);
+			orderDao.merge(order);
+
+			OrderLog orderLog = new OrderLog();
+			orderLog.setType(OrderLog.Type.returns);
+			orderLog.setOperator(operator != null ? operator.getUsername() : null);
+			orderLog.setContent("买家申请退货");
+			orderLog.setOrder(order);
+			orderLogDao.persist(orderLog);
+
 		}
+
 	}
 
 }

@@ -310,4 +310,71 @@ public class OrderItem extends BaseEntity {
 		}
 	}
 
+	/**
+	 * 计算分润金额
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public BigDecimal calcPercent1() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			BigDecimal d1 =
+					getSubtotal().multiply(
+							distribution.getPercent1().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			return d1;
+		} else {
+			return BigDecimal.ZERO;
+		}
+	}
+
+	/**
+	 * 计算分润金额
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public BigDecimal calcPercent2() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			BigDecimal d2 =
+					getSubtotal().multiply(
+							distribution.getPercent2().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			return d2;
+		} else {
+			return BigDecimal.ZERO;
+		}
+	}
+
+
+	/**
+	 * 计算分润金额
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public BigDecimal calcPercent3() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			BigDecimal d3 =
+					getSubtotal().multiply(
+							distribution.getPercent3().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			return d3;
+		} else {
+			return BigDecimal.ZERO;
+		}
+	}
+
 }

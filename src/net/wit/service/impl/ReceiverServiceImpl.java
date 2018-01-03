@@ -45,6 +45,12 @@ public class ReceiverServiceImpl extends BaseServiceImpl<Receiver, Long> impleme
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(Receiver receiver) {
+		if (receiver.getIsDefault()) {
+			for (Receiver r:receiver.getMember().getReceivers()) {
+				r.setIsDefault(false);
+				receiverDao.merge(r);
+			}
+		}
 		super.save(receiver);
 	}
 
@@ -52,6 +58,14 @@ public class ReceiverServiceImpl extends BaseServiceImpl<Receiver, Long> impleme
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public Receiver update(Receiver receiver) {
+		if (receiver.getIsDefault()) {
+			for (Receiver r:receiver.getMember().getReceivers()) {
+				if (!r.equals(receiver)) {
+					r.setIsDefault(false);
+					receiverDao.merge(r);
+				}
+			}
+		}
 		return super.update(receiver);
 	}
 

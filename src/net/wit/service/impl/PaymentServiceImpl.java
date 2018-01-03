@@ -150,6 +150,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			payment.setStatus(Payment.Status.success);
 			paymentDao.merge(payment);
 			paymentDao.flush();
+
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
 				Order order = payment.getOrder();

@@ -270,6 +270,10 @@ public class Order extends BaseEntity {
 	@JoinColumn(updatable = false)
 	private Member promoter;
 
+	/** 是否已分配佣金 */
+	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
+	private Boolean isDistribution;
+
 	/** 优惠码 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
@@ -629,6 +633,14 @@ public class Order extends BaseEntity {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public void setIsDistribution(Boolean distribution) {
+		isDistribution = distribution;
+	}
+
+	public Boolean getIsDistribution() {
+		return isDistribution;
 	}
 
 	/**
@@ -1005,6 +1017,32 @@ public class Order extends BaseEntity {
 			amount = amount.add(getOffsetAmount());
 		}
 		return amount.compareTo(new BigDecimal(0)) > 0 ? amount : new BigDecimal(0);
+	}
+
+	/**
+	 * 获取分销佣金
+	 *
+	 * @return 分销佣金
+	 */
+	@Transient
+	public BigDecimal getDistribution() {
+		BigDecimal d = BigDecimal.ZERO;
+		if (getPromoter()!=null) {
+			if (getOrderItems() != null) {
+				for (OrderItem orderItem : getOrderItems()) {
+					if (orderItem != null && orderItem.getSubtotal() != null) {
+						d = d.add(orderItem.calcPercent1());
+						if (getPromoter().getPromoter()!=null) {
+							d = d.add(orderItem.calcPercent2());
+						}
+						if (getPromoter().getPromoter().getPromoter()!=null) {
+							d = d.add(orderItem.calcPercent3());
+						}
+					}
+				}
+			}
+		}
+		return d;
 	}
 
 	/**
