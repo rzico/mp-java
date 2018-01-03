@@ -226,7 +226,7 @@ public class Order extends BaseEntity {
 	/** 电话 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false,columnDefinition="varchar(255) not null comment '邮编'")
+	@Column(nullable = false,columnDefinition="varchar(255) not null comment '联系电话'")
 	private String phone;
 
 	/** 买家留言 */
@@ -251,31 +251,37 @@ public class Order extends BaseEntity {
 	private Boolean isAllocatedStock;
 
 	/** 地区 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Area area;
 
 	/** 买家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
 	/** 卖家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Member seller;
 
 	/** 推广 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private Member promoter;
 
 	/** 优惠码 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private CouponCode couponCode;
 
 	/** 优惠券 */
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_order_coupon")
 	private List<Coupon> coupons = new ArrayList<Coupon>();
@@ -285,19 +291,23 @@ public class Order extends BaseEntity {
 	@NotEmpty
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("isGift asc")
+	@JsonIgnore
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 	/** 订单日志 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private List<OrderLog> orderLogs = new ArrayList<OrderLog>();
 
 	/** 收款单 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Payment> payments = new HashSet<Payment>();
 
 	/** 退款单 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Refunds> refunds = new HashSet<Refunds>();

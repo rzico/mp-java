@@ -70,14 +70,44 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
+		List<MapEntity> paymentMethods = new ArrayList<>();
+		paymentMethods.add(new MapEntity("online","线上结算"));
+		paymentMethods.add(new MapEntity("offline","线下结算"));
+		model.addAttribute("paymentMethods",paymentMethods);
+
+		List<MapEntity> shippingMethods = new ArrayList<>();
+		shippingMethods.add(new MapEntity("shipping","卖家配送"));
+		shippingMethods.add(new MapEntity("pickup","线下提货"));
+		model.addAttribute("shippingMethods",shippingMethods);
+
+		List<MapEntity> orderStatuss = new ArrayList<>();
+		orderStatuss.add(new MapEntity("unconfirmed","未确认"));
+		orderStatuss.add(new MapEntity("confirmed","已确认"));
+		orderStatuss.add(new MapEntity("completed","已完成"));
+		orderStatuss.add(new MapEntity("cancelled","已取消"));
+		model.addAttribute("orderStatuss",orderStatuss);
+
+		List<MapEntity> paymentStatuss = new ArrayList<>();
+		paymentStatuss.add(new MapEntity("unpaid","未支付"));
+		paymentStatuss.add(new MapEntity("paid","已支付"));
+		paymentStatuss.add(new MapEntity("refunding","退款中"));
+		paymentStatuss.add(new MapEntity("refunded","已退款"));
+		model.addAttribute("paymentStatuss",paymentStatuss);
+
+		List<MapEntity> shippingStatuss = new ArrayList<>();
+		shippingStatuss.add(new MapEntity("unshipped","未发货"));
+		shippingStatuss.add(new MapEntity("shipped","已发货"));
+		shippingStatuss.add(new MapEntity("returning","退货中"));
+		shippingStatuss.add(new MapEntity("returned","已退货"));
+		model.addAttribute("shippingStatuss",shippingStatuss);
 
 		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("couponCodes",couponCodeService.findAll());
 
-		model.addAttribute("members",memberService.findAll());
+		//model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("sellers",memberService.findAll());
+		//model.addAttribute("sellers",memberService.findAll());
 
 		return "/admin/order/list";
 	}
@@ -183,7 +213,12 @@ public class OrderController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
-            orderService.delete(ids);
+			for(long id: ids){
+				Order order = orderService.find(id);
+				order.setDeleted(true);
+				orderService.update(order);
+			}
+            //orderService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {
             e.printStackTrace();

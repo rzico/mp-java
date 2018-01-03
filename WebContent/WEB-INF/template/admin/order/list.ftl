@@ -45,10 +45,15 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-		<a href="javascript:;" onclick="add('首页 &gt; 订单管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增订单管理</a></span></div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+                <!--
+                <a href="javascript:;" onclick="add('首页 &gt; 订单管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增订单管理</a>
+                -->
+                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+        </span>
+    </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -89,7 +94,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/order/list.jhtml",
-            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -118,15 +123,23 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
+                $(row).children('td').eq(4).attr('style', 'text-align: right;');
+                $(row).children('td').eq(5).attr('style', 'text-align: right;');
+                $(row).children('td').eq(6).attr('style', 'text-align: right;');
+                $(row).children('td').eq(7).attr('style', 'text-align: right;');
+                $(row).children('td').eq(8).attr('style', 'text-align: right;');
+                $(row).children('td').eq(9).attr('style', 'text-align: right;');
+                $(row).children('td').eq(10).attr('style', 'text-align: right;');
+
             },
             "aoColumns": [
                 {
-                    "mData": "id",
+                    "mData": "id", "bSortable": false,
                     "sClass": "center",
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
                     "sClass": "center"
                 },
@@ -136,13 +149,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "address",
-                    "sTitle": "地址",
+                    "mData": "sn",
+                    "sTitle": "订单编号",
                     "sClass": "center"
                 },
                 {
@@ -151,23 +159,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "areaName",
-                    "sTitle": "地区名称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "consignee",
-                    "sTitle": "收货人",
-                    "sClass": "center"
-                },
-                {
                     "mData": "couponDiscount",
                     "sTitle": "优惠券折扣",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "expire",
-                    "sTitle": "到期时间",
                     "sClass": "center"
                 },
                 {
@@ -181,43 +174,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "isAllocatedStock",
-                    "sTitle": "是否已分配库存",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "lockExpire",
-                    "sTitle": "锁定到期时间",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "memo",
-                    "sTitle": "买家留言",
-                    "sClass": "center"
-                },
-                {
                     "mData": "offsetAmount",
                     "sTitle": "调整金额",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "operator",
-                    "sTitle": "操作人",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "orderStatus",
-                    "sTitle": "订单状态",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "paymentStatus",
-                    "sTitle": "支付状态",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "phone",
-                    "sTitle": "邮编",
                     "sClass": "center"
                 },
                 {
@@ -231,38 +189,43 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "orderStatus",
+                    "sTitle": "订单状态",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "paymentStatus",
+                    "sTitle": "支付状态",
+                    "sClass": "center"
+                },
+                {
                     "mData": "shippingStatus",
                     "sTitle": "配送状态",
                     "sClass": "center"
                 },
                 {
-                    "mData": "sn",
-                    "sTitle": "订单编号",
+                    "mData": "paymentMethod",
+                    "sTitle": "结算方式",
                     "sClass": "center"
                 },
                 {
-                    "mData": "zipCode",
-                    "sTitle": "邮编",
+                    "mData": "shippingMethod",
+                    "sTitle": "配送方式",
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapArea",
-                    "sTitle": "Area",
+                    "mData": "areaName",
+                    "sTitle": "地区名称",
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapCouponCode",
-                    "sTitle": "CouponCode",
+                    "mData": "consignee",
+                    "sTitle": "收货人",
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapSeller",
-                    "sTitle": "Seller",
+                    "mData": "operator",
+                    "sTitle": "操作人",
                     "sClass": "center"
                 },
                 {
@@ -289,75 +252,87 @@
                     }
                 },
                 {
-                    "aTargets": [3],
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [9],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if(data != null){
+                        [#if orderStatuss??]
+                            [#list orderStatuss as orderStatus]
+                                if ("${orderStatus.id}" == data) {
+                                    return "${orderStatus.name}";
+                                }
+                            [/#list]
+                        [/#if]
+                        }else{
+                            return "";
+                        }
                     }
                 },
                 {
                     "aTargets": [12],
                     "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
+                        if(data != null){
+                        [#if paymentStatuss??]
+                            [#list paymentStatuss as paymentStatus]
+                                if ("${paymentStatus.id}" == data) {
+                                    return "${paymentStatus.name}";
+                                }
+                            [/#list]
+                        [/#if]
+                        }else{
+                            return "";
                         }
                     }
                 },
                 {
                     "aTargets": [13],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [25],
-                    "mRender": function (data, display, row) {
                         if(data != null){
-                            return data.name;
+                        [#if shippingStatuss??]
+                            [#list shippingStatuss as shippingStatus]
+                                if ("${shippingStatus.id}" == data) {
+                                    return "${shippingStatus.name}";
+                                }
+                            [/#list]
+                        [/#if]
                         }else{
                             return "";
                         }
                     }
                 },
                 {
-                    "aTargets": [26],
+                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','couponCodeView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        [#if paymentMethods??]
+                            [#list paymentMethods as paymentMethod]
+                                if ("${paymentMethod.id}" == data) {
+                                    return "${paymentMethod.name}";
+                                }
+                            [/#list]
+                        [/#if]
                         }else{
                             return "";
                         }
                     }
-                }, 
+                },
                 {
-                    "aTargets": [27],
+                    "aTargets": [15],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        [#if shippingMethods??]
+                            [#list shippingMethods as shippingMethod]
+                                if ("${shippingMethod.id}" == data) {
+                                    return "${shippingMethod.name}";
+                                }
+                            [/#list]
+                        [/#if]
                         }else{
                             return "";
                         }
                     }
-                }, 
+                },
                 {
-                    "aTargets": [28],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [29],
+                    "aTargets": [19],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 订单管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -369,7 +344,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 6, 25, 26, 27, 28, 29]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 19]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
