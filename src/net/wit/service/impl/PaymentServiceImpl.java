@@ -160,9 +160,15 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				paymentDao.merge(payment);
 
 				order.setAmountPaid(order.getAmountPaid().add(payment.getAmount()));
-				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
+				if (payment.getMethod().equals(Payment.Method.offline)) {
+					order.setFee(BigDecimal.ZERO);
+				} else
+				if (payment.getMethod().equals(Payment.Method.card)) {
 					order.setFee(BigDecimal.ZERO);
 				}
+
+				order.setPaymentMethod(Order.PaymentMethod.values()[payment.getMethod().ordinal()]);
+
 				order.setExpire(null);
 				if (order.getAmountPaid().compareTo(order.getAmount()) >= 0) {
 					order.setOrderStatus(Order.OrderStatus.confirmed);
@@ -176,6 +182,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				orderLog.setContent("买家付款成功");
 				orderLog.setOrder(order);
 				orderLogDao.persist(orderLog);
+
+				messageService.orderMemberPushTo(orderLog);
+				messageService.orderSellerPushTo(orderLog);
+
 			} else
 			if (payment.getType() == Payment.Type.cashier) {
 				Member member = payment.getPayee();

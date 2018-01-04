@@ -304,6 +304,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 
+		messageService.orderMemberPushTo(orderLog);
+
 		//下单就锁定库存
 		for (OrderItem orderItem : order.getOrderItems()) {
 			if (orderItem != null) {
@@ -353,6 +355,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("卖家已经接单");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
+		messageService.orderMemberPushTo(orderLog);
 		return ;
 	}
 
@@ -415,7 +418,29 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("订单交易完成");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
+		messageService.orderMemberPushTo(orderLog);
 
+		//计算货款
+		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
+			if (order.getPaymentMethod().equals(Order.PaymentMethod.online) || order.getPaymentMethod().equals(Order.PaymentMethod.deposit)) {
+				//扣除商家分配佣金
+				Member seller = order.getSeller();
+				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
+				seller.setBalance(seller.getBalance().subtract(order.getAmountPaid()));
+				memberDao.merge(member);
+				Deposit deposit = new Deposit();
+				deposit.setBalance(member.getBalance());
+				deposit.setType(Deposit.Type.product);
+				deposit.setMemo("订单货款结算");
+				deposit.setMember(member);
+				deposit.setCredit(order.getAmountPaid());
+				deposit.setDebit(BigDecimal.ZERO);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				depositDao.persist(deposit);
+				messageService.depositPushTo(deposit);
+		    }
+		}
 		//计算分润
 		if (order.getShippingStatus() == Order.ShippingStatus.shipped && order.getPromoter()!=null) {
 			BigDecimal d = order.getDistribution();
@@ -428,8 +453,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					memberDao.merge(member);
 					Deposit deposit = new Deposit();
 					deposit.setBalance(member.getBalance());
-					deposit.setType(Deposit.Type.rebate);
-					deposit.setMemo("支付分销返利金");
+					deposit.setType(Deposit.Type.product);
+					deposit.setMemo("支付分销佣金");
 					deposit.setMember(member);
 					deposit.setCredit(BigDecimal.ZERO.subtract(d));
 					deposit.setDebit(BigDecimal.ZERO);
@@ -443,7 +468,60 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 					for (OrderItem orderItem : order.getOrderItems()) {
 						if (orderItem != null) {
-
+							BigDecimal r1 = orderItem.calcPercent1();
+							if (r1.compareTo(BigDecimal.ZERO)>0) {
+								Member p1 = order.getPromoter();
+								memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
+								p1.setBalance(p1.getBalance().add(r1));
+								memberDao.merge(p1);
+								Deposit d1 = new Deposit();
+								d1.setBalance(p1.getBalance());
+								d1.setType(Deposit.Type.rebate);
+								d1.setMemo("分销奖励金");
+								d1.setMember(p1);
+								d1.setCredit(r1);
+								d1.setDebit(BigDecimal.ZERO);
+								d1.setDeleted(false);
+								d1.setOperator("system");
+								depositDao.persist(d1);
+								messageService.depositPushTo(d1);
+							}
+							BigDecimal r2 = orderItem.calcPercent2();
+							if (r2.compareTo(BigDecimal.ZERO)>0) {
+								Member p2 = order.getPromoter().getPromoter();
+								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
+								p2.setBalance(p2.getBalance().add(r2));
+								memberDao.merge(p2);
+								Deposit d2 = new Deposit();
+								d2.setBalance(p2.getBalance());
+								d2.setType(Deposit.Type.rebate);
+								d2.setMemo("分销奖励金");
+								d2.setMember(p2);
+								d2.setCredit(r2);
+								d2.setDebit(BigDecimal.ZERO);
+								d2.setDeleted(false);
+								d2.setOperator("system");
+								depositDao.persist(d2);
+								messageService.depositPushTo(d2);
+							}
+							BigDecimal r3 = orderItem.calcPercent3();
+							if (r3.compareTo(BigDecimal.ZERO)>0) {
+								Member p3 = order.getPromoter();
+								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
+								p3.setBalance(p3.getBalance().add(r3));
+								memberDao.merge(p3);
+								Deposit d3 = new Deposit();
+								d3.setBalance(p3.getBalance());
+								d3.setType(Deposit.Type.rebate);
+								d3.setMemo("分销奖励金");
+								d3.setMember(p3);
+								d3.setCredit(r3);
+								d3.setDebit(BigDecimal.ZERO);
+								d3.setDeleted(false);
+								d3.setOperator("system");
+								depositDao.persist(d3);
+								messageService.depositPushTo(d3);
+							}
 						}
 					}
 
@@ -501,6 +579,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("关闭订单成功");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
+		messageService.orderMemberPushTo(orderLog);
 		return;
 	}
 
@@ -598,6 +677,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("卖家已发货");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
+		messageService.orderMemberPushTo(orderLog);
 		return;
 
 	}
@@ -639,8 +719,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setType(OrderLog.Type.refunds);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
 		orderLog.setOrder(order);
-		orderLog.setContent("已提交退款");
+		if (operator==null) {
+			orderLog.setContent("买家申请退款");
+		} else {
+			orderLog.setContent("卖家确定退款");
+		}
 		orderLogDao.persist(orderLog);
+		if (operator==null) {
+			messageService.orderSellerPushTo(orderLog);
+		} else {
+			messageService.orderMemberPushTo(orderLog);
+		}
 
 	}
 
@@ -700,6 +789,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderLog.setContent("卖家确定退货");
 			orderLog.setOrder(order);
 			orderLogDao.persist(orderLog);
+			messageService.orderMemberPushTo(orderLog);
 
 			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
 
@@ -730,9 +820,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				OrderLog orderLog1 = new OrderLog();
 				orderLog1.setType(OrderLog.Type.refunds);
 				orderLog1.setOperator(operator != null ? operator.getUsername() : null);
-				orderLog1.setContent("已提交退款");
+				orderLog1.setContent("卖家确定退款");
 				orderLog1.setOrder(order);
 				orderLogDao.persist(orderLog1);
+				messageService.orderMemberPushTo(orderLog);
 
 			}
 
@@ -747,7 +838,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderLog.setContent("买家申请退货");
 			orderLog.setOrder(order);
 			orderLogDao.persist(orderLog);
-
+			messageService.orderSellerPushTo(orderLog);
 		}
 
 	}

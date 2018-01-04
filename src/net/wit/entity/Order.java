@@ -57,7 +57,13 @@ public class Order extends BaseEntity {
 		online,
 
 		/** 线下结算 */
-		offline
+		offline,
+
+		/** 余额支付 */
+		deposit,
+
+		/** 会员卡 */
+		card
 	}
 
 	/**
@@ -1116,12 +1122,16 @@ public class Order extends BaseEntity {
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
 			return "已发货";
 		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+			return "退货中";
+		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
 			return "退款中";
 		} else {
 			return "已完成";
 		}
 	}
+	
 	public String getStatus() {
 	   if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
 	   	  return  "unpaid";
@@ -1131,6 +1141,9 @@ public class Order extends BaseEntity {
 	   } else
 	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
 		   return "shipped";
+	   } else
+	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+		   return "refunding";
 	   } else
 	   if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
 		   return "refunding";

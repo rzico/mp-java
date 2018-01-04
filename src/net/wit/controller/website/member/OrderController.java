@@ -99,7 +99,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 计算
 	 */
-	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
+	@RequestMapping(value = "/calculate")
 	public @ResponseBody
 	Message calculate(Long id,Integer quantity) {
 		Member member = memberService.getCurrent();
@@ -224,6 +224,52 @@ public class OrderController extends BaseController {
 			}
 		} else {
 			return Message.success("不能关闭订单");
+		}
+	}
+
+	/**
+	 * 退款
+	 */
+	@RequestMapping(value = "/refunds", method = RequestMethod.POST)
+	public @ResponseBody
+	Message refunds(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getPaymentStatus() == Order.PaymentStatus.paid) {
+			try {
+				orderService.refunds(order, null);
+				return Message.success("退款已提交");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else {
+			return Message.success("不能退款");
+		}
+	}
+
+	/**
+	 * 退货
+	 */
+	@RequestMapping(value = "/returns", method = RequestMethod.POST)
+	public @ResponseBody
+	Message returns(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			try {
+				orderService.returns(order, null);
+				return Message.success("退货已提交");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else {
+			return Message.success("不能退货");
 		}
 	}
 

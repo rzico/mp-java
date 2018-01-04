@@ -162,9 +162,11 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 				OrderLog orderLog = new OrderLog();
 				orderLog.setType(OrderLog.Type.refunds);
 				orderLog.setOperator(refunds.getMember().userId());
-				orderLog.setContent("已退款完成");
+				orderLog.setContent("卖家已退款");
 				orderLog.setOrder(order);
 				orderLogDao.persist(orderLog);
+
+				messageService.orderMemberPushTo(orderLog);
 
 				orderService.complete(order,null);
 

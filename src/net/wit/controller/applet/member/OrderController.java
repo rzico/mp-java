@@ -1,37 +1,30 @@
 /*
- * Copyright 2005-2013 shopxx.net. All rights reserved.
- * Support: http://www.shopxx.net
- * License: http://www.shopxx.net/license
  */
 package net.wit.controller.applet.member;
 
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-
 import net.wit.*;
 import net.wit.Message;
-import net.wit.controller.model.CouponCodeModel;
 import net.wit.controller.model.OrderListModel;
 import net.wit.controller.model.OrderModel;
+import net.wit.controller.model.PaymentModel;
+import net.wit.controller.model.ReceiverModel;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.entity.Order;
 import net.wit.service.*;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller - 会员中心 - 订单
- *
+ * 
  * @version 3.0
  */
 @Controller("appletMemberOrderController")
@@ -101,15 +94,13 @@ public class OrderController extends BaseController {
 	/**
 	 * 计算
 	 */
-	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/calculate")
 	public @ResponseBody
 	Message calculate(Long id,Integer quantity) {
 		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
-		if (cart == null || cart.isEmpty()) {
-			return Message.error("购物车为空");
-		}
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
@@ -118,6 +109,18 @@ public class OrderController extends BaseController {
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
+		if (member!=null) {
+			Receiver receiver = null;
+			for (Receiver r:member.getReceivers()) {
+				if (r.getIsDefault()) {
+					receiver = r;
+					break;
+				}
+			}
+			ReceiverModel m = new ReceiverModel();
+			m.bind(receiver);
+			model.setReceiver(m);
+		}
 		return Message.success(model,"success");
 	}
 
@@ -157,7 +160,7 @@ public class OrderController extends BaseController {
 	 * 支付
 	 */
 	@RequestMapping(value = "/payment", method = RequestMethod.POST)
-	public @ResponseBody Message payment(String sn, ModelMap model) {
+	public @ResponseBody Message payment(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
 		if (order==null) {
@@ -169,7 +172,9 @@ public class OrderController extends BaseController {
 		try {
 			if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
 				Payment payment = orderService.payment(order, null);
-				return Message.success((Object) payment.getSn(), "发起成功");
+				PaymentModel model = new PaymentModel();
+				model.bind(payment);
+				return Message.success(model, "发起成功");
 			} else {
 				return Message.error("不是待付款订单");
 			}
@@ -215,6 +220,52 @@ public class OrderController extends BaseController {
 			}
 		} else {
 			return Message.success("不能关闭订单");
+		}
+	}
+
+	/**
+	 * 退款
+	 */
+	@RequestMapping(value = "/refunds", method = RequestMethod.POST)
+	public @ResponseBody
+	Message refunds(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getPaymentStatus() == Order.PaymentStatus.paid) {
+			try {
+				orderService.refunds(order, null);
+				return Message.success("退款已提交");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else {
+			return Message.success("不能退款");
+		}
+	}
+
+	/**
+	 * 退货
+	 */
+	@RequestMapping(value = "/returns", method = RequestMethod.POST)
+	public @ResponseBody
+	Message returns(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			try {
+				orderService.returns(order, null);
+				return Message.success("退货已提交");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else {
+			return Message.success("不能退货");
 		}
 	}
 
@@ -266,20 +317,20 @@ public class OrderController extends BaseController {
 
 		List<Filter> filters = new ArrayList<Filter>();
 		if ("unpaid".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.unconfirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.unpaid));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.unconfirmed));
+			filters.add(new Filter("paymentStatus", Filter.Operator.eq, Order.PaymentStatus.unpaid));
 		}
 		if ("unshipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.unshipped));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
+			filters.add(new Filter("shippingStatus", Filter.Operator.eq, Order.ShippingStatus.unshipped));
 		}
 		if ("shipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.shipped));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
+			filters.add(new Filter("shippingStatus", Filter.Operator.eq, Order.ShippingStatus.shipped));
 		}
 		if ("refunding".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.refunding));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
+			filters.add(new Filter("paymentStatus", Filter.Operator.eq, Order.PaymentStatus.refunding));
 		}
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 
