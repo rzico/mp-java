@@ -65,7 +65,7 @@ public class TopicController extends BaseController {
         if (member==null) {
             member = memberService.getCurrent();
             if (member==null) {
-                return "redirect:/c1001";
+                return "redirect:/c1001?id=";
             }
         }
         String template="1001";
