@@ -265,14 +265,36 @@ public class OrderController extends BaseController {
 		model.addAttribute("shippingStatuss",shippingStatuss);
 
 		//收款信息
-		List<MapEntity> shippingStatuss = new ArrayList<>();
-		shippingStatuss.add(new MapEntity("unshipped","未发货"));
-		shippingStatuss.add(new MapEntity("shipped","已发货"));
-		shippingStatuss.add(new MapEntity("returning","退货中"));
-		shippingStatuss.add(new MapEntity("returned","已退货"));
-		model.addAttribute("shippingStatuss",shippingStatuss);
+		List<MapEntity> shoukuanStatuss = new ArrayList<>();
+		shoukuanStatuss.add(new MapEntity("waiting","等待支付"));
+		shoukuanStatuss.add(new MapEntity("success","支付成功"));
+		shoukuanStatuss.add(new MapEntity("failure","支付失败"));
+		shoukuanStatuss.add(new MapEntity("refund_waiting","等待退款"));
+		shoukuanStatuss.add(new MapEntity("refund_success","退款完成"));
+		shoukuanStatuss.add(new MapEntity("refund_failure","退款失败"));
+		model.addAttribute("shoukuanStatuss",shoukuanStatuss);
+
+		List<MapEntity> shoukuanMethods = new ArrayList<>();
+		shoukuanMethods.add(new MapEntity("online","在线支付"));
+		shoukuanMethods.add(new MapEntity("offline","线下支付"));
+		shoukuanMethods.add(new MapEntity("deposit","余额支付"));
+		shoukuanMethods.add(new MapEntity("card","会员卡支付"));
+		model.addAttribute("shoukuanMethods",shoukuanMethods);
 
 		//退款信息
+		List<MapEntity> tuikuanStatuss = new ArrayList<>();
+		tuikuanStatuss.add(new MapEntity("waiting","等待退款"));
+		tuikuanStatuss.add(new MapEntity("confirmed","确定提交"));
+		tuikuanStatuss.add(new MapEntity("success","退款成功"));
+		tuikuanStatuss.add(new MapEntity("failure","退款失败"));
+		model.addAttribute("tuikuanStatuss",tuikuanStatuss);
+
+		List<MapEntity> tuikuanMethods = new ArrayList<>();
+		tuikuanMethods.add(new MapEntity("online","在线退款"));
+		tuikuanMethods.add(new MapEntity("offline","线下退款"));
+		tuikuanMethods.add(new MapEntity("deposit","余额退款"));
+		tuikuanMethods.add(new MapEntity("card","会员卡退款"));
+		model.addAttribute("tuikuanMethods",tuikuanMethods);
 
 		//订单日志
 		List<MapEntity> logTypes = new ArrayList<>();

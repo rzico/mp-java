@@ -304,10 +304,22 @@
                         [#list data.payments as payment]
                         <tr class="text-c">
                             <td>${payment.sn}</td>
-                            <td>${payment.method}</td>
+                            <td>
+                                [#list shoukuanMethods as shoukuanMethod]
+                                   [#if "${shoukuanMethod.id}" == payment.method]
+                                        ${shoukuanMethod.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
                             <td>${payment.paymentMethod}</td>
                             <td>${payment.amount}</td>
-                            <td>${payment.status}</td>
+                            <td>
+                                [#list shoukuanStatuss as shoukuanStatus]
+                                    [#if "${shoukuanStatus.id}" == payment.status]
+                                        ${shoukuanStatus.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
                             <td>${payment.paymentDate}</td>
                         </tr>
                         [/#list]
@@ -321,7 +333,7 @@
                     <tr class="text-c">
                         <th>编号</th>
                         <th>方式</th>
-                        <th>支付方式</th>
+                        <th>退款方式</th>
                         <th>退款金额</th>
                         <th>状态</th>
                         <th>退款日期</th>
@@ -333,10 +345,22 @@
                         [#list data.refunds as refund]
                         <tr class="text-c">
                             <td>${refund.sn}</td>
-                            <td>${refund.method}</td>
+                            <td>
+                                [#list tuikuanMethods as tuikuanMethod]
+                                    [#if "${tuikuanMethod.id}" == refund.method]
+                                        ${tuikuanMethod.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
                             <td>${refund.paymentMethod}</td>
                             <td>${refund.amount}</td>
-                            <td>${refund.status}</td>
+                            <td>
+                                [#list tuikuanStatuss as tuikuanStatus]
+                                    [#if "${tuikuanStatus.id}" == refund.status]
+                                        ${tuikuanStatus.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
                             <td>${refund.paymentDate}</td>
                         </tr>
                         [/#list]
