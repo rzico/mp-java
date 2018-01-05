@@ -232,14 +232,61 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
+		//订单信息
+		List<MapEntity> paymentMethods = new ArrayList<>();
+		paymentMethods.add(new MapEntity("online","线上结算"));
+		paymentMethods.add(new MapEntity("offline","线下结算"));
+		model.addAttribute("paymentMethods",paymentMethods);
 
-		model.addAttribute("areas",areaService.findAll());
+		List<MapEntity> shippingMethods = new ArrayList<>();
+		shippingMethods.add(new MapEntity("shipping","卖家配送"));
+		shippingMethods.add(new MapEntity("pickup","线下提货"));
+		model.addAttribute("shippingMethods",shippingMethods);
 
-		model.addAttribute("couponCodes",couponCodeService.findAll());
+		List<MapEntity> orderStatuss = new ArrayList<>();
+		orderStatuss.add(new MapEntity("unconfirmed","未确认"));
+		orderStatuss.add(new MapEntity("confirmed","已确认"));
+		orderStatuss.add(new MapEntity("completed","已完成"));
+		orderStatuss.add(new MapEntity("cancelled","已取消"));
+		model.addAttribute("orderStatuss",orderStatuss);
 
-		model.addAttribute("members",memberService.findAll());
+		List<MapEntity> paymentStatuss = new ArrayList<>();
+		paymentStatuss.add(new MapEntity("unpaid","未支付"));
+		paymentStatuss.add(new MapEntity("paid","已支付"));
+		paymentStatuss.add(new MapEntity("refunding","退款中"));
+		paymentStatuss.add(new MapEntity("refunded","已退款"));
+		model.addAttribute("paymentStatuss",paymentStatuss);
 
-		model.addAttribute("sellers",memberService.findAll());
+		List<MapEntity> shippingStatuss = new ArrayList<>();
+		shippingStatuss.add(new MapEntity("unshipped","未发货"));
+		shippingStatuss.add(new MapEntity("shipped","已发货"));
+		shippingStatuss.add(new MapEntity("returning","退货中"));
+		shippingStatuss.add(new MapEntity("returned","已退货"));
+		model.addAttribute("shippingStatuss",shippingStatuss);
+
+		//收款信息
+		List<MapEntity> shippingStatuss = new ArrayList<>();
+		shippingStatuss.add(new MapEntity("unshipped","未发货"));
+		shippingStatuss.add(new MapEntity("shipped","已发货"));
+		shippingStatuss.add(new MapEntity("returning","退货中"));
+		shippingStatuss.add(new MapEntity("returned","已退货"));
+		model.addAttribute("shippingStatuss",shippingStatuss);
+
+		//退款信息
+
+		//订单日志
+		List<MapEntity> logTypes = new ArrayList<>();
+		logTypes.add(new MapEntity("create","订单创建"));
+		logTypes.add(new MapEntity("modify","订单修改"));
+		logTypes.add(new MapEntity("confirm","订单确认"));
+		logTypes.add(new MapEntity("payment","订单支付"));
+		logTypes.add(new MapEntity("refunds","订单退款"));
+		logTypes.add(new MapEntity("shipping","订单发货"));
+		logTypes.add(new MapEntity("returns","订单退货"));
+		logTypes.add(new MapEntity("complete","订单完成"));
+		logTypes.add(new MapEntity("cancel","订单取消"));
+		logTypes.add(new MapEntity("other","其它"));
+		model.addAttribute("logTypes",logTypes);
 
 		model.addAttribute("data",orderService.find(id));
 
