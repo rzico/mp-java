@@ -120,7 +120,9 @@ public class DistributionController extends BaseController {
         if (catalog==null) {
             return Message.error("无效策略id");
         }
-        catalog.setOrders(orders);
+        if (orders!=null) {
+            catalog.setOrders(orders);
+        }
         catalog.setName(name);
         catalog.setMember(member);
         catalog.setPercent1(percent1);

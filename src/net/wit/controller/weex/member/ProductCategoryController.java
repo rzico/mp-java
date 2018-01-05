@@ -116,7 +116,9 @@ public class ProductCategoryController extends BaseController {
         if (catalog==null) {
             return Message.error("无效分类id");
         }
-        catalog.setOrders(orders);
+        if (orders!=null) {
+            catalog.setOrders(orders);
+        }
         catalog.setName(name);
         catalog.setMember(member);
         productCategoryService.save(catalog);
