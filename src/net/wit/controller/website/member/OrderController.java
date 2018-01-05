@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.wit.*;
 import net.wit.Message;
-import net.wit.controller.model.CouponCodeModel;
-import net.wit.controller.model.OrderListModel;
-import net.wit.controller.model.OrderModel;
+import net.wit.controller.model.*;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.entity.Order;
@@ -101,15 +99,12 @@ public class OrderController extends BaseController {
 	/**
 	 * 计算
 	 */
-	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
+	@RequestMapping(value = "/calculate")
 	public @ResponseBody
 	Message calculate(Long id,Integer quantity) {
 		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
-		if (cart == null || cart.isEmpty()) {
-			return Message.error("购物车为空");
-		}
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
@@ -118,6 +113,18 @@ public class OrderController extends BaseController {
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
+		if (member!=null) {
+			Receiver receiver = null;
+			for (Receiver r:member.getReceivers()) {
+				if (r.getIsDefault()) {
+					receiver = r;
+					break;
+				}
+			}
+			ReceiverModel m = new ReceiverModel();
+			m.bind(receiver);
+			model.setReceiver(m);
+		}
 		return Message.success(model,"success");
 	}
 
@@ -157,7 +164,7 @@ public class OrderController extends BaseController {
 	 * 支付
 	 */
 	@RequestMapping(value = "/payment", method = RequestMethod.POST)
-	public @ResponseBody Message payment(String sn, ModelMap model) {
+	public @ResponseBody Message payment(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
 		if (order==null) {
@@ -169,7 +176,9 @@ public class OrderController extends BaseController {
 		try {
 			if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
 				Payment payment = orderService.payment(order, null);
-				return Message.success((Object) payment.getSn(), "发起成功");
+				PaymentModel model = new PaymentModel();
+				model.bind(payment);
+				return Message.success(model, "发起成功");
 			} else {
 				return Message.error("不是待付款订单");
 			}
@@ -215,6 +224,52 @@ public class OrderController extends BaseController {
 			}
 		} else {
 			return Message.success("不能关闭订单");
+		}
+	}
+
+	/**
+	 * 退款
+	 */
+	@RequestMapping(value = "/refunds", method = RequestMethod.POST)
+	public @ResponseBody
+	Message refunds(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getPaymentStatus() == Order.PaymentStatus.paid) {
+			try {
+				orderService.refunds(order, null);
+				return Message.success("退款已提交");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else {
+			return Message.success("不能退款");
+		}
+	}
+
+	/**
+	 * 退货
+	 */
+	@RequestMapping(value = "/returns", method = RequestMethod.POST)
+	public @ResponseBody
+	Message returns(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			try {
+				orderService.returns(order, null);
+				return Message.success("退货已提交");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else {
+			return Message.success("不能退货");
 		}
 	}
 

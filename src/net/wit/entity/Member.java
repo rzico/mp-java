@@ -76,6 +76,7 @@ public class Member extends BaseEntity {
 	@Pattern(regexp = "^[^\\s&\"<>]+$")
 	@Column(columnDefinition="varchar(255) comment '密码'")
 	private String password;
+
 //
 //	/** E-mail */
 //	@Email
@@ -277,6 +278,11 @@ public class Member extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) comment '专栏'")
 	@JsonIgnore
 	private Topic topic;
+
+	/** 推广 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	private Member promoter;
 
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -581,6 +587,15 @@ public class Member extends BaseEntity {
 //	public void setAttributeValue8(String attributeValue8) {
 //		this.attributeValue8 = attributeValue8;
 //	}
+
+
+	public Member getPromoter() {
+		return promoter;
+	}
+
+	public void setPromoter(Member promoter) {
+		this.promoter = promoter;
+	}
 
 	public String getAttributeValue9() {
 		return attributeValue9;

@@ -21,9 +21,8 @@ import net.wit.Filter.Operator;
 import net.wit.dao.*;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
-import net.wit.service.MessageService;
-import net.wit.service.PluginService;
-import net.wit.service.SmssendService;
+import net.wit.service.*;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.entity.*;
-import net.wit.service.RefundsService;
 
 /**
  * @ClassName: RefundsDaoImpl
@@ -53,6 +51,11 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
+	@Resource(name = "orderDaoImpl")
+	private OrderDao orderDao;
+	@Resource(name = "orderLogDaoImpl")
+	private OrderLogDao orderLogDao;
+
 	@Resource(name = "smssendServiceImpl")
 	private SmssendService smssendService;
 
@@ -67,6 +70,9 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
+
+	@Resource(name = "orderServiceImpl")
+	private OrderService orderService;
 
 	@Resource(name = "refundsDaoImpl")
 	public void setBaseDao(RefundsDao refundsDao) {
@@ -133,6 +139,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			refunds.setStatus(Refunds.Status.success);
 			refundsDao.merge(refunds);
 			refundsDao.flush();
+
 			Payment payment = refunds.getPayment();
 			if (payment!=null) {
 				paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
@@ -146,12 +153,31 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					payBillDao.merge(paymentBill);
 				}
 			}
-			PayBill payBill = refunds.getPayBill();
-			if (payBill!=null) {
-				payBill.setStatus(PayBill.Status.refund_success);
-				payBillDao.merge(payBill);
+			if (refunds.getType().equals(Refunds.Type.payment)) {
+				Order order = refunds.getOrder();
+				orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+				order.setPaymentStatus(Order.PaymentStatus.refunded);
+				orderDao.merge(order);
+
+				OrderLog orderLog = new OrderLog();
+				orderLog.setType(OrderLog.Type.refunds);
+				orderLog.setOperator(refunds.getMember().userId());
+				orderLog.setContent("卖家已退款");
+				orderLog.setOrder(order);
+				orderLogDao.persist(orderLog);
+
+				messageService.orderMemberPushTo(orderLog);
+
+				orderService.complete(order,null);
+
+			} else {
+				PayBill payBill = refunds.getPayBill();
+				if (payBill != null) {
+					payBill.setStatus(PayBill.Status.refund_success);
+					payBillDao.merge(payBill);
+				}
+				messageService.payBillPushTo(payBill);
 			}
-			messageService.payBillPushTo(payBill);
 		}
 	}
 
@@ -173,8 +199,8 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						throw new RuntimeException("重复提交");
 					}
 				}
-				PayBill payBill = refunds.getPayBill();
 				if (refunds.getType().equals(Refunds.Type.cashier)) {
+					PayBill payBill = refunds.getPayBill();
 					Member member =  refunds.getPayee();
 					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
@@ -209,6 +235,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					payBillDao.merge(payBill);
 				}else
 				if (refunds.getType() == Refunds.Type.card) {
+					PayBill payBill = refunds.getPayBill();
 					Member member =  refunds.getPayee();
 					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
@@ -413,4 +440,46 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			throw new RuntimeException("重复关闭");
 		}
 	}
+
+
+
+	/**
+	 * 查询状态
+	 */
+	public void query() {
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("status", Filter.Operator.eq,Refunds.Status.confirmed));
+		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
+		List<Refunds> data = refundsDao.findList(null,null,filters,null);
+		for (Refunds refunds:data) {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				if (paymentPlugin == null) {
+					resultCode = "0001";
+				} else {
+					resultCode = paymentPlugin.refundsQuery(refunds,null);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					try {
+						this.handle(refunds);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				case "0001":
+					try {
+						this.close(refunds);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+			}
+		}
+
+	}
+
+
 }

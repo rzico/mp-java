@@ -49,19 +49,7 @@ public class Friends extends BaseEntity {
 	public enum Type {
 
 		/** 好友 */
-		friend,
-
-		/** 会员 */
-		customer,
-
-		/** 一级代理 */
-		vip1,
-
-		/** 二级代理 */
-		vip2,
-
-		/** 三级代理 */
-		vip3
+		friend
 	}
 
 	/** 状态 */

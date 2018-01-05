@@ -57,7 +57,13 @@ public class Order extends BaseEntity {
 		online,
 
 		/** 线下结算 */
-		offline
+		offline,
+
+		/** 余额支付 */
+		deposit,
+
+		/** 会员卡 */
+		card
 	}
 
 	/**
@@ -273,6 +279,10 @@ public class Order extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private Member promoter;
+
+	/** 是否已分配佣金 */
+	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
+	private Boolean isDistribution;
 
 	/** 优惠码 */
 	@JsonIgnore
@@ -639,6 +649,14 @@ public class Order extends BaseEntity {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public void setIsDistribution(Boolean distribution) {
+		isDistribution = distribution;
+	}
+
+	public Boolean getIsDistribution() {
+		return isDistribution;
 	}
 
 	/**
@@ -1018,6 +1036,32 @@ public class Order extends BaseEntity {
 	}
 
 	/**
+	 * 获取分销佣金
+	 *
+	 * @return 分销佣金
+	 */
+	@Transient
+	public BigDecimal getDistribution() {
+		BigDecimal d = BigDecimal.ZERO;
+		if (getPromoter()!=null) {
+			if (getOrderItems() != null) {
+				for (OrderItem orderItem : getOrderItems()) {
+					if (orderItem != null && orderItem.getSubtotal() != null) {
+						d = d.add(orderItem.calcPercent1());
+						if (getPromoter().getPromoter()!=null) {
+							d = d.add(orderItem.calcPercent2());
+						}
+						if (getPromoter().getPromoter().getPromoter()!=null) {
+							d = d.add(orderItem.calcPercent3());
+						}
+					}
+				}
+			}
+		}
+		return d;
+	}
+
+	/**
 	 * 获取应付金额
 	 * 
 	 * @return 应付金额
@@ -1088,12 +1132,16 @@ public class Order extends BaseEntity {
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
 			return "已发货";
 		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+			return "退货中";
+		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
 			return "退款中";
 		} else {
 			return "已完成";
 		}
 	}
+	
 	public String getStatus() {
 	   if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
 	   	  return  "unpaid";
@@ -1103,6 +1151,9 @@ public class Order extends BaseEntity {
 	   } else
 	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
 		   return "shipped";
+	   } else
+	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+		   return "refunding";
 	   } else
 	   if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
 		   return "refunding";

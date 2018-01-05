@@ -39,4 +39,11 @@ public interface RefundsService extends BaseService<Refunds, Long> {
 	 */
 	Boolean refunds(Refunds refunds, HttpServletRequest request) throws Exception;
 	void close(Refunds refunds) throws Exception;
+
+
+	/**
+	 * 查询状态
+	 */
+	void query();
+
 }

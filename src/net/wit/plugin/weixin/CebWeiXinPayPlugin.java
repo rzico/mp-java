@@ -314,7 +314,8 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
     public String queryOrder(Payment payment,HttpServletRequest request) throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
 
-		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
+		SortedMap<String, String> map = new TreeMap();
+//		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
 
 		map.put("mch_id", pluginConfig.getAttribute("partner"));
 		map.put("service", "unified.trade.query");
@@ -406,7 +407,8 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
 		PluginConfig pluginConfig = getPluginConfig();
 		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
-		SortedMap<String,String> map = XmlUtils.getParameterMap(request);
+		SortedMap<String, String> map = new TreeMap();
+//		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
 		DecimalFormat decimalFormat = new DecimalFormat("#");
 		BigDecimal money = refunds.getAmount().multiply(new BigDecimal(100));
 		map.put("service", "unified.trade.refund");
@@ -496,7 +498,8 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
 		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
-		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
+		SortedMap<String, String> map = new TreeMap();
+//		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
 
 		map.put("mch_id",pluginConfig.getAttribute("partner"));
 		map.put("service", "unified.trade.refundquery");

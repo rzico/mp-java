@@ -109,16 +109,31 @@ public class DepositController extends BaseController {
      */
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
-    public Message summary(Date billDate,HttpServletRequest request){
+    public Message summary(Date billDate,String type,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Date b = DateUtils.truncate(billDate,Calendar.MONTH);
-        Date e = DateUtils.truncate(billDate,Calendar.MONTH);
-        e =DateUtils.addMonths(e,1);
-        e =DateUtils.addDays(e,-1);
-        List<DepositSummary> deps = depositService.sumPage(member,b,e);
+        if (type==null) {
+            type = "1";
+        }
+        Date d = DateUtils.truncate(billDate, Calendar.DATE);
+        Date e = DateUtils.truncate(billDate, Calendar.DATE);
+        if (type!=null) {
+            if ("1".equals(type)) {
+                d = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.addMonths(e,1);
+                e = DateUtils.addDays(e,-1);
+            }
+            if ("2".equals(type)) {
+                d = new Date(billDate.getYear(),1,1);
+                e = new Date(billDate.getYear(),12,1);
+                e = DateUtils.addMonths(e,1);
+                e = DateUtils.addDays(e,-1);
+            }
+        }
+        List<DepositSummary> deps = depositService.sumPage(member,d,e);
         return Message.bind(deps,request);
     }
 

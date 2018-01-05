@@ -13,10 +13,7 @@ import net.sf.json.util.JSONUtils;
 import net.wit.*;
 import net.wit.Filter.Operator;
 
-import net.wit.controller.model.ArticleListModel;
-import net.wit.controller.model.DepositModel;
-import net.wit.controller.model.PayBillModel;
-import net.wit.controller.model.PayBillViewModel;
+import net.wit.controller.model.*;
 import net.wit.dao.ArticleDao;
 import net.wit.dao.BindUserDao;
 import net.wit.dao.MemberDao;
@@ -258,6 +255,36 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setContent(""+reward.getMember().getNickName()+"赞赏你:"+reward.getAmount()+"元,文章:"+reward.getArticle().getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(reward.getArticle());
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
+	//订单提醒
+	public Boolean orderMemberPushTo(OrderLog orderLog) {
+		Message msg = new Message();
+		msg.setReceiver(orderLog.getOrder().getMember());
+		msg.setMember(orderLog.getOrder().getSeller());
+		msg.setType(Message.Type.order);
+		msg.setThumbnial(msg.getMember().getLogo());
+		msg.setTitle("订单提醒");
+		msg.setContent(orderLog.getContent());
+		OrderListModel ext = new OrderListModel();
+		ext.bind(orderLog.getOrder());
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
+	//订单提醒
+	public Boolean orderSellerPushTo(OrderLog orderLog) {
+		Message msg = new Message();
+		msg.setReceiver(orderLog.getOrder().getSeller());
+		msg.setMember(orderLog.getOrder().getMember());
+		msg.setType(Message.Type.order);
+		msg.setThumbnial(msg.getMember().getLogo());
+		msg.setTitle("订单提醒");
+		msg.setContent(orderLog.getContent());
+		OrderListModel ext = new OrderListModel();
+		ext.bind(orderLog.getOrder());
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}

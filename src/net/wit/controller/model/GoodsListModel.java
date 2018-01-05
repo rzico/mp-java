@@ -22,6 +22,8 @@ public class GoodsListModel extends BaseModel implements Serializable {
     private BigDecimal price;
     /** 库存 */
     private Integer stock;
+    /** 可用库存 */
+    private Integer availableStock;
 
     public Long getId() {
         return id;
@@ -63,17 +65,27 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.stock = stock;
     }
 
+    public Integer getAvailableStock() {
+        return availableStock;
+    }
+
+    public void setAvailableStock(Integer availableStock) {
+        this.availableStock = availableStock;
+    }
+
     public void bind(Goods goods) {
         this.id = goods.getId();
         Product product = goods.getProducts().get(0);
         this.name = product.getName();
-        List<ProductStock> stocks = product.getProductStocks();
-        this.stock = 0;
-        for (ProductStock productStock:stocks) {
-            if (productStock.getSeller().equals(product.getMember())) {
-                this.stock = productStock.getStock();
-            }
-        }
+        this.stock = product.getStock();
+        this.availableStock = product.getAvailableStock();
+//        List<ProductStock> stocks = product.getProductStocks();
+//        this.stock = 0;
+//        for (ProductStock productStock:stocks) {
+//            if (productStock.getSeller().equals(product.getMember())) {
+//                this.stock = productStock.getStock();
+//            }
+//        }
         this.setThumbnail(product.getThumbnail());
         this.setPrice(product.getPrice());
     }
@@ -82,13 +94,15 @@ public class GoodsListModel extends BaseModel implements Serializable {
     public void bindProduct(Product product) {
         this.id = product.getGoods().getId();
         this.name = product.getName();
-        List<ProductStock> stocks = product.getProductStocks();
-        this.stock = 0;
-        for (ProductStock productStock:stocks) {
-            if (productStock.getSeller().equals(product.getMember())) {
-                this.stock = productStock.getStock();
-            }
-        }
+        this.stock = product.getStock();
+        this.availableStock = product.getAvailableStock();
+//        List<ProductStock> stocks = product.getProductStocks();
+//        this.stock = 0;
+//        for (ProductStock productStock:stocks) {
+//            if (productStock.getSeller().equals(product.getMember())) {
+//                this.stock = productStock.getStock();
+//            }
+//        }
         this.setThumbnail(product.getThumbnail());
         this.setPrice(product.getPrice());
     }

@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.CouponModel;
 import net.wit.entity.Coupon;
+import net.wit.entity.CouponCode;
 import net.wit.entity.Member;
 import net.wit.service.AdminService;
 import net.wit.service.CouponCodeService;
@@ -17,10 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -76,7 +74,23 @@ public class CouponController extends BaseController {
         Coupon coupon = couponService.find(id);
         CouponModel model = new CouponModel();
         model.bind(coupon);
-        return Message.bind(model,request);
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("coupon",model);
+        Member member = memberService.getCurrent();
+        if (member!=null) {
+            List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+            filters.add(new Filter("coupon", Filter.Operator.eq,coupon));
+            List<CouponCode> couponCodes = couponCodeService.findList(1,filters,null);
+            if (couponCodes.size()>0) {
+                data.put("activate",true);
+            } else {
+                data.put("activate",false);
+            }
+        } else {
+            data.put("activate",false);
+        }
+        return Message.bind(data,request);
     }
 
 }

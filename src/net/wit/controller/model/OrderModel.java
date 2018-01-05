@@ -48,6 +48,9 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  优惠券折扣 */
     private BigDecimal couponDiscount;
 
+    /** 地址 */
+    private ReceiverModel receiver;
+
     /** 商品 */
     private List<OrderItemModel> orderItems;
 
@@ -174,6 +177,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.amount = amount;
     }
 
+    public ReceiverModel getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(ReceiverModel receiver) {
+        this.receiver = receiver;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -196,6 +207,11 @@ public class OrderModel extends BaseModel implements Serializable {
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
 
+        this.receiver = new ReceiverModel();
+        this.receiver.setAddress(order.getAddress());
+        this.receiver.setAreaName(order.getAreaName());
+        this.receiver.setConsignee(order.getConsignee());
+        this.receiver.setPhone(order.getPhone());
     }
 
 

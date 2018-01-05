@@ -291,7 +291,8 @@ public class AliPayPlugin extends PaymentPlugin {
 	@Override
     public String queryOrder(Payment payment,HttpServletRequest request)  throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
-		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
+		SortedMap<String, String> map = new TreeMap();
+//		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
 
 		map.put("mch_id", pluginConfig.getAttribute("partner"));
 		map.put("service", "unified.trade.query");

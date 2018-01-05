@@ -143,7 +143,7 @@ public class PayBillController extends BaseController {
      */
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
-    public Message summary(Long shopId,Date billDate,Pageable pageable, HttpServletRequest request){
+    public Message summary(Long shopId,Date billDate,String type,Pageable pageable, HttpServletRequest request){
         Shop shop = null;
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -164,8 +164,26 @@ public class PayBillController extends BaseController {
                 return Message.error("没有查询权限");
             }
         }
+        if (type==null) {
+            type = "0";
+        }
         Date d = DateUtils.truncate(billDate, Calendar.DATE);
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
+        Date e = DateUtils.truncate(billDate, Calendar.DATE);
+        if (type!=null) {
+            if ("1".equals(type)) {
+                d = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.addMonths(e,1);
+                e = DateUtils.addDays(e,-1);
+            }
+            if ("2".equals(type)) {
+                d = new Date(billDate.getYear(),1,1);
+                e = new Date(billDate.getYear(),12,1);
+                e = DateUtils.addMonths(e,1);
+                e = DateUtils.addDays(e,-1);
+            }
+        }
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,e);
         List<PayBillSummaryModel> models = PayBillSummaryModel.bindList(dsum);
         for (PayBillSummaryModel model:models) {
             if (model.getMethod()!=null) {

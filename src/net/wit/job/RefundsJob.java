@@ -1,6 +1,7 @@
 package net.wit.job;
 
 import net.wit.service.PaymentService;
+import net.wit.service.RefundsService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -8,21 +9,21 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * Job - 付款单
+ * Job - 退款单
  */
-@Component("paymentJob")
+@Component("refundsJob")
 @Lazy(false)
-public class PaymentJob {
+public class RefundsJob {
 
-	@Resource(name = "paymentServiceImpl")
-	private PaymentService paymentService;
+	@Resource(name = "refundsServiceImpl")
+	private RefundsService refundsService;
 
 	/**
 	 * 释放过期订单库存
 	 */
-	@Scheduled(cron = "${job.payment_query.cron}")
+	@Scheduled(cron = "${job.refunds_query.cron}")
 	public void query() {
-		paymentService.query();
+		refundsService.query();
 	}
 
 }

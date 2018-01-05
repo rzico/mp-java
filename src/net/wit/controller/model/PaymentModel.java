@@ -10,12 +10,16 @@ import java.util.Date;
 
 public class PaymentModel extends BaseModel implements Serializable {
 
+    /** 收款单号 */
+    private String sn;
     /** 收款方 */
     private String nickName;
     /** 收款方头像 */
     private String logo;
     /** 摘要 */
     private String memo;
+    /** 付款方式 */
+    private String paymentPluginId;
     /** 金额 */
     private BigDecimal amount;
 
@@ -62,11 +66,29 @@ public class PaymentModel extends BaseModel implements Serializable {
         this.createDate = createDate;
     }
 
+    public String getPaymentPluginId() {
+        return paymentPluginId;
+    }
+
+    public void setPaymentPluginId(String paymentPluginId) {
+        this.paymentPluginId = paymentPluginId;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
     public void bind(Payment payment) {
+        this.sn = payment.getSn();
         this.amount = payment.getAmount();
         this.createDate = payment.getCreateDate();
         this.memo = payment.getMemo();
         this.logo = payment.getPayee().getLogo();
         this.nickName = payment.getPayee().getNickName();
+        this.paymentPluginId = payment.getPaymentPluginId();
     }
 }

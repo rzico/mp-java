@@ -139,6 +139,7 @@ public class ProductController extends BaseController {
 			product.setPoint(0L);
 			product.setGoods(goods);
 			product.setMember(member);
+			product.setStock(pm.getStock());
 			i = i+1;
 			product.setOrders(i);
 			if (i==1) {

@@ -21,6 +21,8 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
     private AreaModel area;
     /** 职业 */
     private OccupationModel occupation;
+    /** 推荐人 */
+    private String promoter;
     /** 生日 */
     private Date birthday;
     /** 是否绑定手机 */
@@ -136,6 +138,14 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
         this.mobile = mobile;
     }
 
+    public String getPromoter() {
+        return promoter;
+    }
+
+    public void setPromoter(String promoter) {
+        this.promoter = promoter;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -151,6 +161,13 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
         OccupationModel occupation = new OccupationModel();
         if (member.getOccupation()!=null) {
             occupation.bind(member.getOccupation());
+        }
+        if (member.getPromoter()!=null) {
+            if (member.getPromoter().getName()!=null) {
+                this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().getName() + ")";
+            } else {
+                this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().getNickName() + ")";
+            }
         }
         this.occupation = occupation;
         this.logo = member.getLogo();

@@ -36,6 +36,8 @@ public class ProductModel extends BaseModel implements Serializable {
 //    private BigDecimal cost;
     /** 库存 */
     private Integer stock;
+    /** 可用库存 */
+    private Integer availableStock;
 
     public Long getProductId() {
         return productId;
@@ -77,6 +79,14 @@ public class ProductModel extends BaseModel implements Serializable {
         this.stock = stock;
     }
 
+    public Integer getAvailableStock() {
+        return availableStock;
+    }
+
+    public void setAvailableStock(Integer availableStock) {
+        this.availableStock = availableStock;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -95,18 +105,20 @@ public class ProductModel extends BaseModel implements Serializable {
         this.spec1 = product.getSpec1();
         this.spec2 = product.getSpec2();
         this.price = product.getPrice();
+        this.stock = product.getStock();
+        this.availableStock = product.getAvailableStock();
 //        this.weight = product.getWeight();
 //        this.vip1Price = product.getVip1Price();
 //        this.vip2Price = product.getVip2Price();
 //        this.vip3Price = product.getVip3Price();
 //        this.cost = product.getCost();
-        List<ProductStock> stocks = product.getProductStocks();
-        this.stock = 0;
-        for (ProductStock productStock:stocks) {
-            if (productStock.getSeller().equals(product.getMember())) {
-                this.stock = productStock.getStock();
-            }
-        }
+//        List<ProductStock> stocks = product.getProductStocks();
+//        this.stock = 0;
+//        for (ProductStock productStock:stocks) {
+//            if (productStock.getSeller().equals(product.getMember())) {
+//                this.stock = productStock.getStock();
+//            }
+//        }
     }
 
     public static List<ProductModel> bindList(List<Product> products) {
