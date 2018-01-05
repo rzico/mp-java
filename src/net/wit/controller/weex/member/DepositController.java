@@ -127,10 +127,18 @@ public class DepositController extends BaseController {
                 e = DateUtils.addDays(e,-1);
             }
             if ("2".equals(type)) {
-                d = new Date(billDate.getYear(),1,1);
-                e = new Date(billDate.getYear(),12,1);
-                e = DateUtils.addMonths(e,1);
-                e = DateUtils.addDays(e,-1);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(d);
+                calendar.set(Calendar.MONTH, 0);
+                calendar.set(Calendar.DATE, 1);
+                d = calendar.getTime();
+
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(d);
+                calendar1.set(Calendar.MONTH, 0);
+                calendar1.set(Calendar.DATE, 1);
+                calendar1.roll(Calendar.DAY_OF_YEAR, -1);
+                e = calendar1.getTime();
             }
         }
         List<DepositSummary> deps = depositService.sumPage(member,d,e);

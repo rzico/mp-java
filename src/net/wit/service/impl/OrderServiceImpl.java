@@ -168,6 +168,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setOffsetAmount(new BigDecimal(0));
 		order.setPoint(0L);
 		order.setPointDiscount(BigDecimal.ZERO);
+		order.setDeleted(false);
 		order.setMemo(memo);
 		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);

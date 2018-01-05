@@ -3,13 +3,12 @@ package net.wit.entity;
 
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName: wx_distribution
@@ -20,7 +19,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "wx_distribution")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_distribution_sequence")
-public class Distribution extends BaseEntity {
+public class Distribution extends OrderEntity {
 
 	private static final long serialVersionUID = 920L;
 
@@ -47,16 +46,16 @@ public class Distribution extends BaseEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
-	/** 一级代理 百分比 */
+	/** 直接代理 百分比 */
 	@Min(0)
 	@NotNull
-	@Column(columnDefinition="decimal(21,6) not null default 0 comment '一级代理'")
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '直接代理'")
 	private BigDecimal percent1;
 
-	/** 二级代理 百分比 */
+	/** 间接代理 百分比 */
 	@Min(0)
 	@NotNull
-	@Column(columnDefinition="decimal(21,6) not null default 0 comment '二级代理'")
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '间接代理'")
 	private BigDecimal percent2;
 
 	/** 三级代理 百分比 */
@@ -64,6 +63,15 @@ public class Distribution extends BaseEntity {
 	@NotNull
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '三级代理'")
 	private BigDecimal percent3;
+
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member member;
+
+	/** 商品 */
+	@OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY)
+	private Set<Product> products = new HashSet<Product>();
+
 
 	public Distribution.Status getStatus() {
 		return status;
@@ -103,5 +111,21 @@ public class Distribution extends BaseEntity {
 
 	public void setPercent3(BigDecimal percent3) {
 		this.percent3 = percent3;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
 	}
 }

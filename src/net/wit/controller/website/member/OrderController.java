@@ -122,7 +122,9 @@ public class OrderController extends BaseController {
 				}
 			}
 			ReceiverModel m = new ReceiverModel();
-			m.bind(receiver);
+			if (receiver!=null) {
+				m.bind(receiver);
+			}
 			model.setReceiver(m);
 		}
 		return Message.success(model,"success");

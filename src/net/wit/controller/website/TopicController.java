@@ -1,5 +1,6 @@
 package net.wit.controller.website;
 
+import com.sun.mail.util.BASE64DecoderStream;
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Order;
@@ -11,17 +12,21 @@ import net.wit.entity.Article;
 import net.wit.entity.ArticleCatalog;
 import net.wit.entity.Member;
 import net.wit.entity.Topic;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.service.*;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.*;
 
 
 /**
@@ -60,12 +65,16 @@ public class TopicController extends BaseController {
      * id 会员
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(Long id,HttpServletRequest request){
+    public String index(Long id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.find(id);
         if (member==null) {
             member = memberService.getCurrent();
             if (member==null) {
-                return "redirect:/c1001?id=";
+                String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+                String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+                redirectUrl = URLEncoder.encode(redirectUrl);
+                return "redirect:"+MenuManager.codeUrlO2(redirectUrl);
             }
         }
         String template="1001";
@@ -74,8 +83,8 @@ public class TopicController extends BaseController {
             template = topic.getTemplate().getSn();
         }
 
-        return "redirect:/c"+template+"?id="+id;
-    }
+        return "redirect:"+"http://"+bundle.getString("weixin.url")+"/c"+template+"?id="+id;
+     }
 
     /**
      * 专栏信息

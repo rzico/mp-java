@@ -75,7 +75,7 @@ public class MenuManager {
 
 	public static String codeUrlO2(String url) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-		String appId = bundle.getString("APPID");//
+		String appId = bundle.getString("weixin.appid");
 		// 第三方用户唯一凭证密钥
 		try {
 			url = WeixinApi.getOauth2Code(appId, url, "snsapi_base");

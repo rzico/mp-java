@@ -140,6 +140,7 @@ public class ProductController extends BaseController {
 			product.setGoods(goods);
 			product.setMember(member);
 			product.setStock(pm.getStock());
+			product.setAllocatedStock(0);
 			i = i+1;
 			product.setOrders(i);
 			if (i==1) {
@@ -149,7 +150,6 @@ public class ProductController extends BaseController {
 			}
 			product.setIsMarketable(true);
 			products.add(product);
-
 		}
 		goods.getProducts().addAll(products);
 		goodsService.save(goods);
