@@ -1116,6 +1116,12 @@ public class Order extends BaseEntity {
 		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
 			return "待付款";
 		} else
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.paid)) {
+			return "待确定";
+		} else
+		if (getOrderStatus().equals(OrderStatus.cancelled)) {
+			return "已取消";
+		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
 			return "待发货";
 		} else
@@ -1127,6 +1133,12 @@ public class Order extends BaseEntity {
 		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
 			return "退款中";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
+			return "已退货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getPaymentStatus().equals(PaymentStatus.refunded) ) {
+			return "已退款";
 		} else {
 			return "已完成";
 		}
