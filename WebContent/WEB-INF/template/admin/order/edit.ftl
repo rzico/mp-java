@@ -30,6 +30,32 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
     <!-- form class="form form-horizontal" id="form-article-add" -->
+        [#if data??]
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+        [#if data.status == 'unpaid' ]<!-- 待付款 -->
+            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                <i class="Hui-iconfont">&#xe706;</i> 关闭
+            </button>
+        [#elseif data.status == 'unshipped']<!-- 待发货 -->
+            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 发货
+            </button>
+            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 退款
+            </button>
+        [#elseif data.status == 'shipped']<!-- 已发货 -->
+            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 退货
+            </button>
+        [#elseif data.status == 'refunding']<!-- 退货中 -->
+            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 同意退货
+            </button>
+        [#elseif data.status == 'completed']<!-- 已完成 -->
+
+        [/#if]
+        </div>
+        <div class="mt-20"></div>
         <div id="tab-system" class="HuiTab">
             <div class="tabBar cl">
                 <span>订单信息</span>
@@ -402,6 +428,7 @@
                 </table>
             </div>
         </div>
+        [/#if]
     </form>
 </div>
 
