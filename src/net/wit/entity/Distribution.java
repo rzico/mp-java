@@ -23,23 +23,6 @@ public class Distribution extends OrderEntity {
 
 	private static final long serialVersionUID = 920L;
 
-	/**
-	 * 状态
-	 */
-	public enum Status {
-
-		/** 开启  */
-		enabled,
-
-		/** 关闭  */
-		disabled
-	}
-
-	/** 状态 */
-	@NotNull
-	@Column(columnDefinition="int(11) not null comment '状态 {enabled:开启,disabled:关闭}'")
-	private Status status;
-
 	/** 策略名称 */
 	@NotNull
 	@Length(max = 200)
@@ -71,15 +54,6 @@ public class Distribution extends OrderEntity {
 	/** 商品 */
 	@OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY)
 	private Set<Product> products = new HashSet<Product>();
-
-
-	public Distribution.Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Distribution.Status status) {
-		this.status = status;
-	}
 
 	public String getName() {
 		return name;
