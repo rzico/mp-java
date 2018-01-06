@@ -313,4 +313,9 @@ public class Topic extends BaseEntity {
     public void setTopicCard(TopicCard topicCard) {
         this.topicCard = topicCard;
     }
+
+    public BigDecimal calcFee(BigDecimal amount) {
+        BigDecimal rate = getFee().multiply(new BigDecimal("0.01"));
+        return amount.multiply(rate).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+    }
 }

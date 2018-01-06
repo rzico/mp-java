@@ -1,6 +1,7 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -9,8 +10,10 @@ import javax.persistence.LockModeType;
 import net.wit.*;
 import net.wit.Filter.Operator;
 
+import net.wit.Message;
 import net.wit.dao.*;
 import net.wit.entity.Order;
+import net.wit.service.AdminService;
 import net.wit.service.MessageService;
 import net.wit.service.SnService;
 import net.wit.util.SettingUtils;
@@ -64,6 +67,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 	@Resource(name = "snServiceImpl")
 	private SnService snService;
+
+	@Resource(name = "adminDaoImpl")
+	private AdminDao adminDao;
 
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
@@ -168,6 +174,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setOffsetAmount(new BigDecimal(0));
 		order.setPoint(0L);
 		order.setPointDiscount(BigDecimal.ZERO);
+		order.setDeleted(false);
 		order.setMemo(memo);
 		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);
@@ -295,6 +302,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		order.setIsAllocatedStock(true);
 
+		Topic topic = member.getTopic();
+		if (topic==null) {
+			order.setFee(order.getAmount().multiply(new BigDecimal("0.006")).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+		} else {
+			order.setFee(topic.calcFee(order.getAmount()));
+		}
 		orderDao.persist(order);
 
 		OrderLog orderLog = new OrderLog();
@@ -423,17 +436,20 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		//计算货款
 		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
 			if (order.getPaymentMethod().equals(Order.PaymentMethod.online) || order.getPaymentMethod().equals(Order.PaymentMethod.deposit)) {
-				//扣除商家分配佣金
 				Member seller = order.getSeller();
 				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
-				seller.setBalance(seller.getBalance().subtract(order.getAmountPaid()));
+				//扣除平台手续费
+				BigDecimal samt = order.getAmountPaid().subtract(order.getFee());
+				seller.setBalance(seller.getBalance().add(samt));
 				memberDao.merge(member);
 				Deposit deposit = new Deposit();
 				deposit.setBalance(member.getBalance());
 				deposit.setType(Deposit.Type.product);
-				deposit.setMemo("订单货款结算");
+				NumberFormat nf = NumberFormat.getNumberInstance();
+				nf.setMaximumFractionDigits(2);
+				deposit.setMemo("货款结算(手续费:"+nf.format(order.getFee())+")");
 				deposit.setMember(member);
-				deposit.setCredit(order.getAmountPaid());
+				deposit.setCredit(samt);
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
@@ -469,7 +485,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					for (OrderItem orderItem : order.getOrderItems()) {
 						if (orderItem != null) {
 							BigDecimal r1 = orderItem.calcPercent1();
-							if (r1.compareTo(BigDecimal.ZERO)>0) {
+							if (r1.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null) {
 								Member p1 = order.getPromoter();
 								memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
 								p1.setBalance(p1.getBalance().add(r1));
@@ -487,7 +503,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								messageService.depositPushTo(d1);
 							}
 							BigDecimal r2 = orderItem.calcPercent2();
-							if (r2.compareTo(BigDecimal.ZERO)>0) {
+							if (r2.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null && order.getPromoter().getPromoter()!=null) {
 								Member p2 = order.getPromoter().getPromoter();
 								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
 								p2.setBalance(p2.getBalance().add(r2));
@@ -505,8 +521,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								messageService.depositPushTo(d2);
 							}
 							BigDecimal r3 = orderItem.calcPercent3();
-							if (r3.compareTo(BigDecimal.ZERO)>0) {
-								Member p3 = order.getPromoter();
+							if (r3.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null && order.getPromoter().getPromoter()!=null && order.getPromoter().getPromoter().getPromoter()!=null) {
+								Member p3 = order.getPromoter().getPromoter().getPromoter();
 								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
 								p3.setBalance(p3.getBalance().add(r3));
 								memberDao.merge(p3);

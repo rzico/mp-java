@@ -3,9 +3,9 @@ package net.wit.controller.weex.member;
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleCatalogModel;
+import net.wit.controller.model.DistributionModel;
 import net.wit.controller.model.ProductCategoryModel;
-import net.wit.entity.ArticleCatalog;
+import net.wit.entity.Distribution;
 import net.wit.entity.Member;
 import net.wit.entity.ProductCategory;
 import net.wit.service.*;
@@ -16,19 +16,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * @ClassName: ProductCategoryController
+ * @ClassName: DistributionController
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexMemberProductCategoryController")
-@RequestMapping("/weex/member/product_category")
-public class ProductCategoryController extends BaseController {
+@Controller("weexMemberDistributionController")
+@RequestMapping("/weex/member/distribution")
+public class DistributionController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
@@ -45,24 +46,24 @@ public class ProductCategoryController extends BaseController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
-    @Resource(name = "productCategoryServiceImpl")
-    private ProductCategoryService productCategoryService;
+    @Resource(name = "distributionServiceImpl")
+    private DistributionService distributionService;
 
     /**
      *  列表
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long tagIds,HttpServletRequest request){
+    public Message list(HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
-        List<ProductCategory> categories = productCategoryService.findList(null,null,filters,null);
+        List<Distribution> categories = distributionService.findList(null,null,filters,null);
 
-        return Message.bind(ProductCategoryModel.bindList(categories),request);
+        return Message.bind(DistributionModel.bindList(categories),request);
     }
 
     /**
@@ -73,10 +74,10 @@ public class ProductCategoryController extends BaseController {
     public Message sort(Long[] ids,HttpServletRequest request){
         int i=0;
         for (Long id:ids) {
-            ProductCategory catalog = productCategoryService.find(id);
+            Distribution catalog = distributionService.find(id);
             i=i+1;
             catalog.setOrders(i);
-            productCategoryService.update(catalog);
+            distributionService.update(catalog);
         }
         return Message.success("success");
     }
@@ -86,18 +87,21 @@ public class ProductCategoryController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(String name,Integer orders,HttpServletRequest request){
+    public Message add(String name, BigDecimal percent1,BigDecimal percent2, BigDecimal percent3,  Integer orders, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        ProductCategory catalog = new ProductCategory();
+        Distribution catalog = new Distribution();
         catalog.setOrders(orders);
         catalog.setName(name);
         catalog.setMember(member);
-        productCategoryService.save(catalog);
+        catalog.setPercent1(percent1);
+        catalog.setPercent2(percent2);
+        catalog.setPercent3(percent3);
+        distributionService.save(catalog);
 
-        ProductCategoryModel model = new ProductCategoryModel();
+        DistributionModel model = new DistributionModel();
         model.bind(catalog);
         return Message.success(model,"添加成功");
     }
@@ -107,22 +111,25 @@ public class ProductCategoryController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,String name,Integer orders,HttpServletRequest request){
+    public Message update(Long id,String name,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, Integer orders,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        ProductCategory catalog = productCategoryService.find(id);
+        Distribution catalog = distributionService.find(id);
         if (catalog==null) {
-            return Message.error("无效分类id");
+            return Message.error("无效策略id");
         }
         if (orders!=null) {
             catalog.setOrders(orders);
         }
         catalog.setName(name);
         catalog.setMember(member);
-        productCategoryService.save(catalog);
-        ProductCategoryModel model = new ProductCategoryModel();
+        catalog.setPercent1(percent1);
+        catalog.setPercent2(percent2);
+        catalog.setPercent3(percent3);
+        distributionService.save(catalog);
+        DistributionModel model = new DistributionModel();
         model.bind(catalog);
         return Message.success(model,"添加成功");
     }
@@ -138,15 +145,15 @@ public class ProductCategoryController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        ProductCategory catalog = productCategoryService.find(id);
+        Distribution catalog = distributionService.find(id);
         if (catalog==null) {
-            return Message.error("无效分类id");
+            return Message.error("无效策略id");
         }
         if (catalog.getProducts().size()>0) {
             return Message.error("有商品不能删");
         }
 
-        productCategoryService.delete(id);
+        distributionService.delete(id);
         return Message.success("删除成功");
     }
 }
