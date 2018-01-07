@@ -63,6 +63,8 @@ public class OrderController extends BaseController {
 	@Resource(name = "couponServiceImpl")
 	private CouponService couponService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 
 	/**
@@ -396,7 +398,22 @@ public class OrderController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Order.OrderStatus orderStatus, Order.PaymentStatus paymentStatus, Order.ShippingStatus shippingStatus, Pageable pageable, ModelMap model) {
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		if(null != orderStatus){
+			Filter orderStatusFilter = new Filter("orderStatus",Filter.Operator.eq,orderStatus);
+			filters.add(orderStatusFilter);
+		}
+
+		if(null != paymentStatus){
+			Filter paymentStatusFilter = new Filter("paymentStatus",Filter.Operator.eq,paymentStatus);
+			filters.add(paymentStatusFilter);
+		}
+
+		if(null != shippingStatus){
+			Filter shippingStatusFilter = new Filter("shippingStatus",Filter.Operator.eq,shippingStatus);
+			filters.add(shippingStatusFilter);
+		}
 
 		Page<Order> page = orderService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
@@ -450,6 +467,42 @@ public class OrderController extends BaseController {
 		return "/admin/order/view/couponCodeView";
 	}
 
+	/**
+	 * 订单取消
+	 */
+	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
+	@ResponseBody
+	public Message cancel(Long orderId){
+		Order order = orderService.find(orderId);
+		Admin admin = adminService.getCurrent();
+
+		try {
+			orderService.cancel(order,admin);
+			order = orderService.find(orderId);
+			return Message.success(order,"订单关闭成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("订单关闭失败!");
+		}
+	}
+
+	/**
+	 * 订单发货
+	 */
+	@RequestMapping(value = "/shipping", method = RequestMethod.POST)
+	@ResponseBody
+	public Message shipping(Long orderId){
+		return Message.error("");
+	}
+
+	/**
+	 * 订单退货
+	 */
+	@RequestMapping(value = "/returns", method = RequestMethod.POST)
+	@ResponseBody
+	public Message returns(Long orderId){
+		return Message.error("");
+	}
 
 
 }

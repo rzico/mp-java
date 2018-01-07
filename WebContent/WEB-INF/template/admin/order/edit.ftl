@@ -33,22 +33,22 @@
         [#if data??]
         <div class="cl pd-5 bg-1 bk-gray mt-20">
         [#if data.status == 'unpaid' ]<!-- 待付款 -->
-            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+            <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
                 <i class="Hui-iconfont">&#xe706;</i> 关闭
             </button>
         [#elseif data.status == 'unshipped']<!-- 待发货 -->
-            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+            <button type="button" class="btn btn-success radius" id="" onclick="search();" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 发货
             </button>
-            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+            <button type="button" class="btn btn-success radius" id="" onclick="search();" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 退款
             </button>
         [#elseif data.status == 'shipped']<!-- 已发货 -->
-            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+            <button type="button" class="btn btn-success radius" id="" onclick="search();" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 退货
             </button>
         [#elseif data.status == 'refunding']<!-- 退货中 -->
-            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+            <button type="button" class="btn btn-success radius" id="" onclick="search();" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 同意退货
             </button>
         [#elseif data.status == 'completed']<!-- 已完成 -->
@@ -443,12 +443,55 @@
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
 <script type="text/javascript">
     $(function(){
         $("#tab-system").Huitab({
             index:0
         });
+
     });
+
+
+    function cancel(id){
+        var $cancelId = $("#cancelId");
+        layer.confirm('确定要关闭吗?',function(index){
+            var load = layer.msg('关闭中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/cancel.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $cancelId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'关闭成功!');
+                    }else{
+                        $cancelId.prop("disabled",false);
+                        parent.toast('关闭失败!',2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $cancelId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('关闭失败!',2);
+                }
+            });
+        });
+    }
+
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

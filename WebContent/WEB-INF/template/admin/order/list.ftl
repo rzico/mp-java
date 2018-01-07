@@ -40,6 +40,37 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 
+        [#if orderStatuss??]
+            <span class="select-box" style="background-color: #ffffff; width:100px; height:32px">
+                <select name="orderStatus" class="select" style="background-color: #ffffff">
+                    <option value="">订单状态</option>
+                    [#list orderStatuss as orderStatus]
+                        <option value="${orderStatus.id}">${orderStatus.name}</option>
+                    [/#list]
+                </select>
+            </span>
+        [/#if]
+        [#if paymentStatuss??]
+            <span class="select-box" style="background-color:#ffffff; width:100px; height: 32px;">
+                <select name="paymentStatus" class="select" style="background-color: #ffffff">
+                    <option value="">支付状态</option>
+                    [#list paymentStatuss as paymentStatus]
+                        <option value="${paymentStatus.id}">${paymentStatus.name}</option>
+                    [/#list]
+                </select>
+            </span>
+        [/#if]
+        [#if shippingStatuss??]
+            <span class="select-box" style="background-color: #ffffff; width:100px; height:32px;">
+                <select name="shippingStatus" class="select" style="background-color: #ffffff">
+                    <option value="">配送状态</option>
+                    [#list shippingStatuss as shippingStatus]
+                        <option value="${shippingStatus.id}">${shippingStatus.name}</option>
+                    [/#list]
+                </select>
+            </span>
+        [/#if]
+
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -335,8 +366,7 @@
                     "aTargets": [19],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='查看' href='javascript:;' onclick=\"edit('首页 &gt; 订单管理 &gt; 查看订单','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<a title='更多操作' href='javascript:;' onclick=\"edit('首页 &gt; 订单管理 &gt; 查看订单','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe60c;</i></a>";
                         }else{
                             return "";
                         }
@@ -351,6 +381,9 @@
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
+                var _shippingStatus = $('select[name="shippingStatus"]').val();
+                var _paymentStatus = $('select[name="paymentStatus"]').val();
+                var _orderStatus = $('select[name="orderStatus"]').val();
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {
@@ -363,7 +396,9 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-
+                        "orderStatus":_orderStatus,
+                        "paymentStatus":_paymentStatus,
+                        "shippingStatus":_shippingStatus,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
