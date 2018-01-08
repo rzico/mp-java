@@ -7,7 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,7 +55,7 @@ public class Distribution extends OrderEntity {
 
 	/** 商品 */
 	@OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY)
-	private Set<Product> products = new HashSet<Product>();
+	private List<Product> products = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -95,11 +97,24 @@ public class Distribution extends OrderEntity {
 		this.member = member;
 	}
 
-	public Set<Product> getProducts() {
+	public List<Product> getProducts() {
 		return products;
 	}
 
-	public void setProducts(Set<Product> products) {
+	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
+
+	/*删除前处理*/
+	@PreRemove
+	public void preRemove(){
+		List<Product> products = getProducts();
+		if(products!=null){
+			for(Product product:products){
+				product.setDistribution(null);
+			}
+
+		}
+	}
+
 }

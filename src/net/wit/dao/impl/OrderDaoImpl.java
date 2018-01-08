@@ -88,11 +88,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 						if (orderItem != null) {
 							Product product = orderItem.getProduct();
 							if (product != null) {
-								ProductStock stock = product.getProductStock(order.getSeller());
-								if (stock!=null) {
-									entityManager.lock(stock, LockModeType.PESSIMISTIC_WRITE);
-									stock.setAllocatedStock(stock.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
-								}
+								entityManager.lock(product, LockModeType.PESSIMISTIC_WRITE);
+								product.setAllocatedStock(product.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
 							}
 						}
 					}
