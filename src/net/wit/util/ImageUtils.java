@@ -355,8 +355,6 @@ public final class ImageUtils {
 	 * @param destFile
 	 *            目标文件
 	 * @param watermarkFile
-	 *            水印文件
-	 * @param watermarkPosition
 	 *            水印位置
 	 * @param alpha
 	 *            水印透明度
