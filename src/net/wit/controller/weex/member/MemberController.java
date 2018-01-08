@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -56,6 +57,10 @@ public class MemberController extends BaseController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
+    @Resource(name = "depositServiceImpl")
+    private DepositService depositService;
+
+
     /**
      * 获取当前会员信息
      */
@@ -68,6 +73,9 @@ public class MemberController extends BaseController {
         }
         MemberModel model =new MemberModel();
         model.bind(member);
+
+        BigDecimal sm = depositService.summary(Deposit.Type.rebate,member);
+        model.setRebate(sm);
         return Message.bind(model,request);
    }
 

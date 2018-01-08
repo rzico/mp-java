@@ -28,6 +28,8 @@ public class MemberModel extends BaseModel implements Serializable {
     private int coupon;
     /** 订单 */
     private int order;
+    /** 奖金 */
+    private BigDecimal rebate;
 
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
@@ -120,6 +122,14 @@ public class MemberModel extends BaseModel implements Serializable {
         this.order = order;
     }
 
+    public BigDecimal getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(BigDecimal rebate) {
+        this.rebate = rebate;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -138,5 +148,6 @@ public class MemberModel extends BaseModel implements Serializable {
             }
         }
         this.coupon = c;
+        this.rebate = BigDecimal.ZERO;
     }
 }

@@ -81,6 +81,12 @@ public class LoginController extends BaseController {
         if (m==null) {
             return Message.error("无效手机号");
         }
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
+            if (memberService.findByMobile(m)==null) {
+                return Message.error("没有注册不能登录");
+            }
+        }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
 
@@ -200,7 +206,6 @@ public class LoginController extends BaseController {
                 return Message.error("无效密码");
             }
 
-
             Cart cart = cartService.getCurrent();
             if (cart != null) {
                 if (cart.getMember() == null) {
@@ -263,6 +268,7 @@ public class LoginController extends BaseController {
             return Message.error("登录失败");
         }
     }
+
     /**
      * 微信登录
      */
@@ -304,6 +310,11 @@ public class LoginController extends BaseController {
             member = bindUser.getMember();
         }
         if (member==null) {
+
+            if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
+                return Message.error("请通过分享链接注册后才能登录");
+            }
+
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
@@ -375,6 +386,7 @@ public class LoginController extends BaseController {
             e.printStackTrace();
             return Message.error("登录失败");
         }
+
     }
 
     /**

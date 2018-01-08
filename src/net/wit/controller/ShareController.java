@@ -5,6 +5,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ShareModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleShare;
+import net.wit.entity.Member;
 import net.wit.entity.Topic;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -54,8 +55,9 @@ public class ShareController extends BaseController {
         if (article==null) {
             return Message.error("无效文章编号");
         }
+        Member member = memberService.getCurrent();
         ShareModel model = new ShareModel();
-        model.bind(article,shareType);
+        model.bind(article,shareType,member);
         return Message.bind(model,request);
    }
 
@@ -69,8 +71,9 @@ public class ShareController extends BaseController {
         if (topic==null) {
             return Message.error("无效专栏编号");
         }
+        Member member = memberService.getCurrent();
         ShareModel model = new ShareModel();
-        model.bind(topic,shareType);
+        model.bind(topic,shareType,member);
         return Message.bind(model,request);
     }
 
