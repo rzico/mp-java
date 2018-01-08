@@ -34,25 +34,29 @@
         <div class="cl pd-5 bg-1 bk-gray mt-20">
         [#if data.status == 'unpaid' ]<!-- 待付款 -->
             <button type="button" class="btn btn-success radius" id="confirmId" onclick="confirm(${data.id});" name="">
-                <i class="Hui-iconfont">&#xe6e1;</i> 订单确认
+                订单确认
             </button>
             <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
-                <i class="Hui-iconfont">&#xe706;</i> 关闭
+               关闭
             </button>
         [#elseif data.status == 'unshipped']<!-- 待发货 -->
             <button type="button" class="btn btn-success radius" id="shippingId" onclick="shipping(${data.id});" name="">
-                <i class="Hui-iconfont">&#xe67a;</i> 发货
+                发货
             </button>
             <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
-                <i class="Hui-iconfont">&#xe706;</i> 关闭
+                关闭
             </button>
         [#elseif data.status == 'shipped']<!-- 已发货 -->
-            <button type="button" class="btn btn-success radius" id="" onclick="search();" name="">
-                <i class="Hui-iconfont">&#xe678;</i> 退货
+            <button type="button" class="btn btn-success radius" id="returnsId" onclick="returns(${data.id});" name="">
+                退货
             </button>
-        [#elseif data.status == 'refunding']<!-- 退货中 -->
-            <button type="button" class="btn btn-success radius" id="" onclick="search();" name="">
-                <i class="Hui-iconfont">&#xe665;</i> 同意退货
+        [#elseif data.status == 'refunding' && data.shippingStatus == 'returning']<!-- C端用户申请退货中 -->
+            <button type="button" class="btn btn-success radius" id="agreereturnsId" onclick="agreereturns(${data.id});" name="">
+                同意退货
+            </button>
+        [#elseif data.status == 'refunding' && data.paymentStatus == 'refunding']<!-- C端用户申请退款中 -->
+            <button type="button" class="btn btn-success radius" id="agreerefundsId" onclick="agreerefunds(${data.id});" name="">
+                 同意退款
             </button>
         [#elseif data.status == 'completed']<!-- 已完成 -->
 
@@ -568,6 +572,123 @@
                     $shippingId.prop("disabled", false);
                     layer.close(load);
                     parent.toast('发货失败!',2);
+                }
+            });
+        });
+    }
+
+    function returns(id){
+        var $returnsId = $("#returnsId");
+        layer.confirm('确定要退货吗?',function(index){
+            var load = layer.msg('退货中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/returns.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $returnsId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'退货成功!');
+                    }else{
+                        $returnsId.prop("disabled",false);
+                        parent.toast('退货失败!',2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $returnsId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('退货失败!',2);
+                }
+            });
+        });
+    }
+
+    function agreereturns(id){
+        var $agreereturnsId = $("#agreereturnsId");
+        layer.confirm('确定要退货吗?',function(index){
+            var load = layer.msg('退货中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/agreereturns.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $agreereturnsId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'退货成功!');
+                    }else{
+                        $agreereturnsId.prop("disabled",false);
+                        parent.toast('退货失败!',2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $agreereturnsId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('退货失败!',2);
+                }
+            });
+        });
+    }
+
+    function agreerefunds(id){
+        var $agreerefundsId = $("#agreerefundsId");
+        layer.confirm('确定要退款吗?',function(index){
+            var load = layer.msg('退款中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/agreerefunds.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $agreerefundsId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'退款成功!');
+                    }else{
+                        $agreerefundsId.prop("disabled",false);
+                        parent.toast('退款失败!',2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $agreerefundsId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('退款失败!',2);
                 }
             });
         });

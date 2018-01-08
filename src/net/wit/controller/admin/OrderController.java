@@ -536,10 +536,55 @@ public class OrderController extends BaseController {
 		try {
 			orderService.returns(order,admin);
 			order = orderService.find(orderId);
+			try{
+				orderService.refunds(order,admin);
+				order = orderService.find(orderId);
+			}catch (Exception e){
+				e.printStackTrace();
+				return Message.error("订单退款失败!");
+			}
+			return Message.success(order,"订单退货退款成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("订单退货失败!");
+		}
+	}
+
+	/**
+	 * 同意订单退货
+	 */
+	@RequestMapping(value = "/agreereturns", method = RequestMethod.POST)
+	@ResponseBody
+	public Message agreereturns(Long orderId){
+		Order order = orderService.find(orderId);
+		Admin admin = adminService.getCurrent();
+
+		try {
+			orderService.returns(order,admin);
+			order = orderService.find(orderId);
 			return Message.success(order,"订单退货成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error("订单退货失败!");
+		}
+	}
+
+	/**
+	 * 同意订单退款
+	 */
+	@RequestMapping(value = "/agreerefunds", method = RequestMethod.POST)
+	@ResponseBody
+	public Message agreerefunds(Long orderId){
+		Order order = orderService.find(orderId);
+		Admin admin = adminService.getCurrent();
+
+		try {
+			orderService.refunds(order,admin);
+			order = orderService.find(orderId);
+			return Message.success(order,"订单退款成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("订单退款失败!");
 		}
 	}
 
