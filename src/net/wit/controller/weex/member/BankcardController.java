@@ -114,7 +114,7 @@ public class BankcardController extends BaseController {
         SafeKey safeKey = new SafeKey();
         safeKey.setKey(m);
         safeKey.setValue(securityCode);
-        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),300));
         redisService.put(Member.MOBILE_BIND_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();

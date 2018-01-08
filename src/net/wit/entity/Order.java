@@ -1020,9 +1020,9 @@ public class Order extends BaseEntity {
 	@Transient
 	public BigDecimal getAmount() {
 		BigDecimal amount = getPrice();
-		if (getFee() != null) {
-			amount = amount.add(getFee());
-		}
+//		if (getFee() != null) {
+//			amount = amount.add(getFee());
+//		}
 		if (getFreight() != null) {
 			amount = amount.add(getFreight());
 		}

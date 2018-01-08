@@ -233,7 +233,7 @@ public class LoginController extends BaseController {
      * 微信登录
      */
     @RequestMapping(value = "/weixin", method = RequestMethod.GET)
-    public String weixin(String code,String redirectURL,HttpServletRequest request){
+    public String weixin(String code,String redirectURL,Long xuid,HttpServletRequest request){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
@@ -282,7 +282,13 @@ public class LoginController extends BaseController {
             member.setIsLocked(false);
             member.setLoginFailureCount(0);
             member.setRegisterIp(request.getRemoteAddr());
+
+            if (xuid!=null) {
+                member.setPromoter(memberService.find(xuid));
+            }
+
             memberService.save(member);
+
         } else {
             if (nickName!=null && member.getNickName()==null) {
                 member.setNickName(nickName);
