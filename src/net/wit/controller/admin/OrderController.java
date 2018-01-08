@@ -487,12 +487,41 @@ public class OrderController extends BaseController {
 	}
 
 	/**
+	 * 订单确认
+	 */
+	@RequestMapping(value = "/confirm", method = RequestMethod.POST)
+	@ResponseBody
+	public Message confirm(Long orderId){
+		Order order = orderService.find(orderId);
+		Admin admin = adminService.getCurrent();
+
+		try {
+			orderService.confirm(order,admin);
+			order = orderService.find(orderId);
+			return Message.success(order,"订单确认成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("订单确认失败!");
+		}
+	}
+
+	/**
 	 * 订单发货
 	 */
 	@RequestMapping(value = "/shipping", method = RequestMethod.POST)
 	@ResponseBody
 	public Message shipping(Long orderId){
-		return Message.error("");
+		Order order = orderService.find(orderId);
+		Admin admin = adminService.getCurrent();
+
+		try {
+			orderService.shipping(order,admin);
+			order = orderService.find(orderId);
+			return Message.success(order,"订单发货成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("订单发货失败!");
+		}
 	}
 
 	/**
@@ -501,7 +530,17 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = "/returns", method = RequestMethod.POST)
 	@ResponseBody
 	public Message returns(Long orderId){
-		return Message.error("");
+		Order order = orderService.find(orderId);
+		Admin admin = adminService.getCurrent();
+
+		try {
+			orderService.returns(order,admin);
+			order = orderService.find(orderId);
+			return Message.success(order,"订单退货成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("订单退货失败!");
+		}
 	}
 
 
