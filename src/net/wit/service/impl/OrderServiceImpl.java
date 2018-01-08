@@ -764,7 +764,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderDao.refresh(order, LockModeType.PESSIMISTIC_WRITE);
 
 		if (operator==null) {
-			if (order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+			if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
 				throw new RuntimeException("不在发货状态");
 			}
 		} else {

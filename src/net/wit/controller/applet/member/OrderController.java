@@ -1,4 +1,7 @@
 /*
+ * Copyright 2005-2013 shopxx.net. All rights reserved.
+ * Support: http://www.shopxx.net
+ * License: http://www.shopxx.net/license
  */
 package net.wit.controller.applet.member;
 
@@ -52,6 +55,9 @@ public class OrderController extends BaseController {
 	@Resource(name = "orderServiceImpl")
 	private OrderService orderService;
 
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
 	@Resource(name = "pluginServiceImpl")
 	private PluginService pluginService;
 
@@ -94,7 +100,6 @@ public class OrderController extends BaseController {
 	/**
 	 * 计算
 	 */
-
 	@RequestMapping(value = "/calculate")
 	public @ResponseBody
 	Message calculate(Long id,Integer quantity) {
@@ -118,7 +123,9 @@ public class OrderController extends BaseController {
 				}
 			}
 			ReceiverModel m = new ReceiverModel();
-			m.bind(receiver);
+			if (receiver!=null) {
+				m.bind(receiver);
+			}
 			model.setReceiver(m);
 		}
 		return Message.success(model,"success");
@@ -293,13 +300,29 @@ public class OrderController extends BaseController {
 	}
 
 	/**
+	 * 提醒卖家发货
+	 */
+	@RequestMapping(value = "/shipp_remind", method = RequestMethod.GET)
+	public @ResponseBody
+	Message shippRemind(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setOrder(order);
+		orderLog.setType(OrderLog.Type.shipping);
+		orderLog.setContent("请卖家尽快发货");
+		orderLog.setOperator(member.userId());
+		messageService.orderSellerPushTo(orderLog);
+		return Message.success("提醒成功");
+	}
+
+	/**
 	 * 物流动态
 	 */
 	@RequestMapping(value = "/delivery_query", method = RequestMethod.GET)
 	public @ResponseBody
 	Message deliveryQuery(String sn) {
-		Map<String, Object> data = new HashMap<String, Object>();
-		return Message.success(data,"查询成功");
+		return Message.error("");
 	}
 
 	/**
