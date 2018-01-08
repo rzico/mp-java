@@ -3,20 +3,11 @@
  * Support: http://www.shopxx.net
  * License: http://www.shopxx.net/license
  */
-package net.wit.controller.website;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package net.wit.controller.applet;
 
 import net.wit.Message;
-import net.wit.controller.model.CardModel;
 import net.wit.controller.model.CartModel;
+import net.wit.controller.website.BaseController;
 import net.wit.entity.Cart;
 import net.wit.entity.CartItem;
 import net.wit.entity.Member;
@@ -26,10 +17,17 @@ import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Controller - 购物车
@@ -37,8 +35,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author SHOP++ Team
  * @version 3.0
  */
-@Controller("websiteCartController")
-@RequestMapping("/website/cart")
+@Controller("appletCartController")
+@RequestMapping("/applet/cart")
 public class CartController extends BaseController {
 
 	@Resource(name = "memberServiceImpl")
