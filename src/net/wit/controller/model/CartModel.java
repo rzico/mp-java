@@ -22,6 +22,46 @@ public class CartModel extends BaseModel implements Serializable {
 
     List<CartItemModel> cartItems;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getEffectivePrice() {
+        return effectivePrice;
+    }
+
+    public void setEffectivePrice(BigDecimal effectivePrice) {
+        this.effectivePrice = effectivePrice;
+    }
+
+    public Boolean getLowStock() {
+        return isLowStock;
+    }
+
+    public void setLowStock(Boolean lowStock) {
+        isLowStock = lowStock;
+    }
+
+    public List<CartItemModel> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItemModel> cartItems) {
+        this.cartItems = cartItems;
+    }
+
     public void bind(Cart cart) {
         this.id = cart.getId();
         this.quantity = cart.getQuantity();

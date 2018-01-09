@@ -20,6 +20,15 @@ public class OrderListModel extends BaseModel implements Serializable {
     /**  头方昵称 */
     private String name;
 
+    /**  卖方 id */
+    private Long sellerId;
+
+    /**  卖方头像 */
+    private String sellerLogo;
+
+    /**  卖方昵称 */
+    private String sellerName;
+
     /**  订单号 */
     private String sn;
 
@@ -83,16 +92,67 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.orderItems = orderItems;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public String getSellerLogo() {
+        return sellerLogo;
+    }
+
+    public void setSellerLogo(String sellerLogo) {
+        this.sellerLogo = sellerLogo;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
         this.sn = order.getSn();
         this.logo = order.getMember().getLogo();
         this.name = order.getMember().getNickName();
+
+        this.sellerId = order.getSeller().getId();
+        if (order.getSeller().getTopic()!=null) {
+            this.sellerLogo = order.getSeller().getTopic().getLogo();
+            this.sellerName = order.getSeller().getTopic().getName();
+        } else {
+            this.sellerLogo = order.getSeller().getLogo();
+            this.sellerName = order.getSeller().getNickName();
+        }
+
         this.status = order.getStatus();
         this.statusDescr = order.getStatusDescr();
 
         this.orderItems = OrderItemModel.bindList(order.getOrderItems());
+
 
 
     }

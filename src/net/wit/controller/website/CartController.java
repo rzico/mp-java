@@ -55,7 +55,7 @@ public class CartController extends BaseController {
 	/**
 	 * 添加
 	 */
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/add")
 	public @ResponseBody
 	Message add(Long id, Integer quantity, HttpServletRequest request, HttpServletResponse response) {
 		if (quantity == null || quantity < 1) {
