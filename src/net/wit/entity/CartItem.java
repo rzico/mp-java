@@ -216,7 +216,7 @@ public class CartItem extends BaseEntity {
 	 */
 	@Transient
 	public boolean getIsLowStock() {
-		if (getQuantity() != null && getProduct() != null && getQuantity() > getProduct().getAvailableStock(getSeller())) {
+		if (getQuantity() != null && getProduct() != null && getQuantity() > getProduct().getAvailableStock()) {
 			return true;
 		} else {
 			return false;

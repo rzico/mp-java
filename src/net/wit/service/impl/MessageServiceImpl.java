@@ -298,12 +298,13 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		if (payBill.getMember()==null) {
 			msg.setThumbnial(payBill.getMember().getLogo());
 		}
+		java.text.DecimalFormat   df   =  new java.text.DecimalFormat("#0.00");
 		if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
 			msg.setTitle("退款通知");
-			msg.setContent("线下退款" + payBill.getPayBillAmount() + "元");
+			msg.setContent("线下退款" + df.format(payBill.getPayBillAmount()) + "元");
 		} else {
 			msg.setTitle("线下收款");
-			msg.setContent("芸店收款" + payBill.getPayBillAmount() + "元");
+			msg.setContent("芸店收款" + df.format(payBill.getPayBillAmount()) + "元");
 		}
 		PayBillViewModel ext = new PayBillViewModel();
 		ext.bind(payBill);
@@ -329,10 +330,10 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				}
 				if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
 					mmsg.setTitle("退款通知");
-					mmsg.setContent("线下退款" + payBill.getPayBillAmount() + "元");
+					mmsg.setContent("线下退款" + df.format(payBill.getPayBillAmount()) + "元");
 				} else {
 					mmsg.setTitle("线下收款");
-					mmsg.setContent("芸店收款" + payBill.getPayBillAmount() + "元");
+					mmsg.setContent("芸店收款" + df.format(payBill.getPayBillAmount()) + "元");
 				}
 				PayBillModel mext = new PayBillModel();
 				mext.bind(payBill);
@@ -518,10 +519,10 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		}
 		BigDecimal amount = deposit.getCredit().subtract(deposit.getDebit());
 		if (amount.compareTo(BigDecimal.ZERO)>0) {
-			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#0.00");
 			msg.setContent("账户收入:"+df.format(amount)+"元,来源:"+deposit.getMemo());
 		} else {
-			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#0.00");
 			msg.setContent("账户支出:"+df.format(BigDecimal.ZERO.subtract(amount))+"元,用途:"+deposit.getMemo());
 		}
 		DepositModel ext = new DepositModel();

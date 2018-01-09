@@ -403,70 +403,71 @@ public class Product extends OrderEntity {
 		return availableStock;
 	}
 
-	/**
-	 * 获取库存记录
-	 *
-	 * @return 获取库存记录
-	 */
-	@Transient
-	public ProductStock getProductStock(Member seller) {
-		ProductStock stock = null;
-		if (seller!=null) {
-			for (ProductStock productStock : getProductStocks()) {
-				if (productStock.getSeller().equals(seller)) {
-					stock = productStock;
-					break;
-				}
-			}
-		}
-		return stock;
-	}
+//	/**
+//	 * 获取库存记录
+//	 *
+//	 * @return 获取库存记录
+//	 */
+//	@Transient
+//	public ProductStock getProductStock(Member seller) {
+//		ProductStock stock = null;
+//		if (seller!=null) {
+//			for (ProductStock productStock : getProductStocks()) {
+//				if (productStock.getSeller().equals(seller)) {
+//					stock = productStock;
+//					break;
+//				}
+//			}
+//		}
+//		return stock;
+//	}
+//
+//	/**
+//	 * 获取可用库存
+//	 *
+//	 * @return 可用库存
+//	 */
+//	@Transient
+//	public Integer getAvailableStock(Member seller) {
+//		ProductStock stock = null;
+//		if (seller!=null) {
+//			for (ProductStock productStock : getProductStocks()) {
+//				if (productStock.getSeller().equals(seller)) {
+//					stock = productStock;
+//					break;
+//				}
+//			}
+//		}
+//        if (stock==null) {
+//			return 0;
+//		} else {
+//			return stock.getAvailableStock();
+//		}
+//	}
+//
+//	/**
+//	 * 获取是否缺货
+//	 *
+//	 * @return 是否缺货
+//	 */
+//	@Transient
+//	public Boolean getIsOutOfStock(Member seller) {
+//		ProductStock stock = null;
+//		if (seller!=null) {
+//			for (ProductStock productStock : getProductStocks()) {
+//				if (productStock.getSeller().equals(seller)) {
+//					stock = productStock;
+//					break;
+//				}
+//			}
+//		}
+//		if (stock==null) {
+//			return true;
+//		} else {
+//			return stock.getIsOutOfStock();
+//		}
+//	}
 
-	/**
-	 * 获取可用库存
-	 *
-	 * @return 可用库存
-	 */
-	@Transient
-	public Integer getAvailableStock(Member seller) {
-		ProductStock stock = null;
-		if (seller!=null) {
-			for (ProductStock productStock : getProductStocks()) {
-				if (productStock.getSeller().equals(seller)) {
-					stock = productStock;
-					break;
-				}
-			}
-		}
-        if (stock==null) {
-			return 0;
-		} else {
-			return stock.getAvailableStock();
-		}
-	}
-
-	/**
-	 * 获取是否缺货
-	 *
-	 * @return 是否缺货
-	 */
-	@Transient
-	public Boolean getIsOutOfStock(Member seller) {
-		ProductStock stock = null;
-		if (seller!=null) {
-			for (ProductStock productStock : getProductStocks()) {
-				if (productStock.getSeller().equals(seller)) {
-					stock = productStock;
-					break;
-				}
-			}
-		}
-		if (stock==null) {
-			return true;
-		} else {
-			return stock.getIsOutOfStock();
-		}
-	}
 	@Transient
 	public String getSpec() {
         if (getSpec1()!=null && getSpec2()!=null) {

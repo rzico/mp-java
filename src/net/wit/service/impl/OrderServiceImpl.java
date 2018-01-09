@@ -825,6 +825,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				orderLogDao.persist(orderLog1);
 				messageService.orderMemberPushTo(orderLog);
 
+			} else {
+				//不要退款，自动完成
+				complete(order,operator);
 			}
 
 		} else {

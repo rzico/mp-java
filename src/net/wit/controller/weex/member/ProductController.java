@@ -53,8 +53,11 @@ public class ProductController extends BaseController {
 	private ProductService productService;
 	@Resource(name = "goodsServiceImpl")
 	private GoodsService goodsService;
+	@Resource(name = "distributionServiceImpl")
+	private DistributionService distributionService;
 	@Resource(name = "productCategoryServiceImpl")
 	private ProductCategoryService productCategoryService;
+
 
 	/**
 	 * 检查编号是否唯一
@@ -141,6 +144,11 @@ public class ProductController extends BaseController {
 			product.setMember(member);
 			product.setStock(pm.getStock());
 			product.setAllocatedStock(0);
+			if (pm.getDistribution()>0) {
+				product.setDistribution(distributionService.find(pm.getDistribution()));
+			} else {
+				product.setDistribution(null);
+			}
 			i = i+1;
 			product.setOrders(i);
 			if (i==1) {
