@@ -36,10 +36,6 @@ public class CommonUtil {
 				+ s.substring(19, 23) + s.substring(24);
 	}
 	
-	
-	
-	
-	
 	/**
 	 * 生成随机AES对称密钥
 	 * @param size
@@ -56,7 +52,7 @@ public class CommonUtil {
 		return key.toString();
 	}
 	
-	public static Map<String, String> encryptData(Map<String,Map<String, Object>> map, PrivateKey priKey, PublicKey pubKey) {
+	public static Map<String, String> encryptData(Map<String,Map<String,Object>> map, PrivateKey priKey, PublicKey pubKey) {
 		Map<String, String> rtrmap = new HashMap<>();
 		try {
 			String message = XmlUtils.maptoXmls(map,"merchant");
