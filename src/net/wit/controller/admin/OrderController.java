@@ -5,10 +5,13 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.plugin.PaymentPlugin;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -66,6 +69,11 @@ public class OrderController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
+	@Resource(name = "refundsServiceImpl")
+	private RefundsService refundsService;
+
+	@Resource(name = "pluginServiceImpl")
+	private PluginService pluginService;
 
 	/**
 	 * 主页
@@ -588,6 +596,60 @@ public class OrderController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error("订单退款失败!");
+		}
+	}
+
+	/**
+	 * 同意订单退款
+	 */
+	@RequestMapping(value = "/refundspayment", method = RequestMethod.POST)
+	@ResponseBody
+	public Message refundspayment(Long orderId,HttpServletRequest request){
+		Refunds refunds = refundsService.find(orderId);
+
+		if (null == refunds){
+			return  Message.error("退款单无效");
+		}
+
+		String paymentPluginId = refunds.getPaymentPluginId();
+		PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
+		if ((null == paymentPlugin) || (!paymentPlugin.getIsEnabled())){
+			return Message.error("支付插件无效");
+		}
+
+		try {
+			if(null == refunds){
+				refunds.setMethod(Refunds.Method.online);
+				refunds.setPaymentPluginId(paymentPluginId);
+				refunds.setPaymentMethod(paymentPlugin.getName());
+				refundsService.update(refunds);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error(e.getMessage());
+		}
+
+		Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
+		if ("SUCCESS".equals(parameters.get("return_code"))) {
+			if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
+				try {
+					refundsService.handle(refunds);
+				} catch (Exception e) {
+					e.printStackTrace();
+					//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
+				}
+			}
+			return Message.success(parameters, "success");
+		} else {
+			try {
+				refundsService.close(refunds);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				parameters.put("return_code","success");
+				parameters.put("result_msg","撤消退款失败");
+				return Message.success(parameters,"退款已提交，客服会尽快处理");
+			}
+			return Message.error(parameters.get("result_msg").toString());
 		}
 	}
 
