@@ -536,14 +536,17 @@ public class OrderController extends BaseController {
 		try {
 			orderService.returns(order,admin);
 			order = orderService.find(orderId);
-			try{
-				orderService.refunds(order,admin);
-				order = orderService.find(orderId);
-			}catch (Exception e){
-				e.printStackTrace();
-				return Message.error("订单退款失败!");
+			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
+				try {
+					orderService.refunds(order, admin);
+					order = orderService.find(orderId);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return Message.error("订单退款失败!");
+				}
+				return Message.success(order,"订单退货退款成功!");
 			}
-			return Message.success(order,"订单退货退款成功!");
+			return Message.success(order,"订单退货成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error("订单退货失败!");
