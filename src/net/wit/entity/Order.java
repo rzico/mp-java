@@ -1132,17 +1132,17 @@ public class Order extends BaseEntity {
 		if (getOrderStatus().equals(OrderStatus.cancelled)) {
 			return "已取消";
 		} else
-		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
-			return "待发货";
-		} else
-		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
-			return "已发货";
-		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
 			return "退货中";
 		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
 			return "退款中";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+			return "待发货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+			return "已发货";
 		} else
 		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
 			return "已退货";
@@ -1155,23 +1155,35 @@ public class Order extends BaseEntity {
 	}
 	
 	public String getStatus() {
-	   if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
-	   	  return  "unpaid";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
-		   return "unshipped";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
-		   return "shipped";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
-		   return "refunding";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
-		   return "refunding";
-	   } else {
-	   	   return "completed";
-	   }
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
+			return "unpaid";
+		} else
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.paid)) {
+			return "unshipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.cancelled)) {
+			return "completed";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+			return "returning";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
+			return "refunding";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+			return "unshipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+			return "shipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
+			return "returned";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getPaymentStatus().equals(PaymentStatus.refunded) ) {
+			return "refunded";
+		} else {
+			return "completed";
+		}
 	}
 
 }
