@@ -32,6 +32,7 @@
                     <li><a data-href="../topic/index.jhtml" data-title="专栏管理" href="javascript:;">专栏管理</a></li>
                     <li><a data-href="../topicCard/index.jhtml" data-title="卡包管理" href="javascript:;">卡包管理</a></li>
                     <li><a data-href="../card/index.jhtml" data-title="会员卡管理" href="javascript:;">会员卡管理</a></li>
+                    <li><a data-href="../merchant/index.jhtml" data-title="商户管理" href="javascript:;">商户管理</a></li>
                 </ul>
             </dd>
             <dt><i class="Hui-iconfont">&#xe60d;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>

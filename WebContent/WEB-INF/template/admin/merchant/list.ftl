@@ -48,7 +48,7 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
                 <a href="javascript:;" onclick="add('首页 &gt; 商户管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增商户管理</a>
+                <i class="Hui-iconfont">&#xe600;</i> 新增商户</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
@@ -192,33 +192,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "cardProvince",
-                    "sTitle": "银行省份",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "city",
-                    "sTitle": "经营城市",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "email",
-                    "sTitle": "邮箱",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "idCard",
-                    "sTitle": "身份证",
-                    "sClass": "center"
-                },
-                {
                     "mData": "industryType",
                     "sTitle": "行业类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "licenseNo",
-                    "sTitle": "营业执照",
                     "sClass": "center"
                 },
                 {
@@ -247,17 +222,12 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "userId",
-                    "sTitle": "唯一标识",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapEnterprise",
+                    "mData": "所属企业",
                     "sTitle": "Enterprise",
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapOwner",
+                    "mData": "所属店主",
                     "sTitle": "Owner",
                     "sClass": "center"
                 },
