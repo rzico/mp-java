@@ -176,7 +176,7 @@ public class UnsPayPlugin extends PaymentPlugin {
 			String req = JsonUtils.toJson(encr);
 			String resp =  HttpClientUtils.REpostRequestStrJson(reqUrl,req);
 
-
+            System.out.println(resp);
 
 		} catch (IOException e) {
 			e.printStackTrace();

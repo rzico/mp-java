@@ -304,7 +304,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 提醒卖家发货
 	 */
-	@RequestMapping(value = "/shipp_remind", method = RequestMethod.GET)
+	@RequestMapping(value = "/shipp_remind", method = RequestMethod.POST)
 	public @ResponseBody
 	Message shippRemind(String sn) {
 		Member member = memberService.getCurrent();

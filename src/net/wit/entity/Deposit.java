@@ -116,6 +116,11 @@ public class Deposit extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '线下收单'")
 	private PayBill payBill;
 
+	/** 线上订单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '线上订单'")
+	private Order order;
+
 	/** 是否删除 */
 	@NotNull
 	@Column(columnDefinition="bit comment '是否删除'")
@@ -303,6 +308,14 @@ public class Deposit extends BaseEntity {
 
 	public void setPayBill(PayBill payBill) {
 		this.payBill = payBill;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	public MapEntity getMapMember() {
