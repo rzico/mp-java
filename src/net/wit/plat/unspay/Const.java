@@ -1,6 +1,7 @@
 package net.wit.plat.unspay;
 
 public class Const {
+    public static String orgNo = "0000000052";
     public static String privateKey =
             "-----BEGIN PRIVATE KEY-----\n"+
                     "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDrAYJ5zOLHd4Bi\n"+
