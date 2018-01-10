@@ -170,7 +170,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				title = "同意好友";
 			} else
 			if (type.equals(Message.Type.favorite)) {
-				title = "收款提醒";
+				title = "收藏提醒";
 			} else
 			if (type.equals(Message.Type.follow)) {
 				title = "关注提醒";
