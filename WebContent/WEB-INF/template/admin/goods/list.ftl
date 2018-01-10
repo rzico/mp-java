@@ -126,8 +126,13 @@
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "products",
+                    "sTitle": "商品图片",
                     "sClass": "center"
                 },
                 {
@@ -138,6 +143,36 @@
                 {
                     "mData": "modifyDate",
                     "sTitle": "修改日期",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "products",
+                    "sTitle": "商品名称",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "products",
+                    "sTitle": "商品编码",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "products",
+                    "sTitle": "商品价格",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "products",
+                    "sTitle": "市场价格",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "products",
+                    "sTitle": "成本价格",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "products",
+                    "sTitle": "库存",
                     "sClass": "center"
                 },
                 {
@@ -156,11 +191,20 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if(data.length >= 1){
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].isList){
+                                    return "<u style='cursor:pointer;' class='text-primary'><img src="+data[i].thumbnail+" height='50' width='50'></u>";
+                            }
+                            }
+                            return "";
+                        }else {
+                            return "";
+                        }
                     }
                 },
                 {
@@ -172,17 +216,111 @@
                 {
                     "aTargets": [4],
                     "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data.length >= 1){
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].isList){
+                                    return data[i].name;
+                                }
+                            }
+                            return "";
+                        }else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [6],
+                    "mRender": function (data, display, row) {
+                        if(data.length >= 1){
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].isList){
+                                    return data[i].sn;
+                                }
+                            }
+                            return "";
+                        }else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [7],
+                    "mRender": function (data, display, row) {
+                        if(data.length >= 1){
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].isList){
+                                    return data[i].price;
+                                }
+                            }
+                            return "";
+                        }else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [8],
+                    "mRender": function (data, display, row) {
+                        if(data.length >= 1){
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].isList){
+                                    return data[i].marketPrice;
+                                }
+                            }
+                            return "";
+                        }else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [9],
+                    "mRender": function (data, display, row) {
+                        if(data.length >= 1){
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].isList){
+                                    return data[i].cost;
+                                }
+                            }
+                            return "";
+                        }else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [10],
+                    "mRender": function (data, display, row) {
+                        if(data.length >= 1){
+                            var sum=0;
+                            for(var i=0;i<data.length;i++){
+                                sum+=data[i].stock;
+                            }
+                            return sum;
+                        }else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [11],
+                    "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 商品管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 商品管理 &gt; 详情','goodsView.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'>详情</a>";
                         }else{
                             return "";
                         }
                     }
 
                 },
-                //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 4]}// 制定列不参与排序
+//                {'bVisible': false, "aTargets": [0]}, //控制列的隐藏显示
+                {"orderable": false, "aTargets": [0,2,5,6,7,8,9,10,11]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
