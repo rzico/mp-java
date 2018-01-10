@@ -37,24 +37,24 @@
                 订单确认
             </button>
             <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
-               关闭
+                订单关闭
             </button>
         [#elseif data.status == 'unshipped']<!-- 待发货 -->
             <button type="button" class="btn btn-success radius" id="shippingId" onclick="shipping(${data.id});" name="">
-                发货
+                订单发货
             </button>
             <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
-                关闭
+                订单关闭
             </button>
         [#elseif data.status == 'shipped']<!-- 已发货 -->
             <button type="button" class="btn btn-success radius" id="returnsId" onclick="returns(${data.id});" name="">
-                退货
+                订单退货
             </button>
-        [#elseif data.status == 'refunding' && data.shippingStatus == 'returning']<!-- C端用户申请退货中 -->
+        [#elseif data.status == 'returning']<!-- C端用户申请退货中 -->
             <button type="button" class="btn btn-success radius" id="agreereturnsId" onclick="agreereturns(${data.id});" name="">
                 同意退货
             </button>
-        [#elseif data.status == 'refunding' && data.paymentStatus == 'refunding']<!-- C端用户申请退款中 -->
+        [#elseif data.status == 'refunding']<!-- C端用户申请退款中 -->
             <button type="button" class="btn btn-success radius" id="agreerefundsId" onclick="agreerefunds(${data.id});" name="">
                  同意退款
             </button>
@@ -456,9 +456,7 @@
         $("#tab-system").Huitab({
             index:0
         });
-
     });
-
 
     function cancel(id){
         var $cancelId = $("#cancelId");
@@ -682,7 +680,7 @@
                         parent.closeWindow(index,'退款成功!');
                     }else{
                         $agreerefundsId.prop("disabled",false);
-                        parent.toast('退款失败!',2);
+                        parent.toast(message.content,2);
                     }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){

@@ -585,18 +585,56 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/agreerefunds", method = RequestMethod.POST)
 	@ResponseBody
-	public Message agreerefunds(Long orderId){
+	public Message agreerefunds(Long orderId ,HttpServletRequest request){
 		Order order = orderService.find(orderId);
-		Admin admin = adminService.getCurrent();
-
-		try {
-			orderService.refunds(order,admin);
-			order = orderService.find(orderId);
-			return Message.success(order,"订单退款成功!");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Message.error("订单退款失败!");
+		if(null == order){
+			return Message.error("无效订单ID");
 		}
+
+		for(Refunds refunds:order.getRefunds()){
+			if (null == refunds){
+				return  Message.error("退款单无效");
+			}
+
+			String paymentPluginId = refunds.getPaymentPluginId();
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
+			if ((null == paymentPlugin) || (!paymentPlugin.getIsEnabled())){
+				return Message.error("支付插件无效");
+			}
+
+			try {
+				if(refunds.getStatus().equals(Refunds.Status.waiting)){
+					refundsService.refunds(refunds,request);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return Message.error(e.getMessage());
+			}
+
+			Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
+			if ("SUCCESS".equals(parameters.get("return_code"))) {
+				//if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
+					try {
+						refundsService.handle(refunds);
+						order = orderService.find(orderId);
+						return Message.success(order,"退款成功!");
+					} catch (Exception e) {
+						e.printStackTrace();
+						//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
+						return Message.error("退款失败!");
+					}
+
+			} else {
+				try {
+					refundsService.close(refunds);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					return Message.error("退款失败，客服会尽快处理");
+				}
+				return Message.error(parameters.get("result_msg").toString());
+			}
+		}
+		return Message.error("退款单无效!");
 	}
 
 	/**
@@ -605,52 +643,58 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = "/refundspayment", method = RequestMethod.POST)
 	@ResponseBody
 	public Message refundspayment(Long orderId,HttpServletRequest request){
-		Refunds refunds = refundsService.find(orderId);
-
-		if (null == refunds){
-			return  Message.error("退款单无效");
+		Order order = orderService.find(orderId);
+		if(null == order){
+			return Message.error("无效订单ID");
 		}
 
-		String paymentPluginId = refunds.getPaymentPluginId();
-		PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
-		if ((null == paymentPlugin) || (!paymentPlugin.getIsEnabled())){
-			return Message.error("支付插件无效");
-		}
-
-		try {
-			if(null == refunds){
-				refunds.setMethod(Refunds.Method.online);
-				refunds.setPaymentPluginId(paymentPluginId);
-				refunds.setPaymentMethod(paymentPlugin.getName());
-				refundsService.update(refunds);
+		for(Refunds refunds:order.getRefunds()){
+			if (null == refunds){
+				return  Message.error("退款单无效");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Message.error(e.getMessage());
-		}
 
-		Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
-		if ("SUCCESS".equals(parameters.get("return_code"))) {
-			if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
-				try {
-					refundsService.handle(refunds);
-				} catch (Exception e) {
-					e.printStackTrace();
-					//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
-				}
+			String paymentPluginId = refunds.getPaymentPluginId();
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
+			if ((null == paymentPlugin) || (!paymentPlugin.getIsEnabled())){
+				return Message.error("支付插件无效");
 			}
-			return Message.success(parameters, "success");
-		} else {
+
 			try {
-				refundsService.close(refunds);
+				if(null == refunds){
+					refunds.setMethod(Refunds.Method.online);
+					refunds.setPaymentPluginId(paymentPluginId);
+					refunds.setPaymentMethod(paymentPlugin.getName());
+					refundsService.update(refunds);
+				}
+				refundsService.refunds(refunds,request);
 			} catch (Exception e) {
-				logger.error(e.getMessage());
-				parameters.put("return_code","success");
-				parameters.put("result_msg","撤消退款失败");
-				return Message.success(parameters,"退款已提交，客服会尽快处理");
+				e.printStackTrace();
+				return Message.error(e.getMessage());
 			}
-			return Message.error(parameters.get("result_msg").toString());
+
+			Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
+			if ("SUCCESS".equals(parameters.get("return_code"))) {
+				if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
+					try {
+						refundsService.handle(refunds);
+					} catch (Exception e) {
+						e.printStackTrace();
+						//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
+						return Message.error("退款失败!");
+					}
+				}
+			} else {
+				try {
+					refundsService.close(refunds);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					return Message.error("退款已提交，客服会尽快处理");
+				}
+				return Message.error(parameters.get("result_msg").toString());
+			}
 		}
+		order = orderService.find(orderId);
+		return Message.success(order,"退款成功!");
 	}
 
 
