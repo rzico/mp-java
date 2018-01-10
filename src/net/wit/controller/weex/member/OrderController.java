@@ -53,7 +53,6 @@ public class OrderController extends BaseController {
 	@Resource(name = "refundsServiceImpl")
 	private RefundsService refundsService;
 
-
 	/**
 	 * 订单锁定
 	 */
@@ -80,17 +79,18 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public @ResponseBody
-	Message view(Long id,HttpServletRequest request) {
+	Message view(String sn,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 
-		Order order = orderService.find(id);
+		Order order = orderService.findBySn(sn);
 		if (order==null) {
 			return Message.error("无效订单id");
 		}
 		OrderModel model = new OrderModel();
+		model.bind(order);
 		return Message.bind(model,request);
 	}
 
@@ -134,15 +134,56 @@ public class OrderController extends BaseController {
 	/**
 	 *  订单审核
 	 */
-	@RequestMapping(value = "/confirm", method = RequestMethod.POST)
+	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
 	public @ResponseBody
-	Message payment(Long id,HttpServletRequest request) {
+	Message cancel(String sn,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 
-		Order order = orderService.find(id);
+		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("无效订单id");
+		}
+
+		Admin admin = adminService.findByMember(member);
+		if (admin==null) {
+			return Message.error("不是店铺员工");
+		}
+
+		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+			return Message.error("订单已审核");
+		}
+
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+
+		try {
+			orderService.cancel(order,admin);
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
+
+		OrderModel model = new OrderModel();
+		model.bind(order);
+		return Message.success(model,"关闭订单成功");
+	}
+
+
+	/**
+	 *  订单审核
+	 */
+	@RequestMapping(value = "/confirm", method = RequestMethod.POST)
+	public @ResponseBody
+	Message payment(String sn,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Order order = orderService.findBySn(sn);
 		if (order==null) {
 			return Message.error("无效订单id");
 		}
@@ -176,13 +217,13 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/shipping", method = RequestMethod.POST)
 	public @ResponseBody
-	Message shipping(Long id,HttpServletRequest request) {
+	Message shipping(String sn,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 
-		Order order = orderService.find(id);
+		Order order = orderService.findBySn(sn);
 		if (order==null) {
 			return Message.error("无效订单id");
 		}
@@ -192,7 +233,7 @@ public class OrderController extends BaseController {
 			return Message.error("不是店铺员工");
 		}
 
-		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			return Message.error("订单未审核");
 		}
 
@@ -220,13 +261,13 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/returns", method = RequestMethod.POST)
 	public @ResponseBody
-	Message returns(Long id,HttpServletRequest request) {
+	Message returns(String sn,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 
-		Order order = orderService.find(id);
+		Order order = orderService.findBySn(sn);
 		if (order==null) {
 			return Message.error("无效订单id");
 		}
@@ -236,12 +277,12 @@ public class OrderController extends BaseController {
 			return Message.error("不是店铺员工");
 		}
 
-		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			return Message.error("订单未审核");
 		}
 
-		if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
-			return Message.error("发货状态才能退货");
+		if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped) && !order.getShippingStatus().equals(Order.ShippingStatus.returning)) {
+			return Message.error("不能退货状态");
 		}
 
 		if (order.isLocked(member.userId())) {
@@ -253,55 +294,6 @@ public class OrderController extends BaseController {
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
 		}
-		OrderModel model = new OrderModel();
-		model.bind(order);
-		return Message.success(model,"退款成功");
-	}
-
-	/**
-	 *  退款
-	 */
-
-	@RequestMapping(value = "/refunds", method = RequestMethod.POST)
-	public @ResponseBody
-	Message refunds(Long id,HttpServletRequest request) {
-
-		Member member = memberService.getCurrent();
-		if (member==null) {
-			return Message.error(Message.SESSION_INVAILD);
-		}
-
-		Order order = orderService.find(id);
-		if (order==null) {
-			return Message.error("无效订单id");
-		}
-
-		Admin admin = adminService.findByMember(member);
-		if (admin==null) {
-			return Message.error("不是店铺员工");
-		}
-
-		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
-			return Message.error("订单未审核");
-		}
-
-		if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
-			return Message.error("发货状态才能退货");
-		}
-
-		if (order.isLocked(member.userId())) {
-			return Message.error("订单处理中，请稍候再试");
-		}
-
-		try {
-			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) ) {
-				orderService.refunds(order, admin);
-			}
-			//执行退款
-		} catch (Exception e) {
-			return Message.error(e.getMessage());
-		}
-
 
 		for (Refunds refunds:order.getRefunds()) {
 
@@ -321,25 +313,149 @@ public class OrderController extends BaseController {
 
 			Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
 			if ("SUCCESS".equals(parameters.get("return_code"))) {
-				if ("balancePayPlugin".equals(refunds.getPaymentPluginId()) || "cardPayPlugin".equals(refunds.getPaymentPluginId()) || "bankPayPlugin".equals(refunds.getPaymentPluginId()) || "cashPayPlugin".equals(refunds.getPaymentPluginId())) {
-					try {
-						refundsService.handle(refunds);
-					} catch (Exception e) {
-						e.printStackTrace();
-						//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
-					}
-				}
-				return Message.success(parameters, "success");
-			} else {
 				try {
-					refundsService.close(refunds);
+					refundsService.handle(refunds);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
-					parameters.put("return_code","success");
-					parameters.put("result_msg","撤消退款失败");
-					return Message.success(parameters,"退款已提交，客服会尽快处理");
+					//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
+					return Message.success(parameters,"退款失败，客服会尽快处理");
 				}
-				return Message.error(parameters.get("result_msg").toString());
+			} else {
+				String resultCode  = null;
+				try {
+					resultCode = paymentPlugin.refundsQuery(refunds,request);
+				} catch (Exception e) {
+					e.printStackTrace();
+					resultCode = "9999";
+				}
+				switch (resultCode) {
+					case "0000":
+						try {
+							refundsService.handle(refunds);
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+							return Message.error("退款失败，客服会尽快处理");
+						}
+					case "0001":
+						try {
+							refundsService.close(refunds);
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+							return Message.error("退款失败，客服会尽快处理");
+						}
+						OrderModel model = new OrderModel();
+						model.bind(order);
+						return Message.success(model,"退款失败");
+					default:
+						return Message.error("查询失败，稍候再试");
+				}
+			}
+
+		}
+
+		OrderModel model = new OrderModel();
+		model.bind(order);
+		return Message.success(model,"退款成功");
+	}
+
+	/**
+	 *  退款
+	 */
+
+	@RequestMapping(value = "/refunds", method = RequestMethod.POST)
+	public @ResponseBody
+	Message refunds(String sn,HttpServletRequest request) {
+
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("无效订单id");
+		}
+
+		Admin admin = adminService.findByMember(member);
+		if (admin==null) {
+			return Message.error("不是店铺员工");
+		}
+
+		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
+			return Message.error("订单未审核");
+		}
+
+		if (!order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getPaymentStatus().equals(Order.PaymentStatus.refunding)) {
+			return Message.error("不能退款状态");
+		}
+
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+
+		try {
+			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) ) {
+				orderService.refunds(order, admin);
+			}
+			//执行退款
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
+
+		for (Refunds refunds:order.getRefunds()) {
+
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
+			if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
+				return Message.error("支付插件无效");
+			}
+
+			try {
+				if (refunds.getStatus().equals(Refunds.Status.waiting)) {
+					refundsService.refunds(refunds, request);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				return Message.error(e.getMessage());
+			}
+
+			Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
+			if ("SUCCESS".equals(parameters.get("return_code"))) {
+				try {
+					refundsService.handle(refunds);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
+					return Message.error("退款失败，客服会尽快处理");
+				}
+			} else {
+				String resultCode  = null;
+				try {
+					resultCode = paymentPlugin.refundsQuery(refunds,request);
+				} catch (Exception e) {
+					e.printStackTrace();
+					resultCode = "9999";
+				}
+				switch (resultCode) {
+					case "0000":
+						try {
+							refundsService.handle(refunds);
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+							return Message.error("退款失败，客服会尽快处理");
+						}
+					case "0001":
+						try {
+							refundsService.close(refunds);
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+							return Message.error("退款失败，客服会尽快处理");
+						}
+						OrderModel model = new OrderModel();
+						model.bind(order);
+						return Message.success(model,"退款失败");
+					default:
+						return Message.error("查询失败，稍候再试");
+				}
 			}
 
 		}

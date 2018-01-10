@@ -10,6 +10,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.entity.StringEntity;
@@ -21,17 +24,24 @@ import org.apache.http.util.EntityUtils;
 import org.apache.http.util.TextUtils;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 public class HttpClientUtils {
+
 	public static String REpostRequestStrJson(String url, String request) throws Exception{
 		HttpPost put = new HttpPost(url);
 		int statusCode = 200;
 		try {
+
 			StringEntity entity = new StringEntity("","UTF-8");
 			entity.setContentType("application/json");
 			put.setEntity(entity);
@@ -58,10 +68,9 @@ public class HttpClientUtils {
 				httpost.addHeader("Connection", "keep-alive");
 				httpost.addHeader("Accept", "*/*");
 				httpost.addHeader("Content-Type", "application/json; charset=UTF-8");
-				httpost.addHeader("Host", url);
 				httpost.addHeader("X-Requested-With", "XMLHttpRequest");
 				httpost.addHeader("Cache-Control", "max-age=0");
-				httpost.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
+				httpost.addHeader("User-Agent", "");
 				httpost.setEntity(new StringEntity(data, "UTF-8"));
 				CloseableHttpResponse response = null;
 				response = httpclient.execute(httpost);
@@ -73,9 +82,12 @@ public class HttpClientUtils {
 				} finally {
 					response.close();
 				}
+			} catch (Exception e){
+		        e.printStackTrace();
 			} finally {
 				httpclient.close();
 			}
+			return  "error";
 	}
 	
 }
