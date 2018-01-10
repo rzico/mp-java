@@ -56,6 +56,7 @@ public class CommonUtil {
 		Map<String, String> rtrmap = new HashMap<>();
 		try {
 			String message = XmlUtils.maptoXmls(map,"merchant");
+			System.out.println(message);
 			// 随机生成密钥
 			String cooperatorAESKey = generateRandomKey(16);
 
