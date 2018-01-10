@@ -166,6 +166,21 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 				orderLog.setOrder(order);
 				orderLogDao.persist(orderLog);
 
+				if (refunds.getMethod().equals(Refunds.Method.online)) {
+					Deposit deposit = new Deposit();
+					deposit.setBalance(payment.getMember().getBalance());
+					deposit.setType(Deposit.Type.refunds);
+					deposit.setMemo(payment.getMemo());
+					deposit.setMember(payment.getMember());
+					deposit.setCredit(refunds.getAmount());
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setOrder(order);
+					depositDao.persist(deposit);
+				}
+
 				messageService.orderMemberPushTo(orderLog);
 
 				orderService.complete(order,null);

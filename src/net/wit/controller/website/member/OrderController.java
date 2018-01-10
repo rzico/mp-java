@@ -291,7 +291,7 @@ public class OrderController extends BaseController {
 		}
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			try {
-				orderService.cancel(order, null);
+				orderService.complete(order, null);
 				return Message.success("关闭成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());
@@ -304,7 +304,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 提醒卖家发货
 	 */
-	@RequestMapping(value = "/shipp_remind", method = RequestMethod.GET)
+	@RequestMapping(value = "/shipp_remind", method = RequestMethod.POST)
 	public @ResponseBody
 	Message shippRemind(String sn) {
 		Member member = memberService.getCurrent();

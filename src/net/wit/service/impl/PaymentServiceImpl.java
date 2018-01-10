@@ -183,6 +183,21 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				orderLog.setOrder(order);
 				orderLogDao.persist(orderLog);
 
+				if (payment.getMethod().equals(Payment.Method.online)) {
+					Deposit deposit = new Deposit();
+					deposit.setBalance(payment.getMember().getBalance());
+					deposit.setType(Deposit.Type.payment);
+					deposit.setMemo(payment.getMemo());
+					deposit.setMember(payment.getMember());
+					deposit.setCredit(BigDecimal.ZERO);
+					deposit.setDebit(payment.getAmount());
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setOrder(order);
+					depositDao.persist(deposit);
+				}
+
 				messageService.orderMemberPushTo(orderLog);
 				messageService.orderSellerPushTo(orderLog);
 
