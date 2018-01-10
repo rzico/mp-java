@@ -88,7 +88,7 @@ public class RefundsController extends BaseController {
     public Message submit(String paymentPluginId, String sn,String safeKey, HttpServletRequest request) {
         Refunds refunds = refundsService.findBySn(sn);
         if (refunds==null) {
-            Message.error("无效退款单");
+            return Message.error("无效退款单");
         }
 
         if (paymentPluginId==null) {

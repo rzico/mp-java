@@ -1,7 +1,7 @@
 package net.wit.entity;
 
 import org.hibernate.validator.constraints.Length;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -101,12 +101,14 @@ public class Merchant extends BaseEntity {
     /** 店主 */
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
+    @JsonIgnore
     private Member owner;
 
     /** 企业 */
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) comment '企业'")
+    @JsonIgnore
     private Enterprise enterprise;
 
     public String getScompany() {
@@ -251,5 +253,21 @@ public class Merchant extends BaseEntity {
 
     public void setEnterprise(Enterprise enterprise) {
         this.enterprise = enterprise;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getMerchantNo() {
+        return merchantNo;
+    }
+
+    public void setMerchantNo(String merchantNo) {
+        this.merchantNo = merchantNo;
     }
 }

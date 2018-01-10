@@ -613,7 +613,6 @@ public class OrderController extends BaseController {
 
 			Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
 			if ("SUCCESS".equals(parameters.get("return_code"))) {
-				//if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
 					try {
 						refundsService.handle(refunds);
 						order = orderService.find(orderId);
@@ -623,7 +622,6 @@ public class OrderController extends BaseController {
 						//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
 						return Message.error("退款失败!");
 					}
-
 			} else {
 				try {
 					refundsService.close(refunds);
