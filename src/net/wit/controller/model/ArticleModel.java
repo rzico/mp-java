@@ -144,9 +144,7 @@ public class ArticleModel extends BaseModel implements Serializable {
         this.thumbnail = article.getThumbnail();
 
         ArticleOptionModel articleOption = new ArticleOptionModel();
-        if (article.getArticleOptions()!=null) {
-            articleOption.bind(article);
-        }
+        articleOption.bind(article);
         this.articleOption = articleOption;
         this.isDraft = article.getIsDraft();
 
