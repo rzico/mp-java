@@ -82,7 +82,8 @@ public class Merchant {
             encr.put("insNo","0000000052");
             String req = JsonUtils.toJson(encr);
             System.out.println(req);
-            String resp =  HttpClientUtils.doJsonPost(reqUrl,req);
+
+            String resp= SLLClient.post(reqUrl,"","application/json", "UTF-8", 10000, 10000);
 
             System.out.println(resp);
 
