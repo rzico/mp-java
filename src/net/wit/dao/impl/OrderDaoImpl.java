@@ -79,7 +79,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.or(criteriaBuilder.equal(root.<Boolean> get("shippingStatus"), Order.ShippingStatus.returning),criteriaBuilder.equal(root.<Boolean> get("paymentStatus"), Order.PaymentStatus.refunding)));
 			}
 			if ("completed".equals(status)) {
-				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.confirmed));
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.completed));
 			}
 			if ("cancelled".equals(status)) {
 				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.cancelled));

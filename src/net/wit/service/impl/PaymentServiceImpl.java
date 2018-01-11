@@ -184,11 +184,13 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				orderLogDao.persist(orderLog);
 
 				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
 					Deposit deposit = new Deposit();
-					deposit.setBalance(payment.getMember().getBalance());
+					deposit.setBalance(member.getBalance());
 					deposit.setType(Deposit.Type.payment);
 					deposit.setMemo(payment.getMemo());
-					deposit.setMember(payment.getMember());
+					deposit.setMember(member);
 					deposit.setCredit(BigDecimal.ZERO);
 					deposit.setDebit(payment.getAmount());
 					deposit.setDeleted(false);
