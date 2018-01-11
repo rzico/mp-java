@@ -1,7 +1,6 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleFavorite;
-
 import java.io.Serializable;
 import java.util.*;
 

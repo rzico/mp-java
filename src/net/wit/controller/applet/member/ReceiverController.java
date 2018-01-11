@@ -2,6 +2,7 @@ package net.wit.controller.applet.member;
 
 import net.wit.Filter;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ReceiverModel;
 import net.wit.entity.Member;
@@ -49,9 +50,13 @@ public class ReceiverController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        List<Order> orders = new ArrayList<Order>();
+        orders.add(new Order("isDefault", Order.Direction.desc));
+
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
-        List<Receiver> receivers = receiverService.findList(null,null,filters,null);
+        List<Receiver> receivers = receiverService.findList(null,null,filters,orders);
 
         return Message.bind(ReceiverModel.bindList(receivers),request);
     }
@@ -115,6 +120,26 @@ public class ReceiverController extends BaseController {
         return Message.success(model,"修改成功");
     }
 
+    /**
+     *  设为默认
+     */
+    @RequestMapping(value = "/default", method = RequestMethod.POST)
+    @ResponseBody
+    public Message setDefault(Long id,Boolean isDefault,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Receiver receiver = receiverService.find(id);
+        if (receiver==null) {
+            return Message.error("无效地址id");
+        }
+        receiver.setIsDefault(isDefault);
+        receiverService.update(receiver);
+        ReceiverModel model = new ReceiverModel();
+        model.bind(receiver);
+        return Message.success(model,"修改成功");
+    }
 
     /**
      *  删除文集
