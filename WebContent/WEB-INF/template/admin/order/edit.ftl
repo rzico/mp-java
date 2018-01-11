@@ -485,7 +485,7 @@
                         parent.closeWindow(index,'关闭成功!');
                     }else{
                         $cancelId.prop("disabled",false);
-                        parent.toast('关闭失败!',2);
+                        parent.toast(message.content,2);
                     }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
@@ -524,7 +524,7 @@
                         parent.closeWindow(index,'订单确认成功!');
                     }else{
                         $confirmId.prop("disabled",false);
-                        parent.toast('订单确认失败!',2);
+                        parent.toast(message.content,2);
                     }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
@@ -563,7 +563,7 @@
                         parent.closeWindow(index,'发货成功!');
                     }else{
                         $shippingId.prop("disabled",false);
-                        parent.toast('发货失败!',2);
+                        parent.toast(message.content,2);
                     }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
@@ -602,7 +602,7 @@
                         parent.closeWindow(index,'退货成功!');
                     }else{
                         $returnsId.prop("disabled",false);
-                        parent.toast('退货失败!',2);
+                        parent.toast(message.content,2);
                     }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
@@ -641,7 +641,7 @@
                         parent.closeWindow(index,'退货成功!');
                     }else{
                         $agreereturnsId.prop("disabled",false);
-                        parent.toast('退货失败!',2);
+                        parent.toast(message.content,2);
                     }
                 },
                 error: function(XmlHttpRequest, textStatus, errorThrown){
