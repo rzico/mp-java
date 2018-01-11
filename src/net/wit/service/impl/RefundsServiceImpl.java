@@ -159,6 +159,16 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 				order.setPaymentStatus(Order.PaymentStatus.refunded);
 				orderDao.merge(order);
 
+				Boolean completed = true;
+				for (Refunds rfd:order.getRefunds()) {
+                   if (!rfd.getStatus().equals(Refunds.Status.success)) {
+                   	  completed = false;
+				   }
+				}
+
+				if (completed) {
+					orderService.complete(order,null);
+				}
 				OrderLog orderLog = new OrderLog();
 				orderLog.setType(OrderLog.Type.refunds);
 				orderLog.setOperator(refunds.getMember().userId());
