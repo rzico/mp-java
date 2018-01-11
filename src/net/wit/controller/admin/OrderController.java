@@ -508,7 +508,7 @@ public class OrderController extends BaseController {
 			return Message.error("没有就业不能操作订单");
 		}
 
-		if (!admin.getEnterprise().getMember().equals(order.getSeller())) {
+		if (null != admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
 			return Message.error("只能操作本企业订单");
 		}
 
@@ -542,7 +542,7 @@ public class OrderController extends BaseController {
 			return Message.error("没有就业不能操作订单");
 		}
 
-		if (!admin.getEnterprise().getMember().equals(order.getSeller())) {
+		if (null != admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
 			return Message.error("只能操作本企业订单");
 		}
 
@@ -577,7 +577,7 @@ public class OrderController extends BaseController {
 			return Message.error("没有就业不能操作订单");
 		}
 
-		if (!admin.getEnterprise().getMember().equals(order.getSeller())) {
+		if (null != admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
 			return Message.error("只能操作本企业订单");
 		}
 
@@ -616,7 +616,7 @@ public class OrderController extends BaseController {
 			return Message.error("没有就业不能操作订单");
 		}
 
-		if (!admin.getEnterprise().getMember().equals(order.getSeller())) {
+		if (null != admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
 			return Message.error("只能操作本企业订单");
 		}
 
@@ -658,7 +658,7 @@ public class OrderController extends BaseController {
 			return Message.error("没有就业不能操作订单");
 		}
 
-		if (!admin.getEnterprise().getMember().equals(order.getSeller())) {
+		if (null != admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
 			return Message.error("只能操作本企业订单");
 		}
 

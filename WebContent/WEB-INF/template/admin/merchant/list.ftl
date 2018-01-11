@@ -47,7 +47,7 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 商户管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <a href="javascript:;" onclick="add('首页 &gt; 商户资料 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe600;</i> 新增商户</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
@@ -129,16 +129,6 @@
                 $(row).children('td').eq(11).attr('style', 'text-align: left;');
                 $(row).children('td').eq(12).attr('style', 'text-align: left;');
                 $(row).children('td').eq(13).attr('style', 'text-align: left;');
-                $(row).children('td').eq(14).attr('style', 'text-align: left;');
-                $(row).children('td').eq(15).attr('style', 'text-align: left;');
-                $(row).children('td').eq(16).attr('style', 'text-align: left;');
-                $(row).children('td').eq(17).attr('style', 'text-align: left;');
-                $(row).children('td').eq(18).attr('style', 'text-align: left;');
-                $(row).children('td').eq(19).attr('style', 'text-align: left;');
-                $(row).children('td').eq(20).attr('style', 'text-align: left;');
-                $(row).children('td').eq(21).attr('style', 'text-align: left;');
-                $(row).children('td').eq(22).attr('style', 'text-align: left;');
-
             },
             "aoColumns": [
                 {
@@ -157,33 +147,33 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
+                    "mData": "merchantNo",
+                    "sTitle": "商户编号",
                     "sClass": "center"
                 },
                 {
-                    "mData": "address",
-                    "sTitle": "经营地址",
+                    "mData": "merchantName",
+                    "sTitle": "商户姓名",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "scompany",
+                    "sTitle": "商户名称",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapEnterprise",
+                    "sTitle": "所属企业",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapOwner",
+                    "sTitle": "所属店主",
                     "sClass": "center"
                 },
                 {
                     "mData": "bankName",
                     "sTitle": "开户银行",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "branchBankName",
-                    "sTitle": "支行名称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "brokerage",
-                    "sTitle": "结算费率",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "cardCity",
-                    "sTitle": "银行城市",
                     "sClass": "center"
                 },
                 {
@@ -197,38 +187,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "merchantName",
-                    "sTitle": "商户姓名",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "merchantNo",
-                    "sTitle": "商户编号",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "phone",
-                    "sTitle": "手机号",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "province",
-                    "sTitle": "经营省份",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "scompany",
-                    "sTitle": "商户名称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "所属企业",
-                    "sTitle": "Enterprise",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "所属店主",
-                    "sTitle": "Owner",
+                    "mData": "licenseNo",
+                    "sTitle": "营业执照",
                     "sClass": "center"
                 },
                 {
@@ -255,13 +215,7 @@
                     }
                 },
                 {
-                    "aTargets": [3],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [22],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','enterpriseView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -271,7 +225,7 @@
                     }
                 }, 
                 {
-                    "aTargets": [23],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -281,10 +235,10 @@
                     }
                 }, 
                 {
-                    "aTargets": [24],
+                    "aTargets": [12],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 商户管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 商户资料 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -293,7 +247,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 22, 23, 24]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 10, 11, 12]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
