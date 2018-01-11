@@ -51,7 +51,7 @@
                 订单退货
             </button>
         [#elseif data.status == 'returning']<!-- C端用户申请退货中 -->
-            <button type="button" class="btn btn-success radius" id="agreereturnsId" onclick="agreereturns(${data.id});" name="">
+            <button type="button" class="btn btn-success radius" id="returnsId" onclick="returns(${data.id});" name="">
                 同意退货
             </button>
         [#elseif data.status == 'refunding']<!-- C端用户申请退款中 -->
@@ -626,7 +626,7 @@
                 data:{
                     orderId:id
                 },
-                url:'${base}/admin/order/agreereturns.jhtml',
+                url:'${base}/admin/order/returns.jhtml',
                 dataType:'json',
                 beforeSend:function(){
                     $agreereturnsId.prop("disabled",true);
@@ -665,7 +665,7 @@
                 data:{
                     orderId:id
                 },
-                url:'${base}/admin/order/agreerefunds.jhtml',
+                url:'${base}/admin/order/refunds.jhtml',
                 dataType:'json',
                 beforeSend:function(){
                     $agreerefundsId.prop("disabled",true);
