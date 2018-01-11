@@ -32,152 +32,148 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经营地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="address" name="address">
-            </div>
-        </div>
+        <table class="table table-border table-bordered table-bg mt-20">
+            <thead>
+            <tr>
+                <th colspan="4" scope="col">商户资料</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th class="text-r" width="10%">手机号：</th>
+                <td  width="30%" colspan="3">
+                    <div class="formControls col-xs-8 col-sm-9" >
+                        <input type="text" class="input-text" value="" placeholder="" id="phone" name="phone" width="30%">
+                    </div>
+                    <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                        <i class="Hui-iconfont">&#xe665;</i> 查询
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r" width="10%">商户编号：</th>
+                <td width="30%">
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="merchantNo" name="merchantNo">
+                    </div>
+                </td>
+                <th class="text-r" width="10%">行业类型：</th>
+                <td width="50%">
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="industryType" name="industryType">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">商户名称：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="scompany" name="scompany">
+                    </div>
+                </td>
+                <th class="text-r">商户姓名：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="merchantName" name="merchantName">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">营业执照：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="licenseNo" name="licenseNo">
+                    </div>
+                </td>
+                <th class="text-r">身份证：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="idCard" name="idCard">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">开户银行：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="bankName" name="bankName">
+                    </div>
+                </td>
+                <th class="text-r">所属企业：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="enterprise" name="enterprise">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">支行名称：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="branchBankName" name="branchBankName">
+                    </div>
+                </td>
+                <th class="text-r">所属店主：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="owner" name="owner">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">银行卡号：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="cardNo" name="cardNo">
+                    </div>
+                </td>
+                <th class="text-r">邮箱：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="email" name="email">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">银行省份：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince">
+                    </div>
+                </td>
+                <th class="text-r">经营省份：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="province" name="province">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">银行城市：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="cardCity" name="cardCity">
+                    </div>
+                </td>
+                <th class="text-r">经营城市：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="city" name="city">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">经营地址：</th>
+                <td colspan="3">
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="address" name="address">
+                    </div>
+                </td>
+            </tr>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">开户银行：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="bankName" name="bankName">
-            </div>
-        </div>
+            </tbody>
+        </table>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">支行名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="branchBankName" name="branchBankName">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">银行城市：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="cardCity" name="cardCity">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">银行卡号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="cardNo" name="cardNo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">银行省份：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经营城市：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="city" name="city">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="@" name="email" value="" id="email">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">身份证：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="idCard" name="idCard">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">行业类型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="industryType" name="industryType">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">营业执照：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="licenseNo" name="licenseNo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>商户姓名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="merchantName" name="merchantName">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商户编号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="merchantNo" name="merchantNo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">手机号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经营省份：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="province" name="province">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商户名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="scompany" name="scompany">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">唯一标识：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="userId" name="userId">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Enterprise：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if enterprises??]
-				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
-                    [#list enterprises as enterprise]
-					<option value="${enterprise.id}">${enterprise.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Owner：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if owners??]
-				<select name="ownerId" class="select" style="background-color: #FFFFFF">
-                    [#list owners as owner]
-					<option value="${owner.id}">${owner.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
