@@ -121,8 +121,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		super.delete(order);
 	}
 
-	public Page<Order> findPage(Date beginDate,Date endDate, Pageable pageable) {
-		return orderDao.findPage(beginDate,endDate,pageable);
+	public Page<Order> findPage(Date beginDate,Date endDate, String status, Pageable pageable) {
+		return orderDao.findPage(beginDate,endDate,status,pageable);
 	}
 
 	/**

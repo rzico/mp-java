@@ -105,27 +105,11 @@ public class OrderController extends BaseController {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 		List<Filter> filters = new ArrayList<Filter>();
-        if ("unpaid".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.unconfirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.unpaid));
-		}
-		if ("unshipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.unshipped));
-		}
-		if ("shipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.shipped));
-		}
-		if ("refunding".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.refunding));
-		}
 		filters.add(new Filter("seller", Filter.Operator.eq,member));
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
-		Page<Order> page = orderService.findPage(null,null,pageable);
+		Page<Order> page = orderService.findPage(null,null,status,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindList(page.getContent()));
 		return Message.bind(model,request);

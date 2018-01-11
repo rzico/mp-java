@@ -7,6 +7,8 @@ import java.util.Date;
 public class MemberAttributeModel extends BaseModel implements Serializable {
 
     private Long id;
+    /** 登录名 */
+    private String  userId;
     /** 账号 */
     private String  username;
     /** 昵称 */
@@ -48,6 +50,14 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getNickName() {
@@ -148,6 +158,7 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
 
     public void bind(Member member) {
         this.id = member.getId();
+        this.userId = member.userId();
         this.autograph = member.getAutograph();
         this.nickName = member.getNickName();
         this.username = member.getUsername();
