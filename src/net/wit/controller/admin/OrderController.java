@@ -443,7 +443,7 @@ public class OrderController extends BaseController {
 			filters.add(shippingStatusFilter);
 		}
 
-		Page<Order> page = orderService.findPage(beginDate,endDate,pageable);
+		Page<Order> page = orderService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
