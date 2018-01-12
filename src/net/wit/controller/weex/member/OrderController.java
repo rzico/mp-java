@@ -105,27 +105,11 @@ public class OrderController extends BaseController {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 		List<Filter> filters = new ArrayList<Filter>();
-        if ("unpaid".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.unconfirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.unpaid));
-		}
-		if ("unshipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.unshipped));
-		}
-		if ("shipped".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("shippingStatus", Filter.Operator.eq, net.wit.entity.Order.ShippingStatus.shipped));
-		}
-		if ("refunding".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq, net.wit.entity.Order.OrderStatus.confirmed));
-			filters.add(new Filter("paymentStatus", Filter.Operator.eq, net.wit.entity.Order.PaymentStatus.refunding));
-		}
 		filters.add(new Filter("seller", Filter.Operator.eq,member));
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
-		Page<Order> page = orderService.findPage(null,null,pageable);
+		Page<Order> page = orderService.findPage(null,null,status,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
@@ -362,7 +346,7 @@ public class OrderController extends BaseController {
 	 *  退款
 	 */
 
-	@RequestMapping(value = "/refunds", method = RequestMethod.POST)
+	@RequestMapping(value = "/refunds")
 	public @ResponseBody
 	Message refunds(String sn,HttpServletRequest request) {
 
@@ -383,10 +367,6 @@ public class OrderController extends BaseController {
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			return Message.error("订单未审核");
-		}
-
-		if (!order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getPaymentStatus().equals(Order.PaymentStatus.refunding)) {
-			return Message.error("不能退款状态");
 		}
 
 		if (order.isLocked(member.userId())) {
@@ -454,7 +434,7 @@ public class OrderController extends BaseController {
 						model.bind(order);
 						return Message.success(model,"退款失败");
 					default:
-						return Message.error("查询失败，稍候再试");
+						return Message.error("正在处理中，稍候再试");
 				}
 			}
 

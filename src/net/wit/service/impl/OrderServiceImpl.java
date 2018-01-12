@@ -121,8 +121,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		super.delete(order);
 	}
 
-	public Page<Order> findPage(Date beginDate,Date endDate, Pageable pageable) {
-		return orderDao.findPage(beginDate,endDate,pageable);
+	public Page<Order> findPage(Date beginDate,Date endDate, String status, Pageable pageable) {
+		return orderDao.findPage(beginDate,endDate,status,pageable);
 	}
 
 	/**
@@ -442,7 +442,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		    }
 		}
 		//计算分润
-		if (order.getShippingStatus() == Order.ShippingStatus.shipped && order.getPromoter()!=null) {
+		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && !order.getPaymentMethod().equals(Order.PaymentMethod.offline) && order.getShippingStatus() == Order.ShippingStatus.shipped && order.getPromoter()!=null) {
 			BigDecimal d = order.getDistribution();
 			if (d.compareTo(BigDecimal.ZERO)>0) {
 				//扣除商家分配佣金

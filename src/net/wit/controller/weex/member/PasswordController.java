@@ -37,6 +37,9 @@ public class PasswordController extends BaseController {
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
@@ -160,6 +163,13 @@ public class PasswordController extends BaseController {
             }
             member.setPassword(MD5Utils.getMD5Str(password));
             memberService.save(member);
+
+            Admin admin = adminService.findByMember(member);
+            if (admin!=null) {
+                admin.setPassword(member.getPassword());
+                adminService.update(admin);
+            }
+
             return Message.success("修改成功");
         } catch (Exception e) {
             e.printStackTrace();

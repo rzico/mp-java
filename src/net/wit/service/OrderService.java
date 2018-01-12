@@ -16,7 +16,7 @@ import net.wit.entity.*;
  */
 
 public interface OrderService extends BaseService<Order, Long> {
-	Page<Order> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Page<Order> findPage(Date beginDate,Date endDate, String status, Pageable pageable);
 
 	/**
 	 * 根据订单编号查找订单

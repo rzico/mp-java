@@ -1130,7 +1130,7 @@ public class Order extends BaseEntity {
 			return "待确定";
 		} else
 		if (getOrderStatus().equals(OrderStatus.cancelled)) {
-			return "已取消";
+			return "已关闭";
 		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
 			return "退货中";

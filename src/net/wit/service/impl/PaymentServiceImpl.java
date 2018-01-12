@@ -18,9 +18,7 @@ import net.wit.dao.*;
 import net.wit.entity.Order;
 import net.wit.entity.summary.CardActivity;
 import net.wit.plugin.PaymentPlugin;
-import net.wit.service.MessageService;
-import net.wit.service.PluginService;
-import net.wit.service.SmssendService;
+import net.wit.service.*;
 import net.wit.util.DateUtil;
 import net.wit.util.JsonUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -31,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.entity.*;
-import net.wit.service.PaymentService;
 
 /**
  * @ClassName: PaymentDaoImpl
@@ -83,6 +80,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 
 	@Resource(name = "topicDaoImpl")
 	private TopicDao topicDao;
+
+	@Resource(name = "enterpriseServiceImpl")
+	private EnterpriseService enterpriseService;
 
 	@Resource(name = "articleRewardDaoImpl")
 	private ArticleRewardDao articleRewardDao;
@@ -184,11 +184,13 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				orderLogDao.persist(orderLog);
 
 				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
 					Deposit deposit = new Deposit();
-					deposit.setBalance(payment.getMember().getBalance());
+					deposit.setBalance(member.getBalance());
 					deposit.setType(Deposit.Type.payment);
 					deposit.setMemo(payment.getMemo());
-					deposit.setMember(payment.getMember());
+					deposit.setMember(member);
 					deposit.setCredit(BigDecimal.ZERO);
 					deposit.setDebit(payment.getAmount());
 					deposit.setDeleted(false);
@@ -377,6 +379,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				topic.setExpire(calendar.getTime());
 				topicDao.merge(topic);
 				messageService.topicPushTo(topic);
+				enterpriseService.create(topic);
 			}
 		}
 	}

@@ -443,7 +443,7 @@ public class OrderController extends BaseController {
 			filters.add(shippingStatusFilter);
 		}
 
-		Page<Order> page = orderService.findPage(beginDate,endDate,pageable);
+		Page<Order> page = orderService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
@@ -665,10 +665,10 @@ public class OrderController extends BaseController {
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			return Message.error("订单未审核");
 		}
-
-		if (!order.getPaymentStatus().equals(Order.PaymentStatus.paid) && !order.getPaymentStatus().equals(Order.PaymentStatus.refunding)) {
-			return Message.error("不能退款状态");
-		}
+//
+//		if (!order.getPaymentStatus().equals(Order.PaymentStatus.paid) && !order.getPaymentStatus().equals(Order.PaymentStatus.refunding)) {
+//			return Message.error("不能退款状态");
+//		}
 
 		if (order.isLocked(admin.getUsername())) {
 			return Message.error("订单处理中，请稍候再试");
