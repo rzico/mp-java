@@ -156,7 +156,7 @@ public class Admin extends BaseEntity {
     /**
      * 绑定会员
      */
-    @NotNull
+    //@NotNull
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -352,6 +352,7 @@ public class Admin extends BaseEntity {
         }
     }
 
+    @JsonIgnore
     public Boolean isOwner() {
         if (this.getEnterprise()==null) {
             return true;

@@ -64,8 +64,17 @@ public class CardController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("none","空卡"));
+		statuss.add(new MapEntity("activate","已激活"));
+		statuss.add(new MapEntity("loss","已挂失"));
+		model.addAttribute("statuss",statuss);
 
-
+		List<MapEntity> vips = new ArrayList<>();
+		vips.add(new MapEntity("vip1","vip1"));
+		vips.add(new MapEntity("vip2","vip2"));
+		vips.add(new MapEntity("vip3","vip3"));
+		model.addAttribute("vips",vips);
 
 		return "/admin/card/list";
 	}
@@ -145,8 +154,13 @@ public class CardController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("none","空卡"));
+		statuss.add(new MapEntity("activate","已激活"));
+		statuss.add(new MapEntity("loss","已挂失"));
+		model.addAttribute("statuss",statuss);
 
-
+		model.addAttribute("shops",shopService.findAll());
 
 		model.addAttribute("data",cardService.find(id));
 
@@ -161,25 +175,18 @@ public class CardController extends BaseController {
     @ResponseBody
 	public Message update(Card card, Long shopId, Long memberId){
 		Card entity = cardService.find(card.getId());
-		
-		entity.setCreateDate(card.getCreateDate());
-
-		entity.setModifyDate(card.getModifyDate());
-
-		entity.setBalance(card.getBalance());
+		//entity.setCreateDate(card.getCreateDate());
+		//entity.setModifyDate(card.getModifyDate());
+		//entity.setBalance(card.getBalance());
 
 		entity.setCode(card.getCode());
-
+		entity.setStatus(card.getStatus());
 		entity.setMobile(card.getMobile());
 
 		entity.setName(card.getName());
-
-		entity.setSign(card.getSign());
-
-		entity.setUsedDate(card.getUsedDate());
-
-		entity.setOwner(memberService.find(memberId));
-
+		//entity.setSign(card.getSign());
+		//entity.setUsedDate(card.getUsedDate());
+		//entity.setOwner(memberService.find(memberId));
 		entity.setShop(shopService.find(shopId));
 		
 		if (!isValid(entity)) {
@@ -200,7 +207,17 @@ public class CardController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Card.Status status, Card.VIP vip, Pageable pageable, ModelMap model) {
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		if (status != null){
+			Filter statusFilter = new Filter("status",Filter.Operator.eq,status);
+			filters.add(statusFilter);
+		}
+
+		if (vip != null){
+			Filter vipFilter = new Filter("vip",Filter.Operator.eq,vip);
+			filters.add(vipFilter);
+		}
 
 		Page<Card> page = cardService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

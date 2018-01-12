@@ -12,322 +12,687 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
-
     <![endif]-->
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
-
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
 
-    <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+    <title>基本设置</title>
 </head>
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
-        <input type="number" value="${data.id}" style="display:none" name="id">
+    <!-- form class="form form-horizontal" id="form-article-add" -->
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.address}" placeholder="" id="address" name="address">
-            </div>
-        </div>
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+        [#if data.status == 'unpaid' ]<!-- 待付款 -->
+            <button type="button" class="btn btn-success radius" id="confirmId" onclick="confirm(${data.id});" name="">
+                订单确认
+            </button>
+            <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
+                订单关闭
+            </button>
+        [#elseif data.status == 'unshipped']<!-- 待发货 -->
+            <button type="button" class="btn btn-success radius" id="shippingId" onclick="shipping(${data.id});" name="">
+                订单发货
+            </button>
+            <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
+                订单关闭
+            </button>
+        [#elseif data.status == 'shipped']<!-- 已发货 -->
+            <button type="button" class="btn btn-success radius" id="returnsId" onclick="returns(${data.id});" name="">
+                订单退货
+            </button>
+        [#elseif data.status == 'returning']<!-- C端用户申请退货中 -->
+            <button type="button" class="btn btn-success radius" id="returnsId" onclick="returns(${data.id});" name="">
+                同意退货
+            </button>
+        [#elseif data.status == 'refunding']<!-- C端用户申请退款中 -->
+            <button type="button" class="btn btn-success radius" id="agreerefundsId" onclick="agreerefunds(${data.id});" name="">
+                 同意退款
+            </button>
+        [#elseif data.status == 'completed']<!-- 已完成 -->
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>地区名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.areaName}" placeholder="" id="areaName" name="areaName">
-            </div>
+        [/#if]
         </div>
+        <div class="mt-20"></div>
+        <div id="tab-system" class="HuiTab">
+            <div class="tabBar cl">
+                <span>订单信息</span>
+                <span>商品信息</span>
+                <span>收款信息</span>
+                <span>退款信息</span>
+                <span>订单日志</span>
+            </div>
+            <div class="tabCon">
+                <table class="table table-border table-bordered table-bg mt-20">
+                    <tr>
+                        <th class="text-r" width="10%">
+                            订单编号:
+                        </th>
+                        <td width="30%">
+                            ${data.sn}
+                        </td>
+                        <th class="text-r" width="10%">
+                            创建日期:
+                        </th>
+                        <td width="50%">
+                            ${data.createDate}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            订单状态:
+                        </th>
+                        <td>
+                        [#if orderStatuss?? && data.orderStatus??]
+                            [#list orderStatuss as orderStatus]
+                                [#if "${orderStatus.id}" == data.orderStatus]
+                                ${orderStatus.name}
+                                [/#if]
+                            [/#list]
+                        [/#if]
+                        </td>
+                        <th class="text-r">
+                            支付状态:
+                        </th>
+                        <td>
+                            [#if paymentStatuss?? && data.paymentStatus??]
+                                [#list paymentStatuss as paymentStatus]
+                                    [#if "${paymentStatus.id}" == data.paymentStatus]
+                                        ${paymentStatus.name}
+                                    [/#if]
+                                [/#list]
+                            [/#if]
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            配送状态:
+                        </th>
+                        <td>
+                            [#if shippingStatuss?? && data.shippingStatus??]
+                            [#list shippingStatuss as shippingStatus]
+                                [#if "${shippingStatus.id}" == data.shippingStatus]
+                                    ${shippingStatus.name}
+                                [/#if]
+                            [/#list]
+                            [/#if]
+                        </td>
+                        <th class="text-r">
+                            用户名:
+                        </th>
+                        <td>
+                            ${data.member.username}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            订单金额:
+                        </th>
+                        <td>
+                            ${data.Amount}
+                        </td>
+                        <th class="text-r">
+                            已付金额:
+                        </th>
+                        <td>
+                            ${data.amountPaid}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            商品重量:
+                        </th>
+                        <td>
+                            ${data.Weight}
+                        </td>
+                        <th class="text-r">
+                            商品数量:
+                        </th>
+                        <td>
+                            ${data.Quantity}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            使用优惠券:
+                        </th>
+                        <td>
+                            [#if data.couponCode??]
+                                <span class="label label-success radius">是</span>
+                            [#else]
+                                <span class="label label-success radius">否</span>
+                            [/#if]
+                        </td>
+                        <th class="text-r">
+                            优惠券折扣:
+                        </th>
+                        <td>
+                            ${data.couponDiscount}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            调整金额:
+                        </th>
+                        <td>
+                            ${data.offsetAmount}
+                        </td>
+                        <th class="text-r">
+                            赠送积分:
+                        </th>
+                        <td>
+                            ${data.point}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            运费:
+                        </th>
+                        <td>
+                            ${data.freight}
+                        </td>
+                        <th class="text-r">
+                            支付手续费:
+                        </th>
+                        <td>
+                            ${data.fee}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            支付方式:
+                        </th>
+                        <td>
+                            [#if paymentMethods?? && data.paymentMethod??]
+                            [#list paymentMethods as paymentMethod]
+                                [#if "${paymentMethod.id}" == data.paymentMethod]
+                                    ${paymentMethod.name}
+                                [/#if]
+                            [/#list]
+                            [/#if]
+                        </td>
+                        <th class="text-r">
+                            配送方式:
+                        </th>
+                        <td>
+                            [#if shippingMethods?? && data.shippingMethod??]
+                            [#list shippingMethods as shippingMethod]
+                                [#if "${shippingMethod.id}" == data.shippingMethod]
+                                    ${shippingMethod.name}
+                                [/#if]
+                            [/#list]
+                            [/#if]
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            收货人:
+                        </th>
+                        <td>
+                            ${data.consignee}
+                        </td>
+                        <th class="text-r">
+                            地区:
+                        </th>
+                        <td>
+                            ${data.areaName}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            地址:
+                        </th>
+                        <td>
+                            ${data.address}
+                        </td>
+                        <th class="text-r">
+                            邮编:
+                        </th>
+                        <td>
+                            ${data.zipCode}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-r">
+                            电话:
+                        </th>
+                        <td>
+                            ${data.phone}
+                        </td>
+                        <th class="text-r">
+                            附言:
+                        </th>
+                        <td>
+                            ${data.memo}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tabCon">
+                <table class="table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+                        <th>商品编号</th>
+                        <th>商品名称</th>
+                        <th>商家</th>
+                        <th>联系电话</th>
+                        <th>商品价格</th>
+                        <th>数量</th>
+                        <th>已发货数量</th>
+                        <th>已退货数量</th>
+                        <th>小计</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    [#if data.orderItems??]
+                        [#list data.orderItems as orderItem]
+                           <tr class="text-c">
+                            <td>${orderItem.product.sn}</td>
+                            <td>${orderItem.name}</td>
+                            <td>
+                                [#if orderItem.member??]
+                                    ${orderItem.member.username}
+                                [/#if]
+                            </td>
+                            <td>
+                                [#if orderItem.member??]
+                                    ${orderItem.member.mobile}
+                                [/#if]
+                            </td>
+                            <td>${orderItem.price}</td>
+                            <td>${orderItem.quantity}</td>
+                            <td>${orderItem.shippedQuantity}</td>
+                            <td>${orderItem.returnQuantity}</td>
+                            <td>${orderItem.subtotal}</td>
+                        </tr>
+                        [/#list]
+                    [/#if]
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>收货人：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.consignee}" placeholder="" id="consignee" name="consignee">
+                    </tbody>
+                </table>
+            </div>
+            <div class="tabCon">
+                <table class="table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+                        <th>编号</th>
+                        <th>方式</th>
+                        <th>支付方式</th>
+                        <th>付款金额</th>
+                        <th>状态</th>
+                        <th>付款日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    [#if data.payments??]
+                        [#list data.payments as payment]
+                        <tr class="text-c">
+                            <td>${payment.sn}</td>
+                            <td>
+                                [#list shoukuanMethods as shoukuanMethod]
+                                   [#if "${shoukuanMethod.id}" == payment.method]
+                                        ${shoukuanMethod.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
+                            <td>${payment.paymentMethod}</td>
+                            <td>${payment.amount}</td>
+                            <td>
+                                [#list shoukuanStatuss as shoukuanStatus]
+                                    [#if "${shoukuanStatus.id}" == payment.status]
+                                        ${shoukuanStatus.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
+                            <td>${payment.paymentDate}</td>
+                        </tr>
+                        [/#list]
+                    [/#if]
+                    </tbody>
+                </table>
+            </div>
+            <div class="tabCon">
+                <table class="table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+                        <th>编号</th>
+                        <th>方式</th>
+                        <th>退款方式</th>
+                        <th>退款金额</th>
+                        <th>状态</th>
+                        <th>退款日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-c">
+                    [#if data.refunds??]
+                        [#list data.refunds as refund]
+                        <tr class="text-c">
+                            <td>${refund.sn}</td>
+                            <td>
+                                [#list tuikuanMethods as tuikuanMethod]
+                                    [#if "${tuikuanMethod.id}" == refund.method]
+                                        ${tuikuanMethod.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
+                            <td>${refund.paymentMethod}</td>
+                            <td>${refund.amount}</td>
+                            <td>
+                                [#list tuikuanStatuss as tuikuanStatus]
+                                    [#if "${tuikuanStatus.id}" == refund.status]
+                                        ${tuikuanStatus.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
+                            <td>${refund.paymentDate}</td>
+                        </tr>
+                        [/#list]
+                    [/#if]
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tabCon">
+                <table class="table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+                        <th>类型</th>
+                        <th>操作员</th>
+                        <th>内容</th>
+                        <th>创建日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-c">
+                    [#if data.orderLogs??]
+                        [#list data.orderLogs as orderLog]
+                        <tr class="text-c">
+                            <td>
+                                [#list logTypes as logType]
+                                    [#if "${logType.id}" == orderLog.type]
+                                        ${logType.name}
+                                    [/#if]
+                                [/#list]
+                            </td>
+                            <td>${orderLog.operator}</td>
+                            <td>${orderLog.content}</td>
+                            <td>${orderLog.createDate}</td>
+                        </tr>
+                        [/#list]
+                    [/#if]
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">到期时间：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.expire}" id="expire" name="expire" class="input-text Wdate" style="width:180px;">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否已分配库存：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isAllocatedStock" id="isAllocatedStock" value="true"[#if data.isAllocatedStock?? && data.isAllocatedStock] checked[/#if]>
-                    <input type="hidden" name="_isAllocatedStock" value="false" />
-                    <label for="isAllocatedStock">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">锁定到期时间：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.lockExpire}" id="lockExpire" name="lockExpire" class="input-text Wdate" style="width:180px;">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">买家留言：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.memo}" placeholder="" id="memo" name="memo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">操作人：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.operator}" placeholder="" id="operator" name="operator">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>订单状态：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.orderStatus}" placeholder="" id="orderStatus" name="orderStatus" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>支付状态：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.paymentStatus}" placeholder="" id="paymentStatus" name="paymentStatus" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>邮编：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.phone}" placeholder="" id="phone" name="phone">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>赠送积分：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.point}" placeholder="" id="point" name="point" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>配送状态：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.shippingStatus}" placeholder="" id="shippingStatus" name="shippingStatus" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>订单编号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.sn}" placeholder="" id="sn" name="sn">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">邮编：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.zipCode}" placeholder="" id="zipCode" name="zipCode">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>地区：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span class="fieldSet">
-                    <input type="hidden" id="areaId" name="areaId" value="${(data.area.id)!}" treePath="${(data.area.treePath)!}" />
-                </span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>优惠码：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if couponCodes??]
-				<select name="couponCodeId" class="select" style="background-color: #FFFFFF">
-                    [#list couponCodes as couponCode]
-					<option[#if data.couponCode?? && couponCode.id == data.couponCode.id] selected[/#if] value="${couponCode.id}">${couponCode.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>买方：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>卖方：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if sellers??]
-				<select name="sellerId" class="select" style="background-color: #FFFFFF">
-                    [#list sellers as seller]
-					<option[#if data.seller?? && seller.id == data.seller.id] selected[/#if] value="${seller.id}">${seller.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"></label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
-            </div>
-        </div>
-            [#else]
-            查找失败
         [/#if]
     </form>
 </div>
-        <!--_footer 作为公共模版分离出去-->
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
-        <!--请在下方写此页面业务相关的脚本-->
-        <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
-        <script type="text/javascript">
-            $(function(){
-                var $areaId = $("#areaId");
-                $areaId.lSelect({
-                    url: "${base}/admin/common/area.jhtml"
-                });
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
-                var $submit = $(":submit");
-                $('.skin-minimal input').iCheck({
-                    checkboxClass: 'icheckbox-blue',
-                    radioClass: 'iradio-blue',
-                    increaseArea: '20%'
-                });
+<script type="text/javascript">
+    $(function(){
+        $("#tab-system").Huitab({
+            index:0
+        });
+    });
 
-                $("#form-update").validate({
-                    rules:{
-                        address:{
-                            required:true,
-                        },
-                        amountPaid:{
-                            required:true,
-                        },
-                        areaName:{
-                            required:true,
-                        },
-                        consignee:{
-                            required:true,
-                        },
-                        couponDiscount:{
-                            required:true,
-                        },
-                        fee:{
-                            required:true,
-                        },
-                        freight:{
-                            required:true,
-                        },
-                        offsetAmount:{
-                            required:true,
-                        },
-                        orderStatus:{
-                            required:true,
-                        },
-                        paymentStatus:{
-                            required:true,
-                        },
-                        phone:{
-                            required:true,
-                        },
-                        point:{
-                            required:true,
-                        },
-                        pointDiscount:{
-                            required:true,
-                        },
-                        shippingStatus:{
-                            required:true,
-                        },
-                        sn:{
-                            required:true,
-                        },
-                        area:{
-                            required:true,
-                        },
-                        couponCode:{
-                            required:true,
-                        },
-                        member:{
-                            required:true,
-                        },
-                        seller:{
-                            required:true,
-                        },
-
-                    },
-                    onkeyup:false,
-                    focusCleanup:true,
-                    success:"valid",
-                    submitHandler:function(form){
-                        var load = layer.msg('加载中', {
-                            icon: 16
-                            ,shade: 0.01
-                        });
-                        $(form).ajaxSubmit({
-                            type: 'post',
-                            url: "${base}/admin/order/update.jhtml" ,
-                            beforeSend: function() {
-                                $submit.prop("disabled", true);
-                            },
-                            success: function(message){
-                                layer.close(load);
-                                if(message.type ==  "success"){
-//                                    关闭当前页面
-                                    var index = parent.layer.getFrameIndex(window.name);
-                                    parent.add_row(message.data);
-                                    //关闭弹窗并提示
-                                    parent.closeWindow(index, '修改成功');
-                                }else{
-                                    $submit.prop("disabled", false);
-                                    parent.toast('修改失败',2);
-                                }
-                            },
-                            error: function(XmlHttpRequest, textStatus, errorThrown){
-                                $submit.prop("disabled", false);
-                                layer.close(load);
-                                parent.toast('修改失败',2);
-                            }
-                        });
-                    }
-                });
+    function cancel(id){
+        var $cancelId = $("#cancelId");
+        layer.confirm('确定要关闭吗?',function(index){
+            var load = layer.msg('关闭中...',{
+                icon:16,
+                shade:0.01
             });
-        </script>
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/cancel.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $cancelId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'关闭成功!');
+                    }else{
+                        $cancelId.prop("disabled",false);
+                        parent.toast(message.content,2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $cancelId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('关闭失败!',2);
+                }
+            });
+        });
+    }
+
+    function confirm(id){
+        var $confirmId = $("#confirmId");
+        layer.confirm('确定要订单确认吗?',function(index){
+            var load = layer.msg('确认中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/confirm.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $confirmId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'订单确认成功!');
+                    }else{
+                        $confirmId.prop("disabled",false);
+                        parent.toast(message.content,2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $confirmId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('订单确认失败!',2);
+                }
+            });
+        });
+    }
+
+    function shipping(id){
+        var $shippingId = $("#shippingId");
+        layer.confirm('确定要发货吗?',function(index){
+            var load = layer.msg('发货中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/shipping.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $shippingId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'发货成功!');
+                    }else{
+                        $shippingId.prop("disabled",false);
+                        parent.toast(message.content,2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $shippingId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('发货失败!',2);
+                }
+            });
+        });
+    }
+
+    function returns(id){
+        var $returnsId = $("#returnsId");
+        layer.confirm('确定要退货吗?',function(index){
+            var load = layer.msg('退货中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/returns.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $returnsId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'退货成功!');
+                    }else{
+                        $returnsId.prop("disabled",false);
+                        parent.toast(message.content,2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $returnsId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('退货失败!',2);
+                }
+            });
+        });
+    }
+
+    function agreereturns(id){
+        var $agreereturnsId = $("#agreereturnsId");
+        layer.confirm('确定要退货吗?',function(index){
+            var load = layer.msg('退货中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/returns.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $agreereturnsId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'退货成功!');
+                    }else{
+                        $agreereturnsId.prop("disabled",false);
+                        parent.toast(message.content,2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $agreereturnsId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('退货失败!',2);
+                }
+            });
+        });
+    }
+
+    function agreerefunds(id){
+        var $agreerefundsId = $("#agreerefundsId");
+        layer.confirm('确定要退款吗?',function(index){
+            var load = layer.msg('退款中...',{
+                icon:16,
+                shade:0.01
+            });
+            $.ajax({
+                type: 'post',
+                data:{
+                    orderId:id
+                },
+                url:'${base}/admin/order/refunds.jhtml',
+                dataType:'json',
+                beforeSend:function(){
+                    $agreerefundsId.prop("disabled",true);
+                },
+                success:function(message){
+                    layer.close(load);
+                    if (message.type == 'success'){
+                        //关闭当前页面
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.add_row(message.data);
+                        //关闭弹窗并提示
+                        parent.closeWindow(index,'退款成功!');
+                    }else{
+                        $agreerefundsId.prop("disabled",false);
+                        parent.toast(message.content,2);
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    $agreerefundsId.prop("disabled", false);
+                    layer.close(load);
+                    parent.toast('退款失败!',2);
+                }
+            });
+        });
+    }
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
 </body>
 </html>

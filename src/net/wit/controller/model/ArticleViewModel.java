@@ -169,7 +169,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();
-        this.isPublish = article.getArticleOptions().getIsPublish();
+        this.isPublish = article.getIsPublish();
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;

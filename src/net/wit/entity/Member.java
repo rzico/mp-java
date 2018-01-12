@@ -282,6 +282,7 @@ public class Member extends BaseEntity {
 	/** 推广 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
+	@JsonIgnore
 	private Member promoter;
 
 	/** 会员标签*/

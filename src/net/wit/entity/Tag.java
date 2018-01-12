@@ -1,5 +1,6 @@
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -59,22 +60,27 @@ public class Tag extends OrderEntity{
     private String memo;
 
     /*文章列表*/
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private List<Article> articles = new ArrayList<Article>();
 
     /*会员列表*/
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private List<Member> members = new ArrayList<Member>();
 
     /*模板列表*/
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private List<Template> templates = new ArrayList<Template>();
 
     /*模板列表*/
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private List<Topic> topics = new ArrayList<Topic>();
 
     /*模板列表*/
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<Product>();
 

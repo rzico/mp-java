@@ -188,6 +188,11 @@
                 },
                 {
                     "mData": "id",
+                    "sTitle": "密码重置",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
                 }
@@ -269,8 +274,22 @@
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 登录账号 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"reset(this,'"+data+"');\" name=\"\">重置密码</button>";
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [12],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            if (data == '1'){
+                                return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 登录账号 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
+                            }else{
+                                return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 登录账号 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                                        "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            }
                         }else{
                             return "";
                         }
@@ -438,7 +457,39 @@
             });
         });
     }
-	
+
+
+    /*密码重置*/
+    function reset(obj, id) {
+        layer.confirm('确认要重置密码吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    Id: id
+                },
+                url: '${base}/admin/admin/reset.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        //$(obj).parents("tr").addClass("publish");
+                        //table.row('.publish').remove().draw( false );
+                        layer.msg('密码重置成功!', {icon: 1, time: 1000});
+                    } else {
+                        layer.msg('密码重置失败!', {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);

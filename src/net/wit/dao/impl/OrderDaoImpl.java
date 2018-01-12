@@ -43,7 +43,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 	 * @param pageable
 	 * @return Page<Order>
 	 */
-	public Page<Order> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<Order> findPage(Date beginDate,Date endDate, String status, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
 		Root<Order> root = criteriaQuery.from(Order.class);
@@ -58,6 +58,32 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 			Date e = DateUtils.truncate(endDate,Calendar.DATE);
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
+		}
+		if (status!=null) {
+			if ("unpaid".equals(status)) {
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.unconfirmed));
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("paymentStatus"), Order.PaymentStatus.unpaid));
+			}
+			if ("unshipped".equals(status)) {
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.confirmed));
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.notEqual(root.<Boolean> get("paymentStatus"), Order.PaymentStatus.refunding));
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.notEqual(root.<Boolean> get("paymentStatus"), Order.PaymentStatus.refunded));
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("shippingStatus"), Order.ShippingStatus.unshipped));
+			}
+			if ("shipped".equals(status)) {
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.confirmed));
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("shippingStatus"), Order.ShippingStatus.shipped));
+			}
+			if ("refunding".equals(status)) {
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.confirmed));
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.or(criteriaBuilder.equal(root.<Boolean> get("shippingStatus"), Order.ShippingStatus.returning),criteriaBuilder.equal(root.<Boolean> get("paymentStatus"), Order.PaymentStatus.refunding)));
+			}
+			if ("completed".equals(status)) {
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.completed));
+			}
+			if ("cancelled".equals(status)) {
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.cancelled));
+			}
 		}
 		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);

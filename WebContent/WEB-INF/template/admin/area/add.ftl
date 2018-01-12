@@ -41,6 +41,13 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>城市编码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="code" name="code">
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">所属地区：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="fieldSet">
@@ -93,7 +100,7 @@
 
                 $("#form-add").validate({
                     rules:{
-                        fullName:{
+                        code:{
                             required:true,
                         },
                         name:{

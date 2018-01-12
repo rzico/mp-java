@@ -23,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import net.wit.entity.BaseEntity.Save;
 import net.wit.entity.Admin;
 import net.wit.service.AdminService;
-
 import java.util.*;
 
 import net.wit.*;
@@ -45,6 +44,12 @@ import net.wit.controller.admin.model.*;
 public class AdminController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
+
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
+
+	@Resource(name = "smssendServiceImpl")
+	private SmssendService smssendService;
 	
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
@@ -115,18 +120,13 @@ public class AdminController extends BaseController {
 
 		entity.setEmail(admin.getEmail());
 
-		entity.setIsEnabled(admin.getIsEnabled());
+		entity.setIsEnabled(true);
 
-		entity.setIsLocked(admin.getIsLocked());
-
-		entity.setLockedDate(admin.getLockedDate());
-
-		entity.setLoginDate(admin.getLoginDate());
-
-		entity.setLoginFailureCount(admin.getLoginFailureCount() == null ? 0 : admin.getLoginFailureCount());
-
-		entity.setLoginIp(admin.getLoginIp());
-
+		entity.setIsLocked(false);
+		//entity.setLockedDate(admin.getLockedDate());
+		//entity.setLoginDate(admin.getLoginDate());
+		entity.setLoginFailureCount(0);
+		//entity.setLoginIp(admin.getLoginIp());
 		entity.setName(admin.getName());
 
 		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
@@ -160,6 +160,13 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public @ResponseBody
     Message delete(Long[] ids) {
+		for(long id:ids){
+			// id=1 为系统管理员
+			if (id == 1) {
+				return Message.error("系统管理员不允许删除!");
+			}
+		}
+
         try {
             adminService.delete(ids);
             return Message.success("admin.delete.success");
@@ -223,9 +230,7 @@ public class AdminController extends BaseController {
 		entity.setLoginIp(admin.getLoginIp());
 
 		entity.setName(admin.getName());
-
-		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
-
+		//entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
 		entity.setUsername(admin.getUsername());
 
 		entity.setEnterprise(enterpriseService.find(enterpriseId));
@@ -247,7 +252,54 @@ public class AdminController extends BaseController {
             return Message.error("admin.update.error");
         }
 	}
-	
+
+	/**
+	 * 重置密码
+	 */
+	@RequestMapping(value = "/reset", method = RequestMethod.POST)
+	@ResponseBody
+	public Message reset(Long Id){
+		Admin entity = adminService.find(Id);
+
+		String securityCode;
+		String m = "";
+		if (entity.getMember()!=null) {
+			Member member = memberService.find(entity.getMember().getId());
+			m = member.getMobile();
+			if ("" != m){
+				int challege = net.wit.util.StringUtils.Random6Code();
+				securityCode = String.valueOf(challege);
+			}else{
+				securityCode = "123456";
+			}
+		}else{
+			securityCode = "123456";
+		}
+		entity.setPassword(MD5Utils.getMD5Str(securityCode));
+
+		Smssend smsSend = new Smssend();
+		if ("" != m) {
+			smsSend.setMobile(m);
+			smsSend.setContent("重置密码 :" + securityCode + ",只用于登录使用。");
+		}
+
+		if (!isValid(entity)) {
+			return Message.error("admin.data.valid");
+		}
+		try {
+			adminService.update(entity);
+			if ("" != m){
+				smssendService.smsSend(smsSend);
+				return Message.success("发送成功");
+			}else{
+				return Message.success(entity,"admin.update.success");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.update.error");
+		}
+	}
 
 	/**
      * 列表

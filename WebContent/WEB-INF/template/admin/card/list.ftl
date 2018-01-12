@@ -39,7 +39,26 @@
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
-
+        [#if statuss??]
+            <span class="select-box" style="background-color: #FFFFFF;width:100px;height:32px;">
+                <select name="status" class="select" style="background-color: #FFFFFF;">
+                    <option value="">卡状态</option>
+                    [#list statuss as status]
+                        <option value="${status.id}">${status.name}</option>
+                    [/#list]
+                </select>
+            </span>
+        [/#if]
+        [#if vips??]
+            <span class="select-box" style="background-color: #FFFFFF;width:100px;height:32px;">
+                    <select name="vip" class="select" style="background-color: #FFFFFF;">
+                        <option value="">卡等级</option>
+                        [#list vips as vip]
+                            <option value="${vip.id}">${vip.name}</option>
+                        [/#list]
+                    </select>
+                </span>
+        [/#if]
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -143,8 +162,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mobile",
-                    "sTitle": "手机",
+                    "mData": "code",
+                    "sTitle": "卡号",
                     "sClass": "center"
                 },
                 {
@@ -153,8 +172,18 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "code",
-                    "sTitle": "卡号",
+                    "mData": "mobile",
+                    "sTitle": "手机",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "status",
+                    "sTitle": "卡状态",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "vip",
+                    "sTitle": "卡等级",
                     "sClass": "center"
                 },
                 {
@@ -207,16 +236,78 @@
                     }
                 },
                 {
+                    "aTargets": [4],
+                    "mRender": function (data, display, row) {
+                        return data;
+                    }
+                },
+                {
+                    "aTargets": [7],
+                    "mRender": function (data, display, row) {
+                        if (data != null){
+                            [#if statuss??]
+                                [#list statuss as status]
+                                    if("${status.id}" == data){
+                                        return "${status.name}";
+                                    }
+                                [/#list]
+                            [/#if]
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
                     "aTargets": [8],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if (data != null){
+                        [#if vips??]
+                            [#list vips as vip]
+                                if("${vip.id}" == data){
+                                    return "${vip.name}";
+                                }
+                            [/#list]
+                        [/#if]
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [10],
+                    "mRender": function (data, display, row) {
+                        if (data != null){
+                            return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        }else{
+                            return "";
+                        }
                     }
                 },
                 {
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 会员卡 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
+                            return data.name;
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [12],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [13],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 会员卡 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
                         }else{
                             return "";
                         }
@@ -232,6 +323,8 @@
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
                 /*处理常量*/
+                var _status = $("#status").val();
+                var _vip = $("#vip").val();
 
                 var index = layer.msg('加载中', {
                     icon: 16
@@ -243,7 +336,8 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-
+                        "status":_status,
+                        "vip":_vip,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

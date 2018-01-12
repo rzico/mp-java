@@ -86,7 +86,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,Boolean isTop,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
@@ -100,6 +100,12 @@ public class ArticleController extends BaseController {
             ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
             filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
         }
+        if (isTop != null) {
+            filters.add(new Filter("isTop", Filter.Operator.eq,isTop));
+        }
+        filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);

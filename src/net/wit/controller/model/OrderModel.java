@@ -12,6 +12,9 @@ public class OrderModel extends BaseModel implements Serializable {
 
     private Long id;
 
+    /**  买方 id */
+    private Long memberId;
+
     /**  买方头像 */
     private String logo;
 
@@ -218,10 +221,19 @@ public class OrderModel extends BaseModel implements Serializable {
         this.sellerName = sellerName;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
         this.sn = order.getSn();
+        this.memberId = order.getMember().getId();
         this.logo = order.getMember().getLogo();
         this.name = order.getMember().getNickName();
         this.sellerId = order.getSeller().getId();

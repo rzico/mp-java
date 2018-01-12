@@ -1,7 +1,6 @@
 package net.wit.controller.model;
 
 import net.wit.entity.Article;
-import net.wit.entity.ArticleOptions;
 
 import java.io.Serializable;
 
@@ -19,7 +18,7 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
     /** 是否赞赏 */
     private Boolean isReward;
     /** 谁可见 */
-    private ArticleOptions.Authority authority;
+    private Article.Authority authority;
     /** 是否样例 */
     private Boolean isExample;
     /** 密码 */
@@ -40,51 +39,51 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
         this.id = id;
     }
 
-    public Boolean getPublish() {
+    public Boolean getIsPublish() {
         return isPublish;
     }
 
-    public void setPublish(Boolean publish) {
+    public void setIsPublish(Boolean publish) {
         isPublish = publish;
     }
 
-    public Boolean getPitch() {
+    public Boolean getIsPitch() {
         return isPitch;
     }
 
-    public void setPitch(Boolean pitch) {
+    public void setIsPitch(Boolean pitch) {
         isPitch = pitch;
     }
 
-    public Boolean getReview() {
+    public Boolean getIsReview() {
         return isReview;
     }
 
-    public void setReview(Boolean review) {
+    public void setIsReview(Boolean review) {
         isReview = review;
     }
 
-    public Boolean getReward() {
+    public Boolean getIsReward() {
         return isReward;
     }
 
-    public void setReward(Boolean reward) {
+    public void setIsReward(Boolean reward) {
         isReward = reward;
     }
 
-    public ArticleOptions.Authority getAuthority() {
+    public Article.Authority getAuthority() {
         return authority;
     }
 
-    public void setAuthority(ArticleOptions.Authority authority) {
+    public void setAuthority(Article.Authority authority) {
         this.authority = authority;
     }
 
-    public Boolean getExample() {
+    public Boolean getIsExample() {
         return isExample;
     }
 
-    public void setExample(Boolean example) {
+    public void setIsExample(Boolean example) {
         isExample = example;
     }
 
@@ -96,11 +95,11 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
         this.password = password;
     }
 
-    public Boolean getTop() {
+    public Boolean getIsTop() {
         return isTop;
     }
 
-    public void setTop(Boolean top) {
+    public void setIsTop(Boolean top) {
         isTop = top;
     }
 
@@ -121,17 +120,14 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
     }
 
     public void bind(Article article) {
-        ArticleOptions options = article.getArticleOptions();
-        if (options!=null) {
-            this.authority = options.getAuthority();
-            this.isPublish = options.getIsPublish();
-            this.isPitch = options.getIsPitch();
-            this.isReview = options.getIsReview();
-            this.isReward = options.getIsReward();
-            this.isExample = options.getIsExample();
-            this.isTop = options.getIsTop();
-        }
-        ArticleCatalogModel articleCatalogModel = new ArticleCatalogModel();
+        this.authority = article.getAuthority();
+        this.isPublish = article.getIsPublish();
+        this.isPitch = article.getIsPitch();
+        this.isReview = article.getIsReview();
+        this.isReward = article.getIsReward();
+        this.isExample = article.getIsExample();
+        this.isTop = article.getIsTop();
+       ArticleCatalogModel articleCatalogModel = new ArticleCatalogModel();
         if (article.getArticleCatalog()!=null) {
             articleCatalogModel.setId(article.getArticleCatalog().getId());
             articleCatalogModel.setName(article.getArticleCatalog().getName());

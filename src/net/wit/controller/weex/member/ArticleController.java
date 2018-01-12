@@ -178,15 +178,13 @@ public class ArticleController extends BaseController {
             article.setLaud(0L);
             article.setReview(0L);
             article.setShare(0L);
-            ArticleOptions options = new ArticleOptions();
-            article.setArticleOptions(options);
-            article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPublic);
-            article.getArticleOptions().setIsExample(false);
-            article.getArticleOptions().setIsPitch(false);
-            article.getArticleOptions().setIsPublish(false);
-            article.getArticleOptions().setIsReview(true);
-            article.getArticleOptions().setIsTop(false);
-            article.getArticleOptions().setIsReward(false);
+            article.setAuthority(Article.Authority.isPublic);
+            article.setIsExample(false);
+            article.setIsPitch(false);
+            article.setIsPublish(false);
+            article.setIsReview(true);
+            article.setIsTop(false);
+            article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
         }
         article.setIsDraft(isDraft);
@@ -217,19 +215,19 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
-    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptions articleOptions,Location location,HttpServletRequest request){
+    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptionModel articleOptions,Location location,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
         }
         if (articleOptions!=null) {
-            article.getArticleOptions().setIsReward(articleOptions.getIsReward());
-            article.getArticleOptions().setIsTop(articleOptions.getIsTop());
-            article.getArticleOptions().setIsReview(articleOptions.getIsReview());
-            article.getArticleOptions().setIsPublish(articleOptions.getIsPublish());
-            article.getArticleOptions().setAuthority(articleOptions.getAuthority());
+            article.setIsReward(articleOptions.getIsReward());
+            article.setIsTop(articleOptions.getIsTop());
+            article.setIsReview(articleOptions.getIsReview());
+            article.setIsPublish(articleOptions.getIsPublish());
+            article.setAuthority(articleOptions.getAuthority());
             if (articleOptions.getPassword()!=null) {
-                article.getArticleOptions().setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
+                article.setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
             }
         }
         if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
@@ -242,7 +240,7 @@ public class ArticleController extends BaseController {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
         article.setIsDraft(false);
-        article.getArticleOptions().setIsPublish(true);
+        article.setIsPublish(true);
         articleService.update(article);
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
@@ -269,9 +267,7 @@ public class ArticleController extends BaseController {
             edited = true;
         }
         if (isTop!=null) {
-            ArticleOptions options =article.getArticleOptions();
-            options.setIsTop(isTop);
-            article.setArticleOptions(options);
+            article.setIsTop(isTop);
         }
         if (!edited) {
             return Message.error("传参不正确");

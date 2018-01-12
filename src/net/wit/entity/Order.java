@@ -232,7 +232,7 @@ public class Order extends BaseEntity {
 	/** 电话 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false,columnDefinition="varchar(255) not null comment '邮编'")
+	@Column(nullable = false,columnDefinition="varchar(255) not null comment '联系电话'")
 	private String phone;
 
 	/** 买家留言 */
@@ -257,21 +257,25 @@ public class Order extends BaseEntity {
 	private Boolean isAllocatedStock;
 
 	/** 地区 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Area area;
 
 	/** 买家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
 	/** 卖家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Member seller;
 
 	/** 推广 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private Member promoter;
@@ -281,11 +285,13 @@ public class Order extends BaseEntity {
 	private Boolean isDistribution;
 
 	/** 优惠码 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private CouponCode couponCode;
 
 	/** 优惠券 */
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_order_coupon")
 	private List<Coupon> coupons = new ArrayList<Coupon>();
@@ -295,19 +301,23 @@ public class Order extends BaseEntity {
 	@NotEmpty
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("isGift asc")
+	@JsonIgnore
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 	/** 订单日志 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private List<OrderLog> orderLogs = new ArrayList<OrderLog>();
 
 	/** 收款单 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Payment> payments = new HashSet<Payment>();
 
 	/** 退款单 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Refunds> refunds = new HashSet<Refunds>();
@@ -1120,19 +1130,19 @@ public class Order extends BaseEntity {
 			return "待确定";
 		} else
 		if (getOrderStatus().equals(OrderStatus.cancelled)) {
-			return "已取消";
-		} else
-		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
-			return "待发货";
-		} else
-		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
-			return "已发货";
+			return "已关闭";
 		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
 			return "退货中";
 		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
 			return "退款中";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+			return "待发货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+			return "已发货";
 		} else
 		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
 			return "已退货";
@@ -1145,23 +1155,35 @@ public class Order extends BaseEntity {
 	}
 	
 	public String getStatus() {
-	   if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
-	   	  return  "unpaid";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
-		   return "unshipped";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
-		   return "shipped";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
-		   return "refunding";
-	   } else
-	   if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
-		   return "refunding";
-	   } else {
-	   	   return "completed";
-	   }
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
+			return "unpaid";
+		} else
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.paid)) {
+			return "unshipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.cancelled)) {
+			return "completed";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+			return "returning";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
+			return "refunding";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+			return "unshipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+			return "shipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
+			return "returned";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getPaymentStatus().equals(PaymentStatus.refunded) ) {
+			return "refunded";
+		} else {
+			return "completed";
+		}
 	}
 
 }

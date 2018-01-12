@@ -159,6 +159,13 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 				order.setPaymentStatus(Order.PaymentStatus.refunded);
 				orderDao.merge(order);
 
+				Boolean completed = true;
+				for (Refunds rfd:order.getRefunds()) {
+                   if (!rfd.getStatus().equals(Refunds.Status.success)) {
+                   	  completed = false;
+				   }
+				}
+
 				OrderLog orderLog = new OrderLog();
 				orderLog.setType(OrderLog.Type.refunds);
 				orderLog.setOperator(refunds.getMember().userId());
@@ -166,9 +173,29 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 				orderLog.setOrder(order);
 				orderLogDao.persist(orderLog);
 
+				if (refunds.getMethod().equals(Refunds.Method.online)) {
+					Member member = refunds.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.refunds);
+					deposit.setMemo(refunds.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(refunds.getAmount());
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setRefunds(refunds);
+					deposit.setOrder(order);
+					depositDao.persist(deposit);
+				}
+
 				messageService.orderMemberPushTo(orderLog);
 
-				orderService.complete(order,null);
+				if (completed) {
+					orderService.complete(order,null);
+				}
 
 			} else {
 				PayBill payBill = refunds.getPayBill();

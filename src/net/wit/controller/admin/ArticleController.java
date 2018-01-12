@@ -124,26 +124,22 @@ public class ArticleController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Article article, Long templateId, Long articleCategoryId, Long areaId, Long [] tagIds){
-		Article entity = new Article();	
+		Article entity = new Article();
 
-		if (article.getArticleOptions()!=null) {
-			ArticleOptions options = new ArticleOptions();
-			options.setAuthority(article.getArticleOptions().getAuthority());
+		entity.setAuthority(article.getAuthority());
 
-			options.setIsPitch(false);
+		entity.setIsPitch(false);
 
-			options.setIsPublish(true);
+		entity.setIsPublish(true);
 
-			options.setIsReview(article.getArticleOptions().getIsReview());
+		entity.setIsReview(article.getIsReview());
 
-			options.setIsReward(article.getArticleOptions().getIsReward());
+		entity.setIsReward(article.getIsReward());
 
-			options.setIsExample(article.getArticleOptions().getIsExample());
+		entity.setIsExample(article.getIsExample());
 
-			options.setIsTop(article.getArticleOptions().getIsTop());
+		entity.setIsTop(article.getIsTop());
 
-			entity.setArticleOptions(options);
-		}
 
 		entity.setAuthor(article.getAuthor());
 
@@ -250,22 +246,18 @@ public class ArticleController extends BaseController {
 	public Message update(Article article, Long templateId, Long articleCatalogId, Long articleCategoryId, Long areaId, Long memberId, Long [] tagIds){
 		Article entity = articleService.find(article.getId());
 
-		if (article.getArticleOptions()!=null) {
-			ArticleOptions options = new ArticleOptions();
-			options.setAuthority(article.getArticleOptions().getAuthority());
+		entity.setAuthority(article.getAuthority());
 
-			options.setIsPublish(article.getArticleOptions().getIsPublish());
+		entity.setIsPublish(article.getIsPublish());
 
-			options.setIsReview(article.getArticleOptions().getIsReview());
+		entity.setIsReview(article.getIsReview());
 
-			options.setIsReward(article.getArticleOptions().getIsReward());
+		entity.setIsReward(article.getIsReward());
 
-			options.setIsExample(article.getArticleOptions().getIsExample());
+		entity.setIsExample(article.getIsExample());
 
-			options.setIsTop(article.getArticleOptions().getIsTop());
+		entity.setIsTop(article.getIsTop());
 
-			entity.setArticleOptions(options);
-		}
 
 		entity.setAuthor(article.getAuthor());
 
@@ -332,7 +324,7 @@ public class ArticleController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Long tagIds, ArticleOptions.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Long tagIds, Article.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (authority!=null) {
 			Filter authorityFilter = new Filter("authority", Filter.Operator.eq, authority);
