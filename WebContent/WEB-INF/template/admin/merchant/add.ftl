@@ -53,13 +53,13 @@
             <tr>
                 <th class="text-r" width="10%">商户编号：</th>
                 <td width="30%">
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="merchantNo" name="merchantNo">
                     </div>
                 </td>
                 <th class="text-r" width="10%">行业类型：</th>
                 <td width="50%">
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-7">
                         <input type="text" class="input-text" value="" placeholder="" id="industryType" name="industryType">
                     </div>
                 </td>
@@ -67,13 +67,13 @@
             <tr>
                 <th class="text-r">商户名称：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="scompany" name="scompany">
                     </div>
                 </td>
                 <th class="text-r">商户姓名：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-7">
                         <input type="text" class="input-text" value="" placeholder="" id="merchantName" name="merchantName">
                     </div>
                 </td>
@@ -81,13 +81,13 @@
             <tr>
                 <th class="text-r">营业执照：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="licenseNo" name="licenseNo">
                     </div>
                 </td>
                 <th class="text-r">身份证：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-7">
                         <input type="text" class="input-text" value="" placeholder="" id="idCard" name="idCard">
                     </div>
                 </td>
@@ -95,41 +95,41 @@
             <tr>
                 <th class="text-r">开户银行：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="bankName" name="bankName">
                     </div>
                 </td>
                 <th class="text-r">所属企业：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
-                        <input type="text" class="input-text" value="" placeholder="" id="enterprise" name="enterprise">
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <input type="hidden" class="input-text" value="" placeholder="" id="enterprise" name="enterprise">
                     </div>
                 </td>
             </tr>
             <tr>
                 <th class="text-r">支行名称：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="branchBankName" name="branchBankName">
                     </div>
                 </td>
                 <th class="text-r">所属店主：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
-                        <input type="text" class="input-text" value="" placeholder="" id="owner" name="owner">
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <input type="hidden" class="input-text" value="" placeholder="" id="owner" name="owner">
                     </div>
                 </td>
             </tr>
             <tr>
                 <th class="text-r">银行卡号：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="cardNo" name="cardNo">
                     </div>
                 </td>
                 <th class="text-r">邮箱：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-7">
                         <input type="text" class="input-text" value="" placeholder="" id="email" name="email">
                     </div>
                 </td>
@@ -137,13 +137,13 @@
             <tr>
                 <th class="text-r">银行省份：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince">
                     </div>
                 </td>
                 <th class="text-r">经营省份：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-7">
                         <input type="text" class="input-text" value="" placeholder="" id="province" name="province">
                     </div>
                 </td>
@@ -151,13 +151,13 @@
             <tr>
                 <th class="text-r">银行城市：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-12">
                         <input type="text" class="input-text" value="" placeholder="" id="cardCity" name="cardCity">
                     </div>
                 </td>
                 <th class="text-r">经营城市：</th>
                 <td>
-                    <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-7">
                         <input type="text" class="input-text" value="" placeholder="" id="city" name="city">
                     </div>
                 </td>
@@ -201,6 +201,7 @@
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
+
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
@@ -230,6 +231,7 @@
                             type: 'post',
                             url: "${base}/admin/merchant/save.jhtml" ,
                             beforeSend: function() {
+                                alert(1);
                                $submit.prop("disabled", true);
                             },
                             success: function(message){
