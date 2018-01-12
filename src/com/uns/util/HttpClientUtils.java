@@ -42,7 +42,7 @@ public class HttpClientUtils {
 		int statusCode = 200;
 		try {
 
-			StringEntity entity = new StringEntity("","UTF-8");
+			StringEntity entity = new StringEntity(request,"UTF-8");
 			entity.setContentType("application/json");
 			put.setEntity(entity);
 			HttpClient httpClient = new DefaultHttpClient();

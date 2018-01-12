@@ -50,25 +50,12 @@ public class Merchant {
         alipty.put("t1fee",merchant.getBrokerage().multiply(new BigDecimal("0.01")));
         body.put("aliptyMap",alipty);
 
-        String reqUrl = "https://180.166.114.152:18082/small_qrcode_pro/add/addMerchant.do";
+
+        //String reqUrl = "http://211.147.83.237:28081/small_qrcode_pro/add/addMerchant.do";
+        String reqUrl = "http://180.166.114.152:18082/small_qrcode_pro/add/addMerchant.do";
 
         Map<String, String> encr = new HashMap<>();
         try {
-            Reader reader = new CharArrayReader(Const.privateKey.toCharArray());
-            JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-            PEMParser parser = new PEMParser(reader);
-            Object priObj = parser.readObject();
-            parser.close();
-            PrivateKey privKey = converter.getPrivateKey((PrivateKeyInfo) priObj);
-
-            Reader pbReader = new CharArrayReader(Const.publicKey.toCharArray());
-            JcaPEMKeyConverter pbConverter = new JcaPEMKeyConverter();
-            PEMParser pbParser = new PEMParser(pbReader);
-            Object pubObj = pbParser.readObject();
-            parser.close();
-            PublicKey pubKey = converter.getPublicKey((SubjectPublicKeyInfo) pubObj);
-
-
             Map<String,Object> header = new HashMap<>();
             header.put("version","1.0.0");
             header.put("msgType","01");
@@ -78,12 +65,16 @@ public class Merchant {
             Map<String,Map<String, Object>> data = new HashMap<>();
             data.put("head",header);
             data.put("body",body);
-            encr = CommonUtil.encryptData(data,privKey,pubKey);
+
+            encr = CommonUtil.encryptData(data,Const.getPrivateKey(),Const.getUsnPublicKey());
+
+            //String decr = CommonUtil.decryptData(encr.get("encryptData"),encr.get("encryptKey"),encr.get("signData"),Const.getPrivateKey(),Const.getPublicKey());
+            //System.out.println("解密："+decr);
             encr.put("insNo","0000000052");
             String req = JsonUtils.toJson(encr);
             System.out.println(req);
 
-            String resp= SLLClient.post(reqUrl,"","application/json", "UTF-8", 10000, 10000);
+            String resp= HttpClientUtils.REpostRequestStrJson(reqUrl,req);// SLLClient.post(reqUrl,"","application/json", "UTF-8", 10000, 10000);
 
             System.out.println(resp);
 
@@ -97,20 +88,21 @@ public class Merchant {
     public static void main(String[] args) throws Exception {
         net.wit.entity.Merchant merchant = new net.wit.entity.Merchant();
         merchant.setScompany("芸店");
-        merchant.setMerchantName("张森荣");
-        merchant.setPhone("13860431130");
+        merchant.setMerchantName("张福昌");
+        merchant.setPhone("13828880166");
         merchant.setBankName("32429");
-        merchant.setCardCity("2511");
-        merchant.setCardProvince("25");
-        merchant.setBranchBankName("厦门市海沧支行");
+        merchant.setIdCard("352623197905051613");
+        merchant.setCardNo("6236687200000871855");
+
+        merchant.setCardCity("1411");
+        merchant.setCardProvince("14");
+        merchant.setBranchBankName("建行厦门分行");
         merchant.setAddress("谊爱路海西文创大厦210");
-        merchant.setCity("厦门市");
-        merchant.setPhone("福建省");
+        merchant.setCity("2511");
+        merchant.setProvince("25");
         merchant.setLicenseNo("913502030899205666");
-        merchant.setIndustryType("160");
+        merchant.setIndustryType("166");
         merchant.setEmail("zhangsr@rzico.com");
-        merchant.setIdCard("352623197805181613");
-        merchant.setCardNo("4367421930031121575");
         merchant.setBrokerage(new BigDecimal("0.38"));
         Merchant.addMerchant(merchant);
     }

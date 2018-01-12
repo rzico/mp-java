@@ -136,7 +136,7 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = "/notify",method = RequestMethod.POST)
     public Boolean notify_post(HttpServletRequest request, HttpServletResponse response, ModelMap model) {		// 调用核心业务类接收消息、处理消息
         try {
-            System.out.println("weixin.notify");
+//            System.out.println("weixin.notify");
             Map<String, String> requestMap = MessageUtil.parseXml(request);
             // 发送方帐号（open_id）
             String fromUserName = requestMap.get("FromUserName");
@@ -157,32 +157,32 @@ public class WeiXinController extends BaseController {
                 String eventType = requestMap.get("Event").toLowerCase();
                 // 关注订阅
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-                    try {
-                        List<Tag> tags = new ArrayList<Tag>();
-                        tags.add(tagService.find(1L));
-                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
-
-                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-                        String eventKey = requestMap.get("EventKey");
-                        List<Article> articles = new ArrayList<Article>();
-                        for (net.wit.entity.Article art:arts.getContent()) {
-                            Article article = new Article();
-                            article.setDescription(art.delHTMLTag());
-                            article.setPicUrl(art.getThumbnail());
-                            article.setTitle(art.getTitle());
-                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
-                            articles.add(article);
-                        }
-                        newsMessage.setArticles(articles);
-                        newsMessage.setArticleCount(articles.size());
-                        response.setContentType("application/octet-stream");
-                        PrintWriter out = response.getWriter();
-                        out.print(MessageUtil.newsMessageToXml(newsMessage));
-                        out.flush();
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                    }
-
+//                    try {
+//                        List<Tag> tags = new ArrayList<Tag>();
+//                        tags.add(tagService.find(1L));
+//                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
+//
+//                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//                        String eventKey = requestMap.get("EventKey");
+//                        List<Article> articles = new ArrayList<Article>();
+//                        for (net.wit.entity.Article art:arts.getContent()) {
+//                            Article article = new Article();
+//                            article.setDescription(art.delHTMLTag());
+//                            article.setPicUrl(art.getThumbnail());
+//                            article.setTitle(art.getTitle());
+//                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
+//                            articles.add(article);
+//                        }
+//                        newsMessage.setArticles(articles);
+//                        newsMessage.setArticleCount(articles.size());
+//                        response.setContentType("application/octet-stream");
+//                        PrintWriter out = response.getWriter();
+//                        out.print(MessageUtil.newsMessageToXml(newsMessage));
+//                        out.flush();
+//                    } catch (Exception e) {
+//                        logger.error(e.getMessage());
+//                    }
+//
                 }
                 // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
@@ -254,32 +254,32 @@ public class WeiXinController extends BaseController {
                 String eventType = requestMap.get("Event").toLowerCase();
                 // 关注订阅
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-                    try {
-                        List<Tag> tags = new ArrayList<Tag>();
-                        tags.add(tagService.find(1L));
-                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
-
-                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-                        String eventKey = requestMap.get("EventKey");
-                        List<Article> articles = new ArrayList<Article>();
-                        for (net.wit.entity.Article art:arts.getContent()) {
-                            Article article = new Article();
-                            article.setDescription(art.delHTMLTag());
-                            article.setPicUrl(art.getThumbnail());
-                            article.setTitle(art.getTitle());
-                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
-                            articles.add(article);
-                        }
-                        newsMessage.setArticles(articles);
-                        newsMessage.setArticleCount(articles.size());
-                        response.setContentType("application/octet-stream");
-                        PrintWriter out = response.getWriter();
-                        out.print(MessageUtil.newsMessageToXml(newsMessage));
-                        out.flush();
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                    }
-
+//                    try {
+//                        List<Tag> tags = new ArrayList<Tag>();
+//                        tags.add(tagService.find(1L));
+//                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
+//
+//                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//                        String eventKey = requestMap.get("EventKey");
+//                        List<Article> articles = new ArrayList<Article>();
+//                        for (net.wit.entity.Article art:arts.getContent()) {
+//                            Article article = new Article();
+//                            article.setDescription(art.delHTMLTag());
+//                            article.setPicUrl(art.getThumbnail());
+//                            article.setTitle(art.getTitle());
+//                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
+//                            articles.add(article);
+//                        }
+//                        newsMessage.setArticles(articles);
+//                        newsMessage.setArticleCount(articles.size());
+//                        response.setContentType("application/octet-stream");
+//                        PrintWriter out = response.getWriter();
+//                        out.print(MessageUtil.newsMessageToXml(newsMessage));
+//                        out.flush();
+//                    } catch (Exception e) {
+//                        logger.error(e.getMessage());
+//                    }
+//
                 }
                 // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
