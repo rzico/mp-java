@@ -346,7 +346,7 @@ public class OrderController extends BaseController {
 	 *  退款
 	 */
 
-	@RequestMapping(value = "/refunds", method = RequestMethod.POST)
+	@RequestMapping(value = "/refunds")
 	public @ResponseBody
 	Message refunds(String sn,HttpServletRequest request) {
 
@@ -367,10 +367,6 @@ public class OrderController extends BaseController {
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			return Message.error("订单未审核");
-		}
-
-		if (!order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getPaymentStatus().equals(Order.PaymentStatus.refunding)) {
-			return Message.error("不能退款状态");
 		}
 
 		if (order.isLocked(member.userId())) {
@@ -438,7 +434,7 @@ public class OrderController extends BaseController {
 						model.bind(order);
 						return Message.success(model,"退款失败");
 					default:
-						return Message.error("查询失败，稍候再试");
+						return Message.error("正在处理中，稍候再试");
 				}
 			}
 
