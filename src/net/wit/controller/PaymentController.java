@@ -10,6 +10,7 @@ import net.wit.entity.Payment.Type;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * Controller - 支付
@@ -53,6 +56,9 @@ public class PaymentController extends BaseController {
 
     @Resource(name = "snServiceImpl")
     private SnService snService;
+
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
 
     /**
      * 付款单信
@@ -103,6 +109,33 @@ public class PaymentController extends BaseController {
         if (safeKey==null) {
             parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
         } else {
+            if ("free".equals(safeKey)) {
+                Member member = memberService.getCurrent();
+                if (member==null) {
+                    return Message.error("不能免密支付");
+                }
+
+                Member seller = payment.getPayee();
+                if ("cardPayPlugin".equals(paymentPluginId)) {
+                    Card card = null;
+                    for (Card c:member.getCards()) {
+                       if (c.getOwner().equals(seller)) {
+                           card = c;
+                           break;
+                       }
+                    }
+                    int challege = StringUtils.Random6Code();
+                    card.setSign(String.valueOf(challege));
+                    cardService.update(card);
+                    safeKey = "http://free/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
+                }
+                if ("balancePayPlugin".equals(paymentPluginId)) {
+                    int challege = StringUtils.Random6Code();
+                    member.setSign(String.valueOf(challege));
+                    memberService.update(member);
+                    safeKey = "http://free/q/818805"+String.valueOf(member.getId()+10200L)+String.valueOf(challege)+".jhtml";
+                }
+            }
             parameters = paymentPlugin.submit(payment,safeKey,request);
         }
         if ("SUCCESS".equals(parameters.get("return_code"))) {

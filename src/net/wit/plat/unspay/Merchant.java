@@ -38,6 +38,7 @@ public class Merchant {
         body.put("email",merchant.getEmail());
         body.put("idCard",merchant.getIdCard());
         body.put("cardNo",merchant.getCardNo());
+        body.put("orgNo",Const.orgNo);
         body.put("userType","P");
         Map<String,Object> wechat = new HashMap<>();
         wechat.put("feeType",2);
@@ -50,8 +51,6 @@ public class Merchant {
         alipty.put("t1fee",merchant.getBrokerage().multiply(new BigDecimal("0.01")));
         body.put("aliptyMap",alipty);
 
-
-        //String reqUrl = "http://211.147.83.237:28081/small_qrcode_pro/add/addMerchant.do";
         String reqUrl = "http://180.166.114.152:18082/small_qrcode_pro/add/addMerchant.do";
 
         Map<String, String> encr = new HashMap<>();
@@ -68,16 +67,19 @@ public class Merchant {
 
             encr = CommonUtil.encryptData(data,Const.getPrivateKey(),Const.getUsnPublicKey());
 
-            //String decr = CommonUtil.decryptData(encr.get("encryptData"),encr.get("encryptKey"),encr.get("signData"),Const.getPrivateKey(),Const.getPublicKey());
-            //System.out.println("解密："+decr);
             encr.put("insNo","0000000052");
             String req = JsonUtils.toJson(encr);
             System.out.println(req);
 
-            String resp= HttpClientUtils.REpostRequestStrJson(reqUrl,req);// SLLClient.post(reqUrl,"","application/json", "UTF-8", 10000, 10000);
+            String resp= HttpClientUtils.REpostRequestStrJson(reqUrl,req);
 
-            System.out.println(resp);
-
+            Map<String,String> respMap = JsonUtils.toObject(resp,Map.class);
+            if (respMap.get("rspCode").equals("0000")) {
+                merchant.setUserId(respMap.get("userId"));
+                merchant.setMerchantNo(respMap.get("merchantNo"));
+            } else {
+                throw  new Exception(respMap.get("rspMsg"));
+            }
         } catch (IOException e) {
             throw  new Exception("验签不通过");
         } catch (Exception e) {
@@ -93,7 +95,6 @@ public class Merchant {
         merchant.setBankName("32429");
         merchant.setIdCard("352623197905051613");
         merchant.setCardNo("6236687200000871855");
-
         merchant.setCardCity("1411");
         merchant.setCardProvince("14");
         merchant.setBranchBankName("建行厦门分行");

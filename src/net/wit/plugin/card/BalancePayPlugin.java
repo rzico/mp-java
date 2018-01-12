@@ -142,7 +142,7 @@ public class BalancePayPlugin extends PaymentPlugin {
 			return finalpackage;
 		}
 
-		if (member.getBalance().compareTo(payment.getAmount()) > 0) {
+		if (member.getBalance().compareTo(payment.getAmount()) >= 0) {
 			try {
 				memberService.payment(member,payment);
 				finalpackage.put("return_code", "SUCCESS");
