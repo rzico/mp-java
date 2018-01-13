@@ -241,7 +241,7 @@ public class LoginController extends BaseController {
         try {
             mState = new String(Base64.decodeBase64(redirectURL),"utf-8");
         } catch (UnsupportedEncodingException e) {
-            logger.debug(e.getMessage());
+            logger.error(e.getMessage());
             mState = "";
         }
         if (token!=null) {

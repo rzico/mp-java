@@ -94,6 +94,20 @@ public class OrderController extends BaseController {
 		Order order = orderService.build(member,null,null, cart, null, null);
 		OrderModel model = new OrderModel();
 		model.bind(order);
+		if (member!=null) {
+			Receiver receiver = null;
+			for (Receiver r:member.getReceivers()) {
+				if (r.getIsDefault()) {
+					receiver = r;
+					break;
+				}
+			}
+			ReceiverModel m = new ReceiverModel();
+			if (receiver!=null) {
+				m.bind(receiver);
+			}
+			model.setReceiver(m);
+		}
 		return Message.success(model,"success");
 	}
 

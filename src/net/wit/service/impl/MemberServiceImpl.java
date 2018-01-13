@@ -140,7 +140,6 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		return null;
 	}
 
-
 	//支付插件专用方法
 	public void payment(Member member,Payment payment) throws Exception {
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
@@ -150,6 +149,12 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		try {
 			member.setBalance(member.getBalance().subtract(payment.getAmount()));
 			memberDao.merge(member);
+
+			payment.setMember(member);
+			payment.setTranSn(payment.getSn());
+			payment.setMethod(Payment.Method.deposit);
+			paymentDao.merge(payment);
+
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
 			deposit.setMember(member);
@@ -157,19 +162,14 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			deposit.setDebit(payment.getAmount());
 			deposit.setDeleted(false);
 			deposit.setType(Deposit.Type.payment);
-			PayBill payBill = payment.getPayBill();
-			if (payBill!=null) {
-				deposit.setPayBill(payBill);
-			}
+			deposit.setPayBill(payment.getPayBill());
+			deposit.setOrder(payment.getOrder());
 			deposit.setMemo(payment.getMemo());
 			deposit.setPayment(payment);
 			depositDao.persist(deposit);
-			payment.setMember(member);
-			payment.setTranSn(payment.getSn());
-			payment.setMethod(Payment.Method.deposit);
-			paymentDao.merge(payment);
+
 		} catch (Exception  e) {
-			throw  new RuntimeException("支付失败");
+			throw new RuntimeException("支付失败");
 		}
 	}
 
