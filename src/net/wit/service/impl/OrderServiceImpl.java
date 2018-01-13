@@ -294,6 +294,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		order.setIsAllocatedStock(true);
+		order.setDeleted(false);
 
 		orderDao.persist(order);
 
@@ -426,7 +427,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				//扣除商家分配佣金
 				Member seller = order.getSeller();
 				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
-				seller.setBalance(seller.getBalance().subtract(order.getAmountPaid()));
+				seller.setBalance(seller.getBalance().add(order.getAmountPaid()));
 				memberDao.merge(member);
 				Deposit deposit = new Deposit();
 				deposit.setBalance(member.getBalance());

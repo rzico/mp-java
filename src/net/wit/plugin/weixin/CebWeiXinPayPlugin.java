@@ -79,18 +79,14 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		map.put("out_trade_no", payment.getSn());
 		map.put("is_raw","1");
 		map.put("body", description);
-		BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
-		//if (bindUser!=null) {
-		map.put("sub_openid",bindUser.getOpenId());
-		//}else {
-		//	map.put("sub_openid","2088802153156580");
-		//}
-//        if (root!=null && root.equals("/applet")) { 小程序支付，先关了
-//			map.put("sub_appid",pluginConfig.getAttribute("appid"));
-//			map.put("is_minipg","1");
-//		} else {
-		map.put("sub_appid", pluginConfig.getAttribute("appId"));
-//		}
+		if (request.getHeader("x-uid")!=null) {
+			map.put("is_minipg","1");
+			map.put("sub_appid", pluginConfig.getAttribute("applet"));
+		} else {
+			BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
+			map.put("sub_openid", bindUser.getOpenId());
+			map.put("sub_appid", pluginConfig.getAttribute("appId"));
+		}
 		map.put("total_fee", decimalFormat.format(money));
 		map.put("mch_create_ip", request.getRemoteAddr());
 		map.put("notify_url", getNotifyUrl(sn,NotifyMethod.async));
