@@ -79,9 +79,11 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		map.put("out_trade_no", payment.getSn());
 		map.put("is_raw","1");
 		map.put("body", description);
-		if (request.getHeader("x-uid")!=null) {
+		if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
 			map.put("is_minipg","1");
 			map.put("sub_appid", pluginConfig.getAttribute("applet"));
+			BindUser bindUser = findByUser(payment.getMember(),pluginConfig.getAttribute("applet"), BindUser.Type.weixin);
+			map.put("sub_openid", bindUser.getOpenId());
 		} else {
 			BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
 			map.put("sub_openid", bindUser.getOpenId());
@@ -92,6 +94,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		map.put("notify_url", getNotifyUrl(sn,NotifyMethod.async));
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
 
+		System.out.println(map);
 		Map<String,String> params = SignUtils.paraFilter(map);
 		StringBuilder buf = new StringBuilder((params.size() +1) * 10);
 		SignUtils.buildPayParams(buf,params,false);
@@ -115,7 +118,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 			if(response != null && response.getEntity() != null){
 				Map<String,String> resultMap = XmlUtils.toMap(EntityUtils.toByteArray(response.getEntity()), "utf-8");
 				res = XmlUtils.toXml(resultMap);
-
+				System.out.println(resultMap);
 				if(resultMap.containsKey("sign")){
 					if(!SignUtils.checkParam(resultMap, pluginConfig.getAttribute("key"))){
 						System.out.print("验证签名不通过");
@@ -143,8 +146,10 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			finalpackage.put("result_msg","验签不通过");
 			finalpackage.put("return_code","FAIL");
+
 		} finally {
 			if (response != null) {
 				try {
@@ -161,8 +166,6 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 				}
 			}
 		}
-		finalpackage.put("result_msg","未知错误");
-		finalpackage.put("return_code","FAIL");
 		return finalpackage;
 	}
 
@@ -218,7 +221,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 							return data;
 						}else{
 							if (
-									resultMap.get("err_code").toString().equals("SYSTEMERROR") ||
+									        resultMap.get("err_code").toString().equals("SYSTEMERROR") ||
 											resultMap.get("err_code").toString().equals("Internal error") ||
 											resultMap.get("err_code").toString().equals("BANKERROR") ||
 											resultMap.get("err_code").toString().equals("10003") ||

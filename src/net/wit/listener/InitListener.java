@@ -47,8 +47,8 @@ public class InitListener implements ServletContextAware, ApplicationListener<Co
 		if (servletContext != null && contextRefreshedEvent.getApplicationContext().getParent() == null) {
 			String info = "I|n|i|t|i|a|l|i|z|i|n|g| " + systemVersion;
 			logger.info(info.replace("|", ""));
-			User.imAttr();
-			messageService.GMInit(Message.Type.gmchat);
+			//User.imAttr();
+			//messageService.GMInit(Message.Type.gmchat);
 		}
 	}
 

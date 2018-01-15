@@ -376,6 +376,10 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 		PluginConfig pluginConfig = getPluginConfig();
         return bindUserService.findMember(member,pluginConfig.getAttribute("appId"), type);
 	}
+	public BindUser findByUser(Member member,String appId,BindUser.Type type) {
+		PluginConfig pluginConfig = getPluginConfig();
+		return bindUserService.findMember(member,appId, type);
+	}
 	/**
 	 * https双向签名认证，用于支付申请退款
 	 *

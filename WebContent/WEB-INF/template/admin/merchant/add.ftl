@@ -43,7 +43,7 @@
                 <th class="text-r" width="10%">手机号：</th>
                 <td  width="30%" colspan="3">
                     <div class="formControls col-xs-8 col-sm-9" >
-                        <input type="text" class="input-text" value="" placeholder="" id="phone" name="phone" width="30%">
+                        <input type="text" class="input-text" value="" placeholder="请输入手机号" id="phone" name="phone" width="30%" onkeypress="return event.keyCode>=48&&event.keyCode<=57" ng-pattern="/[^a-zA-Z]/">
                     </div>
                     <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
                         <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -54,13 +54,23 @@
                 <th class="text-r" width="10%">商户编号：</th>
                 <td width="30%">
                     <div class="formControls col-xs-8 col-sm-12">
-                        <input type="text" class="input-text" value="" placeholder="" id="merchantNo" name="merchantNo">
+                        <input type="text" class="input-text" value="" placeholder="系统自动生成" id="merchantNo" name="merchantNo" readonly="readonly" style="background-color:#E6E6FA">
                     </div>
                 </td>
                 <th class="text-r" width="10%">行业类型：</th>
                 <td width="50%">
                     <div class="formControls col-xs-8 col-sm-7">
-                        <input type="text" class="input-text" value="" placeholder="" id="industryType" name="industryType">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="industryType" name="industryType" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="industryType" name="industryType">
+                                [#if categorys??]
+                                    <option value="" selected="selected">无</option>
+                                    [#list categorys as category]
+                                        <option value="${category.id}">${category.name}</option>
+                                    [/#list]
+                                [/#if]
+                            </select>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -103,6 +113,7 @@
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
                         <input type="hidden" class="input-text" value="" placeholder="" id="enterprise" name="enterprise">
+                        <input type="text" class="input-text" value="" placeholder="" id="enterprisetext" name="enterprisetext">
                     </div>
                 </td>
             </tr>
@@ -117,6 +128,7 @@
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
                         <input type="hidden" class="input-text" value="" placeholder="" id="owner" name="owner">
+                        <input type="text" class="input-text" value="" placeholder="" id="ownertext" name="ownertext">
                     </div>
                 </td>
             </tr>
@@ -138,13 +150,33 @@
                 <th class="text-r">银行省份：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-12">
-                        <input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="cardProvince" name="cardProvince">
+                                [#if provinces??]
+                                    <option value="">请选择</option>
+                                    [#list provinces as province]
+                                        <option value="${province.id}">${province.name}</option>
+                                    [/#list]
+                                [/#if]
+                            </select>
+                        </span>
                     </div>
                 </td>
                 <th class="text-r">经营省份：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
-                        <input type="text" class="input-text" value="" placeholder="" id="province" name="province">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="province" name="province"-->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="province" name="province">
+                                [#if provinces??]
+                                    <option value="">请选择</option>
+                                    [#list provinces as province]
+                                        <option value="${province.id}">${province.name}</option>
+                                    [/#list]
+                                [/#if]
+                            </select>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -152,13 +184,34 @@
                 <th class="text-r">银行城市：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-12">
-                        <input type="text" class="input-text" value="" placeholder="" id="cardCity" name="cardCity">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="cardCity" name="cardCity" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="cardCity" name="cardCity">
+                            [#if citys??]
+                                <option value="">请选择</option>
+                                [#list citys as city]
+                                    <option value="${city.id}">${city.name}</option>
+                                [/#list]
+                            [/#if]
+                            </select>
+                        </span>
                     </div>
                 </td>
                 <th class="text-r">经营城市：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
-                        <input type="text" class="input-text" value="" placeholder="" id="city" name="city">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="city" name="city" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="city" name="city">
+                                [#if citys??]
+                                    <option value="">请选择</option>
+                                    [#list citys as city]
+                                        <option value="${city.id}">${city.name}</option>
+                                    [/#list]
+                                [/#if]
+                            </select>
+
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -255,6 +308,47 @@
                     }
                 });
             });
+
+            /* 搜索 */
+            function search(){
+                var url = "${base}/admin/merchant/getMemberInfo.jhtml?mobile="+$("#phone").val();
+
+                layer.confirm("请确认手机号？",function(index){
+                    var load = layer.msg("查询中..",{
+                        icon:16,shade:0.01
+                    });
+                    $.ajax({
+                        type:'get',
+                        url:url,
+                        dataType:'json',
+                        success:function(data){
+                            layer.close(load);
+                            if(data.type == "success"){
+                                $("#scompany").val(data.data.shopname);
+                                $("#merchantName").val(data.data.name);
+                                $("#licenseNo").val(data.data.license_code);
+                                $("#idCard").val(data.data.identity);
+                                $("#bankName").val(data.data.bankname);
+                                $("#branchBankName").val(data.data.bankname);
+                                $("#cardNo").val(data.data.cardno);
+                                $("#address").val(data.data.address);
+                                $("#enterprise").val(data.data.enterpriseid);
+                                $("#enterprisetext").val(data.data.enterprisename);
+                                $("#owner").val(data.data.shopid);
+                                $("#ownertext").val(data.data.shopname);
+
+                                layer.msg('调取成功!',{icon:16,time:1000});
+                            }else{
+                                layer.msg('调取失败!',{icon:16,time:1000});
+                            }
+                        },
+                        error:function(data){
+                            layer.close(load);
+                            layer.msg('调取失败!',{icon:16,time:1000});
+                        },
+                    });
+                });
+            }
         </script>
 </body>
 </html>
