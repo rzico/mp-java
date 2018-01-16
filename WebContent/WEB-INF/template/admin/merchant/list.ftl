@@ -127,8 +127,7 @@
                 $(row).children('td').eq(9).attr('style', 'text-align: left;');
                 $(row).children('td').eq(10).attr('style', 'text-align: left;');
                 $(row).children('td').eq(11).attr('style', 'text-align: left;');
-                $(row).children('td').eq(12).attr('style', 'text-align: left;');
-                $(row).children('td').eq(13).attr('style', 'text-align: left;');
+                $(row).children('td').eq(12).attr('style', 'text-align: center;');
             },
             "aoColumns": [
                 {
@@ -233,7 +232,23 @@
                             return "";
                         }
                     }
-                }, 
+                },
+                {
+                    "aTargets": [10],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                        [#if categorys??]
+                            [#list categorys as category]
+                                if ("${category.id}" == data) {
+                                    return "${category.name}";
+                                }
+                            [/#list]
+                        [/#if]
+                        }else{
+                            return "";
+                        }
+                    }
+                },
                 {
                     "aTargets": [12],
                     "mRender": function (data, display, row) {
@@ -313,7 +328,9 @@
     }
     /*查看*/
     function show(title, url, id, w, h) {
-        layer_show(title, url, w, h);
+        var w_1 = window.innerWidth * 0.5;
+        var h_1 = window.innerHeight * 0.6;
+        layer_show(title, url, w_1, h_1);
     }
     /*编辑*/
     function edit(title, url, id, w, h) {

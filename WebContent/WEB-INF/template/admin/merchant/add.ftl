@@ -112,7 +112,7 @@
                 <th class="text-r">所属企业：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
-                        <input type="hidden" class="input-text" value="" placeholder="" id="enterprise" name="enterprise">
+                        <input type="hidden" class="input-text" value="" placeholder="" id="enterpriseId" name="enterpriseId">
                         <input type="text" class="input-text" value="" placeholder="" id="enterprisetext" name="enterprisetext">
                     </div>
                 </td>
@@ -127,7 +127,7 @@
                 <th class="text-r">所属店主：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
-                        <input type="hidden" class="input-text" value="" placeholder="" id="owner" name="owner">
+                        <input type="hidden" class="input-text" value="" placeholder="" id="ownerId" name="ownerId">
                         <input type="text" class="input-text" value="" placeholder="" id="ownertext" name="ownertext">
                     </div>
                 </td>
@@ -284,7 +284,6 @@
                             type: 'post',
                             url: "${base}/admin/merchant/save.jhtml" ,
                             beforeSend: function() {
-                                alert(1);
                                $submit.prop("disabled", true);
                             },
                             success: function(message){
@@ -332,10 +331,10 @@
                                 $("#branchBankName").val(data.data.bankname);
                                 $("#cardNo").val(data.data.cardno);
                                 $("#address").val(data.data.address);
-                                $("#enterprise").val(data.data.enterpriseid);
+                                $("#enterpriseId").val(data.data.enterpriseid);
                                 $("#enterprisetext").val(data.data.enterprisename);
-                                $("#owner").val(data.data.shopid);
-                                $("#ownertext").val(data.data.shopname);
+                                $("#ownerId").val(data.data.memberid);
+                                $("#ownertext").val(data.data.membername);
 
                                 layer.msg('调取成功!',{icon:16,time:1000});
                             }else{
@@ -349,6 +348,7 @@
                     });
                 });
             }
+
         </script>
 </body>
 </html>
