@@ -30,7 +30,7 @@ public class MessageManager {
 
     public static String createOrderTempelete(String openId, String title, String url, String sn, String status, String content, String date) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String templateId = "bZJ0UZaWG_lIEhpLvniFC75einD4CDQHeJveqPg85Ic";
+        String templateId = "R5QbFydHVPqqAyZdt5U13-a6NyvXB2M49bN3OiZy_M0";
         if (bundle.containsKey("orderTemplate")) {
             templateId = bundle.getString("orderTemplate");
         }

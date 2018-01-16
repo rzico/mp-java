@@ -312,14 +312,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (orderItem != null) {
 				Product orderProduct = orderItem.getProduct();
 				if (orderProduct!=null) {
+					System.out.println("1111");
 					productDao.lock(orderProduct, LockModeType.PESSIMISTIC_WRITE);
-					product.setAllocatedStock(orderProduct.getAllocatedStock() + orderItem.getQuantity());
+					orderProduct.setAllocatedStock(orderProduct.getAllocatedStock() + orderItem.getQuantity());
 					productDao.merge(orderProduct);
 					orderDao.flush();
+					System.out.println("22222");
 				}
 			}
 		}
-//		cartDao.remove(cart);
+		System.out.println("33333");
+		if (cart!=null) {
+			cartDao.remove(cart);
+		}
 		return order;
 	}
 
