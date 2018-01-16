@@ -308,23 +308,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		messageService.orderMemberPushTo(orderLog);
 
 		//下单就锁定库存
-//		for (OrderItem orderItem : order.getOrderItems()) {
-//			if (orderItem != null) {
-//				Product orderProduct = orderItem.getProduct();
-//				if (orderProduct!=null) {
-//					System.out.println("1111");
-//					productDao.lock(orderProduct, LockModeType.PESSIMISTIC_WRITE);
-//					product.setAllocatedStock(orderProduct.getAllocatedStock() + orderItem.getQuantity());
-//					productDao.merge(orderProduct);
-//					orderDao.flush();
-//					System.out.println("22222");
-//				}
-//			}
-//		}
-//		System.out.println("33333");
-//		if (cart!=null) {
-//			cartDao.remove(cart);
-//		}
+		for (OrderItem orderItem : order.getOrderItems()) {
+			if (orderItem != null) {
+				Product orderProduct = orderItem.getProduct();
+				if (orderProduct!=null) {
+					System.out.println("1111");
+					productDao.lock(orderProduct, LockModeType.PESSIMISTIC_WRITE);
+					orderProduct.setAllocatedStock(orderProduct.getAllocatedStock() + orderItem.getQuantity());
+					productDao.merge(orderProduct);
+					orderDao.flush();
+					System.out.println("22222");
+				}
+			}
+		}
+		System.out.println("33333");
+		if (cart!=null) {
+			cartDao.remove(cart);
+		}
 		return order;
 	}
 

@@ -105,11 +105,13 @@ public class ProductController extends BaseController {
 		} else {
 			goods = goodsService.find(model.getId());
 		}
+
 		List<Product> products = new ArrayList<Product>();
 		int i = 0;
         for (Product product:goods.getProducts()) {
         	product.setDeleted(true);
 		}
+
 		for (ProductModel pm:model.getProducts()) {
 			Product product = null;
 			if (pm.getProductId()==null) {

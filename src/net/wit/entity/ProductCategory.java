@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -67,6 +68,7 @@ public class ProductCategory extends OrderEntity {
 
 	/** 商品 */
 	@OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
+	@Where(clause="deleted=0")
 	private Set<Product> products = new HashSet<Product>();
 
 	/**
