@@ -323,12 +323,16 @@ public class OrderController extends BaseController {
 	Message shippRemind(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("sn订单无效");
+		}
 		OrderLog orderLog = new OrderLog();
 		orderLog.setOrder(order);
 		orderLog.setType(OrderLog.Type.shipping);
 		orderLog.setContent("请卖家尽快发货");
 		orderLog.setOperator(member.userId());
 		messageService.orderSellerPushTo(orderLog);
+
 		return Message.success("提醒成功");
 	}
 
