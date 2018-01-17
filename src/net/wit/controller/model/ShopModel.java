@@ -51,6 +51,13 @@ public class ShopModel extends BaseModel implements Serializable {
     /** 联系电话 */
     private String telephone;
 
+    /** lat */
+    private double lat;
+
+    /** lng */
+    private double lng;
+
+
     public Long getId() {
         return id;
     }
@@ -155,6 +162,22 @@ public class ShopModel extends BaseModel implements Serializable {
         this.categoryName = categoryName;
     }
 
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
     public void bind(Shop shop) {
         this.id = shop.getId();
         this.address = shop.getAddress();
@@ -173,6 +196,10 @@ public class ShopModel extends BaseModel implements Serializable {
         this.telephone = shop.getTelephone();
         this.linkman = shop.getLinkman();
         this.name = shop.getName();
+        if (shop.getLocation()!=null) {
+            this.lat = shop.getLocation().getLat();
+            this.lng = shop.getLocation().getLng();
+        }
     }
 
     public static List<ShopModel> bindList(List<Shop> shops) {
