@@ -259,7 +259,7 @@ public class MerchantController extends BaseController {
 
 		entity.setBranchBankName(merchant.getBranchBankName());
 
-		entity.setBrokerage(new BigDecimal(0.38));
+		//entity.setBrokerage(new BigDecimal(0.38));
 
 		entity.setCardCity(merchant.getCardCity());
 
@@ -297,8 +297,14 @@ public class MerchantController extends BaseController {
             return Message.error("admin.data.valid");
         }
         try {
-            merchantService.update(entity);
-            return Message.success(entity,"admin.update.success");
+			net.wit.plat.unspay.Merchant.editMerchant(entity);
+			if (entity.getMerchantNo() != ""){
+				merchantService.update(entity);
+				return Message.success(entity,"admin.save.success");
+			}else{
+				merchantService.update(entity);
+				return Message.success(entity,"验签不通过");
+			}
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("admin.update.error");
