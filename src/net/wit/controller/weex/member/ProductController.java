@@ -146,8 +146,8 @@ public class ProductController extends BaseController {
 			product.setMember(member);
 			product.setStock(pm.getStock());
 			product.setAllocatedStock(0);
-			if (pm.getDistribution()>0) {
-				product.setDistribution(distributionService.find(pm.getDistribution()));
+			if (pm.getDistribution() != null) {
+				product.setDistribution(distributionService.find(pm.getDistribution().getId()));
 			} else {
 				product.setDistribution(null);
 			}

@@ -39,7 +39,7 @@ public class ProductModel extends BaseModel implements Serializable {
     /** 可用库存 */
     private Integer availableStock;
     /** 分销策略 */
-    private Long distribution;
+    private DistributionViewModel distribution;
 
     public Long getProductId() {
         return productId;
@@ -97,11 +97,11 @@ public class ProductModel extends BaseModel implements Serializable {
         this.price = price;
     }
 
-    public Long getDistribution() {
+    public DistributionViewModel getDistribution() {
         return distribution;
     }
 
-    public void setDistribution(Long distribution) {
+    public void setDistribution(DistributionViewModel distribution) {
         this.distribution = distribution;
     }
 
@@ -117,11 +117,11 @@ public class ProductModel extends BaseModel implements Serializable {
         this.price = product.getPrice();
         this.stock = product.getStock();
         this.availableStock = product.getAvailableStock();
+        DistributionViewModel distributionViewModel = new DistributionViewModel();
         if (product.getDistribution()!=null) {
-            this.distribution = product.getDistribution().getId();
-        } else {
-            this.distribution = 0L;
+            distributionViewModel.bind(product.getDistribution());
         }
+        this.distribution = distributionViewModel;
 //        this.weight = product.getWeight();
 //        this.vip1Price = product.getVip1Price();
 //        this.vip2Price = product.getVip2Price();
