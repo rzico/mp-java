@@ -125,7 +125,7 @@ public class MerchantController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Merchant merchant, String ownerId, String enterpriseId){
+	public Message save(Merchant merchant, Long ownerId, Long enterpriseId){
 		Merchant entity = new Merchant();	
 
 		entity.setCreateDate(merchant.getCreateDate());
@@ -168,10 +168,14 @@ public class MerchantController extends BaseController {
 
 		entity.setUserId(merchant.getUserId());
 
-		entity.setEnterprise(enterpriseService.find(Long.parseLong(enterpriseId)));
+		if(enterpriseId != null){
+			entity.setEnterprise(enterpriseService.find(enterpriseId));
+		}
 
-		entity.setOwner(memberService.find(Long.parseLong(ownerId)));
-		
+		if(ownerId != null){
+			entity.setOwner(memberService.find(ownerId));
+		}
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }

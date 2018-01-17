@@ -113,7 +113,7 @@
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
                         <input type="hidden" class="input-text" value="" placeholder="" id="enterpriseId" name="enterpriseId">
-                        <input type="text" class="input-text" value="" placeholder="" id="enterprisetext" name="enterprisetext">
+                        <input type="text" class="input-text" value="" placeholder="" id="enterprisetext" name="enterprisetext" readonly="readonly" style="background-color:#E6E6FA">
                     </div>
                 </td>
             </tr>
@@ -128,7 +128,7 @@
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
                         <input type="hidden" class="input-text" value="" placeholder="" id="ownerId" name="ownerId">
-                        <input type="text" class="input-text" value="" placeholder="" id="ownertext" name="ownertext">
+                        <input type="text" class="input-text" value="" placeholder="" id="ownertext" name="ownertext" readonly="readonly" style="background-color:#E6E6FA">
                     </div>
                 </td>
             </tr>
