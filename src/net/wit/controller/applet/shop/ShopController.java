@@ -60,7 +60,7 @@ public class ShopController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,Double lat,Double lng,Pageable pageable, HttpServletRequest request){
         Member member = memberService.find(authorId);
         if (member==null) {
             return Message.error("作者id无效");
@@ -79,7 +79,7 @@ public class ShopController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(Long shopId,HttpServletRequest request){
+    public Message view(Long shopId,Double lat,Double lng,HttpServletRequest request){
         Shop shop = shopService.find(shopId);
         if (shop==null) {
             return Message.error("无效shopid");

@@ -8,10 +8,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCatalogModel;
 import net.wit.controller.model.ArticleViewModel;
 import net.wit.controller.model.TopicViewModel;
-import net.wit.entity.Article;
-import net.wit.entity.ArticleCatalog;
-import net.wit.entity.Member;
-import net.wit.entity.Topic;
+import net.wit.entity.*;
 import net.wit.plat.weixin.main.MenuManager;
 import net.wit.service.*;
 import net.wit.util.StringUtils;
@@ -59,6 +56,12 @@ public class TopicController extends BaseController {
 
     @Resource(name = "topicServiceImpl")
     private TopicService topicService;
+
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
+    @Resource(name = "friendsServiceImpl")
+    private FriendsService friendsService;
 
     /**
      * 打开首页
@@ -108,8 +111,18 @@ public class TopicController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
 
+
         List<ArticleCatalog> catalogs = articleCatalogService.findList(null,filters,null);
         model.setCatalogs(ArticleCatalogModel.bindList(catalogs));
+        Member self = memberService.getCurrent();
+        if (self!=null) {
+            MemberFollow follow = memberFollowService.find(self,member);
+            model.setFollowed(follow!=null);
+            Friends friends = friendsService.find(self,member);
+            if (friends!=null) {
+                model.setFriendStatus(friends.getStatus());
+            }
+        }
         return Message.bind(model,request);
    }
 
