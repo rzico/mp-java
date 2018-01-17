@@ -154,7 +154,7 @@
                     <div class="formControls col-xs-8 col-sm-12">
                         <!-- input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince" -->
                         <span class="select-box">
-                            <select class="select" style="background-color: #FFFFFF" id="cardProvince" name="cardProvince">
+                            <select class="select" style="background-color: #FFFFFF" id="cardProvince" name="cardProvince" onchange="changeCity(1)">
                             [#if provinces??]
                                 <option value="">请选择</option>
                                 [#list provinces as province]
@@ -174,7 +174,7 @@
                     <div class="formControls col-xs-8 col-sm-7">
                         <!-- input type="text" class="input-text" value="" placeholder="" id="province" name="province"-->
                         <span class="select-box">
-                            <select class="select" style="background-color: #FFFFFF" id="province" name="province">
+                            <select class="select" style="background-color: #FFFFFF" id="province" name="province" onchange="changeCity(2)">
                             [#if provinces??]
                                 <option value="">请选择</option>
                                 [#list provinces as province]
@@ -200,10 +200,12 @@
                             [#if citys??]
                                 <option value="">请选择</option>
                                 [#list citys as city]
-                                    [#if data.cardCity == "${city.id}"]
-                                        <option value="${city.id}" selected="selected">${city.name}</option>
-                                    [#else]
-                                        <option value="${city.id}">${city.name}</option>
+                                    [#if data.cardProvince == city.id?substring(0,2)]
+                                        [#if data.cardCity == "${city.id}"]
+                                            <option value="${city.id}" selected="selected">${city.name}</option>
+                                        [#else]
+                                            <option value="${city.id}">${city.name}</option>
+                                        [/#if]
                                     [/#if]
                                 [/#list]
                             [/#if]
@@ -220,10 +222,12 @@
                             [#if citys??]
                                 <option value="">请选择</option>
                                 [#list citys as city]
-                                    [#if data.city == "${city.id}"]
-                                        <option value="${city.id}" selected="selected">${city.name}</option>
-                                    [#else]
-                                        <option value="${city.id}">${city.name}</option>
+                                    [#if data.province == city.id?substring(0,2)]
+                                        [#if data.city == "${city.id}"]
+                                            <option value="${city.id}" selected="selected">${city.name}</option>
+                                        [#else]
+                                            <option value="${city.id}">${city.name}</option>
+                                        [/#if]
                                     [/#if]
                                 [/#list]
                             [/#if]
@@ -265,6 +269,16 @@
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript">
+            var $citys = [
+            [#list citys as city]
+                [#if city_index == 0]
+                    {id:"${city.id}",name:"${city.name}"}
+                [#else]
+                    ,{id:"${city.id}",name:"${city.name}"}
+                [/#if]
+            [/#list]
+            ]
+
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -319,6 +333,34 @@
                     }
                 });
             });
+
+            function changeCity(id){
+                var selectid;
+                var select_html;
+                var objs = eval($citys);
+                var $c;
+                if(id == 1){
+                    selectid = $("#cardProvince option:selected") .val();
+                    $c = $("#cardCity");
+                    $c.html("");
+                    objs.forEach(function(item){
+                        if(item.id.substr(0,2) == selectid){
+                            select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
+                        }
+                        $c.html(select_html);
+                    })
+                } else {
+                    selectid = $("#province option:selected") .val();
+                    $c = $("#city");
+                    $c.html("");
+                    objs.forEach(function(item){
+                        if(item.id.substr(0,2) == selectid){
+                            select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
+                        }
+                        $c.html(select_html);
+                    })
+                }
+            }
         </script>
 </body>
 </html>
