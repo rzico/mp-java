@@ -70,7 +70,7 @@ public class ShopController extends BaseController {
         pageable.setFilters(filters);
         Page<Shop> page = shopService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(ShopModel.bindList(page.getContent()));
+        model.setData(ShopModel.bindList(page.getContent(),lat,lng));
         return Message.bind(model,request);
     }
 

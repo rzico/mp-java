@@ -57,6 +57,8 @@ public class ShopModel extends BaseModel implements Serializable {
     /** lng */
     private double lng;
 
+    /** 距离 */
+    private double distance;
 
     public Long getId() {
         return id;
@@ -162,6 +164,14 @@ public class ShopModel extends BaseModel implements Serializable {
         this.categoryName = categoryName;
     }
 
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
     public double getLat() {
         return lat;
     }
@@ -202,11 +212,19 @@ public class ShopModel extends BaseModel implements Serializable {
         }
     }
 
-    public static List<ShopModel> bindList(List<Shop> shops) {
+    public static List<ShopModel> bindList(List<Shop> shops,double lat,double lng) {
         List<ShopModel> ms = new ArrayList<ShopModel>();
         for (Shop shop:shops) {
             ShopModel m = new ShopModel();
             m.bind(shop);
+
+            if (lat>0 && lng>0) {
+                Location location = shop.getLocation();
+                if (location.getLat()>0 && location.getLng()>0) {
+                    m.setDistance(shop.getLocation().calcDistance(lat, lng));
+                }
+            }
+
             ms.add(m);
         }
         return ms;

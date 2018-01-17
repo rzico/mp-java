@@ -123,7 +123,7 @@ public class ShopController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Pageable pageable, HttpServletRequest request){
+    public Message list(Pageable pageable,Double lat,Double lng, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -141,7 +141,7 @@ public class ShopController extends BaseController {
         pageable.setFilters(filters);
         Page<Shop> page = shopService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(ShopModel.bindList(page.getContent()));
+        model.setData(ShopModel.bindList(page.getContent(),lat,lng));
         return Message.bind(model,request);
     }
 
