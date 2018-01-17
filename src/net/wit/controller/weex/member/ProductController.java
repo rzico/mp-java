@@ -130,6 +130,9 @@ public class ProductController extends BaseController {
 			if (model.getProductCategory()!=null && model.getProductCategory().getId()!=null) {
 				product.setProductCategory(productCategoryService.find(model.getProductCategory().getId()));
 			}
+			if (model.getDistribution()!=null && model.getDistribution().getId()!=null) {
+				product.setDistribution(distributionService.find(model.getDistribution().getId()));
+			}
 			product.setThumbnail(pm.getThumbnail());
 			product.setMarketPrice(pm.getPrice());
 			product.setPrice(pm.getPrice());
@@ -146,11 +149,6 @@ public class ProductController extends BaseController {
 			product.setMember(member);
 			product.setStock(pm.getStock());
 			product.setAllocatedStock(0);
-			if (pm.getDistribution() != null) {
-				product.setDistribution(distributionService.find(pm.getDistribution().getId()));
-			} else {
-				product.setDistribution(null);
-			}
 			i = i+1;
 			product.setOrders(i);
 			if (i==1) {

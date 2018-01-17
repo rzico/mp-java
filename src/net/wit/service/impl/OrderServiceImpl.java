@@ -433,12 +433,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				Member seller = order.getSeller();
 				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
 				seller.setBalance(seller.getBalance().add(order.getAmountPaid()));
-				memberDao.merge(member);
+				memberDao.merge(seller);
 				Deposit deposit = new Deposit();
-				deposit.setBalance(member.getBalance());
+				deposit.setBalance(seller.getBalance());
 				deposit.setType(Deposit.Type.product);
 				deposit.setMemo("订单货款结算");
-				deposit.setMember(member);
+				deposit.setMember(seller);
 				deposit.setCredit(order.getAmountPaid());
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
@@ -456,12 +456,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
 				seller.setBalance(seller.getBalance().subtract(d));
 				if (seller.getBalance().compareTo(BigDecimal.ZERO)>=0) {
-					memberDao.merge(member);
+					memberDao.merge(seller);
 					Deposit deposit = new Deposit();
-					deposit.setBalance(member.getBalance());
+					deposit.setBalance(seller.getBalance());
 					deposit.setType(Deposit.Type.product);
 					deposit.setMemo("支付分销佣金");
-					deposit.setMember(member);
+					deposit.setMember(seller);
 					deposit.setCredit(BigDecimal.ZERO.subtract(d));
 					deposit.setDebit(BigDecimal.ZERO);
 					deposit.setDeleted(false);
