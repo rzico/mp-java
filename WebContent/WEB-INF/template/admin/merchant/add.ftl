@@ -257,7 +257,6 @@
             $(function(){
                 var $submit = $(":submit");
 
-
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
@@ -266,9 +265,6 @@
 
                 $("#form-add").validate({
                     rules:{
-                        brokerage:{
-                            required:true,
-                        },
                         merchantName:{
                             required:true,
                         },
@@ -365,8 +361,9 @@
                         if(item.id.substr(0,2) == selectid){
                             select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
                         }
-                        $c.html(select_html);
                     })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
                 } else {
                     selectid = $("#province option:selected") .val();
                     $c = $("#city");
@@ -375,8 +372,9 @@
                         if(item.id.substr(0,2) == selectid){
                             select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
                         }
-                        $c.html(select_html);
                     })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
                 }
             }
 

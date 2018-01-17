@@ -197,7 +197,7 @@
                         <!-- input type="text" class="input-text" value="" placeholder="" id="cardCity" name="cardCity" -->
                         <span class="select-box">
                             <select class="select" style="background-color: #FFFFFF" id="cardCity" name="cardCity">
-                            [#if citys??]
+                            [#if citys?? && "${city.id}" != ""]
                                 <option value="">请选择</option>
                                 [#list citys as city]
                                     [#if data.cardProvince == city.id?substring(0,2)]
@@ -219,7 +219,7 @@
                         <!-- input type="text" class="input-text" value="" placeholder="" id="city" name="city" -->
                         <span class="select-box">
                             <select class="select" style="background-color: #FFFFFF" id="city" name="city">
-                            [#if citys??]
+                            [#if citys?? && "${city.id}" != ""]
                                 <option value="">请选择</option>
                                 [#list citys as city]
                                     [#if data.province == city.id?substring(0,2)]
@@ -289,9 +289,6 @@
 
                 $("#form-update").validate({
                     rules:{
-                        brokerage:{
-                            required:true,
-                        },
                         merchantName:{
                             required:true,
                         },
@@ -347,8 +344,9 @@
                         if(item.id.substr(0,2) == selectid){
                             select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
                         }
-                        $c.html(select_html);
                     })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
                 } else {
                     selectid = $("#province option:selected") .val();
                     $c = $("#city");
@@ -357,8 +355,9 @@
                         if(item.id.substr(0,2) == selectid){
                             select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
                         }
-                        $c.html(select_html);
                     })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
                 }
             }
         </script>
