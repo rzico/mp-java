@@ -202,7 +202,6 @@ public class ShopController extends BaseController {
         return Message.success("绑定成功");
     }
 
-
     /**
      *  1分钱交易测试款
      *  shopid

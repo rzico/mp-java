@@ -409,6 +409,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		}  else
 		if (share.getShareType().equals(ArticleShare.ShareType.browser)) {
 			shareDescr = "浏览器";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.platform)) {
+			shareDescr = "公众号";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.routine)) {
+			shareDescr = "小程序";
 		} else {
 			shareDescr = setting.getSiteName()+"好友";
 		}

@@ -33,7 +33,12 @@ public class ArticleShare extends BaseEntity {
 		/** 复制链接 */
 		copyHref,
 		/** 浏览器 */
-		browser
+		browser,
+		/** 公众号 */
+		platform,
+		/** 小程序 */
+		routine
+
 	};
 
 	/** 分享至 */
