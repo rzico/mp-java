@@ -86,7 +86,7 @@
                 [#if authoritys??]
                 [#list authoritys as authority]
                     <div class="radio-box">
-                        <input name="articleOptions.authority" type="radio" id="authority-${authority_index}" value="${authority.id}"[#if data.articleOptions?? && authority.id == data.articleOptions.authority] checked[/#if]>
+                        <input name="articleOptions.authority" type="radio" id="authority-${authority_index}" value="${authority.id}"[#if authority.id == data.authority] checked[/#if]>
                         <label for="authority-${authority_index}">${authority.name}</label>
                     </div>
                 [/#list]
@@ -98,7 +98,7 @@
             <label class="form-label col-xs-4 col-sm-2">是否投稿：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="articleOptions.isPublish" id="isPublish" value="true"[#if data.articleOptions?? && data.articleOptions.isPublish] checked[/#if]>
+                    <input type="checkbox" name="articleOptions.isPublish" id="isPublish" value="true"[#if data.isPublish] checked[/#if]>
                     <input type="hidden" name="_articleOptions.isPublish" value="false" />
                     <label for="isPublish">&nbsp;</label>
                 </div>
@@ -109,7 +109,7 @@
             <label class="form-label col-xs-4 col-sm-2">是否评论：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="articleOptions.isReview" id="isReview" value="true"[#if data.articleOptions?? && data.articleOptions.isReview] checked[/#if]>
+                    <input type="checkbox" name="articleOptions.isReview" id="isReview" value="true"[#if data.isReview] checked[/#if]>
                     <input type="hidden" name="_articleOptions.isReview" value="false" />
                     <label for="isReview">&nbsp;</label>
                 </div>
@@ -120,7 +120,7 @@
             <label class="form-label col-xs-4 col-sm-2">是否赞赏：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
-                    <input type="checkbox" name="articleOptions.isReward" id="isReward" value="true"[#if data.articleOptions?? && data.articleOptions.isReward] checked[/#if]>
+                    <input type="checkbox" name="articleOptions.isReward" id="isReward" value="true"[#if data.isReward] checked[/#if]>
                     <input type="hidden" name="_articleOptions.isReward" value="false" />
                     <label for="isReward">&nbsp;</label>
                 </div>

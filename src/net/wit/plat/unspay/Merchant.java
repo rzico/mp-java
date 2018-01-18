@@ -105,6 +105,8 @@ public class Merchant {
         body.put("idCard",merchant.getIdCard());
         body.put("cardNo",merchant.getCardNo());
         body.put("orgNo",Const.orgNo);
+        body.put("userId",merchant.getUserId());
+        body.put("merchantNo",merchant.getMerchantNo());
         body.put("userType","P");
         Map<String,Object> wechat = new HashMap<>();
         wechat.put("feeType",2);
@@ -171,7 +173,7 @@ public class Merchant {
         merchant.setIndustryType("166");
         merchant.setEmail("zhangsr@rzico.com");
         merchant.setBrokerage(new BigDecimal("0.38"));
-        Merchant.addMerchant(merchant);
+        Merchant.editMerchant(merchant);
     }
 
 }
