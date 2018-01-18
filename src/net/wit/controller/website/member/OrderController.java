@@ -295,7 +295,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 签收
 	 */
-	@RequestMapping(value = "/completed", method = RequestMethod.POST)
+	@RequestMapping(value = "/completed")
 	public @ResponseBody
 	Message completed(String sn) {
 		Member member = memberService.getCurrent();
@@ -306,7 +306,7 @@ public class OrderController extends BaseController {
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			try {
 				orderService.complete(order, null);
-				return Message.success("关闭成功");
+				return Message.success("签收成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());
 			}
