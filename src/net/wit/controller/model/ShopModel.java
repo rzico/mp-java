@@ -212,13 +212,13 @@ public class ShopModel extends BaseModel implements Serializable {
         }
     }
 
-    public static List<ShopModel> bindList(List<Shop> shops,double lat,double lng) {
+    public static List<ShopModel> bindList(List<Shop> shops,Double lat,Double lng) {
         List<ShopModel> ms = new ArrayList<ShopModel>();
         for (Shop shop:shops) {
             ShopModel m = new ShopModel();
             m.bind(shop);
 
-            if (lat>0 && lng>0) {
+            if (lat !=null && lng !=null && lat>0 && lng>0) {
                 Location location = shop.getLocation();
                 if (location.getLat()>0 && location.getLng()>0) {
                     m.setDistance(shop.getLocation().calcDistance(lat, lng));

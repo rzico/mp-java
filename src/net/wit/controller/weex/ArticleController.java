@@ -141,10 +141,6 @@ public class ArticleController extends BaseController {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
             filters.add(new Filter("articleCategory", Filter.Operator.eq,articleCategory));
         }
-        if (authorId!=null) {
-            Member member = memberService.find(authorId);
-            filters.add(new Filter("member", Filter.Operator.eq,member));
-        }
         if (articleCatalogId!=null) {
             ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
             filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
@@ -152,7 +148,12 @@ public class ArticleController extends BaseController {
         if (isTop != null) {
             filters.add(new Filter("isTop", Filter.Operator.eq,isTop));
         }
-        filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+        if (authorId!=null) {
+            Member member = memberService.find(authorId);
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+        } else {
+            filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+        }
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);

@@ -53,6 +53,9 @@ public class OrderController extends BaseController {
 	@Resource(name = "refundsServiceImpl")
 	private RefundsService refundsService;
 
+	@Resource(name = "enterpriseServiceImpl")
+	private EnterpriseService enterpriseService;
+
 	/**
 	 * 订单锁定
 	 */
@@ -133,7 +136,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
@@ -174,7 +177,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
@@ -214,7 +217,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
@@ -258,7 +261,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
@@ -362,7 +365,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
