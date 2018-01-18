@@ -272,7 +272,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 * @return 订单
 	 */
-	public Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Admin operator) {
+	public Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo,Long xuid, Admin operator) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -295,6 +295,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		order.setIsAllocatedStock(true);
 		order.setDeleted(false);
+		if (xuid!=null) {
+			order.setPromoter(memberDao.find(xuid));
+		}
 
 		orderDao.persist(order);
 

@@ -152,7 +152,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,String memo) {
+	Message create(Long id,Integer quantity,Long receiverId,Long xuid,String memo) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -172,7 +172,7 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, null);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
