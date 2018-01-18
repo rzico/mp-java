@@ -283,10 +283,6 @@ public class LoginController extends BaseController {
             member.setLoginFailureCount(0);
             member.setRegisterIp(request.getRemoteAddr());
 
-            if (xuid!=null) {
-                member.setPromoter(memberService.find(xuid));
-            }
-
             memberService.save(member);
 
         } else {
@@ -299,10 +295,12 @@ public class LoginController extends BaseController {
             memberService.update(member);
         }
         try {
+
             bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
             if (unionId==null) {
                 unionId = "#";
             }
+
             if (bindUser==null) {
                 bindUser = new BindUser();
                 bindUser.setAppId(bundle.getString("weixin.appid"));
@@ -317,7 +315,6 @@ public class LoginController extends BaseController {
                 }
             }
             bindUserService.save(bindUser);
-
 
             Cart cart = cartService.getCurrent();
             if (cart != null) {
@@ -339,6 +336,13 @@ public class LoginController extends BaseController {
                     member.setScene(userAgent.substring(0, 250));
                 }
             }
+
+            if (member.getPromoter()==null && !"#".equals(bindUser.getUnionId())) {
+                if (xuid!=null) {
+                    member.setPromoter(memberService.find(xuid));
+                }
+            }
+
             memberService.save(member);
             return "redirect:"+mState;
         } catch (Exception e) {

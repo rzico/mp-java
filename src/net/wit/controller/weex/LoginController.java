@@ -60,6 +60,9 @@ public class LoginController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "friendsServiceImpl")
+    private FriendsService friendsService;
+
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
@@ -231,10 +234,14 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+
+
+            messageService.login(member,request);
+
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
-            messageService.login(member,request);
+
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
