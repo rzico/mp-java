@@ -17,7 +17,7 @@ public class ManagerModel extends BaseModel implements Serializable {
     private String logo;
     /** 开通收银台 */
     private Boolean useCashier;
-    /**  是否开通专栏 */
+    /** 是否开通专栏 */
     private Boolean hasTopic;
     /** 专栏 */
     private String topic;
@@ -99,6 +99,7 @@ public class ManagerModel extends BaseModel implements Serializable {
         this.hasTopic = (member.getTopic()!=null);
 
         Topic topic = member.getTopic();
+
         if (topic==null) {
             this.topic = "未开通";
         } else {

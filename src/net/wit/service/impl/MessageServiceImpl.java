@@ -492,6 +492,27 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		return pushTo(msg);
 	}
 
+	//添加好友
+	public Boolean addPromoterPushTo(Member member,Member promoter) {
+		Message msg = new Message();
+		msg.setMember(member);
+		msg.setReceiver(promoter);
+		msg.setType(Message.Type.adoptfriend);
+		msg.setThumbnial(member.getLogo());
+		msg.setTitle(member.getNickName());
+		msg.setContent("您的新成员【"+member.getNickName()+"】添加你为好友。");
+		pushTo(msg);
+		Message adt = new Message();
+		adt.setMember(promoter);
+		adt.setReceiver(member);
+		adt.setType(Message.Type.adoptfriend);
+		adt.setThumbnial(promoter.getLogo());
+		adt.setTitle(promoter.getNickName());
+		adt.setContent("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
+		pushTo(adt);
+		return true;
+	}
+
 	//活动专栏
 	public Boolean topicPushTo(Topic topic) {
 		Message msg = new Message();

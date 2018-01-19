@@ -1,6 +1,7 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -168,6 +169,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setOffsetAmount(new BigDecimal(0));
 		order.setPoint(0L);
 		order.setPointDiscount(BigDecimal.ZERO);
+		order.setDeleted(false);
 		order.setMemo(memo);
 		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);
@@ -272,7 +274,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 * @return 订单
 	 */
-	public Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Admin operator) {
+	public Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo,Long xuid, Admin operator) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -296,6 +298,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setIsAllocatedStock(true);
 		order.setDeleted(false);
 
+		Topic topic = member.getTopic();
+		if (topic==null) {
+			order.setFee(order.getAmount().multiply(new BigDecimal("0.006")).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+		} else {
+			order.setFee(topic.calcFee(order.getAmount()));
+		}
+
+		if (xuid!=null) {
+			Member promoter = memberDao.find(xuid);
+			if (promoter!=null && promoter.equals(order.getSeller())) {
+				promoter = null;
+			}
+			order.setPromoter(promoter);
+		}
+
 		orderDao.persist(order);
 
 		OrderLog orderLog = new OrderLog();
@@ -312,16 +329,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (orderItem != null) {
 				Product orderProduct = orderItem.getProduct();
 				if (orderProduct!=null) {
-					System.out.println("1111");
 					productDao.lock(orderProduct, LockModeType.PESSIMISTIC_WRITE);
 					orderProduct.setAllocatedStock(orderProduct.getAllocatedStock() + orderItem.getQuantity());
 					productDao.merge(orderProduct);
 					orderDao.flush();
-					System.out.println("22222");
 				}
 			}
 		}
-		System.out.println("33333");
 		if (cart!=null) {
 			cartDao.remove(cart);
 		}
@@ -432,14 +446,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				//扣除商家分配佣金
 				Member seller = order.getSeller();
 				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
-				seller.setBalance(seller.getBalance().add(order.getAmountPaid()));
+				//扣除平台手续费
+				BigDecimal samt = order.getAmountPaid().subtract(order.getFee());
+				seller.setBalance(seller.getBalance().add(samt));
 				memberDao.merge(seller);
 				Deposit deposit = new Deposit();
 				deposit.setBalance(seller.getBalance());
 				deposit.setType(Deposit.Type.product);
-				deposit.setMemo("订单货款结算");
+				NumberFormat nf = NumberFormat.getNumberInstance();
+				nf.setMaximumFractionDigits(2);
+				deposit.setMemo("货款结算(手续费:"+nf.format(order.getFee())+")");
 				deposit.setMember(seller);
-				deposit.setCredit(order.getAmountPaid());
+				deposit.setCredit(samt);
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
@@ -475,7 +493,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					for (OrderItem orderItem : order.getOrderItems()) {
 						if (orderItem != null) {
 							BigDecimal r1 = orderItem.calcPercent1();
-							if (r1.compareTo(BigDecimal.ZERO)>0) {
+							if (r1.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null) {
 								Member p1 = order.getPromoter();
 								memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
 								p1.setBalance(p1.getBalance().add(r1));
@@ -493,7 +511,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								messageService.depositPushTo(d1);
 							}
 							BigDecimal r2 = orderItem.calcPercent2();
-							if (r2.compareTo(BigDecimal.ZERO)>0) {
+							if (r2.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null && order.getPromoter().getPromoter()!=null) {
 								Member p2 = order.getPromoter().getPromoter();
 								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
 								p2.setBalance(p2.getBalance().add(r2));
@@ -511,8 +529,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								messageService.depositPushTo(d2);
 							}
 							BigDecimal r3 = orderItem.calcPercent3();
-							if (r3.compareTo(BigDecimal.ZERO)>0) {
-								Member p3 = order.getPromoter();
+							if (r3.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null && order.getPromoter().getPromoter()!=null && order.getPromoter().getPromoter().getPromoter()!=null) {
+								Member p3 = order.getPromoter().getPromoter().getPromoter();
 								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
 								p3.setBalance(p3.getBalance().add(r3));
 								memberDao.merge(p3);

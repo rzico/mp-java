@@ -85,7 +85,7 @@ public class MobileController extends BaseController {
 
         Smssend smsSend = new Smssend();
         smsSend.setMobile(m);
-        smsSend.setContent("验证码 :" + securityCode + ",只用于注册账号。");
+        smsSend.setContent("验证码 :" + securityCode + ",只用于设置密码。");
         smssendService.smsSend(smsSend);
         return Message.success("发送成功");
     }
@@ -153,7 +153,7 @@ public class MobileController extends BaseController {
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         Member member =memberService.getCurrent();
         try {
-            if (!member.getMobile().equals(safeKey.getKey())) {
+            if (member.getMobile()!=null && !member.getMobile().equals(safeKey.getKey())) {
                 return Message.error("无效验证码");
             }
             String captcha = rsaService.decryptParameter("captcha", request);

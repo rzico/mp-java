@@ -152,7 +152,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,String memo) {
+	Message create(Long id,Integer quantity,Long receiverId,Long xuid,String memo) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -172,7 +172,7 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, null);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -295,7 +295,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 签收
 	 */
-	@RequestMapping(value = "/completed", method = RequestMethod.POST)
+	@RequestMapping(value = "/completed")
 	public @ResponseBody
 	Message completed(String sn) {
 		Member member = memberService.getCurrent();
@@ -306,7 +306,7 @@ public class OrderController extends BaseController {
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			try {
 				orderService.complete(order, null);
-				return Message.success("关闭成功");
+				return Message.success("签收成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());
 			}

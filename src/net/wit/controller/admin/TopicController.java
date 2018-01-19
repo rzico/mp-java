@@ -11,7 +11,6 @@ import net.wit.Pageable;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.tomcat.dbcp.pool.impl.GenericKeyedObjectPool;
 import org.hibernate.annotations.Filters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

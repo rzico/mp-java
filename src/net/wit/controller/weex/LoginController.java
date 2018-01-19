@@ -175,10 +175,17 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+
+            if (member.getPromoter()!=null) {
+                memberService.create(member,member.getPromoter());
+            }
+
+            messageService.login(member,request);
+
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
-            messageService.login(member,request);
+
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,10 +238,18 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+
+
+            messageService.login(member,request);
+
+            if (member.getPromoter()!=null) {
+                memberService.create(member,member.getPromoter());
+            }
+
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
-            messageService.login(member,request);
+
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -377,10 +392,13 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+            if (member.getPromoter()!=null) {
+                memberService.create(member,member.getPromoter());
+            }
+            messageService.login(member,request);
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
-            messageService.login(member,request);
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();

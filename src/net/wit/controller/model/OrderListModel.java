@@ -43,6 +43,9 @@ public class OrderListModel extends BaseModel implements Serializable {
     private String status;
 
     /**  订单金额 */
+    private Integer quantity;
+
+    /**  订单金额 */
     private BigDecimal amount;
 
     /**  收货人 */
@@ -155,6 +158,14 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.consignee = consignee;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -176,8 +187,8 @@ public class OrderListModel extends BaseModel implements Serializable {
 
         this.orderItems = OrderItemModel.bindList(order.getOrderItems());
 
-
         this.amount = order.getAmount();
+        this.quantity = order.getQuantity();
         this.consignee = order.getConsignee();
 
     }

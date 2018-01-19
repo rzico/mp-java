@@ -84,7 +84,7 @@ public class PayBillModel extends BaseModel implements Serializable {
         this.noDiscount = payBill.getNoDiscount();
         this.cardDiscount = payBill.getCardDiscount();
         this.couponDiscount = payBill.getCouponDiscount();
-        this.effectiveAmount = payBill.getEffectiveAmount();
+        this.effectiveAmount = payBill.getPayBillAmount();
         if (payBill.getCouponCode()!=null) {
             this.couponName = payBill.getCouponCode().getCoupon().getName();
         }
