@@ -371,6 +371,8 @@ public class LoginController extends BaseController {
             logger.debug(e.getMessage());
             mState = "";
         }
+//        System.out.println(mState);
+//        System.out.println(auth_code);
         try {
             AccessToken token = AlipayUtil.getOauth2AccessToken(auth_code);
             if (token!=null) {
