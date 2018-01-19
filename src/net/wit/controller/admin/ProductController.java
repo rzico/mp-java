@@ -62,7 +62,7 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
 
-		model.addAttribute("goodss",goodsService.findAll());
+		//model.addAttribute("goodss",goodsService.findAll());
 
 		model.addAttribute("productCategorys",productCategoryService.findAll());
 

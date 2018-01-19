@@ -9,6 +9,12 @@
                     <li><a data-href="../article/index.jhtml" data-title="文章管理" href="javascript:;">文章管理</a></li>
                 </ul>
             </dd>
+            <dt><i class="Hui-iconfont">&#xe60d;</i> 商品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a data-href="../product/index.jhtml" data-title="商品管理" href="javascript:;">商品管理</a></li>
+                </ul>
+            </dd>
             <dt><i class="Hui-iconfont">&#xe60d;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>

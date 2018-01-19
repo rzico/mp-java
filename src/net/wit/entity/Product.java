@@ -370,6 +370,14 @@ public class Product extends OrderEntity {
 		}
 	}
 
+	public MapEntity getMapProductCategory(){
+		if(getProductCategory() != null){
+			return new MapEntity(getProductCategory().getId().toString(),getProductCategory().getName());
+		}else{
+			return null;
+		}
+	}
+
 	public MapEntity getMapTags() {
 		String tagStr = "";
 		if (getTags() != null) {
@@ -471,7 +479,7 @@ public class Product extends OrderEntity {
 	@Transient
 	public String getSpec() {
         if (getSpec1()!=null && getSpec2()!=null) {
-	       return getSpec1().concat(getSpec2());
+	       return getSpec1().concat(","+getSpec2());
 		} else
 			if (getSpec1()!=null){
         	return getSpec1();

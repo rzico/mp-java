@@ -118,6 +118,8 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
+                $(row).children('td').eq(3).attr('style', 'text-align: left;');
+                $(row).children('td').eq(4).attr('style', 'text-align: left;');
             },
             "aoColumns": [
                 {
@@ -136,8 +138,28 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
+                    "mData": "sn",
+                    "sTitle": "编号",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "name",
+                    "sTitle": "名称",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "unit",
+                    "sTitle": "单位",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapProductCategory",
+                    "sTitle": "所属分类",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "weight",
+                    "sTitle": "重量",
                     "sClass": "center"
                 },
                 {
@@ -146,8 +168,18 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "deleted",
-                    "sTitle": "是否删除",
+                    "mData": "marketPrice",
+                    "sTitle": "市场价",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "price",
+                    "sTitle": "销售价",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "point",
+                    "sTitle": "赠送积分",
                     "sClass": "center"
                 },
                 {
@@ -158,76 +190,6 @@
                 {
                     "mData": "isMarketable",
                     "sTitle": "是否上架",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "marketPrice",
-                    "sTitle": "市场价",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "name",
-                    "sTitle": "名称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "point",
-                    "sTitle": "赠送积分",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "price",
-                    "sTitle": "销售价",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "sn",
-                    "sTitle": "编号",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "spec",
-                    "sTitle": "规格",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "unit",
-                    "sTitle": "单位",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "vip1price",
-                    "sTitle": "一级代理价",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "vip2price",
-                    "sTitle": "二级代理价",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "vip3price",
-                    "sTitle": "三级代理价",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "weight",
-                    "sTitle": "重量",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapGoods",
-                    "sTitle": "Goods",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapProductCategory",
-                    "sTitle": "ProductCategory",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "thumbnial",
-                    "sTitle": "缩略图",
                     "sClass": "center"
                 },
                 {
@@ -254,33 +216,17 @@
                     }
                 },
                 {
-                    "aTargets": [3],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [5],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
+                            return data.name;
                         } else {
-                            return "<span class=\"label label-success radius\">否</span>";
+                            return "";
                         }
                     }
                 },
                 {
-                    "aTargets": [7],
+                    "aTargets": [12],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -290,27 +236,17 @@
                     }
                 },
                 {
-                    "aTargets": [19],
+                    "aTargets": [13],
                     "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','goodsView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
                         }
                     }
-                }, 
+                },
                 {
-                    "aTargets": [20],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','productCategoryView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [22],
+                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 产品档案 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -322,7 +258,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 19, 20, 22]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 12, 13, 14]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

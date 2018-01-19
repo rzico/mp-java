@@ -277,6 +277,16 @@
                     }
                 },
                 {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
@@ -375,16 +385,6 @@
                             return "<span class=\"label label-success radius\">是</span>";
                         } else {
                             return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [5],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
-                        }else{
-                            return "";
                         }
                     }
                 },
