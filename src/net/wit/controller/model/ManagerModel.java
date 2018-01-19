@@ -100,6 +100,8 @@ public class ManagerModel extends BaseModel implements Serializable {
 
         Topic topic = member.getTopic();
 
+        this.useCashier = false;
+
         if (topic==null) {
             this.topic = "未开通";
         } else {
@@ -112,8 +114,9 @@ public class ManagerModel extends BaseModel implements Serializable {
             if (topic.getStatus().equals(Topic.Status.failure)) {
                 this.topic = "已过期";
             }
+            this.useCashier = topic.getConfig().getUseCashier();
         }
-        this.useCashier = false;
+
     }
 
 }
