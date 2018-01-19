@@ -360,4 +360,21 @@ public class Admin extends BaseEntity {
             return this.getEnterprise().getMember().equals(this.getMember());
         }
     }
+
+
+    @JsonIgnore
+    public Boolean isRole(String roles) {
+        Boolean isTrue = false;
+        for (int i=0;i<roles.length();i++) {
+            String s = roles.substring(i,i+1);
+            for (Role role:getRoles()) {
+                if (s.equals(role.getId().toString())) {
+                    isTrue = true;
+                    break;
+                }
+            }
+        }
+        return isTrue;
+    }
+
 }
