@@ -411,6 +411,20 @@ public class Product extends OrderEntity {
 		return availableStock;
 	}
 
+	/**
+	 * 获取是否库存不足
+	 *
+	 * @return 是否库存不足
+	 */
+	@Transient
+	public boolean getIsLowStock(Integer quantity) {
+		if (quantity > getAvailableStock()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 //	/**
 //	 * 获取库存记录
 //	 *

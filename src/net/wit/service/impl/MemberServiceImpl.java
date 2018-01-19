@@ -53,10 +53,10 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
-	@Resource(name = "friendsDaompl")
+	@Resource(name = "friendsDaoImpl")
 	private FriendsDao friendsDao;
 
-	@Resource(name = "memberFollowDaompl")
+	@Resource(name = "memberFollowDaoImpl")
 	private MemberFollowDao memberFollowDao;
 
 	@Resource(name = "memberDaoImpl")

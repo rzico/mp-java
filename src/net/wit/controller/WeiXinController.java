@@ -10,6 +10,7 @@ import net.wit.entity.Member;
 import net.wit.entity.Shop;
 import net.wit.entity.Tag;
 import net.wit.plat.im.User;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -307,6 +309,13 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = "/qrcode/go", method = RequestMethod.GET)
     public String go(String type, String no) {        // 调用核心业务类接收消息、处理消息
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String url = "http://"+bundle.getString("weixin.url")+"/weixin/qrcode/go.jhtml?type="+type+"no="+no;
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+        }
         if ("paybill".equals(type)) {
             Shop shop = shopService.find(no);
             if (shop!=null) {

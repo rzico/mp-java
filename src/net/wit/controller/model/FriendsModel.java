@@ -19,6 +19,8 @@ public class FriendsModel extends BaseModel implements Serializable {
     private String name;
     /** 手机号 */
     private String md5;
+    /** 类型 */
+    private Friends.Type type;
     /** 时间 */
     private Date createDate;
     /** 状态 */
@@ -80,6 +82,14 @@ public class FriendsModel extends BaseModel implements Serializable {
         this.status = status;
     }
 
+    public Friends.Type getType() {
+        return type;
+    }
+
+    public void setType(Friends.Type type) {
+        this.type = type;
+    }
+
     public void bind(Friends friends) {
         Member member = friends.getFriend();
         this.id = member.getId();
@@ -91,6 +101,7 @@ public class FriendsModel extends BaseModel implements Serializable {
         }
         this.createDate = friends.getModifyDate();
         this.status = friends.getStatus();
+        this.type = friends.getType();
      }
 
     public static List<FriendsModel> bindList(List<Friends> friends) {

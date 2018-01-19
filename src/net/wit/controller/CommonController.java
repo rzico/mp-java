@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +45,13 @@ public class CommonController extends BaseController {
 	 */
 
 	@RequestMapping(value = "/resource_not_found.jhtml", method = RequestMethod.GET)
-	public String publicKey(HttpServletRequest request,HttpServletResponse response) {
+	public String resource_not_found(HttpServletRequest request,HttpServletResponse response) {
 		response.setStatus(200);
+		try {
+			response.sendError(200);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return "forward:/index.html";
 	}
 

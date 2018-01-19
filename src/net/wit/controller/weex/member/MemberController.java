@@ -83,7 +83,7 @@ public class MemberController extends BaseController {
     /**
      * 获取权限
      */
-    @RequestMapping(value = "/roles", method = RequestMethod.POST)
+    @RequestMapping(value = "/roles")
     @ResponseBody
     public Message roles(HttpServletRequest request){
         Member member = memberService.getCurrent();

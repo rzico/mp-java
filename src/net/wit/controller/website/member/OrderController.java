@@ -171,6 +171,9 @@ public class OrderController extends BaseController {
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
+			if (product.getIsLowStock(quantity)) {
+				return Message.error("库存不足");
+			}
 		}
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
 
