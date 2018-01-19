@@ -52,14 +52,14 @@ public class BrowseUtil {
 
 	public final static String OTHER = "其它";
 
-	public static String checkBrowse(String userAgent) {
-		if (regex(WEIXIN, userAgent))
-			return WEIXIN;
-		return OTHER;
-	}
-	
+	public final static String ALIPAY = "AlipayClient";
+
 	public static  Boolean isWeixin(String userAgent) {
 		return regex(WEIXIN, userAgent);
+	}
+
+	public static  Boolean isAlipay(String userAgent) {
+		return regex(ALIPAY, userAgent);
 	}
 
 	public static boolean regex(String regex, String str) {
