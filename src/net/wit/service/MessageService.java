@@ -39,6 +39,8 @@ public interface MessageService extends BaseService<Message, Long> {
 	public Boolean reviewPushTo(ArticleReview review);
 	//添加好友
 	public Boolean addFriendPushTo(Member member,Member friend);
+	//发展成员提醒
+	public Boolean addPromoterPushTo(Member member,Member promoter);
 	//同意好友
 	public Boolean adoptFriendPushTo(Member member,Member friend);
 	public void login(Member member,HttpServletRequest request);

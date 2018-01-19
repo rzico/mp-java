@@ -56,4 +56,8 @@ public interface MemberService extends BaseService<Member, Long> {
 	//支付插件专用方法
 	public void refunds(Member member, Refunds refunds) throws Exception;
 
+
+	//发展成员
+	public void create(Member member, Member promoter) throws Exception;
+
 }

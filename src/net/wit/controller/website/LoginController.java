@@ -327,6 +327,7 @@ public class LoginController extends BaseController {
 
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+
             member.setLoginDate(new Date());
             String userAgent = request.getHeader("user-agent");
             if (userAgent!=null) {
@@ -339,11 +340,13 @@ public class LoginController extends BaseController {
 
             if (member.getPromoter()==null && !"#".equals(bindUser.getUnionId())) {
                 if (xuid!=null) {
-                    member.setPromoter(memberService.find(xuid));
+                    Member promoter = memberService.find(xuid);
+                    member.setPromoter(promoter);
                 }
             }
 
             memberService.save(member);
+
             return "redirect:"+mState;
         } catch (Exception e) {
             e.printStackTrace();
