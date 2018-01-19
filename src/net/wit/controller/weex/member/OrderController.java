@@ -107,6 +107,10 @@ public class OrderController extends BaseController {
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
+		Admin admin = adminService.findByMember(member);
+		if (admin!=null && admin.getEnterprise()!=null) {
+			member = admin.getEnterprise().getMember();
+		}
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("seller", Filter.Operator.eq,member));
 		pageable.setFilters(filters);
