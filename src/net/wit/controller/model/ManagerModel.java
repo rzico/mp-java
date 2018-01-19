@@ -114,6 +114,7 @@ public class ManagerModel extends BaseModel implements Serializable {
             }
         }
         this.useCashier = false;
+
     }
 
 }
