@@ -302,7 +302,7 @@ public class ArticleController extends BaseController {
             return Message.error("无效文章编号");
         }
         String sn="1001";
-        if (article.getTemplate()==null) {
+        if (article.getTemplate()!=null) {
            sn = article.getTemplate().getSn();
         }
         return Message.success((Object)sn,"发布成功");

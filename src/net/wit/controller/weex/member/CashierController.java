@@ -75,6 +75,9 @@ public class CashierController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通收银台");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Shop shop = admin.getShop();
         if (admin.isRole("1")) {
             shop = null;
@@ -115,6 +118,9 @@ public class CashierController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通收银台");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         PayBill payBill = new PayBill();
         payBill.setType(PayBill.Type.cashier);

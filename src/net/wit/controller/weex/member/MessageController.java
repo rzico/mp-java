@@ -129,7 +129,7 @@ public class MessageController extends BaseController {
             url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.share)) {
-            url = "file://view/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/article/preview.js?articleId="+message.getId()+"&publish=true";
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.message)) {
             url = "file://view/topic/index.js?id="+message.getMember().getId();

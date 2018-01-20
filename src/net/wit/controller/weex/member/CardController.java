@@ -119,6 +119,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Card card = cardService.find(id);
         if (card==null) {
             return Message.error("无效卡号");
@@ -154,6 +157,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Card card = cardService.find(code);
         if (card==null) {
             return Message.error("无效卡号");
@@ -184,6 +190,9 @@ public class CardController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Card card = cardService.find(id);
         if (card==null) {
@@ -267,6 +276,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通收银台");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Shop shop = admin.getShop();
         if (shop==null) {
             return Message.error("没有分配门店");
@@ -328,6 +340,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通收银台");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Shop shop = admin.getShop();
         if (shop==null) {
             return Message.error("没有分配门店");
@@ -388,6 +403,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Shop shop = admin.getShop();
         if (shop==null) {
             return Message.error("没有分配门店");
@@ -429,6 +447,9 @@ public class CardController extends BaseController {
         Enterprise enterprise = admin.getEnterprise();
         if (enterprise==null) {
             return Message.error("没有开通店铺");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Member owner = enterprise.getMember();
         if (owner.getTopic()==null) {
