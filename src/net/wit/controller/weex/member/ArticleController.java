@@ -67,6 +67,12 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleLaudServiceImpl")
     private ArticleLaudService articleLaudService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
+
     /**
      *  文章列表,带分页
      */
@@ -242,6 +248,13 @@ public class ArticleController extends BaseController {
         article.setIsDraft(false);
         article.setIsPublish(true);
         articleService.update(article);
+
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("follow", Filter.Operator.eq,article.getMember()));
+        List<MemberFollow> data = memberFollowService.findList(null,null,filters,null);
+        for (MemberFollow follow:data) {
+           messageService.publishPushTo(article,follow.getMember());
+        }
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
         return Message.success(entityModel,"保存成功");

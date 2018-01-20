@@ -426,6 +426,22 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		return pushTo(msg);
 	}
 
+	//发布提醒
+	public Boolean publishPushTo(Article article,Member receiver) {
+		Setting setting = SettingUtils.get();
+		Message msg = new Message();
+		msg.setMember(article.getMember());
+		msg.setReceiver(receiver);
+		msg.setType(Message.Type.share);
+		msg.setThumbnial(article.getMember().getLogo());
+		msg.setTitle("【"+article.getMember().getNickName()+"】刚发布了一篇新文章");
+		msg.setContent("【"+article.getMember().getNickName()+"】刚发布了一篇新文章:"+article.getTitle());
+		ArticleListModel ext = new ArticleListModel();
+		ext.bind(article);
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
 	//关注提醒
 	public Boolean followPushTo(MemberFollow follow) {
 		Message msg = new Message();
