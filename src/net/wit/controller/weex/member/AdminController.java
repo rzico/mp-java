@@ -137,6 +137,9 @@ public class AdminController extends BaseController {
             adminMember.setShop(shop);
         }
         if (roleId!=null) {
+            if (adminMember.isOwner()) {
+                return Message.error("店主不能设置角色");
+            }
             Role role = roleService.find(roleId);
             List<Role> roles = adminMember.getRoles();
             if (roles==null) {

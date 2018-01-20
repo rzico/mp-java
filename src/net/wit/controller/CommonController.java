@@ -47,11 +47,6 @@ public class CommonController extends BaseController {
 	@RequestMapping(value = "/resource_not_found.jhtml", method = RequestMethod.GET)
 	public String resource_not_found(HttpServletRequest request,HttpServletResponse response) {
 		response.setStatus(200);
-		try {
-			response.sendError(200);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return "forward:/index.html";
 	}
 

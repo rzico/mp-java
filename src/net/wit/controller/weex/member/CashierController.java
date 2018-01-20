@@ -76,13 +76,12 @@ public class CashierController extends BaseController {
             return Message.error("没有开通收银台");
         }
         Shop shop = admin.getShop();
-        if (shop==null) {
-            if (!admin.isOwner()) {
-                return Message.error("没分配门店");
-            }
+        if (admin.isRole("1")) {
+            shop = null;
         }
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
-        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
+
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
+        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
         if (shop!=null) {
             model.setShopId(shop.getId());
