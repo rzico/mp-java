@@ -8,6 +8,7 @@ import net.wit.entity.Article;
 import net.wit.service.AreaService;
 import net.wit.service.ArticleService;
 import net.wit.service.RSAService;
+import net.wit.service.WeixinUpService;
 import net.wit.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,8 @@ public class CommonController extends BaseController {
 	private AreaService areaService;
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
+	@Resource(name = "weixinUpServiceImpl")
+	private WeixinUpService weixinUpService;
 
 	/**
 	 * 404页面
@@ -73,4 +76,23 @@ public class CommonController extends BaseController {
 		return "/common/article";
 	}
 
+	/**
+	 * 测试群发图文信息
+	 */
+
+	@RequestMapping(value = "/ttaa.jhtml", method = RequestMethod.GET)
+	public String upload(ModelMap model,HttpServletRequest request, HttpServletResponse response) {
+
+		Article article = articleService.find(222L);
+		ArticleModel m = new ArticleModel();
+		m.bind(article);
+		Long[] l=new Long[4];
+		l[0]=367l;
+		l[1]=368l;
+		l[2]=369l;
+		l[3]=370l;
+		weixinUpService.ArticleUpLoad(l);
+		model.addAttribute("articles",m.getTemplates());
+		return "/common/article";
+	}
 }
