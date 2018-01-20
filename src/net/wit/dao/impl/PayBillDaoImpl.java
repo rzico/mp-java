@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Enterprise;
 import net.wit.entity.Payment;
 import net.wit.entity.Shop;
 import net.wit.entity.summary.PayBillShopSummary;
@@ -63,12 +64,15 @@ public class PayBillDaoImpl extends BaseDaoImpl<PayBill, Long> implements PayBil
 		return super.findPage(criteriaQuery,pageable);
 	}
 
-	public List<PayBillShopSummary> sumPage(Shop shop,Date beginDate,Date endDate) {
+	public List<PayBillShopSummary> sumPage(Shop shop, Enterprise enterprise, Date beginDate, Date endDate) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		String shopWhr = "";
 		if (shop!=null) {
 			shopWhr = " and paybill.shop=:shop ";
+		}
+		if (enterprise!=null) {
+			shopWhr = shopWhr + " and paybill.enterprise=:enterprise ";
 		}
 
 		String jpql =
@@ -82,6 +86,9 @@ public class PayBillDaoImpl extends BaseDaoImpl<PayBill, Long> implements PayBil
 				setParameter("e", e);
 		if (shop!=null) {
 			query.setParameter("shop",shop);
+		}
+		if (enterprise!=null) {
+			query.setParameter("enterprise",enterprise);
 		}
 
 		List result = query.getResultList();

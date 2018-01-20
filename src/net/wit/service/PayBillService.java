@@ -29,5 +29,5 @@ public interface PayBillService extends BaseService<PayBill, Long> {
 	 * @param endDate
 	 * @return Page<PayBill>
 	 */
-	List<PayBillShopSummary> sumPage(Shop shop,Date beginDate,Date endDate);
+	List<PayBillShopSummary> sumPage(Shop shop,Enterprise enterprise,Date beginDate,Date endDate);
 }

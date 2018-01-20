@@ -59,6 +59,7 @@ public class ManagerController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
         ManagerModel model =new ManagerModel();
         model.bind(member);
 

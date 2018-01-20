@@ -111,9 +111,6 @@ public class PasswordController extends BaseController {
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         Member member =memberService.getCurrent();
         try {
-            if (!member.getMobile().equals(safeKey.getKey())) {
-                return Message.error("无效验证码");
-            }
             String captcha = rsaService.decryptParameter("captcha", request);
             rsaService.removePrivateKey(request);
             if (member==null) {
