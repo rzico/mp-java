@@ -135,7 +135,9 @@ public class PayBillController extends BaseController {
         List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
         List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
-        model.setShopId(shop.getId());
+        if (shop!=null) {
+            model.setShopId(shop.getId());
+        }
         model.setToday(BigDecimal.ZERO);
         model.setYesterday(BigDecimal.ZERO);
         for (PayBillShopSummary s:dsum) {
