@@ -112,6 +112,14 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.hasFavorite = hasFavorite;
     }
 
+    public Long getShare() {
+        return share;
+    }
+
+    public void setShare(Long share) {
+        this.share = share;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.hits = article.getHits();

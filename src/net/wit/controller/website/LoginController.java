@@ -283,10 +283,6 @@ public class LoginController extends BaseController {
             member.setLoginFailureCount(0);
             member.setRegisterIp(request.getRemoteAddr());
 
-            if (xuid!=null) {
-                member.setPromoter(memberService.find(xuid));
-            }
-
             memberService.save(member);
 
         } else {
@@ -299,10 +295,12 @@ public class LoginController extends BaseController {
             memberService.update(member);
         }
         try {
+
             bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
             if (unionId==null) {
                 unionId = "#";
             }
+
             if (bindUser==null) {
                 bindUser = new BindUser();
                 bindUser.setAppId(bundle.getString("weixin.appid"));
@@ -318,7 +316,6 @@ public class LoginController extends BaseController {
             }
             bindUserService.save(bindUser);
 
-
             Cart cart = cartService.getCurrent();
             if (cart != null) {
                 if (cart.getMember() == null) {
@@ -330,6 +327,7 @@ public class LoginController extends BaseController {
 
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+
             member.setLoginDate(new Date());
             String userAgent = request.getHeader("user-agent");
             if (userAgent!=null) {
@@ -339,7 +337,16 @@ public class LoginController extends BaseController {
                     member.setScene(userAgent.substring(0, 250));
                 }
             }
+
+            if (member.getPromoter()==null && !"#".equals(bindUser.getUnionId())) {
+                if (xuid!=null) {
+                    Member promoter = memberService.find(xuid);
+                    member.setPromoter(promoter);
+                }
+            }
+
             memberService.save(member);
+
             return "redirect:"+mState;
         } catch (Exception e) {
             e.printStackTrace();
@@ -364,6 +371,8 @@ public class LoginController extends BaseController {
             logger.debug(e.getMessage());
             mState = "";
         }
+//        System.out.println(mState);
+//        System.out.println(auth_code);
         try {
             AccessToken token = AlipayUtil.getOauth2AccessToken(auth_code);
             if (token!=null) {

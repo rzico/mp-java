@@ -584,4 +584,12 @@ public class Article extends BaseEntity{
             return str.substring(0,100);
         }
     }
+
+    public MapEntity getMapIsAudit() {
+        if ((getId() != null)&&(getIsAudit() != null)) {
+            return new MapEntity(getId().toString(), getIsAudit().toString());
+        } else {
+            return null;
+        }
+    }
 }

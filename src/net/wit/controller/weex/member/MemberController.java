@@ -79,6 +79,33 @@ public class MemberController extends BaseController {
         return Message.bind(model,request);
    }
 
+
+    /**
+     * 获取权限
+     */
+    @RequestMapping(value = "/roles")
+    @ResponseBody
+    public Message roles(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        String s = "";
+        if (admin==null) {
+            s = "1";
+        } else {
+            if (admin.isOwner()) {
+               s = "1";
+            } else {
+                for (Role role:admin.getRoles()) {
+                    s = s.concat(role.getId().toString());
+                }
+            }
+        }
+        return Message.success((Object) s,"获取成功");
+    }
+
     /**
      * 获取会员属性
      */

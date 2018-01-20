@@ -112,8 +112,8 @@
                 <th class="text-r">所属企业：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
-                        <input type="hidden" class="input-text" value="" placeholder="" id="enterprise" name="enterprise">
-                        <input type="text" class="input-text" value="" placeholder="" id="enterprisetext" name="enterprisetext">
+                        <input type="hidden" class="input-text" value="" placeholder="" id="enterpriseId" name="enterpriseId">
+                        <input type="text" class="input-text" value="" placeholder="" id="enterprisetext" name="enterprisetext" readonly="readonly" style="background-color:#E6E6FA">
                     </div>
                 </td>
             </tr>
@@ -127,8 +127,8 @@
                 <th class="text-r">所属店主：</th>
                 <td>
                     <div class="formControls col-xs-8 col-sm-7">
-                        <input type="hidden" class="input-text" value="" placeholder="" id="owner" name="owner">
-                        <input type="text" class="input-text" value="" placeholder="" id="ownertext" name="ownertext">
+                        <input type="hidden" class="input-text" value="" placeholder="" id="ownerId" name="ownerId">
+                        <input type="text" class="input-text" value="" placeholder="" id="ownertext" name="ownertext" readonly="readonly" style="background-color:#E6E6FA">
                     </div>
                 </td>
             </tr>
@@ -152,7 +152,7 @@
                     <div class="formControls col-xs-8 col-sm-12">
                         <!-- input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince" -->
                         <span class="select-box">
-                            <select class="select" style="background-color: #FFFFFF" id="cardProvince" name="cardProvince">
+                            <select class="select" style="background-color: #FFFFFF" id="cardProvince" name="cardProvince" onchange="changeCity(1)">
                                 [#if provinces??]
                                     <option value="">请选择</option>
                                     [#list provinces as province]
@@ -168,7 +168,7 @@
                     <div class="formControls col-xs-8 col-sm-7">
                         <!-- input type="text" class="input-text" value="" placeholder="" id="province" name="province"-->
                         <span class="select-box">
-                            <select class="select" style="background-color: #FFFFFF" id="province" name="province">
+                            <select class="select" style="background-color: #FFFFFF" id="province" name="province" onchange="changeCity(2)">
                                 [#if provinces??]
                                     <option value="">请选择</option>
                                     [#list provinces as province]
@@ -189,9 +189,6 @@
                             <select class="select" style="background-color: #FFFFFF" id="cardCity" name="cardCity">
                             [#if citys??]
                                 <option value="">请选择</option>
-                                [#list citys as city]
-                                    <option value="${city.id}">${city.name}</option>
-                                [/#list]
                             [/#if]
                             </select>
                         </span>
@@ -205,12 +202,8 @@
                             <select class="select" style="background-color: #FFFFFF" id="city" name="city">
                                 [#if citys??]
                                     <option value="">请选择</option>
-                                    [#list citys as city]
-                                        <option value="${city.id}">${city.name}</option>
-                                    [/#list]
                                 [/#if]
                             </select>
-
                         </span>
                     </div>
                 </td>
@@ -252,6 +245,15 @@
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
         <script type="text/javascript">
+            var $citys = [
+            [#list citys as city]
+                [#if city_index == 0]
+                    {id:"${city.id}",name:"${city.name}"}
+                [#else]
+                    ,{id:"${city.id}",name:"${city.name}"}
+                [/#if]
+            [/#list]
+            ]
             $(function(){
                 var $submit = $(":submit");
 
@@ -263,9 +265,6 @@
 
                 $("#form-add").validate({
                     rules:{
-                        brokerage:{
-                            required:true,
-                        },
                         merchantName:{
                             required:true,
                         },
@@ -284,7 +283,6 @@
                             type: 'post',
                             url: "${base}/admin/merchant/save.jhtml" ,
                             beforeSend: function() {
-                                alert(1);
                                $submit.prop("disabled", true);
                             },
                             success: function(message){
@@ -332,10 +330,10 @@
                                 $("#branchBankName").val(data.data.bankname);
                                 $("#cardNo").val(data.data.cardno);
                                 $("#address").val(data.data.address);
-                                $("#enterprise").val(data.data.enterpriseid);
+                                $("#enterpriseId").val(data.data.enterpriseid);
                                 $("#enterprisetext").val(data.data.enterprisename);
-                                $("#owner").val(data.data.shopid);
-                                $("#ownertext").val(data.data.shopname);
+                                $("#ownerId").val(data.data.memberid);
+                                $("#ownertext").val(data.data.membername);
 
                                 layer.msg('调取成功!',{icon:16,time:1000});
                             }else{
@@ -349,6 +347,37 @@
                     });
                 });
             }
+
+            function changeCity(id){
+                var selectid;
+                var select_html;
+                var objs = eval($citys);
+                var $c;
+                if(id == 1){
+                    selectid = $("#cardProvince option:selected") .val();
+                    $c = $("#cardCity");
+                    $c.html("");
+                    objs.forEach(function(item){
+                        if(item.id.substr(0,2) == selectid){
+                            select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
+                        }
+                    })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
+                } else {
+                    selectid = $("#province option:selected") .val();
+                    $c = $("#city");
+                    $c.html("");
+                    objs.forEach(function(item){
+                        if(item.id.substr(0,2) == selectid){
+                            select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
+                        }
+                    })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
+                }
+            }
+
         </script>
 </body>
 </html>

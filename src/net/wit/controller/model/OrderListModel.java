@@ -6,6 +6,7 @@ import net.wit.entity.OrderItem;
 import net.wit.entity.Product;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +41,15 @@ public class OrderListModel extends BaseModel implements Serializable {
 
     /**  状态描述 */
     private String status;
+
+    /**  订单金额 */
+    private Integer quantity;
+
+    /**  订单金额 */
+    private BigDecimal amount;
+
+    /**  收货人 */
+    private String consignee;
 
     /** 商品 */
     private List<OrderItemModel> orderItems;
@@ -132,6 +142,30 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.sellerName = sellerName;
     }
 
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -153,7 +187,9 @@ public class OrderListModel extends BaseModel implements Serializable {
 
         this.orderItems = OrderItemModel.bindList(order.getOrderItems());
 
-
+        this.amount = order.getAmount();
+        this.quantity = order.getQuantity();
+        this.consignee = order.getConsignee();
 
     }
 

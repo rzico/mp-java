@@ -1,5 +1,6 @@
 package net.wit.entity;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
@@ -270,4 +271,25 @@ public class Merchant extends BaseEntity {
     public void setMerchantNo(String merchantNo) {
         this.merchantNo = merchantNo;
     }
+
+    public MapEntity getMapEnterprise(){
+        if (getEnterprise() != null){
+            return new MapEntity(getEnterprise().getId().toString(),getEnterprise().getName());
+        }else{
+            return null;
+        }
+    }
+
+    public MapEntity getMapOwner(){
+        if (getOwner() != null){
+            if (getOwner().getName() != null){
+                return new MapEntity(getOwner().getId().toString(), getOwner().getName());
+            }else{
+                return new MapEntity(getOwner().getId().toString(), getOwner().getNickName());
+            }
+        }else{
+            return null;
+        }
+    }
+
 }

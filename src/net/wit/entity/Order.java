@@ -1050,9 +1050,9 @@ public class Order extends BaseEntity {
 						d = d.add(orderItem.calcPercent1());
 						if (getPromoter().getPromoter()!=null) {
 							d = d.add(orderItem.calcPercent2());
-						}
-						if (getPromoter().getPromoter().getPromoter()!=null) {
-							d = d.add(orderItem.calcPercent3());
+							if (getPromoter().getPromoter().getPromoter()!=null) {
+								d = d.add(orderItem.calcPercent3());
+							}
 						}
 					}
 				}

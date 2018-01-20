@@ -127,7 +127,7 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
         this.isReward = article.getIsReward();
         this.isExample = article.getIsExample();
         this.isTop = article.getIsTop();
-       ArticleCatalogModel articleCatalogModel = new ArticleCatalogModel();
+        ArticleCatalogModel articleCatalogModel = new ArticleCatalogModel();
         if (article.getArticleCatalog()!=null) {
             articleCatalogModel.setId(article.getArticleCatalog().getId());
             articleCatalogModel.setName(article.getArticleCatalog().getName());

@@ -121,9 +121,12 @@ public class PayBillController extends BaseController {
                break;
             }
         }
+
         if (card!=null) {
-            if (card.getBalance().compareTo(amount) > 0) {
-                cardDiscount = amount;
+            BigDecimal effice = payBill.getPayBillAmount();
+
+            if (card.getBalance().compareTo(effice) >= 0) {
+                cardDiscount = effice;
             } else {
                 card = null;
                 cardDiscount = BigDecimal.ZERO;

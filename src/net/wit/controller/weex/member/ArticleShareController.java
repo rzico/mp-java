@@ -77,4 +77,31 @@ public class ArticleShareController extends BaseController {
         return Message.success("分享成功");
    }
 
- }
+
+    /**
+     *   分享公众号
+     */
+    @RequestMapping(value = "/platform")
+    @ResponseBody
+    public Message platform(Long  articleId, ArticleShare.ShareType shareType, Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Article article = articleService.find(articleId);
+        if (article==null) {
+            return Message.error("无效文章 id");
+        }
+        ArticleShare share = new ArticleShare();
+        share.setIp(request.getRemoteAddr());
+        share.setMember(member);
+        share.setArticle(article);
+        share.setIsShow(true);
+        share.setShareType(shareType);
+        share.setAuthor(article.getMember());
+        articleShareService.save(share);
+        messageService.sharePushTo(share);
+        return Message.success("分享成功");
+    }
+
+}

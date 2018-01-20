@@ -152,7 +152,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,String memo) {
+	Message create(Long id,Integer quantity,Long receiverId,Long xuid,String memo) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -171,8 +171,11 @@ public class OrderController extends BaseController {
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
+			if (product.getIsLowStock(quantity)) {
+				return Message.error("库存不足");
+			}
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, null);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -295,7 +298,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 签收
 	 */
-	@RequestMapping(value = "/completed", method = RequestMethod.POST)
+	@RequestMapping(value = "/completed")
 	public @ResponseBody
 	Message completed(String sn) {
 		Member member = memberService.getCurrent();
@@ -306,7 +309,7 @@ public class OrderController extends BaseController {
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			try {
 				orderService.complete(order, null);
-				return Message.success("关闭成功");
+				return Message.success("签收成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());
 			}
@@ -323,12 +326,16 @@ public class OrderController extends BaseController {
 	Message shippRemind(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("sn订单无效");
+		}
 		OrderLog orderLog = new OrderLog();
 		orderLog.setOrder(order);
 		orderLog.setType(OrderLog.Type.shipping);
 		orderLog.setContent("请卖家尽快发货");
 		orderLog.setOperator(member.userId());
 		messageService.orderSellerPushTo(orderLog);
+
 		return Message.success("提醒成功");
 	}
 

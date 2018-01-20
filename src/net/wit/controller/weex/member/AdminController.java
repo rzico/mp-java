@@ -94,6 +94,11 @@ public class AdminController extends BaseController {
             if (r==null) {
                 return Message.error("就业状态，请先解除就业关系");
             }
+            try {
+                memberService.create(member,adminMember);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
             AdminModel model = new AdminModel();
             model.bind(r);
             return Message.success(model,"添加成功");

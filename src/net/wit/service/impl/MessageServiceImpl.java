@@ -153,6 +153,24 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		}
 	}
 
+	/**
+	 * 添加模版发送任务
+	 */
+	private void addWXTask(final String openId, final String first, final String OrderSn, final String OrderStatus,final String remark,final String url,final Date timeStamp) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String data = MessageManager.createOrderTempelete(openId,first,url,
+							OrderSn,OrderStatus,remark,formatter.format(timeStamp));
+					MessageManager.sendMsg(data);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Member GMInit(Message.Type type) {
 		String userName = "gm_"+String.valueOf(10200+type.ordinal());
 		Member sender = memberDao.findByUsername(userName);
@@ -271,6 +289,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		OrderListModel ext = new OrderListModel();
 		ext.bind(orderLog.getOrder());
 		msg.setExt(JsonUtils.toJson(ext));
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		BindUser bindUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("weixin.appid"), BindUser.Type.weixin);
+		if (bindUser!=null) {
+			String url = "http://"+bundle.getString("weixin.url")+"/order/details?sn="+orderLog.getOrder().getSn();
+			addWXTask(bindUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),msg.getContent(),url,msg.getCreateDate());
+		}
 		return pushTo(msg);
 	}
 
@@ -385,6 +409,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		}  else
 		if (share.getShareType().equals(ArticleShare.ShareType.browser)) {
 			shareDescr = "浏览器";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.platform)) {
+			shareDescr = "公众号";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.routine)) {
+			shareDescr = "小程序";
 		} else {
 			shareDescr = setting.getSiteName()+"好友";
 		}
@@ -460,6 +490,27 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setTitle(member.getNickName());
 		msg.setContent("【"+member.getNickName()+"】同意成为你的好友。");
 		return pushTo(msg);
+	}
+
+	//添加好友
+	public Boolean addPromoterPushTo(Member member,Member promoter) {
+		Message msg = new Message();
+		msg.setMember(member);
+		msg.setReceiver(promoter);
+		msg.setType(Message.Type.adoptfriend);
+		msg.setThumbnial(member.getLogo());
+		msg.setTitle(member.getNickName());
+		msg.setContent("您的新成员【"+member.getNickName()+"】添加你为好友。");
+		pushTo(msg);
+		Message adt = new Message();
+		adt.setMember(promoter);
+		adt.setReceiver(member);
+		adt.setType(Message.Type.adoptfriend);
+		adt.setThumbnial(promoter.getLogo());
+		adt.setTitle(promoter.getNickName());
+		adt.setContent("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
+		pushTo(adt);
+		return true;
 	}
 
 	//活动专栏

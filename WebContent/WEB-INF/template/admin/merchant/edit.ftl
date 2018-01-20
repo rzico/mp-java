@@ -32,163 +32,227 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
-        <input type="number" value="${data.id}" style="display:none" name="id">
-        [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经营地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.address}" placeholder="" id="address" name="address">
-            </div>
-        </div>
+        <table class="table table-border table-bordered table-bg mt-20">
+            <thead>
+            <tr>
+                <th colspan="4" scope="col">商户资料</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th class="text-r" width="10%">手机号：</th>
+                <td  width="30%" colspan="3">
+                    <div class="formControls col-xs-8 col-sm-9" >
+                        <input type="hidden" class="input-text" value="${data.id}" id="id" name="id">
+                        <input type="text" class="input-text" value="${data.phone}" placeholder="请输入手机号" id="phone" name="phone" width="30%" onkeypress="return event.keyCode>=48&&event.keyCode<=57" ng-pattern="/[^a-zA-Z]/">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r" width="10%">商户编号：</th>
+                <td width="30%">
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <input type="text" class="input-text" value="${data.merchantNo}" placeholder="系统自动生成" id="merchantNo" name="merchantNo" readonly="readonly" style="background-color:#E6E6FA">
+                    </div>
+                </td>
+                <th class="text-r" width="10%">行业类型：</th>
+                <td width="50%">
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="industryType" name="industryType" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="industryType" name="industryType">
+                            [#if categorys??]
+                                <option value="" >无</option>
+                                [#list categorys as category]
+                                    [#if data.industryType == "${category.id}"]
+                                        <option value="${category.id}" selected="selected">${category.name}</option>
+                                    [#else]
+                                        <option value="${category.id}">${category.name}</option>
+                                    [/#if]
+                                [/#list]
+                            [/#if]
+                            </select>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">商户名称：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <input type="text" class="input-text" value="${data.scompany}" placeholder="" id="scompany" name="scompany">
+                    </div>
+                </td>
+                <th class="text-r">商户姓名：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <input type="text" class="input-text" value="${data.merchantName}" placeholder="" id="merchantName" name="merchantName">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">营业执照：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <input type="text" class="input-text" value="${data.licenseNo}" placeholder="" id="licenseNo" name="licenseNo">
+                    </div>
+                </td>
+                <th class="text-r">身份证：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <input type="text" class="input-text" value="${data.idCard}" placeholder="" id="idCard" name="idCard">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">开户银行：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <input type="text" class="input-text" value="${data.bankName}" placeholder="" id="bankName" name="bankName">
+                    </div>
+                </td>
+                <th class="text-r">所属企业：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <input type="hidden" class="input-text" value="${data.mapEnterprise.id}" placeholder="" id="enterpriseId" name="enterpriseId">
+                        <input type="text" class="input-text" value="${data.mapEnterprise.name}" placeholder="" id="enterprisetext" name="enterprisetext" readonly="readonly" style="background-color:#E6E6FA">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">支行名称：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <input type="text" class="input-text" value="${data.branchBankName}" placeholder="" id="branchBankName" name="branchBankName">
+                    </div>
+                </td>
+                <th class="text-r">所属店主：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <input type="hidden" class="input-text" value="${data.mapOwner.id}" placeholder="" id="ownerId" name="ownerId">
+                        <input type="text" class="input-text" value="${data.mapOwner.name}" placeholder="" id="ownertext" name="ownertext" readonly="readonly" style="background-color:#E6E6FA">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">银行卡号：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <input type="text" class="input-text" value="${data.cardNo}" placeholder="" id="cardNo" name="cardNo">
+                    </div>
+                </td>
+                <th class="text-r">邮箱：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <input type="text" class="input-text" value="${data.email}" placeholder="" id="email" name="email">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">银行省份：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="cardProvince" name="cardProvince" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="cardProvince" name="cardProvince" onchange="changeCity(1)">
+                            [#if provinces??]
+                                <option value="">请选择</option>
+                                [#list provinces as province]
+                                    [#if data.cardProvince == "${province.id}"]
+                                        <option value="${province.id}" selected="selected">${province.name}</option>
+                                    [#else]
+                                        <option value="${province.id}">${province.name}</option>
+                                    [/#if]
+                                [/#list]
+                            [/#if]
+                            </select>
+                        </span>
+                    </div>
+                </td>
+                <th class="text-r">经营省份：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="province" name="province"-->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="province" name="province" onchange="changeCity(2)">
+                            [#if provinces??]
+                                <option value="">请选择</option>
+                                [#list provinces as province]
+                                    [#if data.province == "${province.id}"]
+                                        <option value="${province.id}" selected="selected">${province.name}</option>
+                                    [#else]
+                                        <option value="${province.id}">${province.name}</option>
+                                    [/#if]
+                                [/#list]
+                            [/#if]
+                            </select>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">银行城市：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-12">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="cardCity" name="cardCity" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="cardCity" name="cardCity">
+                            [#if citys?? && "${city.id}" != ""]
+                                <option value="">请选择</option>
+                                [#list citys as city]
+                                    [#if data.cardProvince == city.id?substring(0,2)]
+                                        [#if data.cardCity == "${city.id}"]
+                                            <option value="${city.id}" selected="selected">${city.name}</option>
+                                        [#else]
+                                            <option value="${city.id}">${city.name}</option>
+                                        [/#if]
+                                    [/#if]
+                                [/#list]
+                            [/#if]
+                            </select>
+                        </span>
+                    </div>
+                </td>
+                <th class="text-r">经营城市：</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-7">
+                        <!-- input type="text" class="input-text" value="" placeholder="" id="city" name="city" -->
+                        <span class="select-box">
+                            <select class="select" style="background-color: #FFFFFF" id="city" name="city">
+                            [#if citys?? && "${city.id}" != ""]
+                                <option value="">请选择</option>
+                                [#list citys as city]
+                                    [#if data.province == city.id?substring(0,2)]
+                                        [#if data.city == "${city.id}"]
+                                            <option value="${city.id}" selected="selected">${city.name}</option>
+                                        [#else]
+                                            <option value="${city.id}">${city.name}</option>
+                                        [/#if]
+                                    [/#if]
+                                [/#list]
+                            [/#if]
+                            </select>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-r">经营地址：</th>
+                <td colspan="3">
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="${data.address}" placeholder="" id="address" name="address">
+                    </div>
+                </td>
+            </tr>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">开户银行：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.bankName}" placeholder="" id="bankName" name="bankName">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">支行名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.branchBankName}" placeholder="" id="branchBankName" name="branchBankName">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">银行城市：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.cardCity}" placeholder="" id="cardCity" name="cardCity">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">银行卡号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.cardNo}" placeholder="" id="cardNo" name="cardNo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">银行省份：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.cardProvince}" placeholder="" id="cardProvince" name="cardProvince">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经营城市：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.city}" placeholder="" id="city" name="city">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="@" name="email" value="${data.email}" id="email">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">身份证：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.idCard}" placeholder="" id="idCard" name="idCard">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">行业类型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.industryType}" placeholder="" id="industryType" name="industryType">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">营业执照：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.licenseNo}" placeholder="" id="licenseNo" name="licenseNo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>商户姓名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.merchantName}" placeholder="" id="merchantName" name="merchantName">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商户编号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.merchantNo}" placeholder="" id="merchantNo" name="merchantNo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">手机号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.phone}" placeholder="" id="phone" name="phone">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经营省份：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.province}" placeholder="" id="province" name="province">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商户名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.scompany}" placeholder="" id="scompany" name="scompany">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">唯一标识：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.userId}" placeholder="" id="userId" name="userId">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Enterprise：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if enterprises??]
-				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
-                    [#list enterprises as enterprise]
-					<option[#if data.enterprise?? && enterprise.id == data.enterprise.id] selected[/#if] value="${enterprise.id}">${enterprise.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Owner：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if owners??]
-				<select name="ownerId" class="select" style="background-color: #FFFFFF">
-                    [#list owners as owner]
-					<option[#if data.owner?? && owner.id == data.owner.id] selected[/#if] value="${owner.id}">${owner.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
+            </tbody>
+        </table>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
             </div>
         </div>
-            [#else]
-            查找失败
-        [/#if]
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
@@ -205,6 +269,16 @@
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript">
+            var $citys = [
+            [#list citys as city]
+                [#if city_index == 0]
+                    {id:"${city.id}",name:"${city.name}"}
+                [#else]
+                    ,{id:"${city.id}",name:"${city.name}"}
+                [/#if]
+            [/#list]
+            ]
+
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -215,9 +289,6 @@
 
                 $("#form-update").validate({
                     rules:{
-                        brokerage:{
-                            required:true,
-                        },
                         merchantName:{
                             required:true,
                         },
@@ -259,6 +330,36 @@
                     }
                 });
             });
+
+            function changeCity(id){
+                var selectid;
+                var select_html;
+                var objs = eval($citys);
+                var $c;
+                if(id == 1){
+                    selectid = $("#cardProvince option:selected") .val();
+                    $c = $("#cardCity");
+                    $c.html("");
+                    objs.forEach(function(item){
+                        if(item.id.substr(0,2) == selectid){
+                            select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
+                        }
+                    })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
+                } else {
+                    selectid = $("#province option:selected") .val();
+                    $c = $("#city");
+                    $c.html("");
+                    objs.forEach(function(item){
+                        if(item.id.substr(0,2) == selectid){
+                            select_html = select_html + "<option value=\""+item.id+"\">"+item.name+"</option>";
+                        }
+                    })
+                    select_html = "<option value=\"\">请选择</option>" + select_html;
+                    $c.html(select_html);
+                }
+            }
         </script>
 </body>
 </html>

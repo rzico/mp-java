@@ -2,6 +2,7 @@
 package net.wit.controller.weex;
 
 import net.wit.Message;
+import net.wit.entity.Admin;
 import net.wit.entity.Area;
 import net.wit.entity.Member;
 import net.wit.entity.Redis;
@@ -49,6 +50,9 @@ public class CommonController extends BaseController {
 
 	@Resource(name = "rsaServiceImpl")
 	private RSAService rsaService;
+
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
@@ -116,7 +120,12 @@ public class CommonController extends BaseController {
 			menu.put("member", "file://view/member/index.js");
 		} else {
 			if (member!=null && member.getTopic()!=null && member.getTopic().getConfig()!=null && member.getTopic().getConfig().getUseCashier()) {
-				menu.put("home","file://view/shop/cashier/index.js?index=true");
+				Admin admin = adminService.findByMember(member);
+				if (admin!=null && admin.isRole("125")) {
+					menu.put("home", "file://view/shop/cashier/index.js?index=true");
+				} else  {
+					menu.put("home", "file://view/home/index.js");
+				}
 			} else {
 				menu.put("home", "file://view/home/index.js");
 			}

@@ -105,11 +105,13 @@ public class ProductController extends BaseController {
 		} else {
 			goods = goodsService.find(model.getId());
 		}
+
 		List<Product> products = new ArrayList<Product>();
 		int i = 0;
         for (Product product:goods.getProducts()) {
         	product.setDeleted(true);
 		}
+
 		for (ProductModel pm:model.getProducts()) {
 			Product product = null;
 			if (pm.getProductId()==null) {
@@ -128,6 +130,9 @@ public class ProductController extends BaseController {
 			if (model.getProductCategory()!=null && model.getProductCategory().getId()!=null) {
 				product.setProductCategory(productCategoryService.find(model.getProductCategory().getId()));
 			}
+			if (model.getDistribution()!=null && model.getDistribution().getId()!=null) {
+				product.setDistribution(distributionService.find(model.getDistribution().getId()));
+			}
 			product.setThumbnail(pm.getThumbnail());
 			product.setMarketPrice(pm.getPrice());
 			product.setPrice(pm.getPrice());
@@ -144,11 +149,6 @@ public class ProductController extends BaseController {
 			product.setMember(member);
 			product.setStock(pm.getStock());
 			product.setAllocatedStock(0);
-			if (pm.getDistribution()>0) {
-				product.setDistribution(distributionService.find(pm.getDistribution()));
-			} else {
-				product.setDistribution(null);
-			}
 			i = i+1;
 			product.setOrders(i);
 			if (i==1) {

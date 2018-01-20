@@ -29,40 +29,40 @@
         <tr>
             <th class="text-r" width="80">Id：</th>
             [#if enterprise.id??]
-            <td>${enterprise.id}</td>
+                <td>${enterprise.id}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="80">创建日期：</th>
             [#if enterprise.createDate??]
-            <td><span id="createDate">${enterprise.createDate}</span></td>
+                <td><span id="createDate">${enterprise.createDate}</span></td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="80">修改日期：</th>
             [#if enterprise.modifyDate??]
-            <td><span id="modifyDate">${enterprise.modifyDate}</span></td>
+                <td><span id="modifyDate">${enterprise.modifyDate}</span></td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="80">企业名称：</th>
             [#if enterprise.name??]
-            <td>${enterprise.name}</td>
+                <td>${enterprise.name}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="80">结算比例：</th>
             [#if enterprise.brokerage??]
-            <td>${enterprise.brokerage}</td>
+                <td>${enterprise.brokerage}</td>
             [/#if]
         </tr>
         <tr>
             <th class="text-r" width="80">类型：</th>
             [#if types??]
                 [#list types as type]
-                [#if type.id == enterprise.type]
-                    <td>${type.name}</td>
-                [/#if]
+                    [#if type.id == enterprise.type]
+                        <td>${type.name}</td>
+                    [/#if]
                 [/#list]
             [/#if]
         </tr>
@@ -70,36 +70,15 @@
             <th class="text-r" width="80">城市：</th>
             [#if types??]
                 [#list areas as area]
-                [#if area.id == enterprise.area]
-                    <td>${area.name}</td>
-                [/#if]
+                    [#if area.id == enterprise.area]
+                        <td>${area.name}</td>
+                    [/#if]
                 [/#list]
-            [/#if]
-        </tr>
-        <tr>
-            <th class="text-r" width="80">${TableComment}：</th>
-            [#if] enterprise.deleted??]
-            [#if enterprise.deleted == true]
-            <span class=\"label label-success radius\">是</span>
-            [#else]
-            <span class=\"label label-success radius\">否</span>
-            [/#if]
-        </tr>
-        <tr>
-            <th class="text-r" width="80">logo：</th>
-            [#if enterprise.logo??]
-            <td>${enterprise.logo}</td>
-            [/#if]
-        </tr>
-        <tr>
-            <th class="text-r" width="80">Member：</th>
-            [#if enterprise.member??]
-            <td>${enterprise.member}</td>
             [/#if]
         </tr>
 
         [#else]
-         没有查找到数据
+        没有查找到数据
         [/#if]
         </tbody>
     </table>

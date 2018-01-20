@@ -49,7 +49,9 @@ public class Friends extends BaseEntity {
 	public enum Type {
 
 		/** 好友 */
-		friend
+		friend,
+		/** 成员 */
+		leaguer
 	}
 
 	/** 状态 */

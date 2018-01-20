@@ -1,0 +1,10 @@
+测试地址：http://180.166.114.156:18082/scancode-pay-front/scanCodePay/applyScanCode
+
+商户号：1120130523134348001
+ 
+
+key:123456
+
+
+目前测试 智能测试微信扫码
+

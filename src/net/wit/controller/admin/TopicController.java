@@ -84,15 +84,15 @@ public class TopicController extends BaseController {
 		types.add(new MapEntity("student","学生"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("areas",areaService.findAll());
+		//model.addAttribute("areas",areaService.findAll());
 
-		model.addAttribute("categorys",categoryService.findAll());
+		//model.addAttribute("categorys",categoryService.findAll());
 
-		model.addAttribute("members",memberService.findAll());
+		//model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+		//model.addAttribute("tags",tagService.findList(Tag.Type.topic));
 
-		model.addAttribute("templates",templateService.findList(Template.Type.topic));
+		//model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
 		return "/admin/topic/list";
 	}
@@ -215,9 +215,9 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("categorys",categoryService.findAll());
 
-		model.addAttribute("members",memberService.findAll());
+		//model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+		//model.addAttribute("tags",tagService.findList(Tag.Type.topic));
 
 		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
@@ -234,6 +234,8 @@ public class TopicController extends BaseController {
     @ResponseBody
 	public Message update(Topic topic, Long areaId, Long templateId, Long memberId, Long categoryId){
 		Topic entity = topicService.find(topic.getId());
+
+		TopicConfig topicConfig = entity.getConfig();
 		
 		entity.setCreateDate(topic.getCreateDate());
 
@@ -251,14 +253,32 @@ public class TopicController extends BaseController {
 
 		entity.setType(topic.getType());
 
-		entity.setArea(areaService.find(areaId));
+		if(areaId != null){
+			entity.setArea(areaService.find(areaId));
+		}
 
-		entity.setCategory(categoryService.find(categoryId));
+		if(categoryId != null){
+			entity.setCategory(categoryService.find(categoryId));
+		}
 
-		entity.setMember(memberService.find(memberId));
+		if(memberId != null){
+			entity.setMember(memberService.find(memberId));
+		}
 
-		entity.setTemplate(templateService.find(templateId));
-		
+		if(templateId != null){
+			entity.setTemplate(templateService.find(templateId));
+		}
+
+		topicConfig.setAppetAppId(topic.getConfig().getAppetAppId());
+
+		topicConfig.setAppetAppSerect(topic.getConfig().getAppetAppSerect());
+
+		topicConfig.setWxAppId(topic.getConfig().getWxAppId());
+
+		topicConfig.setWxAppSerect(topic.getConfig().getWxAppSerect());
+
+		entity.setConfig(topicConfig);
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }

@@ -21,6 +21,17 @@
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
+    <style type="text/css">
+        .tr-10{
+            height: 10px;
+        }
+        .tr-30{
+            height: 30px;
+        }
+        .tr-20{
+            height: 20px;
+        }
+    </style>
 
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
@@ -32,115 +43,76 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true">
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
-            </div>
-        </div>
+        <table class="table table-border table-bordered table-striped radius">
+            <tr class="tr-30">
+                <th>
+                    <span class="c-red">*</span>商品名称：
+                </th>
+                <td>
+                    <input type="text" class="input-text" value="" placeholder="请输入商品名称" id="name" name="name">
+                </td>
+            </tr>
+            <tr class="tr-10"></tr>
+            <tr class="tr-20">
+                <th>
+                    单    位：
+                </th>
+                <td>
+                    <input type="text" class="input-text" value="" placeholder="个、件、袋等" id="unit" name="unit">
+                </td>
+            </tr>
+            <tr id="tableId" height="">
+                <table id="inner-1">
+                    <tr>
+                        <td width="30%" rowspan="3"></td>
+                        <th width="10%">规格</th>
+                        <td width="30%">
+                            <input type="text" class="input-text" value="" placeholder="规格1" id="spec1" name="spec1">
+                        </td>
+                        <td width="30%">
+                            <input type="text" class="input-text" value="" placeholder="规格2" id="spec2" name="spec2">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%">价格</th>
+                        <td width="30%" colspan="2">
+                            <input type="text" class="input-text" value="" placeholder="给商品定个好价格" id="spec2" name="spec2">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%">库存</th>
+                        <td width="30%"></td>
+                        <td width="30%"></td>
+                    </tr>
+                </table>
+            </tr>
+            <tr>
+                添加商品规格
+            </tr>
+            <tr>
+                <th>选择分类</th>
+                <td>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <span class="select-box">
+                            [#if productCategorys??]
+                                <select name="productCategoryId" class="select" style="background-color: #FFFFFF">
+                                    [#list productCategorys as productCategory]
+                                        <option value="${productCategory.id}">${productCategory.name}</option>
+                                    [/#list]
+                                </select>
+                            [/#if]
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>销售策略</th>
+                <td>
+                    <input type="text" class="input-text" value="" placeholder="设置你的专属销售策略" id="unit" name="unit">
+                </td>
+            </tr>
+        </table>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否列出：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isList" id="isList" value="true">
-                    <input type="hidden" name="_isList" value="false" />
-                    <label for="isList">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否上架：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isMarketable" id="isMarketable" value="true">
-                    <input type="hidden" name="_isMarketable" value="false" />
-                    <label for="isMarketable">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>赠送积分：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="point" value="" placeholder="" id="point" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="sn" name="sn">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">规格：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="spec" name="spec">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>单位：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="unit" name="unit">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>重量：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="weight" value="" placeholder="" id="weight" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if goodss??]
-				<select name="goodsId" class="select" style="background-color: #FFFFFF">
-                    [#list goodss as goods]
-					<option value="${goods.id}">${goods.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">分类：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if productCategorys??]
-				<select name="productCategoryId" class="select" style="background-color: #FFFFFF">
-                    [#list productCategorys as productCategory]
-					<option value="${productCategory.id}">${productCategory.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩略图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="thumbnial" name="thumbnial">
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -191,28 +163,9 @@
                         price:{
                             required:true,
                         },
-                        sn:{
-                            required:true,
-                        },
                         unit:{
                             required:true,
                         },
-                        vip1price:{
-                            required:true,
-                        },
-                        vip2price:{
-                            required:true,
-                        },
-                        vip3price:{
-                            required:true,
-                        },
-                        weight:{
-                            required:true,
-                        },
-                        thumbnial:{
-                            required:true,
-                        },
-
                     },
                     onkeyup:false,
                     focusCleanup:true,

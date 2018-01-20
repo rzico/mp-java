@@ -53,6 +53,9 @@ public class OrderController extends BaseController {
 	@Resource(name = "refundsServiceImpl")
 	private RefundsService refundsService;
 
+	@Resource(name = "enterpriseServiceImpl")
+	private EnterpriseService enterpriseService;
+
 	/**
 	 * 订单锁定
 	 */
@@ -104,6 +107,10 @@ public class OrderController extends BaseController {
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
+		Admin admin = adminService.findByMember(member);
+		if (admin!=null && admin.getEnterprise()!=null) {
+			member = admin.getEnterprise().getMember();
+		}
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("seller", Filter.Operator.eq,member));
 		pageable.setFilters(filters);
@@ -133,7 +140,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
@@ -174,7 +181,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
@@ -214,7 +221,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
@@ -258,7 +265,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
@@ -362,7 +369,7 @@ public class OrderController extends BaseController {
 
 		Admin admin = adminService.findByMember(member);
 		if (admin==null) {
-			return Message.error("不是店铺员工");
+			return Message.error("没有开通专栏");
 		}
 
 		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {

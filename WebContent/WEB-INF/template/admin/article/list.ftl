@@ -173,27 +173,27 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.authority",
+                    "mData": "authority",
                     "sTitle": "谁可见",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isPitch",
+                    "mData": "isPitch",
                     "sTitle": "精选",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isPublish",
+                    "mData": "isPublish",
                     "sTitle": "投稿",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isReview",
+                    "mData": "isReview",
                     "sTitle": "评论",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isReward",
+                    "mData": "isReward",
                     "sTitle": "赞赏",
                     "sClass": "center"
                 },
@@ -274,6 +274,16 @@
                     "aTargets": [3],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
                     }
                 },
                 {
@@ -375,16 +385,6 @@
                             return "<span class=\"label label-success radius\">是</span>";
                         } else {
                             return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [5],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
-                        }else{
-                            return "";
                         }
                     }
                 },
