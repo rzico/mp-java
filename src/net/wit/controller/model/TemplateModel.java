@@ -10,12 +10,23 @@ import java.util.List;
 
 public class TemplateModel extends BaseModel implements Serializable {
 
+    /** id */
+    private Long id;
+
     /** 缩例图 */
     private String sn;
     /** 名称 */
     private String name;
     /** 缩例图 */
     private String thumbnial;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getSn() {
         return sn;
@@ -42,6 +53,7 @@ public class TemplateModel extends BaseModel implements Serializable {
     }
 
     public void bind(Template template) {
+        this.id = template.getId();
         this.sn = template.getSn();
         this.name = template.getName();
         this.thumbnial = template.getThumbnial();

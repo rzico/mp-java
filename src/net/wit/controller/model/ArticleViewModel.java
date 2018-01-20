@@ -187,7 +187,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.templates = templates;
         this.votes = votes;
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://"+bundle.getString("weixin.url")+"/t"+article.getTemplate().getSn()+"?id="+article.getId();
+        if (article.getTemplate()==null) {
+            this.url = "http://" + bundle.getString("weixin.url") + "/t1001?id=" + article.getId();
+        } else {
+            this.url = "http://" + bundle.getString("weixin.url") + "/t" + article.getTemplate().getSn() + "?id=" + article.getId();
+        }
     }
 
 }
