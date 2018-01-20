@@ -28,13 +28,6 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
 
     public String ArticleUpLoad(Long[] ids){
-        //微信公众号所需信息  云店的
-//        String appID="wx88a1ec3b5c3bc9c3";
-//        String appsecret="f5e7d000d00788053c50ca6b3a442d20";
-
-        //魔篇公众号
-//        String appID="wx28aae2ea21682949";
-//        String appsecret="517e0c6ac7809c4dc1e10bc27e6d50f3";
 
         //测试号
         String appID="wxc6da7835649d7db6";
