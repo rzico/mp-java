@@ -42,12 +42,12 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         UpArticle upArticle=new UpArticle();
         List<Details> detailses=new ArrayList<>();
         //2.查找多篇文章 并对多篇文章进行群发前的上传处理
-        for(int i=0;i<ids.length;i++){
-            Article article=articleService.find(ids[i]);
+        List<Article>articles=articleService.findList(ids);
+        for(Article article:articles){
             ArticleModel m = new ArticleModel();
             m.bind(article);
-            if(article==null||m==null){
-                return null;
+            if(m==null){
+                continue;
             }
 
             //3.上传该图文的封面缩略图
@@ -136,25 +136,25 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         Details detail = ArticlePropa.UpNews(upArticle, accessToken.getToken());
 
         //8.1测试图文预览
-//        ArticlePropa.Preview("HitmanTsuna",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
-//        ArticlePropa.Preview("yk1398222319",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
+        ArticlePropa.Preview("HitmanTsuna",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
+        ArticlePropa.Preview("yk1398222319",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
 
         //8.2图文群发
-        TagPropa tagPropa=new TagPropa();
-        Filter filter =new Filter();
-        filter.setIs_to_all(true);
-        tagPropa.setFilter(filter);
-        //要发送的素材内容
-        Details mpnews=new Details();
-        mpnews.setMedia_id(detail.getMedia_id());
-        tagPropa.setMpnews(mpnews);
-        //群发的消息类型
-        tagPropa.setMsgtype("mpnews");
-        //图文消息被判定为转载时，是否继续群发
-        tagPropa.setSend_ignore_reprint("1");
-        //群发
-        ReturnJson returnJson=ArticlePropa.TagPropa(accessToken.getToken(),tagPropa);
-        System.out.println(returnJson.getMsg_id()+"-------"+returnJson.getErrcode());
+//        TagPropa tagPropa=new TagPropa();
+//        Filter filter =new Filter();
+//        filter.setIs_to_all(true);
+//        tagPropa.setFilter(filter);
+//        //要发送的素材内容
+//        Details mpnews=new Details();
+//        mpnews.setMedia_id(detail.getMedia_id());
+//        tagPropa.setMpnews(mpnews);
+//        //群发的消息类型
+//        tagPropa.setMsgtype("mpnews");
+//        //图文消息被判定为转载时，是否继续群发
+//        tagPropa.setSend_ignore_reprint("1");
+//        //群发
+//        ReturnJson returnJson=ArticlePropa.TagPropa(accessToken.getToken(),tagPropa);
+//        System.out.println(returnJson.getMsg_id()+"-------"+returnJson.getErrcode());
         return "success";
     }
 }
