@@ -67,9 +67,6 @@ public class ShopController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有点亮专栏");

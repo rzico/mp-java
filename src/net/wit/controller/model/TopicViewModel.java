@@ -6,6 +6,8 @@ import net.wit.entity.Topic;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 public class TopicViewModel extends BaseModel implements Serializable {
 
@@ -30,6 +32,8 @@ public class TopicViewModel extends BaseModel implements Serializable {
     private String autograph;
     /** 头像 */
     private String logo;
+    /** 地址 */
+    private String url;
     /** 状态 */
     private Friends.Status friendStatus;
     /** 标签 */
@@ -149,6 +153,14 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.friendStatus = friendStatus;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -168,5 +180,7 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.tags = TagModel.bindList(member.getTags());
         this.followed = false;
         this.setCatalogs(new ArrayList<ArticleCatalogModel>());
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        this.url = "http://" + bundle.getString("weixin.url") + "/c1001?id=" + member.getId()+"&xuid="+member.getId();
     }
 }
