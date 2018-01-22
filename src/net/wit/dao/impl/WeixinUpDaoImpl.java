@@ -27,14 +27,15 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
     ArticleService articleService;
 
 
-    public String ArticleUpLoad(Long[] ids){
+    public String ArticleUpLoad(Long[] ids,String appID,String appsecret){
 
         //测试号
 //        String appID="wxd570fe49cd2fcc9d";
 //        String appsecret="4f6a7438f0b632abdc7f6e58d07f026d";
 
-        String appID="wx88a1ec3b5c3bc9c3";
-        String appsecret="f5e7d000d00788053c50ca6b3a442d20";
+        //芸店
+//        String appID="wx88a1ec3b5c3bc9c3";
+//        String appsecret="f5e7d000d00788053c50ca6b3a442d20";
 
         //1.获取TOKEN
         AccessToken accessToken= WeixinApi.getAccessToken(appID,appsecret);

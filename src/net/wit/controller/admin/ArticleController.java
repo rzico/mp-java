@@ -433,7 +433,10 @@ public class ArticleController extends BaseController {
 	public @ResponseBody
 	Message Propaganda(Long[] ids){
 		try {
-			weixinUpService.ArticleUpLoad(ids);
+			//芸店公众号
+			String appID="wx88a1ec3b5c3bc9c3";
+			String appsecret="f5e7d000d00788053c50ca6b3a442d20";
+			weixinUpService.ArticleUpLoad(ids,appID,appsecret);
 			return Message.success("admin.delete.success");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -18,7 +18,7 @@ public class WeixinUpServiceImpl implements WeixinUpService {
 
     @Override
     @Transactional
-    public String ArticleUpLoad(Long[] ids){
-        return weixinUpDao.ArticleUpLoad(ids);
+    public String ArticleUpLoad(Long[] ids,String appID,String appsecret){
+        return weixinUpDao.ArticleUpLoad(ids,appID,appsecret);
     }
 }

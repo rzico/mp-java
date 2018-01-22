@@ -10,5 +10,5 @@ public interface WeixinUpDao {
      * @param ids 文章id 若不存在 返回NULL
      * @return
      */
-    String ArticleUpLoad(Long[] ids);
+    String ArticleUpLoad(Long[] ids,String appID,String appsecret);
 }
