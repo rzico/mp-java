@@ -79,6 +79,9 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通店铺");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         if (admin.isRole("1")) {
             shop = null;
         } else {
@@ -127,6 +130,9 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Shop shop = admin.getShop();
         if (admin.isRole("1")) {
             shop = null;
@@ -163,6 +169,9 @@ public class PayBillController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         if (admin.isRole("1")) {
             shop = null;
@@ -294,6 +303,9 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有绑定门店");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         if (!payBill.getShop().equals(admin.getShop())) {
             return Message.error("只能退本门店的单");
@@ -335,6 +347,9 @@ public class PayBillController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         if (shopId==null) {
             shop = admin.getShop();

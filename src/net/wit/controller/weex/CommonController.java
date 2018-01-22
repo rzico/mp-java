@@ -121,7 +121,7 @@ public class CommonController extends BaseController {
 		} else {
 			if (member!=null && member.getTopic()!=null && member.getTopic().getConfig()!=null && member.getTopic().getConfig().getUseCashier()) {
 				Admin admin = adminService.findByMember(member);
-				if (admin!=null && admin.isRole("125")) {
+				if (admin!=null && admin.isRole("125") && admin.getEnterprise()!=null) {
 					menu.put("home", "file://view/shop/cashier/index.js?index=true");
 				} else  {
 					menu.put("home", "file://view/home/index.js");

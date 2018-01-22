@@ -86,6 +86,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         Enterprise enterprise = admin.getEnterprise();
 
@@ -121,6 +124,9 @@ public class AdminController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
 
         Admin adminMember = adminService.find(id);
@@ -174,6 +180,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Enterprise enterprise = admin.getEnterprise();
 
         if (adminMember.isOwner()) {
@@ -206,6 +215,9 @@ public class AdminController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有点亮专栏");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Enterprise enterprise = admin.getEnterprise();
         List<Filter> filters = new ArrayList<Filter>();
