@@ -67,6 +67,9 @@ public class ArticleController extends BaseController {
 	@Resource(name = "occupationServiceImpl")
 	private OccupationService occupationService;
 
+	@Resource(name = "weixinUpServiceImpl")
+	private WeixinUpService weixinUpService;
+
 	/**
 	 * 主页
 	 */
@@ -422,6 +425,21 @@ public class ArticleController extends BaseController {
 		return "/admin/article/view/memberView";
 	}
 
+
+	/**
+	 * 文章推广
+	 */
+	@RequestMapping(value = "/propaganda", method = RequestMethod.POST)
+	public @ResponseBody
+	Message Propaganda(Long[] ids){
+		try {
+			weixinUpService.ArticleUpLoad(ids);
+			return Message.success("admin.delete.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.delete.error");
+		}
+	}
 
 
 }

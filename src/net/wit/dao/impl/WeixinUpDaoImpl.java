@@ -30,8 +30,11 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
     public String ArticleUpLoad(Long[] ids){
 
         //测试号
-        String appID="wxc6da7835649d7db6";
-        String appsecret="e3a9dcc14c13e0cab4e462a31bf57e98";
+//        String appID="wxd570fe49cd2fcc9d";
+//        String appsecret="4f6a7438f0b632abdc7f6e58d07f026d";
+
+        String appID="wx88a1ec3b5c3bc9c3";
+        String appsecret="f5e7d000d00788053c50ca6b3a442d20";
 
         //1.获取TOKEN
         AccessToken accessToken= WeixinApi.getAccessToken(appID,appsecret);
@@ -71,6 +74,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                     value = jsonObject.getString(key);
 //                    Details details1 = new Details();
 //                    //获取媒体类型   微信开发文档中写明会过滤外网URL 实际测试不会 微信服务器会把内容中的图文，图片等素材素材链接过滤掉
+//                    //后期微信更新时在修改 一下以下代码就可接着使用
 //                    if(key.equals("mediaType")){
 //                        if (!value.equals("")) {
 //                            type=value;
@@ -97,6 +101,9 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 //                            ++h;
 //                        }
 //                    }
+                    if(key.equals("url")&&value!=null&&value.equals("")){
+                        details.setContent_source_url(value);
+                    }
                     map.put(key, value);
                 }
                 contents.add(map);
@@ -109,7 +116,6 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             System.out.println(s);
 
             //6.添加图文素材上传信息
-            details.setContent_source_url("");
             details.setContent(s);
             details.setTitle(article.getTitle());
             details.setAuthor(article.getAuthor());
@@ -129,25 +135,25 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         Details detail = ArticlePropa.UpNews(upArticle, accessToken.getToken());
 
         //8.1测试图文预览
-        ArticlePropa.Preview("HitmanTsuna",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
-        ArticlePropa.Preview("yk1398222319",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
+//        ArticlePropa.Preview("HitmanTsuna",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
+//        ArticlePropa.Preview("yk1398222319",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
 
         //8.2图文群发
-//        TagPropa tagPropa=new TagPropa();
-//        Filter filter =new Filter();
-//        filter.setIs_to_all(true);
-//        tagPropa.setFilter(filter);
-//        //要发送的素材内容
-//        Details mpnews=new Details();
-//        mpnews.setMedia_id(detail.getMedia_id());
-//        tagPropa.setMpnews(mpnews);
-//        //群发的消息类型
-//        tagPropa.setMsgtype("mpnews");
-//        //图文消息被判定为转载时，是否继续群发
-//        tagPropa.setSend_ignore_reprint("1");
-//        //群发
-//        ReturnJson returnJson=ArticlePropa.TagPropa(accessToken.getToken(),tagPropa);
-//        System.out.println(returnJson.getMsg_id()+"-------"+returnJson.getErrcode());
+        TagPropa tagPropa=new TagPropa();
+        Filter filter =new Filter();
+        filter.setIs_to_all(true);
+        tagPropa.setFilter(filter);
+        //要发送的素材内容
+        Details mpnews=new Details();
+        mpnews.setMedia_id(detail.getMedia_id());
+        tagPropa.setMpnews(mpnews);
+        //群发的消息类型
+        tagPropa.setMsgtype("mpnews");
+        //图文消息被判定为转载时，是否继续群发
+        tagPropa.setSend_ignore_reprint("1");
+        //群发
+        ReturnJson returnJson=ArticlePropa.TagPropa(accessToken.getToken(),tagPropa);
+        System.out.println(returnJson.getMsg_id()+"-------"+returnJson.getErrcode());
         return "success";
     }
 }
