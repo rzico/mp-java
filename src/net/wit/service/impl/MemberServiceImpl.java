@@ -213,6 +213,10 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
        if (promoter==null) {
        	  return;
 	   }
+
+	   if (member.equals(promoter)) {
+       	  return;
+	   }
 	   Boolean isNew = false;
 
        Friends fds = friendsDao.find(promoter, member);
