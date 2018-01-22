@@ -84,4 +84,34 @@ public class ProductController extends BaseController {
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
 	}
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public @ResponseBody
+	Message search(Long authorId,Long productCategoryId,String keyword,Pageable pageable,HttpServletRequest request) {
+		Member member = memberService.find(authorId);
+		if (member==null) {
+			return Message.error("作者id无效");
+		}
+		ProductCategory productCategory = productCategoryService.find(productCategoryId);
+		List<Filter> filters = new ArrayList<Filter>();
+		if (productCategory!=null) {
+			filters.add(new Filter("productCategory", Filter.Operator.eq,productCategory));
+		}
+		if (keyword!=null) {
+			filters.add(Filter.like("name","%"+keyword+"%"));
+		}
+		filters.add(new Filter("member", Filter.Operator.eq,member));
+		filters.add(new Filter("isList", Filter.Operator.eq,true));
+		pageable.setFilters(filters);
+		pageable.setOrderDirection(Order.Direction.desc);
+		pageable.setOrderProperty("modifyDate");
+		Page<Product> page = productService.findPage(null,null,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(GoodsListModel.bindList(page.getContent()));
+		return Message.bind(model,request);
+	}
+
 }

@@ -180,9 +180,9 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			admin.setRoles(roles);
 			adminDao.persist(admin);
 		} else {
-			if (admin.getEnterprise()!=null) {
-				return null;
-			}
+//			if (admin.getEnterprise()!=null) {
+//				return null;
+//			}
 			admin.setEnterprise(enterprise);
 			admin.setShop(null);
 			adminDao.merge(admin);

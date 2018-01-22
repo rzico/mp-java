@@ -98,7 +98,7 @@ public class AdminController extends BaseController {
                 return Message.error("就业状态，请先解除就业关系");
             }
             try {
-                memberService.create(member,adminMember);
+                memberService.create(adminMember,member);
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
@@ -139,7 +139,6 @@ public class AdminController extends BaseController {
             if (shop == null) {
                 return Message.error("店铺id无效");
             }
-
             adminMember.setShop(shop);
         }
         if (roleId!=null) {
@@ -208,9 +207,6 @@ public class AdminController extends BaseController {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
-        }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
         }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {

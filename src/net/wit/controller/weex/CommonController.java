@@ -119,44 +119,20 @@ public class CommonController extends BaseController {
 			menu.put("message","file://view/message/list.js");
 			menu.put("member", "file://view/member/index.js");
 		} else {
-			if (member!=null && member.getTopic()!=null && member.getTopic().getConfig()!=null && member.getTopic().getConfig().getUseCashier()) {
+			if (member!=null) {
 				Admin admin = adminService.findByMember(member);
-				if (admin!=null && admin.isRole("125") && admin.getEnterprise()!=null) {
-					menu.put("home", "file://view/shop/cashier/index.js?index=true");
+				if (admin!=null && admin.getEnterprise()!=null) {
+					member = admin.getEnterprise().getMember();
+				}
+				if (member.getTopic()!=null && member.getTopic().getConfig()!=null && member.getTopic().getConfig().getUseCashier()) {
+					if (admin !=null && !admin.isRole("125")) {
+						menu.put("home", "file://view/home/index.js");
+					} else {
+						menu.put("home", "file://view/shop/cashier/index.js?index=true");
+					}
 				} else  {
 					menu.put("home", "file://view/home/index.js");
 				}
-			} else {
-				menu.put("home", "file://view/home/index.js");
-			}
-			menu.put("add", "file://view/member/editor/editor.js");
-			menu.put("friend", "file://view/friend/list.js");
-			menu.put("message","file://view/message/list.js");
-			menu.put("member", "file://view/member/index.js");
-		}
-		data.put("tabnav",menu);
-		return Message.bind(data,request);
-	}
-
-	/**
-	 * 页面路由
-	 */
-	@RequestMapping(value = "/json", method = RequestMethod.GET)
-	@ResponseBody
-	public Message json(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> data = new HashMap<>();
-		Map<String,String> menu = new HashMap<>();
-		Member member = memberService.getCurrent();
-		String ua = request.getHeader("user-agent");
-		if (ua.indexOf("V1")>0) {
-			menu.put("home","file://view/shop/cashier/index.js?index=true");
-			menu.put("add", "file://view/shop/card/add.js");
-			menu.put("friend", "file://view/shop/card/list.js");
-			menu.put("message","file://view/message/list.js");
-			menu.put("member", "file://view/member/index.js");
-		} else {
-			if (member!=null && member.getTopic()!=null && member.getTopic().getConfig()!=null && member.getTopic().getConfig().getUseCashier()) {
-				menu.put("home","file://view/shop/cashier/index.js?index=true");
 			} else {
 				menu.put("home", "file://view/home/index.js");
 			}
