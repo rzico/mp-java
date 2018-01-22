@@ -88,7 +88,7 @@ public class ArticleShareController extends BaseController {
      */
     @RequestMapping(value = "/platform",method = RequestMethod.GET)
     @ResponseBody
-    public Message platform(Long[]  articleIds, ArticleShare.ShareType shareType, Pageable pageable, HttpServletRequest request){
+    public Message platform(Long[]  articleId, ArticleShare.ShareType shareType, Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -128,12 +128,12 @@ public class ArticleShareController extends BaseController {
             return Message.error("您未绑定公众号");
         }
 
-        List<Article> articles=articleService.findList(articleIds);
+        List<Article> articles=articleService.findList(articleId);
         if(articles==null){
             return Message.error("文章ID无效");
         }
 
-        if(weixinUpService.ArticleUpLoad(articleIds,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect()).equals("success")){
+        if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect()).equals("success")){
             return Message.error("分享成功");
         }
         else{
