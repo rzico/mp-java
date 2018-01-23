@@ -72,17 +72,20 @@ public class PaymentController extends BaseController {
         Payment payment = paymentService.findBySn(sn);
         String userAgent = request.getHeader("user-agent");
         String type="weixin";
+        System.out.println(userAgent);
         if (BrowseUtil.isAlipay(userAgent)) {
-            type="weixin";
-        } else {
             type="alipay";
+        } else {
+            type="weixin";
         }
-        if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
-            type="cardPayPlugin";
-        } else
-        if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
-            type="balancePayPlugin";
+        if (payment.getPaymentPluginId()!=null) {
+            if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
+                type = "cardPayPlugin";
+            } else if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
+                type = "balancePayPlugin";
+            }
         }
+        System.out.println(type);
         return "redirect:/weixin/payment/view.html?psn="+sn+"&amount="+payment.getAmount()+"&type="+type;
     }
 
