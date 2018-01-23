@@ -537,6 +537,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setType(Message.Type.message);
 		msg.setTitle("活动专栏");
 		msg.setContent("【"+topic.getMember().getNickName()+"】感谢您点亮专栏，您已拥有VIP特权。");
+		Map<String,String> ext = new HashMap<String,String>();
+		ext.put("type","topic");
+		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
 
