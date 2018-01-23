@@ -293,7 +293,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		BindUser bindUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("weixin.appid"), BindUser.Type.weixin);
 		if (bindUser!=null) {
 			String url = "http://"+bundle.getString("weixin.url")+"/order/details?sn="+orderLog.getOrder().getSn();
-			addWXTask(bindUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),msg.getContent(),url,msg.getCreateDate());
+			addWXTask(bindUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),msg.getContent(),url,orderLog.getCreateDate());
 		}
 		return pushTo(msg);
 	}

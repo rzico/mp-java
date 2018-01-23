@@ -7,6 +7,7 @@ import net.wit.controller.model.ArticleReviewModel;
 import net.wit.controller.model.CardBillModel;
 import net.wit.controller.model.CardModel;
 import net.wit.entity.*;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plat.weixin.util.WeixinApi;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.*;
 
 
@@ -66,6 +69,52 @@ public class CardController extends BaseController {
 
     @Resource(name = "cardBillServiceImpl")
     private CardBillService cardBillService;
+
+
+    /**
+     * 我的账单
+     * id 会员
+     */
+    @RequestMapping(value = "/deposit", method = RequestMethod.GET)
+    public String deposit(Long id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member seller = memberService.find(id);
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+        }
+
+        Card card = null;
+        for (Card c:member.getCards()) {
+            if (c.getOwner().equals(seller)) {
+                card = c;
+                break;
+            }
+        }
+
+        return "redirect:/bill?id="+card.getId();
+    }
+
+    /**
+     * 去付款
+     * id 会员
+     */
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(Long id,String card_id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+        }
+
+        return "redirect:/member?id="+id+"&card_id="+card_id;
+    }
 
     /**
      *  我的会员卡

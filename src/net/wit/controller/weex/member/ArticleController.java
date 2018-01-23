@@ -281,6 +281,7 @@ public class ArticleController extends BaseController {
         }
         if (isTop!=null) {
             article.setIsTop(isTop);
+            edited = true;
         }
         if (!edited) {
             return Message.error("传参不正确");
