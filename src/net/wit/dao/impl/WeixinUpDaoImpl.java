@@ -9,13 +9,21 @@ import net.wit.plat.weixin.FormEntity.*;
 import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.plat.weixin.propa.ArticlePropa;
 import net.wit.plat.weixin.util.WeixinApi;
+import net.wit.plugin.StoragePlugin;
 import net.wit.service.ArticleService;
-import net.wit.service.impl.ArticleServiceImpl;
+import net.wit.service.PluginService;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Eric on 2018/1/15.
@@ -25,6 +33,10 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
     @Resource(name = "articleServiceImpl")
     ArticleService articleService;
+
+    @Resource(name = "pluginServiceImpl")
+    private PluginService pluginService;
+
 
 
     public String ArticleUpLoad(Long[] ids,String appID,String appsecret){
@@ -156,5 +168,93 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 //        ReturnJson returnJson=ArticlePropa.TagPropa(accessToken.getToken(),tagPropa);
 //        System.out.println(returnJson.getMsg_id()+"-------"+returnJson.getErrcode());
         return "success";
+    }
+
+    public StringBuffer DownArticle(String url) throws IOException {
+        StringBuffer stringBuffer = new StringBuffer();
+
+        try {
+            URL imgurl = new URL(url);
+            //打开链接
+            HttpURLConnection conn = (HttpURLConnection) imgurl.openConnection();
+            //设置请求方式为"GET"
+            conn.setRequestMethod("GET");
+            //超时响应时间为5秒
+            conn.setConnectTimeout(5 * 1000);
+            //通过输入流获取数据
+            InputStream inStream = conn.getInputStream();
+            //将输入流转换成字符输出高效流
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream,"UTF-8"));
+            while(bufferedReader.readLine()!=null){
+                stringBuffer.append(bufferedReader.readLine());
+            }
+            System.out.println(stringBuffer.toString().length());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //文字保存在<span>中 图片保存在<img>中 这些都是保存在<p>中
+        Pattern p = Pattern.compile("(<p(.*?)?>)(.*?)(</p>)");
+        Matcher m = p.matcher(stringBuffer);
+        StringBuffer stringBuffer1=new StringBuffer("[");
+        int h=0;
+        while(m.find()) {
+            String s=m.group();
+            //带有class的P标签都是微信自动生成的 不属于文本内容应过滤
+            if (s.contains("class")&&!s.contains("img")){
+                continue;
+            }else if(s.contains("<p class")){
+                continue;
+            }
+            //带有sction的标签也过滤掉，不属于文本内容，属于微信文章自动生成的文章标题属性等
+            //原文中的A标签超链接也过滤掉
+            if (s.contains("</sction>")||s.contains("</a>")){
+                continue;
+            }
+            //如果有图片
+            if (h!=0){
+                stringBuffer1.append(",");
+            }
+            if (s.contains("img")){
+                stringBuffer1.append("{\"mediaType\":\"image\",\"thumbnail\":\"\",\"original\":\"");
+                String[] str=s.split(" ");
+                for(int i=0;i<str.length;i++){
+                    if(str[i].contains("data-src")){
+                        //微信图片路径
+                        String surl=str[i].replace("data-src=\"","").replace("\"","");
+                        //说明这个图片是emoji表情,可以不用截取上传也能使用
+                        if(surl.contains("emoji")){
+                            stringBuffer1.append(surl);
+                            continue;
+                        }
+                        //图片格式
+                        String shz=str[i+1].replace("data-type=\"","").replace("\"","");
+                        //文件下载
+                        File file= ArticlePropa.UrlToFile(surl,shz);
+                        FileInputStream in_file = new FileInputStream(file);
+                        MultipartFile multi = new MockMultipartFile(System.currentTimeMillis()+"."+shz, in_file);
+                        StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                        String folder=sdf.format(System.currentTimeMillis());
+                        String filename= String.valueOf(System.currentTimeMillis()*1000000+System.nanoTime());
+                        String uppath="/upload/image/"+folder+"/"+filename+"."+shz;
+                        ossPlugin.upload(uppath,multi,ossPlugin.getMineType("."+shz));
+                        System.out.println(ossPlugin.getUrl(uppath));
+                        stringBuffer1.append(ossPlugin.getUrl(uppath));
+                    }
+                }
+                stringBuffer1.append("\",\"content\":\"\"}");
+                h++;
+                continue;
+            }
+            stringBuffer1.append("{\"mediaType\":\"html\",\"thumbnail\":\"\",\"original\":\"\",\"content\":\"");
+            stringBuffer1.append(s.replace("\"","\\\""));
+            stringBuffer1.append("\"}");
+            h++;
+//            System.out.println(m.group());
+        }
+        stringBuffer1.append("]");
+        System.out.println(stringBuffer1.toString().length());
+        System.out.println(stringBuffer1);
+        return stringBuffer1;
     }
 }

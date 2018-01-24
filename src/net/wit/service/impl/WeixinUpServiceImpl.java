@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by Eric on 2018/1/15.
@@ -20,5 +23,10 @@ public class WeixinUpServiceImpl implements WeixinUpService {
     @Transactional
     public String ArticleUpLoad(Long[] ids,String appID,String appsecret){
         return weixinUpDao.ArticleUpLoad(ids,appID,appsecret);
+    }
+
+    @Override
+    public StringBuffer DownArticle(String url) throws IOException {
+        return weixinUpDao.DownArticle(url);
     }
 }

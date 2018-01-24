@@ -1,5 +1,9 @@
 package net.wit.dao;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * Created by Eric on 2018/1/15.
  */
@@ -11,4 +15,6 @@ public interface WeixinUpDao {
      * @return
      */
     String ArticleUpLoad(Long[] ids,String appID,String appsecret);
+
+    StringBuffer DownArticle(String url) throws IOException;
 }
