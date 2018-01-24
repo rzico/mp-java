@@ -94,7 +94,7 @@ public class ShareModel extends BaseModel implements Serializable {
         if (shareType.equals(ArticleShare.ShareType.appWeex)) {
             this.url = "file://view/member/author.js?id=" + topic.getId();
         } else {
-            this.url = "http://"+bundle.getString("weixin.url")+"/c"+topic.getTemplate().getSn()+"?id="+topic.getMember().getId();
+            this.url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+topic.getMember().getId();
             if (member!=null) {
                 this.url = this.url + "&xuid="+member.getId();
             }
