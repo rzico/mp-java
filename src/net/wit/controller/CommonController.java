@@ -78,4 +78,15 @@ public class CommonController extends BaseController {
 		return "/common/article";
 	}
 
+	@RequestMapping(value = "downarticle")
+	public void upload(HttpServletRequest request,HttpServletResponse response) {
+		String url="https://mp.weixin.qq.com/s/_uy41vlKCzYW08WNTa9Ypw";
+
+		StringBuffer s=new StringBuffer();
+		try {
+			s.append(weixinUpService.DownArticle(url));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

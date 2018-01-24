@@ -134,7 +134,7 @@ public class ArticleShareController extends BaseController {
         }
 
         if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect()).equals("success")){
-            return Message.error("分享成功");
+            return Message.success("分享成功");
         }
         else{
             return Message.error("分享失败");
