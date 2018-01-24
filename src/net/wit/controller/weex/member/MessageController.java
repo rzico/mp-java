@@ -2,10 +2,12 @@ package net.wit.controller.weex.member;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.MessageModel;
 import net.wit.entity.*;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +39,9 @@ public class MessageController extends BaseController {
 
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
+
+    @Resource(name = "orderServiceImpl")
+    private OrderService orderService;
 
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
@@ -99,6 +104,7 @@ public class MessageController extends BaseController {
     @RequestMapping(value = "/go")
     @ResponseBody
     public Message go(Long id,HttpServletRequest request){
+        Member member = memberService.getCurrent();
         net.wit.entity.Message message = messageService.find(id);
         String url = "";
         if (message.getType().equals(net.wit.entity.Message.Type.account)) {
@@ -117,25 +123,40 @@ public class MessageController extends BaseController {
             url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.favorite)) {
-            url = "file://view/topic/index.js?id="+message.getMember().getId();
+            url = "file://view/article/preview.js?articleId="+message.getId()+"&publish=true";
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.adoptfriend)) {
             url = "file://view/topic/index.js?id="+message.getMember().getId();
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.addfriend)) {
-            url = "file://view/friend/add.js?id="+message.getMember().getId();
+            url = "file://view/friend/new.js";
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.order)) {
-            url = "file://view/topic/index.js?id="+message.getMember().getId();
+            net.wit.entity.Order order = orderService.find(message.getId());
+            if (order.getSeller().equals(member)) {
+                url = "file://view/shop/order/details.js?sn=" + order.getSn();
+            } else {
+                url = "";
+            }
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.share)) {
             url = "file://view/article/preview.js?articleId="+message.getId()+"&publish=true";
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.message)) {
-            url = "file://view/topic/index.js?id="+message.getMember().getId();
+            if (message.getExt()!=null) {
+                Map<String,String> data = JsonUtils.toObject(message.getExt(),Map.class);
+                if (data.get("type").equals("topic")) {
+                    url = "file://view/member/topic/index.js";
+                } else
+                if (data.get("type").equals("mobile")) {
+                    url = "file://view/member/mobile/index.js";
+                }
+            } else {
+                url = "";
+            }
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.cashier)) {
-            url = "file://view/shop/deposit/deposit.js?id="+message.getMember().getId();
+            url = "file://view/shop/deposit/deposit.js";
         } else {
             url = "";
         }

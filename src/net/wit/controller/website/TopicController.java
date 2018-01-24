@@ -80,6 +80,7 @@ public class TopicController extends BaseController {
                 return "redirect:"+MenuManager.codeUrlO2(redirectUrl);
             }
         }
+
         String template="1001";
         Topic topic = topicService.find(member);
         if (topic!=null) {

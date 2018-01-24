@@ -293,7 +293,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		BindUser bindUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("weixin.appid"), BindUser.Type.weixin);
 		if (bindUser!=null) {
 			String url = "http://"+bundle.getString("weixin.url")+"/order/details?sn="+orderLog.getOrder().getSn();
-			addWXTask(bindUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),msg.getContent(),url,msg.getCreateDate());
+			addWXTask(bindUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),msg.getContent(),url,orderLog.getCreateDate());
 		}
 		return pushTo(msg);
 	}
@@ -537,6 +537,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setType(Message.Type.message);
 		msg.setTitle("活动专栏");
 		msg.setContent("【"+topic.getMember().getNickName()+"】感谢您点亮专栏，您已拥有VIP特权。");
+		Map<String,String> ext = new HashMap<String,String>();
+		ext.put("type","topic");
+		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
 

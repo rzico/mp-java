@@ -6,8 +6,10 @@ import net.wit.controller.model.DepositModel;
 import net.wit.entity.Deposit;
 import net.wit.entity.Member;
 import net.wit.entity.summary.DepositSummary;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.service.DepositService;
 import net.wit.service.MemberService;
+import net.wit.util.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.*;
 
 
@@ -35,7 +39,6 @@ public class DepositController extends BaseController {
 
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
-
 
     /**
      * 汇总

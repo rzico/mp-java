@@ -170,7 +170,17 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
+
+		Member promter = member.getPromoter();
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
+
+		if (xuid!=null && promter==null && member.getPromoter()!=null) {
+			try {
+				memberService.create(member,member.getPromoter());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);

@@ -5,10 +5,7 @@ import net.sf.json.JSONObject;
 import net.wit.Message;
 import net.wit.Page;
 import net.wit.Principal;
-import net.wit.entity.BindUser;
-import net.wit.entity.Member;
-import net.wit.entity.Shop;
-import net.wit.entity.Tag;
+import net.wit.entity.*;
 import net.wit.plat.im.User;
 import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.AccessToken;
@@ -65,6 +62,35 @@ public class WeiXinController extends BaseController {
 
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
+
+    @Resource(name = "paymentServiceImpl")
+    private PaymentService paymentService;
+
+    /**
+     * 付款页
+     *
+     * @param sn              支付单号
+     *
+     */
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(String sn,HttpServletRequest request) {
+        Payment payment = paymentService.findBySn(sn);
+        String userAgent = request.getHeader("user-agent");
+        String type="weixin";
+        if (BrowseUtil.isAlipay(userAgent)) {
+            type="alipay";
+        } else {
+            type="weixin";
+        }
+        if (payment.getPaymentPluginId()!=null) {
+            if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
+                type = "cardPayPlugin";
+            } else if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
+                type = "balancePayPlugin";
+            }
+        }
+        return "forward:/weixin/payment/view.html?psn="+sn+"&amount="+payment.getAmount()+"&type="+type;
+    }
 
     public String getSha1Sign(HashMap<String, Object> params) {
         try {

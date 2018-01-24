@@ -279,6 +279,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
 //		Assert.notEmpty(cart.getCartItems());
+
 		Assert.notNull(receiver);
 
 		Order order = build(member,product ,quantity ,cart, receiver, memo);
@@ -311,6 +312,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				promoter = null;
 			}
 			order.setPromoter(promoter);
+
+			if (member.getPromoter()==null && promoter!=null && !member.equals(promoter)) {
+				member.setPromoter(promoter);
+				memberDao.merge(member);
+			}
+
 		}
 
 		orderDao.persist(order);

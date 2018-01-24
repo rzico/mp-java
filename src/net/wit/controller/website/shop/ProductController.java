@@ -3,28 +3,24 @@
  * Support: http://www.shopxx.net
  * License: http://www.shopxx.net/license
  */
-package net.wit.controller.applet.shop;
+package net.wit.controller.website.shop;
 
 import net.wit.*;
-import net.wit.Message;
-import net.wit.Order;
 import net.wit.controller.model.GoodsListModel;
 import net.wit.controller.model.GoodsModel;
-import net.wit.controller.model.ProductModel;
 import net.wit.controller.weex.BaseController;
-import net.wit.entity.*;
+import net.wit.entity.Goods;
+import net.wit.entity.Member;
+import net.wit.entity.Product;
+import net.wit.entity.ProductCategory;
 import net.wit.service.*;
-import net.wit.util.JsonUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +28,8 @@ import java.util.List;
  * Controller - 商品
  * 
  */
-@Controller("appletShopProductController")
-@RequestMapping("/applet/shop/product")
+@Controller("websiteShopProductController")
+@RequestMapping("/website/shop/product")
 public class ProductController extends BaseController {
 
 	@Resource(name = "adminServiceImpl")

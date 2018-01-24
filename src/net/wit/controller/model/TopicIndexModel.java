@@ -127,6 +127,7 @@ public class TopicIndexModel extends BaseModel implements Serializable {
         this.logo = topic.getLogo();
         this.fee = topic.getFee();
         this.status = topic.getStatus();
+
         TopicConfig config = topic.getConfig();
         if (config!=null) {
             this.useCard = config.getUseCard();

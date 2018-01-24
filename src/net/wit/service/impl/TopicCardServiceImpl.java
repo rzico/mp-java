@@ -88,7 +88,8 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 				topicCard.getTopic().getName(),
 				topicCard.getTopic().getMember().getLogo(),
 				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor())
+				topicCard.getDescription(),getColor(topicCard.getColor()),
+				topicCard.getTopic().getMember()
 		);
 		if (data.getString("errcode").equals("0")){
 			String cardId = data.getString("card_id");
@@ -112,7 +113,8 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 				topicCard.getTopic().getName(),
 				topicCard.getTopic().getMember().getLogo(),
 				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor())
+				topicCard.getDescription(),getColor(topicCard.getColor()),
+				topicCard.getTopic().getMember()
 		);
 		if (data.getString("errcode").equals("0")){
 			return super.update(topicCard);
@@ -132,7 +134,8 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 				topicCard.getTopic().getName(),
 				topicCard.getTopic().getMember().getLogo(),
 				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor())
+				topicCard.getDescription(),getColor(topicCard.getColor()),
+				topicCard.getTopic().getMember()
 		);
 		if (data.getString("errcode").equals("0")){
 			return super.update(topicCard, ignoreProperties);
