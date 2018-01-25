@@ -46,7 +46,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         UpArticle upArticle=new UpArticle();
         List<Details> detailses=new ArrayList<>();
         //2.查找多篇文章 并对多篇文章进行群发前的上传处理
-        File file=new File(templatepath+"temporary\\");
+        File file=new File(templatepath+"temporary/");
         if(!file.exists()) {
             file.mkdirs();
         }
@@ -61,7 +61,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             //3.上传该图文的封面缩略图
             Details deta=null;
             try {
-                deta=ArticlePropa.uploadMedia(ArticlePropa.UrlToFile(m.getThumbnail(),"jpg",templatepath+"/temporary/"),accessToken.getToken(),"thumb","jpg","","");
+                deta=ArticlePropa.uploadMedia(ArticlePropa.UrlToFile(m.getThumbnail(),"jpg",templatepath+"temporary/"),accessToken.getToken(),"thumb","jpg","","");
                 if (deta==null|deta.getErrcode()!=null){
                     if(deta==null) {
                         System.out.println(m.getId() + "此文章缩略图上传失败,默认跳过该文章上传");
@@ -129,7 +129,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
 
             //5.调用freemark模板自动生成相应的图文内容 并更新现有的图文内容
-            String s=ArticlePropa.build(templatepath+"/WEB-INF/template/common","article.ftl",contents);
+            String s=ArticlePropa.build(templatepath+"WEB-INF/template/common","article.ftl",contents);
 
 //            System.out.println(s);
 
@@ -183,7 +183,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
     public StringBuffer DownArticle(String url,String downpath) throws IOException {
         StringBuffer stringBuffer = new StringBuffer();
-        File folder=new File(downpath+"temporary\\");
+        File folder=new File(downpath+"temporary/");
         try {
             URL imgurl = new URL(url);
             //打开链接
