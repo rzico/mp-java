@@ -81,7 +81,7 @@ public class CardController extends BaseController {
         Member seller = memberService.find(id);
         Member member = memberService.getCurrent();
         if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+            String url = "http://"+bundle.getString("weixin.url")+"/website/member/card/deposit.jhtml?id="+id;
             String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
@@ -95,7 +95,7 @@ public class CardController extends BaseController {
             }
         }
 
-        return "redirect:/bill?id="+card.getId();
+        return "redirect:/#/bill?id="+card.getId();
     }
 
     /**
@@ -107,13 +107,13 @@ public class CardController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+            String url = "http://"+bundle.getString("weixin.url")+"/website/member/card/index.jhtml?id="+id+"&card_id="+card_id;
             String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
         }
 
-        return "redirect:/member?id="+id+"&card_id="+card_id;
+        return "redirect:/#/member?id="+id+"&card_id="+card_id;
     }
 
     /**
@@ -266,6 +266,7 @@ public class CardController extends BaseController {
         model.bind(card);
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
+        data.put("topicId",topicCard.getTopic().getMember().getId());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));

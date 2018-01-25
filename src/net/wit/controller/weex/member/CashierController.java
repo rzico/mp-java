@@ -86,6 +86,7 @@ public class CashierController extends BaseController {
         List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
         List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
+        shop = admin.getShop();
         if (shop!=null) {
             model.setShopId(shop.getId());
         }

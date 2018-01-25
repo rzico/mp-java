@@ -161,7 +161,7 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.url = url;
     }
 
-    public void bind(Member member) {
+    public void bind(Member member,Member shareUser) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
         this.fans = member.getFans().size();
@@ -181,6 +181,9 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.followed = false;
         this.setCatalogs(new ArrayList<ArticleCatalogModel>());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://" + bundle.getString("weixin.url") + "/c1001?id=" + member.getId()+"&xuid="+member.getId();
+        if (shareUser==null) {
+            shareUser = member;
+        }
+        this.url = "http://" + bundle.getString("weixin.url") + "/#/c1001?id=" + member.getId()+"&xuid="+shareUser.getId();
     }
 }

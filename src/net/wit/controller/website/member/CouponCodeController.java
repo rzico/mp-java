@@ -73,7 +73,7 @@ public class CouponCodeController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+            String url = "http://"+bundle.getString("weixin.url")+"/website/member/couponCode/index.jhtml?id="+id;
             String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);

@@ -61,33 +61,33 @@ public class PaymentController extends BaseController {
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
-    /**
-     * 付款页
-     *
-     * @param sn              支付单号
-     *
-     */
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(String sn,HttpServletRequest request) {
-        Payment payment = paymentService.findBySn(sn);
-        String userAgent = request.getHeader("user-agent");
-        String type="weixin";
-        System.out.println(userAgent);
-        if (BrowseUtil.isAlipay(userAgent)) {
-            type="alipay";
-        } else {
-            type="weixin";
-        }
-        if (payment.getPaymentPluginId()!=null) {
-            if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
-                type = "cardPayPlugin";
-            } else if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
-                type = "balancePayPlugin";
-            }
-        }
-        System.out.println(type);
-        return "redirect:/weixin/payment/view.html?psn="+sn+"&amount="+payment.getAmount()+"&type="+type;
-    }
+//    /**
+//     * 付款页
+//     *
+//     * @param sn              支付单号
+//     *
+//     */
+//    @RequestMapping(value = "/index", method = RequestMethod.GET)
+//    public String index(String sn,HttpServletRequest request) {
+//        Payment payment = paymentService.findBySn(sn);
+//        String userAgent = request.getHeader("user-agent");
+//        String type="weixin";
+//        System.out.println(userAgent);
+//        if (BrowseUtil.isAlipay(userAgent)) {
+//            type="alipay";
+//        } else {
+//            type="weixin";
+//        }
+//        if (payment.getPaymentPluginId()!=null) {
+//            if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
+//                type = "cardPayPlugin";
+//            } else if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
+//                type = "balancePayPlugin";
+//            }
+//        }
+//        System.out.println(type);
+//        return "redirect:/weixin/payment/view.html?psn="+sn+"&amount="+payment.getAmount()+"&type="+type;
+//    }
 
     /**
      * 付款单信

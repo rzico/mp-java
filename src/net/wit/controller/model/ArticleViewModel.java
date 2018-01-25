@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
+import net.wit.entity.Member;
 import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
@@ -159,7 +160,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.htmlTag = htmlTag;
     }
 
-    public void bind(Article article) {
+    public void bind(Article article,Member shareUser) {
         this.id = article.getId();
         this.title = article.getTitle();
         this.author = article.getAuthor();
@@ -187,10 +188,13 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.templates = templates;
         this.votes = votes;
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (shareUser==null) {
+            shareUser = article.getMember();
+        }
         if (article.getTemplate()==null) {
-            this.url = "http://" + bundle.getString("weixin.url") + "/t1001?id=" + article.getId()+"&xuid="+member.getId().toString();
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
         } else {
-            this.url = "http://" + bundle.getString("weixin.url") + "/t" + article.getTemplate().getSn() + "?id=" + article.getId()+"&xuid="+member.getId().toString();
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
         }
     }
 

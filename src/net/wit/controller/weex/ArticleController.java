@@ -77,7 +77,7 @@ public class ArticleController extends BaseController {
             articleService.update(article);
         }
         ArticleViewModel model =new ArticleViewModel();
-        model.bind(article);
+        model.bind(article,member);
         return Message.bind(model,request);
    }
 

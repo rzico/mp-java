@@ -80,7 +80,7 @@ public class CardController extends BaseController {
             data.put("useCard","true");
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             Long c = 100000000+admin.getShop().getId();
-            String url = "http://"+bundle.getString("weixin.url")+"/card?code="+"86"+String.valueOf(c);
+            String url = "http://"+bundle.getString("weixin.url")+"/#/card?code="+"86"+String.valueOf(c);
             data.put("url",url);
         } else {
             data.put("useCard","false");

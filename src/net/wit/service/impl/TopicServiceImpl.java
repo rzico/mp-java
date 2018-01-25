@@ -30,8 +30,7 @@ import net.wit.service.TopicService;
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
- 
- 
+
 @Service("topicServiceImpl")
 public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements TopicService {
 	@Resource(name = "topicDaoImpl")

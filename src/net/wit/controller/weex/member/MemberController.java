@@ -220,7 +220,7 @@ public class MemberController extends BaseController {
                return Message.success("上传IM失败");
            };
         }
-        return Message.success("获取会员信息成功");
+        return Message.success("更新会员信息成功");
     }
 
 }

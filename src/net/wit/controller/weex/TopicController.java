@@ -8,7 +8,9 @@ import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.TopicListModel;
 import net.wit.controller.model.TopicViewModel;
 import net.wit.entity.*;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.service.*;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,8 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * @ClassName: ArticleController
@@ -56,6 +62,22 @@ public class TopicController extends BaseController {
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
 
+
+    /**
+     * 公众号设置
+     *
+     */
+    @RequestMapping(value = "/menu", method = RequestMethod.GET)
+    @ResponseBody
+    public Message menu(HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member member = memberService.getCurrent();
+        String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+member.getId();
+        String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+        redirectUrl = URLEncoder.encode(redirectUrl);
+        return Message.success((Object) MenuManager.codeUrlO2(redirectUrl),"复制成功");
+    }
+
     /**
      * 专栏信息
      * id 会员
@@ -68,7 +90,7 @@ public class TopicController extends BaseController {
             return Message.error("无效会员编号");
         }
         TopicViewModel model =new TopicViewModel();
-        model.bind(member);
+        model.bind(member,member);
         Long at = articleService.count(new Filter("member", Filter.Operator.eq,member));
         model.setArticle(at.intValue());
         List<Filter> filters = new ArrayList<Filter>();
