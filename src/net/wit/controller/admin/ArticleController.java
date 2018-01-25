@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.io.FileInputStream;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -435,15 +436,21 @@ public class ArticleController extends BaseController {
 	public @ResponseBody
 	Message Propaganda(Long[] ids, HttpServletRequest request){
 		try {
-			//芸店公众号
-			String appID="wx88a1ec3b5c3bc9c3";
-			String appsecret="f5e7d000d00788053c50ca6b3a442d20";
 			String rootPath = request.getSession().getServletContext().getRealPath("/");
+			Properties properties=new Properties();
+			FileInputStream fileInputStream=new FileInputStream(rootPath+"WEB-INF\\classes\\config.properties");
+			properties.load(fileInputStream);
+			fileInputStream.close();
+			String appID=properties.getProperty("weixin.appid");
+			String appsecret=properties.getProperty("weixin.secret");
+//			//芸店公众号
+//			String appID="wx88a1ec3b5c3bc9c3";
+//			String appsecret="f5e7d000d00788053c50ca6b3a442d20";
 			weixinUpService.ArticleUpLoad(ids,appID,appsecret,rootPath);
-			return Message.success("admin.delete.success");
+			return Message.success("admin.propaganda.success");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Message.error("admin.delete.error");
+			return Message.error("admin.propaganda.error");
 		}
 	}
 
