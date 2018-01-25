@@ -1,0 +1,899 @@
+[2018-01-13 12:24:43] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:43] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:44] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:44] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:45] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:45] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:45] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:45] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:45] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:45] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:46] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:46] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:46] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:46] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:47] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:24:47] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:38] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:38] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:39] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:39] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:39] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:39] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:40] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:40] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:40] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:40] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:40] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:40] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:41] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:41] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:41] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:41] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:42] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:42] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:42] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 12:29:42] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:22] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:22] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:22] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:22] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:23] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:23] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:24] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:24] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:24] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:24] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:25] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:25] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:26] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:26] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:28] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:28] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:29] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:29] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:30] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:30] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:31] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:31] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:32] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 13:34:32] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-13 15:35:30] [ERROR] - Template processing error: "Expression article is undefined on line 3, column 15 in article.ftl."
+
+Expression article is undefined on line 3, column 15 in article.ftl.
+The problematic instruction:
+----------
+==> ${article.content} [on line 3, column 13 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article is undefined on line 3, column 15 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:135)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Expression.getStringValue(Expression.java:93)
+	at freemarker.core.DollarVariable.accept(DollarVariable.java:76)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ComContent.build(ComContent.java:50)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:140)
+[2018-01-13 15:35:30] [ERROR] - Template processing error: "Expression article is undefined on line 4, column 22 in article.ftl."
+
+Expression article is undefined on line 4, column 22 in article.ftl.
+The problematic instruction:
+----------
+==> ${article.original} [on line 4, column 20 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article is undefined on line 4, column 22 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:135)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Expression.getStringValue(Expression.java:93)
+	at freemarker.core.DollarVariable.accept(DollarVariable.java:76)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ComContent.build(ComContent.java:50)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:140)
+[2018-01-14 21:27:52] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original?? [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ExistsExpression._getAsTemplateModel(ExistsExpression.java:71)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Expression.isTrue(Expression.java:138)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:27:52] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original?? [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ExistsExpression._getAsTemplateModel(ExistsExpression.java:71)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Expression.isTrue(Expression.java:138)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:27:52] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original?? [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ExistsExpression._getAsTemplateModel(ExistsExpression.java:71)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Expression.isTrue(Expression.java:138)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:27:52] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original?? [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ExistsExpression._getAsTemplateModel(ExistsExpression.java:71)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Expression.isTrue(Expression.java:138)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:27:52] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original?? [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ExistsExpression._getAsTemplateModel(ExistsExpression.java:71)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Expression.isTrue(Expression.java:138)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:28:28] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original != "" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:28:28] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original != "" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:28:28] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original != "" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:28:28] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original != "" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:28:28] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original != "" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:30:53] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:30:53] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:30:53] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:30:53] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-14 21:30:53] [ERROR] - Template processing error: "Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl."
+
+Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if articles.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.template.TemplateException: Expected hash. articles evaluated instead to freemarker.template.SimpleSequence on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.invalidTypeException(TemplateObject.java:136)
+	at freemarker.core.Dot._getAsTemplateModel(Dot.java:78)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:111)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:255)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-15 15:26:35] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:26:35] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:26:36] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:26:36] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:26:36] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:91)
+[2018-01-15 15:26:36] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:91)
+[2018-01-15 15:33:38] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:38] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:39] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:39] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:39] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:39] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:40] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:40] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:40] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+[2018-01-15 15:33:40] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+[2018-01-15 15:33:40] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:81)
+[2018-01-15 15:33:40] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:91)
+[2018-01-15 15:33:40] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:91)
+[2018-01-15 15:33:40] [ERROR] - Template processing error: "Expression article.original is undefined on line 4, column 14 in article.ftl."
+
+Expression article.original is undefined on line 4, column 14 in article.ftl.
+The problematic instruction:
+----------
+==> if article.original!="" [on line 4, column 9 in article.ftl]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression article.original is undefined on line 4, column 14 in article.ftl.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.ComparisonExpression.isTrue(ComparisonExpression.java:121)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:77)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:179)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at net.wit.plat.weixin.propa.ArticlePropa.build(ArticlePropa.java:270)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:91)
+[2018-01-15 15:33:40] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:33:40] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:39:56] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:39:56] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:39:56] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:39:56] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:42:06] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:42:06] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:42:40] [WARN ] - Tried to assign property errcode:java.lang.Integer to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-15 15:42:40] [WARN ] - Tried to assign property errmsg:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Details
+[2018-01-16 17:11:20] [ERROR] - https request error:{}
+net.sf.json.JSONException: A JSONObject text must begin with '{' at character 1 of ���� JFIF      �� C 		%# , #&')*)-0-(0%()(�� C(((((((((((((((((((((((((((((((((((((((((((((((((((�� �" ��              �� O  !"12ABQRabqr#������3���&6��$%45CSt�DTds��c�����             �� !       1!"ABQ��   ? �{�nkm�y��]B'c�P󠧑�wԒ�Qj�c�$�m�un�r{��Yt�X��Ԛ5�A��av�SACܠ(ƠV��w�z���{�zU��VbEo��T��wЄV�!�%%�Q}��@���ER���rȹu���WuO��T��x�.���b�^"�j�U;��V��*�l9m�aR1Ư�m�i�R�£t]����vn���A�Ƙ��^[R�"enU���Q[W�[��𡚉�o*��*�ʁ��,���QG��@鱯YhHde!7݅����R�6�\z�@� �� �V������☞�UO�r��g��[�.�7�!@�w��vǾ�W��¢u^k�W�M��k�� �R�+�6D�r�`�,���.[��h��`>U�(+�M� �.S*8�rB1�}T�� �ei�!�����т�w��J<8x��\2��(�H��;?�2F�l�Gl�����N~9аȫ�#*"�\�%*�}u�>�"�c�	T(�I��AS6��sr��L�K��Ӹ,��F>��4��g��f��,����w�X� %0�.��w��m��ߖJ� �Xi���c�Z�{�k�}���~�����\� ���K��9�� ��~�� T�EE6��[s?�������������L(G\q0|L�[H�~��M?X�v,�i���m� t�lzZ�]�Z���o��G,��$N���?f/����Fv<�t� ������F�h�;�Y!flJȿ��Ս������l�\�NۇU8����z�����V�.���SW�G�B�Y�����I�,��|�H��w|��(ef�6�>����˥��z~:�<"�X��� Ʉ�-��H��k*�,l����y�Q����kv�چ��*��9���t;t�TP�����bBԖ� \�  >U4c����D��[/ �n��&�|�2�C$�ke��:!�Y��gW�Yc�E��\���9r�����/!8��Cʠ#�P��,Z�e���l��4$Mܾ�ܝ��Ah��qR��}�:*&\���tiH���I��u��&0�����ʴ�vkOg��T,�K�j4f�z "��[�Z�:M�;m�*���:�=��(�X��++��n啕�~%[j�=���?ƶ^��9��$�L�/RUF�U���~�ߨ���MՊ������C[��F���0�B�1_W$�ߵDPj�����E}��Ev>u��X2�(iW�D;d��P�䍽5��-f(�ҡ��!Y吆SҭИ1���UD*!���H��U\Gԛ�:�δ�&�A�-+;G�x��NgҔ�KҊ���`qLU1,��o�[�㐍.I$�TY]�T*ʸb�x+�H��ì`���w�O��ͬ�&����~#��6�e��$A�ݕ��q��[fkec�W,�K����t��F�k,r$�Ik">J~��FR�k�b|����6�� �o� }�>V:� k>_���bD|M���%��r�������y�x� �u���w�����d�G�.��ķx��w�L2�qq���9=?qQ�O��C|t� us���9W�:�]ċ�hVN۩[7F�}oCp�yg��-��ώ�&]uב@qL-q�}�q�\"<��=�mgb������y=�0�d�sh�_g�w���#}�%i� ���wb;�A��7:0�Hn����X��խ����R9Z��5�?�Q��S�C�v\�SVR��5\>�3��Yȟ��Y]5ʾ�w�w�%=հ�!��P��T�V�n[Q����ʏ�Nb�R����ug޽��h�DY1`7�U�E�l$`�w�}��I��ٛfڙ�l㺠x�m�`k6߾��	*�O*E9�SYF�h4]�卑�2��}J�s�L!�V��s�4V�lƶ�E�s�d���9��諾8�����ނ�TUؚ�%W�=�Zcv��E,�oR�ΰ��i�j^`��ԭD͸؊Pd�k%8��d������_3���a�Q�(Vy����k���>tB�;��c��YI��2D��˦����ġ�b��Uoju��d��&�m\��Γ�A�j`6�@�?�jHو�MZ�T���.Yr�C�]dN�ӭ+nvڇg�,F�ֆU�=GΠi۳}�F��@���} �Hz��|�<}MW'���U��Zn��)ްdK����L�u�Ke��tI+�H��_��5�9T���V�R�&�q��];Cv�]42�Gt��-�^�F�I��6i�����h������9f�����ҋ�ڬ�.�q#$E��l��f��w�y.�Y���F�j��w!W~�Fʻ��e��g̶i�y��F���f��V��� ���z��	/�)����gϊuA�;�}��q� �?�+4������W���Lޠ.�<Sx;� H�LV��5�S�0� �w���_f�g�D��j�H���~��ڲ�xb�� ��H>�Ӵ�lF%�ן�z���]�R��q�t���Ĥ�7}1�L��n��ߥ�� !{ӫ�w�O���O�ދB�7G*�1���>nymR���oZI��^i�L��iN��*�����0O�-YU��m?���8���7��8u?_L���� ��{���@\#%h)du]ڶ�{o>���x�b*�c;n���*�[��R���wCC�(�ަˤ�LWڵ3��FU&#s�-��W��eŔ���S�V`.�� ;��ڵ)˾�m�X�U	���[O Pw�#m�}���nQ�ڶ�{V�}5&�0�cC�*��ٌ6�N���F��m��<��C��j�M�m�f�#�1�����XgX�Ǻ���bB���N��^���V�6�U�f� ���T'I�%˖4,�����*|MY�y�s�n��yG�H5~&��fKx��Z�j��q6�r��?ݡ�T�՝8���厞[��]��5^��V�UhP�jw\ץ���X䠹�38Ʌ@i79���[�k�o�^���\g2�u�ғ��]I�r��Y<,�Դxxoљ�[޳n������V-hd~b��-�z~u��$,�2u�V��@���C�N$��A�K)�-F�`ǕB\���g�Ml`�[�eC�޽-��|��zY���֬�2ؾ2g��$S<m�r�*&���"1K;�JU�c�.��� 8`�Q���� *�?��� ���q���i���Mw�3\6%dǯ�R:�e�̨WEu^\�t�7<�~��o��r{�#�g�M�8��?C/ɪ�x�E�+r�v��$_Y)�tP$���T�z�]9B������V|�Ƹ�)����ή_g���_�P�����z�?��U��?�~���5��_�� �w�s�3����7�u>|_s� �zb��!ߑ�VQƢ����;c�������Ɨ��N\[œ���b�?�n����#�*kK�<l��w+;�H�6\:����O�\�ee�35z1����{��S.230m�y۽�M������v��.���?@�����5�׳�ʡA�ۺ�E��R�݇KF�m�KVPn0F��˺��F1���-��$����V�,�r~��l�*@���H��~�;e}�l�u��e�+�m)+��|���J�P���j�!P��H�OΗ�u<R��A��VU�I#��Ex��J�bG���z��-��n�*��S��v?:���v�P\�IJ���\���� Q��ku5ԋ�]\�����SXkG`�w�z�Q�"��A�;Q����Ywk�5E˖��/W���[�@��AjՕ���W�SYhDhQ�5�:����<ʻU+X⩎Inq�2�+�UR�5we�1c�r�Z��T����~��׼@�.��3����쳼����բ�>��M�û�*}+B�#����3�"w��k��R� }g[�J���ʤ���W���_�n�w5�J���׌�˝xH>U�[��;�i���)��?����U�e��x�$Q��d�jz��ӵj�O	,����GZ��iJz�}��y�L�A&�yRV�8�6�.�~�P�n�w<�η1'�@�qR��In�����p�J�΀�O4���K�f!�E߫l:+��%f���M���SޮZ��id�8f~I��J���f��n�����|��/��@Ĳ���1�c���Wa��F�xy$��2,�m\��T71�3�ɖ�qP�� Uu���Nu�FӜ�vͻ7n��/��b[�r��/�+���Ԭ2;�#��c�*�c�5��L�d2n�#�m��KV���R5}��^�� v��q�ۊ��� �9�w���H?��S������o��V��� T��*G��kQ��ŷ'o�G�/���'�l����G��ʲ�1��{����uW�B�.�r�yuuoA�V�F���Dp��E��H+,�+z�����ooxe�D����!�2�/�e����n�U{���U�ߴG+��^�)זx-��ɓ;�4�O�iluH�bȏrĴw�q���]>e�R��䬧|�F�]�G������Ke9���K}t��-� ]s�2A���j5�?���&�O:`J7��Y[(V\zI���.<4�f�곢q���Ao��a�X��Ib`�˖���*�¦&��.~��1V�Qp�a�W����I��{����}���������ћl�*��ߍp>TTi���\�r��B�(ef��(��V�#D�$y#2�7��:�� x�?z3��A�;u*���>6��W���;�|-�[A��-��+J'dth�LQS��)L�]iz\W83<��uO��"��\�t�x��5�^&��ƴm�p�Α^���AhȆd>%o��]���w����<�n�j�����yS�^�P�V�vZ�MK�8�*)�EE��6� �̫�+x���q�>��pd�����q׎ui�uFb�}MIu,��VX�O�|+TB��񲹸f�ҽ*)s�M�k�����w�V-[���Kd��UjE6��Y�.�3�B�>��jͧ1��O#lΎ���hb�I�NG:՗�5c�Q�V�n�����{yV+76`�-E����Z���Tl7�@�� �+�bY�Z9!��ĵ�v%����^^���m��ު�ȥn� �x��j�ץ�ws��BY�7:��[W����1T��w�&��ʬ������T�~�D�8oݻUSl���*�/�O�`vWt�F���*o�F�����z����Vn�4��iW���V�c���*c콛G��in��J�I���]ԛ�q�o٣4H�)�\0h����l}/��q��J�G���V7.���g򮟢;�H�P�r��L�m\���Q~ѽ���t�,�eo����ڥ�`̛Ό�٣uoڤ8�Owq��ά��eE�����D�K��Rdܙ�͈x�{H���v0�i#{�1?~��毧�����|yu���{�V�k�=qn���\�����~H�$�� �_���� =5�Ub>��]�Ue�?i3��� H�Y�Y�� ;.6י�TǠ��oW:]�,Ǌ.�9W�tS��+p��$ۓZpӫp�������F\#/� sz�n�M^�fD/:#z�,k|�;Uu�ܖ%���L6;k�:w������L%V*�ߝTs@�����<tT\�z�Qvl�m�z�ڳZn�0�5FL�2�>Ur��ȹ��V���Y[�f�WV��~��F�]COp��1Em�ޫ���:���Y�/ˢ�Nǡ}��:��H��ȝO]����C�m����$���̽?|j��]�f�Zf�u���J��|B�F>跷���gH*/Y�)^��Ao'g*���TW�<%��wl����1IC.G��z�z���暅؊Gp���(���3� Q��5����[�o�.ːfȮ��K��p�p�#��?�HV����x�[�fYT����1�-����_��sz���� ����g<����A�l6�Z���{kq4��9HρY���I3��T�2I�(�����x��\�p��躤wQ�G,��Xsټ�dИfxٹ�bq=5k��Tͺ�*]ĩ��]1H�v�q�%<�g�&�(H�� \��_v�H�.*��R�'jW���k<SqtX4�P�Q�~�<� �ޥ�u�ei�Fʦ��\L-�`Oo:�O�O"���~�"I%�߽b�[�Hau�}�˙��ٟ*�|wa���+�e�Y��I3;�j������"�Ƃ�����:�j�E!��R�A�dTdb�H����9V0�U��z��U�����^~��t(n��{�SV`I"�v�n{W�����)���j"�Y�;�j"���kF�y�{f-���D���ymX2R�ʉ�4�ޤ�(��r�S�DĀG�Q��WGh�zY�� f�PF�ʉ�ݦv���*eLV�8շ��v�&X*���j[��M��&H�U���p�F�G��Z5,77/�(��Sa�c�Lu{{[Պy��5VR�d�(D�v�r��$Y/�H�Y�R<��5��n �X�kKeTFn�_y7���#6�0O%��d��);���V�e2����H�� �|Օ���Ԧ��ɘIUqkw�S�7�S�;K�~�̓Uft�@�9)���T��kn�v�9�$e��c,p���e(}A�B�q��0�Yoo+�<�-ɰhݕ�[?�|5׾� X�����1"�?�߳��n!�� F�'ӥ�d��9�¯h	���Q����o�^e� ]��� \G?��;�,ۯ����������p�J�*�Ө��*����񦹓��~�~_U?�-��� ���k�N��ms�o<��h����@����L�z��h��^�jMi���ù��j��@ڄ�LX}�٣L�9���ٙ8v��'���K�k�$�rI�]�I�3�X}� ���R;�ـB��񮍣�w��ž�1�9߲��r\��g���Wz%�Cw,�p��O�Za[�1x;��ڦ�A�o�����i*h�1`�yP�r��=�:O���k+U���w�7���^�M,�6�a��W�4-Nô6r�F�Fۥ]}���H6����R��ֺ����:d��y�lX�7�����R��ך.�7�x����9�/1�}5�a֚�3\ie��1�m���� �q����ʈ��*��V�XQ����+2�&'���	c`����v���vU�s�B�K~�ŷZ}�v�]1|��k�p��.�r��3�JQ7�+�fsl������Hٚ0�)ͱ4ˇ��ؚ_�_��2����R_�B�N�m쯽|gi��@ߡ��J���g���S�H��TuV˫�O�?��Z�#F�H�Z9wP�a��o��=ƥ÷���3+<K"�_��Z��mQ��j�� A�3���t~�^�$v_��¸�v_���륿��WWR��'��!��G㐫��=�����Oe=��ʈۺ�x��j�%J1��и��o�Ex��޶�Ʒі�4�F� l��^�#�ᩔ*��zRs�����+e�F��7,����͇}F��z�����;�;�(޳Hsɾ�z��=�����5�����[VZFì7�VH�ǷS/�{��`w�7���@v�Ʀmmsp��~t$������B��\�coԞ��"F|�T�),H��"�B�,ű�V����$I.��Eɚ��&���Գ#�l�?�,-TG�<�?� �o��+JC��9��rʥY����D�Z6��P��$0$ue|�TF�:�8V�,鵝��5ȌEf���Fn��r�et��'2�c�e�7�Ҹ��;)-��ϒNݛLrE�����5f\ddw!�ɃxU� >t��Zg-̹��I�"���i���� �H�D�8QY��NlSČ��֖Ҫ[>�f�����TK���h<sۣ uL������'G��/����ҦR,h]?���ì:��l��T�-�fn����0H�� �vG�f�U���z��h|-�s]#�L�H�;*uo�*N{a�]$P�yk��epv��Mgm�KB���نbp_����]ִ��rm�p/A�L~��2�9��]�Ger�u���j�)V��R<$�q)��������g��	��&�ʵظ3�lv*��Tn"_�aG�k�X;Gi"˭ߡ�����>;����[�}��[�}j��pu���"�1�@7����]5��N�6I\���j�����ֶ��"� \n�I7�ܨ���N�X�8��{��J��_�Nq�uq�����y��՗�C��[ο�U�6�~'֝���I�Ub�?��u�� ��(t�5� ��oΟ�L>�_� j�lq����F��U�Mb��+�G�¹!a�<a�K:�\�9h���-q�T��n6��!�A]f�/���ٕU-�\�������G��+�ڐKu��3t�?-R�QG�5&�W.�Ǔe� �V��G�dPz��zkL�v�e-���pe��(�G�E��3n_j�D�:�IS����.ܾ��Ɍ�>�(���6|Ͻe!��5i�e>�Y�B�ϝt����q�Y�a��M���jvw�xfT�˒��UQ���wg_鷺�Ɗ�$� uFZ�k|!��pH�cl�n�2����e�"�1�p�E��j�㊮�]-f`��G�_��p����E���3��vZ����hd���\:�u���F�K\�Y/}}�k�|;�iyj=�Xə%\�K6>/W��Bj� e�3��&�xP�+Dќ��*ߒ��S||�����t���P�E��;+�Y����U3]��t�$`Ȩ�����VS���A���!��#0>��[��,�S���餬���"::��T#85���1u*�A��3�\�:��ҩ[������TH�HPs��R�t�^(��V;��M�N�M-ol�X-��>�L1�N�2����c�x�6(�ƕ��-�ب�<��0e]Xo�ʹ���yn��o ɳn�*(��+��}�=��t"69u���[r6�a�+��H`��n�]�D\b�����F-Y�ڽ*�v5[��"dn�Y�a�¦N4�0�B�t���Yæmͷ�.dDĺ+s�	�h-r���)U��B�#�-������gneM)y���vod�g�^U٪/��$��|<*��3��iUq�G��&����TUv'�Ǣ�,΁�ضx�k���w(�b���ʬZ�����ѐ�l��_4X4M0I#�9*��O�#+l���&'r��R���P�]P�2��|}U�Y�PA0�4J�g$��-�����,��Fh�Eh�Of���+��P��ngy[gY�d~�Y��ӽ3�5�P�4aq`�����y�I�g��;3�J�a�'�����S����eEu�J�WÉ�ֺ����3js� d�ö�� �g�YX�a�ćfU8�?-�L굩�K�Y�Vd�V&�gP�� =[-8&8]�E[�T�'l}z���m���kH�P��*��z����vѾ�0Vb�wV-Ʊn�mE�)�v���dX�?{���-k��;l��$�D��g�V��������Hχ7Bە�]��R�ew�t\���}5�y�G�I��.���2�#�"���C�w����#���1ǃ3�5�8#C��%��>��pw%�d/�G_RU��[{���΍�H��2U���x��L�lٲfߢ�b�Iz��'��eT�|���v��O8e_J�	Y�X���$��ά\9�Ⱥ��������?�*�7�����.����_�5��b��<�-\�S�њN'՟�5̎��V�-����3��֠?Қ��J�4�"�d�.M�� �W�-��Z�۱vtGiO�Fo�P��	?�N^��F�@q�qKnI��(�w����馺i� �/��I����k��8� ]wK�6�|nj<�u��k�drɔ� %jVQ��+��̎���p�Gn�e1�'3�� ���Uq��F�`� � 2�]i!�@�%���eީ��Pw����w�m����H�Ͷ��u���˿ڶ�ò����k�eI�Xo�ehc�˭B(�`H��j<B����e�4�6��|�q���$�~u��û�nWvEgs�4��ewf2/?-�r=ɢ61 ��ßW�`�Un��H�F�e²���$k�F�rF���FX�{�ЃO:��^�·���d��dw_�z2ڟ�jiq2A�X*;��D٣?�pj嬜�ߧڣe�,{�}gC�W�x��r-��FP����j��e:n�+�	��S����2���Y#?�VFɹ�:��qN�n���W������aV��=��l��Xf��k\�W�=gK��7����ʙ��_f}�k��U����X�8?G:�|~qw�����Q���MPY ��7��A���0ނpb�~�eߨwW��\�ϓ���ʯ�޺�qO�݅���h�.�Ƭ>_'�+ȥ��c2�����S�]���FTO�Nqc�#�II�/�F�`gp�̫��glʪ�o�Ezc��O�]A~Ƶ���Cћm攺_�f)��l�c��T�A������ܸl�B��p�nô���ˊ��׃���f6α�EN�BWKb�Ĳ�z��������ŃFF-�(�ʷ��oز5���荰�B�0T��{��!�B�0߹���E�]|���Fܣ�?ٖ��3�D@��;+��Q��7U�w+�{�xƬZh-#�,qə_Ŏ8�����dG�l�J���`��m/DW���.ѕ�&��^���4����Q-`f*zX~_���O_�!���,*d�5�z��.��i��å@w=+!�F��Դ�R�o�-�9$��}�k���hzf�7�)�m���C7�A]�ն������l�2�)cv� ~��?�@|2_:S�𕶱o%Մ�%^E$l[������h�۳�4�7B����p����U����Օr��w�'ԭ�Z���t�W ߺ[,�z���v�a��[#<�yƘ��_���.-$)q�L6�}T�{q.��d��̈��&�&S��/���!�q7o"����U����ki��S�<���=:��P��+o�&f89��M��4M��:XRK� ������5��W+˫X�7WM)Uةm��~(�(�Z��=];~�R���2՜��<��xἻ!�[6| E�޵#6��q,���*�5$���!u��i՗޴a���S� ��%?���H�k�d��ҩ���W�P��N\��?�<���·W�E4���UV�f��%�ek�o�i"�~�T�r������]:dV�n�LVc,fn������s_�$L�칺\�y� Em��B�l->�G�hy����'� ��IY��oG���Oe�Eّ�eN���>˵[��"�A���2��[�&{�Uw���Vzf��Lpt�����4#�9;/,�>߱]OCP�ב0�YT��\�W1�j��a�����4.�������sV�&N�T� � �/�PQ[v@9꫷�=n�cqo+6!J�:�-[dg���(�!Y��z�MqG�@6گ|i,w�S����O:�j�pܥ����d�c|���K,v��$�S���a+ 9o[j񭶷yg�3��y��\���C����CYY���>[VV�����q�&����o?���c���ۏV?�oƤ+���n7�!YϝM�QZ�ꍷ%� �t��j���&���ngڰ�I�V�h��c�f�������c�?�V�|�EV*N��R3���u��4.�P3�(�t�?7cʓ��L���o��i-�NY#x��t�WCҾ��B�/��n�n�F���C���6��;�>J�,�8�RE}#��qyu��n��xr�#ȍΓk<s%ͼֶ��!�*��a�P��j��CI*��s�7��Hث�_j=V��7<iy�LfX�d�Ԏ� ��J�Y��:2sd�t:�.]�l�׬͉��sG�<�V_��.�C��c�P����>*ak�z�z�x^�/ZL�Mq�F�GʽH��wg y��Q��x�@G�&�ed�ۭ	~��������p������Շ�\�(�V�4,~kLc��uO*F�?�Ӣr���Z3;��fuw�dTŇ�R���ti$P�K9�Ϳ�����n y}��Mcܾ�n�=���G��7��qF�ZL�s�i\�K�mg��fM�j�d\�Vr{�{�.��J�9n�*ޅ|��IbK��K�{T"���������J|OʟU�#<���X�]��%��+RO^��XT.� �͍�#[9i�V�-�,��$Fg����ֵdɮ&�<��͛RG������ vw�] �X�Ud���d��S վ]V�����GvM�K��v1�p E��|�-��JD2>�{eFi�.�x����0r,Ɋ5kԗ����--�:�!���ÖX�f�V�^,�׷HzJ"��e��b��N�_�i�&��v7w�2Y�;+���N,�6�#{�C�x��k��������yvhz��C���[�m�O5i:��k^�3�mc`݌�o�;⿺��-";d�4��F=*�:hv����H�� �1�z=.�f���o��Nh8-�t�Rϋ�̾�	��Q��,�m>��n��roީ���#b�e!#.�.4T]�P�|"��M��~\�ğ\�������+~��}+�i�Ϳ��qn�-�V�h-��H�%S�JX�2�tW�Y g�>�lh[�WK��=�hG�5�zB7Pz��T�Z�+@A�>Lx�6l�mᐮuV�.u��w5�Ȫ�"�=4L�l�-�tԹ{IbY�N�t>���6�n�>�:�eu'��uW@��mFku��0;���^*���-�k�H�p༰�y}n��֘��[�;L���Q�3��u��1XgF�Ӎ&�W�� �|�y���Z��)a�_ɫ��y�[�ɥV���۲�=>t�a�O��E3��xU�"��'��]*�}�����=mB꒲�:+V�)��T����_O;���4v���S���J]�g]��Ə	h�a�Ⱦ�tT@�OS[�V�7E����R��1��'��*�����y�,Ċ�����|>U��� �e7��M�+"]��l�����4P�(�"%�/MZ�vmԊ��`8M0.-w*��T�FĶ�0¡ǩ�6�+}:��/�S(t�h�w?VI�"�.m�/���: ��gQ�n���$p���Us��GȻ\K��U�.d�|��|� w��߂�V��o6�,��$h��/] dg��3w���s�D*d�2�/�E��۲f��2�8���1].b��'/��ƊR�e��-�0��McHEi�}MЕ!s���B�!�ȇ�ڥHa����)[n��	'�z��eVvs�VX��;�ct�>Lj6)���2�O2|�L%(��Q��ݾ*��P�m�t�O߮6��,v��A�ڂ�#J��Z��d�E; #��d1EwS*�]�^�����e�OwW:Ous,Ef�C/=�,jūd�C��HV�7�O��R{�&��XDV|,Gu'�;ۗ���IQ��4�Ӄ�;�V��`��3�[��$��\H��m�P��&-1�-ܠWF�8.�&PVk����J�ǧ�cn��h��dկ��υ�{�%�/���r�v<l����v�Ƹ��ծ}_N����Q��4;kw�pɐf߼�5#�.��	��QG����,�ip>�7mr~\֖}��鉸�ُvm��D:l۸i�P�y5�M���5,;���)�W���Y1���)�P"�Lh���R�Gw:�*�E]�Q!�cʋ�N��~�1����Ff��ky-�'u�>#&���T�J��.ժ�{��E>��ڰSpfe�)l�P����7���ZG��I2�ɛ�Q��{t&���T|��!�5V��ȩ���SD[p���M��o߿UI<����m\��V�]q5���Xa}��i�<+kݻ���)���k "dF�tԔ��OQ9�$����˄\�%O�:��e��3�h�Qߓ-,��}2��<�?BT[p֝a�,����}����0ƿ��2��e�qgj9���T��_��T��k?z�N����7Z�4���%v�jIy��m���a�E�rΒ��f�c���EZiz��ckjc�*6�#�g��1^B����F��J��V��4�\H�<��z�Ӫi7��dY$�&� ����mGT�1p�Eon�pwU�0��B���!�E؊�N_�̿*�}�p��x��EO��+��"�K�Ĵ�O�xl�fGHYYC��[����v���7��*0	#s��-)�x���V�B�8��+����0����W���_g묤c�����ޙ��R���P|���-`���=�5�t�OL�+��ʍ�Ly)�|'��y�0J�V|�l�q)�C{;7:-^G�`��цa�5��*Ϋ��#����9�G��L��m�1�4i�s&�#ؠ����w-ύ���.�*�~U$h�wڌ��fڴ�@ڍ�#+l�Y�T|Q`;fTO3�Y�U�����Q6�پѫ�)�v���!ZV�v�M۔NX��^�vD*GVi]Q ���-��<��7��.I���j�ۺ��Q+�3�U?(ڡ�1ݹ�zВ�J�a�W�o3o��|�-�Fm�5�|��1#�VH�6��Ӈo�In��Vq6^gԌ�ض���q�ݷ�n��Y/nSt9�T�[����D�����I�I%��Xd��c�ά�OĖ��6�30�+��}C�n�W�K���D���o������<L��'�b}*����ʣ=�g=R�/�ϕo�j��M����ʺ��ZX(0�����=b���ӭ�$���|����%�O+��.��P�V]3��a9Eiڲugp�T��lR�� >�95@�ޓ���@�ȍ�P�:YZ��5�0�ӄ^#AI�Y�O�-o��CŧB��7��Lv�Ę��(�@����Gh�oJ�40��I�'c��U5P��T��3b��O�P������=�y�w��� �*g�'���v\�)�]6ܰWi��/��Ђ��Ԑ[�"C*�#���M��q����Ў����٥d�5%�ymmԛ��R�J2j]7Xǹ���v�l�NgӕU�#,��YpŔJ�A���T��8�Q�\m�X�|��M'S��GC̙^ᵷ���`�s�X�)�"M�*�THm�D`���'*?O��0�;C�w�w|gkk�0�����S��;%��V�/�����Q�P�i֪�,��^m\�k��Y�k�f?Զ�}����Ԫ�O�RZ.��]dKB��j<G�\��2�>��J0��P�� ��u� Mz���s�v�e�J&���4����J�nS��Q�k0�����&9�W�)����yt��`��S:v�!�<�J�¯�QZ]������*#:�:��T	5k�� ���E����F��fv���U���8�+L��Xp�.���My���#M4�~�T~� ��(%�)ÿ��;8I�<I��P-9]j�%qn�q���/�f빸����0ڳ�N���+*�Y��Z�6�}pD�{\�c�d�Z��ޖ�R;Ku�F�*��5X��A��ukMJ�4��õ���K��Ѿ��jx�1	��7y����n'Cn��U�վ5a��F�g�(cN˳�ã㪆@�#�=��	m��<�����4��F��݂�Y����PB�>��YJ}6���%�/���|@_C�v���%,_n�*�׍$����rND��vU	h���+�����D�	>:�fg��{��gn�1!�ݻ�G�(*���o0�G�J�R��������bc;*ع#ŽhdS�?��۩/nP����D�4�&��5⤍��X0R�J|��@v;�P4�#��ou?O�L��{U~�$r�wE�sm�O���y��*�/��4�%�Ϝ��UI��n�%?����=������bm�ʩ�7*�%�N)-��'�E ��gm�\>� ��rX=��M�H��ɧ�e�3[��7:��[��۲�m4�z�i��	�b�m���]%㰱�<jrGBɭ���--]��o�ZE�p=�a��|�+Vkm*�O�1�u_!���mCS�\rXT�V�nNZWg?:��ͪi��$�m�,���V�%�}�u�;H�]�ƦQY8Y-���-{p����KWm�}��v�ȹ��}U��{������TUU�R*�&(75��m��9.|�����/el,��o"�³E1�U�V��Xڡ*XyF�R��mC�GfV��cGZp��y�[�;����_��1����L�ꚥ��$tF�Eڭ��?�ێ��Ѹ����B��iJE����I��W/�v�)m��~������l���W�':IuƬ�;Wo��Ɣ��iV�p�o��=Ž��Yc���ApZ�Qxc�P���N���c���1uu��:ً3��Jn���To�B��v�4{Ǎ^��y����]�\�]7���QZ��A��k�aqt���X�n�|���P���j���R��1�MC�jW��vT�pJO�!49DE�.���*2�Z5��h�&��{�z��'��;�c�F�T�Y��Bs2d�,��W�{�>8�E��*�݂,���I���-�1,y����'fI��U�;|_���b_f�{�M��kF]��PU�eU�f���-����Yڏ3RU.t˛y�Wq��w�:���Z��Ė�w�kk���,�+� �5��wv�ږE��R��?�Y��g=Jù��,�M�ˡk��M:\<�h�4oۤwmomo:vJ�S�X��陸���*�8d���Ƥ�r�@�����l�'a��3�IW�����S!H�ޯ:����s8��:&IZ��(���ɨw���d.~F�551�i��G���:3iZ��}o3J�����W�U+�9��,k�\�.����Z��rE,��l�e{"�,��<�²���$S�\������������;��s�ZFg�m�u��E-҄(#UX֒9u��Gm+�θs[?cl�K*��=��LF��]�H��H�P�>*�_��$A�)�]6�	>OŜ$0����v��%�4�B�7h�Ej�$����@{���gc�Z���3�*|��g^��T�#}����W����eb�t��^4��\^|�����a�I�,�6���9\�ˆ�;��a���N�^i����t���U��$AH�Hރ���eR!�bS����Å�lT?g���TS\����%͗m�:S$W?��#ԑYě3~l��X*�]vP��ʠy�� ~�O;*� ���(4J[M"䫊��*�+d�]�ڧ�L�?��h��'T�ȵ.�a�v�$�6f1��ՙA.����կg-c�T|"�]'R��<�u!�scm�Mq�_J���8ԭ��w�SN�0���i�:U��QA��کMu�_�E��ئ4E�^\��������-핲��D�JR��)�@����Tg�{>��I�d�t�+;p0�5�}�]��TO ���Q��f�i��Ҧ���s��Z#�S��i-�@��ȿ!UXt��kA�3T�J��2���'�M�_M�I(ϥyҙ������w>�m2ݙ�y��qZɬϱXQaHړ��H�,;H�Û3s���eU��e�����s��?STxF���ے�vEϥ�z񵫉����h ���5��Je����#��LO�V�=��?UJG=�p��ؑH{i��8�v����^v���U��jf�߯��� 9K�]��D׈W vZ ��Bȁ�ǫ��.�P	���B��c�_�����T�z�K�>��[�R#��ʠ2����j��5k�`T�j��ƹ)r�6�����u�����f��S5��B��y��r\4��D�65�`�A^�{�h"�qW���m�યʽ1�(i]����f~F��d�!:GI>�|H�8�U�bymF]�$[":2�.�2�L�(�*32"���͝� ��u؄�F��$�a�*���ay�*ej���0�󑱣�DI�*��� |#޺��Ŗi��vn��G���/�ޭ����3.�D�?����e�܍���@��� ���W�/o%����� -e����Z۫5Īڗ^kv�+v�|��)c�^ X2��ƚXpd�6�,��r�&��9ݰG��iݵ�C�*ަm�V6*Lr>Th�N�����r�Än�`ҳ`~�-�Z۪�ʒ8�:�n5�u)o��A=���*�伅Ma�[��*����QK�B��<��e�zT-�\��&�`� ��]�:�����;�Ƨ�j�g9H��{���l�c�e��[H ���m��	-�5  ?R���{�Pɪ[�M�L��Ei��F��8��*�=m�6�@��/lm�\�[ڠM�񁸘��L`��xy�v��4��Nᅕ�w���	կ�͊��r������ޡ�\���@~�1i<=#��&,O�zio��C�h��򥗜T��XUOʑ�k�7N;c�-L�����3P��w�����:�yU3���`�&j�t���q*+}4�k�-������K��\�G��|�l4��w�b��j�>�x� �T)er�� �9�Νm���A�=�������>��bXyB��˧[1AH��ի����E.��[���N������kS�f��f��A#F�wڵD��5�k�p*#0\��*�S�57�+W8��-�j7���{��t�4ɜ0�"��Q4���)��*������y���4�@�Q5�`�)�;w.ߍj���v��>B��Z2K�����z�>±m�S�=��B�#��^F�i�d;��J}[/���_¼<�W�jq0X�j�Z�Z�e�[T&�Wu�K��XPu��q�Q�Ub�u*"���t�����zJ��~�4��x��)���Ү��i�De��1�|��c̮?������9\����U����ή�%��ur��I-Ľ�cm��n�'��U�c��8�eo�Z���7���d>=w���5[9v]��٫����r?*!x.�'즿}K�ΏU8|<=�ɳ5������Q0ptͱ���z޾��8+NF�&�c�|���?³Q���越�a�j���|�T���	o*���#��jѢ�Zȿ����c��3�i���4j�w��G/ն�|��ö��?�3�պ	�x ��z�>xQR��/�ź�5���w<�;-�IٜyTq4���� ǽIq�m��5_�Z�[�oH�T�R�F7`v�j�ũ<J}���?ƍ�E ���j-!�4� 	�+�h��YHQR��\a@�y*��5Y�b��z�T)nOtlv�Ń��P|�]� �巚B�V%�>��--�K&dyT'QIk��FG)ݶ�@�bE�$U�P�V��Ȉ�� ��۪yr���wk%�G��GP�������A�Z[�H '������92⿪��Gc�����z6RC�31�&���h#e�D�'��;�'��4�2w�ڬK=��cf��6�޲}N��|]	�Ti.u+��H��Ⱅ��ď!NF*�yŐ��mߵ"��+��n�]G�Ыkgns-��l�1"�n;��:&{ۭ�ؓ[.G;�*��]R�A��T��i�a�J��QI�e�[�ܟ�D�G���>[R��#��f�c�{��Dڄ�2����_�;���Z��[�`Pν8�ʴ�w��\��S"w�[n�2ޗ=�����Џ�b�f�j���<�Tm8ۓ/��7�Y�`[�� �ȭ���ͧ�ܗ�W��Io����%sSå3��3:�����|�&�i�Vo��K�mދ�U<v�Dĳ~Z�եo4�wGν��Fq���m ��e���*��l};oL�A��f�˷�:�j���)ݵC-�K�{�}*7��[��ir��0�j�5��z�����9�LKM$V���cm�V�������k��課�S���ZK�3��ʬƺ���1�EY\�ZᲫ������Dk�kH��"�Q��lx[]���xQ�S��8����e�j����[x�F���;N�*�H�����V��*�a��;`U�� fr�����˃4�R��R�Y��e��Z��g��f�O��KAݔʎ���� ��C��%U��f�Q���3Ԝm}�G�r��S[/�=��K��|a��K��в�l��R$�xk���~�[��uɿ��JꪪA��U�A����q�⅕�m��^S'�@���w����>��Ⱦ� P 0� N�(�����Ue�/tI�ޙ\Y��9v�!ݰ���K�-~���n	; y�v���L`Dk9��vQ���� �OqbӾ��f�o�>��6&�o��� �R�3[��NN��Y��P�nU�1����[�I�:Ѯ��*;�Ud��Λ�k�w��#�� ��Z����n��ރf�ےs���F�yr��k�c{�߸U���y`6��!; �K�;��o�� �j"�L��4ďP�A��T�C�VV������T�i׷*�:�zR�[w�0�N��C�ۦ�3�%�TB����2�;�]U۳=G��UK�n}G��KU�Z�:�>T��]��#-�ʪ�n߱G���y�B�P���P}��n�ef'�Q��o��0�k{;s��3V=�1�<��i{wTg����;���f>tv�,�$���^�Z7��X��W=��wz�0{�V��^mZ�주�/㡥�T��p�y��|�uޖ����=��Tn�gu;�Z	|B��U��?���5Ē���V-��ěvx�&�����-t�FHc��|�-O��ۺ��*µ#xb$M<1(UOy�������+�j|&� r�G� ��kV�bˬ�΅���S@A� k_�+L��QM�<��Z�o��2����g8��G��������W.����'���VI㌟�f��Â�E�I���:R���mi��*ǧ��ې���{��r�/���v[���U�˂��yw����WSz�UW��[L�l�YO��"{X-!�� �MMw� �,���V�m�S쿴?�\4_��V�<%G���=5�`�j,�j�e��R�� ��w���nWv��y�5"Y��*���G��e׆�Z����k{@l{����s#ڧ��k��ڎ���H����� ���iI����4����C�X�s�i}`�7O}�� aF�]1)��';w��ubA����OI��5����ˏ�����
+	at net.sf.json.util.JSONTokener.syntaxError(JSONTokener.java:505)
+	at net.sf.json.JSONObject._fromJSONTokener(JSONObject.java:1144)
+	at net.sf.json.JSONObject._fromString(JSONObject.java:1373)
+	at net.sf.json.JSONObject.fromObject(JSONObject.java:161)
+	at net.sf.json.JSONObject.fromObject(JSONObject.java:130)
+	at net.wit.plat.weixin.util.WeixinApi.httpRequest(WeixinApi.java:144)
+	at net.wit.plat.weixin.propa.ArticlePropa.detailed(ArticlePropa.java:422)
+	at net.wit.plat.weixin.propa.ArticlePropaTest.main(ArticlePropaTest.java:155)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+[2018-01-17 10:01:25] [WARN ] - Tried to assign property media_id:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Minutia
+[2018-01-17 10:02:21] [WARN ] - Tried to assign property media_id:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Minutia
+[2018-01-17 10:04:12] [WARN ] - Tried to assign property media_id:java.lang.String to bean of class net.wit.plat.weixin.FormEntity.Minutia
+[2018-01-17 12:03:17] [ERROR] - Weixin server connection timed out.
+[2018-01-17 12:05:24] [ERROR] - Weixin server connection timed out.
+[2018-01-17 12:06:22] [ERROR] - Weixin server connection timed out.
+[2018-01-17 12:10:17] [ERROR] - Weixin server connection timed out.
+[2018-01-17 12:12:32] [ERROR] - Weixin server connection timed out.
+[2018-01-17 12:21:17] [ERROR] - Weixin server connection timed out.
+[2018-01-17 12:54:31] [ERROR] - Weixin server connection timed out.
+[2018-01-17 13:39:49] [ERROR] - Weixin server connection timed out.
+[2018-01-17 13:41:50] [ERROR] - Weixin server connection timed out.
+[2018-01-17 13:47:02] [ERROR] - Weixin server connection timed out.
+[2018-01-19 14:48:47] [ERROR] - 获取token失败 errcode:40164 errmsg:invalid ip 106.122.227.81, not in whitelist hint: [ZfDHWa05262976]
+[2018-01-19 14:49:10] [ERROR] - 获取token失败 errcode:40164 errmsg:invalid ip 106.122.227.81, not in whitelist hint: [HQnZva0550sha6]
+[2018-01-19 14:51:10] [ERROR] - 获取token失败 errcode:40164 errmsg:invalid ip 106.122.227.81, not in whitelist hint: [Ifwa406353612]
+[2018-01-19 14:52:16] [ERROR] - 获取token失败 errcode:40164 errmsg:invalid ip 106.122.227.81, not in whitelist hint: [0N5NGa07133612]
+[2018-01-19 17:38:27] [ERROR] - 获取token失败 errcode:40164 errmsg:invalid ip 106.122.227.81, not in whitelist hint: [i4RBma07071512]

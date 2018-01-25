@@ -438,7 +438,7 @@ public class ArticleController extends BaseController {
 		try {
 			String rootPath = request.getSession().getServletContext().getRealPath("/");
 			Properties properties=new Properties();
-			FileInputStream fileInputStream=new FileInputStream(rootPath+"WEB-INF\\classes\\config.properties");
+			FileInputStream fileInputStream=new FileInputStream(rootPath+"/WEB-INF/classes/config.properties");
 			properties.load(fileInputStream);
 			fileInputStream.close();
 			String appID=properties.getProperty("weixin.appid");
