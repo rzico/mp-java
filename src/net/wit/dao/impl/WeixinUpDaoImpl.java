@@ -249,7 +249,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                         StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
                         String folder1=sdf.format(System.currentTimeMillis());
-                        String filename= String.valueOf(System.currentTimeMillis()*1000000+System.nanoTime());
+                        String filename= String.valueOf(System.currentTimeMillis()*1000000+(int)((Math.random()*9+1)*100000));
                         String uppath="/upload/image/"+folder1+"/"+filename+"."+shz;
                         ossPlugin.upload(uppath,multi,ossPlugin.getMineType("."+shz));
                         System.out.println(ossPlugin.getUrl(uppath));
