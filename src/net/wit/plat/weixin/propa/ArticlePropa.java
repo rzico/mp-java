@@ -90,10 +90,14 @@ public class ArticlePropa {
      * @param url 文件路径
      * @param type 文件后缀格式
      */
-    public static File UrlToFile(String url,String type) {
+    public static File UrlToFile(String url,String type, String path) {
         //new一个文件对象用来保存文件，默认保存当前工程根目录
-        File material =new File("faker."+type);
+        File material =new File(path+"faker."+type);
         try {
+            if(!material.exists()) {
+                material.getParentFile().mkdir();
+                material.createNewFile();
+            }
             //new一个URL对象
             URL imgurl = new URL(url);
             //打开链接
@@ -110,12 +114,34 @@ public class ArticlePropa {
             //写入数据
             outStream.write(data);
             //关闭输出流
+            inStream.close();
             outStream.close();
             return material;
         } catch (Exception e) {
             return material;
         }
     }
+
+    /**
+     * 删除文件
+     * @param file 文件路径
+     */
+    public static void deleteFile(File file) {
+
+        File[] files = file.listFiles();
+
+        //2.对该数组进行遍历
+        for (File f : files) {
+            //3.判断是否有目录，如果有，继续使用该功能遍历，如果不是文件夹，直接删除
+            if (f.isDirectory()) {
+                deleteFile(f);
+            } else {
+                f.delete();//文件删除
+            }
+        }
+        file.delete();//最后删除文件夹
+    }
+
 
     /**
      * 微信服务器永久素材上传

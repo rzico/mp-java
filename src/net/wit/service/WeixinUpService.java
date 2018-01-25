@@ -10,7 +10,7 @@ import java.io.IOException;
 public interface WeixinUpService {
 
 
-    String ArticleUpLoad(Long[] ids,String appID,String appsecret);
+    String ArticleUpLoad(Long[] ids,String appID,String appsecret,String templatepath);
 
-    StringBuffer DownArticle(String url) throws IOException;
+    StringBuffer DownArticle(String url,String downpath) throws IOException;
 }

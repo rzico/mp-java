@@ -39,21 +39,17 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
 
 
-    public String ArticleUpLoad(Long[] ids,String appID,String appsecret){
-
-        //测试号
-//        String appID="wxd570fe49cd2fcc9d";
-//        String appsecret="4f6a7438f0b632abdc7f6e58d07f026d";
-
-        //芸店
-//        String appID="wx88a1ec3b5c3bc9c3";
-//        String appsecret="f5e7d000d00788053c50ca6b3a442d20";
+    public String ArticleUpLoad(Long[] ids,String appID,String appsecret,String templatepath){
 
         //1.获取TOKEN
         AccessToken accessToken= WeixinApi.getAccessToken(appID,appsecret);
         UpArticle upArticle=new UpArticle();
         List<Details> detailses=new ArrayList<>();
         //2.查找多篇文章 并对多篇文章进行群发前的上传处理
+        File file=new File(templatepath+"temporary\\");
+        if(!file.exists()) {
+            file.mkdirs();
+        }
         List<Article>articles=articleService.findList(ids);
         for(Article article:articles){
             ArticleModel m = new ArticleModel();
@@ -65,7 +61,16 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             //3.上传该图文的封面缩略图
             Details deta=null;
             try {
-                deta=ArticlePropa.uploadMedia(ArticlePropa.UrlToFile(m.getThumbnail(),"jpg"),accessToken.getToken(),"thumb","jpg","","");
+                deta=ArticlePropa.uploadMedia(ArticlePropa.UrlToFile(m.getThumbnail(),"jpg",templatepath+"temporary\\"),accessToken.getToken(),"thumb","jpg","","");
+                if (deta==null|deta.getErrcode()!=null){
+                    if(deta==null) {
+                        System.out.println(m.getId() + "此文章缩略图上传失败,默认跳过该文章上传");
+                    }
+                    if(deta.getErrcode()!=null){
+                        System.out.println(m.getId() + "此文章缩略图上传失败,默认跳过该文章上传错误码:"+deta.getErrcode());
+                    }
+                    continue;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -124,20 +129,15 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
 
             //5.调用freemark模板自动生成相应的图文内容 并更新现有的图文内容
-            String s=ArticlePropa.build("H:\\mopian\\mp-java\\WebContent\\WEB-INF\\template\\common","article.ftl",contents);
+            String s=ArticlePropa.build(templatepath+"WEB-INF\\template\\common","article.ftl",contents);
 
-            System.out.println(s);
+//            System.out.println(s);
 
             //6.添加图文素材上传信息
             details.setContent(s);
             details.setTitle(article.getTitle());
             details.setAuthor(article.getAuthor());
-            if (deta.getMedia_id() == null) {
-                System.out.println(article.getId() + "该文章缩略图上传失败");
-                details.setThumb_media_id("");
-            } else {
-                details.setThumb_media_id(deta.getMedia_id());
-            }
+            details.setThumb_media_id(deta.getMedia_id());
             details.setDigest("");
             details.setShow_cover_pic("1");
             detailses.add(details);
@@ -146,6 +146,11 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
         //7.上传图文素材
         Details detail = ArticlePropa.UpNews(upArticle, accessToken.getToken());
+        if(detail==null|detail.getErrcode()!=null){
+            ArticlePropa.deleteFile(file);
+            System.out.println("该多图文消息上传失败错误码:"+detail.getErrcode());
+            return "error";
+        }
 
         //8.1测试图文预览
         ArticlePropa.Preview("HitmanTsuna",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
@@ -166,13 +171,19 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 //        tagPropa.setSend_ignore_reprint("1");
 //        //群发
 //        ReturnJson returnJson=ArticlePropa.TagPropa(accessToken.getToken(),tagPropa);
-//        System.out.println(returnJson.getMsg_id()+"-------"+returnJson.getErrcode());
+//        if(returnJson.getErrcode()==0?false:true){
+//            System.out.println("群发失败错误码:"+returnJson.getErrcode());
+//            return "error";
+//        }
+        //群发成功返回群发消息ID
+//        return String.valueOf(returnJson.getMsg_id());
+        ArticlePropa.deleteFile(file);
         return "success";
     }
 
-    public StringBuffer DownArticle(String url) throws IOException {
+    public StringBuffer DownArticle(String url,String downpath) throws IOException {
         StringBuffer stringBuffer = new StringBuffer();
-
+        File folder=new File(downpath+"temporary\\");
         try {
             URL imgurl = new URL(url);
             //打开链接
@@ -227,16 +238,19 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                             continue;
                         }
                         //图片格式
+                        if(!str[i+1].contains("data-type")){
+                            continue;
+                        }
                         String shz=str[i+1].replace("data-type=\"","").replace("\"","");
                         //文件下载
-                        File file= ArticlePropa.UrlToFile(surl,shz);
+                        File file= ArticlePropa.UrlToFile(surl,shz,downpath+"temporary\\");
                         FileInputStream in_file = new FileInputStream(file);
                         MultipartFile multi = new MockMultipartFile(System.currentTimeMillis()+"."+shz, in_file);
                         StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-                        String folder=sdf.format(System.currentTimeMillis());
+                        String folder1=sdf.format(System.currentTimeMillis());
                         String filename= String.valueOf(System.currentTimeMillis()*1000000+System.nanoTime());
-                        String uppath="/upload/image/"+folder+"/"+filename+"."+shz;
+                        String uppath="/upload/image/"+folder1+"/"+filename+"."+shz;
                         ossPlugin.upload(uppath,multi,ossPlugin.getMineType("."+shz));
                         System.out.println(ossPlugin.getUrl(uppath));
                         stringBuffer1.append(ossPlugin.getUrl(uppath));
@@ -255,6 +269,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         stringBuffer1.append("]");
         System.out.println(stringBuffer1.toString().length());
         System.out.println(stringBuffer1);
+        ArticlePropa.deleteFile(folder);
         return stringBuffer1;
     }
 }

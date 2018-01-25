@@ -133,7 +133,8 @@ public class ArticleShareController extends BaseController {
             return Message.error("文章ID无效");
         }
 
-        if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect()).equals("success")){
+        String rootPath = request.getSession().getServletContext().getRealPath("/");
+        if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath).equals("success")){
             return Message.success("分享成功");
         }
         else{

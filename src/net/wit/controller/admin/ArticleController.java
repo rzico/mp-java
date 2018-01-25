@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
@@ -431,12 +433,13 @@ public class ArticleController extends BaseController {
 	 */
 	@RequestMapping(value = "/propaganda", method = RequestMethod.POST)
 	public @ResponseBody
-	Message Propaganda(Long[] ids){
+	Message Propaganda(Long[] ids, HttpServletRequest request){
 		try {
 			//芸店公众号
 			String appID="wx88a1ec3b5c3bc9c3";
 			String appsecret="f5e7d000d00788053c50ca6b3a442d20";
-			weixinUpService.ArticleUpLoad(ids,appID,appsecret);
+			String rootPath = request.getSession().getServletContext().getRealPath("/");
+			weixinUpService.ArticleUpLoad(ids,appID,appsecret,rootPath);
 			return Message.success("admin.delete.success");
 		} catch (Exception e) {
 			e.printStackTrace();

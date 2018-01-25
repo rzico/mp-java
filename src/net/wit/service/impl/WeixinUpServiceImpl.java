@@ -21,12 +21,12 @@ public class WeixinUpServiceImpl implements WeixinUpService {
 
     @Override
     @Transactional
-    public String ArticleUpLoad(Long[] ids,String appID,String appsecret){
-        return weixinUpDao.ArticleUpLoad(ids,appID,appsecret);
+    public String ArticleUpLoad(Long[] ids,String appID,String appsecret,String templatepath){
+        return weixinUpDao.ArticleUpLoad(ids,appID,appsecret,templatepath);
     }
 
     @Override
-    public StringBuffer DownArticle(String url) throws IOException {
-        return weixinUpDao.DownArticle(url);
+    public StringBuffer DownArticle(String url,String downpath) throws IOException {
+        return weixinUpDao.DownArticle(url,downpath);
     }
 }
