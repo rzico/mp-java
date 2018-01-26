@@ -81,6 +81,7 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
 		model.addAttribute("productCategorys",productCategoryService.findAll());
+		model.addAttribute("distributions",distributionService.findAll());
 
 		return "/admin/product/add";
 	}
@@ -181,7 +182,14 @@ public class ProductController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
-            goodsService.delete(ids);
+			for(long id:ids){
+				Goods goods = productService.find(id).getGoods();
+				for(Product product: goods.getProducts()){
+					product.setDeleted(true);
+				}
+				goodsService.save(goods);
+			}
+            //goodsService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,8 +203,10 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
-		model.addAttribute("goodss",goodsService.find(id));
 		model.addAttribute("productCategorys",productCategoryService.findAll());
+		model.addAttribute("distributions",distributionService.findAll());
+		model.addAttribute("products",productService.find(id).getGoods().getProducts());
+
 		return "/admin/product/edit";
 	}
 
@@ -285,6 +295,8 @@ public class ProductController extends BaseController {
 			Filter productCategoryFilter = new Filter("productCategory",Filter.Operator.eq,productCategory);
 			filters.add(productCategoryFilter);
 		}
+		Filter isList = new Filter("isList",Filter.Operator.eq,true);
+		filters.add(isList);
 
 		Page<Product> page = productService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

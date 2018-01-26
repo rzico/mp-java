@@ -264,6 +264,7 @@
                     <span class="select-box" style="height:44px; font-size:20px;">
                         [#if productCategorys??]
                             <select name="productCategoryId" class="select" style="background-color: #FFFFFF; font-size:20px;">
+                                <option value="">请选择</option>
                                 [#list productCategorys as productCategory]
                                     <option value="${productCategory.id}">${productCategory.name}</option>
                                 [/#list]
@@ -277,7 +278,16 @@
             <div class="goodsbox-col1">
                 <div class="goodsbox-r1">销售策略</div>
                 <div class="goodsbox-r2">
-                    <input type="text" style="height:44px; font-size:20px;" class="input-text" value="" placeholder="设置你的专属销售策略" id="unit" name="unit">
+                    <span class="select-box" style="height:44px; font-size:20px;">
+                    [#if distributions??]
+                        <select name="distributionId" class="select" style="background-color: #FFFFFF; font-size:20px;">
+                            <option value="">请选择</option>
+                            [#list distributions as distribution]
+                                <option value="${distribution.id}">${distribution.name}</option>
+                            [/#list]
+                        </select>
+                    [/#if]
+                    </span>
                 </div>
             </div>
         </div>
@@ -311,18 +321,7 @@
             $tableCount = 1;
             $IsShow = true;
             $product_list = [];
-            $goodsId = '';
-            $goodsName = '';
-            $catagoryName = '全部商品';
-            $catagoryId = '';
-            $distributionId = '';
-            $distributionName = '';
-            $firstThumbnailImg = '';
-            $firstParaImage = '';
-            $firstProductId = '';
-            $goodsUnit = '';
             $productTemplates = [];
-            $clicked = '';
             $jsons = '';
 
             $(function(){
@@ -441,8 +440,8 @@
                 }
                 // 销售策略
                 let distributionTemplate = {
-                    id:0,
-                    name:"",
+                    id:parseInt($('select[name="distributionId"]').val()),
+                    name:$('select[name="distributionId"]').find("option:selected").text()
                 }
                 let productData = {
                     id: '',
@@ -452,7 +451,6 @@
                     distribution:distributionTemplate,
                     products: $productTemplates,
                 };
-
                 $jsons = JSON.stringify(productData);
 
             }
