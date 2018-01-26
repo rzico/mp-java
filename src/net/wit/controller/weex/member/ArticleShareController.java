@@ -86,7 +86,7 @@ public class ArticleShareController extends BaseController {
     /**
      *   分享公众号
      */
-    @RequestMapping(value = "/platform")
+    @RequestMapping(value = "/platform",method = RequestMethod.POST)
     @ResponseBody
     public Message platform(Long[]  articleId, ArticleShare.ShareType shareType, Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
