@@ -97,7 +97,7 @@ public class DistributionController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(String name, BigDecimal percent1,BigDecimal percent2, BigDecimal percent3,  Integer orders, HttpServletRequest request){
+    public Message add(String name, BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point1,BigDecimal point2, BigDecimal point3,  Integer orders, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -112,9 +112,37 @@ public class DistributionController extends BaseController {
         catalog.setOrders(orders);
         catalog.setName(name);
         catalog.setMember(member);
-        catalog.setPercent1(percent1);
-        catalog.setPercent2(percent2);
-        catalog.setPercent3(percent3);
+
+        if (percent1!=null) {
+            catalog.setPercent1(percent1);
+        } else {
+            catalog.setPercent1(BigDecimal.ZERO);
+        }
+        if (percent2!=null) {
+            catalog.setPercent2(percent2);
+        } else {
+            catalog.setPercent2(BigDecimal.ZERO);
+        }
+        if (percent3!=null) {
+            catalog.setPercent3(percent3);
+        } else {
+            catalog.setPercent3(BigDecimal.ZERO);
+        }
+        if (point1!=null) {
+            catalog.setPoint1(point1);
+        } else {
+            catalog.setPoint1(BigDecimal.ZERO);
+        }
+        if (point2!=null) {
+            catalog.setPoint2(point2);
+        } else {
+            catalog.setPoint2(BigDecimal.ZERO);
+        }
+        if (point3!=null) {
+            catalog.setPoint3(point3);
+        } else {
+            catalog.setPoint3(BigDecimal.ZERO);
+        }
         distributionService.save(catalog);
 
         DistributionModel model = new DistributionModel();
@@ -127,7 +155,7 @@ public class DistributionController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,String name,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, Integer orders,HttpServletRequest request){
+    public Message update(Long id,String name,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point1,BigDecimal point2, BigDecimal point3, Integer orders,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -148,9 +176,37 @@ public class DistributionController extends BaseController {
         }
         catalog.setName(name);
         catalog.setMember(member);
-        catalog.setPercent1(percent1);
-        catalog.setPercent2(percent2);
-        catalog.setPercent3(percent3);
+
+        if (percent1!=null) {
+            catalog.setPercent1(percent1);
+        } else {
+            catalog.setPercent1(BigDecimal.ZERO);
+        }
+        if (percent2!=null) {
+            catalog.setPercent2(percent2);
+        } else {
+            catalog.setPercent2(BigDecimal.ZERO);
+        }
+        if (percent3!=null) {
+            catalog.setPercent3(percent3);
+        } else {
+            catalog.setPercent3(BigDecimal.ZERO);
+        }
+        if (point1!=null) {
+            catalog.setPoint1(point1);
+        } else {
+            catalog.setPoint1(BigDecimal.ZERO);
+        }
+        if (point2!=null) {
+            catalog.setPoint2(point2);
+        } else {
+            catalog.setPoint2(BigDecimal.ZERO);
+        }
+        if (point3!=null) {
+            catalog.setPoint3(point3);
+        } else {
+            catalog.setPoint3(BigDecimal.ZERO);
+        }
         distributionService.save(catalog);
         DistributionModel model = new DistributionModel();
         model.bind(catalog);

@@ -33,4 +33,8 @@ public interface CardService extends BaseService<Card, Long> {
 	public void payment(Card card,Payment payment) throws Exception;
 	//支付插件专用方法
 	public void refunds(Card card,Refunds refunds) throws Exception;
+
+	public void addPoint(Card card, Long point,String memo,Order order);
+	public void decPoint(Card card, Long point,String memo,Order order);
+
 }

@@ -47,6 +47,9 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	@Resource(name = "cardBillDaoImpl")
 	private CardBillDao cardBillDao;
 
+	@Resource(name = "cardPointBillDaoImpl")
+	private CardPointBillDao cardPointBillDao;
+
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
@@ -348,6 +351,43 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		} catch (Exception  e) {
 			throw  new RuntimeException("支付失败");
 		}
+	}
+
+	public void addPoint(Card card,Long point,String memo,Order order) {
+		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
+		card.setPoint(card.getPoint()+point);
+		cardDao.merge(card);
+		CardPointBill bill = new CardPointBill();
+		bill.setBalance(card.getPoint());
+		bill.setCard(card);
+		bill.setCredit(point);
+		bill.setDebit(0L);
+		bill.setDeleted(false);
+		bill.setMemo(memo);
+		bill.setOrder(order);
+		bill.setOwner(card.getOwner());
+		bill.setMember(order.getMember());
+		cardPointBillDao.persist(bill);
+	}
+
+	public void decPoint(Card card, Long point,String memo,Order order) {
+		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
+		card.setPoint(card.getPoint()-point);
+		if (card.getPoint().compareTo(0L)<0) {
+			throw  new RuntimeException("积分余额不足");
+		}
+		cardDao.merge(card);
+		CardPointBill bill = new CardPointBill();
+		bill.setBalance(card.getPoint());
+		bill.setCard(card);
+		bill.setCredit(point);
+		bill.setDebit(0L);
+		bill.setDeleted(false);
+		bill.setMemo(memo);
+		bill.setOrder(order);
+		bill.setOwner(card.getOwner());
+		bill.setMember(order.getMember());
+		cardPointBillDao.persist(bill);
 	}
 
 }
