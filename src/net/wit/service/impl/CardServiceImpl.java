@@ -164,6 +164,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setStatus(Card.Status.none);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
+			card.setPoint(0L);
 			if (code == null) {
 				topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 				Long no = topicCard.getIncrement() + 1L;
@@ -210,6 +211,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setStatus(Card.Status.activate);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
+			card.setPoint(0L);
 			topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 			Long no = topicCard.getIncrement() + 1L;
 			topicCard.setIncrement(no);
