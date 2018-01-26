@@ -12,8 +12,7 @@ import net.wit.Filter.Operator;
 
 import net.wit.dao.*;
 import net.wit.entity.Order;
-import net.wit.service.MessageService;
-import net.wit.service.SnService;
+import net.wit.service.*;
 import net.wit.util.SettingUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.entity.*;
-import net.wit.service.OrderService;
 import org.springframework.util.Assert;
 
 /**
@@ -57,6 +55,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
+
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
 
@@ -65,6 +66,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 	@Resource(name = "snServiceImpl")
 	private SnService snService;
+
+	@Resource(name = "cardServiceImpl")
+	private CardService cardService;
 
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
@@ -176,6 +180,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setShippingMethod(Order.ShippingMethod.shipping);
 		order.setIsAllocatedStock(false);
 		order.setIsDistribution(false);
+		order.setRebateAmount(BigDecimal.ZERO);
 
 		if (receiver != null) {
 			order.setConsignee(receiver.getConsignee());
@@ -312,14 +317,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				promoter = null;
 			}
 			order.setPromoter(promoter);
-
-			if (member.getPromoter()==null && promoter!=null && !member.equals(promoter)) {
-				member.setPromoter(promoter);
-				memberDao.merge(member);
-			}
-
 		}
-
 		orderDao.persist(order);
 
 		OrderLog orderLog = new OrderLog();
@@ -472,8 +470,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				messageService.depositPushTo(deposit);
 		    }
 		}
+
+		//建立分佣关系
+		memberService.create(order.getMember(),order.getSeller());
+		Card card = cardService.createAndActivate(order.getMember(),order.getSeller(),order.getPromoter());
+		if (card!=null) {
+			memberService.create(order.getMember(),order.getPromoter());
+		}
+
+		//判断是会员
 		//计算分润
-		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && !order.getPaymentMethod().equals(Order.PaymentMethod.offline) && order.getShippingStatus() == Order.ShippingStatus.shipped && order.getPromoter()!=null) {
+		if (order.getPromoter()!=null) {
+//			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && !order.getPaymentMethod().equals(Order.PaymentMethod.offline) && order.getShippingStatus() == Order.ShippingStatus.shipped && order.getPromoter()!=null) {
 			BigDecimal d = order.getDistribution();
 			if (d.compareTo(BigDecimal.ZERO)>0) {
 				//扣除商家分配佣金
@@ -494,21 +502,22 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 
+					order.setRebateAmount(d);
 					order.setIsDistribution(true);
 					orderDao.merge(order);
 
 					for (OrderItem orderItem : order.getOrderItems()) {
 						if (orderItem != null) {
+							Member p1 = order.getPromoter();
 							BigDecimal r1 = orderItem.calcPercent1();
-							if (r1.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null) {
-								Member p1 = order.getPromoter();
+							if (r1.compareTo(BigDecimal.ZERO)>0 && p1!=null && p1.leaguer(order.getSeller())) {
 								memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
 								p1.setBalance(p1.getBalance().add(r1));
 								memberDao.merge(p1);
 								Deposit d1 = new Deposit();
 								d1.setBalance(p1.getBalance());
 								d1.setType(Deposit.Type.rebate);
-								d1.setMemo("分销奖励金");
+								d1.setMemo(orderItem.getName()+"奖励金");
 								d1.setMember(p1);
 								d1.setCredit(r1);
 								d1.setDebit(BigDecimal.ZERO);
@@ -517,16 +526,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								depositDao.persist(d1);
 								messageService.depositPushTo(d1);
 							}
+							Member p2 = null;
+							if (p1!=null) {
+								Card c2 = p1.card(order.getSeller());
+								if (c2!=null) {
+									p2 = c2.getPromoter();
+								}
+							}
 							BigDecimal r2 = orderItem.calcPercent2();
-							if (r2.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null && order.getPromoter().getPromoter()!=null) {
-								Member p2 = order.getPromoter().getPromoter();
+							if (r2.compareTo(BigDecimal.ZERO)>0 && p2!=null && p2.leaguer(order.getSeller())) {
+								p2 = order.getPromoter().getPromoter();
 								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
 								p2.setBalance(p2.getBalance().add(r2));
 								memberDao.merge(p2);
 								Deposit d2 = new Deposit();
 								d2.setBalance(p2.getBalance());
 								d2.setType(Deposit.Type.rebate);
-								d2.setMemo("分销奖励金");
+								d2.setMemo(orderItem.getName()+"奖励金");
 								d2.setMember(p2);
 								d2.setCredit(r2);
 								d2.setDebit(BigDecimal.ZERO);
@@ -535,16 +551,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								depositDao.persist(d2);
 								messageService.depositPushTo(d2);
 							}
+							Member p3 = null;
+							if (p2!=null) {
+								Card c3 = p2.card(order.getSeller());
+								if (c3!=null) {
+									p3 = c3.getPromoter();
+								}
+							}
 							BigDecimal r3 = orderItem.calcPercent3();
-							if (r3.compareTo(BigDecimal.ZERO)>0 && order.getPromoter()!=null && order.getPromoter().getPromoter()!=null && order.getPromoter().getPromoter().getPromoter()!=null) {
-								Member p3 = order.getPromoter().getPromoter().getPromoter();
+							if (r3.compareTo(BigDecimal.ZERO)>0 && p3!=null && p3.leaguer(order.getSeller())) {
+								p3 = order.getPromoter().getPromoter().getPromoter();
 								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
 								p3.setBalance(p3.getBalance().add(r3));
 								memberDao.merge(p3);
 								Deposit d3 = new Deposit();
 								d3.setBalance(p3.getBalance());
 								d3.setType(Deposit.Type.rebate);
-								d3.setMemo("分销奖励金");
+								d3.setMemo(orderItem.getName()+"奖励金");
 								d3.setMember(p3);
 								d3.setCredit(r3);
 								d3.setDebit(BigDecimal.ZERO);
@@ -555,7 +578,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							}
 						}
 					}
-
 				}
 			}
 		}

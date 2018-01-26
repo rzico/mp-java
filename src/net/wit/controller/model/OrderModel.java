@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 
+import net.wit.entity.Member;
 import net.wit.entity.Order;
 import net.wit.entity.Payment;
 
@@ -44,6 +45,9 @@ public class OrderModel extends BaseModel implements Serializable {
 
     /**  优惠券 */
     private String couponName;
+
+    /**  推广人 */
+    private String promoter;
 
     /**  支付方式 */
     private Order.PaymentMethod paymentMethod;
@@ -229,6 +233,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.memberId = memberId;
     }
 
+    public String getPromoter() {
+        return promoter;
+    }
+
+    public void setPromoter(String promoter) {
+        this.promoter = promoter;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -265,6 +277,15 @@ public class OrderModel extends BaseModel implements Serializable {
         this.receiver.setAreaName(order.getAreaName());
         this.receiver.setConsignee(order.getConsignee());
         this.receiver.setPhone(order.getPhone());
+        this.promoter = "";
+        if (order.getPromoter()!=null) {
+           Member promoter = order.getPromoter();
+           if (promoter.getName()!=null) {
+               this.promoter = promoter.getName();
+           } else {
+               this.promoter = promoter.getNickName();
+           }
+        }
     }
 
 

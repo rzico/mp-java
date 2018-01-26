@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import net.wit.controller.model.GoodsListModel;
 import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
@@ -45,5 +46,18 @@ public class Goods extends BaseEntity {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
+
+
+	public Product product() {
+		Product product = null;
+		for (Product p:getProducts()) {
+			if (!p.getDeleted()) {
+				product = p;
+				break;
+			}
+		}
+		return product;
+	}
+
 
 }

@@ -75,7 +75,7 @@ public class GoodsListModel extends BaseModel implements Serializable {
 
     public void bind(Goods goods) {
         this.id = goods.getId();
-        Product product = goods.getProducts().get(0);
+        Product product = goods.product();
         this.name = product.getName();
         this.stock = product.getStock();
         this.availableStock = product.getAvailableStock();
