@@ -40,6 +40,16 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 
+        [#if productCategorys??]
+        <span class="select-box" style="background-color: #FFFFFF;width:100px;height:32px;">
+            <select name="productCategory" class="select" type="background-color: #FFFFFF;">
+                <option value="">分类</option>
+                [#list productCategorys as productCategory]
+                    <option value="${productCategory.id}">${productCategory.name}</option>
+                [/#list]
+            </select>
+        </span>
+        [/#if]
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -265,6 +275,7 @@
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
+                var _productCategory = $('select[name="productCategory"]').val();
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {
@@ -277,7 +288,7 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-
+                        "productCategoryId":_productCategory,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

@@ -1,14 +1,21 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.controller.model.GoodsListModel;
+import net.wit.controller.model.GoodsModel;
+import net.wit.controller.model.ProductModel;
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -44,13 +51,14 @@ import net.wit.controller.admin.model.*;
 public class ProductController extends BaseController {
 	@Resource(name = "productServiceImpl")
 	private ProductService productService;
-	
+	@Resource(name = "distributionServiceImpl")
+	private DistributionService distributionService;
 	@Resource(name = "goodsServiceImpl")
 	private GoodsService goodsService;
-
 	@Resource(name = "productCategoryServiceImpl")
 	private ProductCategoryService productCategoryService;
-
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
@@ -61,9 +69,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
-
-		//model.addAttribute("goodss",goodsService.findAll());
-
 		model.addAttribute("productCategorys",productCategoryService.findAll());
 
 		return "/admin/product/list";
@@ -75,9 +80,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
-
-		model.addAttribute("goodss",goodsService.findAll());
-
 		model.addAttribute("productCategorys",productCategoryService.findAll());
 
 		return "/admin/product/add";
@@ -89,60 +91,86 @@ public class ProductController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Product product, Long goodsId, Long productCategoryId){
-		Product entity = new Product();	
+	public Message save(String body, HttpServletRequest request, RedirectAttributes redirectAttributes){
+		/*Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+		Admin admin = adminService.findByMember(member);
+		if (admin!=null && admin.getEnterprise()!=null) {
+			member = admin.getEnterprise().getMember();
+		}
+		*/
+		GoodsModel model = JsonUtils.toObject(body,GoodsModel.class);
+		if (model==null) {
+			return Message.error("无效数据包");
+		}
 
-		entity.setCreateDate(product.getCreateDate());
+		Goods goods = null;
+		if (model.getId()==null) {
+			goods = new Goods();
+		} else {
+			goods = goodsService.find(model.getId());
+		}
 
-		entity.setModifyDate(product.getModifyDate());
+		List<Product> products = new ArrayList<Product>();
+		int i = 0;
+		for (Product product:goods.getProducts()) {
+			product.setDeleted(true);
+		}
 
-		entity.setCost(product.getCost());
-
-		entity.setDeleted(product.getDeleted());
-
-		entity.setIsList(product.getIsList());
-
-		entity.setIsMarketable(product.getIsMarketable());
-
-		entity.setMarketPrice(product.getMarketPrice());
-
-		entity.setName(product.getName());
-
-		entity.setPoint(product.getPoint() == null ? 0 : product.getPoint());
-
-		entity.setPrice(product.getPrice());
-
-		entity.setSn(product.getSn());
-
-		entity.setSpec1(product.getSpec1());
-		entity.setSpec2(product.getSpec2());
-
-		entity.setUnit(product.getUnit());
-
-		entity.setVip1Price(product.getVip1Price());
-
-		entity.setVip2Price(product.getVip2Price());
-
-		entity.setVip3Price(product.getVip3Price());
-
-		entity.setWeight(product.getWeight() == null ? 0 : product.getWeight());
-
-		entity.setGoods(goodsService.find(goodsId));
-
-		entity.setProductCategory(productCategoryService.find(productCategoryId));
-
-		entity.setThumbnail(product.getThumbnail());
-		
-		if (!isValid(entity, Save.class)) {
-            return Message.error("admin.data.valid");
-        }
-        try {
-            productService.save(entity);
-            return Message.success(entity,"admin.save.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("admin.save.error");
-        }
+		for (ProductModel pm:model.getProducts()) {
+			Product product = null;
+			if (pm.getProductId()==null) {
+				product = new Product();
+			} else {
+				for (Product prod:goods.getProducts()) {
+					if (prod.getId().equals(pm.getProductId())) {
+						product = prod;
+						break;
+					}
+				}
+				product.setDeleted(false);
+			}
+			product.setName(model.getName());
+			product.setUnit(model.getUnit());
+			if (model.getProductCategory()!=null && model.getProductCategory().getId()!=null) {
+				product.setProductCategory(productCategoryService.find(model.getProductCategory().getId()));
+			}
+			if (model.getDistribution()!=null && model.getDistribution().getId()!=null) {
+				product.setDistribution(distributionService.find(model.getDistribution().getId()));
+			}
+			product.setThumbnail(pm.getThumbnail());
+			product.setMarketPrice(pm.getPrice());
+			product.setPrice(pm.getPrice());
+			product.setVip1Price(pm.getPrice());
+			product.setVip2Price(pm.getPrice());
+			product.setVip3Price(pm.getPrice());
+			product.setSpec1(pm.getSpec1());
+			product.setSpec2(pm.getSpec2());
+			product.setCost(BigDecimal.ZERO);
+			product.setDeleted(false);
+			product.setWeight(0);
+			product.setPoint(0L);
+			product.setGoods(goods);
+			//product.setMember(member);
+			product.setStock(pm.getStock());
+			product.setAllocatedStock(0);
+			i = i+1;
+			product.setOrders(i);
+			if (i==1) {
+				product.setIsList(true);
+			} else {
+				product.setIsList(false);
+			}
+			product.setIsMarketable(true);
+			products.add(product);
+		}
+		goods.getProducts().addAll(products);
+		goodsService.save(goods);
+		//GoodsListModel data = new GoodsListModel();
+		//data.bind(goods);
+		return Message.success(goods.getProducts().get(0),"保存成功");
 	}
 
 
@@ -153,7 +181,7 @@ public class ProductController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
-            productService.delete(ids);
+            goodsService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,13 +195,8 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
-
-		model.addAttribute("goodss",goodsService.findAll());
-
+		model.addAttribute("goodss",goodsService.find(id));
 		model.addAttribute("productCategorys",productCategoryService.findAll());
-
-		model.addAttribute("data",productService.find(id));
-
 		return "/admin/product/edit";
 	}
 
@@ -245,7 +268,23 @@ public class ProductController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Long productCategoryId, Pageable pageable, ModelMap model) {
+		/*
+		Member member = memberService.getCurrent();
+		if (member == null){
+			Message.error("操作员不合法");
+		}
+		Admin admin = adminService.findByMember(member);
+		if (admin != null && admin.getEnterprise() != null){
+			member = admin.getEnterprise().getMember();
+		}
+		*/
+		ProductCategory productCategory = productCategoryService.find(productCategoryId);
+		ArrayList<Filter> filters = (ArrayList<Filter>)pageable.getFilters();
+		if(productCategory != null){
+			Filter productCategoryFilter = new Filter("productCategory",Filter.Operator.eq,productCategory);
+			filters.add(productCategoryFilter);
+		}
 
 		Page<Product> page = productService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
@@ -257,8 +296,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/goodsView", method = RequestMethod.GET)
 	public String goodsView(Long id, ModelMap model) {
-
-
 		model.addAttribute("goods",goodsService.find(id));
 		return "/admin/product/view/goodsView";
 	}
