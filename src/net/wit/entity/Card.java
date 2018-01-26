@@ -94,6 +94,11 @@ public class Card extends BaseEntity {
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '余额'")
 	private BigDecimal balance;
 
+	/** 积分 */
+	@Min(0)
+	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
+	private Long point;
+
 	/*  会员 */
 	@JsonIgnore
 	@ManyToMany(mappedBy = "cards",fetch = FetchType.LAZY)
@@ -230,6 +235,14 @@ public class Card extends BaseEntity {
 
 	public void setPromoter(Member promoter) {
 		this.promoter = promoter;
+	}
+
+	public Long getPoint() {
+		return point;
+	}
+
+	public void setPoint(Long point) {
+		this.point = point;
 	}
 
 	public MapEntity getMapOwner(){
