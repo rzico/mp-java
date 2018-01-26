@@ -30,7 +30,7 @@
             width: 100%;
             height: auto;
             background: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position: relative;
             left: 0px;
             top: 0px;
@@ -48,7 +48,7 @@
             width: 100%;
             height: 52px;
             background-color: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -57,7 +57,7 @@
             width: 100%;
             height: 10px;
             background-color: #F0F8FF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -66,7 +66,7 @@
             width: 100%;
             height: auto;
             background-color: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -75,7 +75,7 @@
             width: 700px;
             height: auto;
             background-color: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -84,7 +84,7 @@
             float: left;
             width: 200px;
             height: 48px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             text-align: right;
             font-size: 26px;
             font-weight: 100px;
@@ -93,7 +93,7 @@
             float: left;
             width: 500px;
             height: 48px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             text-align: left;
             font-size: 26px;
             font-weight: 100px;
@@ -103,7 +103,7 @@
             width: 198px;
             height: 144px;
             /*height: auto;*/
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
         }
         .goodsbox-rchild2{
@@ -111,7 +111,7 @@
             width: 452px;
             height: 144px;
             /* height: auto; */
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
         }
         .goodsbox-rchild3{
@@ -119,7 +119,7 @@
             width: 42px;
             height: 144px;
             /* height: auto; */
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             font-size: 30px;
             color: red;
@@ -152,13 +152,13 @@
         .goodsbox-colchild1{
             width: 100%;
             height: 46px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
         }
         .goodsbox-rchild6{
             float: left;
             width: 100px;
             height: 44px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             text-align: right;
             font-size: 26px;
             font-weight: 100px;
@@ -167,13 +167,13 @@
             float: left;
             width: 173px;
             height: 44px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
         }
         .goodsbox-rchild5{
             float: left;
             width: 348px;
             height: 44px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
         }
 
     </style>
@@ -244,7 +244,7 @@
                             </div>
                         </div>
                         <div class="goodsbox-rchild3" id="abcd">
-                            <i class='Hui-iconfont' onclick="deletetable(this)">&#xe631;</i>
+                            <a class='Hui-iconfont' style="color: red;text-decoration:none;cursor:hand;" onclick="deletetable(this)">&#xe631;</a>
                         </div>
                     </div>
                 <div class="goodsbox-col2">
