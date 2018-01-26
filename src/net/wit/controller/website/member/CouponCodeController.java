@@ -5,6 +5,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.CardModel;
 import net.wit.controller.model.CouponCodeModel;
 import net.wit.entity.*;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plat.weixin.util.WeixinApi;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
@@ -60,6 +63,24 @@ public class CouponCodeController extends BaseController {
 
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
+
+    /**
+     * 我的优惠券
+     * id 会员
+     */
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(Long id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String url = "http://"+bundle.getString("weixin.url")+"/website/member/couponCode/index.jhtml?id="+id;
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+        }
+
+        return "redirect:/member/coupon?id="+id;
+    }
 
     /**
      *  文章列表,带分页

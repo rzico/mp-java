@@ -213,12 +213,13 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
        if (promoter==null) {
        	  return;
 	   }
+
+	   if (member.equals(promoter)) {
+       	  return;
+	   }
 	   Boolean isNew = false;
 
-//	   member.setPromoter(promoter);
-//       memberDao.merge(member);
-//
-		Friends fds = friendsDao.find(promoter, member);
+       Friends fds = friendsDao.find(promoter, member);
 		if (fds==null) {
 			fds = new Friends();
 			fds.setFriend(member);
@@ -258,7 +259,7 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			}
 		}
 		if (isNew) {
-			messageService.addFriendPushTo(promoter, member);
+			messageService.addPromoterPushTo(member,promoter);
 		}
 
 		long rc = memberFollowDao.count(new Filter("member", Filter.Operator.eq,member),new Filter("follow", Filter.Operator.eq,promoter));

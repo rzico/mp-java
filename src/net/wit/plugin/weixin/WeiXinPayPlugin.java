@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  * @author rsico Team
  * @version 3.0
  */
-@Component("weixinPayPlugin_bk")
+@Component("weixinOcPayPlugin")
 public class WeiXinPayPlugin extends PaymentPlugin {
 
 	public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";

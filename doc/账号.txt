@@ -13,6 +13,11 @@
   zhangsr@rzico.com
   zhangsr@051204
 
+4 oppo商城
+  rzico
+  zhangsr@rzico.com
+  zhangsr@051204
+
 5.rzico.jks 证书
 
   Alias: rzico  Password: 123456

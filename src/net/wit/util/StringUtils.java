@@ -120,7 +120,7 @@ public class StringUtils  {
 			return null;
 		}
 		try {
-			return new String(Base64.encodeBase64(binaryData, true, true), "UTF-8");
+			return new String(Base64.encodeBase64(binaryData, false, true), "UTF-8");
 		} catch (UnsupportedEncodingException e ){
 			return null;
 		}

@@ -103,6 +103,14 @@ public class MemberController extends BaseController {
                 }
             }
         }
+
+        if (admin!=null && admin.getEnterprise()!=null) {
+           Member owner = admin.getEnterprise().getMember();
+           if (owner.getTopic()!=null && owner.getTopic().getStatus().equals(Topic.Status.success)) {
+               s = s + 'A';
+           }
+        }
+
         return Message.success((Object) s,"获取成功");
     }
 
@@ -212,7 +220,7 @@ public class MemberController extends BaseController {
                return Message.success("上传IM失败");
            };
         }
-        return Message.success("获取会员信息成功");
+        return Message.success("更新会员信息成功");
     }
 
 }

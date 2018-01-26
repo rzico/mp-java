@@ -1,4 +1,5 @@
 package net.wit.controller.model;
+import net.wit.entity.Admin;
 import net.wit.entity.Member;
 import net.wit.entity.Topic;
 import net.wit.entity.TopicConfig;
@@ -101,7 +102,6 @@ public class ManagerModel extends BaseModel implements Serializable {
         Topic topic = member.getTopic();
 
         this.useCashier = false;
-
         if (topic==null) {
             this.topic = "未开通";
         } else {

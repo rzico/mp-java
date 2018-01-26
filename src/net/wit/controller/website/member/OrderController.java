@@ -41,6 +41,7 @@ public class OrderController extends BaseController {
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
+
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 	@Resource(name = "receiverServiceImpl")
@@ -309,6 +310,7 @@ public class OrderController extends BaseController {
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			try {
 				orderService.complete(order, null);
+
 				return Message.success("签收成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());

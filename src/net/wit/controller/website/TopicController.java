@@ -63,6 +63,9 @@ public class TopicController extends BaseController {
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      * 打开首页
      * id 会员
@@ -74,19 +77,20 @@ public class TopicController extends BaseController {
         if (member==null) {
             member = memberService.getCurrent();
             if (member==null) {
-                String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+                String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+id;
                 String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
                 redirectUrl = URLEncoder.encode(redirectUrl);
                 return "redirect:"+MenuManager.codeUrlO2(redirectUrl);
             }
         }
+
         String template="1001";
         Topic topic = topicService.find(member);
         if (topic!=null) {
             template = topic.getTemplate().getSn();
         }
 
-        return "redirect:"+"http://"+bundle.getString("weixin.url")+"/c"+template+"?id="+id;
+        return "redirect:"+"http://"+bundle.getString("weixin.url")+"/#/c"+template+"?id="+id;
      }
 
     /**
@@ -100,12 +104,16 @@ public class TopicController extends BaseController {
         if (member==null) {
             member = memberService.getCurrent();
         }
-        if (member==null) {
-            return Message.error("无效会员编号");
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Topic topic = topicService.find(member);
         TopicViewModel model =new TopicViewModel();
-        model.bind(member);
+        model.bind(member,member);
         Long at = articleService.count(new Filter("member", Filter.Operator.eq,member));
         model.setArticle(at.intValue());
         List<Filter> filters = new ArrayList<Filter>();

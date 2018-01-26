@@ -8,6 +8,7 @@ import net.wit.entity.Article;
 import net.wit.service.AreaService;
 import net.wit.service.ArticleService;
 import net.wit.service.RSAService;
+import net.wit.service.WeixinUpService;
 import net.wit.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,8 @@ public class CommonController extends BaseController {
 	private AreaService areaService;
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
+	@Resource(name = "weixinUpServiceImpl")
+	private WeixinUpService weixinUpService;
 
 	/**
 	 * 404页面
@@ -46,12 +49,8 @@ public class CommonController extends BaseController {
 
 	@RequestMapping(value = "/resource_not_found.jhtml", method = RequestMethod.GET)
 	public String resource_not_found(HttpServletRequest request,HttpServletResponse response) {
+		response.reset();
 		response.setStatus(200);
-		try {
-			response.sendError(200);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return "forward:/index.html";
 	}
 
@@ -79,4 +78,15 @@ public class CommonController extends BaseController {
 		return "/common/article";
 	}
 
+	@RequestMapping(value = "downarticle")
+	public void upload(HttpServletRequest request,HttpServletResponse response) {
+		String url="https://mp.weixin.qq.com/s/_uy41vlKCzYW08WNTa9Ypw";
+		String rootPath = request.getSession().getServletContext().getRealPath("/");
+		StringBuffer s=new StringBuffer();
+		try {
+			s.append(weixinUpService.DownArticle(url,rootPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

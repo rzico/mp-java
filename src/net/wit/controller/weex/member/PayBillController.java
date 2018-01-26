@@ -77,12 +77,25 @@ public class PayBillController extends BaseController {
         }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有绑定门店");
+            return Message.error("没有开通店铺");
         }
-        if (shopId==null) {
-            shop = admin.getShop();
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+        if (admin.isRole("1")) {
+            shop = null;
         } else {
-            shop = shopService.find(shopId);
+            if (shopId == null) {
+                shop = admin.getShop();
+            } else {
+                shop = shopService.find(shopId);
+            }
+            if (shop==null) {
+                Page<PayBill> page = new Page<>();
+                PageBlock model = PageBlock.bind(page);
+                model.setData(PayBillViewModel.bindList(page.getContent()));
+                return Message.bind(model,request);
+            }
         }
         List<Filter> filters = new ArrayList<Filter>();
         if (billDate!=null) {
@@ -91,9 +104,7 @@ public class PayBillController extends BaseController {
         if (shop!=null) {
             filters.add(new Filter("shop", Filter.Operator.eq, shop));
         } else {
-            if (!admin.isOwner()) {
-                return Message.error("没有查询权限");
-            }
+            filters.add(new Filter("enterprise", Filter.Operator.eq,admin.getEnterprise()));
         }
         filters.add(new Filter("status", Filter.Operator.ne,PayBill.Status.failure));
         pageable.setFilters(filters);
@@ -119,14 +130,20 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
-        Shop shop = admin.getShop();
-        if (shop==null) {
-            return Message.error("没分配门店");
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
-        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
+        Shop shop = admin.getShop();
+        if (admin.isRole("1")) {
+            shop = null;
+        }
+
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
+        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
-        model.setShopId(shop.getId());
+        if (shop!=null) {
+            model.setShopId(shop.getId());
+        }
         model.setToday(BigDecimal.ZERO);
         model.setYesterday(BigDecimal.ZERO);
         for (PayBillShopSummary s:dsum) {
@@ -153,10 +170,21 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
-        if (shopId==null) {
-            shop = admin.getShop();
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+        if (admin.isRole("1")) {
+            shop = null;
         } else {
-            shop = shopService.find(shopId);
+            if (shopId == null) {
+                shop = admin.getShop();
+            } else {
+                shop = shopService.find(shopId);
+            }
+            if (shop==null) {
+                List<PayBillSummaryModel> ms = new ArrayList<PayBillSummaryModel>();
+                return Message.bind(ms,request);
+            }
         }
 
         if (shop==null) {
@@ -191,7 +219,7 @@ public class PayBillController extends BaseController {
                 e = calendar1.getTime();
             }
         }
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,e);
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,e);
         List<PayBillSummaryModel> models = PayBillSummaryModel.bindList(dsum);
         for (PayBillSummaryModel model:models) {
             if (model.getMethod()!=null) {
@@ -275,6 +303,9 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有绑定门店");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         if (!payBill.getShop().equals(admin.getShop())) {
             return Message.error("只能退本门店的单");
@@ -317,6 +348,9 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         if (shopId==null) {
             shop = admin.getShop();
         } else {
@@ -325,11 +359,11 @@ public class PayBillController extends BaseController {
 
         if (shop==null) {
             if (!admin.isOwner()) {
-                return Message.error("没有查询权限");
+                return Message.error("没有权限");
             }
         }
         Date d = DateUtils.truncate(billDate, Calendar.DATE);
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
         List<PayBillSummaryModel> models = PayBillSummaryModel.bindList(dsum);
 
         StringBuilder builder = new StringBuilder();

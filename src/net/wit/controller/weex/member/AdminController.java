@@ -86,6 +86,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         Enterprise enterprise = admin.getEnterprise();
 
@@ -95,7 +98,7 @@ public class AdminController extends BaseController {
                 return Message.error("就业状态，请先解除就业关系");
             }
             try {
-                memberService.create(member,adminMember);
+                memberService.create(adminMember,member);
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
@@ -122,6 +125,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         Admin adminMember = adminService.find(id);
         if (adminMember==null) {
@@ -133,10 +139,12 @@ public class AdminController extends BaseController {
             if (shop == null) {
                 return Message.error("店铺id无效");
             }
-
             adminMember.setShop(shop);
         }
         if (roleId!=null) {
+            if (adminMember.isOwner()) {
+                return Message.error("店主不能设置角色");
+            }
             Role role = roleService.find(roleId);
             List<Role> roles = adminMember.getRoles();
             if (roles==null) {
@@ -171,6 +179,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Enterprise enterprise = admin.getEnterprise();
 
         if (adminMember.isOwner()) {
@@ -197,12 +208,12 @@ public class AdminController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有点亮专栏");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Enterprise enterprise = admin.getEnterprise();
         List<Filter> filters = new ArrayList<Filter>();

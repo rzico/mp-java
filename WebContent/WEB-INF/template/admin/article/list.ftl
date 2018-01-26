@@ -68,6 +68,8 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
 		<a href="javascript:;" onclick="add('首页 &gt; 文章管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
                 class="Hui-iconfont">&#xe600;</i> 新增文章</a>
+        <a href="javascript:;" onclick="Propaganda()" class="btn btn-primary radius"><i
+                class="Hui-iconfont">&#xe600;</i> 文章推广</a>
         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
     </span></div>
     <div class="mt-20">
@@ -643,6 +645,55 @@
             }
         }
         return format;
+    }
+
+    /*文章推广*/
+    function Propaganda(){
+        var url = "${base}/admin/article/propaganda.jhtml";
+        var i = 0;
+        $('input[type="checkbox"][name="ids"]:checked').each(
+                function() {
+                    $(this).parents("tr").addClass("selected");
+                    if(i == 0){
+                        url += "?ids="+$(this).val();
+                    }else{
+                        url += "&ids="+$(this).val();
+                    }
+                    i++;
+                }
+        );
+        if(i < 1) {
+            layer.msg('请选择要推广的文章!', {icon: 0, time: 1000});
+            return;
+        }
+        if(i>8){
+            layer.msg('推广的文章必须小于8篇!', {icon: 0, time: 1000});
+            return;
+        }
+        layer.confirm('确认要推广吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                url: url ,
+                dataType: 'json' ,
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        table.rows('.selected').remove().draw( false );
+                        layer.msg('已推广,微信查收!', {icon: 1, time: 1000});
+                    } else {
+                        layer.msg('推广失败!', {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    layer.close(load);
+                    console.log(data.msg);
+                },
+            });
+        });
     }
 </script>
 </body>

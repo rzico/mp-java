@@ -170,6 +170,7 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
+
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
 
 		OrderModel model = new OrderModel();

@@ -5,6 +5,7 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.DistributionModel;
 import net.wit.controller.model.ProductCategoryModel;
+import net.wit.entity.Admin;
 import net.wit.entity.Distribution;
 import net.wit.entity.Member;
 import net.wit.entity.ProductCategory;
@@ -49,6 +50,9 @@ public class DistributionController extends BaseController {
     @Resource(name = "distributionServiceImpl")
     private DistributionService distributionService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      *  列表
      */
@@ -59,6 +63,12 @@ public class DistributionController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
+
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
         List<Distribution> categories = distributionService.findList(null,null,filters,null);
@@ -92,6 +102,12 @@ public class DistributionController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
+
         Distribution catalog = new Distribution();
         catalog.setOrders(orders);
         catalog.setName(name);
@@ -116,6 +132,13 @@ public class DistributionController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
+
         Distribution catalog = distributionService.find(id);
         if (catalog==null) {
             return Message.error("无效策略id");

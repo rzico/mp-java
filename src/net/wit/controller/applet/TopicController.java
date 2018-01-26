@@ -68,7 +68,7 @@ public class TopicController extends BaseController {
             return Message.error("无效会员编号");
         }
         TopicViewModel model =new TopicViewModel();
-        model.bind(member);
+        model.bind(member,member);
         Long at = articleService.count(new Filter("member", Filter.Operator.eq,member));
         model.setArticle(at.intValue());
         List<Filter> filters = new ArrayList<Filter>();

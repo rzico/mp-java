@@ -83,7 +83,7 @@ public class ArticleController extends BaseController {
             articleService.update(article);
         }
         ArticleViewModel model =new ArticleViewModel();
-        model.bind(article);
+        model.bind(article,member);
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("article",model);
 

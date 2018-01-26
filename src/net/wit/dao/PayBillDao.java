@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Enterprise;
 import net.wit.entity.PayBill;
 import net.wit.entity.Shop;
 import net.wit.entity.summary.PayBillShopSummary;
@@ -36,6 +37,6 @@ public interface PayBillDao extends BaseDao<PayBill, Long> {
 	 * @param endDate
 	 * @return Page<PayBill>
 	 */
-	List<PayBillShopSummary> sumPage(Shop shop,Date beginDate,Date endDate);
+	List<PayBillShopSummary> sumPage(Shop shop, Enterprise enterprise, Date beginDate, Date endDate);
 
 }

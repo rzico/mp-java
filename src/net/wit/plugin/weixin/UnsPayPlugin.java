@@ -11,6 +11,7 @@ import net.wit.entity.BindUser;
 import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
 import net.wit.entity.Refunds;
+import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.util.JsonUtils;
 import net.wit.util.MD5Utils;
@@ -48,46 +49,6 @@ import java.util.*;
  */
 @Component("unsPayPlugin")
 public class UnsPayPlugin extends PaymentPlugin {
-    public String privateKey =
-			"-----BEGIN PRIVATE KEY-----\n"+
-	        "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDrAYJ5zOLHd4Bi\n"+
-            "4yeDWVXAOpz6yVr9Gz1F5v4YKCwNH4Ry0rI1KzgKu2qKSNDwsBkJu9Ett1Y9I7Tz\n"+
-	        "dFdrnep7p5UItVbJkjp6vSWEY+7fj8JDoGvVseG/SC//jC9ZR07jgePp5JzYQCKu\n"+
-	        "e5XCj3Z4wxONL0TopnASdTmHELZe/YkiRK4vCVR6OOgNg3GnHyJbQ7ru9XkbOE7y\n"+
-	        "lrQM55aIvcSD0X2qypCSGEogoyvms5wf+CnwoiOAnSosX5JoK0G7B5SvNqPTJjxC\n"+
-			"t8G0BOd5q0SqAt45CBppL1zqBDgn90Z3UtAEq9PEWeh5qbDoEcP5ugMArZ0msgTa\n"+
-	        "KwshXoV1AgMBAAECggEBAMAQucxGEUoodrtbH14QUy8KOGYWztBxxMAuq5ierHIF\n"+
-	        "QkB9xrwBmInc5pQiMvGjWrND1w/f+RF671bRzOjdZViue/VkD4wqgLTzhYgQDJiW\n"+
-	        "a5TNtZQvD2s/2kqnDcOPrf/ulpEAENgEgtPLmXgrvA2ykXYgHdduv8W2HNAwbnxu\n"+
-			"dPqKWeAD1nCgoSgfwti2VzpSO96SHzT5CJOCgThqMFO1mup9gwhDEcXW0P9Wdab6\n"+
-	        "vDxAcoIH9BY2WCmoXniGOkbIRo61JYSSnoElizIZirRjvwSaSc+mZENk9e8K5+aC\n"+
-	        "q5crME5TckABHiBOdjErvjA2K6dZIvWFcMVku4fKAMECgYEA+ZTZtvEgaTuN4cYw\n"+
-            "841ZkHZbNWg27szqeqOsF7nUqsp8LPhQ1zevJwRe22+aWqB4SS5d5f+Qq64sK8gL\n"+
-			"fANgqbUsQmCXKYOzd6zB+sil/5y8oQTIebwCdyOe/bQv7E9YnvZ/RPh6Gq3wZerZ\n"+
-			"QxzJlJgCwRpONryrjqdXRmBn/q0CgYEA8QyzB3sZNXpXAukEphzJZ0H/HkGm2qTo\n"+
-			"VXeTSRltIqQfSBvrCOYmO6MnIK3/TTDHihXC1vxYfbDDTfryhJralQ4Eeeo8T7xf\n"+
-			"ZW1JRf02wQZqiVZcJyrmSN0T+9DLyMQkQClWqDlcnI53g2lPtG1pqfAkuliFzBI2\n"+
-			"1qeS5/7P4ukCgYB6tpxBXdeAxj5hlw/0gDhcVkVMQhxYV7qmaBkyZTVScFKTzdf5\n"+
-			"qbBd78EwBXSQQLxDxx91+a1JLE8di7NR21tItgK39EP+rnmsSu3pf4RW5Nq+FNr5\n"+
-			"N97Cc2o19cVmXDEHn809vSpUOdesVMdUPzBB9mfMSEHSmfuEHXVE7hvT1QKBgAxK\n"+
-			"x35kKp7thC5jz5bg9OxNE0NpuaaArlBdbqdVopkXoXi947hqdByqbz5dYR2AlUxX\n"+
-			"W7421BRkxTDe0Sst8mOTeWr2JOk0A/FaJ1hoVzh0qU4jl0NwDpo8m95FgX7VcbvL\n"+
-			"391oP27EXRfYcPYUdkTyOA1AomILs7wyg21NMzCxAoGAHbAP2vcHdkEd47POtAw4\n"+
-			"HfOgxA1pL5xuGYBgUF33YMpWPsEKEFaRiHlJuwsqWbSRIjRpnOZDOfkGYO7/lflo\n"+
-			"v5vMjWw8M0MoV99pbRmGSFmctHn+aPsK7fJH1CdqnJoCcUgBtX4oQkn4qjvzAdNc\n"+
-			"q+9QE68knjBttexCwuO7Qpg=\n"+
-			"-----END PRIVATE KEY-----";
-	public String publicKey =
-			"-----BEGIN PUBLIC KEY-----\n"+
-	        "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6wGCeczix3eAYuMng1lV\n"+
-	        "wDqc+sla/Rs9Reb+GCgsDR+EctKyNSs4CrtqikjQ8LAZCbvRLbdWPSO083RXa53q\n"+
-	        "e6eVCLVWyZI6er0lhGPu34/CQ6Br1bHhv0gv/4wvWUdO44Hj6eSc2EAirnuVwo92\n"+
-			"eMMTjS9E6KZwEnU5hxC2Xv2JIkSuLwlUejjoDYNxpx8iW0O67vV5GzhO8pa0DOeW\n"+
-	        "iL3Eg9F9qsqQkhhKIKMr5rOcH/gp8KIjgJ0qLF+SaCtBuweUrzaj0yY8QrfBtATn\n"+
-	        "eatEqgLeOQgaaS9c6gQ4J/dGd1LQBKvTxFnoeamw6BHD+boDAK2dJrIE2isLIV6F\n"+
-			"dQIDAQAB\n"+
-            "-----END PUBLIC KEY-----";
-
 	@Override
 	public String getName() {
 		return "银生宝微信支付";
@@ -100,7 +61,7 @@ public class UnsPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getSettingUrl() {
-		return "weixinpay/cebpay/setting.jhtml";
+		return "weixinpay/unsbpay/setting.jhtml";
 	}
 
 	@Override
@@ -118,75 +79,53 @@ public class UnsPayPlugin extends PaymentPlugin {
 		return "UTF-8";
 	}
 
+	/**
+	 * 作用：生成签名
+	 */
+	public String getSign(HashMap<String, Object> params) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		// 签名步骤一：按字典序排序参数
+		String str = WeiXinUtils.FormatBizQueryParaMap(params, false);
+		// 签名步骤二：在string后加入KEY
+		str += "&key=" + pluginConfig.getAttribute("key");
+		// 签名步骤三：MD5加密 签名步骤四：所有字符转为大写
+		str = MD5Utils.getMD5Str(str).toUpperCase();
+		return str;
+	}
+
 	@Override
 	public Map<String, Object> getParameterMap(String sn, String description, HttpServletRequest request) {
 		PluginConfig pluginConfig = getPluginConfig();
 		Payment payment = getPayment(sn);
 		DecimalFormat decimalFormat = new DecimalFormat("#");
-		BigDecimal money = payment.getAmount().multiply(new BigDecimal(100));
+		BigDecimal money = payment.getAmount();
 		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
 
-		Map<String,Object> body = new HashMap<String,Object>();
-		body.put("payWay", "WXZF");
-		body.put("smallMerchantNo", pluginConfig.getAttribute("partner"));
-		body.put("traceNo", payment.getSn());
-		body.put("settleType","1");
+		HashMap<String,Object> body = new HashMap<String,Object>();
+		body.put("accountId", pluginConfig.getAttribute("partner"));
+		body.put("orderId", payment.getSn());
+		body.put("commodity", description);
+		body.put("amount", decimalFormat.format(money));
+		body.put("responseUrl", getNotifyUrl(sn, NotifyMethod.async));
 		body.put("subject", description);
 		BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
-		body.put("openid",bindUser.getOpenId());
-		body.put("appId", pluginConfig.getAttribute("appId"));
-		body.put("totalAmount", decimalFormat.format(money));
-
-
-		String reqUrl = "https://180.166.114.152:38081/mpos_qrcode/org/doPay";
-
-		Map<String, String> encr = null;
-		try {
-			Reader reader = new CharArrayReader(privateKey.toCharArray());
-			JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-			PEMParser parser = new PEMParser(reader);
-			Object priObj = parser.readObject();
-			parser.close();
-			PrivateKey privKey = converter.getPrivateKey((PrivateKeyInfo) priObj);
-
-			Reader pbReader = new CharArrayReader(publicKey.toCharArray());
-			JcaPEMKeyConverter pbConverter = new JcaPEMKeyConverter();
-			PEMParser pbParser = new PEMParser(pbReader);
-			Object pubObj = pbParser.readObject();
-			parser.close();
-			PublicKey pubKey = converter.getPublicKey((SubjectPublicKeyInfo) pubObj);
-
-
-			Map<String,Object> header = new HashMap<>();
-			header.put("version","1.0.0");
-			header.put("msgType","01");
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-			header.put("reqDate",formatter.format(new Date()));
-
-			Map<String,Map<String, Object>> data = new HashMap<>();
-			data.put("header",header);
-			data.put("body",body);
-			encr = CommonUtil.encryptData(data,privKey,pubKey);
-
-			encr.put("tranCode","SMZF010");
-			encr.put("traceNo",payment.getSn());
-			encr.put("insNo","0000000052");
-			encr.put("ext","ext");
-			encr.put("callBack",this.getNotifyUrl(payment.getSn(),NotifyMethod.async));
-			String req = JsonUtils.toJson(encr);
-			String resp =  HttpClientUtils.REpostRequestStrJson(reqUrl,req);
-
-            System.out.println(resp);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			finalpackage.put("result_msg","验签不通过");
+		if (bindUser!=null) {
+			body.put("openid", bindUser.getOpenId());
+		} else {
+			finalpackage.put("result_msg","没有用户信息");
 			finalpackage.put("return_code","FAIL");
-		} catch (Exception e) {
-			e.printStackTrace();
-			finalpackage.put("result_msg","验签不通过");
-			finalpackage.put("return_code","FAIL");
+			return finalpackage;
 		}
+		try {
+			body.put("mac",getSign(body));
+		} catch (Exception e) {
+			finalpackage.put("result_msg","验签不通过");
+			finalpackage.put("return_code","FAIL");
+			return finalpackage;
+		}
+
+		String reqUrl = "http://180.166.114.156:18082/fixCodePay/applyWXCodePayByOpenId";
+		String resp = post(reqUrl,body);
 		return finalpackage;
 	}
 

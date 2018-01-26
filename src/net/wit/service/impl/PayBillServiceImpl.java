@@ -272,8 +272,8 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 		return bill;
 	}
 
-	public List<PayBillShopSummary> sumPage(Shop shop,Date beginDate,Date endDate) {
-		return payBillDao.sumPage(shop,beginDate,endDate);
+	public List<PayBillShopSummary> sumPage(Shop shop,Enterprise enterprise,Date beginDate,Date endDate) {
+		return payBillDao.sumPage(shop,enterprise,beginDate,endDate);
 	}
 
 }

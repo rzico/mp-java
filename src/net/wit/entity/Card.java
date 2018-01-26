@@ -32,9 +32,9 @@ public class Card extends BaseEntity {
 	};
 
 	public static enum  VIP{
-		/** vip1  */
+		/** vip1 普通会员 */
 		vip1,
-		/** vip2 */
+		/** vip2 团队成员 */
 		vip2,
 		/** vip3 */
 		vip3
@@ -114,6 +114,12 @@ public class Card extends BaseEntity {
 	public void setVip(VIP vip) {
 		this.vip = vip;
 	}
+
+	/** 推广 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	private Member promoter;
 
 	/**
 	 * 获取号码
@@ -216,6 +222,14 @@ public class Card extends BaseEntity {
 
 	public void setTopicCard(TopicCard topicCard) {
 		this.topicCard = topicCard;
+	}
+
+	public Member getPromoter() {
+		return promoter;
+	}
+
+	public void setPromoter(Member promoter) {
+		this.promoter = promoter;
 	}
 
 	public MapEntity getMapOwner(){

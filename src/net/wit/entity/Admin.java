@@ -364,6 +364,9 @@ public class Admin extends BaseEntity {
 
     @JsonIgnore
     public Boolean isRole(String roles) {
+        if (isOwner()) {
+            return true;
+        }
         Boolean isTrue = false;
         for (int i=0;i<roles.length();i++) {
             String s = roles.substring(i,i+1);

@@ -75,15 +75,18 @@ public class CashierController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通收银台");
         }
-        Shop shop = admin.getShop();
-        if (shop==null) {
-            if (!admin.isOwner()) {
-                return Message.error("没分配门店");
-            }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
-        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
+        Shop shop = admin.getShop();
+        if (admin.isRole("1")) {
+            shop = null;
+        }
+
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
+        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
+        shop = admin.getShop();
         if (shop!=null) {
             model.setShopId(shop.getId());
         }
@@ -116,6 +119,9 @@ public class CashierController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通收银台");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         PayBill payBill = new PayBill();
         payBill.setType(PayBill.Type.cashier);
