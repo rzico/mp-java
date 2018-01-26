@@ -61,7 +61,9 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             //3.上传该图文的封面缩略图
             Details deta=null;
             try {
-                deta=ArticlePropa.uploadMedia(ArticlePropa.UrlToFile(m.getThumbnail(),"jpg",templatepath+"temporary/"),accessToken.getToken(),"thumb","jpg","","");
+                File urlToFile=ArticlePropa.UrlToFile(m.getThumbnail(),"jpg",templatepath+"temporary/");
+                deta=ArticlePropa.uploadMedia(urlToFile,accessToken.getToken(),"thumb","jpg","","");
+                urlToFile.delete();
                 if (deta==null|deta.getErrcode()!=null){
                     if(deta==null) {
                         System.out.println(m.getId() + "此文章缩略图上传失败,默认跳过该文章上传");
@@ -147,7 +149,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         //7.上传图文素材
         Details detail = ArticlePropa.UpNews(upArticle, accessToken.getToken());
         if(detail==null|detail.getErrcode()!=null){
-            ArticlePropa.deleteFile(file);
+            file.delete();
             System.out.println("该多图文消息上传失败错误码:"+detail.getErrcode());
             return "error";
         }
@@ -177,7 +179,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 //        }
         //群发成功返回群发消息ID
 //        return String.valueOf(returnJson.getMsg_id());
-        ArticlePropa.deleteFile(file);
+        file.delete();
         return "success";
     }
 
@@ -252,6 +254,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                         String filename= String.valueOf(System.currentTimeMillis()*1000000+(int)((Math.random()*9+1)*100000));
                         String uppath="/upload/image/"+folder1+"/"+filename+"."+shz;
                         ossPlugin.upload(uppath,multi,ossPlugin.getMineType("."+shz));
+                        file.delete();
                         System.out.println(ossPlugin.getUrl(uppath));
                         stringBuffer1.append(ossPlugin.getUrl(uppath));
                     }
@@ -269,7 +272,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         stringBuffer1.append("]");
         System.out.println(stringBuffer1.toString().length());
         System.out.println(stringBuffer1);
-        ArticlePropa.deleteFile(folder);
+        folder.delete();
         return stringBuffer1;
     }
 }
