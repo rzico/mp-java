@@ -395,10 +395,9 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "grabarticle", method = RequestMethod.GET)
     @ResponseBody
     public JSONArray articleGrab(String articlePath, HttpServletRequest request){
-        String rootPath=request.getSession().getServletContext().getRealPath("/");
         StringBuffer s=new StringBuffer();
         try {
-            s.append(weixinUpService.DownArticle(articlePath,rootPath));
+            s.append(weixinUpService.DownArticle(articlePath));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

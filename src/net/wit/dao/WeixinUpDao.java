@@ -16,5 +16,5 @@ public interface WeixinUpDao {
      */
     String ArticleUpLoad(Long[] ids,String appID,String appsecret,String templatepath);
 
-    StringBuffer DownArticle(String url,String downpath) throws IOException;
+    StringBuffer DownArticle(String url) throws IOException;
 }

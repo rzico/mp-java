@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.rmi.server.ExportException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -46,10 +47,6 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         UpArticle upArticle=new UpArticle();
         List<Details> detailses=new ArrayList<>();
         //2.查找多篇文章 并对多篇文章进行群发前的上传处理
-        File file=new File(templatepath+"temporary/");
-        if(!file.exists()) {
-            file.mkdirs();
-        }
         List<Article>articles=articleService.findList(ids);
         for(Article article:articles){
             ArticleModel m = new ArticleModel();
@@ -60,21 +57,24 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
             //3.上传该图文的封面缩略图
             Details deta=null;
+            File urlToFile=ArticlePropa.UrlToFile(m.getThumbnail(),"jpg",templatepath);
             try {
-                File urlToFile=ArticlePropa.UrlToFile(m.getThumbnail(),"jpg",templatepath+"temporary/");
                 deta=ArticlePropa.uploadMedia(urlToFile,accessToken.getToken(),"thumb","jpg","","");
-                urlToFile.delete();
                 if (deta==null|deta.getErrcode()!=null){
                     if(deta==null) {
                         System.out.println(m.getId() + "此文章缩略图上传失败,默认跳过该文章上传");
+                        continue;
                     }
                     if(deta.getErrcode()!=null){
                         System.out.println(m.getId() + "此文章缩略图上传失败,默认跳过该文章上传错误码:"+deta.getErrcode());
+                        continue;
                     }
                     continue;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                urlToFile.delete();
             }
 
             //4.整理文章内容 并把其中所对应的文件先行一步上传入微信服务器 并由微信服务器返回的URL 替换现有的URL
@@ -88,7 +88,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                 Iterator<String> iterator = jsonObject.keys();
                 String key = null;
                 String value = null;
-                String type="";
+//                String type="";
                 while (iterator.hasNext()) {
                     key = iterator.next();
                     value = jsonObject.getString(key);
@@ -149,7 +149,6 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         //7.上传图文素材
         Details detail = ArticlePropa.UpNews(upArticle, accessToken.getToken());
         if(detail==null|detail.getErrcode()!=null){
-            file.delete();
             System.out.println("该多图文消息上传失败错误码:"+detail.getErrcode());
             return "error";
         }
@@ -158,7 +157,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         ArticlePropa.Preview("HitmanTsuna",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
         ArticlePropa.Preview("yk1398222319",accessToken.getToken(),detail.getMedia_id(),"mpnews","");
 
-        //8.2图文群发
+        //8.2图文群发 发送给所有关注该公众号的用户
 //        TagPropa tagPropa=new TagPropa();
 //        Filter filter =new Filter();
 //        filter.setIs_to_all(true);
@@ -179,13 +178,14 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 //        }
         //群发成功返回群发消息ID
 //        return String.valueOf(returnJson.getMsg_id());
-        file.delete();
         return "success";
     }
 
-    public StringBuffer DownArticle(String url,String downpath) throws IOException {
+    public StringBuffer DownArticle(String url) throws IOException {
         StringBuffer stringBuffer = new StringBuffer();
-        File folder=new File(downpath+"temporary/");
+        String tempPath = System.getProperty("java.io.tmpdir");
+//        System.out.println(tempPath);
+        //爬下网页的HTML文件
         try {
             URL imgurl = new URL(url);
             //打开链接
@@ -245,7 +245,8 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                         }
                         String shz=str[i+1].replace("data-type=\"","").replace("\"","");
                         //文件下载
-                        File file= ArticlePropa.UrlToFile(surl,shz,downpath+"temporary\\");
+                        File file= ArticlePropa.UrlToFile(surl,shz,tempPath);
+                        try {
                         FileInputStream in_file = new FileInputStream(file);
                         MultipartFile multi = new MockMultipartFile(System.currentTimeMillis()+"."+shz, in_file);
                         StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
@@ -254,9 +255,15 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                         String filename= String.valueOf(System.currentTimeMillis()*1000000+(int)((Math.random()*9+1)*100000));
                         String uppath="/upload/image/"+folder1+"/"+filename+"."+shz;
                         ossPlugin.upload(uppath,multi,ossPlugin.getMineType("."+shz));
-                        file.delete();
-                        System.out.println(ossPlugin.getUrl(uppath));
+//                        System.out.println(ossPlugin.getUrl(uppath));
                         stringBuffer1.append(ossPlugin.getUrl(uppath));
+                        }
+                        catch (Exception e){
+
+                        }
+                        finally {
+                            file.delete();
+                        }
                     }
                 }
                 stringBuffer1.append("\",\"content\":\"\"}");
@@ -272,7 +279,6 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         stringBuffer1.append("]");
         System.out.println(stringBuffer1.toString().length());
         System.out.println(stringBuffer1);
-        folder.delete();
         return stringBuffer1;
     }
 }
