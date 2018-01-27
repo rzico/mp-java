@@ -218,6 +218,8 @@ public class ArticleController extends BaseController {
 
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
+
+        System.out.println(JsonUtils.toJson(entityModel));
         return Message.success(entityModel,"保存成功");
 
     }

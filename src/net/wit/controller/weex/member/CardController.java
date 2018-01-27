@@ -182,7 +182,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Card.VIP vip,HttpServletRequest request){
+    public Message update(Long id,Card.VIP vip,String name,String mobile,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -201,7 +201,15 @@ public class CardController extends BaseController {
         if (!card.getOwner().equals(admin.getEnterprise().getMember())) {
             return Message.error("不是本店会员卡");
         }
-        card.setVip(vip);
+        if (vip!=null) {
+            card.setVip(vip);
+        }
+        if (name!=null) {
+            card.setName(name);
+        }
+        if (mobile!=null) {
+            card.setMobile(mobile);
+        }
         cardService.update(card);
         return Message.success("更新成功");
     }

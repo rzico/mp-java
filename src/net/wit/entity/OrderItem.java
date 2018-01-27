@@ -333,6 +333,28 @@ public class OrderItem extends BaseEntity {
 	}
 
 	/**
+	 * 计算分润积分
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public Long calcPoint1() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			Long d1 =
+					getSubtotal().multiply(
+							distribution.getPoint1().multiply(new BigDecimal("0.01")))
+							.setScale(0,BigDecimal.ROUND_DOWN).longValue();
+			return d1;
+		} else {
+			return 0L;
+		}
+	}
+
+	/**
 	 * 计算分润金额
 	 *
 	 * @return 小计
@@ -356,6 +378,28 @@ public class OrderItem extends BaseEntity {
 
 
 	/**
+	 * 计算分润积分
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public Long calcPoint2() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			Long d2 =
+					getSubtotal().multiply(
+							distribution.getPoint2().multiply(new BigDecimal("0.01")))
+							.setScale(0,BigDecimal.ROUND_DOWN).longValue();
+			return d2;
+		} else {
+			return 0L;
+		}
+	}
+
+	/**
 	 * 计算分润金额
 	 *
 	 * @return 小计
@@ -374,6 +418,29 @@ public class OrderItem extends BaseEntity {
 			return d3;
 		} else {
 			return BigDecimal.ZERO;
+		}
+	}
+
+
+	/**
+	 * 计算分润积分
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public Long calcPoint3() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			Long d3 =
+					getSubtotal().multiply(
+							distribution.getPoint3().multiply(new BigDecimal("0.01")))
+							.setScale(0,BigDecimal.ROUND_DOWN).longValue();
+			return d3;
+		} else {
+			return 0L;
 		}
 	}
 

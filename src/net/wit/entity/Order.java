@@ -201,6 +201,13 @@ public class Order extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '已付金额'")
 	private BigDecimal amountPaid;
 
+	/** 分销佣金 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '分销佣金'")
+	private BigDecimal rebateAmount;
+
 	/** 赠送积分 */
 	@NotNull
 	@Min(0)
@@ -432,6 +439,14 @@ public class Order extends BaseEntity {
 	 */
 	public void setFee(BigDecimal fee) {
 		this.fee = fee;
+	}
+
+	public BigDecimal getRebateAmount() {
+		return rebateAmount;
+	}
+
+	public void setRebateAmount(BigDecimal rebateAmount) {
+		this.rebateAmount = rebateAmount;
 	}
 
 	/**
@@ -1043,14 +1058,18 @@ public class Order extends BaseEntity {
 	@Transient
 	public BigDecimal getDistribution() {
 		BigDecimal d = BigDecimal.ZERO;
-		if (getPromoter()!=null) {
+		if (getPromoter()!=null && getPromoter().leaguer(getSeller())) {
 			if (getOrderItems() != null) {
 				for (OrderItem orderItem : getOrderItems()) {
 					if (orderItem != null && orderItem.getSubtotal() != null) {
 						d = d.add(orderItem.calcPercent1());
-						if (getPromoter().getPromoter()!=null) {
+						Card c2 = getPromoter().card(getSeller());
+						Member p2 = c2.getPromoter();
+						if (p2!=null  && p2.leaguer(getSeller()) ) {
 							d = d.add(orderItem.calcPercent2());
-							if (getPromoter().getPromoter().getPromoter()!=null) {
+							Card c3 = p2.card(getSeller());
+							Member p3 = c3.getPromoter();
+							if (p3!=null  && p3.leaguer(getSeller())) {
 								d = d.add(orderItem.calcPercent3());
 							}
 						}
@@ -1068,7 +1087,7 @@ public class Order extends BaseEntity {
 	 */
 	@Transient
 	public BigDecimal getAmountPayable() {
-		BigDecimal amountPayable = getAmount().subtract(getAmountPaid());
+		BigDecimal amountPayable = getAmount().subtract(getPointDiscount()).subtract(getAmountPaid());
 		return amountPayable.compareTo(new BigDecimal(0)) > 0 ? amountPayable : new BigDecimal(0);
 	}
 

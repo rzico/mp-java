@@ -47,6 +47,9 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	@Resource(name = "cardBillDaoImpl")
 	private CardBillDao cardBillDao;
 
+	@Resource(name = "cardPointBillDaoImpl")
+	private CardPointBillDao cardPointBillDao;
+
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
@@ -117,6 +120,17 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		return cardDao.find(code);
 	}
 
+	public Card find(Member member,Member owner) {
+        Card card = null;
+		for (Card c:member.getCards()) {
+			if (c.getOwner().equals(owner)) {
+				card = c;
+				break;
+			}
+		}
+		return card;
+	}
+
 	public synchronized Card activate(Card card,Member member) {
 		String name = card.getName();
 		String mobile = card.getMobile();
@@ -153,6 +167,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setStatus(Card.Status.none);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
+			card.setPoint(0L);
 			if (code == null) {
 				topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 				Long no = topicCard.getIncrement() + 1L;
@@ -180,6 +195,70 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			}
 		}
 		return card;
+	}
+
+
+	//分销关系，创建并激活会员卡
+	public synchronized Card createAndActivate(Member member,Member owner,Member promoter) {
+
+		Card  card = member.card(owner);
+		TopicCard topicCard = null;
+		if (owner.getTopic()!=null) {
+			topicCard = owner.getTopic().getTopicCard();
+		}
+
+		if (card==null && topicCard!=null) {
+			card = new Card();
+			card.setOwner(topicCard.getTopic().getMember());
+			card.setVip(Card.VIP.vip2);
+			card.setStatus(Card.Status.activate);
+			card.setTopicCard(topicCard);
+			card.setBalance(BigDecimal.ZERO);
+			card.setPoint(0L);
+			topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
+			Long no = topicCard.getIncrement() + 1L;
+			topicCard.setIncrement(no);
+			topicCardDao.merge(topicCard);
+
+			// 无法认识店铺，使用企业卡
+			card.setCode("85" + String.valueOf(topicCard.getId() + 100000000L) + String.valueOf(no + 10200L));
+			if (promoter.leaguer(owner)) {
+				card.setPromoter(promoter);
+			} else {
+				card = null;
+			}
+			cardDao.persist(card);
+
+			card.getMembers().add(member);
+			cardDao.merge(card);
+
+			member.getCards().add(card);
+			memberDao.merge(member);
+
+		} else {
+			if (card!=null) {
+				if (card.getPromoter() == null) {
+					if (card.getVip().compareTo(Card.VIP.vip2)<0) {
+						card.setVip(Card.VIP.vip2);
+						if (promoter.leaguer(owner)) {
+							card.setPromoter(promoter);
+						} else {
+							card = null;
+						}
+						cardDao.merge(card);
+					} else {
+						card = null;
+					}
+				} else {
+					card = null;
+				}
+			} else {
+				card = null;
+			}
+		}
+
+		return card;
+
 	}
 
 	//支付插件专用方法
@@ -272,6 +351,43 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		} catch (Exception  e) {
 			throw  new RuntimeException("支付失败");
 		}
+	}
+
+	public void addPoint(Card card,Long point,String memo,Order order) {
+		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
+		card.setPoint(card.getPoint()+point);
+		cardDao.merge(card);
+		CardPointBill bill = new CardPointBill();
+		bill.setBalance(card.getPoint());
+		bill.setCard(card);
+		bill.setCredit(point);
+		bill.setDebit(0L);
+		bill.setDeleted(false);
+		bill.setMemo(memo);
+		bill.setOrder(order);
+		bill.setOwner(card.getOwner());
+		bill.setMember(order.getMember());
+		cardPointBillDao.persist(bill);
+	}
+
+	public void decPoint(Card card, Long point,String memo,Order order) {
+		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
+		card.setPoint(card.getPoint()-point);
+		if (card.getPoint().compareTo(0L)<0) {
+			throw  new RuntimeException("积分余额不足");
+		}
+		cardDao.merge(card);
+		CardPointBill bill = new CardPointBill();
+		bill.setBalance(card.getPoint());
+		bill.setCard(card);
+		bill.setCredit(point);
+		bill.setDebit(0L);
+		bill.setDeleted(false);
+		bill.setMemo(memo);
+		bill.setOrder(order);
+		bill.setOwner(card.getOwner());
+		bill.setMember(order.getMember());
+		cardPointBillDao.persist(bill);
 	}
 
 }

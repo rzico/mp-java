@@ -945,6 +945,31 @@ public class Member extends BaseEntity {
 
 	}
 
+	public Card card(Member seller) {
+		Card card = null;
+		for (Card c:getCards()) {
+			if (c.getOwner().equals(seller)) {
+				card = c;
+				break;
+			}
+		}
+		return card;
+	}
+
+
+	public Boolean leaguer(Member seller) {
+		Card card = card(seller);
+		if (card==null) {
+			return false;
+		}
+		if (card.getVip().compareTo(Card.VIP.vip1)>0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
 	public static Long decodeUserId(String userId) {
 		if (userId!=null) {
 			String uid = userId.substring(2);

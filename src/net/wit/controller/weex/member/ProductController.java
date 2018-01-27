@@ -108,8 +108,8 @@ public class ProductController extends BaseController {
 
 		List<Product> products = new ArrayList<Product>();
 		int i = 0;
-        for (Product product:goods.getProducts()) {
-        	product.setDeleted(true);
+		for (Product product:goods.getProducts()) {
+			product.setDeleted(true);
 		}
 
 		for (ProductModel pm:model.getProducts()) {

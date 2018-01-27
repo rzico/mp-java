@@ -28,4 +28,5 @@ public interface CardDao extends BaseDao<Card, Long> {
 	 */
 	Page<Card> findPage(Date beginDate,Date endDate, Pageable pageable);
 	public Card find(String code);
+
 }

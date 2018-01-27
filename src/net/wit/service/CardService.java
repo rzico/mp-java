@@ -22,9 +22,19 @@ public interface CardService extends BaseService<Card, Long> {
 
 	public Card find(String code);
 
+	public Card find(Member member,Member owner);
+
 	public Card create(TopicCard topicCard,Shop shop, String code,Member member);
+
+	//分销关系，创建并激活会员卡
+	public Card createAndActivate(Member member,Member owner,Member promoter);
+
 	//支付插件专用方法
 	public void payment(Card card,Payment payment) throws Exception;
 	//支付插件专用方法
 	public void refunds(Card card,Refunds refunds) throws Exception;
+
+	public void addPoint(Card card, Long point,String memo,Order order);
+	public void decPoint(Card card, Long point,String memo,Order order);
+
 }

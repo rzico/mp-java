@@ -176,16 +176,7 @@ public class OrderController extends BaseController {
 				return Message.error("库存不足");
 			}
 		}
-		Member promter = member.getPromoter();
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
-
-		if (xuid!=null && promter==null && member.getPromoter()!=null) {
-			try {
-				memberService.create(member,member.getPromoter());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -319,6 +310,7 @@ public class OrderController extends BaseController {
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			try {
 				orderService.complete(order, null);
+
 				return Message.success("签收成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());
