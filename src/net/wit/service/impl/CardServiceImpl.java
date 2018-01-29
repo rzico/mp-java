@@ -354,40 +354,44 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	}
 
 	public void addPoint(Card card,Long point,String memo,Order order) {
-		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
-		card.setPoint(card.getPoint()+point);
-		cardDao.merge(card);
-		CardPointBill bill = new CardPointBill();
-		bill.setBalance(card.getPoint());
-		bill.setCard(card);
-		bill.setCredit(point);
-		bill.setDebit(0L);
-		bill.setDeleted(false);
-		bill.setMemo(memo);
-		bill.setOrder(order);
-		bill.setOwner(card.getOwner());
-		bill.setMember(order.getMember());
-		cardPointBillDao.persist(bill);
+		if (point>0) {
+			cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+			card.setPoint(card.getPoint() + point);
+			cardDao.merge(card);
+			CardPointBill bill = new CardPointBill();
+			bill.setBalance(card.getPoint());
+			bill.setCard(card);
+			bill.setCredit(point);
+			bill.setDebit(0L);
+			bill.setDeleted(false);
+			bill.setMemo(memo);
+			bill.setOrder(order);
+			bill.setOwner(card.getOwner());
+			bill.setMember(order.getMember());
+			cardPointBillDao.persist(bill);
+		}
 	}
 
 	public void decPoint(Card card, Long point,String memo,Order order) {
-		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
-		card.setPoint(card.getPoint()-point);
-		if (card.getPoint().compareTo(0L)<0) {
-			throw  new RuntimeException("积分余额不足");
+		if (point>0) {
+			cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+			card.setPoint(card.getPoint() - point);
+			if (card.getPoint().compareTo(0L) < 0) {
+				throw new RuntimeException("积分余额不足");
+			}
+			cardDao.merge(card);
+			CardPointBill bill = new CardPointBill();
+			bill.setBalance(card.getPoint());
+			bill.setCard(card);
+			bill.setCredit(point);
+			bill.setDebit(0L);
+			bill.setDeleted(false);
+			bill.setMemo(memo);
+			bill.setOrder(order);
+			bill.setOwner(card.getOwner());
+			bill.setMember(order.getMember());
+			cardPointBillDao.persist(bill);
 		}
-		cardDao.merge(card);
-		CardPointBill bill = new CardPointBill();
-		bill.setBalance(card.getPoint());
-		bill.setCard(card);
-		bill.setCredit(point);
-		bill.setDebit(0L);
-		bill.setDeleted(false);
-		bill.setMemo(memo);
-		bill.setOrder(order);
-		bill.setOwner(card.getOwner());
-		bill.setMember(order.getMember());
-		cardPointBillDao.persist(bill);
 	}
 
 }
