@@ -210,7 +210,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		if (card==null && topicCard!=null) {
 			card = new Card();
 			card.setOwner(topicCard.getTopic().getMember());
-			card.setVip(Card.VIP.vip2);
+			card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
 			card.setStatus(Card.Status.activate);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
@@ -238,8 +238,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		} else {
 			if (card!=null) {
 				if (card.getPromoter() == null) {
-					if (card.getVip().compareTo(Card.VIP.vip2)<0) {
-						card.setVip(Card.VIP.vip2);
+					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()))<0) {
+						card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
 						if (promoter.leaguer(owner)) {
 							card.setPromoter(promoter);
 						} else {

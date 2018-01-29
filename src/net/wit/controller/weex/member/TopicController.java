@@ -178,7 +178,7 @@ public class TopicController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message submit(String name,String logo,Long categoryId,Long areaId,String address,Long templateId,Boolean useCoupon,Boolean useCard,Boolean useCashier,HttpServletRequest request){
+    public Message submit(String name,String logo,Long categoryId,Long areaId,String address,Long templateId,Boolean useCoupon,Boolean useCard,Boolean useCashier,TopicConfig.PromoterType promoterType,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -258,6 +258,9 @@ public class TopicController extends BaseController {
                 return Message.error("请绑定银行卡才能开通");
             }
             config.setUseCashier(useCashier);
+        }
+        if (promoterType!=null) {
+            config.setPromoterType(promoterType);
         }
         topic.setConfig(config);
         topicService.update(topic);
