@@ -49,24 +49,11 @@ public class Distribution extends OrderEntity {
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '三级代理'")
 	private BigDecimal percent3;
 
-
-	/** 直接代理 百分比 */
+	/** 可提现比例 */
 	@Min(0)
 	@NotNull
-	@Column(columnDefinition="decimal(21,6) not null default 0 comment '直接代理'")
-	private BigDecimal point1;
-
-	/** 间接代理 百分比 */
-	@Min(0)
-	@NotNull
-	@Column(columnDefinition="decimal(21,6) not null default 0 comment '间接代理'")
-	private BigDecimal point2;
-
-	/** 三级代理 百分比 */
-	@Min(0)
-	@NotNull
-	@Column(columnDefinition="decimal(21,6) not null default 0 comment '三级代理'")
-	private BigDecimal point3;
+	@Column(columnDefinition="bigint(20) not null default 0 comment '可提现比例'")
+	private Long point;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -124,28 +111,17 @@ public class Distribution extends OrderEntity {
 		this.products = products;
 	}
 
-	public BigDecimal getPoint1() {
-		return point1;
+	public Long getPoint() {
+		return point;
 	}
 
-	public void setPoint1(BigDecimal point1) {
-		this.point1 = point1;
+	public void setPoint(Long point) {
+		this.point = point;
 	}
 
-	public BigDecimal getPoint2() {
-		return point2;
-	}
-
-	public void setPoint2(BigDecimal point2) {
-		this.point2 = point2;
-	}
-
-	public BigDecimal getPoint3() {
-		return point3;
-	}
-
-	public void setPoint3(BigDecimal point3) {
-		this.point3 = point3;
+	public BigDecimal calePointRate() {
+		Long p = getPoint();
+		return new BigDecimal((100-p)*0.01);
 	}
 
 	/*删除前处理*/
