@@ -2,6 +2,7 @@ package net.wit.controller.weex.member;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.AdminModel;
 import net.wit.controller.model.CouponModel;
@@ -219,6 +220,8 @@ public class AdminController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("enterprise", Filter.Operator.eq,enterprise));
         pageable.setFilters(filters);
+        pageable.setOrderProperty("shop");
+        pageable.setOrderDirection(Order.Direction.asc);
         Page<Admin> page = adminService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(AdminModel.bindList(page.getContent()));

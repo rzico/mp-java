@@ -109,6 +109,7 @@ public class ArticleController extends BaseController {
         } else {
             filters.add(new Filter("isAudit", Filter.Operator.eq, true));
         }
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
 
         pageable.setFilters(filters);
