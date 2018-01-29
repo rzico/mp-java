@@ -55,6 +55,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
     /**
      * 文章预览信息
      */
@@ -77,6 +80,7 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+
         return Message.bind(model,request);
    }
 

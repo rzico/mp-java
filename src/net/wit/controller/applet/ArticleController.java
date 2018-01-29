@@ -62,6 +62,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleCatalogServiceImpl")
     private ArticleCatalogService articleCatalogService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
     /**
      * 文章预览详情
      */
@@ -102,6 +105,9 @@ public class ArticleController extends BaseController {
             laudfilters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
             option.setHasLaud(lauds.size()>0);
+
+            MemberFollow memberFollow = memberFollowService.find(member, article.getMember());
+            option.setHasFollow(memberFollow!=null);
 
         }
         data.put("option",option);
