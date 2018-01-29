@@ -76,6 +76,8 @@ public class PaymentController extends BaseController {
 	@Resource(name = "pluginServiceImpl")
 	private PluginService pluginService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 	/**
 	 * 主页
 	 */
@@ -405,6 +407,54 @@ public class PaymentController extends BaseController {
 		return "/admin/payment/view/orderView";
 	}
 
-
-
+	/**
+	 * 付款登记
+	 */
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@ResponseBody
+	public Message register(Payment payment, String paymentVoucher,HttpServletRequest request) {
+		Admin admin = adminService.getCurrent();
+		//判断用户是否存在
+		if(admin==null){
+			return Message.error("该用户不存在");
+		}
+		Payment entity = paymentService.find(payment.getId());
+		//调用银行接口查询是否入账
+		try {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(entity.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				resultCode = paymentPlugin.queryOrder(entity, request);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				return Message.success(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					entity.setOperator(admin.getName());
+					entity.setTranSn(paymentVoucher);
+					entity.setStatus(Payment.Status.success);
+					if (!isValid(entity)) {
+						return Message.error("payment.data.valid");
+					}
+					paymentService.update(entity);
+					return Message.success(entity, "支付成功");
+				case "0001":
+					entity.setOperator(admin.getName());
+					entity.setTranSn(paymentVoucher);
+					entity.setStatus(Payment.Status.failure);
+					if (!isValid(entity)) {
+						return Message.error("payment.data.valid");
+					}
+					paymentService.update(entity);
+					return Message.success(entity, "支付失败");
+				default:
+					return Message.success(entity, "支付中");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return Message.error("服务器发生异常");
+		}
+	}
 }
