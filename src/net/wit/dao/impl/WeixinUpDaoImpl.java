@@ -270,7 +270,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                 h++;
                 continue;
             }
-            stringBuffer1.append("{\"mediaType\":\"html\",\"thumbnail\":\"\",\"original\":\"\",\"content\":\"");
+            stringBuffer1.append("{\"mediaType\":\"image\",\"thumbnail\":\"\",\"original\":\"\",\"content\":\"");
             stringBuffer1.append(s.replace("\"","\\\""));
             stringBuffer1.append("\"}");
             h++;
