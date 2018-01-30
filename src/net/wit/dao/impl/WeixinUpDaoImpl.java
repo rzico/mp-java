@@ -198,10 +198,12 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             InputStream inStream = conn.getInputStream();
             //将输入流转换成字符输出高效流
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream,"UTF-8"));
-            while(bufferedReader.readLine()!=null){
-                stringBuffer.append(bufferedReader.readLine());
+            String s=null;
+            while((s=bufferedReader.readLine())!=null){
+                stringBuffer.append(s);
             }
             System.out.println(stringBuffer.toString().length());
+//            System.out.println(stringBuffer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -223,40 +225,47 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             if (s.contains("</sction>")||s.contains("</a>")){
                 continue;
             }
+
+            //过滤换行标签
+            if (s.contains("</br>")||s.contains("</ br>")||s.contains("<br>")||s.contains("<br  />")||s.contains("<br />")){
+                continue;
+            }
             //如果有图片
             if (h!=0){
                 stringBuffer1.append(",");
             }
             if (s.contains("img")){
-                stringBuffer1.append("{\"mediaType\":\"image\",\"thumbnail\":\"\",\"original\":\"");
+                stringBuffer1.append("{\"mediaType\":\"image\",\"thumbnail\":\"");
                 String[] str=s.split(" ");
-                for(int i=0;i<str.length;i++){
-                    if(str[i].contains("data-src")){
+                for (int i = 0; i < str.length; i++) {
+                    if (str[i].contains("data-src")) {
                         //微信图片路径
-                        String surl=str[i].replace("data-src=\"","").replace("\"","");
+                        String surl = str[i].replace("data-src=\"", "").replace("\"", "");
                         //说明这个图片是emoji表情,可以不用截取上传也能使用
-                        if(surl.contains("emoji")){
+                        if (surl.contains("emoji")) {
                             stringBuffer1.append(surl);
                             continue;
                         }
                         //图片格式
-                        if(!str[i+1].contains("data-type")){
+                        if (!str[i + 1].contains("data-type")) {
                             continue;
                         }
-                        String shz=str[i+1].replace("data-type=\"","").replace("\"","");
+                        String shz = str[i + 1].replace("data-type=\"", "").replace("\"", "");
                         //文件下载
-                        File file= ArticlePropa.UrlToFile(surl,shz,tempPath);
+                        File file = ArticlePropa.UrlToFile(surl, shz, tempPath);
                         try {
-                        FileInputStream in_file = new FileInputStream(file);
-                        MultipartFile multi = new MockMultipartFile(System.currentTimeMillis()+"."+shz, in_file);
-                        StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-                        String folder1=sdf.format(System.currentTimeMillis());
-                        String filename= String.valueOf(System.currentTimeMillis()*1000000+(int)((Math.random()*9+1)*100000));
-                        String uppath="/upload/image/"+folder1+"/"+filename+"."+shz;
-                        ossPlugin.upload(uppath,multi,ossPlugin.getMineType("."+shz));
-//                        System.out.println(ossPlugin.getUrl(uppath));
-                        stringBuffer1.append(ossPlugin.getUrl(uppath));
+                            FileInputStream in_file = new FileInputStream(file);
+                            MultipartFile multi = new MockMultipartFile(System.currentTimeMillis() + "." + shz, in_file);
+                            StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                            String folder1 = sdf.format(System.currentTimeMillis());
+                            String filename = String.valueOf(System.currentTimeMillis() * 1000000 + (int) ((Math.random() * 9 + 1) * 100000));
+                            String uppath = "/upload/image/" + folder1 + "/" + filename + "." + shz;
+                            ossPlugin.upload(uppath, multi, ossPlugin.getMineType("." + shz));
+                            String string=ossPlugin.getUrl(uppath);
+                            stringBuffer1.append(string);
+                            stringBuffer1.append("\",\"original\":\"");
+                            stringBuffer1.append(string);
                         }
                         catch (Exception e){
 
@@ -270,7 +279,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                 h++;
                 continue;
             }
-            stringBuffer1.append("{\"mediaType\":\"html\",\"thumbnail\":\"\",\"original\":\"\",\"content\":\"");
+            stringBuffer1.append("{\"mediaType\":\"image\",\"thumbnail\":\"\",\"original\":\"\",\"content\":\"");
             stringBuffer1.append(s.replace("\"","\\\""));
             stringBuffer1.append("\"}");
             h++;
