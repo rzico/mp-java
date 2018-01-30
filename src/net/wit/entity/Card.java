@@ -123,7 +123,6 @@ public class Card extends BaseEntity {
 	/** 推广 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
 	private Member promoter;
 
 	/**

@@ -1087,7 +1087,7 @@ public class Order extends BaseEntity {
 	 */
 	@Transient
 	public BigDecimal getAmountPayable() {
-		BigDecimal amountPayable = getAmount().subtract(getPointDiscount()).subtract(getAmountPaid());
+		BigDecimal amountPayable = getAmount().subtract(getPointDiscount());
 		return amountPayable.compareTo(new BigDecimal(0)) > 0 ? amountPayable : new BigDecimal(0);
 	}
 

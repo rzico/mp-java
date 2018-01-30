@@ -326,7 +326,7 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent1().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			        d1 = d1.multiply(new BigDecimal(distribution.getPoint()*0.01).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+			        d1 = d1.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			return d1;
 		} else {
 			return BigDecimal.ZERO;
@@ -349,7 +349,7 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent1().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			Long p1 = d1.multiply(new BigDecimal((100L-distribution.getPoint())*0.01).setScale(0,BigDecimal.ROUND_HALF_DOWN)).longValue();
+			Long p1 = d1.multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_HALF_DOWN).longValue();
 			return p1;
 		} else {
 			return 0L;
@@ -372,7 +372,7 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent2().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			d2 = d2.multiply(new BigDecimal(distribution.getPoint()*0.01).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+			d2 = d2.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			return d2;
 		} else {
 			return BigDecimal.ZERO;
@@ -396,7 +396,7 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent2().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			Long p2 = d2.multiply(new BigDecimal((100L-distribution.getPoint())*0.01).setScale(0,BigDecimal.ROUND_HALF_DOWN)).longValue();
+			Long p2 = d2.multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_HALF_DOWN).longValue();
 			return p2;
 		} else {
 			return 0L;
@@ -419,7 +419,7 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent3().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			d3 = d3.multiply(new BigDecimal((100L-distribution.getPoint())*0.01).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+			d3 = d3.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			return d3;
 		} else {
 			return BigDecimal.ZERO;
@@ -443,7 +443,7 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent3().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			Long p3 = d3.multiply(new BigDecimal((100L-distribution.getPoint())*0.01).setScale(0,BigDecimal.ROUND_HALF_DOWN)).longValue();
+			Long p3 = d3.multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_HALF_DOWN).longValue();
 			return p3;
 		} else {
 			return 0L;

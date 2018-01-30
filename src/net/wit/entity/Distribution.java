@@ -52,8 +52,8 @@ public class Distribution extends OrderEntity {
 	/** 可提现比例 */
 	@Min(0)
 	@NotNull
-	@Column(columnDefinition="bigint(20) not null default 0 comment '可提现比例'")
-	private Long point;
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '可提现比例'")
+	private BigDecimal point;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -111,17 +111,22 @@ public class Distribution extends OrderEntity {
 		this.products = products;
 	}
 
-	public Long getPoint() {
+	public BigDecimal getPoint() {
 		return point;
 	}
 
-	public void setPoint(Long point) {
+	public void setPoint(BigDecimal point) {
 		this.point = point;
 	}
 
 	public BigDecimal calePointRate() {
-		Long p = getPoint();
-		return new BigDecimal((100-p)*0.01);
+		BigDecimal p = getPoint();
+		return (new BigDecimal(10).subtract(p)).multiply(new BigDecimal("0.1"));
+	}
+
+	public BigDecimal caleMoneyRate() {
+		BigDecimal p = getPoint();
+		return p.multiply(new BigDecimal("0.1"));
 	}
 
 	/*删除前处理*/
