@@ -198,10 +198,12 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             InputStream inStream = conn.getInputStream();
             //将输入流转换成字符输出高效流
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream,"UTF-8"));
-            while(bufferedReader.readLine()!=null){
-                stringBuffer.append(bufferedReader.readLine());
+            String s=null;
+            while((s=bufferedReader.readLine())!=null){
+                stringBuffer.append(s);
             }
             System.out.println(stringBuffer.toString().length());
+//            System.out.println(stringBuffer);
         } catch (IOException e) {
             e.printStackTrace();
         }
