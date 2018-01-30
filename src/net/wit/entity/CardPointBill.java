@@ -62,7 +62,7 @@ public class CardPointBill extends BaseEntity {
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '订单'")
+	@JoinColumn(name = "orders", updatable = false)
 	private Order order;
 
 	/** 是否删除 */

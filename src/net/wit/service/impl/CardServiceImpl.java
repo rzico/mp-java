@@ -210,7 +210,11 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		if (card==null && topicCard!=null) {
 			card = new Card();
 			card.setOwner(topicCard.getTopic().getMember());
-			card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
+			if (owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
+				card.setVip(Card.VIP.vip1);
+			} else {
+				card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
+			}
 			card.setStatus(Card.Status.activate);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
@@ -237,15 +241,23 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 
 		} else {
 			if (card!=null) {
-				if (card.getPromoter() == null) {
+				if (card.getPromoter() == null && promoter!=null) {
+					if (owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
+						if (promoter.leaguer(owner)) {
+							card.setPromoter(promoter);
+							cardDao.merge(card);
+						} else {
+							card = null;
+						}
+					} else
 					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()))<0) {
 						card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
 						if (promoter.leaguer(owner)) {
 							card.setPromoter(promoter);
+							cardDao.merge(card);
 						} else {
 							card = null;
 						}
-						cardDao.merge(card);
 					} else {
 						card = null;
 					}
@@ -354,40 +366,44 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	}
 
 	public void addPoint(Card card,Long point,String memo,Order order) {
-		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
-		card.setPoint(card.getPoint()+point);
-		cardDao.merge(card);
-		CardPointBill bill = new CardPointBill();
-		bill.setBalance(card.getPoint());
-		bill.setCard(card);
-		bill.setCredit(point);
-		bill.setDebit(0L);
-		bill.setDeleted(false);
-		bill.setMemo(memo);
-		bill.setOrder(order);
-		bill.setOwner(card.getOwner());
-		bill.setMember(order.getMember());
-		cardPointBillDao.persist(bill);
+		if (point>0) {
+			cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+			card.setPoint(card.getPoint() + point);
+			cardDao.merge(card);
+			CardPointBill bill = new CardPointBill();
+			bill.setBalance(card.getPoint());
+			bill.setCard(card);
+			bill.setCredit(point);
+			bill.setDebit(0L);
+			bill.setDeleted(false);
+			bill.setMemo(memo);
+			bill.setOrder(order);
+			bill.setOwner(card.getOwner());
+			bill.setMember(order.getMember());
+			cardPointBillDao.persist(bill);
+		}
 	}
 
 	public void decPoint(Card card, Long point,String memo,Order order) {
-		cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
-		card.setPoint(card.getPoint()-point);
-		if (card.getPoint().compareTo(0L)<0) {
-			throw  new RuntimeException("积分余额不足");
+		if (point>0) {
+			cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
+			card.setPoint(card.getPoint() - point);
+			if (card.getPoint().compareTo(0L) < 0) {
+				throw new RuntimeException("积分余额不足");
+			}
+			cardDao.merge(card);
+			CardPointBill bill = new CardPointBill();
+			bill.setBalance(card.getPoint());
+			bill.setCard(card);
+			bill.setCredit(point);
+			bill.setDebit(0L);
+			bill.setDeleted(false);
+			bill.setMemo(memo);
+			bill.setOrder(order);
+			bill.setOwner(card.getOwner());
+			bill.setMember(order.getMember());
+			cardPointBillDao.persist(bill);
 		}
-		cardDao.merge(card);
-		CardPointBill bill = new CardPointBill();
-		bill.setBalance(card.getPoint());
-		bill.setCard(card);
-		bill.setCredit(point);
-		bill.setDebit(0L);
-		bill.setDeleted(false);
-		bill.setMemo(memo);
-		bill.setOrder(order);
-		bill.setOwner(card.getOwner());
-		bill.setMember(order.getMember());
-		cardPointBillDao.persist(bill);
 	}
 
 }

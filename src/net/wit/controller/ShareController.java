@@ -56,6 +56,12 @@ public class ShareController extends BaseController {
             return Message.error("无效文章编号");
         }
         Member member = memberService.getCurrent();
+        if (member.getLogo()==null) {
+            return Message.error("请设置头像再分享");
+        }
+        if (member.getNickName()==null) {
+            return Message.error("请设置昵称再分享");
+        }
         ShareModel model = new ShareModel();
         model.bind(article,shareType,member);
         return Message.bind(model,request);
@@ -72,6 +78,12 @@ public class ShareController extends BaseController {
             return Message.error("无效专栏编号");
         }
         Member member = memberService.getCurrent();
+        if (member.getLogo()==null) {
+            return Message.error("请设置头像再分享");
+        }
+        if (member.getNickName()==null) {
+            return Message.error("请设置昵称再分享");
+        }
         ShareModel model = new ShareModel();
         model.bind(topic,shareType,member);
         return Message.bind(model,request);

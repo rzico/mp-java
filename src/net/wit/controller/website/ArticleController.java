@@ -55,6 +55,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
     /**
      * 文章预览信息
      */
@@ -77,6 +80,7 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+
         return Message.bind(model,request);
    }
 
@@ -105,6 +109,7 @@ public class ArticleController extends BaseController {
         } else {
             filters.add(new Filter("isAudit", Filter.Operator.eq, true));
         }
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
 
         pageable.setFilters(filters);

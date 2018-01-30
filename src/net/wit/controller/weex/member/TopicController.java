@@ -3,6 +3,7 @@ package net.wit.controller.weex.member;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.TopicIndexModel;
+import net.wit.controller.model.TopicOptionModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -97,6 +98,7 @@ public class TopicController extends BaseController {
                 config.setUseCard(false);
                 config.setUseCashier(false);
                 config.setUseCoupon(false);
+                config.setPromoterType(TopicConfig.PromoterType.any);
             }
             topic.setConfig(config);
             Calendar calendar   =   new GregorianCalendar();
@@ -228,6 +230,7 @@ public class TopicController extends BaseController {
             config.setUseCard(false);
             config.setUseCashier(false);
             config.setUseCoupon(false);
+            config.setPromoterType(TopicConfig.PromoterType.any);
         }
         if (useCard!=null) {
             if (member.getMobile()==null) {
@@ -329,6 +332,22 @@ public class TopicController extends BaseController {
         }
 
 
+        return Message.bind(model,request);
+
+    }
+
+    /**
+     *  获取专栏信息
+     */
+    @RequestMapping(value = "/option", method = RequestMethod.GET)
+    @ResponseBody
+    public Message option(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        TopicOptionModel model = new TopicOptionModel();
+        model.bind(member);
         return Message.bind(model,request);
 
     }

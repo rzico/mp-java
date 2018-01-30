@@ -77,7 +77,11 @@ public class ShareModel extends BaseModel implements Serializable {
         if (shareType.equals(ArticleShare.ShareType.appWeex)) {
             this.url = "file://view/member/editor/preview.js?articleId=" + article.getId() + "&publish=true";
         } else {
-            this.url = "http://"+bundle.getString("weixin.url")+"/#/t"+article.getTemplate().getSn()+"?id="+article.getId();
+            if (article.getTemplate()==null) {
+                this.url = "http://"+bundle.getString("weixin.url")+"/#/t1001?id="+article.getId();
+            } else {
+                this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId();
+            }
             if (member!=null) {
                 this.url = this.url + "&xuid="+member.getId();
             }
@@ -94,7 +98,11 @@ public class ShareModel extends BaseModel implements Serializable {
         if (shareType.equals(ArticleShare.ShareType.appWeex)) {
             this.url = "file://view/member/author.js?id=" + topic.getId();
         } else {
-            this.url = "http://"+bundle.getString("weixin.url")+"/#/c"+topic.getTemplate().getSn()+"?id="+topic.getMember().getId();
+            if (topic.getTemplate()==null) {
+                this.url = "http://"+bundle.getString("weixin.url")+"/#/c1001?id="+topic.getMember().getId();
+            } else {
+                this.url = "http://" + bundle.getString("weixin.url") + "/#/c" + topic.getTemplate().getSn() + "?id=" + topic.getMember().getId();
+            }
             if (member!=null) {
                 this.url = this.url + "&xuid="+member.getId();
             }
