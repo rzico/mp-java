@@ -218,8 +218,9 @@
                             <div class="formControls col-xs-8 col-sm-9">
                                 <div class="uploader-thum-container">
                                     <div id="fileList" class="uploader-list"></div>
+                                    <img src="${product.thumbnail}" height="100" width="100">
                                     <div id="filePicker">选择图片</div>
-                                    <input type="hidden" value="" id="thumbnail" name="thumbnail">
+                                    <input type="hidden" value="${product.thumbnail}" id="thumbnail" name="thumbnail">
                                 </div>
                             </div>
                         </div>
@@ -326,8 +327,13 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
-
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+
+        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
 <script type="text/javascript">
     $tab = $("#childtable-1").clone();
     $tableCount = $('.goodsbox-col3').children().length;
@@ -342,6 +348,15 @@
             checkboxClass: 'icheckbox-blue',
             radioClass: 'iradio-blue',
             increaseArea: '20%'
+        });
+
+        $('.goodsbox-col3').children().each(function(index,element){
+            $pictureId = "fileList"+index.toString();
+            $(element).find("#fileList").attr("id",$pictureId);
+            $filePickerId = "filePicker"+index.toString();
+            $(element).find("#filePicker").attr("id",$filePickerId);
+            //$thumbnail = $(element).find("#thumbnail").val();
+            new $uploadpicture($pictureId,$filePickerId);
         });
 
         $("#form-update").validate({
@@ -464,7 +479,6 @@
             products: $productTemplates,
         };
         $jsons = JSON.stringify(productData);
-
     }
 
 </script>
