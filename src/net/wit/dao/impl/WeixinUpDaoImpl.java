@@ -223,6 +223,11 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             if (s.contains("</sction>")||s.contains("</a>")){
                 continue;
             }
+
+            //过滤换行标签
+            if (s.contains("</br>")||s.contains("</ br>")||s.contains("<br>")){
+                continue;
+            }
             //如果有图片
             if (h!=0){
                 stringBuffer1.append(",");
