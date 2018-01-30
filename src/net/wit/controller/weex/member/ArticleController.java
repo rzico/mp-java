@@ -399,6 +399,7 @@ public class ArticleController extends BaseController {
     public JSONArray articleGrab(String articlePath, HttpServletRequest request){
         StringBuffer s=new StringBuffer();
         System.out.println(articlePath);
+        logger.info(articlePath);
         try {
             s.append(weixinUpService.DownArticle(articlePath));
         } catch (IOException e) {
