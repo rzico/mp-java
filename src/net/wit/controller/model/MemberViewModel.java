@@ -125,9 +125,9 @@ public class MemberViewModel extends BaseModel implements Serializable {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Topic topic = member.getTopic();
         if (topic!=null) {
-            this.url = "http://"+bundle.getString("weixin.url")+"/c"+topic.getTemplate().getSn()+"?id="+member.getId();
+            this.url = "http://"+bundle.getString("weixin.url")+"/#/c"+topic.getTemplate().getSn()+"?id="+member.getId();
         } else {
-            this.url = "http://"+bundle.getString("weixin.url")+"/c1001?id="+member.getId();
+            this.url = "http://"+bundle.getString("weixin.url")+"/#/c1001?id="+member.getId();
         }
     }
 }

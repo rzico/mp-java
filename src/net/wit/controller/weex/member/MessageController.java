@@ -132,8 +132,9 @@ public class MessageController extends BaseController {
             url = "file://view/friend/new.js";
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.order)) {
-            Map<String,String> data = JsonUtils.toObject(message.getExt(),Map.class);
-            net.wit.entity.Order order = orderService.find(Long.parseLong(data.get("id")));
+            Map<String,Object> data = JsonUtils.toObject(message.getExt(),Map.class);
+            String oid = data.get("id").toString();
+            net.wit.entity.Order order = orderService.find(Long.parseLong(oid));
             if (order.getSeller().equals(member)) {
                 url = "file://view/shop/order/details.js?sn=" + order.getSn();
             } else {

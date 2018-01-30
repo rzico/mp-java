@@ -219,31 +219,31 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
 			card.setPoint(0L);
+
 			topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 			Long no = topicCard.getIncrement() + 1L;
 			topicCard.setIncrement(no);
 			topicCardDao.merge(topicCard);
 
-			// 无法认识店铺，使用企业卡
-			card.setCode("85" + String.valueOf(topicCard.getId() + 100000000L) + String.valueOf(no + 10200L));
-			if (promoter.leaguer(owner)) {
-				card.setPromoter(promoter);
-			} else {
-				card = null;
-			}
-			cardDao.persist(card);
-
 			card.getMembers().add(member);
-			cardDao.merge(card);
+			cardDao.persist(card);
 
 			member.getCards().add(card);
 			memberDao.merge(member);
 
+			// 无法认识店铺，使用企业卡
+			card.setCode("85" + String.valueOf(topicCard.getId() + 100000000L) + String.valueOf(no + 10200L));
+			if (promoter!=null && promoter.leaguer(owner)) {
+				card.setPromoter(promoter);
+				cardDao.merge(card);
+			} else {
+				card = null;
+			}
 		} else {
 			if (card!=null) {
-				if (card.getPromoter() == null && promoter!=null) {
+				if (card.getPromoter() == null) {
 					if (owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
-						if (promoter.leaguer(owner)) {
+						if (promoter!=null && promoter.leaguer(owner)) {
 							card.setPromoter(promoter);
 							cardDao.merge(card);
 						} else {
@@ -252,7 +252,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 					} else
 					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()))<0) {
 						card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
-						if (promoter.leaguer(owner)) {
+						if (promoter!=null && promoter.leaguer(owner)) {
 							card.setPromoter(promoter);
 							cardDao.merge(card);
 						} else {

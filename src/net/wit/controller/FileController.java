@@ -39,6 +39,7 @@ public class FileController extends BaseController {
 			StoragePlugin oss = pluginService.getStoragePlugin("ossPlugin");
 			String exec = new MyActionEnter(request,oss, rootPath+"/WEB-INF/classes", rootPath).exec();
 			PrintWriter writer = response.getWriter();
+			response.setContentType("application/json");
 			writer.write(exec);
 			writer.flush();
 			writer.close();
