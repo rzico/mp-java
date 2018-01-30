@@ -225,7 +225,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             }
 
             //过滤换行标签
-            if (s.contains("</br>")||s.contains("</ br>")||s.contains("<br>")){
+            if (s.contains("</br>")||s.contains("</ br>")||s.contains("<br>")||s.contains("<br  />")||s.contains("<br />")){
                 continue;
             }
             //如果有图片
