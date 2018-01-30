@@ -962,7 +962,12 @@ public class Member extends BaseEntity {
 		if (card==null) {
 			return false;
 		}
-		if (card.getVip().compareTo(Card.VIP.vip1)>0) {
+
+		Topic topic = seller.getTopic();
+		if (topic.getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
+			return true;
+		}
+		if (card.getVip().compareTo(Card.VIP.valueOf(topic.getConfig().getPromoterType().name()))>=0) {
 			return true;
 		} else {
 			return false;

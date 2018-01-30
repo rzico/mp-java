@@ -326,9 +326,33 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent1().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			        d1 = d1.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			return d1;
 		} else {
 			return BigDecimal.ZERO;
+		}
+	}
+
+	/**
+	 * 计算分润积分
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public Long calcPoint1() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			BigDecimal d1 =
+					getSubtotal().multiply(
+							distribution.getPercent1().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			Long p1 = d1.multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_HALF_DOWN).longValue();
+			return p1;
+		} else {
+			return 0L;
 		}
 	}
 
@@ -348,12 +372,36 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent2().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			d2 = d2.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			return d2;
 		} else {
 			return BigDecimal.ZERO;
 		}
 	}
 
+
+	/**
+	 * 计算分润积分
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public Long calcPoint2() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			BigDecimal d2 =
+					getSubtotal().multiply(
+							distribution.getPercent2().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			Long p2 = d2.multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_HALF_DOWN).longValue();
+			return p2;
+		} else {
+			return 0L;
+		}
+	}
 
 	/**
 	 * 计算分润金额
@@ -371,9 +419,34 @@ public class OrderItem extends BaseEntity {
 					getSubtotal().multiply(
 							distribution.getPercent3().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			d3 = d3.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			return d3;
 		} else {
 			return BigDecimal.ZERO;
+		}
+	}
+
+
+	/**
+	 * 计算分润积分
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public Long calcPoint3() {
+		Product product = getProduct();
+		//第一级分润
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			BigDecimal d3 =
+					getSubtotal().multiply(
+							distribution.getPercent3().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			Long p3 = d3.multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_HALF_DOWN).longValue();
+			return p3;
+		} else {
+			return 0L;
 		}
 	}
 

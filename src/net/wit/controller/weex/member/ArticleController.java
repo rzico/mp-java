@@ -396,17 +396,17 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "grabarticle", method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray articleGrab(String articlePath, HttpServletRequest request){
-        String rootPath=request.getSession().getServletContext().getRealPath("/");
+    public Message articleGrab(String articlePath, HttpServletRequest request){
         StringBuffer s=new StringBuffer();
+        System.out.println(articlePath);
         try {
-            s.append(weixinUpService.DownArticle(articlePath,rootPath));
+            s.append(weixinUpService.DownArticle(articlePath));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         JSONArray jsonArrays=JSONArray.fromObject(s.toString());
-        return jsonArrays;
+        return Message.success(jsonArrays,"抓取成功");
     }
 
 }

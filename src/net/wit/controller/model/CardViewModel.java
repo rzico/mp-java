@@ -30,6 +30,10 @@ public class CardViewModel extends BaseModel implements Serializable {
     private Card.VIP vip;
     /** 余额 */
     private BigDecimal balance;
+    /** 积分 */
+    private Long point;
+    /** 店铺 */
+    private String shopName;
 
     public Long getId() {
         return id;
@@ -111,6 +115,22 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.mobile = mobile;
     }
 
+    public Long getPoint() {
+        return point;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
@@ -123,6 +143,13 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.vip = card.getVip();
         this.color = topic.getTopicCard().getColor();
         this.background = topic.getTopicCard().getBackground();
+        this.point = card.getPoint();
+        if (card.getShop()!=null) {
+            this.shopName = card.getShop().getName();
+        } else {
+            this.shopName = "";
+        }
+
     }
 
 

@@ -12,6 +12,7 @@ public class DistributionModel extends BaseModel implements Serializable {
     private BigDecimal percent1;
     private BigDecimal percent2;
     private BigDecimal percent3;
+    private BigDecimal point;
 
     public Long getId() {
         return id;
@@ -53,12 +54,21 @@ public class DistributionModel extends BaseModel implements Serializable {
         this.percent3 = percent3;
     }
 
+    public BigDecimal getPoint() {
+        return point;
+    }
+
+    public void setPoint(BigDecimal point) {
+        this.point = point;
+    }
+
     public void bind(Distribution distribution) {
         this.id = distribution.getId();
         this.name = distribution.getName();
         this.percent1 = distribution.getPercent1();
         this.percent2 = distribution.getPercent2();
         this.percent3 = distribution.getPercent3();
+        this.point = distribution.getPoint();
     }
 
     public static List<DistributionModel> bindList(List<Distribution> distributions) {

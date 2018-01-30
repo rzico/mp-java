@@ -26,7 +26,7 @@ public class WeixinUpServiceImpl implements WeixinUpService {
     }
 
     @Override
-    public StringBuffer DownArticle(String url,String downpath) throws IOException {
-        return weixinUpDao.DownArticle(url,downpath);
+    public StringBuffer DownArticle(String url) throws IOException {
+        return weixinUpDao.DownArticle(url);
     }
 }

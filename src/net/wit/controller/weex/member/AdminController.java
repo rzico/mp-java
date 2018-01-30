@@ -2,6 +2,7 @@ package net.wit.controller.weex.member;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.AdminModel;
 import net.wit.controller.model.CouponModel;
@@ -136,11 +137,13 @@ public class AdminController extends BaseController {
 
         if (shopId!=null) {
             Shop shop = shopService.find(shopId);
+            System.out.println(shopId);
             if (shop == null) {
                 return Message.error("店铺id无效");
             }
             adminMember.setShop(shop);
         }
+
         if (roleId!=null) {
             if (adminMember.isOwner()) {
                 return Message.error("店主不能设置角色");
@@ -219,6 +222,8 @@ public class AdminController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("enterprise", Filter.Operator.eq,enterprise));
         pageable.setFilters(filters);
+        pageable.setOrderProperty("shop");
+        pageable.setOrderDirection(Order.Direction.asc);
         Page<Admin> page = adminService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(AdminModel.bindList(page.getContent()));
