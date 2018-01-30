@@ -210,7 +210,11 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		if (card==null && topicCard!=null) {
 			card = new Card();
 			card.setOwner(topicCard.getTopic().getMember());
-			card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
+			if (owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
+				card.setVip(Card.VIP.vip1);
+			} else {
+				card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
+			}
 			card.setStatus(Card.Status.activate);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
@@ -237,15 +241,23 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 
 		} else {
 			if (card!=null) {
-				if (card.getPromoter() == null) {
+				if (card.getPromoter() == null && promoter!=null) {
+					if (owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
+						if (promoter.leaguer(owner)) {
+							card.setPromoter(promoter);
+							cardDao.merge(card);
+						} else {
+							card = null;
+						}
+					} else
 					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()))<0) {
 						card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
 						if (promoter.leaguer(owner)) {
 							card.setPromoter(promoter);
+							cardDao.merge(card);
 						} else {
 							card = null;
 						}
-						cardDao.merge(card);
 					} else {
 						card = null;
 					}

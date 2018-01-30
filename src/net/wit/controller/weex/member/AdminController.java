@@ -137,11 +137,13 @@ public class AdminController extends BaseController {
 
         if (shopId!=null) {
             Shop shop = shopService.find(shopId);
+            System.out.println(shopId);
             if (shop == null) {
                 return Message.error("店铺id无效");
             }
             adminMember.setShop(shop);
         }
+
         if (roleId!=null) {
             if (adminMember.isOwner()) {
                 return Message.error("店主不能设置角色");
