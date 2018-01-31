@@ -30,7 +30,7 @@
             width: 100%;
             height: auto;
             background: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position: relative;
             left: 0px;
             top: 0px;
@@ -38,17 +38,17 @@
 
         .goodsbox-tablechild{
             width: 700px;
-            height: 144px;
+            height: 138px;
             /*height: auto;*/
             background: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            border: 1px solid rgb(192,192,192);
         }
 
         .goodsbox-col1{
             width: 100%;
-            height: 52px;
+            height: 48px;
             background-color: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -57,7 +57,7 @@
             width: 100%;
             height: 10px;
             background-color: #F0F8FF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -66,7 +66,7 @@
             width: 100%;
             height: auto;
             background-color: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -75,7 +75,7 @@
             width: 700px;
             height: auto;
             background-color: #FFFFFF;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             left:0;
         }
@@ -83,9 +83,10 @@
         .goodsbox-r1{
             float: left;
             width: 200px;
-            height: 48px;
-            border: 1px solid rgb(0,0,0);
+            height: 46px;
+            /*border: 1px solid rgb(0,0,0);*/
             text-align: right;
+            padding-right: 5px;
             font-size: 26px;
             font-weight: 100px;
         }
@@ -93,7 +94,7 @@
             float: left;
             width: 500px;
             height: 48px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             text-align: left;
             font-size: 26px;
             font-weight: 100px;
@@ -101,25 +102,25 @@
         .goodsbox-rchild1{
             float: left;
             width: 198px;
-            height: 144px;
+            height: 136px;
             /*height: auto;*/
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
         }
         .goodsbox-rchild2{
             float: left;
             width: 452px;
-            height: 144px;
+            height: 136px;
             /* height: auto; */
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
         }
         .goodsbox-rchild3{
             float: left;
             width: 42px;
-            height: 144px;
+            height: 136px;
             /* height: auto; */
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
             position:inherit;
             font-size: 30px;
             color: red;
@@ -152,13 +153,14 @@
         .goodsbox-colchild1{
             width: 100%;
             height: 46px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
         }
         .goodsbox-rchild6{
             float: left;
             width: 100px;
             height: 44px;
-            border: 1px solid rgb(0,0,0);
+            padding-right: 3px;
+            /*border: 1px solid rgb(0,0,0);*/
             text-align: right;
             font-size: 26px;
             font-weight: 100px;
@@ -167,13 +169,22 @@
             float: left;
             width: 173px;
             height: 44px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
         }
+
+        .goodsbox-rchild4-1{
+            float: left;
+            width: 173px;
+            height: 44px;
+            padding-left: 2px;
+            /*border: 1px solid rgb(0,0,0);*/
+        }
+
         .goodsbox-rchild5{
             float: left;
             width: 348px;
             height: 44px;
-            border: 1px solid rgb(0,0,0);
+            /*border: 1px solid rgb(0,0,0);*/
         }
 
     </style>
@@ -190,6 +201,8 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <div id="table-1" class="goodsbox-table">
+            <div class="goodsbox-col2">
+            </div>
             <div class="goodsbox-col1">
                 <div class="goodsbox-r1">商品名称</div>
                 <div class="goodsbox-r2">
@@ -218,7 +231,7 @@
                             <div class="formControls col-xs-8 col-sm-9">
                                 <div class="uploader-thum-container">
                                     <div id="fileList" class="uploader-list"></div>
-                                    <img src="${product.thumbnail}" height="100" width="100">
+                                    <img src="${product.thumbnailSmall}" height="100" width="100">
                                     <div id="filePicker">选择图片</div>
                                     <input type="hidden" value="${product.thumbnail}" id="thumbnail" name="thumbnail">
                                 </div>
@@ -230,7 +243,7 @@
                                 <div class="goodsbox-rchild4">
                                     <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${product.spec1}" placeholder="规格1" id="spec1" name="spec1">
                                 </div>
-                                <div class="goodsbox-rchild4">
+                                <div class="goodsbox-rchild4-1">
                                     <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${product.spec2}" placeholder="规格2" id="spec2" name="spec2">
                                 </div>
                             </div>
@@ -305,6 +318,8 @@
                     </span>
                 </div>
             </div>
+            <div class="goodsbox-col2">
+            </div>
         </div>
 
         <div class="row cl">
@@ -337,6 +352,7 @@
 <script type="text/javascript">
     $tab = $("#childtable-1").clone();
     $tableCount = $('.goodsbox-col3').children().length;
+    $pictureCount = 1;
     $IsShow = true;
     $product_list = [];
     $productTemplates = [];
@@ -426,10 +442,16 @@
         }else{
             var $tabcopy = $tab.clone();
             $tableCount = $tableCount + 1;
-            //$tableId = "childtable-"+Math.random(0-1000).toString();
-            //$tabcopy.attr("id",$tableId);
+
+            $pictureCount++;
+            $pictureId = "fileList"+$pictureCount.toString();
+            $tabcopy.find("#fileList").attr("id",$pictureId);
+            $filePickerId = "filePicker"+$pictureCount.toString();
+            $tabcopy.find("#filePicker").attr("id",$filePickerId);
             $tabcopy.find("i").attr("onclick","deletetable(this)");
             $("#insertdiv").append($tabcopy);
+            new $uploadpicture($pictureId,$filePickerId);
+
         }
     }
 

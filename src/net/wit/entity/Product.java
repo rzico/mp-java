@@ -492,14 +492,30 @@ public class Product extends OrderEntity {
 
 	@Transient
 	public String getSpec() {
-        if (getSpec1()!=null && getSpec2()!=null) {
-	       return getSpec1().concat(","+getSpec2());
+		if (getSpec1()!=null && getSpec2()!=null) {
+			return getSpec1().concat(","+getSpec2());
 		} else
-			if (getSpec1()!=null){
-        	return getSpec1();
+		if (getSpec1()!=null){
+			return getSpec1();
 		} else {
-				return getSpec2();
+			return getSpec2();
+		}
+	}
+
+	@Transient
+	public String getThumbnailSmall() {
+		if (getThumbnail()!=null) {
+			if (getThumbnail().substring(0,11).equals("http://cdnx")) {
+				return getThumbnail()+"?x-oss-process=image/resize,w_100,h_100";
+			} else
+			if (getThumbnail().substring(0,10).equals("http://cdn")) {
+				return getThumbnail()+"@100w_100h_1e_1c_100Q";
+			} else {
+				return getThumbnail();
 			}
+		} else{
+			return null;
+		}
 	}
 
 }
