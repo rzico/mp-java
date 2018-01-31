@@ -35,6 +35,7 @@ public class FileController extends BaseController {
 	public void upload(HttpServletRequest request,HttpServletResponse response) {
 		response.setContentType("application/json");
 		String rootPath = request.getSession().getServletContext().getRealPath("/");
+		rootPath = rootPath.replaceAll("\\\\","/");
 		try {
 			StoragePlugin oss = pluginService.getStoragePlugin("ossPlugin");
 			String exec = new MyActionEnter(request,oss, rootPath+"/WEB-INF/classes", rootPath).exec();
