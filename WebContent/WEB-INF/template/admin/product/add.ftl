@@ -348,7 +348,6 @@
             $arrypic = [];
             $jsons = '';
 
-
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({

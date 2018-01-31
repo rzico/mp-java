@@ -352,7 +352,7 @@
 <script type="text/javascript">
     $tab = $("#childtable-1").clone();
     $tableCount = $('.goodsbox-col3').children().length;
-    $pictureCount = 1;
+    $pictureCount = $('.goodsbox-col3').children().length;;
     $IsShow = true;
     $product_list = [];
     $productTemplates = [];
@@ -443,7 +443,6 @@
             var $tabcopy = $tab.clone();
             $tableCount = $tableCount + 1;
 
-            $pictureCount++;
             $pictureId = "fileList"+$pictureCount.toString();
             $tabcopy.find("#fileList").attr("id",$pictureId);
             $filePickerId = "filePicker"+$pictureCount.toString();
@@ -451,7 +450,7 @@
             $tabcopy.find("i").attr("onclick","deletetable(this)");
             $("#insertdiv").append($tabcopy);
             new $uploadpicture($pictureId,$filePickerId);
-
+            $pictureCount++;
         }
     }
 
