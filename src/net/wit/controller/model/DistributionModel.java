@@ -12,7 +12,7 @@ public class DistributionModel extends BaseModel implements Serializable {
     private BigDecimal percent1;
     private BigDecimal percent2;
     private BigDecimal percent3;
-    private Long point;
+    private BigDecimal point;
 
     public Long getId() {
         return id;
@@ -54,11 +54,11 @@ public class DistributionModel extends BaseModel implements Serializable {
         this.percent3 = percent3;
     }
 
-    public Long getPoint() {
+    public BigDecimal getPoint() {
         return point;
     }
 
-    public void setPoint(Long point) {
+    public void setPoint(BigDecimal point) {
         this.point = point;
     }
 

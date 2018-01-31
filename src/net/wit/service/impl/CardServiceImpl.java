@@ -241,31 +241,22 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			}
 		} else {
 			if (card!=null) {
-				if (card.getPromoter() == null) {
-					if (owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
-						if (promoter!=null && promoter.leaguer(owner)) {
-							card.setPromoter(promoter);
-							cardDao.merge(card);
-						} else {
-							card = null;
-						}
-					} else
-					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()))<0) {
+				if (!owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
+					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name())) < 0) {
 						card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
-						if (promoter!=null && promoter.leaguer(owner)) {
-							card.setPromoter(promoter);
-							cardDao.merge(card);
-						} else {
-							card = null;
-						}
+						cardDao.merge(card);
+					}
+				}
+				if (card.getPromoter() == null) {
+					if (promoter != null && promoter.leaguer(owner)) {
+						card.setPromoter(promoter);
+						cardDao.merge(card);
 					} else {
 						card = null;
 					}
 				} else {
 					card = null;
 				}
-			} else {
-				card = null;
 			}
 		}
 

@@ -473,6 +473,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
+				deposit.setOrder(order);
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 		    }
@@ -500,9 +501,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (d.compareTo(BigDecimal.ZERO)>0) {
 				//扣除商家分配佣金
 				Member seller = order.getSeller();
-				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
+				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
 				seller.setBalance(seller.getBalance().subtract(d));
-				if (seller.getBalance().compareTo(BigDecimal.ZERO)>=0) {
+				if (seller.getBalance().compareTo(BigDecimal.ZERO) >= 0) {
 					memberDao.merge(seller);
 					Deposit deposit = new Deposit();
 					deposit.setBalance(seller.getBalance());
@@ -513,48 +514,51 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					deposit.setDebit(BigDecimal.ZERO);
 					deposit.setDeleted(false);
 					deposit.setOperator("system");
+					deposit.setOrder(order);
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 
 					order.setRebateAmount(d);
 					order.setIsDistribution(true);
 					orderDao.merge(order);
-
+				}
+			}
 					for (OrderItem orderItem : order.getOrderItems()) {
 						if (orderItem != null) {
 							Member p1 = order.getPromoter();
 							Card c1 = p1.card(order.getSeller());
 							BigDecimal r1 = orderItem.calcPercent1();
-							if (r1.compareTo(BigDecimal.ZERO)>0 && p1!=null && p1.leaguer(order.getSeller())) {
+							if (r1.compareTo(BigDecimal.ZERO) > 0 && p1 != null && p1.leaguer(order.getSeller())) {
 								memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
 								p1.setBalance(p1.getBalance().add(r1));
 								memberDao.merge(p1);
 								Deposit d1 = new Deposit();
 								d1.setBalance(p1.getBalance());
 								d1.setType(Deposit.Type.rebate);
-								d1.setMemo(orderItem.getName()+"奖励金");
+								d1.setMemo(orderItem.getName() + "奖励金");
 								d1.setMember(p1);
 								d1.setCredit(r1);
 								d1.setDebit(BigDecimal.ZERO);
 								d1.setDeleted(false);
 								d1.setOperator("system");
+								d1.setOrder(order);
 								depositDao.persist(d1);
 								messageService.depositPushTo(d1);
 							}
 							Long point1 = orderItem.calcPoint1();
-							if (point1.compareTo(0L)>0 && p1!=null && p1.leaguer(order.getSeller())) {
-								cardService.addPoint(c1,point1,orderItem.getName()+"奖励",order);
+							if (point1.compareTo(0L) > 0 && p1 != null && p1.leaguer(order.getSeller())) {
+								cardService.addPoint(c1, point1, orderItem.getName() + "奖励", order);
 							}
 							Member p2 = null;
 							Card c2 = null;
-							if (p1!=null) {
+							if (p1 != null) {
 								c2 = p1.card(order.getSeller());
-								if (c2!=null) {
+								if (c2 != null) {
 									p2 = c2.getPromoter();
 								}
 							}
 							BigDecimal r2 = orderItem.calcPercent2();
-							if (r2.compareTo(BigDecimal.ZERO)>0 && p2!=null && p2.leaguer(order.getSeller())) {
+							if (r2.compareTo(BigDecimal.ZERO) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
 								p2 = order.getPromoter().getPromoter();
 								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
 								p2.setBalance(p2.getBalance().add(r2));
@@ -562,29 +566,30 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								Deposit d2 = new Deposit();
 								d2.setBalance(p2.getBalance());
 								d2.setType(Deposit.Type.rebate);
-								d2.setMemo(orderItem.getName()+"奖励金");
+								d2.setMemo(orderItem.getName() + "奖励金");
 								d2.setMember(p2);
 								d2.setCredit(r2);
 								d2.setDebit(BigDecimal.ZERO);
 								d2.setDeleted(false);
 								d2.setOperator("system");
+								d2.setOrder(order);
 								depositDao.persist(d2);
 								messageService.depositPushTo(d2);
 							}
 							Long point2 = orderItem.calcPoint2();
-							if (point2.compareTo(0L)>0 && p2!=null && p2.leaguer(order.getSeller())) {
-								cardService.addPoint(c2,point2,orderItem.getName()+"奖励",order);
+							if (point2.compareTo(0L) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
+								cardService.addPoint(c2, point2, orderItem.getName() + "奖励", order);
 							}
 							Member p3 = null;
 							Card c3 = null;
-							if (p2!=null) {
+							if (p2 != null) {
 								c3 = p2.card(order.getSeller());
-								if (c3!=null) {
+								if (c3 != null) {
 									p3 = c3.getPromoter();
 								}
 							}
 							BigDecimal r3 = orderItem.calcPercent3();
-							if (r3.compareTo(BigDecimal.ZERO)>0 && p3!=null && p3.leaguer(order.getSeller())) {
+							if (r3.compareTo(BigDecimal.ZERO) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
 								p3 = order.getPromoter().getPromoter().getPromoter();
 								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
 								p3.setBalance(p3.getBalance().add(r3));
@@ -592,24 +597,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								Deposit d3 = new Deposit();
 								d3.setBalance(p3.getBalance());
 								d3.setType(Deposit.Type.rebate);
-								d3.setMemo(orderItem.getName()+"奖励金");
+								d3.setMemo(orderItem.getName() + "奖励金");
 								d3.setMember(p3);
 								d3.setCredit(r3);
 								d3.setDebit(BigDecimal.ZERO);
 								d3.setDeleted(false);
 								d3.setOperator("system");
+								d3.setOrder(order);
 								depositDao.persist(d3);
 								messageService.depositPushTo(d3);
 							}
 							Long point3 = orderItem.calcPoint3();
-							if (point3.compareTo(0L)>0 && p3!=null && p3.leaguer(order.getSeller())) {
-								cardService.addPoint(c3,point3,orderItem.getName()+"奖励",order);
+							if (point3.compareTo(0L) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
+								cardService.addPoint(c3, point3, orderItem.getName() + "奖励", order);
 							}
 
 						}
 					}
-				}
-			}
 		}
 
 		return ;
@@ -692,21 +696,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		order.setFee(BigDecimal.ZERO);
 		if (card!=null) {
-			if (card.getBalance().compareTo(order.getAmount()) >= 0) {
+			if (card.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("cardPayPlugin");
 			}
 		} else
 		if (payment.getPaymentPluginId()==null) {
 			Member member = order.getMember();
-			if (member.getBalance().compareTo(order.getAmount())>=0) {
+			if (member.getBalance().compareTo(order.getAmountPayable())>=0) {
 				payment.setPaymentPluginId("balancePayPlugin");
 			}
 		} else {
 			Topic topic = order.getSeller().getTopic();
 			if (topic==null) {
-				order.setFee(order.getAmount().multiply(new BigDecimal("0.006")).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+				order.setFee(order.getAmountPayable().multiply(new BigDecimal("0.006")).setScale(2,BigDecimal.ROUND_UP));
 			} else {
-				order.setFee(topic.calcFee(order.getAmount()));
+				order.setFee(topic.calcFee(order.getAmountPayable()));
 			}
 		}
 		orderDao.merge(order);
