@@ -230,6 +230,10 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             if (s.contains("</br>")||s.contains("</ br>")||s.contains("<br>")||s.contains("<br  />")||s.contains("<br />")){
                 continue;
             }
+            //过滤行空格
+            if(s.contains(">&nbsp;<")||s.contains("> &nbsp;<")||s.contains(">&nbsp <")||s.contains("> &nbsp; <")){
+                continue;
+            }
             //如果有图片
             if (h!=0){
                 stringBuffer1.append(",");
