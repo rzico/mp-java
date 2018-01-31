@@ -235,8 +235,12 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             if(Pattern.compile("((<span(.*?)?>)([^A-Za-z0-9一-龥_])*?(( )?&nbsp;( )?)+([^A-Za-z0-9一-龥_])*?(</span>))").matcher(s).find()){
                 continue;
             }
-            //当br 和 &nbsp;混合调用时 过滤
+            //当span中只有br 和 &nbsp;混合调用时 过滤
             if(Pattern.compile("((<span(.*?)?>)([^A-Za-z0-9一-龥_])*?(( )?&nbsp;( )?)+?([^A-Za-z0-9一-龥_])*?(<( )?(/)?br(.*?)?>)+?([^A-Za-z0-9一-龥_])*?(</span>))").matcher(s).find()){
+                continue;
+            }
+            //当span标签中内容无效 过滤
+            if(Pattern.compile("((<span(.*?)?>)([^A-Za-z0-9一-龥_])*?(</span>))").matcher(s).find()){
                 continue;
             }
             //如果有图片
