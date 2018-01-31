@@ -227,11 +227,16 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             }
 
             //过滤换行标签
-            if (s.contains("</br>")||s.contains("</ br>")||s.contains("<br>")||s.contains("<br  />")||s.contains("<br />")){
+//            Pattern.matches("(>([^A-Za-z0-9一-龥_])?(<( )?(/)?br(.*?)?>)([^A-Za-z0-9一-龥_])?<)",s);
+            if (Pattern.compile("(>([^A-Za-z0-9一-龥_])*?(<( )?(/)?br(.*?)?>)+([^A-Za-z0-9一-龥_])*?<)").matcher(s).find()){
                 continue;
             }
             //过滤行空格
-            if(s.contains(">&nbsp;<")||s.contains("> &nbsp;<")||s.contains(">&nbsp <")||s.contains("> &nbsp; <")){
+            if(Pattern.compile("((<span(.*?)?>)([^A-Za-z0-9一-龥_])*?(( )?&nbsp;( )?)+([^A-Za-z0-9一-龥_])*?(</span>))").matcher(s).find()){
+                continue;
+            }
+            //当br 和 &nbsp;混合调用时 过滤
+            if(Pattern.compile("((<span(.*?)?>)([^A-Za-z0-9一-龥_])*?(( )?&nbsp;( )?)+?([^A-Za-z0-9一-龥_])*?(<( )?(/)?br(.*?)?>)+?([^A-Za-z0-9一-龥_])*?(</span>))").matcher(s).find()){
                 continue;
             }
             //如果有图片

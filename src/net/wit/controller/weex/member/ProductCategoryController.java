@@ -5,6 +5,7 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCatalogModel;
 import net.wit.controller.model.ProductCategoryModel;
+import net.wit.entity.Admin;
 import net.wit.entity.ArticleCatalog;
 import net.wit.entity.Member;
 import net.wit.entity.ProductCategory;
@@ -48,6 +49,9 @@ public class ProductCategoryController extends BaseController {
     @Resource(name = "productCategoryServiceImpl")
     private ProductCategoryService productCategoryService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      *  列表
      */
@@ -57,6 +61,10 @@ public class ProductCategoryController extends BaseController {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
         }
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
@@ -91,6 +99,10 @@ public class ProductCategoryController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
         ProductCategory catalog = new ProductCategory();
         catalog.setOrders(orders);
         catalog.setName(name);
@@ -111,6 +123,10 @@ public class ProductCategoryController extends BaseController {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
         }
         ProductCategory catalog = productCategoryService.find(id);
         if (catalog==null) {
@@ -138,6 +154,7 @@ public class ProductCategoryController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
         ProductCategory catalog = productCategoryService.find(id);
         if (catalog==null) {
             return Message.error("无效分类id");

@@ -6,6 +6,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
 import net.wit.controller.model.CardBillModel;
 import net.wit.controller.model.CardModel;
+import net.wit.controller.model.CardPointBillModel;
 import net.wit.entity.*;
 import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.Ticket;
@@ -69,6 +70,9 @@ public class CardController extends BaseController {
 
     @Resource(name = "cardBillServiceImpl")
     private CardBillService cardBillService;
+
+    @Resource(name = "cardPointBillServiceImpl")
+    private CardPointBillService cardPointBillService;
 
 
     /**
@@ -396,6 +400,24 @@ public class CardController extends BaseController {
         Page<CardBill> page = cardBillService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(CardBillModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+
+
+    /**
+     *  账单记录
+     */
+    @RequestMapping(value = "/point_bill", method = RequestMethod.GET)
+    @ResponseBody
+    public Message pointBill(Long id,Pageable pageable, HttpServletRequest request){
+        Card card = cardService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        pageable.setFilters(filters);
+        Page<CardPointBill> page = cardPointBillService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(CardPointBillModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

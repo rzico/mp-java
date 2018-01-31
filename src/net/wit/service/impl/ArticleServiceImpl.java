@@ -93,4 +93,8 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	public Page<Article> findPage(Date beginDate,Date endDate, List<Tag> tags, Pageable pageable) {
 		return articleDao.findPage(beginDate,endDate,tags,pageable);
 	}
+
+	public Page<Article> findMemberPage(Date beginDate, Date endDate, List<Member> members, Pageable pageable){
+		return articleDao.findMemberPage(beginDate,endDate,members,pageable);
+	}
 }
