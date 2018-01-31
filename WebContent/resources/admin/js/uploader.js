@@ -44,15 +44,18 @@ jQuery(function() {
     uploader.on( 'fileQueued', function( file ) {
         var $li = $(
                 '<div id="' + file.id + '" class="file-item thumbnail">' +
-                '<img>' +
+                '<img id='+pickerid+'>' +
                 '<div class="info">' + file.name + '</div>' +
                 '</div>'
             ),
             $img = $li.find('img');
 
-        //$list.find('img').remove();
         var $p = $list.next();
-        $p.remove();
+        console.log($p.get(0).tagName);
+        if($p.get(0).tagName === 'IMG')
+        {
+            $p.remove();
+        }
         $list.html( $li );
 
         // 创建缩略图
