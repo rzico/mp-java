@@ -8,8 +8,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.json.JSONArray;
 import net.wit.Filter;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.Pageable;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -73,11 +75,23 @@ public class ArticleController extends BaseController {
 	@Resource(name = "weixinUpServiceImpl")
 	private WeixinUpService weixinUpService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 	/**
 	 * 主页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
+		Admin admin=adminService.getCurrent();
+		//用户不存在
+		if(admin==null){
+			return null;
+		}
+		//判断用户有没有所属企业
+		if(admin.getEnterprise()==null){
+			return null;
+		}
 
 		List<MapEntity> authoritys = new ArrayList<>();
 		authoritys.add(new MapEntity("isPublic","公开"));
@@ -93,9 +107,9 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.article));
+//		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/list";
 	}
@@ -331,6 +345,16 @@ public class ArticleController extends BaseController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public Message list(Date beginDate, Date endDate, Long tagIds, Article.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
+
+		Admin admin=adminService.getCurrent();
+		//用户不存在
+		if(admin==null){
+			return null;
+		}
+		//判断用户有没有所属企业
+		if(admin.getEnterprise()==null){
+			return null;
+		}
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (authority!=null) {
 			Filter authorityFilter = new Filter("authority", Filter.Operator.eq, authority);
@@ -341,8 +365,30 @@ public class ArticleController extends BaseController {
 			filters.add(mediaTypeFilter);
 		}
 
-		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
-		return Message.success(PageBlock.bind(page), "admin.list.success");
+		//判断用户公司属于哪种企业类型
+		Enterprise enterprise=admin.getEnterprise();
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业已删除");
+		}
+		//运营商
+		if(enterprise.getType()==Enterprise.Type.operate){
+			Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
+			return Message.success(PageBlock.bind(page), "admin.list.success");
+		}
+
+		//代理商
+		if(enterprise.getType()== Enterprise.Type.agent){
+			Area area=enterprise.getArea();
+			System.out.println(area.getId());
+			List<Filter> filters1 =new ArrayList<>();
+			filters1.add(new Filter("area", Filter.Operator.eq,area.getId()));
+			List<Member> members=memberService.findList(null,filters1,null);
+			Page<Article> page = articleService.findMemberPage(beginDate,endDate,members,pageable);
+			return Message.success(PageBlock.bind(page), "admin.list.success");
+		}
+
+		return Message.error("服务器繁忙");
 	}
 	
 	
@@ -443,9 +489,6 @@ public class ArticleController extends BaseController {
 			fileInputStream.close();
 			String appID=properties.getProperty("weixin.appid");
 			String appsecret=properties.getProperty("weixin.secret");
-//			//芸店公众号
-//			String appID="wx88a1ec3b5c3bc9c3";
-//			String appsecret="f5e7d000d00788053c50ca6b3a442d20";
 			weixinUpService.ArticleUpLoad(ids,appID,appsecret,rootPath);
 			return Message.success("admin.propaganda.success");
 		} catch (Exception e) {
