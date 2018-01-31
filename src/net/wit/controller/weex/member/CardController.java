@@ -138,7 +138,7 @@ public class CardController extends BaseController {
 
         Member cardMember = card.getMembers().get(0);
         Bankcard bankcard = bankcardService.findDefault(cardMember);
-        if (bankcard==null) {
+        if (bankcard!=null) {
             model.setName(bankcard.getName());
             model.setBindName(true);
         }
@@ -190,7 +190,7 @@ public class CardController extends BaseController {
 
         Member cardMember = card.getMembers().get(0);
         Bankcard bankcard = bankcardService.findDefault(cardMember);
-        if (bankcard==null) {
+        if (bankcard!=null) {
             model.setName(bankcard.getName());
             model.setBindName(true);
         }
@@ -527,7 +527,7 @@ public class CardController extends BaseController {
             Card card = cardService.find(c.getId());
             Member cardMember = card.getMembers().get(0);
             Bankcard bankcard = bankcardService.findDefault(cardMember);
-            if (bankcard==null) {
+            if (bankcard!=null) {
                 c.setName(bankcard.getName());
                 c.setBindName(true);
             }

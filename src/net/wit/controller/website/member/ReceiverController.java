@@ -81,7 +81,11 @@ public class ReceiverController extends BaseController {
         receiver.setArea(areaService.find(areaId));
         receiver.setAreaName(receiver.getArea().getFullName());
         receiver.setPhone(phone);
-        receiver.setIsDefault(isDefault);
+        if (isDefault!=null) {
+            receiver.setIsDefault(isDefault);
+        } else {
+            receiver.setIsDefault(false);
+        }
         receiver.setZipCode("000000");
         receiver.setMember(member);
 
@@ -111,7 +115,9 @@ public class ReceiverController extends BaseController {
         receiver.setArea(areaService.find(areaId));
         receiver.setAreaName(receiver.getArea().getFullName());
         receiver.setPhone(phone);
-        receiver.setIsDefault(isDefault);
+        if (isDefault!=null) {
+            receiver.setIsDefault(isDefault);
+        }
         receiver.setZipCode("000000");
         receiver.setMember(member);
         receiverService.update(receiver);
