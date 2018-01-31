@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 
 import net.wit.entity.Card;
+import net.wit.entity.Member;
 import net.wit.entity.Topic;
 import net.wit.entity.TopicCard;
 
@@ -16,6 +17,11 @@ public class CardViewModel extends BaseModel implements Serializable {
     private String name;
     /** 手机号 */
     private String mobile;
+    /** 是否实名 */
+    private Boolean bindName;
+    /** 是否绑定 */
+    private Boolean bindMobile;
+
     /** 卡号 */
     private String code;
     /** 头像 */
@@ -131,13 +137,35 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.shopName = shopName;
     }
 
+
+    public Boolean getBindName() {
+        return bindName;
+    }
+
+    public void setBindName(Boolean bindName) {
+        this.bindName = bindName;
+    }
+
+    public Boolean getBindMobile() {
+        return bindMobile;
+    }
+
+    public void setBindMobile(Boolean bindMobile) {
+        this.bindMobile = bindMobile;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
         this.name = card.getName();
         this.mobile = card.getMobile();
         this.code = card.getCode();
-        this.logo = card.getMembers().get(0).getLogo();
+
+        Member member = card.getMembers().get(0);
+        this.logo = member.getLogo();
+
+        this.bindMobile = false;
+        this.bindName = false;
         this.balance = card.getBalance();
         this.status = card.getStatus();
         this.vip = card.getVip();
@@ -149,7 +177,6 @@ public class CardViewModel extends BaseModel implements Serializable {
         } else {
             this.shopName = "";
         }
-
     }
 
 

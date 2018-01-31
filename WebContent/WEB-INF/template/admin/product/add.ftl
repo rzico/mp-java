@@ -9,6 +9,7 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="Bookmark" href="/favicon.ico" >
     <link rel="Shortcut Icon" href="/favicon.ico" />
+
     <!--[if lt IE 9]>
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
@@ -177,7 +178,6 @@
         }
 
     </style>
-
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
@@ -212,8 +212,8 @@
                     <div class="goodsbox-tablechild">
                         <div class="goodsbox-rchild1">
                             <div class="formControls col-xs-8 col-sm-9">
-                                <div class="uploader-thum-container">
-                                    <div id="fileList" class="uploader-list"></div>
+                                <div class="uploader-thum-container ">
+                                    <div id="fileList" class="uploader-list" ></div>
                                     <div id="filePicker">选择图片</div>
                                     <input type="hidden" value="" id="thumbnail" name="thumbnail">
                                 </div>
@@ -316,13 +316,23 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
+        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
         <script type="text/javascript">
             $tab = $("#childtable-1").clone();
             $tableCount = 1;
+            $pictureCount = 1;
             $IsShow = true;
             $product_list = [];
             $productTemplates = [];
+            $arrypic = [];
             $jsons = '';
+
 
             $(function(){
                 var $submit = $(":submit");
@@ -331,6 +341,8 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+
+                new $uploadpicture("fileList","filePicker");
 
                 $("#form-add").validate({
                     rules:{
@@ -399,10 +411,14 @@
                 }else{
                     var $tabcopy = $tab.clone();
                     $tableCount = $tableCount + 1;
-                    //$tableId = "childtable-"+Math.random(0-1000).toString();
-                    //$tabcopy.attr("id",$tableId);
+                    $pictureCount++;
+                    $pictureId = "fileList"+$pictureCount.toString();
+                    $tabcopy.find("#fileList").attr("id",$pictureId);
+                    $filePickerId = "filePicker"+$pictureCount.toString();
+                    $tabcopy.find("#filePicker").attr("id",$filePickerId);
                     $tabcopy.find("i").attr("onclick","deletetable(this)");
                     $("#insertdiv").append($tabcopy);
+                    new $uploadpicture($pictureId,$filePickerId);
                 }
             }
 

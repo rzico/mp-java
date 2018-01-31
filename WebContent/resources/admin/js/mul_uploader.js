@@ -1,19 +1,15 @@
 // 图片上传demo
 jQuery(function() {
-
-    var $uploadpicture = function (divname,pickerid){
-
     var $ = jQuery,
-        //$list = $('#fileList'),
-        $list = $('#'+divname),
-        // 优化retina, 在retina下这个值是2
+        $list = $('#fileList'),
+    // 优化retina, 在retina下这个值是2
         ratio = window.devicePixelRatio || 1,
 
-        // 缩略图大小
+    // 缩略图大小
         thumbnailWidth = 100 * ratio,
         thumbnailHeight = 100 * ratio,
 
-        // Web Uploader实例
+    // Web Uploader实例
         uploader;
 
     // 初始化Web Uploader
@@ -30,7 +26,7 @@ jQuery(function() {
 
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#'+pickerid,//'#filePicker',
+        pick: '#filePicker',
 
         // 只允许选择文件，可选。
         accept: {
@@ -50,9 +46,6 @@ jQuery(function() {
             ),
             $img = $li.find('img');
 
-        //$list.find('img').remove();
-        var $p = $list.next();
-        $p.remove();
         $list.html( $li );
 
         // 创建缩略图
@@ -121,8 +114,4 @@ jQuery(function() {
     uploader.on( 'uploadComplete', function( file ) {
         $( '#'+file.id ).find('.progress').remove();
     });
-
-    }
-
-    window.$uploadpicture = $uploadpicture;
 });

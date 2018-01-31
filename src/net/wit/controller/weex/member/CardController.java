@@ -71,6 +71,9 @@ public class CardController extends BaseController {
     @Resource(name = "payBillServiceImpl")
     private PayBillService payBillService;
 
+    @Resource(name = "bankcardServiceImpl")
+    private BankcardService bankcardService;
+
     /**
      *   获取会员卡
      */
@@ -92,6 +95,7 @@ public class CardController extends BaseController {
         model.bind(card);
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
+
         TopicCard topicCard = card.getTopicCard();
         data.put("mobile",member.getMobile());
         data.put("name",member.getName());
@@ -131,6 +135,19 @@ public class CardController extends BaseController {
         }
         CardViewModel model = new CardViewModel();
         model.bind(card);
+
+        Member cardMember = card.getMembers().get(0);
+        Bankcard bankcard = bankcardService.findDefault(cardMember);
+        if (bankcard==null) {
+            model.setName(bankcard.getName());
+            model.setBindName(true);
+        }
+
+        if (cardMember.getMobile()!=null) {
+            model.setBindMobile(true);
+            model.setMobile(cardMember.getMobile());
+        }
+
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
         TopicCard topicCard = card.getTopicCard();
@@ -169,6 +186,20 @@ public class CardController extends BaseController {
         }
         CardViewModel model = new CardViewModel();
         model.bind(card);
+
+
+        Member cardMember = card.getMembers().get(0);
+        Bankcard bankcard = bankcardService.findDefault(cardMember);
+        if (bankcard==null) {
+            model.setName(bankcard.getName());
+            model.setBindName(true);
+        }
+
+        if (cardMember.getMobile()!=null) {
+            model.setBindMobile(true);
+            model.setMobile(cardMember.getMobile());
+        }
+
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
         TopicCard topicCard = card.getTopicCard();
@@ -182,7 +213,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Card.VIP vip,String name,String mobile,HttpServletRequest request){
+    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -210,6 +241,14 @@ public class CardController extends BaseController {
         if (mobile!=null) {
             card.setMobile(mobile);
         }
+        if (shopId!=null) {
+            Shop shop = shopService.find(shopId);
+            if (shop==null) {
+                return Message.error("无效店铺 id");
+            }
+            card.setShop(shop);
+        }
+
         cardService.update(card);
         return Message.success("更新成功");
     }
@@ -483,7 +522,23 @@ public class CardController extends BaseController {
         pageable.setFilters(filters);
         Page<Card> page = cardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(CardViewModel.bindList(page.getContent()));
+        List<CardViewModel> cardList = CardViewModel.bindList(page.getContent());
+        for (CardViewModel c:cardList) {
+            Card card = cardService.find(c.getId());
+            Member cardMember = card.getMembers().get(0);
+            Bankcard bankcard = bankcardService.findDefault(cardMember);
+            if (bankcard==null) {
+                c.setName(bankcard.getName());
+                c.setBindName(true);
+            }
+
+            if (cardMember.getMobile()!=null) {
+                c.setMobile(cardMember.getMobile());
+                c.setBindMobile(true);
+            }
+        }
+
+        model.setData(cardList);
         return Message.bind(model,request);
     }
 
