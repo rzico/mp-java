@@ -44,19 +44,19 @@ public class QrcodeController extends BaseController {
              if ("865380".equals(cmd)) {
                  String userId = id.substring(6, id.length());
                  Long uid = Long.parseLong(userId) - 10200L;
-                 return "redirect:/topic?id=" + uid;
+                 return "redirect:/#/topic?id=" + uid;
              } else
              /**
               * 会员卡 空卡，跑转领卡界面,会员卡界面判断跳转  会号规则 88100006165001042 实体卡  86100006165 商家码
               */
              if ("818801".equals(cmd)) {
                  String code = id.substring(6, id.length());
-                 return "redirect:/card?code=" + code;
+                 return "redirect:/#/card?code=" + code;
              } else {
-                 return "redirect:/";
+                 return "redirect:/#/";
              }
          } catch (Exception e) {
-             return "redirect:/";
+             return "redirect:/#/";
          }
      }
 

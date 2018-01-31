@@ -559,7 +559,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							}
 							BigDecimal r2 = orderItem.calcPercent2();
 							if (r2.compareTo(BigDecimal.ZERO) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
-								p2 = order.getPromoter().getPromoter();
 								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
 								p2.setBalance(p2.getBalance().add(r2));
 								memberDao.merge(p2);
@@ -590,7 +589,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							}
 							BigDecimal r3 = orderItem.calcPercent3();
 							if (r3.compareTo(BigDecimal.ZERO) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
-								p3 = order.getPromoter().getPromoter().getPromoter();
 								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
 								p3.setBalance(p3.getBalance().add(r3));
 								memberDao.merge(p3);
