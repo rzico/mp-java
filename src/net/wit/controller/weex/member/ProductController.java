@@ -90,10 +90,12 @@ public class ProductController extends BaseController {
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
+
 		Admin admin = adminService.findByMember(member);
 		if (admin!=null && admin.getEnterprise()!=null) {
 			member = admin.getEnterprise().getMember();
 		}
+
 		GoodsModel model = JsonUtils.toObject(body,GoodsModel.class);
 		if (model==null) {
 			return Message.error("无效数据包");
@@ -127,12 +129,14 @@ public class ProductController extends BaseController {
 			}
 			product.setName(model.getName());
 			product.setUnit(model.getUnit());
+
 			if (model.getProductCategory()!=null && model.getProductCategory().getId()!=null) {
 				product.setProductCategory(productCategoryService.find(model.getProductCategory().getId()));
 			}
 			if (model.getDistribution()!=null && model.getDistribution().getId()!=null) {
 				product.setDistribution(distributionService.find(model.getDistribution().getId()));
 			}
+
 			product.setThumbnail(pm.getThumbnail());
 			product.setMarketPrice(pm.getPrice());
 			product.setPrice(pm.getPrice());
