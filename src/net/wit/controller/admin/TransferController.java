@@ -58,8 +58,6 @@ public class TransferController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
-
-
 	/**
 	 * 主页
 	 */
