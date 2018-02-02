@@ -78,6 +78,7 @@ public class PaymentController extends BaseController {
 
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
+
 	/**
 	 * 主页
 	 */
@@ -108,14 +109,6 @@ public class PaymentController extends BaseController {
 		types.add(new MapEntity("topic","专栏激活"));
 		types.add(new MapEntity("card","会员卡"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
-
-		model.addAttribute("articleRewards",articleRewardService.findAll());
-
-		model.addAttribute("payees",memberService.findAll());
 
 		return "/admin/payment/list";
 	}
@@ -148,14 +141,6 @@ public class PaymentController extends BaseController {
 		types.add(new MapEntity("reward","文章赞赏"));
 		types.add(new MapEntity("cashier","线下收款"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
-
-		model.addAttribute("articleRewards",articleRewardService.findAll());
-
-		model.addAttribute("payees",memberService.findAll());
 
 		return "/admin/payment/add";
 	}
@@ -259,14 +244,6 @@ public class PaymentController extends BaseController {
 		types.add(new MapEntity("reward","文章赞赏"));
 		types.add(new MapEntity("cashier","线下收款"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
-
-		model.addAttribute("articleRewards",articleRewardService.findAll());
-
-		model.addAttribute("payees",memberService.findAll());
 
 		model.addAttribute("data",paymentService.find(id));
 
