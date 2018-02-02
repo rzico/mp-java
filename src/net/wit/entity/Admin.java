@@ -380,4 +380,16 @@ public class Admin extends BaseEntity {
         return isTrue;
     }
 
+    public String roles() {
+        String roleStr = "";
+        if (getRoles() != null) {
+            for (Role role:getRoles()) {
+                roleStr = roleStr.concat(role.getId().toString());
+            }
+            return roleStr;
+        } else {
+            return null;
+        }
+    }
+
 }

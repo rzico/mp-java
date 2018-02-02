@@ -117,6 +117,7 @@
 				<entry key="mosaic" value-ref="mosaicMethod" />
 				<entry key="currency" value-ref="currencyMethod" />
 				<entry key="flash_message" value-ref="flashMessageDirective" />
+				<entry key="adminDirective" value-ref="adminDirective" />
 			</map>
 		</property>
 	</bean>
