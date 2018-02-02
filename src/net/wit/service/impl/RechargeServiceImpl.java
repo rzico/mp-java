@@ -20,77 +20,70 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.ArticleDao;
+import net.wit.dao.RechargeDao;
 import net.wit.entity.*;
-import net.wit.service.ArticleService;
+import net.wit.service.RechargeService;
 
 /**
- * @ClassName: ArticleDaoImpl
+ * @ClassName: RechargeDaoImpl
  * @author 降魔战队
- * @date 2017-9-14 19:42:7
+ * @date 2018-2-1 14:1:27
  */
  
  
-@Service("articleServiceImpl")
-public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implements ArticleService {
-	@Resource(name = "articleDaoImpl")
-	private ArticleDao articleDao;
+@Service("rechargeServiceImpl")
+public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> implements RechargeService {
+	@Resource(name = "rechargeDaoImpl")
+	private RechargeDao rechargeDao;
 
-	@Resource(name = "articleDaoImpl")
-	public void setBaseDao(ArticleDao articleDao) {
-		super.setBaseDao(articleDao);
+	@Resource(name = "rechargeDaoImpl")
+	public void setBaseDao(RechargeDao rechargeDao) {
+		super.setBaseDao(rechargeDao);
 	}
 	
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void save(Article article) {
-		super.save(article);
+	public void save(Recharge recharge) {
+		super.save(recharge);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public Article update(Article article) {
-		return super.update(article);
+	public Recharge update(Recharge recharge) {
+		return super.update(recharge);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public Article update(Article article, String... ignoreProperties) {
-		return super.update(article, ignoreProperties);
+	public Recharge update(Recharge recharge, String... ignoreProperties) {
+		return super.update(recharge, ignoreProperties);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		Article article = articleDao.find(id);
-		article.setDeleted(true);
-		super.update(article);
+		super.delete(id);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		for (Long id:ids) {
-			Article article = articleDao.find(id);
-			article.setDeleted(true);
-			super.update(article);
-		}
+		super.delete(ids);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void delete(Article article) {
-		article.setDeleted(true);
-		super.update(article);
+	public void delete(Recharge recharge) {
+		super.delete(recharge);
 	}
 
-	public Page<Article> findPage(Date beginDate,Date endDate, List<Tag> tags, Pageable pageable) {
-		return articleDao.findPage(beginDate,endDate,tags,pageable);
+	public Page<Recharge> findPage(Date beginDate,Date endDate, Pageable pageable) {
+		return rechargeDao.findPage(beginDate,endDate,pageable);
 	}
 }

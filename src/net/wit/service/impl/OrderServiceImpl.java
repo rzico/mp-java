@@ -306,14 +306,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		order.setFee(BigDecimal.ZERO);
 
-		if (xuid!=null) {
-			Member promoter = memberDao.find(xuid);
-			if (promoter!=null && promoter.equals(order.getSeller())) {
-				promoter = null;
-			}
-			order.setPromoter(promoter);
-		}
-
 		Card card = member.card(order.getSeller());
 		if (card!=null) {
 			Long point = order.getAmount().setScale(0,BigDecimal.ROUND_DOWN).longValue();
@@ -323,6 +315,22 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				order.setPointDiscount(new BigDecimal(card.getPoint()));
 			}
 		}
+
+		if (card!=null && card.getPromoter()!=null) {
+			Member promoter = card.getPromoter();
+			if (promoter!=null && promoter.equals(order.getSeller())) {
+				promoter = null;
+			}
+			order.setPromoter(promoter);
+		} else
+		if (xuid!=null) {
+			Member promoter = memberDao.find(xuid);
+			if (promoter!=null && promoter.equals(order.getSeller())) {
+				promoter = null;
+			}
+			order.setPromoter(promoter);
+		}
+
 
 		orderDao.persist(order);
 		cardService.decPoint(card,order.getPointDiscount().longValue(),"订单支付",order);
@@ -552,9 +560,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							Member p2 = null;
 							Card c2 = null;
 							if (p1 != null) {
-								c2 = p1.card(order.getSeller());
-								if (c2 != null) {
-									p2 = c2.getPromoter();
+								c1 = p1.card(order.getSeller());
+								if (c1 != null) {
+									p2 = c1.getPromoter();
+									c2 = p2.card(order.getSeller());
 								}
 							}
 							BigDecimal r2 = orderItem.calcPercent2();
@@ -582,9 +591,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							Member p3 = null;
 							Card c3 = null;
 							if (p2 != null) {
-								c3 = p2.card(order.getSeller());
-								if (c3 != null) {
-									p3 = c3.getPromoter();
+								c2 = p2.card(order.getSeller());
+								if (c2 != null) {
+									p3 = c2.getPromoter();
+									c3 = p3.card(order.getSeller());
 								}
 							}
 							BigDecimal r3 = orderItem.calcPercent3();

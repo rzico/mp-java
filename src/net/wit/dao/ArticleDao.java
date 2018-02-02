@@ -29,6 +29,4 @@ public interface ArticleDao extends BaseDao<Article, Long> {
 	 * @return Page<Article>
 	 */
 	Page<Article> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable);
-
-	Page<Article> findMemberPage(Date beginDate, Date endDate, List<Member> members, Pageable pageable);
 }

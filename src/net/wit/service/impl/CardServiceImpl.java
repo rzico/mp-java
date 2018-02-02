@@ -241,13 +241,19 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			}
 		} else {
 			if (card!=null) {
+				Boolean isNew = false;
 				if (!owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
 					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name())) < 0) {
 						card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
 						cardDao.merge(card);
+						isNew = true;
+					}
+				} else {
+					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name())) < 0) {
+						isNew = true;
 					}
 				}
-				if (card.getPromoter() == null) {
+				if (card.getPromoter() == null && isNew) {
 					if (promoter != null && promoter.leaguer(owner)) {
 						card.setPromoter(promoter);
 						cardDao.merge(card);
@@ -370,7 +376,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			bill.setMemo(memo);
 			bill.setOrder(order);
 			bill.setOwner(card.getOwner());
-			bill.setMember(order.getMember());
+			bill.setMember(card.getMembers().get(0));
 			cardPointBillDao.persist(bill);
 		}
 	}
@@ -392,7 +398,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			bill.setMemo(memo);
 			bill.setOrder(order);
 			bill.setOwner(card.getOwner());
-			bill.setMember(order.getMember());
+			bill.setMember(card.getMembers().get(0));
 			cardPointBillDao.persist(bill);
 		}
 	}

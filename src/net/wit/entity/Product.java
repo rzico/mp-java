@@ -17,6 +17,7 @@ import java.util.TreeSet;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
@@ -35,16 +36,19 @@ public class Product extends OrderEntity {
 	private static final long serialVersionUID = 41L;
 
 	/** 会员 */
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Member member;
 
 	/** 编号 */
+	@NotNull
 	@Length(max = 50)
 	@Column(nullable = false, length = 100,columnDefinition="varchar(50) not null comment '编号'")
 	private String sn;
 
 	/** 名称 */
+	@NotNull
 	@Length(max = 200)
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
@@ -109,6 +113,7 @@ public class Product extends OrderEntity {
 	private Integer allocatedStock;
 
 	/** 单位 */
+	@NotNull
 	@Length(max = 10)
 	@Column(nullable = false,columnDefinition="varchar(10) not null comment '单位'")
 	private String unit;
@@ -119,14 +124,17 @@ public class Product extends OrderEntity {
 	private Integer weight;
 
 	/** 赠送积分 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bigint(20) not null comment '赠送积分'")
 	private Long point;
 
 	/** 是否上架 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bit not null comment '是否上架'")
 	private Boolean isMarketable;
 
 	/** 是否列出 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bit not null comment '是否列出'")
 	private Boolean isList;
 
@@ -136,6 +144,7 @@ public class Product extends OrderEntity {
 	private ProductCategory productCategory;
 
 	/** 货品 */
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Goods goods;
@@ -146,6 +155,7 @@ public class Product extends OrderEntity {
 	private Distribution distribution;
 
 	/** 是否删除 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bit not null comment '是否删除'")
 	private Boolean deleted;
 
