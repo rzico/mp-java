@@ -2,7 +2,6 @@
 package net.wit.entity;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
