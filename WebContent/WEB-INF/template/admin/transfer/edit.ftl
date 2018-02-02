@@ -34,66 +34,58 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span>${data.sn}</span>
                 </div>
             </div>
-
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>申请人：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.member.nickName}</span>
                 </div>
             </div>
-
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开户名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.name}</span>
                 </div>
             </div>
-
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>账号：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行账号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <span> ${data.cardNo}</span>
+                    <span> ${data.cardno}</span>
                 </div>
             </div>
-
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行名称：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.bankname}</span>
                 </div>
             </div>
-
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>城市：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>所属城市：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.city}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>提现类型：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     <span> ${message("Transfer.Type."+data.type)}</span>
                 </div>
             </div>
-
             <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">说明：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>当前状态：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <span> ${message("Transfer.Status."+data.status)}</span>
+                </div>
+            </div>
+            <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">备注：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span>${data.memo}</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <span> ${message("Transfer.Status."+data.status)}</span>
             </div>
         </div>
 
