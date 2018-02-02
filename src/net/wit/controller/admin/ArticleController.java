@@ -83,15 +83,6 @@ public class ArticleController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
-		Admin admin=adminService.getCurrent();
-		//用户不存在
-		if(admin==null){
-			return null;
-		}
-		//判断用户有没有所属企业
-		if(admin.getEnterprise()==null){
-			return null;
-		}
 
 		List<MapEntity> authoritys = new ArrayList<>();
 		authoritys.add(new MapEntity("isPublic","公开"));
@@ -363,6 +354,9 @@ public class ArticleController extends BaseController {
 
 		//判断用户公司属于哪种企业类型
 		Enterprise enterprise=admin.getEnterprise();
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
 		//判断企业是否被删除
 		if(enterprise.getDeleted()){
 			Message.error("您的企业不存在");

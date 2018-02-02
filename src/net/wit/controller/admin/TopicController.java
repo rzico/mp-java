@@ -63,7 +63,8 @@ public class TopicController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 	/**
 	 * 主页
@@ -308,6 +309,41 @@ public class TopicController extends BaseController {
 			filters.add(typeFilter);
 		}
 
+		Admin admin =adminService.getCurrent();
+//		System.out.println("admin.ID:"+admin.getId());
+		Enterprise enterprise=admin.getEnterprise();
+//		System.out.println("enter.ID:"+enterprise.getId());
+
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		if(enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("id", Filter.Operator.eq, enterprise.getMember().getTopic().getId());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
 		Page<Topic> page = topicService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

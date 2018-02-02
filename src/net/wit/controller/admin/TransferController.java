@@ -58,6 +58,8 @@ public class TransferController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 
 	/**
@@ -237,6 +239,28 @@ public class TransferController extends BaseController {
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
 			filters.add(typeFilter);
+		}
+
+		Admin admin =adminService.getCurrent();
+		Enterprise enterprise=admin.getEnterprise();
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商(無權限)
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, enterprise.getMember());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
 		}
 
 		Page<Transfer> page = transferService.findPage(beginDate,endDate,pageable);
