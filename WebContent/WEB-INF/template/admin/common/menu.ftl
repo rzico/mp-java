@@ -26,6 +26,7 @@
                 <ul>
                     <li><a data-href="../payment/index.jhtml" data-title="收款管理" href="javascript:;">收款管理</a></li>
                     <li><a data-href="../refunds/index.jhtml" data-title="退款管理" href="javascript:;">退款管理</a></li>
+                    <li><a data-href="../recharge/index.jhtml" data-title="充值管理" href="javascript:;">充值管理</a></li>
                     <li><a data-href="../transfer/index.jhtml" data-title="提现管理" href="javascript:;">提现管理</a></li>
                 </ul>
             </dd>

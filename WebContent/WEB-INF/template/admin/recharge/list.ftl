@@ -167,6 +167,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "mapMember",
+                    "sTitle": "会员名",
+                    "sClass": "center"
+                },
+                {
                     "mData": "amount",
                     "sTitle": "充值金额",
                     "sClass": "center"
@@ -177,13 +182,18 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "memo",
-                    "sTitle": "备注",
+                    "mData": "method",
+                    "sTitle": "方式",
                     "sClass": "center"
                 },
                 {
-                    "mData": "method",
-                    "sTitle": "方式",
+                    "mData": "voucher",
+                    "sTitle": "凭证号",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "memo",
+                    "sTitle": "备注",
                     "sClass": "center"
                 },
                 {
@@ -204,16 +214,6 @@
                 {
                     "mData": "transferDate",
                     "sTitle": "到账日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "voucher",
-                    "sTitle": "凭证号",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
                     "sClass": "center"
                 },
                 {
