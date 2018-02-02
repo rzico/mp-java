@@ -93,15 +93,17 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(String body, HttpServletRequest request, RedirectAttributes redirectAttributes){
-		/*Member member = memberService.getCurrent();
-		if (member==null) {
-			return Message.error(Message.SESSION_INVAILD);
-		}
-		Admin admin = adminService.findByMember(member);
+		Member member = null;
+		Admin admin = adminService.getCurrent();
 		if (admin!=null && admin.getEnterprise()!=null) {
 			member = admin.getEnterprise().getMember();
 		}
-		*/
+
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+
 		GoodsModel model = JsonUtils.toObject(body,GoodsModel.class);
 		if (model==null) {
 			return Message.error("无效数据包");
@@ -154,7 +156,7 @@ public class ProductController extends BaseController {
 			product.setWeight(0);
 			product.setPoint(0L);
 			product.setGoods(goods);
-			//product.setMember(member);
+			product.setMember(member);
 			product.setStock(pm.getStock());
 			product.setAllocatedStock(0);
 			i = i+1;
@@ -279,16 +281,12 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public Message list(Date beginDate, Date endDate, Long productCategoryId, Pageable pageable, ModelMap model) {
-		/*
-		Member member = memberService.getCurrent();
-		if (member == null){
-			Message.error("操作员不合法");
-		}
-		Admin admin = adminService.findByMember(member);
+		Member member = null;
+		Admin admin = adminService.getCurrent();
 		if (admin != null && admin.getEnterprise() != null){
 			member = admin.getEnterprise().getMember();
 		}
-		*/
+
 		ProductCategory productCategory = productCategoryService.find(productCategoryId);
 		ArrayList<Filter> filters = (ArrayList<Filter>)pageable.getFilters();
 		if(productCategory != null){

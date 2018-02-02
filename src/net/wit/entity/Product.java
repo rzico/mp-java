@@ -514,7 +514,8 @@ public class Product extends OrderEntity {
 
 	@Transient
 	public String getThumbnailSmall() {
-		if (getThumbnail()!=null) {
+		if ((getThumbnail()!=null) && (!"".equals(getThumbnail()))) {
+
 			if (getThumbnail().substring(0,11).equals("http://cdnx")) {
 				return getThumbnail()+"?x-oss-process=image/resize,w_100,h_100";
 			} else

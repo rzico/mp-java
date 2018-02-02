@@ -347,13 +347,9 @@ public class ArticleController extends BaseController {
 	public Message list(Date beginDate, Date endDate, Long tagIds, Article.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
 
 		Admin admin=adminService.getCurrent();
-		//用户不存在
-		if(admin==null){
-			return null;
-		}
 		//判断用户有没有所属企业
 		if(admin.getEnterprise()==null){
-			return null;
+			return Message.error("企业不存在");
 		}
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (authority!=null) {
@@ -369,26 +365,33 @@ public class ArticleController extends BaseController {
 		Enterprise enterprise=admin.getEnterprise();
 		//判断企业是否被删除
 		if(enterprise.getDeleted()){
-			Message.error("您的企业已删除");
-		}
-		//运营商
-		if(enterprise.getType()==Enterprise.Type.operate){
-			Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
-			return Message.success(PageBlock.bind(page), "admin.list.success");
+			Message.error("您的企业不存在");
 		}
 
 		//代理商
 		if(enterprise.getType()== Enterprise.Type.agent){
-			Area area=enterprise.getArea();
-			System.out.println(area.getId());
-			List<Filter> filters1 =new ArrayList<>();
-			filters1.add(new Filter("area", Filter.Operator.eq,area.getId()));
-			List<Member> members=memberService.findList(null,filters1,null);
-			Page<Article> page = articleService.findMemberPage(beginDate,endDate,members,pageable);
-			return Message.success(PageBlock.bind(page), "admin.list.success");
+			if(enterprise.getArea()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+				filters.add(mediaTypeFilter);
+			}
+			else {
+				return Message.error("您不是区域代理商!");
+			}
+		}
+		//个人代理商
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, enterprise.getMember());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
 		}
 
-		return Message.error("服务器繁忙");
+		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
+		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
 	
