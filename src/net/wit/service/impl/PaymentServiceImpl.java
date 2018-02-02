@@ -170,10 +170,8 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				order.setPaymentMethod(Order.PaymentMethod.values()[payment.getMethod().ordinal()]);
 
 				order.setExpire(null);
-				if (order.getAmountPaid().compareTo(order.getAmount()) >= 0) {
-					order.setOrderStatus(Order.OrderStatus.confirmed);
-					order.setPaymentStatus(Order.PaymentStatus.paid);
-				}
+				order.setOrderStatus(Order.OrderStatus.confirmed);
+				order.setPaymentStatus(Order.PaymentStatus.paid);
 				orderDao.merge(order);
 
 				OrderLog orderLog = new OrderLog();
@@ -217,6 +215,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) > 0) {
 						member.setBalance(member.getBalance().add(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.cashier);
@@ -257,6 +256,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) > 0) {
 						member.setBalance(member.getBalance().add(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.card);
@@ -289,6 +289,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 					card.setBalance(card.getBalance().add(payBill.getCardAmount()));
 					cardDao.merge(card);
+					cardDao.flush();
 
 					CardBill cardBill = new CardBill();
 					cardBill.setDeleted(false);
@@ -333,6 +334,8 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				ArticleReward reward = payment.getArticleReward();
 				member.setBalance(member.getBalance().add(reward.getAmount().subtract(reward.getFee())));
 				memberDao.merge(member);
+				memberDao.flush();
+
 				Deposit deposit = new Deposit();
 				deposit.setBalance(member.getBalance());
 				deposit.setType(Deposit.Type.reward);
@@ -410,6 +413,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 						card.setBalance(card.getBalance().add(payBill.getCardDiscount()));
 						cardDao.merge(card);
+						cardDao.flush();
 						CardBill bill = new CardBill();
 						bill.setBalance(card.getBalance());
 						bill.setCard(card);

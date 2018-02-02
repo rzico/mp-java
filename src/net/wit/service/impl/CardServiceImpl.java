@@ -279,6 +279,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		try {
 			card.setBalance(card.getBalance().subtract(payment.getAmount()));
 			cardDao.merge(card);
+			cardDao.flush();
 			CardBill bill = new CardBill();
 			bill.setBalance(card.getBalance());
 			bill.setCard(card);
@@ -323,6 +324,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		try {
 			card.setBalance(card.getBalance().add(refunds.getAmount()));
 			cardDao.merge(card);
+			cardDao.flush();
 			CardBill bill = new CardBill();
 			bill.setBalance(card.getBalance());
 			bill.setCard(card);
@@ -367,6 +369,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 			card.setPoint(card.getPoint() + point);
 			cardDao.merge(card);
+			cardDao.flush();
 			CardPointBill bill = new CardPointBill();
 			bill.setBalance(card.getPoint());
 			bill.setCard(card);
@@ -389,6 +392,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 				throw new RuntimeException("积分余额不足");
 			}
 			cardDao.merge(card);
+			cardDao.flush();
 			CardPointBill bill = new CardPointBill();
 			bill.setBalance(card.getPoint());
 			bill.setCard(card);

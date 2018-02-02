@@ -241,6 +241,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							}
 							member.setBalance(member.getBalance().add(settle));
 							memberDao.merge(member);
+							memberDao.flush();
 							Deposit deposit = new Deposit();
 							deposit.setBalance(member.getBalance());
 							deposit.setType(Deposit.Type.cashier);
@@ -276,6 +277,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							}
 							member.setBalance(member.getBalance().add(settle));
 							memberDao.merge(member);
+							memberDao.flush();
 							Deposit deposit = new Deposit();
 							deposit.setBalance(member.getBalance());
 							deposit.setType(Deposit.Type.card);
@@ -303,6 +305,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						}
 						card.setBalance(card.getBalance().add(payBill.getCardAmount()));
 						cardDao.merge(card);
+						cardDao.flush();
 
 						CardBill cardBill = new CardBill();
 						cardBill.setDeleted(false);
@@ -381,6 +384,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) != 0) {
 						member.setBalance(member.getBalance().subtract(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.cashier);
@@ -413,6 +417,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) != 0) {
 						member.setBalance(member.getBalance().subtract(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.card);
@@ -437,6 +442,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 					card.setBalance(card.getBalance().subtract(payBill.getCardAmount()));
 					cardDao.merge(card);
+					cardDao.flush();
 
 					CardBill cardBill = new CardBill();
 					cardBill.setDeleted(false);

@@ -470,6 +470,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				BigDecimal samt = order.getAmountPaid().subtract(order.getFee());
 				seller.setBalance(seller.getBalance().add(samt));
 				memberDao.merge(seller);
+				memberDao.flush();
 				Deposit deposit = new Deposit();
 				deposit.setBalance(seller.getBalance());
 				deposit.setType(Deposit.Type.product);
@@ -513,6 +514,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				seller.setBalance(seller.getBalance().subtract(d));
 				if (seller.getBalance().compareTo(BigDecimal.ZERO) >= 0) {
 					memberDao.merge(seller);
+					memberDao.flush();
 					Deposit deposit = new Deposit();
 					deposit.setBalance(seller.getBalance());
 					deposit.setType(Deposit.Type.product);
@@ -540,6 +542,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
 								p1.setBalance(p1.getBalance().add(r1));
 								memberDao.merge(p1);
+								memberDao.flush();
 								Deposit d1 = new Deposit();
 								d1.setBalance(p1.getBalance());
 								d1.setType(Deposit.Type.rebate);
@@ -554,7 +557,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								messageService.depositPushTo(d1);
 							}
 							Long point1 = orderItem.calcPoint1();
-							if (point1.compareTo(0L) > 0 && p1 != null && p1.leaguer(order.getSeller())) {
+							if (point1.compareTo(0L) > 0 && c1 != null && p1 != null && p1.leaguer(order.getSeller())) {
 								cardService.addPoint(c1, point1, orderItem.getName() + "奖励", order);
 							}
 							Member p2 = null;
@@ -563,7 +566,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								c1 = p1.card(order.getSeller());
 								if (c1 != null) {
 									p2 = c1.getPromoter();
-									c2 = p2.card(order.getSeller());
+									if (p2!=null) {
+										c2 = p2.card(order.getSeller());
+									}
 								}
 							}
 							BigDecimal r2 = orderItem.calcPercent2();
@@ -571,6 +576,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
 								p2.setBalance(p2.getBalance().add(r2));
 								memberDao.merge(p2);
+								memberDao.flush();
 								Deposit d2 = new Deposit();
 								d2.setBalance(p2.getBalance());
 								d2.setType(Deposit.Type.rebate);
@@ -585,7 +591,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								messageService.depositPushTo(d2);
 							}
 							Long point2 = orderItem.calcPoint2();
-							if (point2.compareTo(0L) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
+							if (point2.compareTo(0L) > 0 && c2 != null && p2 != null && p2.leaguer(order.getSeller())) {
 								cardService.addPoint(c2, point2, orderItem.getName() + "奖励", order);
 							}
 							Member p3 = null;
@@ -594,7 +600,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								c2 = p2.card(order.getSeller());
 								if (c2 != null) {
 									p3 = c2.getPromoter();
-									c3 = p3.card(order.getSeller());
+									if (p3!=null) {
+										c3 = p3.card(order.getSeller());
+									}
 								}
 							}
 							BigDecimal r3 = orderItem.calcPercent3();
@@ -602,6 +610,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
 								p3.setBalance(p3.getBalance().add(r3));
 								memberDao.merge(p3);
+								memberDao.flush();
 								Deposit d3 = new Deposit();
 								d3.setBalance(p3.getBalance());
 								d3.setType(Deposit.Type.rebate);
@@ -616,7 +625,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								messageService.depositPushTo(d3);
 							}
 							Long point3 = orderItem.calcPoint3();
-							if (point3.compareTo(0L) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
+							if (point3.compareTo(0L) > 0 && c3 != null && p3 != null && p3.leaguer(order.getSeller())) {
 								cardService.addPoint(c3, point3, orderItem.getName() + "奖励", order);
 							}
 
