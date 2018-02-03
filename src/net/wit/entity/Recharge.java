@@ -94,7 +94,7 @@ public class Recharge extends BaseEntity {
 	private String memo;
 
 	/** 账单记录 */
-	@OneToMany(mappedBy = "transfer", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "recharge", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Deposit> deposits = new ArrayList<Deposit>();
 
