@@ -491,7 +491,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(friend);
 		msg.setType(Message.Type.addfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle(member.getNickName());
+		msg.setTitle("【"+member.getNickName()+"】申请成为你的好友。");
 		msg.setContent("【"+member.getNickName()+"】申请成为你的好友。");
 		return pushTo(msg);
 	}
@@ -503,7 +503,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(friend);
 		msg.setType(Message.Type.adoptfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle(member.getNickName());
+		msg.setTitle("【"+member.getNickName()+"】同意成为你的好友。");
 		msg.setContent("【"+member.getNickName()+"】同意成为你的好友。");
 		return pushTo(msg);
 	}
@@ -515,7 +515,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(promoter);
 		msg.setType(Message.Type.adoptfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle(member.getNickName());
+		msg.setTitle("您的新成员【"+member.getNickName()+"】添加你为好友。");
 		msg.setContent("您的新成员【"+member.getNickName()+"】添加你为好友。");
 		pushTo(msg);
 		Message adt = new Message();
@@ -523,7 +523,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		adt.setReceiver(member);
 		adt.setType(Message.Type.adoptfriend);
 		adt.setThumbnial(promoter.getLogo());
-		adt.setTitle(promoter.getNickName());
+		adt.setTitle("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
 		adt.setContent("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
 		pushTo(adt);
 		return true;

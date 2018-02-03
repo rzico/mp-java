@@ -50,6 +50,8 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 
 	private HiloOptimizer orderHiloOptimizer;
 
+	private HiloOptimizer rechargeHiloOptimizer;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -95,14 +97,21 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 	@Value("${sn.order.maxLo}")
 	private int orderMaxLo;
 
+	@Value("${sn.recharge.prefix}")
+	private String rechargePrefix;
+
+	@Value("${sn.recharge.maxLo}")
+	private int rechargeMaxLo;
+
 	public void afterPropertiesSet() throws Exception {
 		paymentHiloOptimizer = new HiloOptimizer(Sn.Type.payment, paymentPrefix, paymentMaxLo);
 		refundsHiloOptimizer = new HiloOptimizer(Sn.Type.refunds, refundsPrefix, refundsMaxLo);
 		transferHiloOptimizer = new HiloOptimizer(Sn.Type.transfer, transferPrefix, transferMaxLo);
 		cardHiloOptimizer = new HiloOptimizer(Sn.Type.card, cardPrefix, cardMaxLo);
 		topicHiloOptimizer = new HiloOptimizer(Sn.Type.topic, topicPrefix, topicMaxLo);
-		orderHiloOptimizer = new HiloOptimizer(Sn.Type.order, topicPrefix, topicMaxLo);
-		productHiloOptimizer = new HiloOptimizer(Sn.Type.product, topicPrefix, topicMaxLo);
+		orderHiloOptimizer = new HiloOptimizer(Sn.Type.order, orderPrefix, orderMaxLo);
+		productHiloOptimizer = new HiloOptimizer(Sn.Type.product, productPrefix, productMaxLo);
+		rechargeHiloOptimizer = new HiloOptimizer(Sn.Type.recharge, rechargePrefix, rechargeMaxLo);
 	}
 
 	public String generate(Sn.Type type) {
@@ -121,6 +130,8 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 			return orderHiloOptimizer.generate();
 		} else if (type == Sn.Type.product) {
 			return productHiloOptimizer.generate();
+		} else if (type == Sn.Type.recharge) {
+			return rechargeHiloOptimizer.generate();
 		}
 		return null;
 	}
