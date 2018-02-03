@@ -148,54 +148,57 @@ public class UnsPay {
         return data.get(errorCode);
     }
     public synchronized static String submit(Transfer transfer) {
-        try {
-            BigDecimal bal = queryBalance();
-            if (bal.compareTo(transfer.effectiveAmount().add(BigDecimal.ONE))<=0) {
-               return "3000";
-            }
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("01accountId", bundle.getString("x-unspay-partner"));
-            params.put("02name", transfer.getName());
-            params.put("03cardNo", transfer.getCardno());
-            params.put("04orderId", transfer.getSn());
-            params.put("05purpose", transfer.getMemo());
-            java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#0.00");
-            params.put("06amount", df.format(transfer.effectiveAmount()));
-            String notifyUrl = bundle.getString("x-unspay-url") +"payment/transfer/" + transfer.getSn() + ".jhtml";
-            params.put("06responseUrl", notifyUrl);
-            String keystr = UnsPay.joinValue(params);
-            params.put("08mac", MD5Utils.getMD5Str(keystr).toUpperCase());
-            String resp = get(url, params);
-            System.out.println(resp);
-            Map<String, String> data = JsonUtils.toObject(resp, Map.class);
-            return data.get("result_code");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return "9999";
-        }
+        return "0000";
+//        try {
+//            BigDecimal bal = queryBalance();
+//            if (bal.compareTo(transfer.effectiveAmount().add(BigDecimal.ONE))<=0) {
+//               return "3000";
+//            }
+//            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//            Map<String, Object> params = new HashMap<String, Object>();
+//            params.put("01accountId", bundle.getString("x-unspay-partner"));
+//            params.put("02name", transfer.getName());
+//            params.put("03cardNo", transfer.getCardno());
+//            params.put("04orderId", transfer.getSn());
+//            params.put("05purpose", transfer.getMemo());
+//            java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#0.00");
+//            params.put("06amount", df.format(transfer.effectiveAmount()));
+//            String notifyUrl = bundle.getString("x-unspay-url") +"payment/transfer/" + transfer.getSn() + ".jhtml";
+//            params.put("06responseUrl", notifyUrl);
+//            String keystr = UnsPay.joinValue(params);
+//            params.put("08mac", MD5Utils.getMD5Str(keystr).toUpperCase());
+//            String resp = get(url, params);
+//            System.out.println(resp);
+//            Map<String, String> data = JsonUtils.toObject(resp, Map.class);
+//            return data.get("result_code");
+//        } catch (Exception e) {
+//            logger.error(e.getMessage());
+//            return "9999";
+//        }
 
     }
     //00，成功;10，处理中;20，失败  ;其他情况出错了
     public static String query(String sn) {
-        try {
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-            Map<String,Object> params=new HashMap<String,Object>();
-            params.put("01accountId",bundle.getString("x-unspay-partner"));
-            params.put("02orderId",sn);
-            String keystr = UnsPay.joinValue(params);
-            params.put("03mac", MD5Utils.getMD5Str(keystr).toUpperCase());
-            String resp =get(queryurl,params);
-            Map<String,String> data = JsonUtils.toObject(resp,Map.class);
-            if ("0000".equals(data.get("result_code"))) {
-                return data.get("status").toString();
-            } else {
-                return "99."+data.get("result_msg").toString();
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return "99.查询出错了";
-        }
+        return "0000";
+//
+//        try {
+//            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//            Map<String,Object> params=new HashMap<String,Object>();
+//            params.put("01accountId",bundle.getString("x-unspay-partner"));
+//            params.put("02orderId",sn);
+//            String keystr = UnsPay.joinValue(params);
+//            params.put("03mac", MD5Utils.getMD5Str(keystr).toUpperCase());
+//            String resp =get(queryurl,params);
+//            Map<String,String> data = JsonUtils.toObject(resp,Map.class);
+//            if ("0000".equals(data.get("result_code"))) {
+//                return data.get("status").toString();
+//            } else {
+//                return "99."+data.get("result_msg").toString();
+//            }
+//        } catch (Exception e) {
+//            logger.error(e.getMessage());
+//            return "99.查询出错了";
+//        }
     }
     //00，成功;10，处理中;20，失败  ;其他情况出错了
     public static String verifyNotify(String sn,HttpServletRequest request) {

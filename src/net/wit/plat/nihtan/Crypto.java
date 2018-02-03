@@ -23,10 +23,10 @@ import java.util.Map;
  * Created by zhangsr on 2018/1/29.
  */
 public class Crypto {
-    private static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
-    private static String sessionURL = "http://api.neo-nihtan.com/api/session";
-    private static String gameListURL = "http://api.neo-nihtan.com/api/game/list";
-    private static String videoListURL = "http://video-list.neo-nihtan.com/video/list";
+    public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
+    public static String sessionURL = "http://api.neo-nihtan.com/api/session";
+    public static String gameListURL = "http://api.neo-nihtan.com/api/game/list";
+    public static String videoListURL = "http://video-list.neo-nihtan.com/video/list";
 
     public static String encrypt(String key, String data) {
         String hash = "";
