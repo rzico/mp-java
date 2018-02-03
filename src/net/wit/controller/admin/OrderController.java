@@ -131,9 +131,9 @@ public class OrderController extends BaseController {
 		shippingStatuss.add(new MapEntity("returned","已退货"));
 		model.addAttribute("shippingStatuss",shippingStatuss);
 
-		model.addAttribute("areas",areaService.findAll());
+//		model.addAttribute("areas",areaService.findAll());
 
-		model.addAttribute("couponCodes",couponCodeService.findAll());
+//		model.addAttribute("couponCodes",couponCodeService.findAll());
 
 		//model.addAttribute("members",memberService.findAll());
 
@@ -443,6 +443,32 @@ public class OrderController extends BaseController {
 			filters.add(shippingStatusFilter);
 		}
 
+		Admin admin =adminService.getCurrent();
+//		System.out.println("admin.ID:"+admin.getId());
+		Enterprise enterprise=admin.getEnterprise();
+//		System.out.println("enter.ID:"+enterprise.getId());
+
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商(無權限)
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("seller", Filter.Operator.eq, enterprise.getMember());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
+
 		Page<Order> page = orderService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
@@ -508,7 +534,7 @@ public class OrderController extends BaseController {
 			return Message.error("没有就业不能操作订单");
 		}
 
-		if (null != admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
+		if (null == admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
 			return Message.error("只能操作本企业订单");
 		}
 
@@ -537,12 +563,13 @@ public class OrderController extends BaseController {
 	public Message confirm(Long orderId){
 		Order order = orderService.find(orderId);
 		Admin admin = adminService.getCurrent();
-
+//System.out.println("order.seller.id"+order.getSeller().getId());
+//		System.out.println("admin.enter.member.id"+admin.getEnterprise().getMember().getId());
 		if (admin.getEnterprise()==null) {
 			return Message.error("没有就业不能操作订单");
 		}
 
-		if (null != admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
+		if (null == admin.getEnterprise().getMember() || !admin.getEnterprise().getMember().equals(order.getSeller())) {
 			return Message.error("只能操作本企业订单");
 		}
 

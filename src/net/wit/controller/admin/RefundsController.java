@@ -73,6 +73,8 @@ public class RefundsController extends BaseController {
 	@Resource(name = "pluginServiceImpl")
 	private PluginService pluginService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 	/**
 	 * 主页
@@ -298,6 +300,27 @@ public class RefundsController extends BaseController {
 			filters.add(typeFilter);
 		}
 
+		Admin admin =adminService.getCurrent();
+		Enterprise enterprise=admin.getEnterprise();
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商(無權限)
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, enterprise.getMember());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
 		Page<Refunds> page = refundsService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

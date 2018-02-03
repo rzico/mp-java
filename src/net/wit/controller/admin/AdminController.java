@@ -74,9 +74,9 @@ public class AdminController extends BaseController {
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
 
-		model.addAttribute("areas",areaService.findAll());
+//		model.addAttribute("areas",areaService.findAll());
 
-		model.addAttribute("roles",roleService.findAll());
+//		model.addAttribute("roles",roleService.findAll());
 
 		return "/admin/admin/list";
 	}
@@ -311,6 +311,32 @@ public class AdminController extends BaseController {
 		if (gender!=null) {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
 			filters.add(genderFilter);
+		}
+
+		Admin admin =adminService.getCurrent();
+//		System.out.println("admin.ID:"+admin.getId());
+		Enterprise enterprise=admin.getEnterprise();
+//		System.out.println("enter.ID:"+enterprise.getId());
+
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop||enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("enterprise", Filter.Operator.eq, enterprise);
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
 		}
 
 		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);

@@ -77,6 +77,8 @@ public class MerchantController extends BaseController {
 	@Resource(name = "categoryServiceImpl")
 	private CategoryService categoryService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 	/**
 	 * 主页
@@ -320,7 +322,29 @@ public class MerchantController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+		Admin admin =adminService.getCurrent();
+		Enterprise enterprise=admin.getEnterprise();
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("owner", Filter.Operator.eq, enterprise.getMember());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
+		//个人代理商(無權限)
+		//商家(無權限)
 
 		Page<Merchant> page = merchantService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

@@ -35,84 +35,73 @@
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">编号：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span>${data.sn}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">申请人：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>申请人：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.member.nickName}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">开户名：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开户名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.name}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">银行账号：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行账号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.cardno}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">银行名称：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行名称：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.bankname}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">所属城市：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>所属城市：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <span> ${data.city}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">提现类型：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>提现类型：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     <span> ${message("Transfer.Type."+data.type)}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">提现金额：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    <span> ${data.amount}&nbsp;&nbsp;(人民币:元)</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">当前状态：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>当前状态：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     <span> ${message("Transfer.Status."+data.status)}</span>
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">备注：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span>${data.memo}</span>
-                </div>
+            <label class="form-label col-xs-4 col-sm-2">备注：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.memo}</span>
             </div>
+        </div>
 
              <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">操作员：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <span id="operator">${data.operator}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">凭证号：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span id="voucher">${data.voucher}</span>
+                    <span>${data.operator}</span>
                 </div>
             </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 [#if data.status=="waiting"]
-                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;审核提交&nbsp;&nbsp;">
-                    <input class="btn btn-primary radius" type="button" onclick="edit(${data.id})" value="&nbsp;&nbsp;手动转账&nbsp;&nbsp;">
+                <!--
+                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交付款&nbsp;&nbsp;">
+                -->
                 [/#if]
                 [#if data.status=="confirmed"]
                     <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;">
@@ -201,27 +190,6 @@
                     }
                 });
             });
-
-            /*编辑*/
-            function edit(id) {
-                var w_1 = window.innerWidth * 0.3;
-                var h_1 = window.innerHeight * 0.5;
-                layer_show("手动转账", "../transfer/manualTransfer.jhtml?id="+id, w_1, h_1);
-            }
-
-            /*刷新数据*/
-            function rewrite(data) {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.add_row(data);
-                parent.closeWindow(index, '提交成功');
-            }
-
-            /*关闭页面*/
-            function closeWindow(index, msg) {
-                layer.close(index);
-                layer.msg(msg, {icon: 1, time: 1000});
-            }
-
         </script>
 </body>
 </html>
