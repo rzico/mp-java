@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Recharge;
+import net.wit.entity.Transfer;
 
 
 /**
@@ -27,4 +28,5 @@ public interface RechargeDao extends BaseDao<Recharge, Long> {
 	 * @return Page<Recharge>
 	 */
 	Page<Recharge> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Recharge findBySn(String sn);
 }

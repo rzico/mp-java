@@ -39,8 +39,18 @@
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
+        [#if statuss??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="status" class="select" style="background-color: #FFFFFF;">
+                    <option value="">状态</option>
+                    [#list statuss as status]
+                        <option value="${status.id}">${status.name}</option>
+                    [/#list]
+                </select>
+        </span>
+        [/#if]
 		[#if methods??]
-			<span class="select-box" style="background-color:#FFFFFF;width=100px;height=32px;">
+			<span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
 				<select name="method" class="select" style="background-color: #FFFFFF;">
 					<option value="">方式</option>
 					[#list methods as method]
@@ -48,16 +58,8 @@
 					[/#list]
 				</select>
 			</span>
-		[/#if]		[#if statuss??]
-			<span class="select-box" style="background-color:#FFFFFF;width=100px;height=32px;">
-				<select name="status" class="select" style="background-color: #FFFFFF;">
-					<option value="">状态</option>
-					[#list statuss as status]
-					<option value="${status.id}">${status.name}</option>
-					[/#list]
-				</select>
-			</span>
 		[/#if]
+
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -66,8 +68,7 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
                 <a href="javascript:;" onclick="add('首页 &gt; 充值管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增充值管理</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                <i class="Hui-iconfont">&#xe600;</i>充值</a>
         </span>
     </div>
     <div class="mt-20">
@@ -139,10 +140,7 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(7).attr('style', 'text-align: left;');
-                $(row).children('td').eq(9).attr('style', 'text-align: left;');
                 $(row).children('td').eq(10).attr('style', 'text-align: left;');
-                $(row).children('td').eq(13).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -167,6 +165,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "sn",
+                    "sTitle": "编号",
+                    "sClass": "center"
+                },
+                {
                     "mData": "mapMember",
                     "sTitle": "会员名",
                     "sClass": "center"
@@ -177,18 +180,13 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "fee",
-                    "sTitle": "手续费",
-                    "sClass": "center"
-                },
-                {
                     "mData": "method",
                     "sTitle": "方式",
                     "sClass": "center"
                 },
                 {
-                    "mData": "voucher",
-                    "sTitle": "凭证号",
+                    "mData": "transferDate",
+                    "sTitle": "到账日期",
                     "sClass": "center"
                 },
                 {
@@ -202,18 +200,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "sn",
-                    "sTitle": "编号",
-                    "sClass": "center"
-                },
-                {
                     "mData": "status",
                     "sTitle": "状态",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "transferDate",
-                    "sTitle": "到账日期",
                     "sClass": "center"
                 },
                 {
@@ -246,6 +234,16 @@
                     }
                 },
                 {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
                     "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
@@ -262,7 +260,13 @@
                     }
                 },
                 {
-                    "aTargets": [10],
+                    "aTargets": [8],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]
@@ -278,27 +282,10 @@
                     }
                 },
                 {
-                    "aTargets": [11],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [13],
+                    "aTargets": [12],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [14],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 充值管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 充值管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>";
                         }else{
                             return "";
                         }
@@ -306,7 +293,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 13, 14]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 11, 12]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
@@ -374,7 +361,9 @@
     }
     /*查看*/
     function show(title, url, id, w, h) {
-        layer_show(title, url, w, h);
+        var w_1 = window.innerWidth * 0.5;
+        var h_1 = window.innerHeight * 0.6;
+        layer_show(title, url, w_1, h_1);
     }
     /*编辑*/
     function edit(title, url, id, w, h) {

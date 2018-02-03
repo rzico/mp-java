@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -66,9 +67,9 @@ public class TransferController extends BaseController {
 
 		List<MapEntity> statuss = new ArrayList<>();
 		statuss.add(new MapEntity("waiting","等待审核"));
-		statuss.add(new MapEntity("confirmed","提交处理"));
-		statuss.add(new MapEntity("success","付款成功"));
-		statuss.add(new MapEntity("failure","付款失败"));
+		statuss.add(new MapEntity("confirmed","审核提交"));
+		statuss.add(new MapEntity("success","提现成功"));
+		statuss.add(new MapEntity("failure","提现失败"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
@@ -89,9 +90,9 @@ public class TransferController extends BaseController {
 
 		List<MapEntity> statuss = new ArrayList<>();
 		statuss.add(new MapEntity("waiting","等待审核"));
-		statuss.add(new MapEntity("confirmed","提交处理"));
-		statuss.add(new MapEntity("success","付款成功"));
-		statuss.add(new MapEntity("failure","付款失败"));
+		statuss.add(new MapEntity("confirmed","审核提交"));
+		statuss.add(new MapEntity("success","提现成功"));
+		statuss.add(new MapEntity("failure","提现失败"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
@@ -167,9 +168,9 @@ public class TransferController extends BaseController {
 
 		List<MapEntity> statuss = new ArrayList<>();
 		statuss.add(new MapEntity("waiting","等待审核"));
-		statuss.add(new MapEntity("confirmed","提交处理"));
-		statuss.add(new MapEntity("success","付款成功"));
-		statuss.add(new MapEntity("failure","付款失败"));
+		statuss.add(new MapEntity("confirmed","审核提交"));
+		statuss.add(new MapEntity("success","提现成功"));
+		statuss.add(new MapEntity("failure","提现失败"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
@@ -202,11 +203,11 @@ public class TransferController extends BaseController {
 			    String resp = UnsPay.query(entity.getSn());
 			    if ("00".equals(resp)) {
 					transferService.handle(entity);
-					return Message.success(entity,"付款成功");
+					return Message.success(entity,"提现成功");
 				} else
 				if ("20".equals(resp)) {
 					transferService.refunds(entity);
-					return Message.success(entity,"付款失败,款项退回账号");
+					return Message.success(entity,"提现失败,款项退回账号");
 				} else
 				if ("10".equals(resp)) {
 					return Message.success(entity,"正在处理中");
@@ -263,6 +264,46 @@ public class TransferController extends BaseController {
 		return "/admin/transfer/view/memberView";
 	}
 
+	/**
+	 * 申请手动转账
+	 */
+	@RequestMapping(value = "/manualTransfer", method = RequestMethod.GET)
+	public String manualTransfer(ModelMap model,Long id) {
+		model.addAttribute("data",transferService.find(id));
 
+		return "/admin/transfer/view/manualTransfer";
+	}
+
+	/**
+	 * 提交手动转账
+	 */
+	@RequestMapping(value = "/manualTransferSave", method = RequestMethod.POST)
+	@ResponseBody
+	public Message manualTransferSave(String voucher, BigDecimal amount, Long Id){
+		if("".equals(voucher)){
+			return Message.error("凭证号不能为空!");
+		}
+
+		Transfer entity = transferService.find(Id);
+		if(amount.compareTo(entity.getAmount()) != 0){
+			return Message.error("汇款金额不正确,请重新填写!");
+		}
+		Member member = memberService.getCurrent();
+		entity.setVoucher(voucher);
+		entity.setStatus(Transfer.Status.success);
+		if(member == null){
+			entity.setOperator("系统操作员");
+		}else{
+			entity.setOperator(member.getName());
+		}
+
+		try {
+			transferService.update(entity);
+			return Message.success(entity,"正在处理中");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error(e.getMessage());
+		}
+	}
 
 }
