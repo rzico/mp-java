@@ -111,6 +111,11 @@ public class Deposit extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '转账单'")
 	private Transfer transfer;
 
+	/** 充值单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '充值单'")
+	private Recharge recharge;
+
 	/** 线下收单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '线下收单'")
@@ -316,6 +321,14 @@ public class Deposit extends BaseEntity {
 
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public Recharge getRecharge() {
+		return recharge;
+	}
+
+	public void setRecharge(Recharge recharge) {
+		this.recharge = recharge;
 	}
 
 	public MapEntity getMapMember() {

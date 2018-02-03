@@ -104,6 +104,40 @@ public class LoginController extends BaseController {
     }
 
     /**
+     * 手机验证码登录时，发送验证码
+     * mobile 手机号
+     */
+    @RequestMapping(value = "/send_email", method = RequestMethod.POST)
+    @ResponseBody
+    public Message sendMail(HttpServletRequest request) {
+        String m = rsaService.decryptParameter("email", request);
+        rsaService.removePrivateKey(request);
+        if (m==null) {
+            return Message.error("无效手机号");
+        }
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
+            if (memberService.findByMobile(m)==null) {
+                return Message.error("没有注册不能登录");
+            }
+        }
+        int challege = StringUtils.Random6Code();
+        String securityCode = String.valueOf(challege);
+
+        SafeKey safeKey = new SafeKey();
+        safeKey.setKey(m);
+        safeKey.setValue(securityCode);
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
+        redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
+
+        Smssend smsSend = new Smssend();
+        smsSend.setMobile(m);
+        smsSend.setContent("验证码 :" + securityCode + ",只用于登录使用。");
+        smssendService.smsSend(smsSend);
+        return Message.success("发送成功");
+    }
+
+    /**
      * 验证码登录
      */
     @RequestMapping(value = "/captcha", method = RequestMethod.POST)
