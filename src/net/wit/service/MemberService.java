@@ -33,6 +33,12 @@ public interface MemberService extends BaseService<Member, Long> {
 	 */
 	Member findByMobile(String mobile);
 	/**
+	 * 根据手机号查找会员
+	 * @param email 用户名(忽略大小写)
+	 * @return 会员，若不存在则返回null
+	 */
+	Member findByEmail(String email);
+	/**
 	 * 根据设备号查找会员
 	 * @param uuid 设备号(忽略大小写)
 	 * @return 会员，若不存在则返回null

@@ -40,6 +40,12 @@ public interface MemberDao extends BaseDao<Member, Long> {
 	 * @return 会员，若不存在则返回null
 	 */
 	Member findByMobile(String mobile);
+	/**
+	 * 根据手机号查找会员
+	 * @param email 用户名(忽略大小写)
+	 * @return 会员，若不存在则返回null
+	 */
+	Member findByEmail(String email);
 
 	/**
 	 * 根据设备查找会员
