@@ -235,7 +235,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -245,7 +245,7 @@
                     }
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if methods??]
@@ -261,7 +261,7 @@
                     }
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
@@ -363,7 +363,9 @@
     }
     /*查看*/
     function show(title, url, id, w, h) {
-        layer_show(title, url, w, h);
+        var w_1 = window.innerWidth * 0.5;
+        var h_1 = window.innerHeight * 0.6;
+        layer_show(title, url, w_1, h_1);
     }
     /*编辑*/
     function edit(title, url, id, w, h) {

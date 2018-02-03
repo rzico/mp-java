@@ -61,7 +61,8 @@ public class RechargeController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-
+	@Resource(name = "snServiceImpl")
+	private SnService snService;
 
 	/**
 	 * 主页
@@ -108,7 +109,7 @@ public class RechargeController extends BaseController {
 	public Message save(Recharge recharge, Long memberId){
 		Recharge entity = new Recharge();
 
-		entity.setSn("");
+		entity.setSn(snService.generate(Sn.Type.recharge));
 
 		entity.setAmount(recharge.getAmount());
 
