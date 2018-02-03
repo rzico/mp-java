@@ -5,7 +5,7 @@
  */
 package net.wit.util;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -309,18 +309,31 @@ public final class WebUtils {
 		}
 		throw new IllegalArgumentException();
 	}
-	
-	public static String getSession(HttpResponse httpResponse) {
-		String JSESSIONID = "";
-		Header[] heard = httpResponse.getHeaders("Set-Cookie");
-		for (int i = 0; i < heard.length; i++) {
-			if (heard[i].getValue().contains("JSESSIONID")) {
-				JSESSIONID = heard[i].getValue();
-				break;
+
+	public static String getBodyParams(HttpServletRequest request) {
+		String readLine;
+		StringBuffer sb = new StringBuffer();
+		BufferedReader responseReader = null;
+		OutputStream outputStream = null;
+		try {
+			responseReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
+			while ((readLine = responseReader.readLine()) != null) {
+				sb.append(readLine).append("\n");
+			}
+			responseReader.close();
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		return JSESSIONID;
+		return "";
 	}
-	
 
 }
