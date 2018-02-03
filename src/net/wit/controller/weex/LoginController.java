@@ -54,6 +54,9 @@ public class LoginController extends BaseController {
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
+    @Resource(name = "mailServiceImpl")
+    private MailService mailService;
+
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
@@ -110,14 +113,14 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/send_email", method = RequestMethod.POST)
     @ResponseBody
     public Message sendMail(HttpServletRequest request) {
-        String m = rsaService.decryptParameter("email", request);
+        String e = rsaService.decryptParameter("email", request);
         rsaService.removePrivateKey(request);
-        if (m==null) {
-            return Message.error("无效手机号");
+        if (e==null) {
+            return Message.error("无效邮箱");
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
-            if (memberService.findByMobile(m)==null) {
+            if (memberService.findByEmail(e)==null) {
                 return Message.error("没有注册不能登录");
             }
         }
@@ -125,15 +128,12 @@ public class LoginController extends BaseController {
         String securityCode = String.valueOf(challege);
 
         SafeKey safeKey = new SafeKey();
-        safeKey.setKey(m);
+        safeKey.setKey(e);
         safeKey.setValue(securityCode);
-        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),1800));
         redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
 
-        Smssend smsSend = new Smssend();
-        smsSend.setMobile(m);
-        smsSend.setContent("验证码 :" + securityCode + ",只用于登录使用。");
-        smssendService.smsSend(smsSend);
+        mailService.sendLoginMail(e,e,securityCode);
         return Message.success("发送成功");
     }
 
@@ -149,7 +149,10 @@ public class LoginController extends BaseController {
         }
         redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
-        Member member =memberService.findByMobile(safeKey.getKey());
+        Member member = memberService.findByMobile(safeKey.getKey());
+        if (member==null) {
+            member = memberService.findByEmail(safeKey.getKey());
+        }
         try {
             String captcha = rsaService.decryptParameter("captcha", request);
             rsaService.removePrivateKey(request);
@@ -359,11 +362,6 @@ public class LoginController extends BaseController {
             member = bindUser.getMember();
         }
         if (member==null) {
-
-            if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
-                return Message.error("请通过分享链接注册后才能登录");
-            }
-
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
