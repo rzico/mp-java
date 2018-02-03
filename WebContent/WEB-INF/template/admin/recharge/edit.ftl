@@ -34,86 +34,63 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">备注：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.memo}" placeholder="" id="memo" name="memo">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">编号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span> ${data.sn}</span>
+                </div>
             </div>
-        </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">充值人：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span> ${data.mapMember.name}</span>
+                </div>
+            </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>方式：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if methods??]
-                [#list methods as method]
-                    <div class="radio-box">
-                        <input name="method" type="radio" id="method-${method_index}" value="${method.id}"[#if method.id == data.method] checked[/#if]>
-                        <label for="method-${method_index}">${method.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">当前状态：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <span> ${message("Recharge.Status."+data.status)}</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">操作员：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.operator}" placeholder="" id="operator" name="operator">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">充值金额：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <span> ${data.amount}&nbsp;&nbsp;(人民币:元)</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.sn}" placeholder="" id="sn" name="sn">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">备注：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>${data.memo}</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if statuss??]
-                [#list statuss as status]
-                    <div class="radio-box">
-                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
-                        <label for="status-${status_index}">${status.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">操作员：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span id="operator">${data.operator}</span>
+                </div>
             </div>
-        </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">凭证号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span id="voucher">${data.voucher}</span>
+                </div>
+            </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">到账日期：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss' })" value="${data.transferDate}" id="transferDate" name="transferDate" class="input-text Wdate" style="width:180px;">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">凭证号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.voucher}" placeholder="" id="voucher" name="voucher">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Member：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
+                [#if data.status=="waiting"]
+                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;审核提交&nbsp;&nbsp;">
+                    <input class="btn btn-primary radius" type="button" onclick="edit(${data.id})" value="&nbsp;&nbsp;手动转账&nbsp;&nbsp;">
+                [/#if]
+                [#if data.status=="confirmed"]
+                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;">
+                [/#if]
             </div>
         </div>
             [#else]
@@ -201,6 +178,28 @@
                     }
                 });
             });
+
+
+            /*编辑*/
+            function edit(id) {
+                var w_1 = window.innerWidth * 0.3;
+                var h_1 = window.innerHeight * 0.5;
+                layer_show("手动转账", "../recharge/manualTransfer.jhtml?id="+id, w_1, h_1);
+            }
+
+            /*刷新数据*/
+            function rewrite(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.add_row(data);
+                parent.closeWindow(index, '提交成功');
+            }
+
+            /*关闭页面*/
+            function closeWindow(index, msg) {
+                layer.close(index);
+                layer.msg(msg, {icon: 1, time: 1000});
+            }
+
         </script>
 </body>
 </html>
