@@ -134,7 +134,7 @@ public class RechargeController extends BaseController {
             return Message.error("admin.data.valid");
         }
         try {
-            rechargeService.save(entity);
+            rechargeService.submit(entity);
             return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,20 +185,13 @@ public class RechargeController extends BaseController {
 	public Message update(Recharge recharge, Long memberId){
 		Recharge entity = rechargeService.find(recharge.getId());
 		try {
-			if (entity.getStatus().equals(Transfer.Status.waiting)) {
-				if (rechargeService.transfer(entity)) {
-					return Message.success(entity,"提交成功");
-				} else {
-					return Message.error("提交失败");
-				}
-			} else {
 				String resp = UnsPay.query(entity.getSn());
 				if ("00".equals(resp)) {
 					rechargeService.handle(entity);
 					return Message.success(entity,"充值成功");
 				} else
 				if ("20".equals(resp)) {
-					rechargeService.refunds(entity);
+					rechargeService.close(entity);
 					return Message.success(entity,"充值失败,款项退回账号");
 				} else
 				if ("10".equals(resp)) {
@@ -206,7 +199,6 @@ public class RechargeController extends BaseController {
 				} else {
 					return Message.error("查询失败");
 				}
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error(e.getMessage());
