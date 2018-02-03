@@ -77,13 +77,13 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '密码'")
 	private String password;
 
-//
-//	/** E-mail */
-//	@Email
-//	@Length(max = 200)
-//	@Column(columnDefinition="varchar(255) comment '邮箱'")
-//	private String email;
-//
+
+	/** E-mail */
+	@Email
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '邮箱'")
+	private String email;
+
 //	/** 积分 */
 //	@Min(0)
 //	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
@@ -365,14 +365,14 @@ public class Member extends BaseEntity {
 		this.password = password;
 	}
 
-//	public String getEmail() {
-//		return email;
-//	}
-//
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
-//
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 //	public Long getPoint() {
 //		return point;
 //	}
