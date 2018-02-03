@@ -26,7 +26,7 @@ import net.wit.entity.Recharge;
  * @author 降魔战队
  * @date 2018-2-1 14:1:25
  */
- 
+
 
 @Repository("rechargeDaoImpl")
 public class RechargeDaoImpl extends BaseDaoImpl<Recharge, Long> implements RechargeDao {

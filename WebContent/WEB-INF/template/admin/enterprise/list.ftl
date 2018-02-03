@@ -171,11 +171,16 @@
                     "sTitle": "区域",
                     "sClass": "center"
                 },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
-                }
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {
+                        "mData": "id",
+                        "sTitle": "操作",
+                        "sClass": "center"
+                    }
+                [/#if]
+            [/@adminDirective]
+
             ],
             "aoColumnDefs": [
                 {
@@ -226,23 +231,33 @@
                         }
                     }
                 },
-                {
-                    "aTargets": [8],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
-                        }else{
-                            return "";
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {
+                        "aTargets": [8],
+                        "mRender": function (data, display, row) {
+                            if(data != null){
+                                return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                                        "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            }else{
+                                return "";
+                            }
                         }
-                    }
 
-                },
-                //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7, 8]}// 制定列不参与排序
+                    },
+                [/#if]
+            [/@adminDirective]
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                    {"orderable": false, "aTargets": [0, 7, 8]}// 制定列不参与排序
+                [#else]
+                    {"orderable": false, "aTargets": [0, 7]}
+                [/#if]
+            [/@adminDirective]
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
@@ -256,10 +271,10 @@
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
                         "aoData": JSON.stringify(aoData),
-                        "beginDate":_beginDate,
-                        "endDate":_endDate,
-                        "type":_type,
-                        "searchValue":_searchValue
+                        "beginDate": _beginDate,
+                        "endDate": _endDate,
+                        "type": _type,
+                        "searchValue": _searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',

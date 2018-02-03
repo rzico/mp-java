@@ -77,7 +77,11 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                 <a href="javascript:;" onclick="" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量审核</a>
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    <a href="javascript:;" onclick="" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量审核</a>
+                [/#if]
+            [/@adminDirective]
         </span>
     </div>
     <div class="mt-20">

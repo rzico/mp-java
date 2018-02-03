@@ -237,11 +237,15 @@
                     "sTitle": "操作员",
                     "sClass": "center"
                 },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
-                }
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {
+                        "mData": "id",
+                        "sTitle": "操作",
+                        "sClass": "center"
+                    }
+                [/#if]
+            [/@adminDirective]
             ],
             "aoColumnDefs": [
                 {
@@ -353,20 +357,30 @@
                             return "";
                         }
                     }
-                }, 
-                {
-                    "aTargets": [16],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 收款单 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>"
-                        }else{
-                            return "";
-                        }
-                    }
-
                 },
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {
+                        "aTargets": [16],
+                        "mRender": function (data, display, row) {
+                            if (data != null) {
+                                return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 收款单 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>"
+                            } else {
+                                return "";
+                            }
+                        }
+
+                    },
+                [/#if]
+            [/@adminDirective]
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 5, 6, 16]}// 制定列不参与排序
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {"orderable": false, "aTargets": [0, 5, 6, 16]}// 制定列不参与排序
+                [#else]
+                    {"orderable": false, "aTargets": [0, 5, 6]}
+                [/#if]
+            [/@adminDirective]
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

@@ -46,6 +46,8 @@ public class EnterpriseController extends BaseController {
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 
 	/**
@@ -61,7 +63,7 @@ public class EnterpriseController extends BaseController {
 		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("areas",areaService.findAll());
+//		model.addAttribute("areas",areaService.findAll());
 
 		return "/admin/enterprise/list";
 	}
@@ -198,7 +200,28 @@ public class EnterpriseController extends BaseController {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
 			filters.add(typeFilter);
 		}
+		Admin admin =adminService.getCurrent();
+		Enterprise enterprise=admin.getEnterprise();
 
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		//个人代理商(無權限)
+		//商家(無權限)
+		if(enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
 		Page<Enterprise> page = enterpriseService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
