@@ -85,11 +85,11 @@
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 [#if data.status=="waiting"]
-                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;审核提交&nbsp;&nbsp;">
+                    <!-- input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;审核提交&nbsp;&nbsp;" -->
                     <input class="btn btn-primary radius" type="button" onclick="edit(${data.id})" value="&nbsp;&nbsp;手动转账&nbsp;&nbsp;">
                 [/#if]
                 [#if data.status=="confirmed"]
-                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;">
+                    <!-- input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;" -->
                 [/#if]
             </div>
         </div>
@@ -184,7 +184,7 @@
             function edit(id) {
                 var w_1 = window.innerWidth * 0.3;
                 var h_1 = window.innerHeight * 0.5;
-                layer_show("手动转账", "../recharge/manualTransfer.jhtml?id="+id, w_1, h_1);
+                layer_show("手动转账", "./manualTransfer.jhtml?id="+id, w_1, h_1);
             }
 
             /*刷新数据*/

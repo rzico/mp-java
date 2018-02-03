@@ -50,6 +50,9 @@ public class RechargeController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 
@@ -185,6 +188,7 @@ public class RechargeController extends BaseController {
 	public Message update(Recharge recharge, Long memberId){
 		Recharge entity = rechargeService.find(recharge.getId());
 		try {
+
 				String resp = UnsPay.query(entity.getSn());
 				if ("00".equals(resp)) {
 					rechargeService.handle(entity);
@@ -275,6 +279,16 @@ public class RechargeController extends BaseController {
 	}
 
 	/**
+	 * 申请手动转账
+	 */
+	@RequestMapping(value = "/manualTransfer", method = RequestMethod.GET)
+	public String manualTransfer(ModelMap model,Long id) {
+		model.addAttribute("data",rechargeService.find(id));
+
+		return "/admin/recharge/view/manualTransfer";
+	}
+
+	/**
 	 * 提交手动转账
 	 */
 	@RequestMapping(value = "/manualTransferSave", method = RequestMethod.POST)
@@ -283,23 +297,22 @@ public class RechargeController extends BaseController {
 		if("".equals(voucher)){
 			return Message.error("凭证号不能为空!");
 		}
-
 		Recharge entity = rechargeService.find(Id);
 		if(amount.compareTo(entity.getAmount()) != 0){
 			return Message.error("充值金额不正确,请重新填写!");
 		}
-		Member member = memberService.getCurrent();
+		Admin admin = adminService.getCurrent();
+		Member member = admin.getMember();
 		entity.setVoucher(voucher);
-		entity.setStatus(Recharge.Status.success);
+		entity.setStatus(Recharge.Status.confirmed);
 		if(member == null){
 			entity.setOperator("系统操作员");
 		}else{
 			entity.setOperator(member.getName());
 		}
-
 		try {
-			rechargeService.update(entity);
-			return Message.success(entity,"正在处理中");
+			rechargeService.handle(entity);
+			return Message.success(entity,"充值成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error(e.getMessage());

@@ -109,7 +109,7 @@
 
                 $(form).ajaxSubmit({
                     type: 'post',
-                    url: "${base}/admin/transfer/manualTransferSave.jhtml" ,
+                    url: "${base}/admin/recharge/manualTransferSave.jhtml" ,
                     data: {
                         voucher: _voucher,
                         amount: _amount,
