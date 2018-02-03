@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Transfer;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -57,4 +58,17 @@ public class RechargeDaoImpl extends BaseDaoImpl<Recharge, Long> implements Rech
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	public Recharge findBySn(String sn) {
+		if (sn == null) {
+			return null;
+		}
+		String jpql = "select recharge from Recharge recharge where lower(recharge.sn) = lower(:sn)";
+		try {
+			return entityManager.createQuery(jpql, Recharge.class).setFlushMode(FlushModeType.COMMIT).setParameter("sn", sn).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 }
