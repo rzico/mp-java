@@ -111,7 +111,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			recharge.setStatus(Recharge.Status.success);
 			recharge.setTransferDate(new Date());
 			rechargeDao.persist(recharge);
-			member.setBalance(member.getBalance().subtract(recharge.effectiveAmount()));
+			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
 			memberDao.merge(member);
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
@@ -140,7 +140,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 				recharge.setStatus(Recharge.Status.success);
 				recharge.setTransferDate(new Date());
 				rechargeDao.merge(recharge);
-				member.setBalance(member.getBalance().subtract(recharge.effectiveAmount()));
+				member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
 				memberDao.merge(member);
 				memberDao.flush();
 				Deposit deposit = new Deposit();
