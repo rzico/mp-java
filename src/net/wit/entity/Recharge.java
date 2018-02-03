@@ -108,6 +108,12 @@ public class Recharge extends BaseEntity {
 	@JsonIgnore
 	private Member member;
 
+	/** 代理 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	@JsonIgnore
+	private Admin admin;
+
 	public String getSn() {
 		return sn;
 	}
@@ -194,6 +200,14 @@ public class Recharge extends BaseEntity {
 
 	public void setDeposits(List<Deposit> deposits) {
 		this.deposits = deposits;
+	}
+
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
 	}
 
 	public BigDecimal effectiveAmount() {
