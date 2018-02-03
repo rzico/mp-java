@@ -69,7 +69,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
-		model.addAttribute("productCategorys",productCategoryService.findAll());
+//		model.addAttribute("productCategorys",productCategoryService.findAll());
 
 		return "/admin/product/list";
 	}
@@ -295,6 +295,28 @@ public class ProductController extends BaseController {
 		}
 		Filter isList = new Filter("isList",Filter.Operator.eq,true);
 		filters.add(isList);
+
+		Enterprise enterprise=admin.getEnterprise();
+
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商(無權限)
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, enterprise.getMember());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
 
 		Page<Product> page = productService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

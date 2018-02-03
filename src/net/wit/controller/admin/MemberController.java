@@ -55,6 +55,8 @@ public class MemberController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 	/**
 	 * 主页
 	 */
@@ -67,11 +69,11 @@ public class MemberController extends BaseController {
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
 
-		model.addAttribute("areas",areaService.findAll());
+//		model.addAttribute("areas",areaService.findAll());
 
-		model.addAttribute("occupations",occupationService.findAll());
+//		model.addAttribute("occupations",occupationService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.member));
+//		model.addAttribute("tags",tagService.findList(Tag.Type.member));
 
 		return "/admin/member/list";
 	}
@@ -286,7 +288,31 @@ public class MemberController extends BaseController {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
 			filters.add(genderFilter);
 		}
+		Admin admin =adminService.getCurrent();
+//		System.out.println("admin.ID:"+admin.getId());
+		Enterprise enterprise=admin.getEnterprise();
+//		System.out.println("enter.ID:"+enterprise.getId());
 
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		if(enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
+		//个人代理商(無權限)
+		//商家(無權限)
 		Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
 		User.userState(page.getContent());
 		return Message.success(PageBlock.bind(page), "admin.list.success");
