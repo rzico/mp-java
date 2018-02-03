@@ -186,7 +186,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 支付
 	 */
-	@RequestMapping(value = "/payment", method = RequestMethod.POST)
+	@RequestMapping(value = "/payment")
 	public @ResponseBody Message payment(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
