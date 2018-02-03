@@ -10,6 +10,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.plat.unspay.UnsPay;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -126,6 +127,8 @@ public class RechargeController extends BaseController {
 		entity.setVoucher(recharge.getVoucher());
 
 		entity.setMember(memberService.find(memberId));
+
+		entity.setTransferDate(new Date());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -161,18 +164,14 @@ public class RechargeController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
-
-		List<MapEntity> methods = new ArrayList<>();
-		methods.add(new MapEntity("online","在线充值"));
-		methods.add(new MapEntity("offline","线下充值"));
-		model.addAttribute("methods",methods);
-
 		List<MapEntity> statuss = new ArrayList<>();
 		statuss.add(new MapEntity("waiting","等待充值"));
 		statuss.add(new MapEntity("confirmed","提交充值"));
 		statuss.add(new MapEntity("success","充值成功"));
 		statuss.add(new MapEntity("failure","充值失败"));
 		model.addAttribute("statuss",statuss);
+
+		model.addAttribute("data",rechargeService.find(id));
 
 		return "/admin/recharge/edit";
 	}
@@ -185,41 +184,33 @@ public class RechargeController extends BaseController {
     @ResponseBody
 	public Message update(Recharge recharge, Long memberId){
 		Recharge entity = rechargeService.find(recharge.getId());
-		
-		entity.setCreateDate(recharge.getCreateDate());
-
-		entity.setModifyDate(recharge.getModifyDate());
-
-		entity.setAmount(recharge.getAmount());
-
-		entity.setFee(recharge.getFee());
-
-		entity.setMemo(recharge.getMemo());
-
-		entity.setMethod(recharge.getMethod());
-
-		entity.setOperator(recharge.getOperator());
-
-		entity.setSn(recharge.getSn());
-
-		entity.setStatus(recharge.getStatus());
-
-		entity.setTransferDate(recharge.getTransferDate());
-
-		entity.setVoucher(recharge.getVoucher());
-
-		entity.setMember(memberService.find(memberId));
-		
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
-        try {
-            rechargeService.update(entity);
-            return Message.success(entity,"admin.update.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("admin.update.error");
-        }
+		try {
+			if (entity.getStatus().equals(Transfer.Status.waiting)) {
+				if (rechargeService.transfer(entity)) {
+					return Message.success(entity,"提交成功");
+				} else {
+					return Message.error("提交失败");
+				}
+			} else {
+				String resp = UnsPay.query(entity.getSn());
+				if ("00".equals(resp)) {
+					rechargeService.handle(entity);
+					return Message.success(entity,"充值成功");
+				} else
+				if ("20".equals(resp)) {
+					rechargeService.refunds(entity);
+					return Message.success(entity,"充值失败,款项退回账号");
+				} else
+				if ("10".equals(resp)) {
+					return Message.success(entity,"正在处理中");
+				} else {
+					return Message.error("查询失败");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error(e.getMessage());
+		}
 	}
 	
 
@@ -288,6 +279,38 @@ public class RechargeController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error("admin.update.error");
+		}
+	}
+
+	/**
+	 * 提交手动转账
+	 */
+	@RequestMapping(value = "/manualTransferSave", method = RequestMethod.POST)
+	@ResponseBody
+	public Message manualTransferSave(String voucher, BigDecimal amount, Long Id){
+		if("".equals(voucher)){
+			return Message.error("凭证号不能为空!");
+		}
+
+		Recharge entity = rechargeService.find(Id);
+		if(amount.compareTo(entity.getAmount()) != 0){
+			return Message.error("充值金额不正确,请重新填写!");
+		}
+		Member member = memberService.getCurrent();
+		entity.setVoucher(voucher);
+		entity.setStatus(Recharge.Status.success);
+		if(member == null){
+			entity.setOperator("系统操作员");
+		}else{
+			entity.setOperator(member.getName());
+		}
+
+		try {
+			rechargeService.update(entity);
+			return Message.success(entity,"正在处理中");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error(e.getMessage());
 		}
 	}
 
