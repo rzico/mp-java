@@ -61,7 +61,7 @@
                     [#if (admin.type=="operate")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
                     <li><a data-href="../topicCard/index.jhtml" data-title="卡包管理" href="javascript:;">卡包管理</a></li>
                     [/#if]
-                    [#if (admin.type=="operate"||admin.type=="shop"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
+                    [#if (admin.type=="operate"||admin.type=="shop")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
                     <li><a data-href="../card/index.jhtml" data-title="会员卡管理" href="javascript:;">会员卡管理</a></li>
                     [/#if]
                     [#if (admin.type=="operate"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
