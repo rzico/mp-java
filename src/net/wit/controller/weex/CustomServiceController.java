@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCatalogModel;
+import net.wit.controller.model.CustomServiceModel;
 import net.wit.controller.model.TopicListModel;
 import net.wit.controller.model.TopicViewModel;
 import net.wit.entity.*;
@@ -58,8 +59,8 @@ public class CustomServiceController extends BaseController {
     @Resource(name = "memberFollowServiceImpl")
     private MemberFollowService memberFollowService;
 
-    @Resource(name = "friendsServiceImpl")
-    private FriendsService friendsService;
+    @Resource(name = "customServiceServiceImpl")
+    private CustomServiceService customServiceService;
 
     /**
      *  专栏搜索
@@ -68,7 +69,8 @@ public class CustomServiceController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Pageable pageable, HttpServletRequest request){
-        return Message.bind(model,request);
+        List<CustomService> data = customServiceService.findAll();
+        return Message.bind(CustomServiceModel.bindList(data),request);
     }
 
 }

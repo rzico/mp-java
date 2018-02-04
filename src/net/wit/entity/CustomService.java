@@ -22,6 +22,12 @@ public class CustomService extends BaseEntity {
 
 	private static final long serialVersionUID = 49L;
 
+	/** 头像 */
+	@NotEmpty
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '头像'")
+	private String logo;
+
 	/** 名称 */
 	@NotEmpty
 	@Length(max = 200)
@@ -73,5 +79,13 @@ public class CustomService extends BaseEntity {
 
 	public void setQq(String qq) {
 		this.qq = qq;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 }
