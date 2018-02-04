@@ -71,6 +71,7 @@ public class GameListModel extends BaseModel implements Serializable {
         if (oj.containsKey(game)) {
 
         }
+        return games;
     }
 
 }

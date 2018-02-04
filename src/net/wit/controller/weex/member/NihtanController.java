@@ -105,7 +105,7 @@ public class NihtanController extends BaseController {
 
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
-        params.put("url",bundle.getString("nihtan.url")+"/nihtan/weex/member/nihtan/play.jhtml?game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
+        params.put("url",bundle.getString("nihtan.url")+"/weex/member/nihtan/play.jhtml?game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
         params.put("video",video.get(game+"_"+table));
         return Message.success(params,"获取成功");
 
