@@ -307,12 +307,12 @@ public class BankcardController extends BaseController {
                 }
                 bankcard.setBankimage("#");
                 bankcard.setBankname(data.get("bankname"));
-                bankcard.setBanknum(data.get("banknum"));
+                bankcard.setBanknum("#");
                 bankcard.setCardname("#");
                 bankcard.setCardtype("1");
                 bankcard.setCity("#");
                 bankcard.setProvince("#");
-                bankcard.setCardno("#");
+                bankcard.setCardno(data.get("cardNo"));
                 bankcard.setIdentity("#");
                 bankcard.setMobile("#");
                 bankcard.setName(data.get("name"));
