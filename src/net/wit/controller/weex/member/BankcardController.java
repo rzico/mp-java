@@ -283,4 +283,59 @@ public class BankcardController extends BaseController {
         }
     }
 
+
+    /**
+     *  保存银行卡
+     */
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Message save(String body,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        try {
+            String mima = rsaService.decryptValue(body, request);
+            rsaService.removePrivateKey(request);
+
+            if (mima==null) {
+                return Message.error("数据解密失败");
+            }
+            Map<String,String> data = JsonUtils.toObject(mima,Map.class);
+                Boolean isNew = false;
+                Bankcard bankcard = bankcardService.findDefault(member);
+                if (bankcard==null) {
+                    bankcard = new Bankcard();
+                    isNew = true;
+                }
+                bankcard.setBankimage("#");
+                bankcard.setBankname(data.get("bankname"));
+                bankcard.setBanknum(data.get("banknum"));
+                bankcard.setCardname("#");
+                bankcard.setCardtype("1");
+                bankcard.setCity("#");
+                bankcard.setProvince("#");
+                bankcard.setCardno("#");
+                bankcard.setIdentity("#");
+                bankcard.setMobile("#");
+                bankcard.setName(data.get("name"));
+                bankcard.setDefault(true);
+                bankcard.setMember(member);
+                if (!isNew) {
+                    bankcardService.update(bankcard);
+                } else {
+                    bankcardService.save(bankcard);
+                }
+                member.setName(data.get("name"));
+                memberService.update(member);
+                Admin admin = adminService.findByMember(member);
+                if (admin!=null) {
+                    admin.setName(member.getName());
+                    adminService.update(admin);
+                }
+                return Message.success("保存成功");
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+            return Message.error("保存失败");
+        }
+    }
+
+
 }

@@ -80,6 +80,8 @@ public class NihtanController extends BaseController {
     public Message list(HttpServletRequest request,ModelMap model){
         String resp = Crypto.gameList();
         Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
+
+
         return Message.success(data,"获取成功");
     }
 
