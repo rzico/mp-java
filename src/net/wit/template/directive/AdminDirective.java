@@ -45,7 +45,7 @@ public class AdminDirective extends BaseDirective {
 			if (enterprise!=null) {
 				data.put("type",enterprise.getType());
 			} else {
-				data.put("type","");
+				data.put("type","operate");
 			}
 			data.put("role",admin.roles());
 			setLocalVariable(VARIABLE_NAME, data, env, body);

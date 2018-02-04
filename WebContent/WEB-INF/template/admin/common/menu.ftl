@@ -87,6 +87,7 @@
                 [/#if]
                 [#if (admin.type=="operate")&&(admin.role?contains("1")||admin.role?contains("2"))]
                     <li><a data-href="../occupation/index.jhtml" data-title="职业分类" href="javascript:;">职业分类</a></li>
+                    <li><a data-href="../customService/index.jhtml" data-title="客服管理" href="javascript:;">客服管理</a></li>
                 [/#if]
                 [#if (admin.type=="operate")&&(admin.role?contains("1"))]
                     <li><a data-href="../area/index.jhtml" data-title="行政区域" href="javascript:;">行政区域</a></li>
