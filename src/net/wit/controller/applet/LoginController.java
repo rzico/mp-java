@@ -157,7 +157,7 @@ public class LoginController extends BaseController {
                 if (!User.userAttr(member)) {
                     return Message.success(Message.LOGIN_SUCCESS);
                 };
-                messageService.login(member,request);
+
                 Map<String,String> data = new HashMap<>();
                 data.put("jsessionId",sessionId);
                 data.put("session_key",sessionKey);
