@@ -40,13 +40,19 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/check")
     public String check(HttpServletRequest request,ModelMap model){
+        System.out.println("check");
         String json = WebUtils.getBodyParams(request);
         System.out.println(json);
         if (json!=null && !json.equals("")) {
             Map<String,String> params = JsonUtils.toObject(json,Map.class);
-            model.addAttribute("notifyMessage",10000000);
+            Member member = memberService.findByUsername(params.get("user_id"));
+            if (member!=null) {
+                model.addAttribute("notifyMessage",member.getBalance());
+            } else {
+                model.addAttribute("notifyMessage",0);
+            }
         } else {
-            model.addAttribute("notifyMessage",10000000);
+            model.addAttribute("notifyMessage",0);
         }
         return "common/notify";
     }
@@ -57,9 +63,10 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/transaction")
     public String transaction(String hash,HttpServletRequest request,ModelMap model){
         String json = WebUtils.getBodyParams(request);
+        System.out.println("transaction");
         System.out.println(json);
         Map<String,String> data = new HashMap<>();
-        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
+//        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
             Map<String,String> params = JsonUtils.toObject(json,Map.class);
             Member member = memberService.findByUsername(params.get("user_id"));
             if (member!=null) {
@@ -88,11 +95,11 @@ public class NihtanController extends BaseController {
                 data.put("status","error");
                 data.put("credits","0");
             }
-        } else {
-            data.put("code","500");
-            data.put("status","error");
-            data.put("credits","0");
-        }
+//        } else {
+//            data.put("code","500");
+//            data.put("status","error");
+//            data.put("credits","0");
+//        }
         model.addAttribute("notifyMessage",JsonUtils.toJson(data));
         System.out.println(JsonUtils.toJson(data));
         return "common/notify";
@@ -103,38 +110,42 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/history")
     public String history(String hash,HttpServletRequest request,ModelMap model){
+        System.out.println("history");
         String json = WebUtils.getBodyParams(request);
         System.out.println(json);
         Map<String,String> data = new HashMap<>();
-        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
-            Map<String,String> params = JsonUtils.toObject(json,Map.class);
-            Member member = memberService.findByUsername(params.get("user_id"));
-            if (member!=null) {
-                Game game = gameService.find(params.get("game"),params.get("table"),params.get("round_no"));
-                game.setCredit(game.getDebit());
-
-                try {
-                    gameService.history(game);
+//        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
+//            Map<String,String> params = JsonUtils.toObject(json,Map.class);
+//            Member member = memberService.findByUsername(params.get("user_id"));
+//            if (member!=null) {
+//                Game game = gameService.find(params.get("game"),params.get("table"),params.get("round_no"));
+//                game.setCredit(game.getDebit());
+//
+//                try {
+//                    gameService.history(game);
+//                    data.put("code","200");
+//                    data.put("status","ok");
+//                    data.put("credits",params.get("amount"));
+//                } catch (Exception e) {
+//                    data.put("code","500");
+//                    data.put("status",e.getMessage());
+//                    data.put("credits","0");
+//                }
+//            } else {
+//                data.put("code","500");
+//                data.put("status","error");
+//                data.put("credits","0");
+//            }
+//        } else {
+//            data.put("code","500");
+//            data.put("status","error");
+//            data.put("credits","0");
+//        }
                     data.put("code","200");
                     data.put("status","ok");
-                    data.put("credits",params.get("amount"));
-                } catch (Exception e) {
-                    data.put("code","500");
-                    data.put("status",e.getMessage());
                     data.put("credits","0");
-                }
-            } else {
-                data.put("code","500");
-                data.put("status","error");
-                data.put("credits","0");
-            }
-        } else {
-            data.put("code","500");
-            data.put("status","error");
-            data.put("credits","0");
-        }
         model.addAttribute("notifyMessage",JsonUtils.toJson(data));
-        System.out.println(JsonUtils.toJson(data));
+//        System.out.println(JsonUtils.toJson(data));
         return "common/notify";
     }
 

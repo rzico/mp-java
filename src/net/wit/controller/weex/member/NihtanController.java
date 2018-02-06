@@ -56,7 +56,7 @@ public class NihtanController extends BaseController {
         Map<String,String> data = JsonUtils.toObject(resp,Map.class);
         if (game==null) {
             game = "Baccarat";
-            table = "1";
+            table = "6";
             range = "100-2000";
         }
 
@@ -99,7 +99,7 @@ public class NihtanController extends BaseController {
         Map<String,String> video = (Map) data.get("list");
         if (game==null) {
             game = "Baccarat";
-            table = "1";
+            table = "6";
             range = "100-2000";
         }
 
