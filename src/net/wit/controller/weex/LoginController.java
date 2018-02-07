@@ -113,12 +113,15 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/send_email")
     @ResponseBody
     public Message sendMail(String email,HttpServletRequest request) {
+
         String e = email;
 //        String e = rsaService.decryptParameter("email", request);
 //        rsaService.removePrivateKey(request);
+
         if (e==null) {
             return Message.error("无效邮箱");
         }
+
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
             if (memberService.findByEmail(e)==null) {
