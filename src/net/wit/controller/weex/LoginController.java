@@ -110,14 +110,18 @@ public class LoginController extends BaseController {
      * 手机验证码登录时，发送验证码
      * mobile 手机号
      */
-    @RequestMapping(value = "/send_email", method = RequestMethod.POST)
+    @RequestMapping(value = "/send_email")
     @ResponseBody
-    public Message sendMail(HttpServletRequest request) {
-        String e = rsaService.decryptParameter("email", request);
-        rsaService.removePrivateKey(request);
+    public Message sendMail(String email,HttpServletRequest request) {
+
+        String e = email;
+//        String e = rsaService.decryptParameter("email", request);
+//        rsaService.removePrivateKey(request);
+
         if (e==null) {
             return Message.error("无效邮箱");
         }
+
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
             if (memberService.findByEmail(e)==null) {
