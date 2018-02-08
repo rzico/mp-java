@@ -248,10 +248,6 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 						cardDao.merge(card);
 						isNew = true;
 					}
-				} else {
-					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name())) < 0) {
-						isNew = true;
-					}
 				}
 				if (card.getPromoter() == null && isNew) {
 					if (promoter != null && promoter.leaguer(owner)) {

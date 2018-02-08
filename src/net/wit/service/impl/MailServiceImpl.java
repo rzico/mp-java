@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -85,10 +86,18 @@ public class MailServiceImpl implements MailService {
 			Configuration configuration = freeMarkerConfigurer.getConfiguration();
 			Template template = configuration.getTemplate(templatePath);
 			String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-			javaMailSender.setHost(smtpHost);
-			javaMailSender.setPort(smtpPort);
+			javaMailSender.setHost("smtp.qq.com");
+			javaMailSender.setPort(465);
 			javaMailSender.setUsername(smtpUsername);
-			javaMailSender.setPassword(smtpPassword);
+			javaMailSender.setPassword("cpdvgozehjoicahg");
+			Properties properties = new Properties();
+			properties.setProperty("mail.host", "smtp.qq.com");
+			properties.setProperty("mail.transport.protocol", "smtp");
+			properties.setProperty("mail.smtp.auth", "true");
+			properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			properties.setProperty("mail.smtp.port", "465");
+			properties.setProperty("mail.smtp.socketFactory.port", "465");
+
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
 			mimeMessageHelper.setFrom(MimeUtility.encodeWord(setting.getSiteName()) + " <" + smtpFromMail + ">");
@@ -127,19 +136,15 @@ public class MailServiceImpl implements MailService {
 	public void sendFindPasswordMail(String toMail, String username, String captcha) {
 		Setting setting = SettingUtils.get();
 		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("username", username);
-		model.put("captcha", captcha);
-		String subject = "【"+setting.getSiteName()+"】密码重置";
-		send(toMail, subject, "common/mail_reset", model);
+		model.put("content", "【"+setting.getSiteName()+"】验证码:"+captcha+",只用于重置密码");
+		send(toMail, "【"+setting.getSiteName()+"】重置密码验证码", "common/mail.ftl", model);
 	}
 
 	public void sendLoginMail(String toMail, String username, String captcha) {
 		Setting setting = SettingUtils.get();
 		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("username", username);
-		model.put("captcha", captcha);
-		String subject = "【"+setting.getSiteName()+"】验证码登录";
-		send(toMail, subject, "common/mail_login", model);
+		model.put("content", "【"+setting.getSiteName()+"】验证码:"+captcha+",只用于登录");
+		send(toMail, "【"+setting.getSiteName()+"】登录验证码", "common/mail.ftl", model);
 	}
 
 }

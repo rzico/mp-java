@@ -34,80 +34,37 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编号：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span>${data.sn}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>申请人：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span> ${data.member.nickName}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开户名：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span> ${data.name}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行账号：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span> ${data.cardno}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>银行名称：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span> ${data.bankname}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>所属城市：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span> ${data.city}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>提现类型：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    <span> ${message("Transfer.Type."+data.type)}</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>当前状态：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    <span> ${message("Transfer.Status."+data.status)}</span>
-                </div>
-            </div>
-            <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">备注：</label>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">描述：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.memo}</span>
+                <input type="text" class="input-text" value="${data.description}" placeholder="" id="description" name="description">
             </div>
         </div>
 
-             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">操作员：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span>${data.operator}</span>
-                </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
             </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">QQ号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.qq}" placeholder="" id="qq" name="qq">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">微信号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.wechat}" placeholder="" id="wechat" name="wechat">
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                [#if data.status=="waiting"]
-                    [@adminDirective]
-                        [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
-                            <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交付款&nbsp;&nbsp;">
-                        [/#if]
-                    [/@adminDirective]
-                [/#if]
-                [#if data.status=="confirmed"]
-                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;">
-                [/#if]
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
             </div>
         </div>
             [#else]
@@ -139,19 +96,7 @@
 
                 $("#form-update").validate({
                     rules:{
-                        amount:{
-                            required:true,
-                        },
-                        sn:{
-                            required:true,
-                        },
-                        status:{
-                            required:true,
-                        },
-                        type:{
-                            required:true,
-                        },
-                        member:{
+                        name:{
                             required:true,
                         },
 
@@ -166,7 +111,7 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/transfer/update.jhtml" ,
+                            url: "${base}/admin/customService/update.jhtml" ,
                             beforeSend: function() {
                                 $submit.prop("disabled", true);
                             },
@@ -177,42 +122,21 @@
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
                                     //关闭弹窗并提示
-                                    parent.closeWindow(index, message.content);
+                                    parent.closeWindow(index, '修改成功');
                                 }else{
                                     $submit.prop("disabled", false);
-                                    parent.toast(message.content,2);
+                                    parent.toast('修改失败',2);
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
                                 $submit.prop("disabled", false);
                                 layer.close(load);
-                                parent.toast('执行失败',2);
+                                parent.toast('修改失败',2);
                             }
                         });
                     }
                 });
             });
-
-            /*编辑*/
-            function edit(id) {
-                var w_1 = window.innerWidth * 0.3;
-                var h_1 = window.innerHeight * 0.5;
-                layer_show("手动转账", "../transfer/manualTransfer.jhtml?id="+id, w_1, h_1);
-            }
-
-            /*刷新数据*/
-            function rewrite(data) {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.add_row(data);
-                parent.closeWindow(index, '提交成功');
-            }
-
-            /*关闭页面*/
-            function closeWindow(index, msg) {
-                layer.close(index);
-                layer.msg(msg, {icon: 1, time: 1000});
-            }
-
         </script>
 </body>
 </html>

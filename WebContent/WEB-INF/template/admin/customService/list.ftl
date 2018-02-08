@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>充值管理</title>
+    <title>CustomService</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 充值管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> CustomService <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -39,26 +39,6 @@
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
-        [#if statuss??]
-        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
-				<select name="status" class="select" style="background-color: #FFFFFF;">
-                    <option value="">状态</option>
-                    [#list statuss as status]
-                        <option value="${status.id}">${status.name}</option>
-                    [/#list]
-                </select>
-        </span>
-        [/#if]
-		[#if methods??]
-			<span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
-				<select name="method" class="select" style="background-color: #FFFFFF;">
-					<option value="">方式</option>
-					[#list methods as method]
-					<option value="${method.id}">${method.name}</option>
-					[/#list]
-				</select>
-			</span>
-		[/#if]
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
@@ -67,8 +47,9 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 充值管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i>充值</a>
+                <a href="javascript:;" onclick="add('首页 &gt; CustomService &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增CustomService</a>
+                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
     <div class="mt-20">
@@ -110,7 +91,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/recharge/list.jhtml",
+            "sAjaxSource": "${base}/admin/customService/list.jhtml",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -140,7 +121,10 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(10).attr('style', 'text-align: left;');
+                $(row).children('td').eq(5).attr('style', 'text-align: left;');
+                $(row).children('td').eq(6).attr('style', 'text-align: left;');
+                $(row).children('td').eq(7).attr('style', 'text-align: left;');
+                $(row).children('td').eq(8).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -165,43 +149,23 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "sn",
-                    "sTitle": "编号",
+                    "mData": "description",
+                    "sTitle": "描述",
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapMember",
-                    "sTitle": "会员名",
+                    "mData": "name",
+                    "sTitle": "名称",
                     "sClass": "center"
                 },
                 {
-                    "mData": "amount",
-                    "sTitle": "充值金额",
+                    "mData": "qq",
+                    "sTitle": "QQ号",
                     "sClass": "center"
                 },
                 {
-                    "mData": "method",
-                    "sTitle": "方式",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "transferDate",
-                    "sTitle": "到账日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "memo",
-                    "sTitle": "备注",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "operator",
-                    "sTitle": "操作员",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "status",
-                    "sTitle": "状态",
+                    "mData": "wechat",
+                    "sTitle": "微信号",
                     "sClass": "center"
                 },
                 {
@@ -234,58 +198,11 @@
                     }
                 },
                 {
-                    "aTargets": [5],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [7],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if methods??]
-                            [#list methods as method]
-                                if ("${method.id}" == data) {
-                                    return "${method.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
                     "aTargets": [8],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [11],
-                    "mRender": function (data, display, row) {
                         if(data != null){
-                        [#if statuss??]
-                            [#list statuss as status]
-                                if ("${status.id}" == data) {
-                                    return "${status.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [12],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 充值管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>";
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; CustomService &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
                         }
@@ -293,7 +210,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 11, 12]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 8]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
@@ -301,8 +218,7 @@
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
                 /*处理常量*/
-                var _method =  $('select[name="method"]').val();
-                var _status =  $('select[name="status"]').val();
+
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -313,8 +229,7 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-                        "method":_method,
-                        "status":_status,
+
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
@@ -361,9 +276,7 @@
     }
     /*查看*/
     function show(title, url, id, w, h) {
-        var w_1 = window.innerWidth * 0.5;
-        var h_1 = window.innerHeight * 0.6;
-        layer_show(title, url, w_1, h_1);
+        layer_show(title, url, w, h);
     }
     /*编辑*/
     function edit(title, url, id, w, h) {
@@ -385,7 +298,7 @@
     }
     /*删除全部*/
     function delAll(){
-        var url = "${base}/admin/recharge/delete.jhtml";
+        var url = "${base}/admin/customService/delete.jhtml";
         var i = 0;
         $('input[type="checkbox"][name="ids"]:checked').each(
                 function() {
@@ -439,7 +352,7 @@
                 data: {
                     ids: id
                 },
-                url: '${base}/admin/recharge/delete.jhtml',
+                url: '${base}/admin/customService/delete.jhtml',
                 dataType: 'json',
                 success: function (data) {
                     layer.close(load);

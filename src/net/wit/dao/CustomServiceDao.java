@@ -7,26 +7,24 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.entity.Recharge;
-import net.wit.entity.Transfer;
+import net.wit.entity.CustomService;
 
 
 /**
- * @ClassName: RechargeDao
+ * @ClassName: CustomServiceDao
  * @author 降魔战队
- * @date 2018-2-1 14:1:25
+ * @date 2018-2-3 21:3:47
  */
  
 
-public interface RechargeDao extends BaseDao<Recharge, Long> {
+public interface CustomServiceDao extends BaseDao<CustomService, Long> {
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
 	 * @param beginDate
 	 * @param endDate
 	 * @param pageable
-	 * @return Page<Recharge>
+	 * @return Page<CustomService>
 	 */
-	Page<Recharge> findPage(Date beginDate, Date endDate, Pageable pageable);
-	Recharge findBySn(String sn);
+	Page<CustomService> findPage(Date beginDate, Date endDate, Pageable pageable);
 }

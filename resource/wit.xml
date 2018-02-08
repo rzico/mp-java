@@ -32,7 +32,7 @@
 	<setting name="smtpFromMail" value="30355701@qq.com" />
 	<setting name="smtpHost" value="smtp.qq.com" />
 	<setting name="smtpPort" value="25" />
-	<setting name="smtpUsername" value="30355701" />
+	<setting name="smtpUsername" value="30355701@qq.com" />
 	<setting name="smtpPassword" value="zhangsr051204" />
 	<setting name="isDevelopmentEnabled" value="true" />
 	<setting name="cookiePath" value="/" />

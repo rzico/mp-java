@@ -10,7 +10,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import net.wit.entity.Transfer;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -18,31 +17,31 @@ import org.springframework.util.StringUtils;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.dao.RechargeDao;
-import net.wit.entity.Recharge;
+import net.wit.dao.CustomServiceDao;
+import net.wit.entity.CustomService;
 
 
 /**
- * @ClassName: RechargeDaoImpl
+ * @ClassName: CustomServiceDaoImpl
  * @author 降魔战队
- * @date 2018-2-1 14:1:25
+ * @date 2018-2-3 21:3:47
  */
+ 
 
-
-@Repository("rechargeDaoImpl")
-public class RechargeDaoImpl extends BaseDaoImpl<Recharge, Long> implements RechargeDao {
+@Repository("customServiceDaoImpl")
+public class CustomServiceDaoImpl extends BaseDaoImpl<CustomService, Long> implements CustomServiceDao {
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
 	 * @param beginDate
 	 * @param endDate
 	 * @param pageable
-	 * @return Page<Recharge>
+	 * @return Page<CustomService>
 	 */
-	public Page<Recharge> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<CustomService> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Recharge> criteriaQuery = criteriaBuilder.createQuery(Recharge.class);
-		Root<Recharge> root = criteriaQuery.from(Recharge.class);
+		CriteriaQuery<CustomService> criteriaQuery = criteriaBuilder.createQuery(CustomService.class);
+		Root<CustomService> root = criteriaQuery.from(CustomService.class);
 		criteriaQuery.select(root);
 		Predicate restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.conjunction();
@@ -58,17 +57,4 @@ public class RechargeDaoImpl extends BaseDaoImpl<Recharge, Long> implements Rech
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
-
-	public Recharge findBySn(String sn) {
-		if (sn == null) {
-			return null;
-		}
-		String jpql = "select recharge from Recharge recharge where lower(recharge.sn) = lower(:sn)";
-		try {
-			return entityManager.createQuery(jpql, Recharge.class).setFlushMode(FlushModeType.COMMIT).setParameter("sn", sn).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
 }
