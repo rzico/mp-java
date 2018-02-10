@@ -248,23 +248,16 @@ public class BankcardController extends BaseController {
                 if (member.getMobile()==null) {
                     Member m = memberService.findByMobile(data.get("mobile"));
                     if (m==null) {
-                        BindUser bindUser = bindUserService.findMember(m,bundle.getString("app.appid"), BindUser.Type.weixin);
-                        if (bindUser!=null) {
-                            m.setMobile(null);
-                            memberService.save(m);
-                            member.setMobile(data.get("mobile"));
-                            for (Card card:member.getCards()) {
-                                card.setMobile(member.getMobile());
-                                cardService.update(card);
-                            }
-                        }
-                    } else {
-                        member.setMobile(data.get("mobile"));
-                        for (Card card:member.getCards()) {
-                            card.setMobile(member.getMobile());
-                            cardService.update(card);
-                        }
+                        m.setUsername(null);
+                        m.setMobile(null);
+                        memberService.save(m);
                     }
+                    for (Card card:member.getCards()) {
+                        card.setMobile(member.getMobile());
+                        cardService.update(card);
+                    }
+                    member.setUsername(data.get("mobile"));
+                    member.setMobile(data.get("mobile"));
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);
