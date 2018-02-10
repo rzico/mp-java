@@ -54,7 +54,6 @@ public class WeexMemberInterceptor extends HandlerInterceptorAdapter {
 		if (member==null) {
 			member = memberService.findByUUID(xuid);
 			if (member != null) {
-
 				Cart cart = cartService.getCurrent();
 				if (cart != null) {
 					if (cart.getMember() == null) {

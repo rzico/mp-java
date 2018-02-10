@@ -1,7 +1,10 @@
 package net.wit.controller.weex.member;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.GameListModel;
 import net.wit.controller.model.OccupationModel;
 import net.wit.entity.Member;
 import net.wit.entity.Occupation;
@@ -43,12 +46,70 @@ public class NihtanController extends BaseController {
     @ResponseBody
     public Message list(HttpServletRequest request,ModelMap model){
         String resp = Crypto.gameList();
-        Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
+        JSONObject jsonObject = JSONObject.fromObject(resp);
 
+        JSONObject sicbo = jsonObject.getJSONObject("Sicbo");
+
+        JSONArray  sicboArr = sicbo.getJSONArray("tables");
+        List<GameListModel> data = new ArrayList<>();
+        for (int i=0;i<sicboArr.size();i++) {
+           JSONObject tb = sicboArr.getJSONObject(i);
+           GameListModel m = new GameListModel();
+           m.setGame("Sicbo");
+           m.setTable(tb.getString("table"));
+           JSONArray mts = tb.getJSONArray("maintenance");
+           m.setDealer("none");
+           for (int j=0;j<mts.size();j++) {
+               JSONObject mt = mts.getJSONObject(j);
+               if (mt.getString("status").equals("1")) {
+                   m.setDealer(mt.getString("division"));
+               }
+           }
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j=0;j<mts.size();j++) {
+                JSONObject range = mts.getJSONObject(j);
+                if (range.getString("status").equals("1")) {
+                   rng = range.getString("min")+"-"+range.getString("max");
+                   break;
+                }
+            }
+            m.setRanges(rng);
+            data.add(m);
+        }
+
+        JSONObject sicbo = jsonObject.getJSONObject("Sicbo");
+
+        JSONArray  sicboArr = sicbo.getJSONArray("tables");
+        List<GameListModel> data = new ArrayList<>();
+        for (int i=0;i<sicboArr.size();i++) {
+            JSONObject tb = sicboArr.getJSONObject(i);
+            GameListModel m = new GameListModel();
+            m.setGame("Sicbo");
+            m.setTable(tb.getString("table"));
+            JSONArray mts = tb.getJSONArray("maintenance");
+            m.setDealer("none");
+            for (int j=0;j<mts.size();j++) {
+                JSONObject mt = mts.getJSONObject(j);
+                if (mt.getString("status").equals("1")) {
+                    m.setDealer(mt.getString("division"));
+                }
+            }
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j=0;j<mts.size();j++) {
+                JSONObject range = mts.getJSONObject(j);
+                if (range.getString("status").equals("1")) {
+                    rng = range.getString("min")+"-"+range.getString("max");
+                    break;
+                }
+            }
+            m.setRanges(rng);
+            data.add(m);
+        }
 
         return Message.success(data,"获取成功");
     }
-
 
     /**
      *  获取游戏参数
@@ -115,6 +176,5 @@ public class NihtanController extends BaseController {
         return Message.success(params,"获取成功");
 
     }
-
 
 }

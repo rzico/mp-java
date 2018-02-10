@@ -74,7 +74,6 @@ public class Crypto {
         return result;
     }
 
-
     /**
      * POST请求
      * @param url URL
@@ -104,7 +103,7 @@ public class Crypto {
     public static String getSession(String ip,Member member) {
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
-        data.put("user_name",member.getNickName());
+        data.put("user_name",member.getUsername());
         data.put("user_ip",ip);
         data.put("vendor_name","ch_test");
         data.put("pc_redirect","http://dev.rzico.com/nihtan");
