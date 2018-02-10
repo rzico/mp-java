@@ -1,5 +1,7 @@
 package net.wit.controller;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.Game;
 import net.wit.entity.Member;
@@ -74,7 +76,6 @@ public class NihtanController extends BaseController {
                 game.setGame(params.get("game"));
                 game.setTableNo(params.get("table"));
                 game.setRoundNo(params.get("round_no"));
-                game.setGame(params.get("round_no"));
                 game.setDebit(new BigDecimal(params.get("amount")));
                 game.setCredit(BigDecimal.ZERO);
                 game.setMember(member);
@@ -112,10 +113,49 @@ public class NihtanController extends BaseController {
     public String history(String hash,HttpServletRequest request,ModelMap model){
 //        System.out.println("history");
         String json = WebUtils.getBodyParams(request);
-//        System.out.println(json);
+        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
-//            Map<String,String> params = JsonUtils.toObject(json,Map.class);
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String game = jsonObject.getString("game");
+        String table = jsonObject.getString("table");
+        String round_no = jsonObject.getString("round_no");
+        JSONArray datas = jsonObject.getJSONArray("data");
+        for (int i = 0 ; i<datas.size(); i++) {
+            JSONObject user = datas.getJSONObject(i);
+            String user_id = user.getString("user_id");
+            BigDecimal win_money = new BigDecimal(user.getString("total_win"));
+            System.out.println(user_id);
+            System.out.println(win_money);
+            System.out.println(game);
+            System.out.println(table);
+            System.out.println(round_no);
+            Member member = memberService.findByUsername(user_id);
+            if (member!=null) {
+                Game gameData = gameService.find(member,game,table,round_no);
+                if (gameData!=null) {
+                    gameData.setCredit(gameData.getDebit());
+                    try {
+                        gameService.history(gameData);
+                        data.put("code", "200");
+                        data.put("status", "ok");
+                        data.put("credits", user.getString("total_win"));
+                    } catch (Exception e) {
+                        data.put("code", "500");
+                        data.put("status", e.getMessage());
+                        data.put("credits", "0");
+                    }
+                } else {
+                    data.put("code", "200");
+                    data.put("status", "ok1");
+                    data.put("credits", "0");
+                }
+            } else {
+                data.put("code", "200");
+                data.put("status", "ok2");
+                data.put("credits", "0");
+            }
+        }
 //            Member member = memberService.findByUsername(params.get("user_id"));
 //            if (member!=null) {
 //                Game game = gameService.find(params.get("game"),params.get("table"),params.get("round_no"));
@@ -141,11 +181,11 @@ public class NihtanController extends BaseController {
 //            data.put("status","error");
 //            data.put("credits","0");
 //        }
-                    data.put("code","200");
-                    data.put("status","ok");
-                    data.put("credits","0");
+//                    data.put("code","200");
+//                    data.put("status","ok");
+//                    data.put("credits","0");
         model.addAttribute("notifyMessage",JsonUtils.toJson(data));
-//        System.out.println(JsonUtils.toJson(data));
+        System.out.println(JsonUtils.toJson(data));
         return "common/notify";
     }
 

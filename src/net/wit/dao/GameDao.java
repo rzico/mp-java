@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Game;
+import net.wit.entity.Member;
 
 
 /**
@@ -28,5 +29,5 @@ public interface GameDao extends BaseDao<Game, Long> {
 	 */
 	Page<Game> findPage(Date beginDate, Date endDate, Pageable pageable);
 
-	public Game find(String game, String tableNo, String roundNo);
+	public Game find(Member member, String game, String tableNo, String roundNo);
 }

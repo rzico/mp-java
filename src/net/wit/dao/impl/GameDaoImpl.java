@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
 import net.wit.entity.Transfer;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
@@ -39,7 +40,7 @@ public class GameDaoImpl extends BaseDaoImpl<Game, Long> implements GameDao {
 	 * @param pageable
 	 * @return Page<Game>
 	 */
-	public Page<Game> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<Game> findPage(Date beginDate, Date endDate, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Game> criteriaQuery = criteriaBuilder.createQuery(Game.class);
 		Root<Game> root = criteriaQuery.from(Game.class);
@@ -59,10 +60,11 @@ public class GameDaoImpl extends BaseDaoImpl<Game, Long> implements GameDao {
 		return super.findPage(criteriaQuery,pageable);
 	}
 
-	public Game find(String game, String tableNo, String roundNo) {
-		String jpql = "select game from Game game where game.game = :game and game.tableNo=:tableNo and game.roundNo=:roundNo";
+	public Game find(Member member, String game, String tableNo, String roundNo) {
+		String jpql = "select game from Game game where game.member=:member and game.game = :game and game.tableNo=:tableNo and game.roundNo=:roundNo";
 		try {
 			return entityManager.createQuery(jpql, Game.class).setFlushMode(FlushModeType.COMMIT)
+					.setParameter("member", member)
 					.setParameter("game", game)
 					.setParameter("tableNo", tableNo)
 					.setParameter("roundNo", roundNo)

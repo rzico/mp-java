@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Game;
+import net.wit.entity.Member;
 
 /**
  * @ClassName: GameService
@@ -22,5 +23,5 @@ public interface GameService extends BaseService<Game, Long> {
 
 	public void history(Game game) throws Exception;
 
-	public Game find(String game,String tableNo,String roundNo);
+	public Game find(Member member, String game, String tableNo, String roundNo);
 }

@@ -127,12 +127,12 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 
 	public synchronized void history(Game game) throws Exception {
 		Member member = game.getMember();
-		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 		try {
-			member.setBalance(member.getBalance().add(game.getCredit()));
-			memberDao.merge(member);
-			memberDao.flush();
 			if (game.getCredit().compareTo(BigDecimal.ZERO)>0) {
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+				member.setBalance(member.getBalance().add(game.getCredit()));
+				memberDao.merge(member);
+				memberDao.flush();
 				Deposit deposit = new Deposit();
 				deposit.setBalance(member.getBalance());
 				deposit.setType(Deposit.Type.reward);
@@ -152,8 +152,8 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 		}
 	}
 
-	public Game find(String game,String tableNo,String roundNo) {
-		return gameDao.find(game,tableNo,roundNo);
+	public Game find(Member member, String game,String tableNo,String roundNo) {
+		return gameDao.find(member,game,tableNo,roundNo);
 	}
 
 }
