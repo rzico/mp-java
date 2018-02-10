@@ -65,8 +65,6 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/transaction")
     public String transaction(String hash,HttpServletRequest request,ModelMap model){
         String json = WebUtils.getBodyParams(request);
-        System.out.println("transaction");
-        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
             Map<String,String> params = JsonUtils.toObject(json,Map.class);
@@ -125,16 +123,11 @@ public class NihtanController extends BaseController {
             JSONObject user = datas.getJSONObject(i);
             String user_id = user.getString("user_id");
             BigDecimal win_money = new BigDecimal(user.getString("total_win"));
-            System.out.println(user_id);
-            System.out.println(win_money);
-            System.out.println(game);
-            System.out.println(table);
-            System.out.println(round_no);
             Member member = memberService.findByUsername(user_id);
             if (member!=null) {
                 Game gameData = gameService.find(member,game,table,round_no);
                 if (gameData!=null) {
-                    gameData.setCredit(gameData.getDebit());
+                    gameData.setCredit(win_money);
                     try {
                         gameService.history(gameData);
                         data.put("code", "200");
