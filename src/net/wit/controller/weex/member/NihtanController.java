@@ -42,6 +42,17 @@ public class NihtanController extends BaseController {
      *  游戏列表
      */
 
+    @RequestMapping(value = "/gameList")
+    @ResponseBody
+    public Message gameList(HttpServletRequest request,ModelMap model) {
+        String resp = Crypto.gameList();
+        Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
+        return Message.success(data,"获取成功");
+    }
+    /**
+     *  游戏列表
+     */
+
     @RequestMapping(value = "/list")
     @ResponseBody
     public Message list(HttpServletRequest request,ModelMap model){
@@ -78,14 +89,77 @@ public class NihtanController extends BaseController {
             data.add(m);
         }
 
-        JSONObject sicbo = jsonObject.getJSONObject("Sicbo");
 
-        JSONArray  sicboArr = sicbo.getJSONArray("tables");
-        List<GameListModel> data = new ArrayList<>();
-        for (int i=0;i<sicboArr.size();i++) {
-            JSONObject tb = sicboArr.getJSONObject(i);
+
+        JSONObject poker = jsonObject.getJSONObject("Poker");
+
+        JSONArray  pokerArr = poker.getJSONArray("tables");
+        for (int i=0;i<pokerArr.size();i++) {
+            JSONObject tb = pokerArr.getJSONObject(i);
             GameListModel m = new GameListModel();
-            m.setGame("Sicbo");
+            m.setGame("Poker");
+            m.setTable(tb.getString("table"));
+            JSONArray mts = tb.getJSONArray("maintenance");
+            m.setDealer("none");
+            for (int j=0;j<mts.size();j++) {
+                JSONObject mt = mts.getJSONObject(j);
+                if (mt.getString("status").equals("1")) {
+                    m.setDealer(mt.getString("division"));
+                }
+            }
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j=0;j<mts.size();j++) {
+                JSONObject range = mts.getJSONObject(j);
+                if (range.getString("status").equals("1")) {
+                    rng = range.getString("min")+"-"+range.getString("max");
+                    break;
+                }
+            }
+            m.setRanges(rng);
+            data.add(m);
+        }
+
+
+
+        JSONObject tiger = jsonObject.getJSONObject("Dragon-Tiger");
+
+        JSONArray  tigerArr = tiger.getJSONArray("tables");
+        for (int i=0;i<tigerArr.size();i++) {
+            JSONObject tb = tigerArr.getJSONObject(i);
+            GameListModel m = new GameListModel();
+            m.setGame("Dragon-Tiger");
+            m.setTable(tb.getString("table"));
+            JSONArray mts = tb.getJSONArray("maintenance");
+            m.setDealer("none");
+            for (int j=0;j<mts.size();j++) {
+                JSONObject mt = mts.getJSONObject(j);
+                if (mt.getString("status").equals("1")) {
+                    m.setDealer(mt.getString("division"));
+                }
+            }
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j=0;j<mts.size();j++) {
+                JSONObject range = mts.getJSONObject(j);
+                if (range.getString("status").equals("1")) {
+                    rng = range.getString("min")+"-"+range.getString("max");
+                    break;
+                }
+            }
+            m.setRanges(rng);
+            data.add(m);
+        }
+
+
+
+        JSONObject baccarat = jsonObject.getJSONObject("Baccarat");
+
+        JSONArray  baccaratArr = baccarat.getJSONArray("tables");
+        for (int i=0;i<baccaratArr.size();i++) {
+            JSONObject tb = baccaratArr.getJSONObject(i);
+            GameListModel m = new GameListModel();
+            m.setGame("Baccarat");
             m.setTable(tb.getString("table"));
             JSONArray mts = tb.getJSONArray("maintenance");
             m.setDealer("none");
