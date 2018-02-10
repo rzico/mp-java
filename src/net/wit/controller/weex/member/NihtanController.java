@@ -78,8 +78,8 @@ public class NihtanController extends BaseController {
            }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
-            for (int j=0;j<mts.size();j++) {
-                JSONObject range = mts.getJSONObject(j);
+            for (int j=0;j<ranges.size();j++) {
+                JSONObject range = ranges.getJSONObject(j);
                 if (range.getString("status").equals("1")) {
                    rng = range.getString("min")+"-"+range.getString("max");
                    break;
@@ -109,8 +109,8 @@ public class NihtanController extends BaseController {
             }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
-            for (int j=0;j<mts.size();j++) {
-                JSONObject range = mts.getJSONObject(j);
+            for (int j=0;j<ranges.size();j++) {
+                JSONObject range = ranges.getJSONObject(j);
                 if (range.getString("status").equals("1")) {
                     rng = range.getString("min")+"-"+range.getString("max");
                     break;
@@ -140,8 +140,8 @@ public class NihtanController extends BaseController {
             }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
-            for (int j=0;j<mts.size();j++) {
-                JSONObject range = mts.getJSONObject(j);
+            for (int j=0;j<ranges.size();j++) {
+                JSONObject range = ranges.getJSONObject(j);
                 if (range.getString("status").equals("1")) {
                     rng = range.getString("min")+"-"+range.getString("max");
                     break;
@@ -171,8 +171,8 @@ public class NihtanController extends BaseController {
             }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
-            for (int j=0;j<mts.size();j++) {
-                JSONObject range = mts.getJSONObject(j);
+            for (int j=0;j<ranges.size();j++) {
+                JSONObject range = ranges.getJSONObject(j);
                 if (range.getString("status").equals("1")) {
                     rng = range.getString("min")+"-"+range.getString("max");
                     break;
