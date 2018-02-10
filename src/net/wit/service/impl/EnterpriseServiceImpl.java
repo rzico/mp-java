@@ -113,6 +113,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setName(topic.getName());
 			enterprise.setDeleted(false);
 			enterprise.setBrokerage(new BigDecimal("0.38"));
+			enterprise.setCreditLine(BigDecimal.ZERO);
 			enterprise.setLogo(topic.getLogo());
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.shop);

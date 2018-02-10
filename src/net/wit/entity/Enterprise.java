@@ -61,6 +61,12 @@ public class Enterprise extends BaseEntity {
     @JsonIgnore
     private Area area;
 
+    /** 授信额度 */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '授信额度'")
+    private BigDecimal creditLine;
+
     /** 结算佣金 10% */
     @Min(0)
     @NotNull
@@ -132,6 +138,14 @@ public class Enterprise extends BaseEntity {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public BigDecimal getCreditLine() {
+        return creditLine;
+    }
+
+    public void setCreditLine(BigDecimal creditLine) {
+        this.creditLine = creditLine;
     }
 
     public MapEntity getMapArea() {
