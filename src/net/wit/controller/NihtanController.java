@@ -2,24 +2,33 @@ package net.wit.controller;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.wit.Message;
+import net.wit.Principal;
 import net.wit.controller.admin.BaseController;
+import net.wit.entity.Cart;
 import net.wit.entity.Game;
 import net.wit.entity.Member;
+import net.wit.plat.im.User;
 import net.wit.plat.nihtan.Crypto;
 import net.wit.service.CategoryService;
 import net.wit.service.GameService;
 import net.wit.service.MemberService;
+import net.wit.service.RedisService;
 import net.wit.util.JsonUtils;
 import net.wit.util.WebUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * @ClassName: NihtanController
@@ -37,6 +46,37 @@ public class NihtanController extends BaseController {
     @Resource(name = "gameServiceImpl")
     private GameService gameService;
 
+    @Resource(name = "redisServiceImpl")
+    private RedisService redisService;
+
+    /**
+     *  进入游戏
+     */
+
+    @RequestMapping(value = "/play")
+    public String play(String game,String table,String range,String token,HttpServletRequest request,ModelMap model){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+        Member member = memberService.getCurrent();
+        model.addAttribute("requestUrl",bundle.getString("nihtan.host"));
+        model.addAttribute("requestMethod","post");
+        model.addAttribute("requestCharset","utf-8");
+
+
+        Map<String,String> parameterMap = new HashMap<>();
+
+        parameterMap.put("token",token);
+        parameterMap.put("mobile","1");
+        parameterMap.put("g",game);
+        parameterMap.put("t",table);
+        parameterMap.put("r",range);
+        parameterMap.put("m","1");
+        model.addAttribute("parameterMap",parameterMap);
+        return "common/play";
+
+    }
+
+
     /**
      *  进入游戏同步金额
      */
@@ -46,8 +86,8 @@ public class NihtanController extends BaseController {
         String json = WebUtils.getBodyParams(request);
         System.out.println(json);
         if (json!=null && !json.equals("")) {
-            Map<String,String> params = JsonUtils.toObject(json,Map.class);
-            Member member = memberService.findByUsername(params.get("user_id"));
+            JSONObject jsonObject = JSONObject.fromObject(json);
+            Member member = memberService.findByUsername(jsonObject.getString("user_id"));
             if (member!=null) {
                 model.addAttribute("notifyMessage",member.getBalance());
             } else {
@@ -65,26 +105,29 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/transaction")
     public String transaction(String hash,HttpServletRequest request,ModelMap model){
         String json = WebUtils.getBodyParams(request);
+        System.out.println("transaction");
+        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
-            Map<String,String> params = JsonUtils.toObject(json,Map.class);
-            Member member = memberService.findByUsername(params.get("user_id"));
+            JSONObject jsonObject = JSONObject.fromObject(json);
+            Member member = memberService.findByUsername(jsonObject.getString("user_id"));
             if (member!=null) {
                 Game game = new Game();
-                game.setGame(params.get("game"));
-                game.setTableNo(params.get("table"));
-                game.setRoundNo(params.get("round_no"));
-                game.setDebit(new BigDecimal(params.get("amount")));
+                game.setGame(jsonObject.getString("game"));
+                game.setTableNo(jsonObject.getString("table"));
+                game.setRoundNo(jsonObject.getString("round_no"));
+                game.setDebit(new BigDecimal(jsonObject.getString("amount")));
                 game.setCredit(BigDecimal.ZERO);
                 game.setMember(member);
                 game.setStatus(Game.Status.transaction);
-                game.setMemo(params.get("range"));
+                game.setMemo(jsonObject.getString("range"));
                 try {
                     gameService.sumbit(game);
                     data.put("code","200");
                     data.put("status","ok");
-                    data.put("credits",params.get("amount"));
+                    data.put("credits",jsonObject.getString("amount"));
                 } catch (Exception e) {
+                    e.printStackTrace();
                     data.put("code","500");
                     data.put("status",e.getMessage());
                     data.put("credits","0");
@@ -109,7 +152,7 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/history")
     public String history(String hash,HttpServletRequest request,ModelMap model){
-//        System.out.println("history");
+        System.out.println("history");
         String json = WebUtils.getBodyParams(request);
         System.out.println(json);
         Map<String,String> data = new HashMap<>();

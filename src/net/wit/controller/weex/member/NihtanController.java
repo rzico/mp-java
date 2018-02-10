@@ -36,42 +36,6 @@ public class NihtanController extends BaseController {
     private MemberService memberService;
 
     /**
-     *  进入游戏
-     */
-
-    @RequestMapping(value = "/play")
-    public String play(String game,String table,String range,HttpServletRequest request,ModelMap model){
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-
-        Member member = memberService.getCurrent();
-        model.addAttribute("requestUrl",bundle.getString("nihtan.host"));
-        model.addAttribute("requestMethod","post");
-        model.addAttribute("requestCharset","utf-8");
-
-
-        Map<String,String> parameterMap = new HashMap<>();
-
-        String resp =  Crypto.getSession(request.getRemoteAddr());
-
-        Map<String,String> data = JsonUtils.toObject(resp,Map.class);
-        if (game==null) {
-            game = "Baccarat";
-            table = "6";
-            range = "100-2000";
-        }
-
-        parameterMap.put("token",data.get("token"));
-        parameterMap.put("mobile","1");
-        parameterMap.put("g",game);
-        parameterMap.put("t",table);
-        parameterMap.put("r",range);
-        parameterMap.put("m","1");
-        model.addAttribute("parameterMap",parameterMap);
-        return "common/play";
-
-    }
-
-    /**
      *  游戏列表
      */
 
@@ -94,21 +58,63 @@ public class NihtanController extends BaseController {
     @ResponseBody
     public Message view(String game,String table,String range, HttpServletRequest request,ModelMap model){
         String resp = Crypto.videoList();
-        Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
+        Map<String,Object> videoData = JsonUtils.toObject(resp,Map.class);
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
 
-        Map<String,String> video = (Map) data.get("list");
+        String sessionResp =  Crypto.getSession(request.getRemoteAddr(),member);
+
+        Map<String,String> data = JsonUtils.toObject(sessionResp,Map.class);
+
+        Map<String,String> video = (Map) videoData.get("list");
         if (game==null) {
-            game = "Baccarat";
-            table = "6";
-            range = "100-2000";
+            game = "Sicbo";
+            table = "1";
+            range = "5-100";
         }
 
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
-        params.put("url",bundle.getString("nihtan.url")+"/weex/member/nihtan/play.jhtml?game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
+        params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?token="+data.get("token")+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
         params.put("video",video.get(game+"_"+table));
         return Message.success(params,"获取成功");
 
     }
+
+    /**
+     *  获取游戏参数
+     */
+
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public Message test(String game,String table,String range, HttpServletRequest request,ModelMap model){
+        String resp = Crypto.videoList();
+        Map<String,Object> videoData = JsonUtils.toObject(resp,Map.class);
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        String sessionResp =  Crypto.getSession(request.getRemoteAddr(),member);
+
+        Map<String,String> data = JsonUtils.toObject(sessionResp,Map.class);
+
+        Map<String,String> video = (Map) videoData.get("list");
+        if (game==null) {
+            game = "Sicbo";
+            table = "1";
+            range = "5-100";
+        }
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Map<String,String> params = new HashMap<>();
+        params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?token="+data.get("token")+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
+        params.put("video",video.get(game+"_"+table));
+        return Message.success(params,"获取成功");
+
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package net.wit.plat.nihtan;
 
+import net.wit.entity.Member;
 import net.wit.util.JsonUtils;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.http.HttpEntity;
@@ -23,6 +24,7 @@ import java.util.Map;
  * Created by zhangsr on 2018/1/29.
  */
 public class Crypto {
+    public static String vendor_name="ch_test";
     public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
     public static String sessionURL = "http://api.neo-nihtan.com/api/session";
     public static String gameListURL = "http://api.neo-nihtan.com/api/game/list";
@@ -99,10 +101,10 @@ public class Crypto {
         return result;
     }
 
-    public static String getSession(String ip) {
+    public static String getSession(String ip,Member member) {
         Map<String,String> data = new HashMap<String,String>();
-        data.put("user_id","13860431130");
-        data.put("user_name","13860431130");
+        data.put("user_id",member.getUsername());
+        data.put("user_name",member.getNickName());
         data.put("user_ip",ip);
         data.put("vendor_name","ch_test");
         data.put("pc_redirect","http://dev.rzico.com/nihtan");
