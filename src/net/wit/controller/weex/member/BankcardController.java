@@ -252,15 +252,16 @@ public class BankcardController extends BaseController {
                         m.setMobile(null);
                         memberService.save(m);
                     }
-                    for (Card card:member.getCards()) {
-                        card.setMobile(member.getMobile());
-                        cardService.update(card);
-                    }
                     member.setUsername(data.get("mobile"));
                     member.setMobile(data.get("mobile"));
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);
+                for (Card card:member.getCards()) {
+                    card.setMobile(member.getMobile());
+                    card.setName(member.getName());
+                    cardService.update(card);
+                }
                 Admin admin = adminService.findByMember(member);
                 if (admin!=null) {
                     admin.setName(member.getName());
