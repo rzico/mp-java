@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class GameListModel extends BaseModel implements Serializable {
-
     /** 名称 */
     private String game;
     /** 桌号 */

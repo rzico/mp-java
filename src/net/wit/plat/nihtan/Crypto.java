@@ -101,8 +101,8 @@ public class Crypto {
 
     public static String getSession(String ip) {
         Map<String,String> data = new HashMap<String,String>();
-        data.put("user_id","tester1");
-        data.put("user_name","tester1");
+        data.put("user_id","13860431130");
+        data.put("user_name","13860431130");
         data.put("user_ip",ip);
         data.put("vendor_name","ch_test");
         data.put("pc_redirect","http://dev.rzico.com/nihtan");

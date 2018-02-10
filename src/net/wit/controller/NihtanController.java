@@ -110,9 +110,9 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/history")
     public String history(String hash,HttpServletRequest request,ModelMap model){
-        System.out.println("history");
+//        System.out.println("history");
         String json = WebUtils.getBodyParams(request);
-        System.out.println(json);
+//        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
 //            Map<String,String> params = JsonUtils.toObject(json,Map.class);
