@@ -55,6 +55,12 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  配送方式 */
     private Order.ShippingMethod shippingMethod;
 
+    /**  支付方式 */
+    private Order.PaymentStatus paymentStatus;
+
+    /**  配送方式 */
+    private Order.ShippingStatus shippingStatus;
+
     /**  商品合计 */
     private BigDecimal price;
 
@@ -241,6 +247,22 @@ public class OrderModel extends BaseModel implements Serializable {
         this.promoter = promoter;
     }
 
+    public Order.PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(Order.PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public Order.ShippingStatus getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setShippingStatus(Order.ShippingStatus shippingStatus) {
+        this.shippingStatus = shippingStatus;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -271,6 +293,8 @@ public class OrderModel extends BaseModel implements Serializable {
         this.couponDiscount = order.getCouponDiscount();
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
+        this.paymentStatus = order.getPaymentStatus();
+        this.shippingStatus = order.getShippingStatus();
 
         this.receiver = new ReceiverModel();
         this.receiver.setAddress(order.getAddress());

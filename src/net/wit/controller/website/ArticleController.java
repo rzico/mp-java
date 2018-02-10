@@ -60,7 +60,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(Long id,HttpServletRequest request){
+    public Message view(Long id,Long xuid,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
@@ -77,6 +77,15 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+        Member share = null;
+        if (xuid!=null) {
+            share = memberService.find(xuid);
+        }
+        if (share!=null) {
+            model.setShareNickName(share.getNickName());
+        } else {
+            model.setShareNickName(article.getMember().getNickName());
+        }
 
         return Message.bind(model,request);
    }
