@@ -68,14 +68,14 @@ public class NihtanController extends BaseController {
            GameListModel m = new GameListModel();
            m.setGame("Sicbo");
            m.setTable(tb.getString("table"));
-           JSONArray mts = tb.getJSONArray("maintenance");
+//           JSONArray mts = tb.getJSONArray("maintenance");
            m.setDealer("none");
-           for (int j=0;j<mts.size();j++) {
-               JSONObject mt = mts.getJSONObject(j);
-               if (mt.getString("status").equals("1")) {
-                   m.setDealer(mt.getString("division"));
-               }
-           }
+//           for (int j=0;j<mts.size();j++) {
+//               JSONObject mt = mts.getJSONObject(j);
+//               if (mt.getString("status").equals("1")) {
+//                   m.setDealer(mt.getString("division"));
+//               }
+//           }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j=0;j<ranges.size();j++) {
@@ -99,14 +99,14 @@ public class NihtanController extends BaseController {
             GameListModel m = new GameListModel();
             m.setGame("Poker");
             m.setTable(tb.getString("table"));
-            JSONArray mts = tb.getJSONArray("maintenance");
+//            JSONArray mts = tb.getJSONArray("maintenance");
             m.setDealer("none");
-            for (int j=0;j<mts.size();j++) {
-                JSONObject mt = mts.getJSONObject(j);
-                if (mt.getString("status").equals("1")) {
-                    m.setDealer(mt.getString("division"));
-                }
-            }
+//            for (int j=0;j<mts.size();j++) {
+//                JSONObject mt = mts.getJSONObject(j);
+//                if (mt.getString("status").equals("1")) {
+//                    m.setDealer(mt.getString("division"));
+//                }
+//            }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j=0;j<ranges.size();j++) {
@@ -130,14 +130,14 @@ public class NihtanController extends BaseController {
             GameListModel m = new GameListModel();
             m.setGame("Dragon-Tiger");
             m.setTable(tb.getString("table"));
-            JSONArray mts = tb.getJSONArray("maintenance");
+//            JSONArray mts = tb.getJSONArray("maintenance");
             m.setDealer("none");
-            for (int j=0;j<mts.size();j++) {
-                JSONObject mt = mts.getJSONObject(j);
-                if (mt.getString("status").equals("1")) {
-                    m.setDealer(mt.getString("division"));
-                }
-            }
+//            for (int j=0;j<mts.size();j++) {
+//                JSONObject mt = mts.getJSONObject(j);
+//                if (mt.getString("status").equals("1")) {
+//                    m.setDealer(mt.getString("division"));
+//                }
+//            }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j=0;j<ranges.size();j++) {
@@ -161,14 +161,14 @@ public class NihtanController extends BaseController {
             GameListModel m = new GameListModel();
             m.setGame("Baccarat");
             m.setTable(tb.getString("table"));
-            JSONArray mts = tb.getJSONArray("maintenance");
+//            JSONArray mts = tb.getJSONArray("maintenance");
             m.setDealer("none");
-            for (int j=0;j<mts.size();j++) {
-                JSONObject mt = mts.getJSONObject(j);
-                if (mt.getString("status").equals("1")) {
-                    m.setDealer(mt.getString("division"));
-                }
-            }
+//            for (int j=0;j<mts.size();j++) {
+//                JSONObject mt = mts.getJSONObject(j);
+//                if (mt.getString("status").equals("1")) {
+//                    m.setDealer(mt.getString("division"));
+//                }
+//            }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j=0;j<ranges.size();j++) {
