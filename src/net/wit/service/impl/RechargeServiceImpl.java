@@ -18,6 +18,7 @@ import net.wit.Filter.Operator;
 import net.wit.dao.DepositDao;
 import net.wit.dao.MemberDao;
 import net.wit.plat.unspay.UnsPay;
+import net.wit.service.MemberService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -44,6 +45,9 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
+
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
 
 	@Resource(name = "rechargeDaoImpl")
 	private RechargeDao rechargeDao;
@@ -150,6 +154,13 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			logger.debug(e.getMessage());
 			throw new RuntimeException("提交出错了");
 		}
+
+		if (member.getPromoter()==null) {
+			member.setPromoter(agent);
+			memberDao.merge(member);
+			memberService.create(member, agent);
+		}
+
 		return true;
 	}
 
