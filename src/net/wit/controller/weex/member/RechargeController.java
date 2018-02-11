@@ -62,7 +62,11 @@ public class RechargeController extends BaseController {
     @RequestMapping(value = "find", method = RequestMethod.GET)
     @ResponseBody
     public Message find(String username,HttpServletRequest request){
+        Member self = memberService.getCurrent();
         Member member = memberService.findByUsername(username);
+        if (member.getPromoter()!=null && !member.getPromoter().equals(self)) {
+            return Message.error("不是你客户,不能充值");
+        }
         MemberViewModel model = new MemberViewModel();
         model.bind(member);
         return Message.bind(model,request);
