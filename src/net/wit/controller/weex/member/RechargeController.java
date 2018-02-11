@@ -57,7 +57,7 @@ public class RechargeController extends BaseController {
     private BankcardService bankcardService;
 
     /**
-     *
+     * 查找用户
      */
     @RequestMapping(value = "find", method = RequestMethod.GET)
     @ResponseBody
@@ -99,7 +99,11 @@ public class RechargeController extends BaseController {
         recharge.setAdmin(admin);
         recharge.setSn(snService.generate(Sn.Type.recharge));
         recharge.setMemo("代理商代充,"+admin.getName());
-        rechargeService.save(recharge);
+        try {
+            rechargeService.agentSubmit(recharge,member);
+        } catch (Exception e) {
+            return Message.error(e.getMessage());
+        }
         return Message.success("提交成功");
     }
 
