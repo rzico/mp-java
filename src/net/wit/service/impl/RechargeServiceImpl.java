@@ -116,7 +116,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 		try {
 			//扣代理款
 			memberDao.refresh(agent, LockModeType.PESSIMISTIC_WRITE);
-			agent.getBalance().subtract(recharge.getAmount());
+			agent.setBalance(agent.getBalance().subtract(recharge.getAmount()));
 			if (agent.getBalance().compareTo(BigDecimal.ZERO)<0) {
 				throw new RuntimeException("代理商余额不足");
 			}
