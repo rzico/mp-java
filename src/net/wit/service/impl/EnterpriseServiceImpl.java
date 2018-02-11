@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 
 import net.wit.Filter;
 import net.wit.Page;
@@ -14,9 +15,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
-import net.wit.dao.AdminDao;
-import net.wit.dao.RoleDao;
-import net.wit.dao.ShopDao;
+import net.wit.dao.*;
+import net.wit.service.MessageService;
 import net.wit.util.MD5Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -24,9 +24,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.EnterpriseDao;
 import net.wit.entity.*;
 import net.wit.service.EnterpriseService;
+import org.tuckey.web.filters.urlrewrite.Run;
 
 /**
  * @ClassName: EnterpriseDaoImpl
@@ -45,6 +45,17 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 	private ShopDao shopDao;
 	@Resource(name = "roleDaoImpl")
 	private RoleDao roleDao;
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
+	@Resource(name = "paymentDaoImpl")
+	private PaymentDao paymentDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
 
 	@Resource(name = "enterpriseDaoImpl")
 	public void setBaseDao(EnterpriseDao enterpriseDao) {
@@ -197,6 +208,37 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterpriseDao.persist(enterprise);
 		}
 		return enterprise;
+	}
+
+	public Enterprise creditLine(Enterprise enterprise,BigDecimal amount,Admin admin) throws Exception {
+		enterpriseDao.lock(enterprise, LockModeType.PESSIMISTIC_WRITE);
+		Member member = enterprise.getMember();
+
+		memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+		member.setBalance(member.getBalance().add(amount));
+		if (member.getBalance().compareTo(BigDecimal.ZERO)<0) {
+			throw new RuntimeException("余额不足");
+		}
+		memberDao.merge(member);
+
+		Deposit deposit = new Deposit();
+		deposit.setBalance(member.getBalance());
+		deposit.setType(Deposit.Type.recharge);
+		deposit.setMemo("授信充值");
+		deposit.setMember(member);
+		deposit.setCredit(amount);
+		deposit.setDebit(BigDecimal.ZERO);
+		deposit.setDeleted(false);
+		deposit.setOperator(admin.getName());
+		depositDao.persist(deposit);
+
+		enterprise.setCreditLine(enterprise.getCreditLine().add(amount));
+		enterpriseDao.merge(enterprise);
+
+		messageService.depositPushTo(deposit);
+
+		return enterprise;
+
 	}
 
 	@Transactional
