@@ -104,6 +104,56 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 	}
 
 	@Transactional
+	public synchronized Boolean agentSubmit(Recharge recharge,Member agent) throws Exception {
+
+		recharge.setStatus(Recharge.Status.success);
+		recharge.setTransferDate(new Date());
+		rechargeDao.persist(recharge);
+		Member member = recharge.getMember();
+		try {
+			//扣代理款
+			memberDao.refresh(agent, LockModeType.PESSIMISTIC_WRITE);
+			agent.getBalance().subtract(recharge.getAmount());
+			if (agent.getBalance().compareTo(BigDecimal.ZERO)<0) {
+				throw new RuntimeException("代理商余额不足");
+			}
+			memberDao.merge(agent);
+			Deposit deposit = new Deposit();
+			deposit.setBalance(agent.getBalance());
+			deposit.setType(Deposit.Type.payment);
+			deposit.setMemo("代"+member.getUsername()+"充值");
+			deposit.setMember(agent);
+			deposit.setCredit(BigDecimal.ZERO);
+			deposit.setDebit(recharge.getAmount());
+			deposit.setDeleted(false);
+			deposit.setOperator("system");
+			deposit.setRecharge(recharge);
+			depositDao.persist(deposit);
+
+			//充用户款
+
+			memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
+			memberDao.merge(member);
+			Deposit memberDeposit = new Deposit();
+			memberDeposit.setBalance(member.getBalance());
+			memberDeposit.setType(Deposit.Type.recharge);
+			memberDeposit.setMemo(recharge.getMemo());
+			memberDeposit.setMember(member);
+			memberDeposit.setCredit(recharge.getAmount());
+			memberDeposit.setDebit(BigDecimal.ZERO);
+			memberDeposit.setDeleted(false);
+			memberDeposit.setOperator("system");
+			memberDeposit.setRecharge(recharge);
+			depositDao.persist(memberDeposit);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			throw new RuntimeException("提交出错了");
+		}
+		return true;
+	}
+
+	@Transactional
 	public synchronized Boolean submit(Recharge recharge) throws Exception {
 		Member member = recharge.getMember();
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);

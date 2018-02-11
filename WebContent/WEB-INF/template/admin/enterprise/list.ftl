@@ -231,7 +231,8 @@
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                   "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>"+
+                                   "<a title='授信' href='javascript:;' onclick=\"creditline('授信充值','creditLine.jhtml?id=" + data + "','300" + data + "','510')\" class='ml-5' style='text-decoration:none'>授信</a>";
                         }else{
                             return "";
                         }
@@ -315,6 +316,15 @@
             content:url
         });
         layer.full(index);
+    }
+    /*编辑*/
+    function creditline(title, url, id, w, h) {
+        var index = layer.open({
+            type:2,
+            title:title,
+            content:url
+        });
+        layer.show(index);
     }
     /*提示框*/
     function toast(msg, icon) {

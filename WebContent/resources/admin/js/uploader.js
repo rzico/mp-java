@@ -128,4 +128,6 @@ jQuery(function() {
     }
 
     window.$uploadpicture = $uploadpicture;
+
+    $uploadpicture("fileList","filePicker");
 });

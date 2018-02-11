@@ -118,15 +118,11 @@ public class MobileController extends BaseController {
             }
             Member m = memberService.findByMobile(safeKey.getKey());
             if (m!=null) {
-                ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-                BindUser bindUser = bindUserService.findMember(m,bundle.getString("app.appid"), BindUser.Type.weixin);
-                if (bindUser==null) {
-                    return Message.error("当前手机已经注册");
-                }
+                m.setUsername(null);
                 m.setMobile(null);
                 memberService.save(m);
             }
-
+            member.setUsername(safeKey.getKey());
             member.setMobile(safeKey.getKey());
             memberService.save(member);
             for (Card card:member.getCards()) {
