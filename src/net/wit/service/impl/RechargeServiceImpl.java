@@ -109,7 +109,6 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 
 	@Transactional
 	public synchronized Boolean agentSubmit(Recharge recharge,Member agent) throws Exception {
-
 		recharge.setStatus(Recharge.Status.success);
 		recharge.setTransferDate(new Date());
 		rechargeDao.persist(recharge);
