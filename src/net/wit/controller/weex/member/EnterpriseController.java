@@ -1,12 +1,10 @@
 package net.wit.controller.weex.member;
 
 import net.wit.*;
+import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.AdminModel;
-import net.wit.entity.Admin;
-import net.wit.entity.Enterprise;
-import net.wit.entity.Member;
-import net.wit.entity.Role;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,42 +68,64 @@ public class EnterpriseController extends BaseController {
     @RequestMapping(value = "/view")
     @ResponseBody
     public Message view(HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Admin admin = adminService.findByMember(member);
-        if (admin==null) {
-            return Message.error("没有开通");
-        }
-
-        Enterprise enterprise = admin.getEnterprise();
 
         Map<String,Object> data = new HashMap<String,Object>();
-        data.put("logo",enterprise.getLogo());
-        data.put("name",enterprise.getName());
-        if (admin.getShop()!=null) {
-            data.put("shopName",admin.getShop().getName());
-        } else {
-            data.put("shopName","未分配");
-        }
-        data.put("isOwner",admin.isOwner());
-        if (admin.isOwner()) {
-            data.put("roleName","店主");
-        } else {
-            String s = "";
-            for (Role role:admin.getRoles()) {
-                if (s.equals("")) {
-                    s = s + ",";
-                }
-                s = s +role.getName();
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            data.put("status","success");
+            Enterprise enterprise = admin.getEnterprise();
+
+            data.put("logo",enterprise.getLogo());
+            data.put("name",enterprise.getName());
+            if (admin.getShop()!=null) {
+                data.put("shopName",admin.getShop().getName());
+            } else {
+                data.put("shopName","未分配");
             }
-            data.put("roleName",s);
+            data.put("isOwner",admin.isOwner());
+            data.put("creditLine",enterprise.getCreditLine());
+            if (admin.isOwner()) {
+                data.put("roleName","店主");
+            } else {
+                String s = "";
+                for (Role role:admin.getRoles()) {
+                    if (s.equals("")) {
+                        s = s + ",";
+                    }
+                    s = s +role.getName();
+                }
+                data.put("roleName",s);
+            }
+        } else {
+            data.put("status","none");
         }
+
         return Message.bind(data,request);
 
     }
 
+    /**
+     *  申请代理
+     */
+    @RequestMapping(value = "/create_agent")
+    @ResponseBody
+    public Message create_enterprise(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        if (member.getName()==null) {
+            return Message.error("请先绑定银行卡");
+        }
+        enterpriseService.createAgent(member);
+        return Message.success("申请成功");
+    }
 
     /**
      *  解除就业

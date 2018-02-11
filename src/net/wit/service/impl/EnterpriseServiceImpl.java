@@ -153,6 +153,53 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 	}
 
 	@Transactional
+	public Enterprise createAgent(Member member) {
+		Enterprise enterprise = enterpriseDao.find(member);
+		if (enterprise==null) {
+			enterprise = new Enterprise();
+			enterprise.setName(member.getName());
+			enterprise.setDeleted(false);
+			enterprise.setBrokerage(new BigDecimal("0.38"));
+			enterprise.setCreditLine(BigDecimal.ZERO);
+			enterprise.setLogo(member.getLogo());
+			enterprise.setMember(member);
+			enterprise.setType(Enterprise.Type.personal);
+			enterpriseDao.persist(enterprise);
+		}
+		Admin admin = adminDao.findByMember(member);
+		if (admin == null) {
+			admin = new Admin();
+			admin.setUsername(member.userId());
+			admin.setName(member.getName());
+//			admin.setEmail(member.getEmail());
+			admin.setEnterprise(enterprise);
+			admin.setIsLocked(false);
+			admin.setIsEnabled(true);
+			admin.setLoginFailureCount(0);
+			admin.setMember(member);
+			admin.setPassword(member.getPassword());
+			if (admin.getPassword()==null) {
+				String m = admin.getUsername();
+				admin.setPassword(MD5Utils.getMD5Str(m));
+			}
+			if (member.getGender()!=null) {
+				admin.setGender(Admin.Gender.valueOf(member.getGender().name()));
+			}
+			List<Role> roles = admin.getRoles();
+			if (roles!=null) {
+				roles = new ArrayList<Role>();
+			}
+			roles.add(roleDao.find(1L));
+			admin.setRoles(roles);
+			adminDao.persist(admin);
+		} else {
+			admin.setEnterprise(enterprise);
+			enterpriseDao.persist(enterprise);
+		}
+		return enterprise;
+	}
+
+	@Transactional
 	public Admin addAdmin(Enterprise enterprise,Member member) {
 		Admin admin = adminDao.findByMember(member);
 		if (admin==null) {

@@ -22,5 +22,6 @@ public interface EnterpriseService extends BaseService<Enterprise, Long> {
 	Page<Enterprise> findPage(Date beginDate,Date endDate, Pageable pageable);
 
 	public Enterprise create(Topic topic);
+	public Enterprise createAgent(Member member);
 	public Admin addAdmin(Enterprise enterprise, Member member);
 }
