@@ -2,6 +2,7 @@ package net.wit.controller.weex.member;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.MemberModel;
 import net.wit.controller.model.MemberViewModel;
 import net.wit.entity.*;
 import net.wit.service.*;
@@ -67,7 +68,7 @@ public class RechargeController extends BaseController {
         if (member.getPromoter()!=null && !member.getPromoter().equals(self)) {
             return Message.error("不是你客户,不能充值");
         }
-        MemberViewModel model = new MemberViewModel();
+        MemberModel model = new MemberModel();
         model.bind(member);
         return Message.bind(model,request);
     }
