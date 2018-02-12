@@ -5,6 +5,8 @@ import net.wit.controller.model.ArticleContentModel;
 import net.wit.controller.model.ArticleModel;
 import net.wit.dao.WeixinUpDao;
 import net.wit.entity.Article;
+import net.wit.entity.ArticleContent;
+import net.wit.entity.ArticleTemplate;
 import net.wit.plat.weixin.FormEntity.*;
 import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.plat.weixin.propa.ArticlePropa;
@@ -181,11 +183,35 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
         return "success";
     }
 
-    public StringBuffer DownArticle(String url) throws IOException {
+    public JSONObject DownArticle(String url) throws IOException {
+        StringBuffer stringBuffer=new StringBuffer();
+
+        if(!(url.contains("mp.weixin.qq.com")||url.contains("weibo.com/ttarticle")||url.contains("m.eqxiu.com"))){
+            return null;
+        }
+
+        stringBuffer=downArticle(url);
+        if (stringBuffer==null||stringBuffer.equals("")){
+            return null;
+        }
+
+        if (url.contains("mp.weixin.qq.com")){
+            return weixinArticle(stringBuffer);
+        }
+
+        if (url.contains("weibo.com/ttarticle")){
+//            return weiboArticle(stringBuffer);
+        }
+
+        if (url.contains("m.eqxiu.com")){
+            return eqixiuArticle(stringBuffer);
+        }
+
+        return null;
+    }
+
+    public StringBuffer downArticle(String url){
         StringBuffer stringBuffer = new StringBuffer();
-        String tempPath = System.getProperty("java.io.tmpdir");
-//        System.out.println(tempPath);
-        //爬下网页的HTML文件
         try {
             URL imgurl = new URL(url);
             //打开链接
@@ -202,24 +228,34 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             while((s=bufferedReader.readLine())!=null){
                 stringBuffer.append(s);
             }
-            System.out.println(stringBuffer.toString().length());
-//            System.out.println(stringBuffer);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        //文字保存在<span>中 图片保存在<img>中 这些都是保存在<p>中
+        return stringBuffer;
+    }
+
+    //微信爬虫算法
+    public JSONObject weixinArticle(StringBuffer stringBuffer){
+        ArticleTemplate articleTemlate=new ArticleTemplate();
+        articleTemlate.setTitle(" ");
+        articleTemlate.setThumbnail(" ");
+        List<ArticleContent> articleContents=new ArrayList<>();
+        String tempPath = System.getProperty("java.io.tmpdir");
         Pattern p = Pattern.compile("(<p(.*?)?>)(.*?)(</p>)");
         Matcher m = p.matcher(stringBuffer);
-        StringBuffer stringBuffer1=new StringBuffer("[");
-        int h=0;
         while(m.find()) {
+            ArticleContent articleContent=new ArticleContent();
+            articleContent.setMediaType("image");
             String s=m.group();
+
             //带有class的P标签都是微信自动生成的 不属于文本内容应过滤
             if (s.contains("class")&&!s.contains("img")){
                 continue;
             }else if(s.contains("<p class")){
                 continue;
             }
+
             //带有sction的标签也过滤掉，不属于文本内容，属于微信文章自动生成的文章标题属性等
             //原文中的A标签超链接也过滤掉
             if (s.contains("</sction>")||s.contains("</a>")){
@@ -227,7 +263,6 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             }
 
             //过滤换行标签
-//            Pattern.matches("(>([^A-Za-z0-9一-龥_])?(<( )?(/)?br(.*?)?>)([^A-Za-z0-9一-龥_])?<)",s);
             if (Pattern.compile("(>([^A-Za-z0-9一-龥_])*?(<( )?(/)?br(.*?)?>)+([^A-Za-z0-9一-龥_])*?<)").matcher(s).find()){
                 continue;
             }
@@ -240,30 +275,48 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                 continue;
             }
             //当span标签中内容无效 过滤
-            if(Pattern.compile("((<span(.*?)?>)([^A-Za-z0-9一-龥_])*?(</span>))").matcher(s).find()){
+            //当出现多个span标签嵌套的情况
+            int h=0;
+            int j=0;
+            if((j=s.indexOf("</span>"))>0){
+                h++;
+                while ((j=s.indexOf("</span>",j+1))>0){
+                    h++;
+                }
+            }
+            //END获取多少个SPAN嵌套
+            //根据多重span嵌套自动拼装不同正则表达式
+            StringBuffer regular=new StringBuffer("(<span(.*?)?>)([^A-Za-z0-9一-龥_])*?");
+            for(int i=1;i<h;i++){
+                regular.append("(<span(.*?)?>)([^A-Za-z0-9一-龥_])*?(</span>)([^A-Za-z0-9一-龥_])*?");
+            }
+            regular.append("(</span>)");
+            if(Pattern.compile(regular.toString()).matcher(s).find()){
                 continue;
             }
-            //如果有图片
-            if (h!=0){
-                stringBuffer1.append(",");
-            }
+
             if (s.contains("img")){
-                stringBuffer1.append("{\"mediaType\":\"image\",\"thumbnail\":\"");
                 String[] str=s.split(" ");
                 for (int i = 0; i < str.length; i++) {
+
                     if (str[i].contains("data-src")) {
                         //微信图片路径
                         String surl = str[i].replace("data-src=\"", "").replace("\"", "");
+
                         //说明这个图片是emoji表情,可以不用截取上传也能使用
                         if (surl.contains("emoji")) {
-                            stringBuffer1.append(surl);
+                            articleContent.setThumbnail(surl);
+                            articleContent.setOriginal(surl);
+                            articleContent.setContent("");
                             continue;
                         }
+
                         //图片格式
                         if (!str[i + 1].contains("data-type")) {
                             continue;
                         }
                         String shz = str[i + 1].replace("data-type=\"", "").replace("\"", "");
+
                         //文件下载
                         File file = ArticlePropa.UrlToFile(surl, shz, tempPath);
                         try {
@@ -276,9 +329,9 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                             String uppath = "/upload/image/" + folder1 + "/" + filename + "." + shz;
                             ossPlugin.upload(uppath, multi, ossPlugin.getMineType("." + shz));
                             String string=ossPlugin.getUrl(uppath);
-                            stringBuffer1.append(string);
-                            stringBuffer1.append("\",\"original\":\"");
-                            stringBuffer1.append(string);
+                            articleContent.setThumbnail(string);
+                            articleContent.setOriginal(string);
+                            articleContent.setContent("");
                         }
                         catch (Exception e){
 
@@ -288,19 +341,101 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                         }
                     }
                 }
-                stringBuffer1.append("\",\"content\":\"\"}");
-                h++;
-                continue;
             }
-            stringBuffer1.append("{\"mediaType\":\"image\",\"thumbnail\":\"\",\"original\":\"\",\"content\":\"");
-            stringBuffer1.append(s.replace("\"","\\\""));
-            stringBuffer1.append("\"}");
-            h++;
-//            System.out.println(m.group());
+            else{
+                articleContent.setThumbnail("");
+                articleContent.setOriginal("");
+                articleContent.setContent(s);
+            }
+            articleContents.add(articleContent);
         }
-        stringBuffer1.append("]");
-        System.out.println(stringBuffer1.toString().length());
+        articleTemlate.setTemplates(articleContents);
+        return JSONObject.fromObject(articleTemlate);
+    }
+
+    //微博爬虫算法
+    private JSONObject weiboArticle(StringBuffer stringBuffer) {
+        System.out.println(stringBuffer);
+        ArticleTemplate articleTemplate=new ArticleTemplate();
+        Matcher a;
+        //设置文章标题
+        if((a=Pattern.compile("(<title>){1}(.*?)(</title>){1}").matcher(stringBuffer)).find()){
+            System.out.println(a.group());
+            articleTemplate.setTitle(a.group().replace("<title>","").replace("</title>",""));
+        }else {
+            articleTemplate.setTitle("");
+        }
+
+        //设置文章封面
+        if((a=Pattern.compile("<img node-type=(.+?)src=(.+?)>").matcher(stringBuffer)).find()){
+            System.out.println(a.group()+"  "+a.group(0));
+            articleTemplate.setThumbnail(a.group(1).replace("\"",""));
+        }else{
+            articleTemplate.setThumbnail("");
+        }
+
+        //设置文本内容
+        List<ArticleContent> articleContents=new ArrayList<>();
+        Matcher m=Pattern.compile("(<p(.*?)?>)(.*?)(</p>)").matcher(stringBuffer);
+        while (m.find()){
+            ArticleContent articleContent=new ArticleContent();
+            articleContent.setMediaType("image");
+            String s=m.group();
+            System.out.println(s);
+            //判断是否为图片
+            if(Pattern.compile("<img(.+?)>").matcher(s).find()){
+                String[] str= s.split(" ");
+                for(int i=0;i<str.length;i++){
+                    if(str[i].contains("src=")){
+                        articleContent.setThumbnail(str[i].replace("src=\"","").replace("\"",""));
+                        articleContent.setOriginal(str[i].replace("src=\"","").replace("\"",""));
+                        articleContent.setContent("");
+                    }
+                }
+            }
+            else{
+                articleContent.setThumbnail("");
+                articleContent.setOriginal("");
+                articleContent.setContent(s);
+            }
+            articleContents.add(articleContent);
+        }
+        articleTemplate.setTemplates(articleContents);
+
+        return JSONObject.fromObject(articleTemplate);
+    }
+
+    //易企秀爬虫JSON获取地址
+    private JSONObject eqixiuArticle( StringBuffer stringBuffer){
+        Matcher a;
+        StringBuffer stringBuffer1=new StringBuffer("https://a.eqxiu.com/eqs/page/");
         System.out.println(stringBuffer1);
-        return stringBuffer1;
+        if((a=Pattern.compile("id:([0-9])*,").matcher(stringBuffer)).find()){
+            stringBuffer1.append(a.group().replace("id:","").replace(",",""));
+            System.out.println(stringBuffer1);
+        }
+
+        if((a=Pattern.compile("code:\"([0-9a-zA-Z])*\",").matcher(stringBuffer)).find()){
+            stringBuffer1.append("?code="+a.group().replace("code:\"","").replace("\",",""));
+            System.out.println(stringBuffer1);
+        }
+
+        if((a=Pattern.compile("createTime:([0-9])*,").matcher(stringBuffer)).find()){
+            stringBuffer1.append("&time="+a.group().replace("createTime:","").replace(",",""));
+            System.out.println(stringBuffer1);
+        }
+        return eqxiuArticle(stringBuffer1);
+    }
+
+    //易企秀文本爬虫算法
+    private JSONObject eqxiuArticle(StringBuffer stringBuffer1) {
+        StringBuffer stringBuffer=downArticle(stringBuffer1.toString());
+
+        if(stringBuffer==null||stringBuffer.equals("")){
+            return null;
+        }
+
+        System.out.println(stringBuffer);
+        return JSONObject.fromObject(stringBuffer);
     }
 }
