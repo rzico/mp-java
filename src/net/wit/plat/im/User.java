@@ -22,16 +22,17 @@ import static com.tls.tls_sigature.tls_sigature.GenTLSSignatureEx;
 
 public class User {
     public static Logger logger = LogManager.getLogger(User.class);
+
     public static String privateKey=
             "-----BEGIN PRIVATE KEY-----\n"+
-            "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgilzRLbmHzOJTqgpaM5Ln\n"+
-            "yyGZLYxr7Q0HGkm8YCz95f+hRANCAAQaFa7sPGBQbxMRrrce87loEfMH5v3+L5Rx\n"+
-            "60tHHM/kXD1hh7TTv+dAwyQsfR7dAkoy3KVKxNcHP+OGHK/M1OS0\n"+
+            "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg8s4bgHXrydRo5SWR\n"+
+            "OZhCZuSxPizC+pJzq4YnnHQBxkChRANCAAQBT0lZlVjDosCPHMBlJdgw6anE262k\n"+
+            "cW8j6d3DUItNIN3RhOWqPEAgdTn0eicb3sdFuikiSfFu6oAdLwACqe1W\n"+
             "-----END PRIVATE KEY-----";
     public static String publicKey=
             "-----BEGIN PUBLIC KEY-----\n"+
-            "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEGhWu7DxgUG8TEa63HvO5aBHzB+b9/i+U\n"+
-            "cetLRxzP5Fw9YYe007/nQMMkLH0e3QJKMtylSsTXBz/jhhyvzNTktA==\n"+
+            "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEAU9JWZVYw6LAjxzAZSXYMOmpxNut\n"+
+            "pHFvI+ndw1CLTSDd0YTlqjxAIHU59HonG97HRbopIknxbuqAHS8AAqntVg==\n"+
             "-----END PUBLIC KEY-----";
 //    public static String privateKey=
 //              "-----BEGIN PRIVATE KEY-----\n"+
@@ -74,10 +75,10 @@ public class User {
     }
     public static boolean imAttr() {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig("zhangsr");
+        String userSig=User.createUserSig("hhmm007");
         int random=StringUtils.Random6Code();
 
-        String url = im_attr.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+        String url = im_attr.replace("USERSIG",userSig).replace("ADMIN","hhmm007").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
         String data ="{ \"AttrNames\": { \"0\": \"userId\", \"1\": \"logo\", \"2\": \"nickName\"}}";
 
@@ -110,10 +111,10 @@ public class User {
             return true;
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig("zhangsr");
+        String userSig=User.createUserSig("hhmm007");
         int random=StringUtils.Random6Code();
 
-        String url = user_attr.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+        String url = user_attr.replace("USERSIG",userSig).replace("ADMIN","hhmm007").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
         Map<String,String> attrs = new HashMap<String,String>();
         attrs.put("Identifier",member.userId());
@@ -142,10 +143,10 @@ public class User {
     }
     public static boolean userState(List<Member> members) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig("zhangsr");
+        String userSig=User.createUserSig("hhmm007");
         int random=StringUtils.Random6Code();
 
-        String url = user_state.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+        String url = user_state.replace("USERSIG",userSig).replace("ADMIN","hhmm007").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
         Map<String,Object> data = new HashMap<String,Object>();
         List<String> users = new ArrayList<String>();
