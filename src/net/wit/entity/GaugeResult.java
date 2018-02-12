@@ -27,7 +27,6 @@ public class GaugeResult extends OrderEntity {
 
     private static final long serialVersionUID = 24L;
 
-
     /**  最小得分 */
     @Min(0)
     @Digits(integer = 12, fraction = 3)
