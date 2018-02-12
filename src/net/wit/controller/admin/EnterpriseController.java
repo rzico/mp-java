@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class EnterpriseController extends BaseController {
 
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
+
 
 
 	/**
@@ -187,7 +189,34 @@ public class EnterpriseController extends BaseController {
             return Message.error("admin.update.error");
         }
 	}
-	
+
+
+	/**
+	 * 申请手动转账
+	 */
+	@RequestMapping(value = "/creditLine", method = RequestMethod.GET)
+	public String manualTransfer(ModelMap model,Long id) {
+		model.addAttribute("data",enterpriseService.find(id));
+
+		return "/admin/enterprise/view/creditline";
+	}
+
+	/**
+	 * 授信
+	 */
+	@RequestMapping(value = "/creditLine", method = RequestMethod.POST)
+	@ResponseBody
+	public Message creditLine(Long id,BigDecimal amount){
+		Enterprise entity = enterpriseService.find(id);
+		try {
+			enterpriseService.creditLine(entity,amount,adminService.getCurrent());
+			return Message.success(entity,"admin.update.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.update.error");
+		}
+	}
+
 
 	/**
      * 列表

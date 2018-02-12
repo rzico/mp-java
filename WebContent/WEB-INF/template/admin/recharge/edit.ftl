@@ -179,7 +179,6 @@
                 });
             });
 
-
             /*编辑*/
             function edit(id) {
                 var w_1 = window.innerWidth * 0.3;

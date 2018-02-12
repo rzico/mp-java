@@ -239,6 +239,7 @@
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                         "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                        "<a title='授信' href='javascript:;' onclick=\"creditline('授信充值','creditLine.jhtml?id=" + data + "','300" + data + "','510')\" class='ml-5' style='text-decoration:none'>授信</a>";
                             }else{
                                 return "";
                             }
@@ -271,10 +272,10 @@
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
                         "aoData": JSON.stringify(aoData),
-                        "beginDate": _beginDate,
-                        "endDate": _endDate,
-                        "type": _type,
-                        "searchValue": _searchValue
+                        "beginDate":_beginDate,
+                        "endDate":_endDate,
+                        "type":_type,
+                        "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',
@@ -330,6 +331,15 @@
             content:url
         });
         layer.full(index);
+    }
+    /*编辑*/
+    function creditline(title, url, id, w, h) {
+        var index = layer.open({
+            type:2,
+            title:title,
+            content:url
+        });
+        layer.show(index);
     }
     /*提示框*/
     function toast(msg, icon) {

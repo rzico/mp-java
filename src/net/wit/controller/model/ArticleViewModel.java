@@ -13,6 +13,8 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Long id;
     /** 会员 */
     private MemberViewModel member;
+    /** 分享 */
+    private String shareNickName;
     /** 作者 */
     private String author;
     /** 标题 */
@@ -160,7 +162,15 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.htmlTag = htmlTag;
     }
 
-    public void bind(Article article,Member shareUser) {
+    public String getShareNickName() {
+        return shareNickName;
+    }
+
+    public void setShareNickName(String shareNickName) {
+        this.shareNickName = shareNickName;
+    }
+
+    public void bind(Article article, Member shareUser) {
         this.id = article.getId();
         this.title = article.getTitle();
         this.author = article.getAuthor();
@@ -187,15 +197,19 @@ public class ArticleViewModel extends BaseModel implements Serializable {
 
         this.templates = templates;
         this.votes = votes;
+
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (shareUser==null) {
             shareUser = article.getMember();
         }
+        this.shareNickName = shareUser.getNickName();
+
         if (article.getTemplate()==null) {
             this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
         } else {
             this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
         }
+
     }
 
 }

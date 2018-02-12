@@ -11,6 +11,8 @@ public class MemberModel extends BaseModel implements Serializable {
 
     private Long id;
     /** 昵称 */
+    private String username;
+    /** 昵称 */
     private String nickName;
     /** 收藏 */
     private int favorite;
@@ -130,12 +132,21 @@ public class MemberModel extends BaseModel implements Serializable {
         this.rebate = rebate;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
         this.fans = member.getFans().size();
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();
+        this.username = member.getUsername();
         this.nickName = member.getNickName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());

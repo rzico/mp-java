@@ -3,10 +3,7 @@ package net.wit.controller.website;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleListModel;
-import net.wit.controller.model.ArticleModel;
-import net.wit.controller.model.ArticleViewModel;
-import net.wit.controller.model.GoodsListModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -63,7 +60,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(Long id,HttpServletRequest request){
+    public Message view(Long id,Long xuid,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
@@ -80,6 +77,15 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+        Member share = null;
+        if (xuid!=null) {
+            share = memberService.find(xuid);
+        }
+        if (share!=null) {
+            model.setShareNickName(share.getNickName());
+        } else {
+            model.setShareNickName(article.getMember().getNickName());
+        }
 
         return Message.bind(model,request);
    }

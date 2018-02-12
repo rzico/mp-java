@@ -198,7 +198,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/circle", method = RequestMethod.GET)
     @ResponseBody
-    public Message circle(Pageable pageable, HttpServletRequest request){
+    public Message circle(Long id,Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("isAudit", Filter.Operator.eq,true));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));

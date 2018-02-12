@@ -25,6 +25,7 @@ import java.util.Set;
 @Table(name = "wx_enterprise")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_enterprise_sequence")
 public class Enterprise extends BaseEntity {
+
     private static final long serialVersionUID = 24L;
 
     public enum Type{
@@ -60,6 +61,12 @@ public class Enterprise extends BaseEntity {
     @JoinColumn(columnDefinition="bigint(20) comment '地区'")
     @JsonIgnore
     private Area area;
+
+    /** 授信额度 */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '授信额度'")
+    private BigDecimal creditLine;
 
     /** 结算佣金 10% */
     @Min(0)
@@ -132,6 +139,14 @@ public class Enterprise extends BaseEntity {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public BigDecimal getCreditLine() {
+        return creditLine;
+    }
+
+    public void setCreditLine(BigDecimal creditLine) {
+        this.creditLine = creditLine;
     }
 
     public MapEntity getMapArea() {
