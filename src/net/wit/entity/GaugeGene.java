@@ -32,7 +32,7 @@ public class GaugeGene extends OrderEntity {
 
     /** 对应题目 */
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ky_gauge_gene_question")
+    @JoinTable(name = "ky_gauge_gene_questions")
     @OrderBy("orders asc")
     @JsonIgnore
     private List<GaugeQuestion> questions = new ArrayList<GaugeQuestion>();
