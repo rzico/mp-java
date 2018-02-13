@@ -54,18 +54,22 @@ public class NihtanController extends BaseController {
      */
 
     @RequestMapping(value = "/play")
-    public String play(String game,String table,String range,String token,HttpServletRequest request,ModelMap model){
+    public String play(String game,String table,String range,String nihtan,HttpServletRequest request,ModelMap model){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-
-        Member member = memberService.getCurrent();
         model.addAttribute("requestUrl",bundle.getString("nihtan.host"));
         model.addAttribute("requestMethod","post");
         model.addAttribute("requestCharset","utf-8");
 
+        if (nihtan==null) {
+            Member member = memberService.find(43L);
+            String sessionResp = Crypto.getSession(request.getRemoteAddr(), member);
+            Map<String, String> data = JsonUtils.toObject(sessionResp, Map.class);
+            nihtan =data.get("token");
+        }
 
         Map<String,String> parameterMap = new HashMap<>();
 
-        parameterMap.put("token",token);
+        parameterMap.put("token",nihtan);
         parameterMap.put("mobile","1");
         parameterMap.put("g",game);
         parameterMap.put("t",table);

@@ -210,10 +210,12 @@ public class NihtanController extends BaseController {
             range = "5-100";
         }
 
+        System.out.println(video);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
         params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?token="+data.get("token")+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
-        params.put("video",video.get(game+"_"+table));
+        params.put("video",video.get(game.replace("-","_")+"_"+table));
+        System.out.println(params);
         return Message.success(params,"获取成功");
 
     }
@@ -245,7 +247,7 @@ public class NihtanController extends BaseController {
 
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
-        params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?token="+data.get("token")+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
+        params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?nihtan="+URLEncoder.encode(data.get("token"))+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
         params.put("video",video.get(game+"_"+table));
         return Message.success(params,"获取成功");
 
