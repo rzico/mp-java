@@ -72,6 +72,9 @@ public class Gauge extends BaseEntity {
     @Column(columnDefinition="varchar(255) not null comment '副标题'")
     private String subTitle;
 
+    /** 缩列图 */
+    private String thumbnail;
+
     /** 测评须知 */
     @Length(max = 200)
     @NotNull
@@ -279,6 +282,14 @@ public class Gauge extends BaseEntity {
 
     public void setQuestions(List<GaugeQuestion> questions) {
         this.questions = questions;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public Product getProduct() {
