@@ -45,6 +45,11 @@ public class Gauge extends BaseEntity {
     };
 
 
+    /** 量表分类 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private GaugeCategory gaugeCategory;
+
     /** 用户类型 */
     @NotNull
     @Column(columnDefinition="int(11) not null comment '用户类型 {general:普通用户,enterprise:企业用户,school:学校用户}'")
@@ -282,5 +287,13 @@ public class Gauge extends BaseEntity {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public GaugeCategory getGaugeCategory() {
+        return gaugeCategory;
+    }
+
+    public void setGaugeCategory(GaugeCategory gaugeCategory) {
+        this.gaugeCategory = gaugeCategory;
     }
 }
