@@ -6,10 +6,11 @@
 package net.wit.plugin.weixin;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.DecimalFormat;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,11 +22,16 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.util.MD5Utils;
 import net.wit.plat.weixin.util.WeiXinUtils;
 
+import net.wit.util.SignUtils;
+import net.wit.util.XmlUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
@@ -283,5 +289,185 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 	public Integer getTimeout() {
 		return 30;
 	}
+
+	/**
+	 * 申请退款
+	 */
+	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		DecimalFormat decimalFormat = new DecimalFormat("#");
+		BigDecimal money = refunds.getAmount().multiply(new BigDecimal(100));
+		map.put("appid", pluginConfig.getAttribute("appId"));
+		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+		map.put("out_trade_no",refunds.getPayment().getSn());
+		map.put("out_refund_no",refunds.getSn());
+		map.put("total_fee", decimalFormat.format(money));
+		map.put("refund_fee", decimalFormat.format(money));
+		try {
+			map.put("sign",getSign(map));
+		} catch (Exception e) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg","签名出错");
+			return finalpackage;
+		}
+
+		String reqUrl = "https://pay.swiftpass.cn/pay/gateway";
+
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = null;
+		String res = null;
+		try {
+			HttpPost httpPost = new HttpPost(reqUrl);
+			String xml = WeiXinUtils.getRequestXml(map);
+			StringEntity entityParams = new StringEntity(xml,"utf-8");
+			httpPost.setEntity(entityParams);
+			httpPost.setHeader("Content-Type", "text/xml;charset=utf-8");
+			client = HttpClients.createDefault();
+			response = client.execute(httpPost);
+			if(response != null && response.getEntity() != null){
+				String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
+
+				if(resultMap.containsKey("sign")){
+					String sign = getSign(resultMap);
+					if(!sign.equals(resultMap.get("sign"))){
+						finalpackage.put("return_code", "FAIL");
+						finalpackage.put("result_msg", "验证签名不通过");
+						return finalpackage;
+					}else{
+						if("SUCCESS".equals(resultMap.get("return_code").toString()) && "SUCCESS".equals(resultMap.get("result_code").toString())){
+							finalpackage.put("return_code", "SUCCESS");
+							finalpackage.put("result_msg", "提交成功");
+							return finalpackage;
+						}else{
+							finalpackage.put("return_code", "FAIL");
+							finalpackage.put("result_msg", resultMap.get("err_code_des").toString());
+							return finalpackage;
+						}
+					}
+				}else{
+
+					finalpackage.put("return_code", "FAIL");
+					finalpackage.put("result_msg", resultMap.get("return_msg").toString());
+					return finalpackage;
+				}
+			} else {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg","提交银行出错");
+				return finalpackage;
+			}
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg","提交银行出错");
+			return finalpackage;
+		} finally {
+			if(response != null){
+				try {
+					response.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(client != null){
+				try {
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 查询退款
+	 */
+	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		map.put("appid", pluginConfig.getAttribute("appId"));
+		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("out_refund_no", refunds.getSn());
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+		try {
+			map.put("sign",getSign(map));
+		} catch (Exception e) {
+			throw new Exception("签名出错");
+		}
+
+		String reqUrl = "https://pay.swiftpass.cn/pay/gateway";
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = null;
+		String res = null;
+		try {
+			HttpPost httpPost = new HttpPost(reqUrl);
+			String xml = WeiXinUtils.getRequestXml(map);
+			StringEntity entityParams = new StringEntity(xml, "utf-8");
+			httpPost.setEntity(entityParams);
+			client = HttpClients.createDefault();
+			response = client.execute(httpPost);
+			if (response != null && response.getEntity() != null) {
+				String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
+				if (resultMap.containsKey("sign")) {
+					String sign = getSign(resultMap);
+					if(!sign.equals(resultMap.get("sign").toString())){
+						throw new Exception("签名出错");
+					} else {
+						if ("SUCCESS".equals(resultMap.get("return_code").toString()) && "SUCCESS".equals(resultMap.get("result_code").toString())) {
+							int count = Integer.parseInt(resultMap.get("refund_count").toString())-1;
+							if ("SUCCESS".equals(resultMap.get("refund_status_"+count).toString())) {
+								return "0000";
+							} else if ("REFUNDCLOSE".equals(resultMap.get("refund_status_"+count).toString())) {
+								return "0001";
+							} else if("CHANGE".equals(resultMap.get("refund_status_"+count).toString())){
+								return "0001";
+							} else {
+								return "9999";
+							}
+						} else {
+							throw new Exception(resultMap.get("err_code_des").toString());
+						}
+					}
+				} else {
+					throw new Exception(resultMap.get("err_code_des").toString());
+				}
+			} else {
+				throw new Exception("提交查询出错");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new Exception("提交查询出错");
+		} finally {
+			if (response != null) {
+				try {
+					response.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (client != null) {
+				try {
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 申请通知
+	 */
+	public String refundsVerify(HttpServletRequest request) {
+		return "";
+	}
+
 
 }
