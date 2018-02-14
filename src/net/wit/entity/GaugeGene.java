@@ -56,4 +56,28 @@ public class GaugeGene extends OrderEntity {
     public void setGauge(Gauge gauge) {
         this.gauge = gauge;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<GaugeQuestion> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<GaugeQuestion> questions) {
+        this.questions = questions;
+    }
+
+    public List<GaugeResult> getResults() {
+        return results;
+    }
+
+    public void setResults(List<GaugeResult> results) {
+        this.results = results;
+    }
 }

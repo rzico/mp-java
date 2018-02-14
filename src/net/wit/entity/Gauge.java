@@ -268,5 +268,19 @@ public class Gauge extends BaseEntity {
         this.revisionAttributes = revisionAttributes;
     }
 
+    public List<GaugeQuestion> getQuestions() {
+        return questions;
+    }
 
+    public void setQuestions(List<GaugeQuestion> questions) {
+        this.questions = questions;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }

@@ -89,4 +89,6 @@ public class GaugeQuestion extends OrderEntity {
     public void setGauge(Gauge gauge) {
         this.gauge = gauge;
     }
+
+
 }

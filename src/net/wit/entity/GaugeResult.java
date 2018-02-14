@@ -64,4 +64,36 @@ public class GaugeResult extends OrderEntity {
     public void setGauge(Gauge gauge) {
         this.gauge = gauge;
     }
+
+    public BigDecimal getMinscore() {
+        return minscore;
+    }
+
+    public void setMinscore(BigDecimal minscore) {
+        this.minscore = minscore;
+    }
+
+    public BigDecimal getMaxscore() {
+        return maxscore;
+    }
+
+    public void setMaxscore(BigDecimal maxscore) {
+        this.maxscore = maxscore;
+    }
+
+    public GaugeGene getGaugeGene() {
+        return gaugeGene;
+    }
+
+    public void setGaugeGene(GaugeGene gaugeGene) {
+        this.gaugeGene = gaugeGene;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
