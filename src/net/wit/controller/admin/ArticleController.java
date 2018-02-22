@@ -151,7 +151,6 @@ public class ArticleController extends BaseController {
 
 		entity.setIsTop(article.getIsTop());
 
-
 		entity.setAuthor(article.getAuthor());
 
 		entity.setContent(article.getContent());
@@ -269,10 +268,11 @@ public class ArticleController extends BaseController {
 
 		entity.setIsTop(article.getIsTop());
 
-
 		entity.setAuthor(article.getAuthor());
 
-		entity.setContent(article.getContent());
+		if (entity.getMediaType().equals(Article.MediaType.html)) {
+			entity.setContent(article.getContent());
+		}
 
 		entity.setMediaType(article.getMediaType());
 

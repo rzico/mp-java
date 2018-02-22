@@ -71,11 +71,20 @@ public class Order extends BaseEntity {
 	 */
 	public enum ShippingMethod {
 
-		/** 卖家配送 */
+		/** 普通快递 */
 		shipping,
 
 		/** 线下提货 */
-		pickup
+		pickup,
+
+		/** 统仓统配 */
+		warehouse,
+
+		/** 存入卡包 */
+		ecard,
+
+		/** 虚拟货品 */
+		virtual
 	}
 
 	/**
