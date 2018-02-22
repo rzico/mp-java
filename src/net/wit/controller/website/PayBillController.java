@@ -98,10 +98,10 @@ public class PayBillController extends BaseController {
         List<CouponCode> couponCodes = member.getCouponCodes();
         BigDecimal discount = BigDecimal.ZERO;
         for (CouponCode code:couponCodes) {
-            if (code.getCoupon().getDistributor().equals(shop.getOwner()) && code.getEnabled()) {
-                BigDecimal d = couponCode.calculate(amount.subtract(noDiscount));
+            if (code.getCoupon().getDistributor().equals(shop.getOwner()) && code.getEnabled() && !code.getCoupon().getScope().equals(Coupon.Scope.mall)) {
+                BigDecimal d = code.calculate(amount.subtract(noDiscount));
                 if (d.compareTo(discount) > 0) {
-                    couponCode = couponCode;
+                    couponCode = code;
                     discount = d;
                 }
             }
@@ -114,23 +114,25 @@ public class PayBillController extends BaseController {
         payBill.setCouponDiscount(discount);
         Card card = null;
         BigDecimal cardDiscount = BigDecimal.ZERO;
+
         for (Card c:member.getCards()) {
             if (c.getOwner().equals(owner)) {
                card = c;
                break;
             }
         }
+
         if (card!=null) {
-            if (card.getBalance().compareTo(amount) > 0) {
-                cardDiscount = amount;
-                card = null;
+            BigDecimal effice = payBill.getPayBillAmount();
+
+            if (card.getBalance().compareTo(effice) >= 0) {
+                cardDiscount = effice;
             } else {
+                card = null;
                 cardDiscount = BigDecimal.ZERO;
             }
         }
 
-        payBill.setCouponCode(couponCode);
-        payBill.setCouponDiscount(discount);
         payBill.setCard(card);
         payBill.setCardDiscount(cardDiscount);
 
@@ -185,8 +187,18 @@ public class PayBillController extends BaseController {
         payBill.setShop(shop);
         payBill.setEnterprise(shop.getEnterprise());
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入付款金额");
+            }
             Payment payment = payBillService.submit(payBill);
-            return Message.success((Object)payment.getSn() ,"success");
+            Map<String,String> data = new HashMap<String,String>();
+            data.put("sn",payment.getSn());
+            if (payBill.getCardDiscount().compareTo(BigDecimal.ZERO)>0) {
+                data.put("card","true");
+            } else {
+                data.put("card","false");
+            }
+            return Message.success(data,"success");
         } catch (Exception e) {
             return Message.error(e.getMessage());
         }

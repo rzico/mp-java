@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,8 +32,6 @@ import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.controller.admin.model.*;
 
-
-
 /**
  * @ClassName: EnterpriseController
  * @author 降魔战队
@@ -48,6 +47,9 @@ public class EnterpriseController extends BaseController {
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 
 
 	/**
@@ -57,13 +59,13 @@ public class EnterpriseController extends BaseController {
 	public String index(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("areas",areaService.findAll());
+//		model.addAttribute("areas",areaService.findAll());
 
 		return "/admin/enterprise/list";
 	}
@@ -76,10 +78,10 @@ public class EnterpriseController extends BaseController {
 	public String add(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());
@@ -95,12 +97,13 @@ public class EnterpriseController extends BaseController {
     @ResponseBody
 	public Message save(Enterprise enterprise, Long areaId){
 		Enterprise entity = new Enterprise();	
-
-		entity.setCreateDate(enterprise.getCreateDate());
-
-		entity.setModifyDate(enterprise.getModifyDate());
-
+		//entity.setCreateDate(enterprise.getCreateDate());
+		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
+
+		entity.setLogo(enterprise.getLogo());
+
+		entity.setDeleted(false);
 
 		entity.setBrokerage(enterprise.getBrokerage());
 
@@ -144,10 +147,10 @@ public class EnterpriseController extends BaseController {
 	public String edit(Long id, ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("customer","入驻商家"));
+		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("operate","运营商"));
+		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("areas",areaService.findAll());
@@ -165,11 +168,8 @@ public class EnterpriseController extends BaseController {
     @ResponseBody
 	public Message update(Enterprise enterprise, Long areaId){
 		Enterprise entity = enterpriseService.find(enterprise.getId());
-		
-		entity.setCreateDate(enterprise.getCreateDate());
-
-		entity.setModifyDate(enterprise.getModifyDate());
-
+		//entity.setCreateDate(enterprise.getCreateDate());
+		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
 
 		entity.setBrokerage(enterprise.getBrokerage());
@@ -189,7 +189,34 @@ public class EnterpriseController extends BaseController {
             return Message.error("admin.update.error");
         }
 	}
-	
+
+
+	/**
+	 * 申请手动转账
+	 */
+	@RequestMapping(value = "/creditLine", method = RequestMethod.GET)
+	public String manualTransfer(ModelMap model,Long id) {
+		model.addAttribute("data",enterpriseService.find(id));
+
+		return "/admin/enterprise/view/creditline";
+	}
+
+	/**
+	 * 授信
+	 */
+	@RequestMapping(value = "/creditLine", method = RequestMethod.POST)
+	@ResponseBody
+	public Message creditLine(Long id,BigDecimal amount){
+		Enterprise entity = enterpriseService.find(id);
+		try {
+			enterpriseService.creditLine(entity,amount,adminService.getCurrent());
+			return Message.success(entity,"admin.update.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.update.error");
+		}
+	}
+
 
 	/**
      * 列表
@@ -202,7 +229,28 @@ public class EnterpriseController extends BaseController {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
 			filters.add(typeFilter);
 		}
+		Admin admin =adminService.getCurrent();
+		Enterprise enterprise=admin.getEnterprise();
 
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		//个人代理商(無權限)
+		//商家(無權限)
+		if(enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
 		Page<Enterprise> page = enterpriseService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
@@ -213,9 +261,8 @@ public class EnterpriseController extends BaseController {
 	 */
 	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
 	public String areaView(Long id, ModelMap model) {
-
-
 		model.addAttribute("area",areaService.find(id));
+
 		return "/admin/enterprise/view/areaView";
 	}
 

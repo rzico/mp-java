@@ -61,7 +61,7 @@ public class MemberFansController extends BaseController {
         pageable.setFilters(filters);
         Page<MemberFollow> page = memberFollowService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        List<MemberFollowModel> follows = MemberFollowModel.bindFollow(page.getContent());
+        List<MemberFollowModel> follows = MemberFollowModel.bindFans(page.getContent());
         if (self!=null) {
             for (MemberFollowModel followModel : follows) {
                 Member follow = memberService.find(followModel.getId());

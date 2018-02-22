@@ -11,6 +11,7 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.service.CardService;
 import net.wit.service.PaymentService;
 import net.wit.service.RSAService;
+import net.wit.service.SmssendService;
 import net.wit.util.MD5Utils;
 import net.wit.util.ScanUtil;
 import org.apache.commons.lang.time.DateUtils;
@@ -27,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +49,7 @@ public class CardPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "会员卡支付";
+		return "会员卡";
 	}
 
 	@Override
@@ -88,7 +91,14 @@ public class CardPayPlugin extends PaymentPlugin {
 			}
 		}
 		if (card!=null) {
-			if (card.getBalance().compareTo(payment.getAmount()) > 0) {
+
+			if (!card.getOwner().equals(payment.getPayee())) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg", "不是本店会员卡");
+				return finalpackage;
+			}
+
+			if (card.getBalance().compareTo(payment.getAmount()) >= 0) {
 				try {
 					if (member.getPassword()==null) {
 						finalpackage.put("return_code", "FAIL");
@@ -104,6 +114,7 @@ public class CardPayPlugin extends PaymentPlugin {
 					cardService.payment(card,payment);
 					finalpackage.put("return_code", "SUCCESS");
 					finalpackage.put("result_msg", "提交成功");
+
 				} catch (Exception e) {
 					finalpackage.put("return_code", "FAIL");
 					finalpackage.put("result_msg", e.getMessage());
@@ -133,14 +144,11 @@ public class CardPayPlugin extends PaymentPlugin {
 
 		Map<String,String> data = ScanUtil.scanParser(safeKey);
 
-
-		if (!data.get("type").toString().equals("818802")) {
-			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("result_msg", "无效付款码");
-			return finalpackage;
-		}
 		String code = data.get("code");
-		String c = code.substring(0,code.length()-6);
+		String c = code;
+		if (data.get("type").toString().equals("818802")) {
+			c = code.substring(0,code.length()-6);
+		}
 
 		Card card = cardService.find(c);
 		if (card==null) {
@@ -149,14 +157,33 @@ public class CardPayPlugin extends PaymentPlugin {
 			return finalpackage;
 		}
 
-		String sign = code.substring(code.length()-6,code.length());
-		if (!sign.equals(card.getSign())) {
+		if (data.get("type").toString().equals("818801")) {
+			if (!code.substring(0,2).equals("88")) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg", "请重打开付款码");
+				return finalpackage;
+			}
+		} else
+		if (data.get("type").toString().equals("818802")) {
+			String sign = code.substring(code.length() - 6, code.length());
+			if (!sign.equals(card.getSign())) {
+				finalpackage.put("return_code", "FAIL");
+				finalpackage.put("result_msg", "请重打开付款码");
+				return finalpackage;
+			}
+		} else {
 			finalpackage.put("return_code", "FAIL");
-			finalpackage.put("result_msg", "请重打开付款码");
+			finalpackage.put("result_msg", "无效付款码");
 			return finalpackage;
 		}
 
-		if (card.getBalance().compareTo(payment.getAmount()) > 0) {
+		if (!card.getOwner().equals(payment.getPayee())) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg", "不是本店会员卡");
+			return finalpackage;
+		}
+
+		if (card.getBalance().compareTo(payment.getAmount()) >= 0) {
 			try {
 				cardService.payment(card,payment);
 				finalpackage.put("return_code", "SUCCESS");

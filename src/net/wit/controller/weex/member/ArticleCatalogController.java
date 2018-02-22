@@ -116,7 +116,9 @@ public class ArticleCatalogController extends BaseController {
         if (catalog==null) {
             return Message.error("无效文集id");
         }
-        catalog.setOrders(orders);
+        if (orders!=null) {
+            catalog.setOrders(orders);
+        }
         catalog.setName(name);
         catalog.setStatus(ArticleCatalog.Status.enabled);
         catalog.setMember(member);
@@ -146,6 +148,6 @@ public class ArticleCatalogController extends BaseController {
         }
 
         articleCatalogService.delete(id);
-        return Message.error("删除成功");
+        return Message.success("删除成功");
     }
 }

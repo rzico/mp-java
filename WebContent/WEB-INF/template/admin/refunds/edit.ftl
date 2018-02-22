@@ -79,21 +79,21 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <span> ${message("Refunds.Type."+data.type)}</span>
+                <span> ${message("Payment.Type."+data.type)}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">付款人：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                <span>${data.mapMember.nickName}</span>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.mapMember.name}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">收款人：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                <span>${data.mapPayee.nickName}</span>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span>${data.mapPayee.name}</span>
             </div>
         </div>
 
@@ -101,7 +101,9 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">退款日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.mapPayee.refundsDate}</span>
+                [#if data.refundsDate != null]
+                     <span>${data.refundsDate}</span>
+                [/#if]
             </div>
         </div>
 
@@ -109,7 +111,13 @@
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 [#if data.status=="waiting"]
-                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交退款&nbsp;&nbsp;">
+                <!--
+                [@adminDirective]
+                        [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                            <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交退款&nbsp;&nbsp;">
+                        [/#if]
+                    [/@adminDirective]
+                -->
                 [/#if]
                 [#if data.status=="confirmed"]
                     <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;查询状态&nbsp;&nbsp;">

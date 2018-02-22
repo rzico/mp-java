@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,7 +41,30 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, Long> implement
 	public void setBaseDao(ProductDao productDao) {
 		super.setBaseDao(productDao);
 	}
-	
+
+	@Transactional(readOnly = true)
+	public boolean snExists(Member member ,String sn) {
+		return productDao.snExists(member,sn);
+	}
+
+	@Transactional(readOnly = true)
+	public Product findBySn(Member member ,String sn) {
+		return productDao.findBySn(member,sn);
+	}
+
+	@Transactional(readOnly = true)
+	public boolean snUnique(Member member ,String previousSn, String currentSn) {
+		if (StringUtils.equalsIgnoreCase(previousSn, currentSn)) {
+			return true;
+		} else {
+			if (productDao.snExists(member,currentSn)) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)

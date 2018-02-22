@@ -98,7 +98,7 @@ public class RedisServiceImpl extends BaseServiceImpl<Redis, Long> implements Re
 		return redis;
 	}
 
-	public void put(String key,String value) {
+	public synchronized void put(String key,String value) {
 		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
 		if (requestAttributes != null) {
 			HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();

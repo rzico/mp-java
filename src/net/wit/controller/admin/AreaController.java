@@ -85,17 +85,14 @@ public class AreaController extends BaseController {
 
 		entity.setOrders(area.getOrders() == null ? 0 : area.getOrders());
 
-		entity.setFullName(area.getFullName());
-
 		entity.setName(area.getName());
 
 		entity.setTreePath(area.getTreePath());
 
+		entity.setCode(area.getCode());
+
 		entity.setParent(areaService.find(parentId));
-		
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
+
         try {
             areaService.save(entity);
             return Message.success(entity,"admin.save.success");

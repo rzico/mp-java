@@ -3,6 +3,7 @@ package net.wit.controller.model;
 import net.wit.Setting;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleShare;
+import net.wit.entity.Member;
 import net.wit.entity.Topic;
 import net.wit.util.SettingUtils;
 
@@ -63,7 +64,7 @@ public class ShareModel extends BaseModel implements Serializable {
         this.shareType = shareType;
     }
 
-    public void bind(Article article, ArticleShare.ShareType shareType) {
+    public void bind(Article article, ArticleShare.ShareType shareType, Member member) {
         Setting setting = SettingUtils.get();
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         this.title = "【"+article.getMember().getNickName()+"】"+article.getTitle();
@@ -76,11 +77,18 @@ public class ShareModel extends BaseModel implements Serializable {
         if (shareType.equals(ArticleShare.ShareType.appWeex)) {
             this.url = "file://view/member/editor/preview.js?articleId=" + article.getId() + "&publish=true";
         } else {
-            this.url = "http://"+bundle.getString("weixin.url")+"/t"+article.getTemplate().getSn()+"?id="+article.getId();
+            if (article.getTemplate()==null) {
+                this.url = "http://"+bundle.getString("weixin.url")+"/#/t1001?id="+article.getId();
+            } else {
+                this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId();
+            }
+            if (member!=null) {
+                this.url = this.url + "&xuid="+member.getId();
+            }
         }
     }
 
-    public void bind(Topic topic, ArticleShare.ShareType shareType) {
+    public void bind(Topic topic, ArticleShare.ShareType shareType, Member member) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Setting setting = SettingUtils.get();
         this.title = topic.getName();
@@ -90,7 +98,14 @@ public class ShareModel extends BaseModel implements Serializable {
         if (shareType.equals(ArticleShare.ShareType.appWeex)) {
             this.url = "file://view/member/author.js?id=" + topic.getId();
         } else {
-            this.url = "http://"+bundle.getString("weixin.url")+"/c"+topic.getTemplate().getSn()+"?id="+topic.getId();
+            if (topic.getTemplate()==null) {
+                this.url = "http://"+bundle.getString("weixin.url")+"/#/c1001?id="+topic.getMember().getId();
+            } else {
+                this.url = "http://" + bundle.getString("weixin.url") + "/#/c" + topic.getTemplate().getSn() + "?id=" + topic.getMember().getId();
+            }
+            if (member!=null) {
+                this.url = this.url + "&xuid="+member.getId();
+            }
         }
     }
 

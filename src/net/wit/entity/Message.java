@@ -55,7 +55,9 @@ public class Message extends BaseEntity {
 		/** 同意好友 gm_10210  */
 		adoptfriend,
 		/** 客服消息 gm_10211  */
-		gmchat
+		gmchat,
+		/** 线下收单 gm_10212  */
+		cashier
 	}
 
 	/** 类型 */

@@ -5,11 +5,9 @@ import net.sf.json.JSONObject;
 import net.wit.Message;
 import net.wit.Page;
 import net.wit.Principal;
-import net.wit.entity.BindUser;
-import net.wit.entity.Member;
-import net.wit.entity.Shop;
-import net.wit.entity.Tag;
+import net.wit.entity.*;
 import net.wit.plat.im.User;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
@@ -18,10 +16,7 @@ import net.wit.service.*;
 import net.wit.plat.weixin.message.resp.Article;
 import net.wit.plat.weixin.message.resp.NewsMessage;
 import net.wit.plat.weixin.util.MessageUtil;
-import net.wit.util.JsonUtils;
-import net.wit.util.SettingUtils;
-import net.wit.util.Sha1Util;
-import net.wit.util.StringUtils;
+import net.wit.util.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -66,6 +62,35 @@ public class WeiXinController extends BaseController {
 
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
+
+    @Resource(name = "paymentServiceImpl")
+    private PaymentService paymentService;
+
+    /**
+     * 付款页
+     *
+     * @param sn              支付单号
+     *
+     */
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(String sn,HttpServletRequest request) {
+        Payment payment = paymentService.findBySn(sn);
+        String userAgent = request.getHeader("user-agent");
+        String type="weixin";
+        if (BrowseUtil.isAlipay(userAgent)) {
+            type="alipay";
+        } else {
+            type="weixin";
+        }
+        if (payment.getPaymentPluginId()!=null) {
+            if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
+                type = "cardPayPlugin";
+            } else if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
+                type = "balancePayPlugin";
+            }
+        }
+        return "forward:/weixin/payment/view.html?psn="+sn+"&amount="+payment.getAmount()+"&type="+type;
+    }
 
     public String getSha1Sign(HashMap<String, Object> params) {
         try {
@@ -136,6 +161,7 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = "/notify",method = RequestMethod.POST)
     public Boolean notify_post(HttpServletRequest request, HttpServletResponse response, ModelMap model) {		// 调用核心业务类接收消息、处理消息
         try {
+//            System.out.println("weixin.notify");
             Map<String, String> requestMap = MessageUtil.parseXml(request);
             // 发送方帐号（open_id）
             String fromUserName = requestMap.get("FromUserName");
@@ -156,32 +182,32 @@ public class WeiXinController extends BaseController {
                 String eventType = requestMap.get("Event").toLowerCase();
                 // 关注订阅
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-                    try {
-                        List<Tag> tags = new ArrayList<Tag>();
-                        tags.add(tagService.find(1L));
-                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
-
-                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-                        String eventKey = requestMap.get("EventKey");
-                        List<Article> articles = new ArrayList<Article>();
-                        for (net.wit.entity.Article art:arts.getContent()) {
-                            Article article = new Article();
-                            article.setDescription(art.delHTMLTag());
-                            article.setPicUrl(art.getThumbnail());
-                            article.setTitle(art.getTitle());
-                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
-                            articles.add(article);
-                        }
-                        newsMessage.setArticles(articles);
-                        newsMessage.setArticleCount(articles.size());
-                        response.setContentType("application/octet-stream");
-                        PrintWriter out = response.getWriter();
-                        out.print(MessageUtil.newsMessageToXml(newsMessage));
-                        out.flush();
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                    }
-
+//                    try {
+//                        List<Tag> tags = new ArrayList<Tag>();
+//                        tags.add(tagService.find(1L));
+//                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
+//
+//                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//                        String eventKey = requestMap.get("EventKey");
+//                        List<Article> articles = new ArrayList<Article>();
+//                        for (net.wit.entity.Article art:arts.getContent()) {
+//                            Article article = new Article();
+//                            article.setDescription(art.delHTMLTag());
+//                            article.setPicUrl(art.getThumbnail());
+//                            article.setTitle(art.getTitle());
+//                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
+//                            articles.add(article);
+//                        }
+//                        newsMessage.setArticles(articles);
+//                        newsMessage.setArticleCount(articles.size());
+//                        response.setContentType("application/octet-stream");
+//                        PrintWriter out = response.getWriter();
+//                        out.print(MessageUtil.newsMessageToXml(newsMessage));
+//                        out.flush();
+//                    } catch (Exception e) {
+//                        logger.error(e.getMessage());
+//                    }
+//
                 }
                 // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
@@ -253,32 +279,32 @@ public class WeiXinController extends BaseController {
                 String eventType = requestMap.get("Event").toLowerCase();
                 // 关注订阅
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-                    try {
-                        List<Tag> tags = new ArrayList<Tag>();
-                        tags.add(tagService.find(1L));
-                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
-
-                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-                        String eventKey = requestMap.get("EventKey");
-                        List<Article> articles = new ArrayList<Article>();
-                        for (net.wit.entity.Article art:arts.getContent()) {
-                            Article article = new Article();
-                            article.setDescription(art.delHTMLTag());
-                            article.setPicUrl(art.getThumbnail());
-                            article.setTitle(art.getTitle());
-                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
-                            articles.add(article);
-                        }
-                        newsMessage.setArticles(articles);
-                        newsMessage.setArticleCount(articles.size());
-                        response.setContentType("application/octet-stream");
-                        PrintWriter out = response.getWriter();
-                        out.print(MessageUtil.newsMessageToXml(newsMessage));
-                        out.flush();
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                    }
-
+//                    try {
+//                        List<Tag> tags = new ArrayList<Tag>();
+//                        tags.add(tagService.find(1L));
+//                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
+//
+//                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//                        String eventKey = requestMap.get("EventKey");
+//                        List<Article> articles = new ArrayList<Article>();
+//                        for (net.wit.entity.Article art:arts.getContent()) {
+//                            Article article = new Article();
+//                            article.setDescription(art.delHTMLTag());
+//                            article.setPicUrl(art.getThumbnail());
+//                            article.setTitle(art.getTitle());
+//                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
+//                            articles.add(article);
+//                        }
+//                        newsMessage.setArticles(articles);
+//                        newsMessage.setArticleCount(articles.size());
+//                        response.setContentType("application/octet-stream");
+//                        PrintWriter out = response.getWriter();
+//                        out.print(MessageUtil.newsMessageToXml(newsMessage));
+//                        out.flush();
+//                    } catch (Exception e) {
+//                        logger.error(e.getMessage());
+//                    }
+//
                 }
                 // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
@@ -304,17 +330,37 @@ public class WeiXinController extends BaseController {
 
     //老版本
     @RequestMapping(value = "/qrcode/go", method = RequestMethod.GET)
-    public String go(String type, String no) {        // 调用核心业务类接收消息、处理消息
+    public String go(String type, String no,HttpServletRequest request) {        // 调用核心业务类接收消息、处理消息
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String userAgent = request.getHeader("user-agent");
+            if (BrowseUtil.isWeixin(userAgent)) {
+                String url = "http://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
+                String redirectUrl = "http://" + bundle.getString("weixin.url") + "/website/login/weixin.jhtml?redirectURL=" + StringUtils.base64Encode(url.getBytes());
+                redirectUrl = URLEncoder.encode(redirectUrl);
+                return "redirect:" + MenuManager.codeUrlO2(redirectUrl);
+            }
+            if (BrowseUtil.isAlipay(userAgent)) {
+                String url = "http://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
+                String redirectUrl = "http://" + bundle.getString("weixin.url") + "/website/login/alipay.jhtml?redirectURL=" + StringUtils.base64Encode(url.getBytes());
+                redirectUrl = URLEncoder.encode(redirectUrl);
+                String alipay = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=" + bundle.getString("alipay.appid")+"&scope=auth_base&state=state&redirect_uri=" + redirectUrl;
+                return "redirect:" + alipay;
+            }
+        }
         if ("paybill".equals(type)) {
             Shop shop = shopService.find(no);
             if (shop!=null) {
                 return "redirect:/paybill/#/?code="+shop.getCode();
             } else {
-                return "redirect:/";
+                return "redirect:/#/";
             }
+        } else
+        if ("card_active".equals(type)) {
+            return "redirect:/#/card?code=" + no;
         }
-        return "redirect:/";
+        return "redirect:/#/";
     }
 
 }

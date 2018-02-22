@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -91,6 +92,7 @@ public class ArticleCategory extends OrderEntity {
 	/** 文章 */
 	@OneToMany(mappedBy = "articleCategory", fetch = FetchType.LAZY)
 	@JsonIgnore
+	@Where(clause="deleted=0")
 	private Set<Article> articles = new HashSet<Article>();
 
 	public ArticleCategory.Status getStatus() {

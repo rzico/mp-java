@@ -60,7 +60,10 @@ public class Deposit extends BaseEntity {
 		cashier,
 
 		/** 会员卡  收入 */
-		card
+		card,
+
+		/** 手机短信 支出 */
+		smsSend
 	}
 
 	/** 类型 */
@@ -95,23 +98,33 @@ public class Deposit extends BaseEntity {
 
 	/** 收款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '收款单'")
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '收款单'")
 	private Payment payment;
 
 	/** 退款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '退款单'")
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '退款单'")
 	private Refunds refunds;
 
 	/** 转账单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '转账单'")
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '转账单'")
 	private Transfer transfer;
+
+	/** 充值单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '充值单'")
+	private Recharge recharge;
 
 	/** 线下收单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '线下收单'")
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '线下收单'")
 	private PayBill payBill;
+
+	/** 线上订单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orders", updatable = false)
+	private Order order;
 
 	/** 是否删除 */
 	@NotNull
@@ -300,6 +313,22 @@ public class Deposit extends BaseEntity {
 
 	public void setPayBill(PayBill payBill) {
 		this.payBill = payBill;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public Recharge getRecharge() {
+		return recharge;
+	}
+
+	public void setRecharge(Recharge recharge) {
+		this.recharge = recharge;
 	}
 
 	public MapEntity getMapMember() {

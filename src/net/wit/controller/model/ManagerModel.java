@@ -1,4 +1,5 @@
 package net.wit.controller.model;
+import net.wit.entity.Admin;
 import net.wit.entity.Member;
 import net.wit.entity.Topic;
 import net.wit.entity.TopicConfig;
@@ -17,7 +18,7 @@ public class ManagerModel extends BaseModel implements Serializable {
     private String logo;
     /** 开通收银台 */
     private Boolean useCashier;
-    /**  是否开通专栏 */
+    /** 是否开通专栏 */
     private Boolean hasTopic;
     /** 专栏 */
     private String topic;
@@ -99,6 +100,8 @@ public class ManagerModel extends BaseModel implements Serializable {
         this.hasTopic = (member.getTopic()!=null);
 
         Topic topic = member.getTopic();
+
+        this.useCashier = false;
         if (topic==null) {
             this.topic = "未开通";
         } else {
@@ -111,8 +114,9 @@ public class ManagerModel extends BaseModel implements Serializable {
             if (topic.getStatus().equals(Topic.Status.failure)) {
                 this.topic = "已过期";
             }
+            this.useCashier = topic.getConfig().getUseCashier();
         }
-        this.useCashier = false;
+
     }
 
 }

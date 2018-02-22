@@ -1,6 +1,6 @@
 package net.wit.entity;
 
-import sun.jvm.hotspot.oops.BooleanField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -41,16 +41,13 @@ public class CouponCode extends BaseEntity {
 	/** 优惠券 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
+	@JsonIgnore
 	private Coupon coupon;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Member member;
-
-	/** 订单 */
-	@OneToOne(mappedBy = "couponCode", fetch = FetchType.LAZY)
-	@JoinColumn(name = "orders")
-	private Order order;
 
 	/**
 	 * 获取号码
@@ -148,36 +145,14 @@ public class CouponCode extends BaseEntity {
 	}
 
 	/**
-	 * 获取订单
-	 * 
-	 * @return 订单
-	 */
-	public Order getOrder() {
-		return order;
-	}
-
-	/**
-	 * 设置订单
-	 * 
-	 * @param order
-	 *            订单
-	 */
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	/**
 	 * 删除前处理
 	 */
 	@PreRemove
 	public void preRemove() {
-		if (getOrder() != null) {
-			getOrder().setCouponCode(null);
-		}
 	}
 
 	public Boolean getEnabled() {
-		return !isUsed && getCoupon().hasBegun() && getCoupon().hasExpired() && getCoupon().hasExpired() && !getCoupon().getDeleted();
+		return !isUsed && getCoupon().hasBegun() && !getCoupon().hasExpired() && !getCoupon().getDeleted();
 	}
 
 	public BigDecimal calculate(BigDecimal amount) {
@@ -196,9 +171,10 @@ public class CouponCode extends BaseEntity {
 		} else
 		if (coupon.getType().equals(Coupon.Type.discount)){
 			if (amount.compareTo(coupon.getMinimumPrice()) >= 0) {
-				discount = amount.multiply(coupon.getAmount()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+				discount = amount.multiply(coupon.getAmount().multiply(new BigDecimal(0.1))).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			}
 		}
 		return discount.compareTo(amount)>0?amount:discount;
 	}
+
 }

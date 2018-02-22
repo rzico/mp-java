@@ -10,6 +10,7 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.ESCUtil;
 import net.wit.util.SettingUtils;
+import net.wit.util.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.net.util.Base64;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -75,12 +77,25 @@ public class PayBillController extends BaseController {
         }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有绑定门店");
+            return Message.error("没有开通店铺");
         }
-        if (shopId==null) {
-            shop = admin.getShop();
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+        if (admin.isRole("1")) {
+            shop = null;
         } else {
-            shop = shopService.find(shopId);
+            if (shopId == null) {
+                shop = admin.getShop();
+            } else {
+                shop = shopService.find(shopId);
+            }
+            if (shop==null) {
+                Page<PayBill> page = new Page<>();
+                PageBlock model = PageBlock.bind(page);
+                model.setData(PayBillViewModel.bindList(page.getContent()));
+                return Message.bind(model,request);
+            }
         }
         List<Filter> filters = new ArrayList<Filter>();
         if (billDate!=null) {
@@ -89,9 +104,7 @@ public class PayBillController extends BaseController {
         if (shop!=null) {
             filters.add(new Filter("shop", Filter.Operator.eq, shop));
         } else {
-            if (!admin.isOwner()) {
-                return Message.error("没有查询权限");
-            }
+            filters.add(new Filter("enterprise", Filter.Operator.eq,admin.getEnterprise()));
         }
         filters.add(new Filter("status", Filter.Operator.ne,PayBill.Status.failure));
         pageable.setFilters(filters);
@@ -117,14 +130,20 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
-        Shop shop = admin.getShop();
-        if (shop==null) {
-            return Message.error("没分配门店");
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
-        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
+        Shop shop = admin.getShop();
+        if (admin.isRole("1")) {
+            shop = null;
+        }
+
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
+        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
-        model.setShopId(shop.getId());
+        if (shop!=null) {
+            model.setShopId(shop.getId());
+        }
         model.setToday(BigDecimal.ZERO);
         model.setYesterday(BigDecimal.ZERO);
         for (PayBillShopSummary s:dsum) {
@@ -141,7 +160,7 @@ public class PayBillController extends BaseController {
      */
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
-    public Message summary(Long shopId,Date billDate,Pageable pageable, HttpServletRequest request){
+    public Message summary(Long shopId,Date billDate,String type,Pageable pageable, HttpServletRequest request){
         Shop shop = null;
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -151,10 +170,21 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
-        if (shopId==null) {
-            shop = admin.getShop();
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+        if (admin.isRole("1")) {
+            shop = null;
         } else {
-            shop = shopService.find(shopId);
+            if (shopId == null) {
+                shop = admin.getShop();
+            } else {
+                shop = shopService.find(shopId);
+            }
+            if (shop==null) {
+                List<PayBillSummaryModel> ms = new ArrayList<PayBillSummaryModel>();
+                return Message.bind(ms,request);
+            }
         }
 
         if (shop==null) {
@@ -162,8 +192,34 @@ public class PayBillController extends BaseController {
                 return Message.error("没有查询权限");
             }
         }
+        if (type==null) {
+            type = "0";
+        }
         Date d = DateUtils.truncate(billDate, Calendar.DATE);
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
+        Date e = DateUtils.truncate(billDate, Calendar.DATE);
+        if (type!=null) {
+            if ("1".equals(type)) {
+                d = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.addMonths(e,1);
+                e = DateUtils.addDays(e,-1);
+            } else
+            if ("2".equals(type)) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(d);
+                calendar.set(Calendar.MONTH, 0);
+                calendar.set(Calendar.DATE, 1);
+                d = calendar.getTime();
+
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(d);
+                calendar1.set(Calendar.MONTH, 0);
+                calendar1.set(Calendar.DATE, 1);
+                calendar1.roll(Calendar.DAY_OF_YEAR, -1);
+                e = calendar1.getTime();
+            }
+        }
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,e);
         List<PayBillSummaryModel> models = PayBillSummaryModel.bindList(dsum);
         for (PayBillSummaryModel model:models) {
             if (model.getMethod()!=null) {
@@ -247,14 +303,17 @@ public class PayBillController extends BaseController {
         if (admin==null) {
             return Message.error("没有绑定门店");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         if (!payBill.getShop().equals(admin.getShop())) {
             return Message.error("只能退本门店的单");
         }
 
-        if (!admin.equals(payBill.getAdmin())) {
-            return Message.error("收款人才能退款");
-        }
+        //if (!admin.equals(payBill.getAdmin())) {
+        //    return Message.error("收款人才能退款");
+        //}
 
         if (payBill.getBillDate().compareTo(DateUtils.truncate(new Date(), Calendar.DATE))!=0) {
             return Message.error("只能退当天的收款");
@@ -264,7 +323,7 @@ public class PayBillController extends BaseController {
         try {
             bill = payBillService.createRefund(payBill,admin);
         } catch (Exception e) {
-            return Message.error("退款失败");
+            return Message.error(e.getMessage());
         }
         Map<String,Object> data = new HashMap<String,Object>();
         PayBillViewModel model = new PayBillViewModel();
@@ -272,6 +331,125 @@ public class PayBillController extends BaseController {
         data.put("data",model);
         data.put("sn",bill.getRefunds().getSn());
         return Message.success(data,"申请退款");
+    }
+
+    /**
+     *  打印日报
+     */
+    @RequestMapping(value = "/summary_print", method = RequestMethod.GET)
+    @ResponseBody
+    public Message summaryPrint(Long shopId,Date billDate,HttpServletRequest request){
+        Shop shop = null;
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+        if (shopId==null) {
+            shop = admin.getShop();
+        } else {
+            shop = shopService.find(shopId);
+        }
+
+        if (shop==null) {
+            if (!admin.isOwner()) {
+                return Message.error("没有权限");
+            }
+        }
+        Date d = DateUtils.truncate(billDate, Calendar.DATE);
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
+        List<PayBillSummaryModel> models = PayBillSummaryModel.bindList(dsum);
+
+        StringBuilder builder = new StringBuilder();
+        try {
+            byte[] nextLine = ESCUtil.nextLine(1);
+            byte[] next2Line = ESCUtil.nextLine(2);
+            byte[] next4Line = ESCUtil.nextLine(4);
+            byte[] boldOn = ESCUtil.boldOn();
+            byte[] boldOff = ESCUtil.boldOff();
+            byte[] fontSize2Big = ESCUtil.fontSizeSetBig(3);
+            byte[] fontSize2Small = ESCUtil.fontSizeSetBig(1);
+            byte[] fontSize1Big = ESCUtil.fontSizeSetBig(1);
+            byte[] fontSize1Small = ESCUtil.fontSizeSetSmall(1);
+            byte[] center = ESCUtil.alignCenter();
+            byte[] left = ESCUtil.alignLeft();
+            byte[] title = "营业日报表".getBytes("gb2312");
+            byte[] Stub = "------------商户存根------------".getBytes("gb2312");
+
+
+            byte[] shopName = "门店：".concat(shop.getName()).getBytes("gb2312");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            byte[] dateDisplay = "日期：".concat(sdf.format(d)).getBytes("gb2312");
+
+            byte[] line = "-------------------------------".getBytes("gb2312");
+
+            BigDecimal total = BigDecimal.ZERO;
+            BigDecimal fee = BigDecimal.ZERO;
+            BigDecimal wallet = BigDecimal.ZERO;
+
+            for (PayBillSummaryModel model:models) {
+                total = total.add(model.getAmount());
+                fee = fee.add(model.getFee());
+                wallet = wallet.add(model.getAccount());
+                if (model.getMethod()!=null) {
+                    PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(model.getMethod());
+                    model.setMethod(paymentPlugin.getName());
+                } else {
+                    model.setMethod("现金（未确定）");
+                }
+                String s = "";
+                if (model.getType().equals(PayBill.Type.cashier)) {
+                    s = "消费";
+                } else
+                if (model.getType().equals(PayBill.Type.cashierRefund)) {
+                    s = "退款";
+                } else
+                if (model.getType().equals(PayBill.Type.card)) {
+                    s = "充值(会员卡)";
+                } else
+                if (model.getType().equals(PayBill.Type.cardRefund)) {
+                    s = "退款(会员卡)";
+                } else {
+                    s = "未知";
+                }
+
+                s  = s.concat(",").concat(model.getMethod());
+
+                builder.append(s);
+                builder.append("\n");
+                NumberFormat format = NumberFormat.getInstance();
+                format.setMinimumFractionDigits( 2 );
+                format.setMaximumFractionDigits( 4 );
+                String amount =  format.format(model.getAmount());
+                builder.append(StringUtils.addSpace(amount,32-amount.length()));
+            }
+            byte[] content = builder.toString().getBytes("gb2312");
+
+            NumberFormat format = NumberFormat.getInstance();
+            format.setMinimumFractionDigits( 2 );
+            format.setMaximumFractionDigits( 4 );
+            byte[] totalDiaplay = "营业额:".concat(format.format(total)).getBytes("gb2312");
+            byte[] feeDiaplay = "手续费:".concat(format.format(fee)).getBytes("gb2312");
+            byte[] walletDiaplay = "线下结算:".concat(format.format(wallet)).getBytes("gb2312");
+            byte[] breakPartial = ESCUtil.feedPaperCutPartial();
+
+            byte[][] cmdBytes = {center, fontSize1Small, boldOn, title, next2Line, boldOff, Stub, nextLine, left, shopName,
+                    nextLine, dateDisplay,nextLine,line, nextLine, content, nextLine, boldOn,nextLine,line, nextLine,totalDiaplay, nextLine, feeDiaplay, nextLine,walletDiaplay, nextLine,boldOff,next4Line,
+                    breakPartial};
+
+
+            byte[] data = ESCUtil.byteMerger(cmdBytes);
+            return Message.bind(Base64.encodeBase64String(data),request);
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+            return Message.error("打印出错了");
+        }
     }
 
     /**
@@ -387,9 +565,9 @@ public class PayBillController extends BaseController {
             byte[] partner = builder2.append("商户号：").append(payBill.getShop().getCode()).toString().getBytes("gb2312");
             byte[] fontSize1Small = ESCUtil.fontSizeSetSmall(1);
 
-            byte[] device = builder3.append("终端号：").append(payBill.getAdmin()==null?"":payBill.getAdmin().getMember().getUuid()).toString().getBytes("gb2312");
+            byte[] device = builder3.append("终端号：").append(payBill.getAdmin()==null?"台卡二维码":payBill.getAdmin().getMember().getUuid()).toString().getBytes("gb2312");
 
-            byte[] cashierName = builder4.append("收银员：").append(payBill.getAdmin()==null?"":payBill.getAdmin().getName()).toString().getBytes("gb2312");
+            byte[] cashierName = builder4.append("收银员：").append(payBill.getAdmin()==null?"台卡扫码付":payBill.getAdmin().getName()).toString().getBytes("gb2312");
 
             byte[] line = "-------------------------------".getBytes("gb2312");
             byte[] snNumber = builder5.append("流水号：").append(String.valueOf(10200L+payBill.getId())).toString().getBytes("gb2312");

@@ -24,6 +24,25 @@ public class Article extends BaseEntity{
 
     private static final long serialVersionUID = 3L;
 
+    /**
+     * 权限
+     */
+    public enum Authority {
+
+        /** 公开  所有人可见，且录入个人专栏  */
+        isPublic,
+
+        /** 不公开，自行控制分享范围，仅被分享的人可见  */
+        isShare,
+
+        /** 加密，设置密码，凭密码访问  */
+        isEncrypt,
+
+        /** 私密，公自已可见  */
+        isPrivate
+    }
+
+
     public static enum MediaType{
         /**   */
         html,
@@ -32,7 +51,9 @@ public class Article extends BaseEntity{
         /** 音频 */
         audio,
         /** 视频 */
-        video
+        video,
+        /** 商品 */
+        product
     };
 
     /** 类型 */
@@ -119,19 +140,61 @@ public class Article extends BaseEntity{
 
     /** 是否删除 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否删除'")
+    @Column(columnDefinition="bit not null default 0 comment '是否删除'")
     @JsonIgnore
     private Boolean deleted;
 
     /** 是否草稿 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否草稿'")
+    @Column(columnDefinition="bit not null default 1 comment '是否草稿'")
     @JsonIgnore
     private Boolean isDraft;
 
-    /** 安全密匙 */
-    @Embedded
-    private ArticleOptions articleOptions;
+    /** 是否审核 */
+    @NotNull
+    @Column(columnDefinition="bit not null default 0 comment '是否审核'")
+    @JsonIgnore
+    private Boolean isAudit;
+
+
+    /** 是否投稿 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否投稿'")
+    private Boolean isPublish;
+
+    /** 是否精选 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否精选'")
+    private Boolean isPitch;
+
+    /** 是否评论 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否评论'")
+    private Boolean isReview;
+
+    /** 是否赞赏 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否赞赏'")
+    private Boolean isReward;
+
+    /** 谁可见 */
+    @NotNull
+    @Column(columnDefinition="int(11) comment '谁可见  {isPublic:公开,isShare:不会开,isEncrypt:加密,isPrivate:私秘}'")
+    private Authority authority;
+
+    /** 是否样例 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否样例'")
+    private Boolean isExample;
+
+    /** 是否置顶 */
+    @NotNull
+    @Column(columnDefinition="bit comment '是否置顶'")
+    private Boolean isTop;
+
+    /** 密码 */
+    @Column(columnDefinition=" varchar(255) comment '密码'")
+    private String password;
 
     /** 定位 */
     @Embedded
@@ -170,11 +233,11 @@ public class Article extends BaseEntity{
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<ArticleReview> reviews = new HashSet<ArticleReview>();
-
-    /** 商品*/
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
+//
+//    /** 商品*/
+//    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    @JsonIgnore
+//    private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
 
     /** 投票项 */
     private String votes;
@@ -235,17 +298,32 @@ public class Article extends BaseEntity{
         this.favorite = favorite;
     }
 
+    public Authority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
+    }
+
+    public void setIsReview(Boolean isReview) {
+        this.isReview = isReview;
+    }
+    public Boolean getIsReview() {
+        return this.isReview;
+    }
+
     public Long getReview() {
         return review;
+    }
+    public void setReview(Long review) {
+        this.review = review;
     }
 
     public void setReview(Set<ArticleReview> review) {
         this.reviews = reviews;
     }
 
-    public void setReview(Long review) {
-        this.review = review;
-    }
 
     public Long getHits() {
         return hits;
@@ -301,14 +379,6 @@ public class Article extends BaseEntity{
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
-    }
-
-    public ArticleOptions getArticleOptions() {
-        return articleOptions;
-    }
-
-    public void setArticleOptions(ArticleOptions articleOptions) {
-        this.articleOptions = articleOptions;
     }
 
     public MediaType getMediaType() {
@@ -383,6 +453,62 @@ public class Article extends BaseEntity{
         this.share = share;
     }
 
+    public Boolean getIsAudit() {
+        return isAudit;
+    }
+
+    public void setIsAudit(Boolean audit) {
+        isAudit = audit;
+    }
+
+    public Boolean getIsPublish() {
+        return isPublish;
+    }
+
+    public void setIsPublish(Boolean publish) {
+        isPublish = publish;
+    }
+
+    public Boolean getIsPitch() {
+        return isPitch;
+    }
+
+    public void setIsPitch(Boolean pitch) {
+        isPitch = pitch;
+    }
+
+    public Boolean getIsReward() {
+        return isReward;
+    }
+
+    public void setIsReward(Boolean reward) {
+        isReward = reward;
+    }
+
+    public Boolean getIsExample() {
+        return isExample;
+    }
+
+    public void setIsExample(Boolean example) {
+        isExample = example;
+    }
+
+    public Boolean getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(Boolean top) {
+        isTop = top;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public MapEntity getMapTemplate() {
         if (getTemplate() != null) {
             return new MapEntity(getTemplate().getId().toString(), getTemplate().getName());
@@ -438,14 +564,14 @@ public class Article extends BaseEntity{
             return null;
         }
     }
-
-    public Set<ArticleProduct> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<ArticleProduct> products) {
-        this.products = products;
-    }
+//
+//    public Set<ArticleProduct> getProducts() {
+//        return products;
+//    }
+//
+//    public void setProducts(Set<ArticleProduct> products) {
+//        this.products = products;
+//    }
 
     public String delHTMLTag(){
         String str = getContent();
@@ -456,6 +582,14 @@ public class Article extends BaseEntity{
             return str;
         } else {
             return str.substring(0,100);
+        }
+    }
+
+    public MapEntity getMapIsAudit() {
+        if ((getId() != null)&&(getIsAudit() != null)) {
+            return new MapEntity(getId().toString(), getIsAudit().toString());
+        } else {
+            return null;
         }
     }
 }

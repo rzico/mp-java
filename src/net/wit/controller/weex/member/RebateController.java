@@ -6,7 +6,9 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleRewardModel;
 import net.wit.controller.model.DepositModel;
 import net.wit.entity.*;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.service.*;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,9 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 
 /**
@@ -35,6 +41,24 @@ public class RebateController extends BaseController {
 
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
+
+    /**
+     * 我的奖励金
+     * id 会员
+     */
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(Long id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+        }
+
+        return "redirect:/member/rabate?id="+id;
+    }
 
     /**
      *  我的奖励金

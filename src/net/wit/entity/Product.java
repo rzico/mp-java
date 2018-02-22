@@ -17,6 +17,7 @@ import java.util.TreeSet;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
@@ -30,21 +31,24 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "wx_product")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_product_sequence")
-public class Product extends BaseEntity {
+public class Product extends OrderEntity {
 
 	private static final long serialVersionUID = 41L;
 
 	/** 会员 */
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Member member;
 
 	/** 编号 */
+	@NotNull
 	@Length(max = 50)
 	@Column(nullable = false, length = 100,columnDefinition="varchar(50) not null comment '编号'")
 	private String sn;
 
 	/** 名称 */
+	@NotNull
 	@Length(max = 200)
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
@@ -52,12 +56,17 @@ public class Product extends BaseEntity {
 	/** 缩略图 */
 	@Length(max = 200)
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
-	private String thumbnial;
+	private String thumbnail;
 
-	/** 规格 */
+	/** 规格1 */
 	@Length(max = 50)
-	@Column(length = 50,columnDefinition="varchar(50) comment '规格'")
-	private String spec;
+	@Column(length = 50,columnDefinition="varchar(50) comment '规格1'")
+	private String spec1;
+
+	/** 规格2 */
+	@Length(max = 50)
+	@Column(length = 50,columnDefinition="varchar(50) comment '规格2'")
+	private String spec2;
 
 	/** 销售价 */
 	@Min(0)
@@ -95,7 +104,16 @@ public class Product extends BaseEntity {
 	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '市场价'")
 	private BigDecimal marketPrice;
 
+	/** 库存 */
+	@Column(nullable = false,columnDefinition="int(11) not null default 0 comment '库存'")
+	private Integer stock;
+
+	/** 已分配库存 */
+	@Column(nullable = false,columnDefinition="int(11) not null default 0 comment '已分配库存'")
+	private Integer allocatedStock;
+
 	/** 单位 */
+	@NotNull
 	@Length(max = 10)
 	@Column(nullable = false,columnDefinition="varchar(10) not null comment '单位'")
 	private String unit;
@@ -106,32 +124,45 @@ public class Product extends BaseEntity {
 	private Integer weight;
 
 	/** 赠送积分 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bigint(20) not null comment '赠送积分'")
 	private Long point;
 
 	/** 是否上架 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bit not null comment '是否上架'")
 	private Boolean isMarketable;
 
 	/** 是否列出 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bit not null comment '是否列出'")
 	private Boolean isList;
 
 	/** 商品分类 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private ProductCategory productCategory;
 
 	/** 货品 */
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Goods goods;
 
+	/** 分销方式  */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Distribution distribution;
+
 	/** 是否删除 */
+	@NotNull
 	@Column(nullable = false,columnDefinition="bit not null comment '是否删除'")
 	private Boolean deleted;
 
 	/** 商品库存*/
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private Set<ProductStock> productStocks = new HashSet<ProductStock>();
+	@JsonIgnore
+	private List<ProductStock> productStocks = new ArrayList<>();
 
 	/** 标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -156,12 +187,20 @@ public class Product extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getSpec() {
-		return spec;
+	public String getSpec1() {
+		return spec1;
 	}
 
-	public void setSpec(String spec) {
-		this.spec = spec;
+	public void setSpec1(String spec1) {
+		this.spec1 = spec1;
+	}
+
+	public String getSpec2() {
+		return spec2;
+	}
+
+	public void setSpec2(String spec2) {
+		this.spec2 = spec2;
 	}
 
 	public BigDecimal getPrice() {
@@ -276,20 +315,20 @@ public class Product extends BaseEntity {
 		this.deleted = deleted;
 	}
 
-	public Set<ProductStock> getProductStocks() {
+	public List<ProductStock> getProductStocks() {
 		return productStocks;
 	}
 
-	public void setProductStocks(Set<ProductStock> productStocks) {
+	public void setProductStocks(List<ProductStock> productStocks) {
 		this.productStocks = productStocks;
 	}
 
-	public String getThumbnial() {
-		return thumbnial;
+	public String getThumbnail() {
+		return thumbnail;
 	}
 
-	public void setThumbnial(String thumbnial) {
-		this.thumbnial = thumbnial;
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 
 	public List<Tag> getTags() {
@@ -308,10 +347,43 @@ public class Product extends BaseEntity {
 		this.member = member;
 	}
 
+
+	public Distribution getDistribution() {
+		return distribution;
+	}
+
+	public void setDistribution(Distribution distribution) {
+		this.distribution = distribution;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public Integer getAllocatedStock() {
+		return allocatedStock;
+	}
+
+	public void setAllocatedStock(Integer allocatedStock) {
+		this.allocatedStock = allocatedStock;
+	}
+
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
 			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
 		} else {
+			return null;
+		}
+	}
+
+	public MapEntity getMapProductCategory(){
+		if(getProductCategory() != null){
+			return new MapEntity(getProductCategory().getId().toString(),getProductCategory().getName());
+		}else{
 			return null;
 		}
 	}
@@ -338,43 +410,122 @@ public class Product extends BaseEntity {
 	 * @return 可用库存
 	 */
 	@Transient
-	public Integer getAvailableStock(Member seller) {
-		ProductStock stock = null;
-		if (seller!=null) {
-			for (ProductStock productStock : getProductStocks()) {
-				if (productStock.getSeller().equals(seller)) {
-					stock = productStock;
-					break;
-				}
+	public Integer getAvailableStock() {
+		Integer availableStock = null;
+		if (getStock() != null && getAllocatedStock() != null) {
+			availableStock = getStock() - getAllocatedStock();
+			if (availableStock < 0) {
+				availableStock = 0;
 			}
 		}
-        if (stock==null) {
-			return 0;
-		} else {
-			return stock.getAvailableStock();
-		}
+		return availableStock;
 	}
 
 	/**
-	 * 获取是否缺货
+	 * 获取是否库存不足
 	 *
-	 * @return 是否缺货
+	 * @return 是否库存不足
 	 */
 	@Transient
-	public Boolean getIsOutOfStock(Member seller) {
-		ProductStock stock = null;
-		if (seller!=null) {
-			for (ProductStock productStock : getProductStocks()) {
-				if (productStock.getSeller().equals(seller)) {
-					stock = productStock;
-					break;
-				}
-			}
-		}
-		if (stock==null) {
+	public boolean getIsLowStock(Integer quantity) {
+		if (quantity > getAvailableStock()) {
 			return true;
 		} else {
-			return stock.getIsOutOfStock();
+			return false;
+		}
+	}
+
+//	/**
+//	 * 获取库存记录
+//	 *
+//	 * @return 获取库存记录
+//	 */
+//	@Transient
+//	public ProductStock getProductStock(Member seller) {
+//		ProductStock stock = null;
+//		if (seller!=null) {
+//			for (ProductStock productStock : getProductStocks()) {
+//				if (productStock.getSeller().equals(seller)) {
+//					stock = productStock;
+//					break;
+//				}
+//			}
+//		}
+//		return stock;
+//	}
+//
+//	/**
+//	 * 获取可用库存
+//	 *
+//	 * @return 可用库存
+//	 */
+//	@Transient
+//	public Integer getAvailableStock(Member seller) {
+//		ProductStock stock = null;
+//		if (seller!=null) {
+//			for (ProductStock productStock : getProductStocks()) {
+//				if (productStock.getSeller().equals(seller)) {
+//					stock = productStock;
+//					break;
+//				}
+//			}
+//		}
+//        if (stock==null) {
+//			return 0;
+//		} else {
+//			return stock.getAvailableStock();
+//		}
+//	}
+//
+//	/**
+//	 * 获取是否缺货
+//	 *
+//	 * @return 是否缺货
+//	 */
+//	@Transient
+//	public Boolean getIsOutOfStock(Member seller) {
+//		ProductStock stock = null;
+//		if (seller!=null) {
+//			for (ProductStock productStock : getProductStocks()) {
+//				if (productStock.getSeller().equals(seller)) {
+//					stock = productStock;
+//					break;
+//				}
+//			}
+//		}
+//		if (stock==null) {
+//			return true;
+//		} else {
+//			return stock.getIsOutOfStock();
+//		}
+//	}
+
+	@Transient
+	public String getSpec() {
+		if (getSpec1()!=null && getSpec2()!=null) {
+			return getSpec1().concat(","+getSpec2());
+		} else
+		if (getSpec1()!=null){
+			return getSpec1();
+		} else {
+			return getSpec2();
+		}
+	}
+
+	@Transient
+	public String getThumbnailSmall() {
+		if ((getThumbnail()!=null) && (!"".equals(getThumbnail()))) {
+
+			if (getThumbnail().substring(0,11).equals("http://cdnx")) {
+				return getThumbnail()+"?x-oss-process=image/resize,w_100,h_100";
+			} else
+			if (getThumbnail().substring(0,10).equals("http://cdn")) {
+				return getThumbnail()+"@100w_100h_1e_1c_100Q";
+			} else {
+				return getThumbnail();
+			}
+		} else{
+			return null;
 		}
 	}
 

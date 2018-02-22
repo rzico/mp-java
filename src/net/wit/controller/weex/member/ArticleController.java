@@ -1,5 +1,7 @@
 package net.wit.controller.weex.member;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,6 +70,14 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleLaudServiceImpl")
     private ArticleLaudService articleLaudService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
+
+    @Resource(name = "weixinUpServiceImpl")
+    private WeixinUpService weixinUpService;
 
     /**
      *  文章列表,带分页
@@ -179,18 +190,17 @@ public class ArticleController extends BaseController {
             article.setLaud(0L);
             article.setReview(0L);
             article.setShare(0L);
-            ArticleOptions options = new ArticleOptions();
-            article.setArticleOptions(options);
-            article.getArticleOptions().setAuthority(ArticleOptions.Authority.isPublic);
-            article.getArticleOptions().setIsExample(false);
-            article.getArticleOptions().setIsPitch(false);
-            article.getArticleOptions().setIsPublish(false);
-            article.getArticleOptions().setIsReview(true);
-            article.getArticleOptions().setIsTop(false);
-            article.getArticleOptions().setIsReward(false);
+            article.setAuthority(Article.Authority.isPublic);
+            article.setIsExample(false);
+            article.setIsPitch(false);
+            article.setIsPublish(false);
+            article.setIsReview(true);
+            article.setIsTop(false);
+            article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
         }
         article.setIsDraft(isDraft);
+        article.setIsAudit(false);
         article.setTitle(title);
         article.setAuthor(author);
         article.setThumbnail(thumbnail);
@@ -206,24 +216,10 @@ public class ArticleController extends BaseController {
             articleService.update(article);
         }
 
-        for (ArticleProduct product:article.getProducts()) {
-            articleProductService.delete(product);
-        }
-        if (model.getProducts()!=null) {
-            for (ProductViewModel product : model.getProducts()) {
-                Product prod = productService.find(product.getId());
-                if (prod == null) {
-                    return Message.error("无效商品");
-                }
-                ArticleProduct ap = new ArticleProduct();
-                ap.setArticle(article);
-                ap.setProduct(prod);
-                articleProductService.save(ap);
-            }
-        }
-
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
+
+        System.out.println(JsonUtils.toJson(entityModel));
         return Message.success(entityModel,"保存成功");
 
     }
@@ -233,19 +229,19 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
-    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptions articleOptions,Location location,HttpServletRequest request){
+    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptionModel articleOptions,Location location,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
         }
         if (articleOptions!=null) {
-            article.getArticleOptions().setIsReward(articleOptions.getIsReward());
-            article.getArticleOptions().setIsTop(articleOptions.getIsTop());
-            article.getArticleOptions().setIsReview(articleOptions.getIsReview());
-            article.getArticleOptions().setIsPublish(articleOptions.getIsPublish());
-            article.getArticleOptions().setAuthority(articleOptions.getAuthority());
+            article.setIsReward(articleOptions.getIsReward());
+            article.setIsTop(articleOptions.getIsTop());
+            article.setIsReview(articleOptions.getIsReview());
+            article.setIsPublish(articleOptions.getIsPublish());
+            article.setAuthority(articleOptions.getAuthority());
             if (articleOptions.getPassword()!=null) {
-                article.getArticleOptions().setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
+                article.setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
             }
         }
         if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
@@ -258,8 +254,15 @@ public class ArticleController extends BaseController {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
         article.setIsDraft(false);
-        article.getArticleOptions().setIsPublish(true);
+        article.setIsPublish(true);
         articleService.update(article);
+
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("follow", Filter.Operator.eq,article.getMember()));
+        List<MemberFollow> data = memberFollowService.findList(null,null,filters,null);
+        for (MemberFollow follow:data) {
+           messageService.publishPushTo(article,follow.getMember());
+        }
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
         return Message.success(entityModel,"保存成功");
@@ -285,9 +288,8 @@ public class ArticleController extends BaseController {
             edited = true;
         }
         if (isTop!=null) {
-            ArticleOptions options =article.getArticleOptions();
-            options.setIsTop(isTop);
-            article.setArticleOptions(options);
+            article.setIsTop(isTop);
+            edited = true;
         }
         if (!edited) {
             return Message.error("传参不正确");
@@ -309,7 +311,7 @@ public class ArticleController extends BaseController {
             return Message.error("无效文章编号");
         }
         String sn="1001";
-        if (article.getTemplate()==null) {
+        if (article.getTemplate()!=null) {
            sn = article.getTemplate().getSn();
         }
         return Message.success((Object)sn,"发布成功");
@@ -387,6 +389,26 @@ public class ArticleController extends BaseController {
         article.setDeleted(false);
         articleService.update(article);
         return Message.success("还原成功");
+    }
+
+    /**
+     *  文章抓取
+     */
+    @RequestMapping(value = "grabarticle", method = RequestMethod.GET)
+    @ResponseBody
+    public Message articleGrab(String articlePath, HttpServletRequest request){
+        try {
+            JSONObject jsonObject=weixinUpService.DownArticle(articlePath);
+            if(jsonObject!=null){
+                return Message.success(jsonObject,"抓取成功");
+            }
+            else {
+                return Message.error("URL参数错误,抓取失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Message.error("URL参数错误,抓取失败");
+        }
     }
 
 }

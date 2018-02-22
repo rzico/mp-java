@@ -76,6 +76,9 @@ public class PaymentController extends BaseController {
 	@Resource(name = "pluginServiceImpl")
 	private PluginService pluginService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 	/**
 	 * 主页
 	 */
@@ -85,7 +88,8 @@ public class PaymentController extends BaseController {
 		List<MapEntity> methods = new ArrayList<>();
 		methods.add(new MapEntity("online","在线支付"));
 		methods.add(new MapEntity("offline","线下支付"));
-		methods.add(new MapEntity("deposit","钱包支付"));
+		methods.add(new MapEntity("deposit","余额支付"));
+		methods.add(new MapEntity("card","会员卡支付"));
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -98,19 +102,13 @@ public class PaymentController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("payment","消费支付"));
+		types.add(new MapEntity("payment","购物支付"));
 		types.add(new MapEntity("recharge","钱包充值"));
 		types.add(new MapEntity("reward","文章赞赏"));
 		types.add(new MapEntity("cashier","线下收款"));
+		types.add(new MapEntity("topic","专栏激活"));
+		types.add(new MapEntity("card","会员卡"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
-
-		model.addAttribute("articleRewards",articleRewardService.findAll());
-
-		model.addAttribute("payees",memberService.findAll());
 
 		return "/admin/payment/list";
 	}
@@ -143,14 +141,6 @@ public class PaymentController extends BaseController {
 		types.add(new MapEntity("reward","文章赞赏"));
 		types.add(new MapEntity("cashier","线下收款"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
-
-		model.addAttribute("articleRewards",articleRewardService.findAll());
-
-		model.addAttribute("payees",memberService.findAll());
 
 		return "/admin/payment/add";
 	}
@@ -236,7 +226,7 @@ public class PaymentController extends BaseController {
 		List<MapEntity> methods = new ArrayList<>();
 		methods.add(new MapEntity("online","在线支付"));
 		methods.add(new MapEntity("offline","线下支付"));
-		methods.add(new MapEntity("deposit","钱包支付"));
+		methods.add(new MapEntity("deposit","余额支付"));
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -254,14 +244,6 @@ public class PaymentController extends BaseController {
 		types.add(new MapEntity("reward","文章赞赏"));
 		types.add(new MapEntity("cashier","线下收款"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
-
-		model.addAttribute("articleRewards",articleRewardService.findAll());
-
-		model.addAttribute("payees",memberService.findAll());
 
 		model.addAttribute("data",paymentService.find(id));
 
@@ -334,6 +316,32 @@ public class PaymentController extends BaseController {
 			filters.add(typeFilter);
 		}
 
+		Admin admin =adminService.getCurrent();
+//		System.out.println("admin.ID:"+admin.getId());
+		Enterprise enterprise=admin.getEnterprise();
+//		System.out.println("enter.ID:"+enterprise.getId());
+
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商(無權限)
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("payee", Filter.Operator.eq, enterprise.getMember());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
+
 		Page<Payment> page = paymentService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
@@ -402,6 +410,54 @@ public class PaymentController extends BaseController {
 		return "/admin/payment/view/orderView";
 	}
 
-
-
+	/**
+	 * 付款登记
+	 */
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@ResponseBody
+	public Message register(Payment payment, String paymentVoucher,HttpServletRequest request) {
+		Admin admin = adminService.getCurrent();
+		//判断用户是否存在
+		if(admin==null){
+			return Message.error("该用户不存在");
+		}
+		Payment entity = paymentService.find(payment.getId());
+		//调用银行接口查询是否入账
+		try {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(entity.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				resultCode = paymentPlugin.queryOrder(entity, request);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				return Message.success(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					entity.setOperator(admin.getName());
+					entity.setTranSn(paymentVoucher);
+					entity.setStatus(Payment.Status.success);
+					if (!isValid(entity)) {
+						return Message.error("payment.data.valid");
+					}
+					paymentService.update(entity);
+					return Message.success(entity, "支付成功");
+				case "0001":
+					entity.setOperator(admin.getName());
+					entity.setTranSn(paymentVoucher);
+					entity.setStatus(Payment.Status.failure);
+					if (!isValid(entity)) {
+						return Message.error("payment.data.valid");
+					}
+					paymentService.update(entity);
+					return Message.success(entity, "支付失败");
+				default:
+					return Message.success(entity, "支付中");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return Message.error("服务器发生异常");
+		}
+	}
 }

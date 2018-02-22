@@ -1,12 +1,17 @@
 package net.wit.controller.admin;
 
+import java.io.FileInputStream;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONArray;
 import net.wit.Filter;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.Pageable;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -67,6 +72,12 @@ public class ArticleController extends BaseController {
 	@Resource(name = "occupationServiceImpl")
 	private OccupationService occupationService;
 
+	@Resource(name = "weixinUpServiceImpl")
+	private WeixinUpService weixinUpService;
+
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 	/**
 	 * 主页
 	 */
@@ -87,9 +98,9 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.article));
+//		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/list";
 	}
@@ -124,26 +135,22 @@ public class ArticleController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Article article, Long templateId, Long articleCategoryId, Long areaId, Long [] tagIds){
-		Article entity = new Article();	
+		Article entity = new Article();
 
-		if (article.getArticleOptions()!=null) {
-			ArticleOptions options = new ArticleOptions();
-			options.setAuthority(article.getArticleOptions().getAuthority());
+		entity.setAuthority(article.getAuthority());
 
-			options.setIsPitch(false);
+		entity.setIsPitch(false);
 
-			options.setIsPublish(true);
+		entity.setIsPublish(true);
 
-			options.setIsReview(article.getArticleOptions().getIsReview());
+		entity.setIsReview(article.getIsReview());
 
-			options.setIsReward(article.getArticleOptions().getIsReward());
+		entity.setIsReward(article.getIsReward());
 
-			options.setIsExample(article.getArticleOptions().getIsExample());
+		entity.setIsExample(article.getIsExample());
 
-			options.setIsTop(article.getArticleOptions().getIsTop());
+		entity.setIsTop(article.getIsTop());
 
-			entity.setArticleOptions(options);
-		}
 
 		entity.setAuthor(article.getAuthor());
 
@@ -173,7 +180,7 @@ public class ArticleController extends BaseController {
 
 		entity.setTemplate(templateService.find(templateId));
 
-		entity.setIsDraft(false);
+		entity.setIsDraft(true);
 
 		entity.setThumbnail(article.getThumbnail());
 
@@ -250,22 +257,18 @@ public class ArticleController extends BaseController {
 	public Message update(Article article, Long templateId, Long articleCatalogId, Long articleCategoryId, Long areaId, Long memberId, Long [] tagIds){
 		Article entity = articleService.find(article.getId());
 
-		if (article.getArticleOptions()!=null) {
-			ArticleOptions options = new ArticleOptions();
-			options.setAuthority(article.getArticleOptions().getAuthority());
+		entity.setAuthority(article.getAuthority());
 
-			options.setIsPublish(article.getArticleOptions().getIsPublish());
+		entity.setIsPublish(article.getIsPublish());
 
-			options.setIsReview(article.getArticleOptions().getIsReview());
+		entity.setIsReview(article.getIsReview());
 
-			options.setIsReward(article.getArticleOptions().getIsReward());
+		entity.setIsReward(article.getIsReward());
 
-			options.setIsExample(article.getArticleOptions().getIsExample());
+		entity.setIsExample(article.getIsExample());
 
-			options.setIsTop(article.getArticleOptions().getIsTop());
+		entity.setIsTop(article.getIsTop());
 
-			entity.setArticleOptions(options);
-		}
 
 		entity.setAuthor(article.getAuthor());
 
@@ -279,11 +282,11 @@ public class ArticleController extends BaseController {
 
 		entity.setTemplate(templateService.find(templateId));
 
-		entity.setIsDraft(article.getIsDraft());
-
 		entity.setThumbnail(article.getThumbnail());
 
 		entity.setTags(tagService.findList(tagIds));
+
+		entity.setIsAudit(false);
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -298,14 +301,47 @@ public class ArticleController extends BaseController {
         }
 
 	}
-	
+
+
+	/**
+	 * 发布
+	 */
+	@RequestMapping(value = "/publish", method = RequestMethod.POST)
+	@ResponseBody
+	public Message publish(Long articleId){
+		Article entity = articleService.find(articleId);
+
+		entity.setIsDraft(false);
+
+		entity.setIsAudit(true);
+
+		if (!isValid(entity)) {
+			return Message.error("admin.data.valid");
+		}
+
+		try {
+			articleService.update(entity);
+			return Message.success(entity,"发布成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("发布失败");
+		}
+
+	}
+
 
 	/**
      * 列表
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Long tagIds, ArticleOptions.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Long tagIds, Article.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
+
+		Admin admin=adminService.getCurrent();
+		//判断用户有没有所属企业
+		if(admin.getEnterprise()==null){
+			return Message.error("企业不存在");
+		}
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (authority!=null) {
 			Filter authorityFilter = new Filter("authority", Filter.Operator.eq, authority);
@@ -314,6 +350,38 @@ public class ArticleController extends BaseController {
 		if (mediaType!=null) {
 			Filter mediaTypeFilter = new Filter("mediaType", Filter.Operator.eq, mediaType);
 			filters.add(mediaTypeFilter);
+		}
+
+		//判断用户公司属于哪种企业类型
+		Enterprise enterprise=admin.getEnterprise();
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+
+		//代理商
+		if(enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getArea()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+				filters.add(mediaTypeFilter);
+			}
+			else {
+				return Message.error("您不是区域代理商!");
+			}
+		}
+		//个人代理商
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, enterprise.getMember());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
 		}
 
 		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
@@ -403,6 +471,28 @@ public class ArticleController extends BaseController {
 		return "/admin/article/view/memberView";
 	}
 
+
+	/**
+	 * 文章推广
+	 */
+	@RequestMapping(value = "/propaganda", method = RequestMethod.POST)
+	public @ResponseBody
+	Message Propaganda(Long[] ids, HttpServletRequest request){
+		try {
+			String rootPath = request.getSession().getServletContext().getRealPath("/");
+			Properties properties=new Properties();
+			FileInputStream fileInputStream=new FileInputStream(rootPath+"/WEB-INF/classes/config.properties");
+			properties.load(fileInputStream);
+			fileInputStream.close();
+			String appID=properties.getProperty("weixin.appid");
+			String appsecret=properties.getProperty("weixin.secret");
+			weixinUpService.ArticleUpLoad(ids,appID,appsecret,rootPath);
+			return Message.success("admin.propaganda.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.propaganda.error");
+		}
+	}
 
 
 }

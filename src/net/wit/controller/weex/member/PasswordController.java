@@ -37,6 +37,9 @@ public class PasswordController extends BaseController {
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
@@ -108,9 +111,6 @@ public class PasswordController extends BaseController {
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         Member member =memberService.getCurrent();
         try {
-            if (!member.getMobile().equals(safeKey.getKey())) {
-                return Message.error("无效验证码");
-            }
             String captcha = rsaService.decryptParameter("captcha", request);
             rsaService.removePrivateKey(request);
             if (member==null) {
@@ -146,9 +146,6 @@ public class PasswordController extends BaseController {
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         Member member =memberService.getCurrent();
         try {
-            if (!member.getMobile().equals(safeKey.getKey())) {
-                return Message.error("无效验证码");
-            }
             String password = rsaService.decryptParameter("enPassword", request);
             rsaService.removePrivateKey(request);
             if (member==null) {
@@ -160,6 +157,13 @@ public class PasswordController extends BaseController {
             }
             member.setPassword(MD5Utils.getMD5Str(password));
             memberService.save(member);
+
+            Admin admin = adminService.findByMember(member);
+            if (admin!=null) {
+                admin.setPassword(member.getPassword());
+                adminService.update(admin);
+            }
+
             return Message.success("修改成功");
         } catch (Exception e) {
             e.printStackTrace();

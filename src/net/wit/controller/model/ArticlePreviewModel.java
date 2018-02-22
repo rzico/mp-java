@@ -31,6 +31,8 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
     private Boolean hasLaud;
     /** 是否收藏 */
     private Boolean hasFavorite;
+    /** 是否关注 */
+    private Boolean hasFollow;
 
     public Long getId() {
         return id;
@@ -112,6 +114,22 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.hasFavorite = hasFavorite;
     }
 
+    public Long getShare() {
+        return share;
+    }
+
+    public void setShare(Long share) {
+        this.share = share;
+    }
+
+    public Boolean getHasFollow() {
+        return hasFollow;
+    }
+
+    public void setHasFollow(Boolean hasFollow) {
+        this.hasFollow = hasFollow;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.hits = article.getHits();
@@ -123,6 +141,8 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.memberId = article.getMember().getId();
         this.hasFavorite = false;
         this.hasLaud = false;
+        this.hasFollow = false;
+        this.template = article.getTemplate().getSn();
     }
 
 }

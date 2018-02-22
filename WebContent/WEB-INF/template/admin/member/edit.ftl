@@ -35,6 +35,13 @@
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
             <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">头像：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <!-- input type="text" class="input-text" value="${data.logo}" placeholder="" id="logo" name="logo" -->
+                    <img src=${data.logo} width="100" height="100">
+                </div>
+            </div>
+            <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">昵称：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="${data.nickName}" placeholder="" id="nickName" name="nickName">
@@ -46,21 +53,12 @@
                     <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
                 </div>
             </div>
-
              <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">签名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="${data.autograph}" placeholder="" id="autograph" name="autograph">
                 </div>
             </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">头像：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.logo}" placeholder="" id="logo" name="logo">
-                </div>
-            </div>
-
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">职业：</label>
                 <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
@@ -69,7 +67,7 @@
                             [#list occupations as occupation]
                                 <option[#if data.occupation?? && occupation.id == data.occupation.id] selected[/#if] value="${occupation.id}">${occupation.name}</option>
                             [/#list]
-				</select>
+				        </select>
                     [/#if]
 				</span>
                 </div>
@@ -97,27 +95,27 @@
                 </span>
                 </div>
             </div>
-
+            <!--
             <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">地址：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.address}" placeholder="" id="address" name="address">
+                <input type="text" class="input-text" value="{data.address}" placeholder="" id="address" name="address">
             </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">邮编：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.zipCode}" placeholder="" id="zipCode" name="zipCode">
+                    <input type="text" class="input-text" value="{data.zipCode}" placeholder="" id="zipCode" name="zipCode">
                 </div>
             </div>
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">电话：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.phone}" placeholder="" id="phone" name="phone">
+                    <input type="text" class="input-text" value="{data.phone}" placeholder="" id="phone" name="phone">
                 </div>
             </div>
-
+            -->
             <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">出生日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -131,13 +129,14 @@
                     <span>${data.mobile}</span>
                 </div>
             </div>
+        <!--
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <span>${data.email}</span>
+                    <span>{data.email}</span>
                 </div>
-
          </div>
+         -->
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">标签：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -212,14 +211,14 @@
                     <span>${data.balance}</span>
                 </div>
             </div>
-
+        <!--
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">积分：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.point}</span>
+                <span>{data.point}</span>
             </div>
         </div>
-
+        -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">注册IP：</label>
             <div class="formControls col-xs-8 col-sm-9">

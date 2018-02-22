@@ -9,6 +9,8 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @ClassName: MessageService
  * @author 降魔战队
@@ -27,6 +29,8 @@ public interface MessageService extends BaseService<Message, Long> {
 	public Boolean rewardPushTo(ArticleReward reward);
 	//分享提醒
 	public Boolean sharePushTo(ArticleShare share);
+	//发布提醒
+	public Boolean publishPushTo(Article article,Member receiver);
 	//收藏提醒
 	public Boolean favoritePushTo(ArticleFavorite favorite);
 	//关注提醒
@@ -37,6 +41,15 @@ public interface MessageService extends BaseService<Message, Long> {
 	public Boolean reviewPushTo(ArticleReview review);
 	//添加好友
 	public Boolean addFriendPushTo(Member member,Member friend);
+	//发展成员提醒
+	public Boolean addPromoterPushTo(Member member,Member promoter);
 	//同意好友
 	public Boolean adoptFriendPushTo(Member member,Member friend);
+	public void login(Member member,HttpServletRequest request);
+	public Boolean payBillPushTo(PayBill payBill);
+	//订单提醒
+	public Boolean orderMemberPushTo(OrderLog orderLog);
+
+	//订单提醒
+	public Boolean orderSellerPushTo(OrderLog orderLog);
 }

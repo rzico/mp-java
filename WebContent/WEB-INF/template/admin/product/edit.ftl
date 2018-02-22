@@ -21,6 +21,174 @@
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .goodsbox-table{
+            width: 100%;
+            height: auto;
+            background: #FFFFFF;
+            /*border: 1px solid rgb(0,0,0);*/
+            position: relative;
+            left: 0px;
+            top: 0px;
+        }
+
+        .goodsbox-tablechild{
+            width: 700px;
+            height: 138px;
+            /*height: auto;*/
+            background: #FFFFFF;
+            border: 1px solid rgb(192,192,192);
+        }
+
+        .goodsbox-col1{
+            width: 100%;
+            height: 48px;
+            background-color: #FFFFFF;
+            /*border: 1px solid rgb(0,0,0);*/
+            position:inherit;
+            left:0;
+        }
+
+        .goodsbox-col2{
+            width: 100%;
+            height: 10px;
+            background-color: #F0F8FF;
+            /*border: 1px solid rgb(0,0,0);*/
+            position:inherit;
+            left:0;
+        }
+
+        .goodsbox-col3{
+            width: 100%;
+            height: auto;
+            background-color: #FFFFFF;
+            /*border: 1px solid rgb(0,0,0);*/
+            position:inherit;
+            left:0;
+        }
+
+        .goodsbox-col5{
+            width: 700px;
+            height: auto;
+            background-color: #FFFFFF;
+            /*border: 1px solid rgb(0,0,0);*/
+            position:inherit;
+            left:0;
+        }
+
+        .goodsbox-r1{
+            float: left;
+            width: 200px;
+            height: 46px;
+            /*border: 1px solid rgb(0,0,0);*/
+            text-align: right;
+            padding-right: 5px;
+            font-size: 26px;
+            font-weight: 100px;
+        }
+        .goodsbox-r2{
+            float: left;
+            width: 500px;
+            height: 48px;
+            /*border: 1px solid rgb(0,0,0);*/
+            text-align: left;
+            font-size: 26px;
+            font-weight: 100px;
+        }
+        .goodsbox-rchild1{
+            float: left;
+            width: 198px;
+            height: 136px;
+            /*height: auto;*/
+            /*border: 1px solid rgb(0,0,0);*/
+            position:inherit;
+        }
+        .goodsbox-rchild2{
+            float: left;
+            width: 452px;
+            height: 136px;
+            /* height: auto; */
+            /*border: 1px solid rgb(0,0,0);*/
+            position:inherit;
+        }
+        .goodsbox-rchild3{
+            float: left;
+            width: 42px;
+            height: 136px;
+            /* height: auto; */
+            /*border: 1px solid rgb(0,0,0);*/
+            position:inherit;
+            font-size: 30px;
+            color: red;
+
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+
+            display: -moz-box;
+            -moz-box-orient: horizontal;
+            -moz-box-pack: center;
+            -moz-box-align: center;
+
+            display: -o-box;
+            -o-box-orient: horizontal;
+            -o-box-pack: center;
+            -o-box-align: center;
+
+            display: -ms-box;
+            -ms-box-orient: horizontal;
+            -ms-box-pack: center;
+            -ms-box-align: center;
+
+            display: box;
+            box-orient: horizontal;
+            box-pack: center;
+            box-align: center;
+        }
+        .goodsbox-colchild1{
+            width: 100%;
+            height: 46px;
+            /*border: 1px solid rgb(0,0,0);*/
+        }
+        .goodsbox-rchild6{
+            float: left;
+            width: 100px;
+            height: 44px;
+            padding-right: 3px;
+            /*border: 1px solid rgb(0,0,0);*/
+            text-align: right;
+            font-size: 26px;
+            font-weight: 100px;
+        }
+        .goodsbox-rchild4{
+            float: left;
+            width: 173px;
+            height: 44px;
+            /*border: 1px solid rgb(0,0,0);*/
+        }
+
+        .goodsbox-rchild4-1{
+            float: left;
+            width: 173px;
+            height: 44px;
+            padding-left: 2px;
+            /*border: 1px solid rgb(0,0,0);*/
+        }
+
+        .goodsbox-rchild5{
+            float: left;
+            width: 348px;
+            height: 44px;
+            /*border: 1px solid rgb(0,0,0);*/
+        }
+
+    </style>
+
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
@@ -32,126 +200,135 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
-        <input type="number" value="${data.id}" style="display:none" name="id">
-        [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
+        <div id="table-1" class="goodsbox-table">
+            <div class="goodsbox-col2">
+            </div>
+            <div class="goodsbox-col1">
+                <div class="goodsbox-r1">商品名称</div>
+                <div class="goodsbox-r2">
+                    <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${products[0].name}" placeholder="请输入商品名称" id="name" name="name">
+                    <input type="hidden" class="input-text" value="${products[0].goods.id}" id="goodsid" name="goodsid">
                 </div>
             </div>
-        </div>
+            <div class="goodsbox-col2">
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否列出：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isList" id="isList" value="true"[#if data.isList?? && data.isList] checked[/#if]>
-                    <input type="hidden" name="_isList" value="false" />
-                    <label for="isList">&nbsp;</label>
+            </div>
+            <div class="goodsbox-col1">
+                <div class="goodsbox-r1">单位</div>
+                <div class="goodsbox-r2">
+                    <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${products[0].unit}" placeholder="个、件、袋等" id="unit" name="unit">
                 </div>
             </div>
-        </div>
+            <div class="goodsbox-col2">
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否上架：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isMarketable" id="isMarketable" value="true"[#if data.isMarketable?? && data.isMarketable] checked[/#if]>
-                    <input type="hidden" name="_isMarketable" value="false" />
-                    <label for="isMarketable">&nbsp;</label>
+            </div>
+            <div id="insertdiv" class="goodsbox-col3">
+                [#if products??]
+                    [#list products as product]
+                <div id="childtable-1" class="goodsbox-col5">
+                    <div class="goodsbox-tablechild">
+                        <div class="goodsbox-rchild1">
+                            <div class="formControls col-xs-8 col-sm-9">
+                                <div class="uploader-thum-container">
+                                    <div id="fileList" class="uploader-list"></div>
+                                    <img src="${product.thumbnailSmall}" height="100" width="100">
+                                    <div id="filePicker">选择图片</div>
+                                    <input type="hidden" value="${product.thumbnail}" id="thumbnail" name="thumbnail">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goodsbox-rchild2">
+                            <div class="goodsbox-colchild1" id="goodsbox-cchild1">
+                                <div class="goodsbox-rchild6">规格</div>
+                                <div class="goodsbox-rchild4">
+                                    <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${product.spec1}" placeholder="规格1" id="spec1" name="spec1">
+                                </div>
+                                <div class="goodsbox-rchild4-1">
+                                    <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${product.spec2}" placeholder="规格2" id="spec2" name="spec2">
+                                </div>
+                            </div>
+                            <div class="goodsbox-colchild1">
+                                <div class="goodsbox-rchild6">价格</div>
+                                <div class="goodsbox-rchild5">
+                                    <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${product.price}" placeholder="给商品定个好价格" id="price" name="price">
+                                </div>
+                            </div>
+                            <div class="goodsbox-colchild1">
+                                <div class="goodsbox-rchild6">库存</div>
+                                <div class="goodsbox-rchild5">
+                                    <input type="text" style="height:44px; font-size:20px;" class="input-text" value="${product.stock}" placeholder="设置命理库存避免超卖" id="stock" name="stock">
+                                    <input type="hidden" class="input-text" value="" id="productid" name="productid">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goodsbox-rchild3" id="abcd">
+                            <i class='Hui-iconfont' onclick="deletetable(this)">&#xe631;</i>
+                        </div>
+                    </div>
+                    <div class="goodsbox-col2">
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>赠送积分：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.point}" placeholder="" id="point" name="point" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>编号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.sn}" placeholder="" id="sn" name="sn">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">规格：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.spec}" placeholder="" id="spec" name="spec">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>单位：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.unit}" placeholder="" id="unit" name="unit">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>重量：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.weight}" placeholder="" id="weight" name="weight" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if goodss??]
-				<select name="goodsId" class="select" style="background-color: #FFFFFF">
-                    [#list goodss as goods]
-					<option[#if data.goods?? && goods.id == data.goods.id] selected[/#if] value="${goods.id}">${goods.name}</option>
                     [/#list]
-				</select>
                 [/#if]
-				</span>
+            </div>
+            <div class="goodsbox-col1">
+                <div class="goodsbox-r1"></div>
+                <div class="goodsbox-r2">
+                    <a class="btn btn-primary radius" style="font-size: 20px;" onclick="append('1')">添加商品规格</a>
+                </div>
+            </div>
+            <div class="goodsbox-col2"></div>
+            <div class="goodsbox-col1">
+                <div class="goodsbox-r1">选择分类</div>
+                <div class="goodsbox-r2">
+                    <span class="select-box" style="height:44px; font-size:20px;">
+                    [#if productCategorys??]
+                        <select name="productCategoryId" class="select" style="background-color: #FFFFFF; font-size:20px;">
+                            <option value="">请选择</option>
+                            [#list productCategorys as productCategory]
+                                [#if products[0].productCategory?? && productCategory.id == products[0].productCategory.id]
+                                    <option value="${productCategory.id}" selected="selected">${productCategory.name}</option>
+                                [#else]
+                                    <option value="${productCategory.id}">${productCategory.name}</option>
+                                [/#if]
+                            [/#list]
+                        </select>
+                    [/#if]
+                    </span>
+                </div>
+            </div>
+            <div class="goodsbox-col2">
+            </div>
+            <div class="goodsbox-col1">
+                <div class="goodsbox-r1">销售策略</div>
+                <div class="goodsbox-r2">
+                    <span class="select-box" style="height:44px; font-size:20px;">
+                        [#if distributions??]
+                            <select name="distributionId" class="select" style="background-color: #FFFFFF; font-size:20px;">
+                                <option value="">请选择</option>
+                                [#list distributions as distribution]
+                                    [#if products[0].distribution??  && distribution.id == products[0].distribution.id]
+                                        <option value="${distribution.id}" selected="selected">${distribution.name}</option>
+                                    [#else]
+                                        <option value="${distribution.id}">${distribution.name}</option>
+                                    [/#if]
+                                [/#list]
+                            </select>
+                        [/#if]
+                    </span>
+                </div>
+            </div>
+            <div class="goodsbox-col2">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">分类：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if productCategorys??]
-				<select name="productCategoryId" class="select" style="background-color: #FFFFFF">
-                    [#list productCategorys as productCategory]
-					<option[#if data.productCategory?? && productCategory.id == data.productCategory.id] selected[/#if] value="${productCategory.id}">${productCategory.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩略图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thumbnial}" placeholder="" id="thumbnial" name="thumbnial">
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
             </div>
         </div>
-            [#else]
-            查找失败
-        [/#if]
+
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
@@ -165,93 +342,169 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
-
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
-        <script type="text/javascript">
-            $(function(){
-                var $submit = $(":submit");
-                $('.skin-minimal input').iCheck({
-                    checkboxClass: 'icheckbox-blue',
-                    radioClass: 'iradio-blue',
-                    increaseArea: '20%'
+
+        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+<script type="text/javascript">
+    $tab = $("#childtable-1").clone();
+    $tableCount = $('.goodsbox-col3').children().length;
+    $pictureCount = $('.goodsbox-col3').children().length;;
+    $IsShow = true;
+    $product_list = [];
+    $productTemplates = [];
+    $jsons = '';
+
+    $(function(){
+        var $submit = $(":submit");
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $('.goodsbox-col3').children().each(function(index,element){
+            $pictureId = "fileList"+index.toString();
+            $(element).find("#fileList").attr("id",$pictureId);
+            $filePickerId = "filePicker"+index.toString();
+            $(element).find("#filePicker").attr("id",$filePickerId);
+            //$thumbnail = $(element).find("#thumbnail").val();
+            new $uploadpicture($pictureId,$filePickerId);
+        });
+
+        $("#form-update").validate({
+            rules:{
+                name:{
+                    required:true,
+                },
+                stock:{
+                    required:true,
+                },
+                price:{
+                    required:true,
+                },
+                unit:{
+                    required:true,
+                },
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            ignore:"",
+            submitHandler:function(form){
+                var load = layer.msg('加载中', {
+                    icon: 16
+                    ,shade: 0.01
                 });
-
-                $("#form-update").validate({
-                    rules:{
-                        cost:{
-                            required:true,
-                        },
-                        marketPrice:{
-                            required:true,
-                        },
-                        name:{
-                            required:true,
-                        },
-                        point:{
-                            required:true,
-                        },
-                        price:{
-                            required:true,
-                        },
-                        sn:{
-                            required:true,
-                        },
-                        unit:{
-                            required:true,
-                        },
-                        vip1price:{
-                            required:true,
-                        },
-                        vip2price:{
-                            required:true,
-                        },
-                        vip3price:{
-                            required:true,
-                        },
-                        weight:{
-                            required:true,
-                        },
-                        thumbnial:{
-                            required:true,
-                        },
-
+                savePage();
+                $(form).ajaxSubmit({
+                    type: 'post',
+                    url: "${base}/admin/product/save.jhtml" ,
+                    data: {
+                        body: $jsons
                     },
-                    onkeyup:false,
-                    focusCleanup:true,
-                    success:"valid",
-                    submitHandler:function(form){
-                        var load = layer.msg('加载中', {
-                            icon: 16
-                            ,shade: 0.01
-                        });
-                        $(form).ajaxSubmit({
-                            type: 'post',
-                            url: "${base}/admin/product/update.jhtml" ,
-                            beforeSend: function() {
-                                $submit.prop("disabled", true);
-                            },
-                            success: function(message){
-                                layer.close(load);
-                                if(message.type ==  "success"){
+                    beforeSend: function() {
+                        $submit.prop("disabled", true);
+                        //savePage();
+                    },
+                    success: function(message){
+                        layer.close(load);
+                        if(message.type ==  "success"){
 //                                    关闭当前页面
-                                    var index = parent.layer.getFrameIndex(window.name);
-                                    parent.add_row(message.data);
-                                    //关闭弹窗并提示
-                                    parent.closeWindow(index, '修改成功');
-                                }else{
-                                    $submit.prop("disabled", false);
-                                    parent.toast('修改失败',2);
-                                }
-                            },
-                            error: function(XmlHttpRequest, textStatus, errorThrown){
-                                $submit.prop("disabled", false);
-                                layer.close(load);
-                                parent.toast('修改失败',2);
-                            }
-                        });
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.add_row(message.data);
+                            parent.closeWindow(index, '添加成功');
+                        }else{
+                            $submit.prop("disabled", false);
+                            layer.msg('添加失败!',{icon:2,time:1000});
+                        }
+                    },
+                    error: function(XmlHttpRequest, textStatus, errorThrown){
+                        $submit.prop("disabled", false);
+                        layer.close(load);
+                        layer.msg('error!',{icon:2,time:1000});
                     }
                 });
+            }
+        });
+    });
+
+    function append(id){
+        if (($tableCount == 1) && ($IsShow.toString() == 'false')){
+            $("#goodsbox-cchild1").css("display","block");
+            $("#goodsbox-cchild1 div").css("display","block");
+            $("#goodsbox-cchild1 input").css("display","block");
+            $("#abcd").css("display","-webkit-box");
+            $IsShow = true;
+        }else{
+            var $tabcopy = $tab.clone();
+            $tableCount = $tableCount + 1;
+
+            $pictureId = "fileList"+$pictureCount.toString();
+            $tabcopy.find("#fileList").attr("id",$pictureId);
+            $filePickerId = "filePicker"+$pictureCount.toString();
+            $tabcopy.find("#filePicker").attr("id",$filePickerId);
+            $tabcopy.find("i").attr("onclick","deletetable(this)");
+            $("#insertdiv").append($tabcopy);
+            new $uploadpicture($pictureId,$filePickerId);
+            $pictureCount++;
+        }
+    }
+
+    function deletetable(obj){
+        if (($tableCount == 1) && ($IsShow)){
+            $("#goodsbox-cchild1 div").css("display","none");
+            $("#goodsbox-cchild1 input").css("display","none");
+            $("#goodsbox-cchild1").css("display","none");
+            //$("#spec2").css("display","none");
+            $("#abcd").css("display","none");
+            $IsShow = false;
+        }else{
+            var $div1 = obj.parentNode.parentNode.parentNode;
+            $div1.remove();
+            $tableCount = $tableCount - 1;
+        }
+    }
+
+    function savePage(){
+        $productTemplates = [];
+        $('.goodsbox-col3').children().each(function(index,element){
+            $productTemplates.push({
+                "productId": $(element).find("#productid").val(),
+                "thumbnail":$(element).find("#thumbnail").val(),
+                "spec1":$(element).find("#spec1").val(),
+                "spec2":$(element).find("#spec2").val(),
+                "price":parseInt($(element).find("#price").val()),
+                "stock":parseInt($(element).find("#stock").val()),
             });
-        </script>
+        });
+
+        let categoryTemplate = {
+            id:parseInt($('select[name="productCategoryId"]').val()),
+            name:$('select[name="productCategoryId"]').find("option:selected").text()
+        }
+        // 销售策略
+        let distributionTemplate = {
+            id:parseInt($('select[name="distributionId"]').val()),
+            name:$('select[name="distributionId"]').find("option:selected").text()
+        }
+        let productData = {
+            id: $('#goodsid').val(),
+            name:$('#name').val(),
+            unit:$('#unit').val(),
+            productCategory:categoryTemplate,
+            distribution:distributionTemplate,
+            products: $productTemplates,
+        };
+        $jsons = JSON.stringify(productData);
+    }
+
+</script>
+
+
+
 </body>
 </html>

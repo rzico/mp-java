@@ -26,5 +26,20 @@ public interface OrderDao extends BaseDao<Order, Long> {
 	 * @param pageable
 	 * @return Page<Order>
 	 */
-	Page<Order> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Page<Order> findPage(Date beginDate,Date endDate, String status, Pageable pageable);
+
+	/**
+	 * 根据订单编号查找订单
+	 *
+	 * @param sn
+	 *            订单编号(忽略大小写)
+	 * @return 订单，若不存在则返回null
+	 */
+	Order findBySn(String sn);
+
+	/**
+	 * 释放过期订单库存
+	 */
+	void releaseStock();
+
 }

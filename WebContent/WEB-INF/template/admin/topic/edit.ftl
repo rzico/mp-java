@@ -143,15 +143,44 @@
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">模版：</label>
-                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                    [#if templates??]
-                        <select name="templateId" class="select" style="background-color: #FFFFFF">
-                            [#list templates as template]
-                                <option[#if data.template?? && template.id == data.template.id] selected[/#if] value="${template.id}">${template.name}</option>
-                            [/#list]
-				</select>
-                    [/#if]
-				</span>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="select-box">
+                        [#if templates??]
+                             <select name="templateId" class="select" style="background-color: #FFFFFF">
+                                   [#list templates as template]
+                                       <option[#if data.template?? && template.id == data.template.id] selected[/#if] value="${template.id}">${template.name}</option>
+                                   [/#list]
+			                 </select>
+                        [/#if]
+				    </span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">小程序ID：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" name="config.appetAppId" value="${data.config.appetAppId}" placeholder="" id="appetAppId" onInput="floatInit(this)">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">小程序Serect：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" name="config.appetAppSerect" value="${data.config.appetAppSerect}" placeholder="" id="appetAppSerect" onInput="floatInit(this)">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">公众号ID：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" name="config.wxAppId" value="${data.config.wxAppId}" placeholder="" id="wxAppId" onInput="floatInit(this)">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">公众号Serect：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" name="config.wxAppSerect" value="${data.config.wxAppSerect}" placeholder="" id="wxAppSerect" onInput="floatInit(this)">
                 </div>
             </div>
 

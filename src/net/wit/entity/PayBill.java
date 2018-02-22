@@ -1,5 +1,6 @@
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Resolution;
 
@@ -83,38 +84,47 @@ public class PayBill extends BaseEntity {
 
 	/** 消费者 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Member member;
 
 	/** 付款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Payment payment;
 
 	/** 退款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Refunds refunds;
 
 	/** 收款账户 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Member owner;
 
 	/** 收银员 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Admin admin;
 
 	/** 所属企业 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Enterprise enterprise;
 
 	/** 所属门店 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Shop shop;
 
 	/** 优惠券 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private CouponCode couponCode;
 
 	/** 会员卡 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Card card;
 
 	/** 优惠金额 */

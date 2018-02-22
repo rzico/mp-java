@@ -30,6 +30,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -46,6 +47,36 @@ public class Order extends BaseEntity {
 
 	/** 订单名称分隔符 */
 	private static final String NAME_SEPARATOR = " ";
+
+	/**
+	 * 结算方式
+	 */
+	public enum PaymentMethod {
+
+		/** 线上结算 */
+		online,
+
+		/** 线下结算 */
+		offline,
+
+		/** 余额支付 */
+		deposit,
+
+		/** 会员卡 */
+		card
+	}
+
+	/**
+	 * 配送方式
+	 */
+	public enum ShippingMethod {
+
+		/** 卖家配送 */
+		shipping,
+
+		/** 线下提货 */
+		pickup
+	}
 
 	/**
 	 * 订单状态
@@ -117,6 +148,20 @@ public class Order extends BaseEntity {
 	@Column(nullable = false,columnDefinition="int(11) not null comment '配送状态'")
 	private ShippingStatus shippingStatus;
 
+	/** 付款方式 */
+	@Column(nullable = false,columnDefinition="int(11) not null comment '付款方式'")
+	private PaymentMethod paymentMethod;
+
+	/** 配送方式 */
+	@Column(nullable = false,columnDefinition="int(11) not null comment '配送方式'")
+	private ShippingMethod shippingMethod;
+
+	/** 是否删除 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否删除'")
+	@JsonIgnore
+	private Boolean deleted;
+
 	/** 交易佣金 */
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '交易佣金'")
 	private BigDecimal fee;
@@ -156,6 +201,13 @@ public class Order extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '已付金额'")
 	private BigDecimal amountPaid;
 
+	/** 分销佣金 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '分销佣金'")
+	private BigDecimal rebateAmount;
+
 	/** 赠送积分 */
 	@NotNull
 	@Min(0)
@@ -187,7 +239,7 @@ public class Order extends BaseEntity {
 	/** 电话 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(nullable = false,columnDefinition="varchar(255) not null comment '邮编'")
+	@Column(nullable = false,columnDefinition="varchar(255) not null comment '联系电话'")
 	private String phone;
 
 	/** 买家留言 */
@@ -212,26 +264,41 @@ public class Order extends BaseEntity {
 	private Boolean isAllocatedStock;
 
 	/** 地区 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Area area;
 
 	/** 买家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
 	/** 卖家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Member seller;
 
-	/** 优惠码 */
+	/** 推广 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(updatable = false)
+	private Member promoter;
+
+	/** 是否已分配佣金 */
+	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
+	private Boolean isDistribution;
+
+	/** 优惠码 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
 	private CouponCode couponCode;
 
 	/** 优惠券 */
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_order_coupon")
 	private List<Coupon> coupons = new ArrayList<Coupon>();
@@ -241,32 +308,26 @@ public class Order extends BaseEntity {
 	@NotEmpty
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("isGift asc")
+	@JsonIgnore
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 	/** 订单日志 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
-	private Set<OrderLog> orderLogs = new HashSet<OrderLog>();
+	private List<OrderLog> orderLogs = new ArrayList<OrderLog>();
 
 	/** 收款单 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Payment> payments = new HashSet<Payment>();
 
 	/** 退款单 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Refunds> refunds = new HashSet<Refunds>();
-
-	/** 发货单 */
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@OrderBy("createDate asc")
-	private Set<Shipping> shippings = new HashSet<Shipping>();
-
-	/** 退货单 */
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@OrderBy("createDate asc")
-	private Set<Returns> returns = new HashSet<Returns>();
 
 	/**
 	 * 获取订单编号
@@ -304,6 +365,15 @@ public class Order extends BaseEntity {
 	 */
 	public void setOrderStatus(OrderStatus orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 	/**
@@ -369,6 +439,14 @@ public class Order extends BaseEntity {
 	 */
 	public void setFee(BigDecimal fee) {
 		this.fee = fee;
+	}
+
+	public BigDecimal getRebateAmount() {
+		return rebateAmount;
+	}
+
+	public void setRebateAmount(BigDecimal rebateAmount) {
+		this.rebateAmount = rebateAmount;
 	}
 
 	/**
@@ -580,6 +658,22 @@ public class Order extends BaseEntity {
 		this.memo = memo;
 	}
 
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public void setIsDistribution(Boolean distribution) {
+		isDistribution = distribution;
+	}
+
+	public Boolean getIsDistribution() {
+		return isDistribution;
+	}
+
 	/**
 	 * 获取到期时间
 	 * 
@@ -745,7 +839,7 @@ public class Order extends BaseEntity {
 	 * 
 	 * @return 订单日志
 	 */
-	public Set<OrderLog> getOrderLogs() {
+	public List<OrderLog> getOrderLogs() {
 		return orderLogs;
 	}
 
@@ -755,7 +849,7 @@ public class Order extends BaseEntity {
 	 * @param orderLogs
 	 *            订单日志
 	 */
-	public void setOrderLogs(Set<OrderLog> orderLogs) {
+	public void setOrderLogs(List<OrderLog> orderLogs) {
 		this.orderLogs = orderLogs;
 	}
 
@@ -797,44 +891,6 @@ public class Order extends BaseEntity {
 		this.refunds = refunds;
 	}
 
-	/**
-	 * 获取发货单
-	 * 
-	 * @return 发货单
-	 */
-	public Set<Shipping> getShippings() {
-		return shippings;
-	}
-
-	/**
-	 * 设置发货单
-	 * 
-	 * @param shippings
-	 *            发货单
-	 */
-	public void setShippings(Set<Shipping> shippings) {
-		this.shippings = shippings;
-	}
-
-	/**
-	 * 获取退货单
-	 * 
-	 * @return 退货单
-	 */
-	public Set<Returns> getReturns() {
-		return returns;
-	}
-
-	/**
-	 * 设置退货单
-	 * 
-	 * @param returns
-	 *            退货单
-	 */
-	public void setReturns(Set<Returns> returns) {
-		this.returns = returns;
-	}
-
 
 	public String getOperator() {
 		return operator;
@@ -842,6 +898,22 @@ public class Order extends BaseEntity {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public ShippingMethod getShippingMethod() {
+		return shippingMethod;
+	}
+
+	public void setShippingMethod(ShippingMethod shippingMethod) {
+		this.shippingMethod = shippingMethod;
+	}
+
+	public Member getPromoter() {
+		return promoter;
+	}
+
+	public void setPromoter(Member promoter) {
+		this.promoter = promoter;
 	}
 
 	/**
@@ -963,9 +1035,9 @@ public class Order extends BaseEntity {
 	@Transient
 	public BigDecimal getAmount() {
 		BigDecimal amount = getPrice();
-		if (getFee() != null) {
-			amount = amount.add(getFee());
-		}
+//		if (getFee() != null) {
+//			amount = amount.add(getFee());
+//		}
 		if (getFreight() != null) {
 			amount = amount.add(getFreight());
 		}
@@ -979,43 +1051,54 @@ public class Order extends BaseEntity {
 	}
 
 	/**
+	 * 获取分销佣金
+	 *
+	 * @return 分销佣金
+	 */
+	@Transient
+	public BigDecimal getDistribution() {
+		BigDecimal d = BigDecimal.ZERO;
+		if (getPromoter()!=null && getPromoter().leaguer(getSeller())) {
+			if (getOrderItems() != null) {
+				for (OrderItem orderItem : getOrderItems()) {
+					if (orderItem != null && orderItem.getSubtotal() != null) {
+						d = d.add(orderItem.calcPercent1());
+						Card c2 = getPromoter().card(getSeller());
+						Member p2 = c2.getPromoter();
+						if (p2!=null  && p2.leaguer(getSeller()) ) {
+							d = d.add(orderItem.calcPercent2());
+							Card c3 = p2.card(getSeller());
+							Member p3 = c3.getPromoter();
+							if (p3!=null  && p3.leaguer(getSeller())) {
+								d = d.add(orderItem.calcPercent3());
+							}
+						}
+					}
+				}
+			}
+		}
+		return d;
+	}
+
+	/**
 	 * 获取应付金额
 	 * 
 	 * @return 应付金额
 	 */
 	@Transient
 	public BigDecimal getAmountPayable() {
-		BigDecimal amountPayable = getAmount().subtract(getAmountPaid());
+		BigDecimal amountPayable = getAmount().subtract(getPointDiscount());
 		return amountPayable.compareTo(new BigDecimal(0)) > 0 ? amountPayable : new BigDecimal(0);
 	}
 
 	/**
-	 * 是否已过期
+	 * 是否已过期  true 过期了
 	 * 
 	 * @return 是否已过期
 	 */
 	@Transient
 	public boolean isExpired() {
 		return getExpire() != null && new Date().after(getExpire());
-	}
-
-	/**
-	 * 获取订单项
-	 * 
-	 * @param sn
-	 *            商品编号
-	 * @return 订单项
-	 */
-	@Transient
-	public OrderItem getOrderItem(String sn) {
-		if (sn != null && getOrderItems() != null) {
-			for (OrderItem orderItem : getOrderItems()) {
-				if (orderItem != null && sn.equalsIgnoreCase(orderItem.getSn())) {
-					return orderItem;
-				}
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -1055,6 +1138,71 @@ public class Order extends BaseEntity {
 	 */
 	@PreRemove
 	public void preRemove() {
+	}
+
+
+	public String getStatusDescr() {
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
+			return "待付款";
+		} else
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.paid)) {
+			return "待确定";
+		} else
+		if (getOrderStatus().equals(OrderStatus.cancelled)) {
+			return "已关闭";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+			return "退货中";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
+			return "退款中";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+			return "待发货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+			return "已发货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
+			return "已退货";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getPaymentStatus().equals(PaymentStatus.refunded) ) {
+			return "已退款";
+		} else {
+			return "已完成";
+		}
+	}
+	
+	public String getStatus() {
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
+			return "unpaid";
+		} else
+		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.paid)) {
+			return "unshipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.cancelled)) {
+			return "completed";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.returning)) {
+			return "returning";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getPaymentStatus().equals(PaymentStatus.refunding)) {
+			return "refunding";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.unshipped)) {
+			return "unshipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
+			return "shipped";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
+			return "returned";
+		} else
+		if (getOrderStatus().equals(OrderStatus.completed) && getPaymentStatus().equals(PaymentStatus.refunded) ) {
+			return "refunded";
+		} else {
+			return "completed";
+		}
 	}
 
 }

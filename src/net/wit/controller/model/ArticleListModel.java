@@ -1,8 +1,6 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleFavorite;
-import net.wit.entity.ArticleOptions;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -154,7 +152,11 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.htmlTag = article.delHTMLTag();
         this.tags = TagModel.bindList(article.getTags());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://"+bundle.getString("weixin.url")+"/website/t"+article.getTemplate().getSn()+"?id="+article.getId();
+        if (article.getTemplate()==null) {
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId();
+        } else {
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId();
+        }
     }
 
     public static List<ArticleListModel> bindList(List<Article> articles) {

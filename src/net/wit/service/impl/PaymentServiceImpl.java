@@ -1,24 +1,27 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
 
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
+import net.wit.Message;
 import net.wit.controller.model.CardActivityModel;
 import net.wit.controller.weex.member.CardController;
 import net.wit.dao.*;
+import net.wit.entity.Order;
 import net.wit.entity.summary.CardActivity;
-import net.wit.service.MessageService;
-import net.wit.service.PluginService;
+import net.wit.plugin.PaymentPlugin;
+import net.wit.service.*;
+import net.wit.util.DateUtil;
 import net.wit.util.JsonUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.entity.*;
-import net.wit.service.PaymentService;
 
 /**
  * @ClassName: PaymentDaoImpl
@@ -46,14 +48,23 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
 
+	@Resource(name = "orderDaoImpl")
+	private OrderDao orderDao;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
+
+	@Resource(name = "smssendServiceImpl")
+	private SmssendService smssendService;
 
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
 
 	@Resource(name = "payBillDaoImpl")
 	private PayBillDao payBillDao;
+
+	@Resource(name = "orderLogDaoImpl")
+	private OrderLogDao orderLogDao;
 
 	@Resource(name = "cardDaoImpl")
 	private CardDao cardDao;
@@ -69,6 +80,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 
 	@Resource(name = "topicDaoImpl")
 	private TopicDao topicDao;
+
+	@Resource(name = "enterpriseServiceImpl")
+	private EnterpriseService enterpriseService;
 
 	@Resource(name = "articleRewardDaoImpl")
 	private ArticleRewardDao articleRewardDao;
@@ -105,6 +119,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			return null;
 		}
 
+		if (topic.getTopicCard().getActivity()==null) {
+			return null;
+		}
+
 		List<Map<String, Object>> activitys = JsonUtils.toObject(topic.getTopicCard().getActivity(),List.class);
 		Collections.sort(activitys, new AmountComparator());
 
@@ -127,9 +145,62 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Transactional
 	public synchronized void handle(Payment payment) throws Exception {
 		paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
-		if (payment != null && !payment.getStatus().equals(Payment.Status.success)) {
+		if (payment != null && payment.getStatus().equals(Payment.Status.waiting)) {
+			payment.setPaymentDate(new Date());
+			payment.setStatus(Payment.Status.success);
+			paymentDao.merge(payment);
+			paymentDao.flush();
+
 			//处理支付结果
 			if (payment.getType() == Payment.Type.payment) {
+				Order order = payment.getOrder();
+				orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+				payment.setOrder(order);
+				paymentDao.merge(payment);
+
+				order.setAmountPaid(order.getAmountPaid().add(payment.getAmount()));
+				if (payment.getMethod().equals(Payment.Method.offline)) {
+					order.setFee(BigDecimal.ZERO);
+				} else
+				if (payment.getMethod().equals(Payment.Method.card)) {
+					order.setFee(BigDecimal.ZERO);
+				}
+
+				order.setPaymentMethod(Order.PaymentMethod.values()[payment.getMethod().ordinal()]);
+
+				order.setExpire(null);
+				order.setOrderStatus(Order.OrderStatus.confirmed);
+				order.setPaymentStatus(Order.PaymentStatus.paid);
+				orderDao.merge(order);
+
+				OrderLog orderLog = new OrderLog();
+				orderLog.setType(OrderLog.Type.payment);
+				orderLog.setOperator(payment.getMember().userId());
+				orderLog.setContent("买家付款成功");
+				orderLog.setOrder(order);
+				orderLogDao.persist(orderLog);
+
+				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.payment);
+					deposit.setMemo(payment.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(BigDecimal.ZERO);
+					deposit.setDebit(payment.getAmount());
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setOrder(order);
+					depositDao.persist(deposit);
+				}
+
+				messageService.orderMemberPushTo(orderLog);
+				messageService.orderSellerPushTo(orderLog);
+
 			} else
 			if (payment.getType() == Payment.Type.cashier) {
 				Member member = payment.getPayee();
@@ -144,6 +215,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) > 0) {
 						member.setBalance(member.getBalance().add(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.cashier);
@@ -154,6 +226,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setDeleted(false);
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
+						deposit.setPayBill(payBill);
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -163,6 +236,12 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
+				if (payBill.getCouponCode()!=null) {
+					CouponCode couponCode = payBill.getCouponCode();
+					couponCode.setIsUsed(true);
+					couponCodeDao.merge(couponCode);
+				}
+				messageService.payBillPushTo(payBill);
 			}else
 			if (payment.getType() == Payment.Type.card) {
 				Member member = payment.getPayee();
@@ -177,6 +256,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) > 0) {
 						member.setBalance(member.getBalance().add(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.card);
@@ -187,6 +267,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setDeleted(false);
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
+						deposit.setPayBill(payBill);
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -208,6 +289,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 					card.setBalance(card.getBalance().add(payBill.getCardAmount()));
 					cardDao.merge(card);
+					cardDao.flush();
 
 					CardBill cardBill = new CardBill();
 					cardBill.setDeleted(false);
@@ -232,7 +314,19 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					cardBill.setType(CardBill.Type.recharge);
 					cardBill.setBalance(card.getBalance());
 					cardBillDao.persist(cardBill);
+                    if (card.getMobile()!=null && card.getMobile().length()==11) {
+                    	String content = "";
+						DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
+						df.setMaximumFractionDigits(2);
+						if (payBill.getAmount().compareTo(payBill.getCardAmount())==0) {
+                    		content = card.getTopicCard().getTopic().getName() + ",会员卡充值"+df.format(payBill.getAmount())+"元,余额:"+df.format(card.getBalance());
+						} else {
+							content = card.getTopicCard().getTopic().getName() + ",会员卡充值"+df.format(payBill.getAmount())+"送"+df.format(payBill.getCardAmount().subtract(payBill.getAmount()))+"元,余额:"+df.format(card.getBalance());
+						}
+						smssendService.send(payBill.getOwner(), card.getMobile(),content);
+					}
 				}
+				messageService.payBillPushTo(payBill);
 			} else
 			if (payment.getType() == Payment.Type.reward) {
 				Member member = payment.getPayee();
@@ -240,6 +334,8 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				ArticleReward reward = payment.getArticleReward();
 				member.setBalance(member.getBalance().add(reward.getAmount().subtract(reward.getFee())));
 				memberDao.merge(member);
+				memberDao.flush();
+
 				Deposit deposit = new Deposit();
 				deposit.setBalance(member.getBalance());
 				deposit.setType(Deposit.Type.reward);
@@ -286,10 +382,8 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				topic.setExpire(calendar.getTime());
 				topicDao.merge(topic);
 				messageService.topicPushTo(topic);
+				enterpriseService.create(topic);
 			}
-			payment.setPaymentDate(new Date());
-			payment.setStatus(Payment.Status.success);
-			paymentDao.merge(payment);
 		}
 	}
 
@@ -301,6 +395,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		if (payment != null && payment.getStatus() == Payment.Status.waiting) {
 			payment.setStatus(Payment.Status.failure);
 			paymentDao.merge(payment);
+			paymentDao.flush();
 			if (payment.getType().equals(Payment.Type.cashier)) {
 				PayBill payBill = payment.getPayBill();
 				payBill.setStatus(PayBill.Status.failure);
@@ -318,6 +413,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 						card.setBalance(card.getBalance().add(payBill.getCardDiscount()));
 						cardDao.merge(card);
+						cardDao.flush();
 						CardBill bill = new CardBill();
 						bill.setBalance(card.getBalance());
 						bill.setCard(card);
@@ -402,4 +498,43 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	public Page<Payment> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return paymentDao.findPage(beginDate,endDate,pageable);
 	}
+
+	/**
+	 * 查询状态
+	 */
+	public void query() {
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("status", Filter.Operator.eq,Payment.Status.waiting));
+		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
+		List<Payment> data = paymentDao.findList(null,null,filters,null);
+		for (Payment payment:data) {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				if (paymentPlugin == null) {
+					resultCode = "0001";
+				} else {
+					resultCode = paymentPlugin.queryOrder(payment,null);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					try {
+						this.handle(payment);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				case "0001":
+					try {
+						this.close(payment);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+			}
+		}
+
+	}
+
 }

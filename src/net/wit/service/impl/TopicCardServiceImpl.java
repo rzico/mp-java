@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Filter.Operator;
@@ -89,7 +88,8 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 				topicCard.getTopic().getName(),
 				topicCard.getTopic().getMember().getLogo(),
 				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor())
+				topicCard.getDescription(),getColor(topicCard.getColor()),
+				topicCard.getTopic().getMember()
 		);
 		if (data.getString("errcode").equals("0")){
 			String cardId = data.getString("card_id");
@@ -113,7 +113,8 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 				topicCard.getTopic().getName(),
 				topicCard.getTopic().getMember().getLogo(),
 				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor())
+				topicCard.getDescription(),getColor(topicCard.getColor()),
+				topicCard.getTopic().getMember()
 		);
 		if (data.getString("errcode").equals("0")){
 			return super.update(topicCard);
@@ -133,7 +134,8 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 				topicCard.getTopic().getName(),
 				topicCard.getTopic().getMember().getLogo(),
 				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor())
+				topicCard.getDescription(),getColor(topicCard.getColor()),
+				topicCard.getTopic().getMember()
 		);
 		if (data.getString("errcode").equals("0")){
 			return super.update(topicCard, ignoreProperties);
@@ -188,5 +190,11 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 	   }
        return topicCard;
 	}
+
+
+	public TopicCard find(String cardId) {
+	  return topicCardDao.find(cardId);
+	}
+
 
 }

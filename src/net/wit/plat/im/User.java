@@ -103,6 +103,12 @@ public class User {
 
     }
     public static boolean userAttr(Member member) {
+        if (member.getLogo()==null) {
+            return true ;
+        }
+        if (member.getNickName()==null) {
+            return true;
+        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String userSig=User.createUserSig("zhangsr");
         int random=StringUtils.Random6Code();

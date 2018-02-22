@@ -156,7 +156,7 @@ public class Admin extends BaseEntity {
     /**
      * 绑定会员
      */
-    @NotNull
+    //@NotNull
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -352,6 +352,7 @@ public class Admin extends BaseEntity {
         }
     }
 
+    @JsonIgnore
     public Boolean isOwner() {
         if (this.getEnterprise()==null) {
             return true;
@@ -359,4 +360,36 @@ public class Admin extends BaseEntity {
             return this.getEnterprise().getMember().equals(this.getMember());
         }
     }
+
+
+    @JsonIgnore
+    public Boolean isRole(String roles) {
+        if (isOwner()) {
+            return true;
+        }
+        Boolean isTrue = false;
+        for (int i=0;i<roles.length();i++) {
+            String s = roles.substring(i,i+1);
+            for (Role role:getRoles()) {
+                if (s.equals(role.getId().toString())) {
+                    isTrue = true;
+                    break;
+                }
+            }
+        }
+        return isTrue;
+    }
+
+    public String roles() {
+        String roleStr = "";
+        if (getRoles() != null) {
+            for (Role role:getRoles()) {
+                roleStr = roleStr.concat(role.getId().toString());
+            }
+            return roleStr;
+        } else {
+            return null;
+        }
+    }
+
 }

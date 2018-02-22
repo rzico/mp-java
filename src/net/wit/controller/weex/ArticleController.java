@@ -35,6 +35,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "redisServiceImpl")
     private RedisService redisService;
 
+    @Resource(name = "tagServiceImpl")
+    private TagService tagService;
+
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
@@ -46,6 +49,9 @@ public class ArticleController extends BaseController {
 
     @Resource(name = "articleLaudServiceImpl")
     private ArticleLaudService articleLaudService;
+
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
 
     @Resource(name = "articleFavoriteServiceImpl")
     private ArticleFavoriteService articleFavoriteService;
@@ -77,7 +83,7 @@ public class ArticleController extends BaseController {
             articleService.update(article);
         }
         ArticleViewModel model =new ArticleViewModel();
-        model.bind(article);
+        model.bind(article,member);
         return Message.bind(model,request);
    }
 
@@ -106,7 +112,9 @@ public class ArticleController extends BaseController {
             laudfilters.add(new Filter("member", Filter.Operator.eq,member));
             laudfilters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
-            model.setHasFavorite(favorites.size()>0);
+            model.setHasLaud(lauds.size()>0);
+            MemberFollow memberFollow = memberFollowService.find(member, article.getMember());
+            model.setHasFollow(memberFollow!=null);
 
         }
         return Message.bind(model,request);
@@ -123,7 +131,7 @@ public class ArticleController extends BaseController {
             return Message.error("无效文章编号");
         }
         String sn="1001";
-        if (article.getTemplate()==null) {
+        if (article.getTemplate()!=null) {
             sn = article.getTemplate().getSn();
         }
         return Message.success((Object)sn,"发布成功");
@@ -135,20 +143,28 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,Boolean isTop,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
             filters.add(new Filter("articleCategory", Filter.Operator.eq,articleCategory));
         }
-        if (authorId!=null) {
-            Member member = memberService.find(authorId);
-            filters.add(new Filter("member", Filter.Operator.eq,member));
-        }
         if (articleCatalogId!=null) {
             ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
             filters.add(new Filter("articleCatalog", Filter.Operator.eq,articleCatalog));
         }
+        if (isTop != null) {
+            filters.add(new Filter("isTop", Filter.Operator.eq,isTop));
+        }
+        if (authorId!=null) {
+            Member member = memberService.find(authorId);
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+        } else {
+            filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+        }
+
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
@@ -156,6 +172,45 @@ public class ArticleController extends BaseController {
         return Message.bind(model,request);
     }
 
+    /**
+     *  热点查询列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/hot", method = RequestMethod.GET)
+    @ResponseBody
+    public Message hot(Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        List<Tag> tags = null;
+        tags = tagService.findList(4L);
+        pageable.setFilters(filters);
+        Page<Article> page = articleService.findPage(null,null,tags,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+    /**
+     *  圈子查询列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/circle", method = RequestMethod.GET)
+    @ResponseBody
+    public Message circle(Long id,Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        List<Tag> tags = null;
+        tags = tagService.findList(4L);
+        pageable.setFilters(filters);
+        Page<Article> page = articleService.findPage(null,null,tags,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
 
     /**
      *  文章搜索

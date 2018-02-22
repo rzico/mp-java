@@ -33,6 +33,17 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">LOGO：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-logo-container">
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="hidden" value="" id="logo" name="logo">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
@@ -90,6 +101,9 @@
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
+
+        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
 
         <script type="text/javascript">
             $(function(){

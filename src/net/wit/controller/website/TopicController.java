@@ -1,5 +1,6 @@
 package net.wit.controller.website;
 
+import com.sun.mail.util.BASE64DecoderStream;
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Order;
@@ -7,21 +8,22 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCatalogModel;
 import net.wit.controller.model.ArticleViewModel;
 import net.wit.controller.model.TopicViewModel;
-import net.wit.entity.Article;
-import net.wit.entity.ArticleCatalog;
-import net.wit.entity.Member;
-import net.wit.entity.Topic;
+import net.wit.entity.*;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.service.*;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.*;
 
 
 /**
@@ -55,24 +57,41 @@ public class TopicController extends BaseController {
     @Resource(name = "topicServiceImpl")
     private TopicService topicService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
+    @Resource(name = "friendsServiceImpl")
+    private FriendsService friendsService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      * 打开首页
      * id 会员
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(Long id,HttpServletRequest request){
+    public String index(Long id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.find(id);
         if (member==null) {
-            return "redirect:/website";
+            member = memberService.getCurrent();
+            if (member==null) {
+                String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+id;
+                String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+                redirectUrl = URLEncoder.encode(redirectUrl);
+                return "redirect:"+MenuManager.codeUrlO2(redirectUrl);
+            }
         }
+
         String template="1001";
         Topic topic = topicService.find(member);
         if (topic!=null) {
             template = topic.getTemplate().getSn();
         }
 
-        return "redirect:/website/c"+template+"?id="+id;
-    }
+        return "redirect:"+"http://"+bundle.getString("weixin.url")+"/#/c"+template+"?id="+id;
+     }
 
     /**
      * 专栏信息
@@ -83,18 +102,35 @@ public class TopicController extends BaseController {
     public Message view(Long id,HttpServletRequest request){
         Member member = memberService.find(id);
         if (member==null) {
-            return Message.error("无效会员编号");
+            member = memberService.getCurrent();
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Topic topic = topicService.find(member);
         TopicViewModel model =new TopicViewModel();
-        model.bind(member);
+        model.bind(member,member);
         Long at = articleService.count(new Filter("member", Filter.Operator.eq,member));
         model.setArticle(at.intValue());
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
 
+
         List<ArticleCatalog> catalogs = articleCatalogService.findList(null,filters,null);
         model.setCatalogs(ArticleCatalogModel.bindList(catalogs));
+        Member self = memberService.getCurrent();
+        if (self!=null) {
+            MemberFollow follow = memberFollowService.find(self,member);
+            model.setFollowed(follow!=null);
+            Friends friends = friendsService.find(self,member);
+            if (friends!=null) {
+                model.setFriendStatus(friends.getStatus());
+            }
+        }
         return Message.bind(model,request);
    }
 

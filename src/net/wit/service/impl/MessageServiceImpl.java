@@ -1,34 +1,44 @@
 package net.wit.service.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.util.JSONUtils;
 import net.wit.*;
 import net.wit.Filter.Operator;
 
-import net.wit.controller.model.ArticleListModel;
-import net.wit.controller.model.DepositModel;
+import net.wit.controller.model.*;
+import net.wit.dao.ArticleDao;
+import net.wit.dao.BindUserDao;
 import net.wit.dao.MemberDao;
 import net.wit.entity.Message;
 import net.wit.plat.im.Push;
 import net.wit.plat.im.User;
+import net.wit.plat.weixin.main.MessageManager;
+import net.wit.plugin.StoragePlugin;
 import net.wit.util.JsonUtils;
 import net.wit.util.SettingUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.dao.MessageDao;
 import net.wit.entity.*;
 import net.wit.service.MessageService;
+
+import static net.wit.plat.im.Push.taskPush;
 
 /**
  * @ClassName: MessageDaoImpl
@@ -44,6 +54,16 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
+
+	@Resource(name = "bindUserDaoImpl")
+	private BindUserDao bindUserDao;
+
+	@Resource(name = "articleDaoImpl")
+	private ArticleDao articleDao;
+
+
+	@Resource(name = "taskExecutor")
+	private TaskExecutor taskExecutor;
 
 	@Resource(name = "messageDaoImpl")
 	public void setBaseDao(MessageDao messageDao) {
@@ -99,6 +119,58 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		super.update(message);
 	}
 
+	/**
+	 * 添加发送任务
+	 */
+	private void addTask(final String sender, final String receiver, final Long timeStamp, final String content) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+				   Push.taskPush(sender,receiver,timeStamp,content);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 添加模版发送任务
+	 */
+	private void addWXTask(final String openId, final String title, final Date timeStamp, final BigDecimal amount,final BigDecimal balance,final String content) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					NumberFormat nf = NumberFormat.getCurrencyInstance();
+					String data = MessageManager.createDepositTempelete(openId,title,"",
+							formatter.format(timeStamp),nf.format(amount),nf.format(balance),content);
+					MessageManager.sendMsg(data);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 添加模版发送任务
+	 */
+	private void addWXTask(final String openId, final String first, final String OrderSn, final String OrderStatus,final String remark,final String url,final Date timeStamp) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String data = MessageManager.createOrderTempelete(openId,first,url,
+							OrderSn,OrderStatus,remark,formatter.format(timeStamp));
+					MessageManager.sendMsg(data);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Member GMInit(Message.Type type) {
 		String userName = "gm_"+String.valueOf(10200+type.ordinal());
 		Member sender = memberDao.findByUsername(userName);
@@ -116,7 +188,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				title = "同意好友";
 			} else
 			if (type.equals(Message.Type.favorite)) {
-				title = "收款提醒";
+				title = "收藏提醒";
 			} else
 			if (type.equals(Message.Type.follow)) {
 				title = "关注提醒";
@@ -142,12 +214,15 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			if (type.equals(Message.Type.share)) {
 				title = "文章分享";
 			} else
+			if (type.equals(Message.Type.cashier)) {
+				title = "线下收单";
+			} else
 			{
 				title = "系统消息";
 			}
 			sender.setNickName( title);
 			sender.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
-			sender.setPoint(0L);
+//			sender.setPoint(0L);
 			sender.setBalance(BigDecimal.ZERO);
 			sender.setIsEnabled(true);
 			sender.setIsLocked(false);
@@ -176,7 +251,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				message.setMember(sender);
 			}
 			super.save(message);
-			Push.impush(message);
+			addTask(message.getSender().getUsername(),message.getReceiver().userId(),message.getCreateDate().getTime(),message.getContent());
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -200,6 +275,97 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		ext.bind(reward.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
+	}
+
+	//订单提醒
+	public Boolean orderMemberPushTo(OrderLog orderLog) {
+		Message msg = new Message();
+		msg.setReceiver(orderLog.getOrder().getMember());
+		msg.setMember(orderLog.getOrder().getSeller());
+		msg.setType(Message.Type.order);
+		msg.setThumbnial(msg.getMember().getLogo());
+		msg.setTitle("订单提醒");
+		msg.setContent(orderLog.getContent());
+		OrderListModel ext = new OrderListModel();
+		ext.bind(orderLog.getOrder());
+		msg.setExt(JsonUtils.toJson(ext));
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		BindUser bindUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("weixin.appid"), BindUser.Type.weixin);
+		if (bindUser!=null) {
+			String url = "http://"+bundle.getString("weixin.url")+"/order/details?sn="+orderLog.getOrder().getSn();
+			addWXTask(bindUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),msg.getContent(),url,orderLog.getCreateDate());
+		}
+		return pushTo(msg);
+	}
+
+	//订单提醒
+	public Boolean orderSellerPushTo(OrderLog orderLog) {
+		Message msg = new Message();
+		msg.setReceiver(orderLog.getOrder().getSeller());
+		msg.setMember(orderLog.getOrder().getMember());
+		msg.setType(Message.Type.order);
+		msg.setThumbnial(msg.getMember().getLogo());
+		msg.setTitle("订单提醒");
+		msg.setContent(orderLog.getContent());
+		OrderListModel ext = new OrderListModel();
+		ext.bind(orderLog.getOrder());
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
+	//收单提醒
+	public Boolean payBillPushTo(PayBill payBill) {
+		Message msg = new Message();
+		msg.setReceiver(payBill.getOwner());
+		msg.setMember(payBill.getMember());
+		msg.setType(Message.Type.cashier);
+		if (payBill.getMember()==null) {
+			msg.setThumbnial(payBill.getMember().getLogo());
+		}
+		java.text.DecimalFormat   df   =  new java.text.DecimalFormat("#0.00");
+		if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
+			msg.setTitle("退款通知");
+			msg.setContent("线下退款" + df.format(payBill.getPayBillAmount()) + "元");
+		} else {
+			msg.setTitle("线下收款");
+			msg.setContent("芸店收款" + df.format(payBill.getPayBillAmount()) + "元");
+		}
+		PayBillViewModel ext = new PayBillViewModel();
+		ext.bind(payBill);
+		msg.setExt(JsonUtils.toJson(ext));
+		pushTo(msg);
+		Shop shop = payBill.getShop();
+		if (shop!=null) {
+			String c = shop.getCode();
+			if (c==null) {
+				return false;
+			}
+			List<Filter> filters = new ArrayList<Filter>();
+			filters.add(new Filter("username",Operator.eq,'d'+c));
+            List<Member> members = memberDao.findList(null,null,filters,null);
+
+            for (Member member:members) {
+				Message mmsg = new Message();
+				mmsg.setReceiver(member);
+				mmsg.setMember(payBill.getMember());
+				mmsg.setType(Message.Type.cashier);
+				if (payBill.getMember()==null) {
+					mmsg.setThumbnial(payBill.getMember().getLogo());
+				}
+				if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
+					mmsg.setTitle("退款通知");
+					mmsg.setContent("线下退款" + df.format(payBill.getPayBillAmount()) + "元");
+				} else {
+					mmsg.setTitle("线下收款");
+					mmsg.setContent("芸店收款" + df.format(payBill.getPayBillAmount()) + "元");
+				}
+				PayBillModel mext = new PayBillModel();
+				mext.bind(payBill);
+				mmsg.setExt(JsonUtils.toJson(mext));
+				return pushTo(mmsg);
+			}
+		}
+		return true;
 	}
 
 	//收藏提醒
@@ -243,6 +409,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		}  else
 		if (share.getShareType().equals(ArticleShare.ShareType.browser)) {
 			shareDescr = "浏览器";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.platform)) {
+			shareDescr = "公众号";
+		}  else
+		if (share.getShareType().equals(ArticleShare.ShareType.routine)) {
+			shareDescr = "小程序";
 		} else {
 			shareDescr = setting.getSiteName()+"好友";
 		}
@@ -250,6 +422,22 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setContent("【"+share.getMember().getNickName()+"】分享你的文章:"+share.getArticle().getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(share.getArticle());
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
+	//发布提醒
+	public Boolean publishPushTo(Article article,Member receiver) {
+		Setting setting = SettingUtils.get();
+		Message msg = new Message();
+		msg.setMember(article.getMember());
+		msg.setReceiver(receiver);
+		msg.setType(Message.Type.share);
+		msg.setThumbnial(article.getMember().getLogo());
+		msg.setTitle("【"+article.getMember().getNickName()+"】刚发布了一篇新文章");
+		msg.setContent("【"+article.getMember().getNickName()+"】刚发布了一篇新文章:"+article.getTitle());
+		ArticleListModel ext = new ArticleListModel();
+		ext.bind(article);
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
@@ -303,9 +491,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(friend);
 		msg.setType(Message.Type.addfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle(member.getNickName());
+		msg.setTitle("【"+member.getNickName()+"】申请成为你的好友。");
 		msg.setContent("【"+member.getNickName()+"】申请成为你的好友。");
-		msg.setExt("friend.add");
 		return pushTo(msg);
 	}
 
@@ -316,10 +503,30 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(friend);
 		msg.setType(Message.Type.adoptfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle(member.getNickName());
+		msg.setTitle("【"+member.getNickName()+"】同意成为你的好友。");
 		msg.setContent("【"+member.getNickName()+"】同意成为你的好友。");
-		msg.setExt("friend.adopt");
 		return pushTo(msg);
+	}
+
+	//添加好友
+	public Boolean addPromoterPushTo(Member member,Member promoter) {
+		Message msg = new Message();
+		msg.setMember(member);
+		msg.setReceiver(promoter);
+		msg.setType(Message.Type.adoptfriend);
+		msg.setThumbnial(member.getLogo());
+		msg.setTitle("您的新成员【"+member.getNickName()+"】添加你为好友。");
+		msg.setContent("您的新成员【"+member.getNickName()+"】添加你为好友。");
+		pushTo(msg);
+		Message adt = new Message();
+		adt.setMember(promoter);
+		adt.setReceiver(member);
+		adt.setType(Message.Type.adoptfriend);
+		adt.setThumbnial(promoter.getLogo());
+		adt.setTitle("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
+		adt.setContent("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
+		pushTo(adt);
+		return true;
 	}
 
 	//活动专栏
@@ -330,6 +537,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setType(Message.Type.message);
 		msg.setTitle("活动专栏");
 		msg.setContent("【"+topic.getMember().getNickName()+"】感谢您点亮专栏，您已拥有VIP特权。");
+		Map<String,String> ext = new HashMap<String,String>();
+		ext.put("type","topic");
+		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
 
@@ -338,8 +548,11 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
         msg.setReceiver(deposit.getMember());
         msg.setType(Message.Type.account);
         if (deposit.getType().equals(Deposit.Type.cashier)) {
-			msg.setMember(deposit.getPayment().getMember());
-			msg.setThumbnial(msg.getMember().getLogo());
+        	PayBill payBill = deposit.getPayBill();
+        	if (payBill!=null) {
+				msg.setMember(payBill.getOwner());
+				msg.setThumbnial(msg.getMember().getLogo());
+			}
 			msg.setTitle("线下收单");
 		} else
 		if (deposit.getType().equals(Deposit.Type.recharge)) {
@@ -368,20 +581,57 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		} else
 		if (deposit.getType().equals(Deposit.Type.rebate)) {
 			msg.setTitle("奖励收入");
+		} else
+		if (deposit.getType().equals(Deposit.Type.smsSend)) {
+			msg.setTitle("营销短信");
 		} else {
-			msg.setTitle("账单提醒");
+			msg.setTitle("其他费用");
 		}
 		BigDecimal amount = deposit.getCredit().subtract(deposit.getDebit());
 		if (amount.compareTo(BigDecimal.ZERO)>0) {
-			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#0.00");
 			msg.setContent("账户收入:"+df.format(amount)+"元,来源:"+deposit.getMemo());
 		} else {
-			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+			java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#0.00");
 			msg.setContent("账户支出:"+df.format(BigDecimal.ZERO.subtract(amount))+"元,用途:"+deposit.getMemo());
 		}
 		DepositModel ext = new DepositModel();
 		ext.bind(deposit);
 		msg.setExt(JsonUtils.toJson(ext));
-		return pushTo(msg);
+		pushTo(msg);
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		BindUser bindUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("weixin.appid"), BindUser.Type.weixin);
+		if (bindUser!=null) {
+			System.out.println("公众号，账单推送");
+			addWXTask(bindUser.getOpenId(),msg.getTitle(),deposit.getCreateDate(),amount,deposit.getBalance(),msg.getContent());
+		}
+		return true;
 	}
+
+	public void login(Member member,HttpServletRequest request) {
+		if (DateUtils.truncate(member.getCreateDate(), Calendar.DATE).equals(DateUtils.truncate(new Date(), Calendar.DATE))) {
+			Article article = articleDao.find(1L);
+			ArticleShare share = new ArticleShare();
+			share.setIp(request.getRemoteAddr());
+			share.setMember(member);
+			share.setArticle(article);
+			share.setIsShow(true);
+			share.setShareType(ArticleShare.ShareType.appWeex);
+			share.setAuthor(article.getMember());
+			sharePushTo(share);
+		}
+		if (member.getMobile()==null) {
+			Message msg = new Message();
+			msg.setMember(member);
+			msg.setReceiver(member);
+			msg.setType(Message.Type.message);
+			msg.setTitle("绑定手机号");
+			msg.setContent("接工信部要求，发布文章都必须绑定手机。");
+			Map<String,String> ext = new HashMap<String,String>();
+			ext.put("type","mobile");
+			msg.setExt(JsonUtils.toJson(ext));
+			pushTo(msg);
+		}
+	}
+
 }

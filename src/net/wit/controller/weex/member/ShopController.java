@@ -67,12 +67,12 @@ public class ShopController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有点亮专栏");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Enterprise enterprise = admin.getEnterprise();
         Shop entity = null;
@@ -123,7 +123,7 @@ public class ShopController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Pageable pageable, HttpServletRequest request){
+    public Message list(Pageable pageable,Double lat,Double lng, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -135,13 +135,16 @@ public class ShopController extends BaseController {
         if (admin==null) {
             return Message.error("没有点亮专栏");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Enterprise enterprise = admin.getEnterprise();
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("enterprise", Filter.Operator.eq,enterprise));
         pageable.setFilters(filters);
         Page<Shop> page = shopService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(ShopModel.bindList(page.getContent()));
+        model.setData(ShopModel.bindList(page.getContent(),lat,lng));
         return Message.bind(model,request);
     }
 
@@ -201,7 +204,6 @@ public class ShopController extends BaseController {
 
         return Message.success("绑定成功");
     }
-
 
     /**
      *  1分钱交易测试款

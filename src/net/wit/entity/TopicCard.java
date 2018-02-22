@@ -115,6 +115,10 @@ public class TopicCard extends BaseEntity {
     @JsonIgnore
     private String activity;
 
+    /** 短信提醒 */
+    @Column(columnDefinition="longtext comment '短信提醒'")
+    private Boolean usegsm;
+
     /**
      * 专栏
      */

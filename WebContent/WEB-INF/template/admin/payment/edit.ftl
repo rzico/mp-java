@@ -33,7 +33,7 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
-        [#if data??]
+    [#if data??]
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">到期时间：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -52,7 +52,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>方式：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <span> ${message("Payment.Method."+data.method)}</span>
-             </div>
+            </div>
         </div>
 
         <div class="row cl">
@@ -100,7 +100,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">付款人：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <span> ${data.mapMember}</span>
+                <span> ${data.mapMember.name}</span>
             </div>
         </div>
 
@@ -108,18 +108,27 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>收款人：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                 <span> ${data.mapPayee}</span>
+                <span> ${data.mapPayee.name}</span>
             </div>
         </div>
+
+        <div class="row cl" id="Voucher">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>付款凭证：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span> <input type="text" class="input-text" value="" placeholder="请填写付款凭证..." id="paymentVoucher"
+                              name="paymentVoucher"> </span>
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp; 查询状态&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp; 提交付款&nbsp;&nbsp;">
             </div>
         </div>
-            [#else]
-            查找失败
-        [/#if]
+    [#else]
+        查找失败
+    [/#if]
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
@@ -138,6 +147,12 @@
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
+
+                if("${message("Payment.Status."+data.status)}"!="等待支付"){
+                    $submit.val("  查询状态  ");
+                    $("#Voucher").hide();
+                }
+
                 $('.skin-minimal input').iCheck({
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
@@ -167,7 +182,11 @@
                         payee:{
                             required:true,
                         },
-
+                        [#if data.status=="waiting"]
+                        paymentVoucher:{
+                            required:true,
+                        },
+                        [/#if]
                     },
                     onkeyup:false,
                     focusCleanup:true,
@@ -177,31 +196,32 @@
                             icon: 16
                             ,shade: 0.01
                         });
-                        $(form).ajaxSubmit({
-                            type: 'post',
-                            url: "${base}/admin/payment/update.jhtml" ,
-                            beforeSend: function() {
-                                $submit.prop("disabled", true);
-                            },
-                            success: function(message){
-                                layer.close(load);
-                                if(message.type ==  "success"){
+                            $(form).ajaxSubmit({
+                                type: 'post',
+                                url: "${base}/admin/payment/[#if data.status!="waiting"]update[#else]register[/#if].jhtml",
+                                beforeSend: function () {
+                                    $submit.prop("disabled", true);
+                                },
+                                success: function (message) {
+                                    layer.close(load);
+                                    if (message.type == "success") {
 //                                    关闭当前页面
-                                    var index = parent.layer.getFrameIndex(window.name);
-                                    parent.add_row(message.data);
-                                    //关闭弹窗并提示
-                                    parent.closeWindow(index,message.content);
-                                }else{
+                                        var index = parent.layer.getFrameIndex(window.name);
+                                        parent.add_row(message.data);
+                                        //关闭弹窗并提示
+                                        parent.closeWindow(index, message.content);
+                                    } else {
+                                        $submit.prop("disabled", false);
+                                        parent.toast(message.content, 2);
+                                    }
+                                },
+                                error: function (XmlHttpRequest, textStatus, errorThrown) {
                                     $submit.prop("disabled", false);
-                                    parent.toast(message.content,2);
+                                    layer.close(load);
+                                    [#if data.status!="waiting"]parent.toast('查询失败', 2);
+                                    [#else]parent.toast('付款失败', 2);[/#if]
                                 }
-                            },
-                            error: function(XmlHttpRequest, textStatus, errorThrown){
-                                $submit.prop("disabled", false);
-                                layer.close(load);
-                                parent.toast('查询失败',2);
-                            }
-                        });
+                            });
                     }
                 });
             });

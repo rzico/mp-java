@@ -76,12 +76,14 @@
         </button>
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
-        <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 收款单 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增收款单</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-        </span>
-    </div>
+        <!--
+            <span class="l">
+                    <a href="javascript:;" onclick="add('首页 &gt; 收款单 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                    <i class="Hui-iconfont">&#xe600;</i> 新增收款单</a>
+                    <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+            </span>
+        -->
+        </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -235,11 +237,15 @@
                     "sTitle": "操作员",
                     "sClass": "center"
                 },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
-                }
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {
+                        "mData": "id",
+                        "sTitle": "操作",
+                        "sClass": "center"
+                    }
+                [/#if]
+            [/@adminDirective]
             ],
             "aoColumnDefs": [
                 {
@@ -267,13 +273,21 @@
                 {
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if (data != null){
+                            return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        }else{
+                            return "";
+                        }
                     }
                 },
                  {
                     "aTargets": [13],
                     "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        if (data != null){
+                            return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        }else{
+                            return "";
+                        }
                     }
                 },
                 {
@@ -309,6 +323,22 @@
                     }
                 },
                 {
+                    "aTargets": [10],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                        [#if methods??]
+                            [#list methods as method]
+                                if ("${method.id}" == data) {
+                                    return "${method.name}";
+                                }
+                            [/#list]
+                        [/#if]
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
                     "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
@@ -327,20 +357,30 @@
                             return "";
                         }
                     }
-                }, 
-                {
-                    "aTargets": [16],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 收款单 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>"
-                        }else{
-                            return "";
-                        }
-                    }
-
                 },
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {
+                        "aTargets": [16],
+                        "mRender": function (data, display, row) {
+                            if (data != null) {
+                                return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 收款单 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>"
+                            } else {
+                                return "";
+                            }
+                        }
+
+                    },
+                [/#if]
+            [/@adminDirective]
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 5, 6, 16]}// 制定列不参与排序
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {"orderable": false, "aTargets": [0, 5, 6, 16]}// 制定列不参与排序
+                [#else]
+                    {"orderable": false, "aTargets": [0, 5, 6]}
+                [/#if]
+            [/@adminDirective]
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
@@ -410,7 +450,9 @@
     }
     /*查看*/
     function show(title, url, id, w, h) {
-        layer_show(title, url, w, h);
+        var w_1 = window.innerWidth*0.5;
+        var h_1 = window.innerHeight*0.6;
+        layer_show(title, url, w_1, h_1);
     }
     /*编辑*/
     function edit(title, url, id, w, h) {

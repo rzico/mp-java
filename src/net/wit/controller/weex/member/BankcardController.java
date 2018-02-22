@@ -48,6 +48,15 @@ public class BankcardController extends BaseController {
     @Resource(name = "bankcardServiceImpl")
     private BankcardService bankcardService;
 
+    @Resource(name = "bindUserServiceImpl")
+    private BindUserService bindUserService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
+
     /**
      * 银行信息查询
      */
@@ -92,7 +101,12 @@ public class BankcardController extends BaseController {
         String m = rsaService.decryptParameter("mobile", request);
         rsaService.removePrivateKey(request);
         if (m==null) {
-            return Message.error("无效手机号");
+            Member member = memberService.getCurrent();
+            if (member!=null & member.getMobile()!=null) {
+                m = member.getMobile();
+            } else {
+                return Message.error("无效手机号");
+            }
         }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
@@ -100,8 +114,8 @@ public class BankcardController extends BaseController {
         SafeKey safeKey = new SafeKey();
         safeKey.setKey(m);
         safeKey.setValue(securityCode);
-        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
-        redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),300));
+        redisService.put(Member.MOBILE_BIND_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();
         smsSend.setMobile(m);
@@ -111,14 +125,51 @@ public class BankcardController extends BaseController {
     }
 
     /**
+     * 验证合法性
+     */
+    @RequestMapping(value = "/captcha", method = RequestMethod.POST)
+    @ResponseBody
+    public Message captcha(HttpServletRequest request){
+        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
+        if (redis==null) {
+            return Message.error("验证码已过期");
+        }
+        SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
+        Member member =memberService.getCurrent();
+        try {
+            if (!member.getMobile().equals(safeKey.getKey())) {
+                return Message.error("无效验证码");
+            }
+            String captcha = rsaService.decryptParameter("captcha", request);
+            rsaService.removePrivateKey(request);
+            if (member==null) {
+                return Message.error("无效验证码");
+            }
+            if (captcha==null) {
+                return Message.error("无效验证码");
+            }
+            if (safeKey.hasExpired()) {
+                return Message.error("验证码已过期");
+            }
+            if (!captcha.equals(safeKey.getValue())) {
+                return Message.error("无效验证码");
+            }
+            return Message.success(member,"验证成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Message.error("验证失败");
+        }
+    }
+
+    /**
      *  绑定银行卡
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
     public Message submit(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
-        Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
-        redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
+        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
+        redisService.remove(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
         }
@@ -136,7 +187,7 @@ public class BankcardController extends BaseController {
 
             String mima = rsaService.decryptValue(body, request);
             rsaService.removePrivateKey(request);
-            System.out.println(mima);
+
             if (mima==null) {
                 return Message.error("数据解密失败");
             }
@@ -153,6 +204,7 @@ public class BankcardController extends BaseController {
             String appcode =  bundle.getString("bank.appcode");// "7af4ab729dd345eaad8eebb918ada80c";
 
             Map<String, String> headers = new HashMap<String, String>();
+
             //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
             headers.put("Authorization", "APPCODE " + appcode);
             Map<String, String> querys = new HashMap<String, String>();
@@ -163,6 +215,7 @@ public class BankcardController extends BaseController {
             HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
             String resp =  EntityUtils.toString(response.getEntity());
             JSONObject result = JSONObject.fromObject(resp);
+
             if ("0".equals(result.getString("error_code"))) {
                 JSONObject inf = result.getJSONObject("result").getJSONObject("information");
                 if (!"1".equals(inf.getString("iscreditcard"))){
@@ -193,11 +246,28 @@ public class BankcardController extends BaseController {
                     bankcardService.save(bankcard);
                 }
                 if (member.getMobile()==null) {
+                    Member m = memberService.findByMobile(data.get("mobile"));
+                    if (m==null) {
+                        m.setUsername(null);
+                        m.setMobile(null);
+                        memberService.save(m);
+                    }
+                    member.setUsername(data.get("mobile"));
                     member.setMobile(data.get("mobile"));
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);
-                return Message.success("success");
+                for (Card card:member.getCards()) {
+                    card.setMobile(member.getMobile());
+                    card.setName(member.getName());
+                    cardService.update(card);
+                }
+                Admin admin = adminService.findByMember(member);
+                if (admin!=null) {
+                    admin.setName(member.getName());
+                    adminService.update(admin);
+                }
+                return Message.success("绑定成功");
             } else {
                 return Message.error(result.get("reason").toString());
             }

@@ -68,6 +68,8 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
 		<a href="javascript:;" onclick="add('首页 &gt; 文章管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
                 class="Hui-iconfont">&#xe600;</i> 新增文章</a>
+        <a href="javascript:;" onclick="Propaganda()" class="btn btn-primary radius"><i
+                class="Hui-iconfont">&#xe600;</i> 文章推广</a>
         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
     </span></div>
     <div class="mt-20">
@@ -173,27 +175,27 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.authority",
+                    "mData": "authority",
                     "sTitle": "谁可见",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isPitch",
+                    "mData": "isPitch",
                     "sTitle": "精选",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isPublish",
+                    "mData": "isPublish",
                     "sTitle": "投稿",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isReview",
+                    "mData": "isReview",
                     "sTitle": "评论",
                     "sClass": "center"
                 },
                 {
-                    "mData": "articleOptions.isReward",
+                    "mData": "isReward",
                     "sTitle": "赞赏",
                     "sClass": "center"
                 },
@@ -243,6 +245,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "mapIsAudit",
+                    "sTitle": "发布",
+                    "sClass": "center"
+                },
+                {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -269,6 +276,16 @@
                     "aTargets": [3],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
                     }
                 },
                 {
@@ -374,16 +391,6 @@
                     }
                 },
                 {
-                    "aTargets": [5],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
                     "aTargets": [19],
                     "mRender": function (data, display, row) {
                         if(data != null){
@@ -394,13 +401,24 @@
                     }
                 },
                 {
-                    "aTargets": [20],
+                    "aTargets": [21],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [20],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data.name == 'true') {
+                            return "<span class=\"label label-success radius\">已发布</span>";
+                        } else {
+                            <!-- return "<span class=\"label label-success radius\">点我发布</span>"; -->
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"publish(this,'"+data.id+"');\" name=\"\">点我发布</button>"
                         }
                     }
 
@@ -437,6 +455,8 @@
                     async: false,
                     success: function (message) {
                         layer.close(index);
+                        console.log(message);
+
                         if (message.type == "success") {
                             fnCallback(message.data);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
                         } else {
@@ -570,7 +590,38 @@
             });
         });
     }
-	
+
+    /*发布*/
+    function publish(obj, id) {
+        layer.confirm('确认要发布吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    articleId: id
+                },
+                url: '${base}/admin/article/publish.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        $(obj).parents("tr").addClass("publish");
+                        table.row('.publish').remove().draw( false );
+                        layer.msg('已发布!', {icon: 1, time: 1000});
+                    } else {
+                        layer.msg('发布失败!', {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);
@@ -594,6 +645,55 @@
             }
         }
         return format;
+    }
+
+    /*文章推广*/
+    function Propaganda(){
+        var url = "${base}/admin/article/propaganda.jhtml";
+        var i = 0;
+        $('input[type="checkbox"][name="ids"]:checked').each(
+                function() {
+                    $(this).parents("tr").addClass("selected");
+                    if(i == 0){
+                        url += "?ids="+$(this).val();
+                    }else{
+                        url += "&ids="+$(this).val();
+                    }
+                    i++;
+                }
+        );
+        if(i < 1) {
+            layer.msg('请选择要推广的文章!', {icon: 0, time: 1000});
+            return;
+        }
+        if(i>8){
+            layer.msg('推广的文章必须小于8篇!', {icon: 0, time: 1000});
+            return;
+        }
+        layer.confirm('确认要推广吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                url: url ,
+                dataType: 'json' ,
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        table.rows('.selected').remove().draw( false );
+                        layer.msg('已推广,微信查收!', {icon: 1, time: 1000});
+                    } else {
+                        layer.msg('推广失败!', {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    layer.close(load);
+                    console.log(data.msg);
+                },
+            });
+        });
     }
 </script>
 </body>

@@ -1,6 +1,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -31,9 +32,9 @@ public class Card extends BaseEntity {
 	};
 
 	public static enum  VIP{
-		/** vip1  */
+		/** vip1 普通会员 */
 		vip1,
-		/** vip2 */
+		/** vip2 团队成员 */
 		vip2,
 		/** vip3 */
 		vip3
@@ -57,14 +58,17 @@ public class Card extends BaseEntity {
 	/** 所属商家 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
+	@JsonIgnore
 	private TopicCard topicCard;
 
 	/** 所属商家 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	private Member owner;
 
 	/** 办卡门店 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Shop shop;
 
@@ -78,12 +82,11 @@ public class Card extends BaseEntity {
 
 	/** 手机 一个手机号只能办一个 */
 	@Column(columnDefinition="varchar(50) comment '手机'")
-	@JsonIgnore
 	private String mobile;
 
 	/** 安全码 */
-	@Column(columnDefinition="varchar(50) comment '安全码'")
 	@JsonIgnore
+	@Column(columnDefinition="varchar(50) comment '安全码'")
 	private String sign;
 
 	/** 余额 */
@@ -91,7 +94,13 @@ public class Card extends BaseEntity {
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '余额'")
 	private BigDecimal balance;
 
+	/** 积分 */
+	@Min(0)
+	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
+	private Long point;
+
 	/*  会员 */
+	@JsonIgnore
 	@ManyToMany(mappedBy = "cards",fetch = FetchType.LAZY)
 	private List<Member> members = new ArrayList<Member>();
 
@@ -110,6 +119,11 @@ public class Card extends BaseEntity {
 	public void setVip(VIP vip) {
 		this.vip = vip;
 	}
+
+	/** 推广 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member promoter;
 
 	/**
 	 * 获取号码
@@ -212,5 +226,37 @@ public class Card extends BaseEntity {
 
 	public void setTopicCard(TopicCard topicCard) {
 		this.topicCard = topicCard;
+	}
+
+	public Member getPromoter() {
+		return promoter;
+	}
+
+	public void setPromoter(Member promoter) {
+		this.promoter = promoter;
+	}
+
+	public Long getPoint() {
+		return point;
+	}
+
+	public void setPoint(Long point) {
+		this.point = point;
+	}
+
+	public MapEntity getMapOwner(){
+		if(getOwner() != null){
+			return new MapEntity(getOwner().getId().toString(),getOwner().getName());
+		}else{
+			return null;
+		}
+	}
+
+	public MapEntity getMapShop(){
+		if(getShop() != null){
+			return new MapEntity(getShop().getId().toString(),getShop().getName());
+		}else{
+			return null;
+		}
 	}
 }

@@ -46,6 +46,12 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 
 	private HiloOptimizer topicHiloOptimizer;
 
+	private HiloOptimizer productHiloOptimizer;
+
+	private HiloOptimizer orderHiloOptimizer;
+
+	private HiloOptimizer rechargeHiloOptimizer;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -79,6 +85,23 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 	@Value("${sn.topic.maxLo}")
 	private int topicMaxLo;
 
+	@Value("${sn.product.prefix}")
+	private String productPrefix;
+
+	@Value("${sn.product.maxLo}")
+	private int productMaxLo;
+
+	@Value("${sn.order.prefix}")
+	private String orderPrefix;
+
+	@Value("${sn.order.maxLo}")
+	private int orderMaxLo;
+
+	@Value("${sn.recharge.prefix}")
+	private String rechargePrefix;
+
+	@Value("${sn.recharge.maxLo}")
+	private int rechargeMaxLo;
 
 	public void afterPropertiesSet() throws Exception {
 		paymentHiloOptimizer = new HiloOptimizer(Sn.Type.payment, paymentPrefix, paymentMaxLo);
@@ -86,6 +109,9 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 		transferHiloOptimizer = new HiloOptimizer(Sn.Type.transfer, transferPrefix, transferMaxLo);
 		cardHiloOptimizer = new HiloOptimizer(Sn.Type.card, cardPrefix, cardMaxLo);
 		topicHiloOptimizer = new HiloOptimizer(Sn.Type.topic, topicPrefix, topicMaxLo);
+		orderHiloOptimizer = new HiloOptimizer(Sn.Type.order, orderPrefix, orderMaxLo);
+		productHiloOptimizer = new HiloOptimizer(Sn.Type.product, productPrefix, productMaxLo);
+		rechargeHiloOptimizer = new HiloOptimizer(Sn.Type.recharge, rechargePrefix, rechargeMaxLo);
 	}
 
 	public String generate(Sn.Type type) {
@@ -100,6 +126,12 @@ public class SnDaoImpl extends BaseDaoImpl<Sn, Long> implements SnDao, Initializ
 			return cardHiloOptimizer.generate();
 		} else if (type == Sn.Type.topic) {
 			return topicHiloOptimizer.generate();
+		} else if (type == Sn.Type.order) {
+			return orderHiloOptimizer.generate();
+		} else if (type == Sn.Type.product) {
+			return productHiloOptimizer.generate();
+		} else if (type == Sn.Type.recharge) {
+			return rechargeHiloOptimizer.generate();
 		}
 		return null;
 	}

@@ -10,6 +10,8 @@ import net.wit.entity.Payment.Type;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
+import net.wit.util.BrowseUtil;
+import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * Controller - 支付
@@ -53,6 +57,37 @@ public class PaymentController extends BaseController {
 
     @Resource(name = "snServiceImpl")
     private SnService snService;
+
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
+
+//    /**
+//     * 付款页
+//     *
+//     * @param sn              支付单号
+//     *
+//     */
+//    @RequestMapping(value = "/index", method = RequestMethod.GET)
+//    public String index(String sn,HttpServletRequest request) {
+//        Payment payment = paymentService.findBySn(sn);
+//        String userAgent = request.getHeader("user-agent");
+//        String type="weixin";
+//        System.out.println(userAgent);
+//        if (BrowseUtil.isAlipay(userAgent)) {
+//            type="alipay";
+//        } else {
+//            type="weixin";
+//        }
+//        if (payment.getPaymentPluginId()!=null) {
+//            if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
+//                type = "cardPayPlugin";
+//            } else if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
+//                type = "balancePayPlugin";
+//            }
+//        }
+//        System.out.println(type);
+//        return "redirect:/weixin/payment/view.html?psn="+sn+"&amount="+payment.getAmount()+"&type="+type;
+//    }
 
     /**
      * 付款单信
@@ -86,7 +121,7 @@ public class PaymentController extends BaseController {
     public Message submit(String paymentPluginId, String sn,String safeKey, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
         if (payment==null) {
-            Message.error("无效付款单");
+            return Message.error("无效付款单");
         }
 
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
@@ -103,6 +138,33 @@ public class PaymentController extends BaseController {
         if (safeKey==null) {
             parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
         } else {
+            if ("free".equals(safeKey)) {
+                Member member = memberService.getCurrent();
+                if (member==null) {
+                    return Message.error("不能免密支付");
+                }
+
+                Member seller = payment.getPayee();
+                if ("cardPayPlugin".equals(paymentPluginId)) {
+                    Card card = null;
+                    for (Card c:member.getCards()) {
+                       if (c.getOwner().equals(seller)) {
+                           card = c;
+                           break;
+                       }
+                    }
+                    int challege = StringUtils.Random6Code();
+                    card.setSign(String.valueOf(challege));
+                    cardService.update(card);
+                    safeKey = "http://free/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
+                }
+                if ("balancePayPlugin".equals(paymentPluginId)) {
+                    int challege = StringUtils.Random6Code();
+                    member.setSign(String.valueOf(challege));
+                    memberService.update(member);
+                    safeKey = "http://free/q/818805"+String.valueOf(member.getId()+10200L)+String.valueOf(challege)+".jhtml";
+                }
+            }
             parameters = paymentPlugin.submit(payment,safeKey,request);
         }
         if ("SUCCESS".equals(parameters.get("return_code"))) {
@@ -157,7 +219,7 @@ public class PaymentController extends BaseController {
     @RequestMapping("/transfer/{sn}")
     public void transfer(@PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
         Transfer transfer = transferService.findBySn(sn);
-
+        System.out.println("transfer");
         if (transfer != null) {
              String resp = UnsPay.verifyNotify(sn, request);
                 if ("00".equals (resp)) {
@@ -235,6 +297,7 @@ public class PaymentController extends BaseController {
         switch (resultCode) {
             case "0000":
                 try {
+
                     paymentService.handle(payment);
                 } catch (Exception e) {
                     logger.error(e.getMessage());

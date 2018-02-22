@@ -11,6 +11,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -30,7 +31,7 @@ public class ArticleCatalog extends OrderEntity {
 	/**
 	 * 状态
 	 */
-	public enum Status {
+	public static enum Status {
 
 		/** 开启  */
 		enabled,
@@ -60,6 +61,7 @@ public class ArticleCatalog extends OrderEntity {
 	/** 文章 */
 	@OneToMany(mappedBy = "articleCatalog", fetch = FetchType.LAZY)
 	@JsonIgnore
+	@Where(clause="deleted=0")
 	private Set<Article> articles = new HashSet<Article>();
 
 	public ArticleCatalog.Status getStatus() {

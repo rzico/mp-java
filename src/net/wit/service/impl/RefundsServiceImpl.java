@@ -1,6 +1,8 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +21,8 @@ import net.wit.Filter.Operator;
 import net.wit.dao.*;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.plugin.PaymentPlugin;
-import net.wit.service.MessageService;
-import net.wit.service.PluginService;
+import net.wit.service.*;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -28,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.entity.*;
-import net.wit.service.RefundsService;
 
 /**
  * @ClassName: RefundsDaoImpl
@@ -50,6 +51,14 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
+	@Resource(name = "orderDaoImpl")
+	private OrderDao orderDao;
+	@Resource(name = "orderLogDaoImpl")
+	private OrderLogDao orderLogDao;
+
+	@Resource(name = "smssendServiceImpl")
+	private SmssendService smssendService;
+
 	@Resource(name = "payBillDaoImpl")
 	private PayBillDao payBillDao;
 
@@ -61,6 +70,9 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
+
+	@Resource(name = "orderServiceImpl")
+	private OrderService orderService;
 
 	@Resource(name = "refundsDaoImpl")
 	public void setBaseDao(RefundsDao refundsDao) {
@@ -126,6 +138,8 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			refunds.setRefundsDate(new Date());
 			refunds.setStatus(Refunds.Status.success);
 			refundsDao.merge(refunds);
+			refundsDao.flush();
+
 			Payment payment = refunds.getPayment();
 			if (payment!=null) {
 				paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
@@ -139,10 +153,57 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					payBillDao.merge(paymentBill);
 				}
 			}
-			PayBill payBill = refunds.getPayBill();
-			if (payBill!=null) {
-				payBill.setStatus(PayBill.Status.refund_success);
-				payBillDao.merge(payBill);
+			if (refunds.getType().equals(Refunds.Type.payment)) {
+				Order order = refunds.getOrder();
+				orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+				order.setPaymentStatus(Order.PaymentStatus.refunded);
+				orderDao.merge(order);
+
+				Boolean completed = true;
+				for (Refunds rfd:order.getRefunds()) {
+                   if (!rfd.getStatus().equals(Refunds.Status.success)) {
+                   	  completed = false;
+				   }
+				}
+
+				OrderLog orderLog = new OrderLog();
+				orderLog.setType(OrderLog.Type.refunds);
+				orderLog.setOperator(refunds.getMember().userId());
+				orderLog.setContent("卖家已退款");
+				orderLog.setOrder(order);
+				orderLogDao.persist(orderLog);
+
+				if (refunds.getMethod().equals(Refunds.Method.online)) {
+					Member member = refunds.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.refunds);
+					deposit.setMemo(refunds.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(refunds.getAmount());
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setRefunds(refunds);
+					deposit.setOrder(order);
+					depositDao.persist(deposit);
+				}
+
+				messageService.orderMemberPushTo(orderLog);
+
+				if (completed) {
+					orderService.complete(order,null);
+				}
+
+			} else {
+				PayBill payBill = refunds.getPayBill();
+				if (payBill != null) {
+					payBill.setStatus(PayBill.Status.refund_success);
+					payBillDao.merge(payBill);
+				}
+				messageService.payBillPushTo(payBill);
 			}
 		}
 	}
@@ -154,6 +215,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			if (refunds.getStatus().equals(Refunds.Status.waiting)) {
 				refunds.setStatus(Refunds.Status.confirmed);
 				refundsDao.merge(refunds);
+				refundsDao.flush();
 				Payment payment = refunds.getPayment();
 				if (payment!=null) {
 					paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
@@ -164,8 +226,8 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						throw new RuntimeException("重复提交");
 					}
 				}
-				PayBill payBill = refunds.getPayBill();
 				if (refunds.getType().equals(Refunds.Type.cashier)) {
+					PayBill payBill = refunds.getPayBill();
 					Member member =  refunds.getPayee();
 					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
@@ -179,6 +241,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							}
 							member.setBalance(member.getBalance().add(settle));
 							memberDao.merge(member);
+							memberDao.flush();
 							Deposit deposit = new Deposit();
 							deposit.setBalance(member.getBalance());
 							deposit.setType(Deposit.Type.cashier);
@@ -189,6 +252,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							deposit.setDeleted(false);
 							deposit.setOperator("system");
 							deposit.setRefunds(refunds);
+							deposit.setPayBill(payBill);
 							depositDao.persist(deposit);
 							messageService.depositPushTo(deposit);
 						}
@@ -199,6 +263,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					payBillDao.merge(payBill);
 				}else
 				if (refunds.getType() == Refunds.Type.card) {
+					PayBill payBill = refunds.getPayBill();
 					Member member =  refunds.getPayee();
 					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
@@ -212,6 +277,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							}
 							member.setBalance(member.getBalance().add(settle));
 							memberDao.merge(member);
+							memberDao.flush();
 							Deposit deposit = new Deposit();
 							deposit.setBalance(member.getBalance());
 							deposit.setType(Deposit.Type.card);
@@ -222,6 +288,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							deposit.setDeleted(false);
 							deposit.setOperator("system");
 							deposit.setRefunds(refunds);
+							deposit.setPayBill(payBill);
 							depositDao.persist(deposit);
 							messageService.depositPushTo(deposit);
 						}
@@ -238,6 +305,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						}
 						card.setBalance(card.getBalance().add(payBill.getCardAmount()));
 						cardDao.merge(card);
+						cardDao.flush();
 
 						CardBill cardBill = new CardBill();
 						cardBill.setDeleted(false);
@@ -262,6 +330,15 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						cardBill.setType(CardBill.Type.refunds);
 						cardBill.setBalance(card.getBalance());
 						cardBillDao.persist(cardBill);
+
+						if (card.getMobile()!=null && card.getMobile().length()==11) {
+							String content = "";
+							DecimalFormat df=(DecimalFormat) NumberFormat.getInstance();
+							df.setMaximumFractionDigits(2);
+							content = card.getTopicCard().getTopic().getName() + ",会员卡退款"+df.format(payBill.getCardDiscount())+"元,余额:"+df.format(card.getBalance());
+							smssendService.send(payBill.getOwner(), card.getMobile(),content);
+						}
+
 					}
 				}
 				return true;
@@ -277,6 +354,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 		if (refunds.getStatus().equals(Refunds.Status.confirmed)) {
 			refunds.setStatus(Refunds.Status.failure);
 			refundsDao.merge(refunds);
+			refundsDao.flush();
 			Payment payment = refunds.getPayment();
 			if (payment!=null) {
 				paymentDao.refresh(payment, LockModeType.PESSIMISTIC_WRITE);
@@ -306,6 +384,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) != 0) {
 						member.setBalance(member.getBalance().subtract(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.cashier);
@@ -316,6 +395,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						deposit.setDeleted(false);
 						deposit.setOperator("system");
 						deposit.setRefunds(refunds);
+						deposit.setPayBill(payBill);
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -337,6 +417,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					if (settle.compareTo(BigDecimal.ZERO) != 0) {
 						member.setBalance(member.getBalance().subtract(settle));
 						memberDao.merge(member);
+						memberDao.flush();
 						Deposit deposit = new Deposit();
 						deposit.setBalance(member.getBalance());
 						deposit.setType(Deposit.Type.card);
@@ -347,6 +428,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						deposit.setDeleted(false);
 						deposit.setOperator("system");
 						deposit.setRefunds(refunds);
+						deposit.setPayBill(payBill);
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -360,6 +442,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 					card.setBalance(card.getBalance().subtract(payBill.getCardAmount()));
 					cardDao.merge(card);
+					cardDao.flush();
 
 					CardBill cardBill = new CardBill();
 					cardBill.setDeleted(false);
@@ -390,4 +473,46 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 			throw new RuntimeException("重复关闭");
 		}
 	}
+
+
+
+	/**
+	 * 查询状态
+	 */
+	public void query() {
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("status", Filter.Operator.eq,Refunds.Status.confirmed));
+		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
+		List<Refunds> data = refundsDao.findList(null,null,filters,null);
+		for (Refunds refunds:data) {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				if (paymentPlugin == null) {
+					resultCode = "0001";
+				} else {
+					resultCode = paymentPlugin.refundsQuery(refunds,null);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					try {
+						this.handle(refunds);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				case "0001":
+					try {
+						this.close(refunds);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+			}
+		}
+
+	}
+
+
 }

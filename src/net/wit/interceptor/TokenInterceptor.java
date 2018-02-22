@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.wit.entity.Cart;
+import net.wit.service.CartService;
 import net.wit.service.MemberService;
 import net.wit.service.RedisService;
 import net.wit.util.JsonUtils;
@@ -34,6 +36,9 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "cartServiceImpl")
+	private CartService cartService;
+
 	@Resource(name = "redisServiceImpl")
 	private RedisService redisService;
 
@@ -53,6 +58,15 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 			if (member==null) {
 				member = memberService.findByUUID(xuid);
 				if (member!=null) {
+
+					Cart cart = cartService.getCurrent();
+					if (cart != null) {
+						if (cart.getMember() == null) {
+							cartService.merge(member, cart);
+							redisService.remove(Cart.KEY_COOKIE_NAME);
+						}
+					}
+
 					Principal principal = new Principal(member.getId(), member.getUsername());
 					redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
 				}

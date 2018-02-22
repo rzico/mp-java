@@ -50,18 +50,8 @@ public class Friends extends BaseEntity {
 
 		/** 好友 */
 		friend,
-
-		/** 会员 */
-		customer,
-
-		/** 一级代理 */
-		vip1,
-
-		/** 二级代理 */
-		vip2,
-
-		/** 三级代理 */
-		vip3
+		/** 成员 */
+		leaguer
 	}
 
 	/** 状态 */

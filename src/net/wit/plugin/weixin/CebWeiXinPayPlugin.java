@@ -38,7 +38,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
-		return "光大微信支付";
+		return "微信钱包";
 	}
 
 	@Override
@@ -79,23 +79,22 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		map.put("out_trade_no", payment.getSn());
 		map.put("is_raw","1");
 		map.put("body", description);
-		BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
-		//if (bindUser!=null) {
-		map.put("sub_openid",bindUser.getOpenId());
-		//}else {
-		//	map.put("sub_openid","2088802153156580");
-		//}
-//        if (root!=null && root.equals("/applet")) { 小程序支付，先关了
-//			map.put("sub_appid",pluginConfig.getAttribute("appid"));
-//			map.put("is_minipg","1");
-//		} else {
-		map.put("sub_appid", pluginConfig.getAttribute("appId"));
-//		}
+		if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
+			map.put("is_minipg","1");
+			map.put("sub_appid", pluginConfig.getAttribute("applet"));
+			BindUser bindUser = findByUser(payment.getMember(),pluginConfig.getAttribute("applet"), BindUser.Type.weixin);
+			map.put("sub_openid", bindUser.getOpenId());
+		} else {
+			BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
+			map.put("sub_openid", bindUser.getOpenId());
+			map.put("sub_appid", pluginConfig.getAttribute("appId"));
+		}
 		map.put("total_fee", decimalFormat.format(money));
 		map.put("mch_create_ip", request.getRemoteAddr());
 		map.put("notify_url", getNotifyUrl(sn,NotifyMethod.async));
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
 
+		System.out.println(map);
 		Map<String,String> params = SignUtils.paraFilter(map);
 		StringBuilder buf = new StringBuilder((params.size() +1) * 10);
 		SignUtils.buildPayParams(buf,params,false);
@@ -119,7 +118,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 			if(response != null && response.getEntity() != null){
 				Map<String,String> resultMap = XmlUtils.toMap(EntityUtils.toByteArray(response.getEntity()), "utf-8");
 				res = XmlUtils.toXml(resultMap);
-
+				System.out.println(resultMap);
 				if(resultMap.containsKey("sign")){
 					if(!SignUtils.checkParam(resultMap, pluginConfig.getAttribute("key"))){
 						System.out.print("验证签名不通过");
@@ -147,8 +146,10 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			finalpackage.put("result_msg","验签不通过");
 			finalpackage.put("return_code","FAIL");
+
 		} finally {
 			if (response != null) {
 				try {
@@ -165,8 +166,6 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 				}
 			}
 		}
-		finalpackage.put("result_msg","未知错误");
-		finalpackage.put("return_code","FAIL");
 		return finalpackage;
 	}
 
@@ -222,7 +221,7 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 							return data;
 						}else{
 							if (
-									resultMap.get("err_code").toString().equals("SYSTEMERROR") ||
+									        resultMap.get("err_code").toString().equals("SYSTEMERROR") ||
 											resultMap.get("err_code").toString().equals("Internal error") ||
 											resultMap.get("err_code").toString().equals("BANKERROR") ||
 											resultMap.get("err_code").toString().equals("10003") ||
@@ -314,7 +313,8 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
     public String queryOrder(Payment payment,HttpServletRequest request) throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
 
-		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
+		SortedMap<String, String> map = new TreeMap();
+//		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
 
 		map.put("mch_id", pluginConfig.getAttribute("partner"));
 		map.put("service", "unified.trade.query");
@@ -406,7 +406,8 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
 		PluginConfig pluginConfig = getPluginConfig();
 		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
-		SortedMap<String,String> map = XmlUtils.getParameterMap(request);
+		SortedMap<String, String> map = new TreeMap();
+//		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
 		DecimalFormat decimalFormat = new DecimalFormat("#");
 		BigDecimal money = refunds.getAmount().multiply(new BigDecimal(100));
 		map.put("service", "unified.trade.refund");
@@ -496,7 +497,8 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
 		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
-		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
+		SortedMap<String, String> map = new TreeMap();
+//		SortedMap<String, String> map = XmlUtils.getParameterMap(request);
 
 		map.put("mch_id",pluginConfig.getAttribute("partner"));
 		map.put("service", "unified.trade.refundquery");

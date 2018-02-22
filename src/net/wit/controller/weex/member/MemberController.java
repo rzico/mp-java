@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -53,6 +54,13 @@ public class MemberController extends BaseController {
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
+    @Resource(name = "depositServiceImpl")
+    private DepositService depositService;
+
+
     /**
      * 获取当前会员信息
      */
@@ -65,8 +73,46 @@ public class MemberController extends BaseController {
         }
         MemberModel model =new MemberModel();
         model.bind(member);
+
+        BigDecimal sm = depositService.summary(Deposit.Type.rebate,member);
+        model.setRebate(sm);
         return Message.bind(model,request);
    }
+
+
+    /**
+     * 获取权限
+     */
+    @RequestMapping(value = "/roles")
+    @ResponseBody
+    public Message roles(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        String s = "";
+        if (admin==null) {
+            s = "1";
+        } else {
+            if (admin.isOwner()) {
+               s = "1";
+            } else {
+                for (Role role:admin.getRoles()) {
+                    s = s.concat(role.getId().toString());
+                }
+            }
+        }
+
+        if (admin!=null && admin.getEnterprise()!=null) {
+           Member owner = admin.getEnterprise().getMember();
+           if (owner.getTopic()!=null && owner.getTopic().getStatus().equals(Topic.Status.success)) {
+               s = s + 'A';
+           }
+        }
+
+        return Message.success((Object) s,"获取成功");
+    }
 
     /**
      * 获取会员属性
@@ -129,6 +175,15 @@ public class MemberController extends BaseController {
         }
         if (nickName!=null) {
             member.setNickName(nickName);
+            Admin admin = adminService.findByMember(member);
+            if (admin!=null) {
+                if (member.getName()!=null) {
+                    admin.setName(member.getName());
+                } else {
+                    admin.setName(nickName);
+                }
+                adminService.update(admin);
+            }
         }
         if (autograph!=null) {
             member.setAutograph(autograph);
@@ -165,7 +220,7 @@ public class MemberController extends BaseController {
                return Message.success("上传IM失败");
            };
         }
-        return Message.success("获取会员信息成功");
+        return Message.success("更新会员信息成功");
     }
 
 }

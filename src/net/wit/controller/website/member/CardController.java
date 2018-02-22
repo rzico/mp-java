@@ -1,11 +1,14 @@
 package net.wit.controller.website.member;
 
-import net.wit.Filter;
+import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
+import net.wit.controller.model.CardBillModel;
 import net.wit.controller.model.CardModel;
+import net.wit.controller.model.CardPointBillModel;
 import net.wit.entity.*;
+import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plat.weixin.util.WeixinApi;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.*;
 
 
@@ -54,11 +59,66 @@ public class CardController extends BaseController {
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
+    @Resource(name = "topicCardServiceImpl")
+    private TopicCardService topicCardService;
+
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
+
+    @Resource(name = "cardBillServiceImpl")
+    private CardBillService cardBillService;
+
+    @Resource(name = "cardPointBillServiceImpl")
+    private CardPointBillService cardPointBillService;
+
+
+    /**
+     * 我的账单
+     * id 会员
+     */
+    @RequestMapping(value = "/deposit", method = RequestMethod.GET)
+    public String deposit(Long id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member seller = memberService.find(id);
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String url = "http://"+bundle.getString("weixin.url")+"/website/member/card/deposit.jhtml?id="+id;
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+        }
+
+        Card card = null;
+        for (Card c:member.getCards()) {
+            if (c.getOwner().equals(seller)) {
+                card = c;
+                break;
+            }
+        }
+
+        return "redirect:/#/bill?id="+card.getId();
+    }
+
+    /**
+     * 去付款
+     * id 会员
+     */
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(Long id,String card_id,HttpServletRequest request,HttpServletResponse response){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            String url = "http://"+bundle.getString("weixin.url")+"/website/member/card/index.jhtml?id="+id+"&card_id="+card_id;
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+        }
+
+        return "redirect:/#/member?id="+id+"&card_id="+card_id;
+    }
 
     /**
      *  我的会员卡
@@ -71,6 +131,43 @@ public class CardController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         return Message.bind(CardModel.bindList(member.getCards()),request);
+    }
+
+    /**
+     *  获取付款码
+     */
+    @RequestMapping(value = "/codepay", method = RequestMethod.POST)
+    @ResponseBody
+    public Message codepay(Long shopId,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Shop shop = shopService.find(shopId);
+        if (shop==null) {
+            return Message.error("无效门店id");
+        }
+        Member payee = shop.getOwner();
+        Card card = null;
+        for (Card c:member.getCards()) {
+            if (c.getOwner().equals(payee)) {
+                card = c;
+                break;
+            }
+        }
+
+        if (card==null) {
+            return Message.error("没有会员卡");
+        }
+
+        int challege = StringUtils.Random6Code();
+        card.setSign(String.valueOf(challege));
+        cardService.update(card);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String payCode = "http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
+
+
+        return Message.success((Object)payCode,"获取成功");
     }
 
      /**
@@ -87,6 +184,7 @@ public class CardController extends BaseController {
         if (card==null) {
             return Message.error("无效卡号");
         }
+
         if (mobile==null) {
             return Message.error("请填写手机号");
         }
@@ -110,8 +208,16 @@ public class CardController extends BaseController {
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
-        data.put("mobile",member.getMobile());
-        data.put("name",member.getName());
+        if (member.getMobile()==null) {
+            data.put("mobile","");
+        } else {
+            data.put("mobile",member.getMobile());
+        }
+        if (member.getName()==null) {
+            data.put("name", "");
+        } else {
+            data.put("name", member.getName());
+        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
@@ -119,20 +225,59 @@ public class CardController extends BaseController {
         data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
 
         Ticket ticket = WeixinApi.getWxCardTicket();
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("api_ticket", ticket.getTicket());
-        params.put("timestamp", WeiXinUtils.getTimeStamp());
-        params.put("nonce_str", WeiXinUtils.CreateNoncestr());
-        params.put("card_id", card.getTopicCard().getWeixinCardId());
-        String sha1Sign1 = getCardSha1Sign(params);
-        HashMap<String, Object> cardExt = new HashMap<>();
-        cardExt.put("timestamp", params.get("timestamp"));
-        cardExt.put("nonce_str", params.get("nonce_str"));
-        cardExt.put("signature", sha1Sign1);
-        data.put("cardExt",cardExt);
+        if (ticket!=null) {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("api_ticket", ticket.getTicket());
+            params.put("timestamp", WeiXinUtils.getTimeStamp());
+            params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+            params.put("card_id", card.getTopicCard().getWeixinCardId());
+            String sha1Sign1 = getCardSha1Sign(params);
+            HashMap<String, Object> cardExt = new HashMap<>();
+            cardExt.put("timestamp", params.get("timestamp"));
+            cardExt.put("nonce_str", params.get("nonce_str"));
+            cardExt.put("signature", sha1Sign1);
+            data.put("cardExt", cardExt);
+        }
         data.put("cardId",card.getTopicCard().getWeixinCardId());
         //System.out.println(data);
         return Message.success(data,"激活成功");
+    }
+
+    /**
+     *   获取卡包
+     */
+    @RequestMapping(value = "/bkg")
+    @ResponseBody
+    public Message bkg(String cardId,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        TopicCard topicCard = topicCardService.find(cardId);
+        if (topicCard==null) {
+            return Message.error("没有开通会员卡");
+        }
+
+        Card card = null;
+        for (Card c:member.getCards()) {
+            if (c.getTopicCard().equals(topicCard)) {
+                card = c;
+                break;
+            }
+        }
+
+        CardModel model = new CardModel();
+        model.bind(card);
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("card",model);
+        data.put("topicId",topicCard.getTopic().getMember().getId());
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        int challege = StringUtils.Random6Code();
+        card.setSign(String.valueOf(challege));
+        cardService.update(card);
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        return Message.bind(data,request);
+
     }
 
     /**
@@ -159,7 +304,7 @@ public class CardController extends BaseController {
                    shopId = Long.parseLong(code.substring(2,11))-100000000;
                    card = cardService.find(code);
                    if (card!=null && !card.getStatus().equals(Card.Status.none) && !card.getMembers().contains(member)) {
-                       card = null;
+                       return Message.error("不是空卡,不能领取");
                    }
                } else {
                    return Message.error("无效code");
@@ -175,14 +320,6 @@ public class CardController extends BaseController {
                TopicCard topicCard = owner.getTopic().getTopicCard();
                if (topicCard==null) {
                    return Message.error("没有开通会员卡");
-               }
-               if (card==null) {
-                   for (Card c : member.getCards()) {
-                       if (c.getTopicCard().equals(topicCard)) {
-                           card = c;
-                           break;
-                       }
-                   }
                }
                if (card==null) {
                    card = cardService.create(owner.getTopic().getTopicCard(),shop, code, member);
@@ -203,8 +340,16 @@ public class CardController extends BaseController {
         model.bind(card);
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
-        data.put("mobile",member.getMobile());
-        data.put("name",member.getName());
+        if (member.getMobile()==null) {
+            data.put("mobile","");
+        } else {
+            data.put("mobile",member.getMobile());
+        }
+        if (member.getName()==null) {
+            data.put("name", "");
+        } else {
+            data.put("name", member.getName());
+        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
@@ -212,17 +357,19 @@ public class CardController extends BaseController {
         data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
 
         Ticket ticket = WeixinApi.getWxCardTicket();
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("api_ticket", ticket.getTicket());
-        params.put("timestamp", WeiXinUtils.getTimeStamp());
-        params.put("nonce_str", WeiXinUtils.CreateNoncestr());
-        params.put("card_id", card.getTopicCard().getWeixinCardId());
-        String sha1Sign1 = getCardSha1Sign(params);
-        HashMap<String, Object> cardExt = new HashMap<>();
-        cardExt.put("timestamp", params.get("timestamp"));
-        cardExt.put("nonce_str", params.get("nonce_str"));
-        cardExt.put("signature", sha1Sign1);
-        data.put("cardExt",cardExt);
+        if (ticket!=null) {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("api_ticket", ticket.getTicket());
+            params.put("timestamp", WeiXinUtils.getTimeStamp());
+            params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+            params.put("card_id", card.getTopicCard().getWeixinCardId());
+            String sha1Sign1 = getCardSha1Sign(params);
+            HashMap<String, Object> cardExt = new HashMap<>();
+            cardExt.put("timestamp", params.get("timestamp"));
+            cardExt.put("nonce_str", params.get("nonce_str"));
+            cardExt.put("signature", sha1Sign1);
+            data.put("cardExt",cardExt);
+        }
         data.put("cardId",card.getTopicCard().getWeixinCardId());
         return Message.bind(data,request);
     }
@@ -237,6 +384,41 @@ public class CardController extends BaseController {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    /**
+     *  账单记录
+     */
+    @RequestMapping(value = "/bill", method = RequestMethod.GET)
+    @ResponseBody
+    public Message bill(Long id,Pageable pageable, HttpServletRequest request){
+        Card card = cardService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        pageable.setFilters(filters);
+        Page<CardBill> page = cardBillService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(CardBillModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+
+
+    /**
+     *  账单记录
+     */
+    @RequestMapping(value = "/point_bill", method = RequestMethod.GET)
+    @ResponseBody
+    public Message pointBill(Long id,Pageable pageable, HttpServletRequest request){
+        Card card = cardService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        pageable.setFilters(filters);
+        Page<CardPointBill> page = cardPointBillService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(CardPointBillModel.bindList(page.getContent()));
+        return Message.bind(model,request);
     }
 
 }

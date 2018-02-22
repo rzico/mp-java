@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import net.sf.json.JSONObject;
+import net.wit.entity.Member;
 import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.util.JsonUtils;
 import org.apache.commons.lang.StringUtils;
@@ -255,7 +256,7 @@ public class WeiXinUtils {
 											  String logoUrl,
 											  String title,
 											  String description,
-											  String color
+											  String color,Member member
 	) {
 		JSONObject jsonObject = null;
 		try {
@@ -296,22 +297,22 @@ public class WeiXinUtils {
 			baseInfo.put("date_info", dateInfo);//使用日期，有效期的信息
 			dateInfo.put("type", "DATE_TYPE_PERMANENT");//使用时间的类型
 
-			baseInfo.put("center_title", "我的卡包");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
-			baseInfo.put("center_sub_title", "点击进入会员中心");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
-			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_title", "去付款");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_sub_title", "出示付款二维码");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/website/member/card/index.jhtml?id="+member.getId());//顶部居中的url，仅在卡券激活后且可用状态时显示
 
-//			Map<String, Object> customCell2 = new HashMap<>();
-//			memberCard.put("custom_cell2", customCell2);//自定义会员信息类目，会员卡激活后显示。
-//			customCell2.put("name", "会员升级");
-//			customCell2.put("url", Config.getProperty("WeiXinSiteUrl") + "/weixin/qrcode/go.jhtml?type=partner");
-//			customCell2.put("tips", "让人脉变钱脉");
-//
-//			Map<String, Object> customCell1 = new HashMap<>();
-//			memberCard.put("custom_cell1", customCell1);//自定义会员信息类目，会员卡激活后显示。
-//			customCell1.put("name", "会员特价");
-//			customCell1.put("url", Config.getProperty("WeiXinSiteUrl") + "/weixin/qrcode/go.jhtml?type=index");
-//			customCell1.put("tips", "分享赚钱又省钱");
-//
+			Map<String, Object> customCell1 = new HashMap<>();
+			memberCard.put("custom_cell1", customCell1);//自定义会员信息类目，会员卡激活后显示。
+			customCell1.put("name", "我的芸店");
+			customCell1.put("url", "http://"+bundle.getString("weixin.url") + "/website/topic/index.jhtml?id="+member.getId());
+			customCell1.put("tips", "逛商城");
+
+			Map<String, Object> customCell2 = new HashMap<>();
+			memberCard.put("custom_cell2", customCell2);//自定义会员信息类目，会员卡激活后显示。
+			customCell2.put("name", "消费记录");
+			customCell2.put("url", "http://"+bundle.getString("weixin.url") + "/website/member/card/deposit.jhtml?id="+member.getId());
+			customCell2.put("tips", "会员卡");
+
 			String data = JsonUtils.toJson(map);
 			post.setEntity(new StringEntity(data, ContentType.APPLICATION_JSON));
 			String res = EntityUtils.toString(client.execute(post).getEntity());
@@ -330,7 +331,7 @@ public class WeiXinUtils {
 											  String logoUrl,
 											  String title,
 											  String description,
-											  String color
+											  String color,Member member
 	) {
 		JSONObject jsonObject = null;
 		try {
@@ -353,9 +354,21 @@ public class WeiXinUtils {
 			baseInfo.put("notice", "消费时请出示会员卡");
 			baseInfo.put("description", description);
 
-			baseInfo.put("center_title", "我的卡包");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
-			baseInfo.put("center_sub_title", "点击进入会员中心");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
-			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/member");//顶部居中的url，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_title", "去付款");//卡券中部居中的按钮，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_sub_title", "出示付款二维码");//显示在入口下方的提示语，仅在卡券激活后且可用状态时显示
+			baseInfo.put("center_url", "http://"+bundle.getString("weixin.url") + "/website/member/card/index.jhtml?id="+member.getId());//顶部居中的url，仅在卡券激活后且可用状态时显示
+
+			Map<String, Object> customCell1 = new HashMap<>();
+			memberCard.put("custom_cell1", customCell1);//自定义会员信息类目，会员卡激活后显示。
+			customCell1.put("name", "我的芸店");
+			customCell1.put("url", "http://"+bundle.getString("weixin.url") + "/website/topic/index.jhtml?id="+member.getId());
+			customCell1.put("tips", "逛商城");
+
+			Map<String, Object> customCell2 = new HashMap<>();
+			memberCard.put("custom_cell2", customCell2);//自定义会员信息类目，会员卡激活后显示。
+			customCell2.put("name", "消费记录");
+			customCell2.put("url", "http://"+bundle.getString("weixin.url") + "/website/member/card/deposit.jhtml?id="+member.getId());
+			customCell2.put("tips", "会员卡");
 
 			String data = JsonUtils.toJson(map);
 			post.setEntity(new StringEntity(data, ContentType.APPLICATION_JSON));

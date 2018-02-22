@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Article;
+import net.wit.entity.Member;
 import net.wit.entity.Tag;
 
 /**

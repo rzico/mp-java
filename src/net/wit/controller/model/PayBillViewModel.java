@@ -20,8 +20,10 @@ public class PayBillViewModel extends BaseModel implements Serializable {
     private String memo;
     /**  LOGO */
     private String logo;
-    /**  昵称 */
-    private String nickName;
+    /**  商户名 */
+    private String name;
+    /**  支付方式 */
+    private String method;
     /**  时间 */
     private Date createDate;
     /**  状态 */
@@ -75,20 +77,28 @@ public class PayBillViewModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     public PayBill.Status getStatus() {
         return status;
     }
 
     public void setStatus(PayBill.Status status) {
         this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public void bind(PayBill payBill) {
@@ -101,28 +111,38 @@ public class PayBillViewModel extends BaseModel implements Serializable {
             if (payBill.getRefunds().getPaymentMethod()!=null) {
                 s = ","+payBill.getRefunds().getPaymentMethod();
             }
+            this.method = payBill.getRefunds().getPaymentMethod();
         } else
         if (payBill.getType().equals(PayBill.Type.cardRefund)){
             this.memo = "退款(会员卡)";
             if (payBill.getRefunds().getPaymentMethod()!=null) {
                 s = ","+payBill.getRefunds().getPaymentMethod();
             }
+            this.method = payBill.getRefunds().getPaymentMethod();
         } else
         if (payBill.getType().equals(PayBill.Type.card)) {
             this.memo = "充值(会员卡)";
             if (payBill.getPayment().getPaymentMethod()!=null) {
                 s = ","+payBill.getPayment().getPaymentMethod();
             }
+            this.method = payBill.getPayment().getPaymentMethod();
         } else {
             this.memo = "消费";
             if (payBill.getPayment().getPaymentMethod()!=null) {
                 s = ","+payBill.getPayment().getPaymentMethod();
             }
+            this.method = payBill.getPayment().getPaymentMethod();
         }
         this.memo = this.memo + s;
-        this.logo = payBill.getMember().getLogo();
         this.createDate = payBill.getCreateDate();
         this.status = payBill.getStatus();
+        if (payBill.getMember()!=null) {
+            this.logo = payBill.getMember().getLogo();
+        }
+        if (payBill.getOwner()!=null && payBill.getOwner().getTopic()!=null) {
+            this.name = payBill.getOwner().getTopic().getName();
+        }
+
     }
 
 

@@ -60,7 +60,7 @@ public class Payment extends BaseEntity {
 		/** 线下支付 */
 		offline,
 
-		/** 钱包支付 */
+		/** 余额支付 */
 		deposit,
 
 		/** 会员卡 */

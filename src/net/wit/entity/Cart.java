@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.Setting;
 import net.wit.util.SettingUtils;
 
@@ -53,10 +54,12 @@ public class Cart extends BaseEntity {
 
 	/** 买方 */
 	@OneToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Member member;
 
 	/** 购物车项 */
 	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<CartItem> cartItems = new HashSet<CartItem>();
 
 	/**
@@ -219,7 +222,7 @@ public class Cart extends BaseEntity {
 	 */
 	@Transient
 	public boolean isValid(Coupon coupon) {
-		if (coupon == null || coupon.getDeleted() || !coupon.hasBegun() || coupon.hasExpired()) {
+		if (coupon == null || coupon.getScope().equals(Coupon.Scope.shop) || coupon.getDeleted() || !coupon.hasBegun() || coupon.hasExpired()) {
 			return false;
 		}
 		if ((coupon.getMinimumPrice() != null && coupon.getMinimumPrice().compareTo(getEffectivePrice()) > 0)) {

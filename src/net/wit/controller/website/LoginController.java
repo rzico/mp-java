@@ -55,6 +55,9 @@ public class LoginController extends BaseController {
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
+    @Resource(name = "cartServiceImpl")
+    private CartService cartService;
+
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
@@ -121,13 +124,22 @@ public class LoginController extends BaseController {
                 member.setMobile(safeKey.getKey());
                 member.setNickName(null);
                 member.setLogo(null);
-                member.setPoint(0L);
+//                member.setPoint(0L);
+//                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setIsEnabled(true);
                 member.setIsLocked(false);
                 member.setLoginFailureCount(0);
                 member.setRegisterIp(request.getRemoteAddr());
                 memberService.save(member);
+            }
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
             }
 
             Principal principal = new Principal(member.getId(),member.getUsername());
@@ -142,6 +154,9 @@ public class LoginController extends BaseController {
                 }
             }
             memberService.save(member);
+            if (cart!=null) {
+
+            }
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,6 +183,15 @@ public class LoginController extends BaseController {
             if (!MD5Utils.getMD5Str(password).equals(member.getPassword())) {
                 return Message.error("无效密码");
             }
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             member.setLoginDate(new Date());
@@ -187,6 +211,15 @@ public class LoginController extends BaseController {
     public Message demo(Long id,HttpServletRequest request){
         Member member =memberService.find(id);
         try {
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
@@ -200,15 +233,15 @@ public class LoginController extends BaseController {
      * 微信登录
      */
     @RequestMapping(value = "/weixin", method = RequestMethod.GET)
-    public String weixin(String code,String state,HttpServletRequest request){
+    public String weixin(String code,String redirectURL,Long xuid,HttpServletRequest request){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
         String mState = null;
         try {
-            mState = new String(Base64.decodeBase64(state),"utf-8");
+            mState = new String(Base64.decodeBase64(redirectURL),"utf-8");
         } catch (UnsupportedEncodingException e) {
-            logger.debug(e.getMessage());
+            logger.error(e.getMessage());
             mState = "";
         }
         if (token!=null) {
@@ -242,13 +275,16 @@ public class LoginController extends BaseController {
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
-            member.setPoint(0L);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
             member.setLoginFailureCount(0);
             member.setRegisterIp(request.getRemoteAddr());
+
             memberService.save(member);
+
         } else {
             if (nickName!=null && member.getNickName()==null) {
                 member.setNickName(nickName);
@@ -259,10 +295,12 @@ public class LoginController extends BaseController {
             memberService.update(member);
         }
         try {
+
             bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
             if (unionId==null) {
                 unionId = "#";
             }
+
             if (bindUser==null) {
                 bindUser = new BindUser();
                 bindUser.setAppId(bundle.getString("weixin.appid"));
@@ -278,8 +316,18 @@ public class LoginController extends BaseController {
             }
             bindUserService.save(bindUser);
 
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+
             member.setLoginDate(new Date());
             String userAgent = request.getHeader("user-agent");
             if (userAgent!=null) {
@@ -289,7 +337,16 @@ public class LoginController extends BaseController {
                     member.setScene(userAgent.substring(0, 250));
                 }
             }
+
+            if (member.getPromoter()==null && !"#".equals(bindUser.getUnionId())) {
+                if (xuid!=null) {
+                    Member promoter = memberService.find(xuid);
+                    member.setPromoter(promoter);
+                }
+            }
+
             memberService.save(member);
+
             return "redirect:"+mState;
         } catch (Exception e) {
             e.printStackTrace();
@@ -301,7 +358,7 @@ public class LoginController extends BaseController {
      * 微信登录
      */
     @RequestMapping(value = "/alipay", method = RequestMethod.GET)
-    public String alipay(String state,String auth_code,HttpServletRequest request,HttpServletResponse response){
+    public String alipay(String redirectURL,String auth_code,HttpServletRequest request,HttpServletResponse response){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String openId = null;
         String nickName=null;
@@ -309,12 +366,13 @@ public class LoginController extends BaseController {
         String unionId=null;
         String mState = null;
         try {
-            mState = new String(Base64.decodeBase64(state),"utf-8");
+            mState = new String(Base64.decodeBase64(redirectURL),"utf-8");
         } catch (UnsupportedEncodingException e) {
             logger.debug(e.getMessage());
             mState = "";
         }
-        System.out.println(mState);
+//        System.out.println(mState);
+//        System.out.println(auth_code);
         try {
             AccessToken token = AlipayUtil.getOauth2AccessToken(auth_code);
             if (token!=null) {
@@ -351,7 +409,8 @@ public class LoginController extends BaseController {
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
-            member.setPoint(0L);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
@@ -387,6 +446,15 @@ public class LoginController extends BaseController {
             }
             bindUserService.save(bindUser);
 
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             member.setLoginDate(new Date());
@@ -414,7 +482,13 @@ public class LoginController extends BaseController {
     public
     Message logout(HttpServletRequest request, HttpSession session) {
         Member member = memberService.getCurrent();
+
         redisService.remove(Member.PRINCIPAL_ATTRIBUTE_NAME);
+        Cart cart = cartService.getCurrent();
+        if (cart!=null) {
+            cartService.delete(cart);
+        }
+
         return Message.success("注销成功");
     }
 
@@ -423,15 +497,20 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("/isAuthenticated")
     @ResponseBody
-    public Message authorized(HttpServletRequest request, HttpServletResponse response) {
+    public Message authorized(String scope,HttpServletRequest request, HttpServletResponse response) {
         Map<String,Object> data = new HashMap<String,Object>();
         Member member = memberService.getCurrent();
-        data.put("loginStatus",member!=null);
+        if ("user".equals(scope)) {
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            BindUser bindUser = bindUserService.findMember(member,bundle.getString("weixin.appid"),BindUser.Type.weixin);
+            data.put("loginStatus",member!=null && bindUser!=null && !bindUser.getUnionId().equals("#"));
+        } else {
+            data.put("loginStatus", member != null);
+        }
         if (member!=null) {
             data.put("uid", member.getId());
             data.put("userId",member.userId());
             data.put("authed",(member.getLogo()!=null));
-            //data.put("userSig", User.createUserSig(member.userId()));
         }
         return Message.success(data,"success");
     }

@@ -120,11 +120,21 @@ public class StringUtils  {
 			return null;
 		}
 		try {
-			return new String(Base64.encodeBase64(binaryData, true, true), "UTF-8");
+			return new String(Base64.encodeBase64(binaryData, false, true), "UTF-8");
 		} catch (UnsupportedEncodingException e ){
 			return null;
 		}
 	}
 
+
+	public static String addSpace(String str,int countSpace)
+	{
+		String resultStr=str;;
+		for(int i=0;i<countSpace;i++)
+		{
+			resultStr= " "+resultStr;
+		}
+		return resultStr;
+	}
 
 }

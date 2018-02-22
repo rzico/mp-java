@@ -10,15 +10,12 @@ import javax.annotation.Resource;
 import javax.persistence.LockModeType;
 import javax.servlet.http.HttpServletRequest;
 
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
-import net.wit.dao.DepositDao;
-import net.wit.dao.PaymentDao;
-import net.wit.dao.RefundsDao;
+import net.wit.dao.*;
+import net.wit.service.FriendsService;
+import net.wit.service.MessageService;
 import net.wit.service.RedisService;
 import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
@@ -27,7 +24,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.MemberDao;
 import net.wit.entity.*;
 import net.wit.service.MemberService;
 import org.springframework.web.context.request.RequestAttributes;
@@ -53,6 +49,15 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	private PaymentDao paymentDao;
 	@Resource(name = "refundsDaoImpl")
 	private RefundsDao refundsDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
+	@Resource(name = "friendsDaoImpl")
+	private FriendsDao friendsDao;
+
+	@Resource(name = "memberFollowDaoImpl")
+	private MemberFollowDao memberFollowDao;
 
 	@Resource(name = "memberDaoImpl")
 	public void setBaseDao(MemberDao memberDao) {
@@ -112,6 +117,9 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	public Member findByMobile(String mobile) {
 		return memberDao.findByMobile(mobile);
 	}
+	public Member findByEmail(String email) {
+		return memberDao.findByEmail(email);
+	}
 	@Transactional(readOnly = true)
 	public Member findByUUID(String uuid) {
 		return memberDao.findByUUID(uuid);
@@ -140,7 +148,6 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		return null;
 	}
 
-
 	//支付插件专用方法
 	public void payment(Member member,Payment payment) throws Exception {
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
@@ -150,6 +157,12 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		try {
 			member.setBalance(member.getBalance().subtract(payment.getAmount()));
 			memberDao.merge(member);
+
+			payment.setMember(member);
+			payment.setTranSn(payment.getSn());
+			payment.setMethod(Payment.Method.deposit);
+			paymentDao.merge(payment);
+
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
 			deposit.setMember(member);
@@ -157,19 +170,14 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			deposit.setDebit(payment.getAmount());
 			deposit.setDeleted(false);
 			deposit.setType(Deposit.Type.payment);
-			PayBill payBill = payment.getPayBill();
-			if (payBill!=null) {
-				deposit.setPayBill(payBill);
-			}
+			deposit.setPayBill(payment.getPayBill());
+			deposit.setOrder(payment.getOrder());
 			deposit.setMemo(payment.getMemo());
 			deposit.setPayment(payment);
 			depositDao.persist(deposit);
-			payment.setMember(member);
-			payment.setTranSn(payment.getSn());
-			payment.setMethod(Payment.Method.deposit);
-			paymentDao.merge(payment);
+
 		} catch (Exception  e) {
-			throw  new RuntimeException("支付失败");
+			throw new RuntimeException("支付失败");
 		}
 	}
 
@@ -199,6 +207,72 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			refundsDao.merge(refunds);
 		} catch (Exception  e) {
 			throw  new RuntimeException("退款失败");
+		}
+	}
+
+	//发展成员
+	public void create(Member member, Member promoter) throws Exception {
+
+       if (promoter==null) {
+       	  return;
+	   }
+
+	   if (member.equals(promoter)) {
+       	  return;
+	   }
+	   Boolean isNew = false;
+
+       Friends fds = friendsDao.find(promoter, member);
+		if (fds==null) {
+			fds = new Friends();
+			fds.setFriend(member);
+			fds.setMember(promoter);
+			fds.setStatus(Friends.Status.adopt);
+			fds.setType(Friends.Type.leaguer);
+			friendsDao.persist(fds);
+			isNew = true;
+		} else {
+			if (!fds.getType().equals(Friends.Type.leaguer)) {
+				fds.setFriend(member);
+				fds.setMember(promoter);
+				fds.setStatus(Friends.Status.adopt);
+				fds.setType(Friends.Type.leaguer);
+				friendsDao.merge(fds);
+				isNew = true;
+			}
+		}
+
+		Friends adot = friendsDao.find(member, promoter);
+		if (adot==null) {
+			adot = new Friends();
+			adot.setFriend(promoter);
+			adot.setMember(member);
+			adot.setStatus(Friends.Status.adopt);
+			adot.setType(Friends.Type.leaguer);
+			friendsDao.persist(adot);
+			isNew = true;
+		} else {
+			if (!adot.getType().equals(Friends.Type.leaguer)) {
+				adot.setFriend(promoter);
+				adot.setMember(member);
+				adot.setStatus(Friends.Status.adopt);
+				adot.setType(Friends.Type.leaguer);
+				friendsDao.merge(adot);
+				isNew = true;
+			}
+		}
+		if (isNew) {
+			messageService.addPromoterPushTo(member,promoter);
+		}
+
+		long rc = memberFollowDao.count(new Filter("member", Filter.Operator.eq,member),new Filter("follow", Filter.Operator.eq,promoter));
+
+		if (rc==0) {
+			MemberFollow follow = new MemberFollow();
+			follow.setIp("127.0.0.1");
+			follow.setMember(member);
+			follow.setFollow(promoter);
+			memberFollowDao.persist(follow);
 		}
 	}
 

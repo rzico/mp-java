@@ -123,6 +123,10 @@ public class Transfer extends BaseEntity {
 	@JsonIgnore
 	private String city;
 
+	/** 凭证号 */
+	@Column(columnDefinition="varchar(255) comment '凭证号'")
+	private String voucher;
+
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
@@ -231,6 +235,14 @@ public class Transfer extends BaseEntity {
 
 	public void setTransferDate(Date transferDate) {
 		this.transferDate = transferDate;
+	}
+
+	public String getVoucher() {
+		return voucher;
+	}
+
+	public void setVoucher(String voucher) {
+		this.voucher = voucher;
 	}
 
 	public List<Deposit> getDeposits() {

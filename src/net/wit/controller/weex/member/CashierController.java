@@ -75,16 +75,21 @@ public class CashierController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通收银台");
         }
-        Shop shop = admin.getShop();
-        if (shop==null) {
-            if (!admin.isOwner()) {
-                return Message.error("没分配门店");
-            }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,d,d);
-        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,y,y);
+        Shop shop = admin.getShop();
+        if (admin.isRole("1")) {
+            shop = null;
+        }
+
+        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
+        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
-        model.setShopId(shop.getId());
+        shop = admin.getShop();
+        if (shop!=null) {
+            model.setShopId(shop.getId());
+        }
         model.setToday(BigDecimal.ZERO);
         model.setYesterday(BigDecimal.ZERO);
         for (PayBillShopSummary s:dsum) {
@@ -115,6 +120,9 @@ public class CashierController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通收银台");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         PayBill payBill = new PayBill();
         payBill.setType(PayBill.Type.cashier);
         payBill.setAmount(amount);
@@ -134,6 +142,9 @@ public class CashierController extends BaseController {
         payBill.setAdmin(admin);
         payBill.setEnterprise(shop.getEnterprise());
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入收款金额");
+            }
             Payment payment = payBillService.submit(payBill);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("id",payBill.getId());

@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
+import net.wit.entity.Member;
 import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
@@ -12,6 +13,8 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Long id;
     /** 会员 */
     private MemberViewModel member;
+    /** 分享 */
+    private String shareNickName;
     /** 作者 */
     private String author;
     /** 标题 */
@@ -32,12 +35,12 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Long hits;
     /** 点赞数 */
     private Long laud;
+    /** 是否发布 */
+    private Boolean isPublish;
     /** 内容 */
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
     /** 投票 */
     private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
-    /** 商品 */
-    private List<ProductViewModel> products = new ArrayList<ProductViewModel>();
 
     public Long getId() {
         return id;
@@ -135,14 +138,6 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.templates = templates;
     }
 
-    public List<ProductViewModel> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductViewModel> products) {
-        this.products = products;
-    }
-
     public List<ArticleVoteOptionModel> getVotes() {
         return votes;
     }
@@ -151,7 +146,31 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.votes = votes;
     }
 
-    public void bind(Article article) {
+    public Boolean getIsPublish() {
+        return isPublish;
+    }
+
+    public void setIsPublish(Boolean publish) {
+        isPublish = publish;
+    }
+
+    public String getHtmlTag() {
+        return htmlTag;
+    }
+
+    public void setHtmlTag(String htmlTag) {
+        this.htmlTag = htmlTag;
+    }
+
+    public String getShareNickName() {
+        return shareNickName;
+    }
+
+    public void setShareNickName(String shareNickName) {
+        this.shareNickName = shareNickName;
+    }
+
+    public void bind(Article article, Member shareUser) {
         this.id = article.getId();
         this.title = article.getTitle();
         this.author = article.getAuthor();
@@ -161,6 +180,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();
+        this.isPublish = article.getIsPublish();
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;
@@ -177,9 +197,19 @@ public class ArticleViewModel extends BaseModel implements Serializable {
 
         this.templates = templates;
         this.votes = votes;
-        this.products = ProductViewModel.bindSet(article);
+
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.url = "http://"+bundle.getString("weixin.url")+"/website/t"+article.getTemplate().getSn()+"?id="+article.getId();
+        if (shareUser==null) {
+            shareUser = article.getMember();
+        }
+        this.shareNickName = shareUser.getNickName();
+
+        if (article.getTemplate()==null) {
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
+        } else {
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
+        }
+
     }
 
 }

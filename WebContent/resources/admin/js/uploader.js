@@ -1,7 +1,11 @@
 // 图片上传demo
 jQuery(function() {
+
+    var $uploadpicture = function (divname,pickerid){
+
     var $ = jQuery,
-        $list = $('#fileList'),
+        //$list = $('#fileList'),
+        $list = $('#'+divname),
         // 优化retina, 在retina下这个值是2
         ratio = window.devicePixelRatio || 1,
 
@@ -26,7 +30,7 @@ jQuery(function() {
 
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#filePicker',
+        pick: '#'+pickerid,//'#filePicker',
 
         // 只允许选择文件，可选。
         accept: {
@@ -40,12 +44,18 @@ jQuery(function() {
     uploader.on( 'fileQueued', function( file ) {
         var $li = $(
                 '<div id="' + file.id + '" class="file-item thumbnail">' +
-                '<img>' +
+                '<img id='+pickerid+'>' +
                 '<div class="info">' + file.name + '</div>' +
                 '</div>'
             ),
             $img = $li.find('img');
 
+        var $p = $list.next();
+        console.log($p.get(0).tagName);
+        if($p.get(0).tagName === 'IMG')
+        {
+            $p.remove();
+        }
         $list.html( $li );
 
         // 创建缩略图
@@ -76,7 +86,7 @@ jQuery(function() {
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on( 'uploadSuccess', function( file ,response) {
-        if (response.state="SUCCESS") {
+        if (response.state=="SUCCESS") {
             $('#' + file.id).addClass('upload-state-done');
             $input = $list.siblings('input');
             $input.val(response.url);
@@ -114,4 +124,10 @@ jQuery(function() {
     uploader.on( 'uploadComplete', function( file ) {
         $( '#'+file.id ).find('.progress').remove();
     });
+
+    }
+
+    window.$uploadpicture = $uploadpicture;
+
+    $uploadpicture("fileList","filePicker");
 });

@@ -46,8 +46,6 @@
                 <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
             </div>
         </div>
-
-
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -61,12 +59,24 @@
                 <input type="password" class="input-text" value="" placeholder="" id="password" name="password">
             </div>
         </div>
-
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">角色：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+            [#if roles??]
+                [#list roles as role]
+                    <div class="check-box">
+                        <label class=""><input type="checkbox" value="${role.id}" name="roleIds" >${role.name}</label>
+                    </div>
+                [/#list]
+            [/#if]
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">企业：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
             [#if enterprises??]
                 <select name="enterpriseId" class="select" style="background-color: #FFFFFF">
+                    <option value="0"></option>
                     [#list enterprises as enterprise]
                         <option value="${enterprise.id}">${enterprise.name}</option>
                     [/#list]
@@ -89,7 +99,6 @@
             [/#if]
             </div>
         </div>
-
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">所在地：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -98,20 +107,6 @@
                 </span>
             </div>
         </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">角色：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if roles??]
-                [#list roles as role]
-                    <div class="check-box">
-                        <label class=""><input type="checkbox" value="${role.id}" name="roleIds" >${role.name}</label>
-                    </div>
-                [/#list]
-            [/#if]
-            </div>
-        </div>
-
          <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -157,7 +152,7 @@
                         },
                         password:{
                             required:true,
-                            minlength:8,
+                            minlength:6,
                             maxlength:16
 
                         },

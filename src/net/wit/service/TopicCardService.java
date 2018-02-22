@@ -17,6 +17,9 @@ import net.wit.entity.TopicCard;
  */
 
 public interface TopicCardService extends BaseService<TopicCard, Long> {
+
+	TopicCard find(String cardId);
+
 	Page<TopicCard> findPage(Date beginDate, Date endDate, Pageable pageable);
 	public TopicCard create(Topic topic);
 }

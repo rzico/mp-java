@@ -11,6 +11,8 @@ public class CardModel extends BaseModel implements Serializable {
     private Long id;
     /** 商户 */
     private String name;
+    /** 店铺 */
+    private String shopName;
     /** 卡号 */
     private String code;
     /** 头像 */
@@ -25,6 +27,8 @@ public class CardModel extends BaseModel implements Serializable {
     private Card.VIP vip;
     /** 余额 */
     private BigDecimal balance;
+    /** 积分 */
+    private Long point;
 
     public Long getId() {
         return id;
@@ -98,6 +102,22 @@ public class CardModel extends BaseModel implements Serializable {
         this.vip = vip;
     }
 
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
@@ -109,6 +129,12 @@ public class CardModel extends BaseModel implements Serializable {
         this.vip = card.getVip();
         this.color = topic.getTopicCard().getColor();
         this.background = topic.getTopicCard().getBackground();
+        if (card.getShop()!=null) {
+            this.shopName = card.getShop().getName();
+        } else {
+            this.shopName = "";
+        }
+        this.point = card.getPoint();
     }
 
 

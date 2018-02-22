@@ -9,6 +9,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.service.impl.ProductServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -44,6 +45,9 @@ import net.wit.controller.admin.model.*;
 public class GoodsController extends BaseController {
 	@Resource(name = "goodsServiceImpl")
 	private GoodsService goodsService;
+
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
 	
 
 
@@ -159,9 +163,34 @@ public class GoodsController extends BaseController {
 	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
 		Page<Goods> page = goodsService.findPage(beginDate,endDate,pageable);
+//		List<Goods> goodses=page.getContent();
+//		for(Goods goods:goodses){
+//			System.out.println(goods.getId()+","+goods.getCreateDate()+","+goods.getModifyDate());
+//			List<Product> products=goods.getProducts();
+//			if(goods.getProducts()!=null) {
+//				for (Product product : products) {
+//					System.out.println(product.getId() + "," + product.getName() + "," + product.getSpec1()+","+product.getThumbnail());
+//				}
+//			}
+//		}
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
-	
-	
+
+
+	/**
+	 * 会员管理视图
+	 */
+	@RequestMapping(value = "/goodsView", method = RequestMethod.GET)
+	public String memberView(Long id, ModelMap model) {
+		Goods goods=goodsService.find(id);
+		List<Product> products=goods.getProducts();
+		model.addAttribute("goods",goods);
+		if(products.size()>=1) {
+			model.addAttribute("products", products);
+		}
+		List<Tag> tags=tagService.findAll();
+		model.addAttribute("tag",tags);
+		return "/admin/product/view/goodsView";
+	}
 
 }

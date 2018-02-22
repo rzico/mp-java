@@ -27,4 +27,8 @@ public interface CartDao extends BaseDao<Cart, Long> {
 	 * @return Page<Cart>
 	 */
 	Page<Cart> findPage(Date beginDate,Date endDate, Pageable pageable);
+	/**
+	 * 清除过期购物车
+	 */
+	void evictExpired();
 }

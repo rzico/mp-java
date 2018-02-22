@@ -48,14 +48,23 @@ public class LoginController extends BaseController {
     @Resource(name = "rsaServiceImpl")
     private RSAService rsaService;
 
+    @Resource(name = "cartServiceImpl")
+    private CartService cartService;
+
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
+
+    @Resource(name = "mailServiceImpl")
+    private MailService mailService;
 
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
+
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
 
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
@@ -75,6 +84,12 @@ public class LoginController extends BaseController {
         if (m==null) {
             return Message.error("无效手机号");
         }
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
+            if (memberService.findByMobile(m)==null) {
+                return Message.error("没有注册不能登录");
+            }
+        }
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
 
@@ -92,6 +107,41 @@ public class LoginController extends BaseController {
     }
 
     /**
+     * 手机验证码登录时，发送验证码
+     * mobile 手机号
+     */
+    @RequestMapping(value = "/send_email")
+    @ResponseBody
+    public Message sendMail(String email,HttpServletRequest request) {
+
+        String e = email;
+//        String e = rsaService.decryptParameter("email", request);
+//        rsaService.removePrivateKey(request);
+
+        if (e==null) {
+            return Message.error("无效邮箱");
+        }
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
+            if (memberService.findByEmail(e)==null) {
+                return Message.error("没有注册不能登录");
+            }
+        }
+        int challege = StringUtils.Random6Code();
+        String securityCode = String.valueOf(challege);
+
+        SafeKey safeKey = new SafeKey();
+        safeKey.setKey(e);
+        safeKey.setValue(securityCode);
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),1800));
+        redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
+
+        mailService.sendLoginMail(e,e,securityCode);
+        return Message.success("发送成功");
+    }
+
+    /**
      * 验证码登录
      */
     @RequestMapping(value = "/captcha", method = RequestMethod.POST)
@@ -103,7 +153,10 @@ public class LoginController extends BaseController {
         }
         redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
-        Member member =memberService.findByMobile(safeKey.getKey());
+        Member member = memberService.findByMobile(safeKey.getKey());
+        if (member==null) {
+            member = memberService.findByEmail(safeKey.getKey());
+        }
         try {
             String captcha = rsaService.decryptParameter("captcha", request);
             rsaService.removePrivateKey(request);
@@ -126,7 +179,8 @@ public class LoginController extends BaseController {
                 member.setMobile(safeKey.getKey());
                 member.setNickName(null);
                 member.setLogo(null);
-                member.setPoint(0L);
+//                member.setPoint(0L);
+//                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setIsEnabled(true);
                 member.setIsLocked(false);
@@ -134,6 +188,16 @@ public class LoginController extends BaseController {
                 member.setRegisterIp(request.getRemoteAddr());
                 memberService.save(member);
             }
+
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
 
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
@@ -152,9 +216,17 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+
+            if (member.getPromoter()!=null) {
+                memberService.create(member,member.getPromoter());
+            }
+
+            messageService.login(member,request);
+
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
+
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,6 +253,15 @@ public class LoginController extends BaseController {
             if (!MD5Utils.getMD5Str(password).equals(member.getPassword())) {
                 return Message.error("无效密码");
             }
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
@@ -198,9 +279,18 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+
+
+            messageService.login(member,request);
+
+            if (member.getPromoter()!=null) {
+                memberService.create(member,member.getPromoter());
+            }
+
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
+
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -216,6 +306,15 @@ public class LoginController extends BaseController {
     public Message demo(Long id,HttpServletRequest request){
         Member member =memberService.find(id);
         try {
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
@@ -225,6 +324,7 @@ public class LoginController extends BaseController {
             return Message.error("登录失败");
         }
     }
+
     /**
      * 微信登录
      */
@@ -269,7 +369,8 @@ public class LoginController extends BaseController {
             member = new Member();
             member.setNickName(nickName);
             member.setLogo(headImg);
-            member.setPoint(0L);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
@@ -301,6 +402,15 @@ public class LoginController extends BaseController {
             }
             bindUserService.save(bindUser);
 
+
+            Cart cart = cartService.getCurrent();
+            if (cart != null) {
+                if (cart.getMember() == null) {
+                    cartService.merge(member, cart);
+                    redisService.remove(Cart.KEY_COOKIE_NAME);
+                }
+            }
+
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
@@ -318,6 +428,10 @@ public class LoginController extends BaseController {
             }
             member.setLoginDate(new Date());
             memberService.save(member);
+            if (member.getPromoter()!=null) {
+                memberService.create(member,member.getPromoter());
+            }
+            messageService.login(member,request);
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
@@ -326,6 +440,7 @@ public class LoginController extends BaseController {
             e.printStackTrace();
             return Message.error("登录失败");
         }
+
     }
 
     /**
@@ -340,6 +455,10 @@ public class LoginController extends BaseController {
             member.setUuid(null);
             member.setScene(null);
             memberService.save(member);
+        }
+        Cart cart = cartService.getCurrent();
+        if (cart!=null) {
+            cartService.delete(cart);
         }
         redisService.remove(Member.PRINCIPAL_ATTRIBUTE_NAME);
         return Message.success("注销成功");
@@ -378,7 +497,8 @@ public class LoginController extends BaseController {
             member.setUsername('d'+code);
             member.setNickName("收款机（"+code+"）");
             member.setLogo("http://cdn.rzico.com/weex/resources/images/logo.png");
-            member.setPoint(0L);
+//            member.setPoint(0L);
+//            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
@@ -393,7 +513,7 @@ public class LoginController extends BaseController {
             admin = new Admin();
             admin.setUsername('d'+code);
             admin.setName("收款机（"+code+"）");
-            admin.setEmail(member.getEmail());
+//            admin.setEmail(member.getEmail());
             admin.setEnterprise(shop.getEnterprise());
             admin.setIsLocked(false);
             admin.setIsEnabled(true);
@@ -411,8 +531,21 @@ public class LoginController extends BaseController {
             adminService.save(admin);
         } else {
             admin.setShop(shop);
+            admin.setEnterprise(shop.getEnterprise());
+            admin.setUsername('d'+code);
+            admin.setName("收款机（"+code+"）");
             adminService.update(admin);
         }
+
+
+        Cart cart = cartService.getCurrent();
+        if (cart != null) {
+            if (cart.getMember() == null) {
+                cartService.merge(member, cart);
+                redisService.remove(Cart.KEY_COOKIE_NAME);
+            }
+        }
+
         Principal principal = new Principal(member.getId(),member.getUsername());
         redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
         String xuid = request.getHeader("x-uid");

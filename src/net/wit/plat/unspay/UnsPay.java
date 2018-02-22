@@ -151,7 +151,7 @@ public class UnsPay {
         try {
             BigDecimal bal = queryBalance();
             if (bal.compareTo(transfer.effectiveAmount().add(BigDecimal.ONE))<=0) {
-               return "";
+               return "3000";
             }
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             Map<String, Object> params = new HashMap<String, Object>();
@@ -160,13 +160,14 @@ public class UnsPay {
             params.put("03cardNo", transfer.getCardno());
             params.put("04orderId", transfer.getSn());
             params.put("05purpose", transfer.getMemo());
-            java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#.00");
+            java.text.DecimalFormat   df   =  new   java.text.DecimalFormat("#0.00");
             params.put("06amount", df.format(transfer.effectiveAmount()));
             String notifyUrl = bundle.getString("x-unspay-url") +"payment/transfer/" + transfer.getSn() + ".jhtml";
             params.put("06responseUrl", notifyUrl);
             String keystr = UnsPay.joinValue(params);
             params.put("08mac", MD5Utils.getMD5Str(keystr).toUpperCase());
             String resp = get(url, params);
+            System.out.println(resp);
             Map<String, String> data = JsonUtils.toObject(resp, Map.class);
             return data.get("result_code");
         } catch (Exception e) {
@@ -212,12 +213,12 @@ public class UnsPay {
             params.put("04result_code", result_code);
             params.put("05result_msg", result_msg);
             String keystr = UnsPay.joinValue(params);
-            //System.out.println(keystr);
-            //System.out.println(MD5Utils.getMD5Str(keystr).toUpperCase());
+//            System.out.println(keystr);
+//            System.out.println(MD5Utils.getMD5Str(keystr).toUpperCase());
             if (mac.equals(MD5Utils.getMD5Str(keystr).toUpperCase())) {
-                //System.out.println(result_code);
-                //System.out.println(orderId);
-                //System.out.println(sn);
+//                System.out.println(result_code);
+//                System.out.println(orderId);
+//                System.out.println(sn);
                 if ("0000".equals(result_code) && sn.equals(orderId)) {
                     return "00";
                 } else {

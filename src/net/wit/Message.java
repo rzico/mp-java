@@ -208,7 +208,7 @@ public class Message {
 		if (rmd5!=null && md5.equals(rmd5)) {
 			return Message.warn(Message.CACHE_SUCCESS);
 		}
-		Message  message = Message.success(data,"success");
+		Message message = Message.success(data,"success");
 		message.setMd5(MD5Utils.getMD5Str(js));
 		return message;
 	}

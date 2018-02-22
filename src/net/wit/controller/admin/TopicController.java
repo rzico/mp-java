@@ -63,7 +63,8 @@ public class TopicController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 	/**
 	 * 主页
@@ -84,15 +85,15 @@ public class TopicController extends BaseController {
 		types.add(new MapEntity("student","学生"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("areas",areaService.findAll());
+		//model.addAttribute("areas",areaService.findAll());
 
-		model.addAttribute("categorys",categoryService.findAll());
+		//model.addAttribute("categorys",categoryService.findAll());
 
-		model.addAttribute("members",memberService.findAll());
+		//model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+		//model.addAttribute("tags",tagService.findList(Tag.Type.topic));
 
-		model.addAttribute("templates",templateService.findList(Template.Type.topic));
+		//model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
 		return "/admin/topic/list";
 	}
@@ -215,9 +216,9 @@ public class TopicController extends BaseController {
 
 		model.addAttribute("categorys",categoryService.findAll());
 
-		model.addAttribute("members",memberService.findAll());
+		//model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+		//model.addAttribute("tags",tagService.findList(Tag.Type.topic));
 
 		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 
@@ -234,6 +235,8 @@ public class TopicController extends BaseController {
     @ResponseBody
 	public Message update(Topic topic, Long areaId, Long templateId, Long memberId, Long categoryId){
 		Topic entity = topicService.find(topic.getId());
+
+		TopicConfig topicConfig = entity.getConfig();
 		
 		entity.setCreateDate(topic.getCreateDate());
 
@@ -251,14 +254,32 @@ public class TopicController extends BaseController {
 
 		entity.setType(topic.getType());
 
-		entity.setArea(areaService.find(areaId));
+		if(areaId != null){
+			entity.setArea(areaService.find(areaId));
+		}
 
-		entity.setCategory(categoryService.find(categoryId));
+		if(categoryId != null){
+			entity.setCategory(categoryService.find(categoryId));
+		}
 
-		entity.setMember(memberService.find(memberId));
+		if(memberId != null){
+			entity.setMember(memberService.find(memberId));
+		}
 
-		entity.setTemplate(templateService.find(templateId));
-		
+		if(templateId != null){
+			entity.setTemplate(templateService.find(templateId));
+		}
+
+		topicConfig.setAppetAppId(topic.getConfig().getAppetAppId());
+
+		topicConfig.setAppetAppSerect(topic.getConfig().getAppetAppSerect());
+
+		topicConfig.setWxAppId(topic.getConfig().getWxAppId());
+
+		topicConfig.setWxAppSerect(topic.getConfig().getWxAppSerect());
+
+		entity.setConfig(topicConfig);
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -288,6 +309,41 @@ public class TopicController extends BaseController {
 			filters.add(typeFilter);
 		}
 
+		Admin admin =adminService.getCurrent();
+//		System.out.println("admin.ID:"+admin.getId());
+		Enterprise enterprise=admin.getEnterprise();
+//		System.out.println("enter.ID:"+enterprise.getId());
+
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		if(enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
+		//个人代理商(無權限)
+		//商家
+		if(enterprise.getType()== Enterprise.Type.shop){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("id", Filter.Operator.eq, enterprise.getMember().getTopic().getId());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
 		Page<Topic> page = topicService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

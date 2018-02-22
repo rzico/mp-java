@@ -13,25 +13,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ *
  * Entity - 账单记录
  *
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
+ *
  */
+
 @Entity
 @Table(name = "wx_enterprise")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_enterprise_sequence")
 public class Enterprise extends BaseEntity {
+
     private static final long serialVersionUID = 24L;
 
-    public static enum Type{
+    public enum Type{
         /** 运营商 */
         operate,
-        /** 城市代理商 */
+        /** 代理商 */
         agent,
-        /** 个人代理商 */
+        /** 个人 */
         personal,
-        /** 入驻商家 */
+        /** 商家 */
         shop
     };
 
@@ -55,7 +59,14 @@ public class Enterprise extends BaseEntity {
     /** 地区 null 代表没有区域限制 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) comment '地区'")
+    @JsonIgnore
     private Area area;
+
+    /** 授信额度 */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '授信额度'")
+    private BigDecimal creditLine;
 
     /** 结算佣金 10% */
     @Min(0)
@@ -71,6 +82,7 @@ public class Enterprise extends BaseEntity {
 
     /** 业主,入驻商家时不能为空 */
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Member member;
 
     public Type getType() {
@@ -129,6 +141,14 @@ public class Enterprise extends BaseEntity {
         this.member = member;
     }
 
+    public BigDecimal getCreditLine() {
+        return creditLine;
+    }
+
+    public void setCreditLine(BigDecimal creditLine) {
+        this.creditLine = creditLine;
+    }
+
     public MapEntity getMapArea() {
         if (getArea() != null) {
             return new MapEntity(getArea().getId().toString(), getArea().getName());
@@ -137,9 +157,18 @@ public class Enterprise extends BaseEntity {
         }
     }
 
+    @JsonIgnore
     public BigDecimal calcFee(BigDecimal amount) {
         BigDecimal rate = this.brokerage.multiply(new BigDecimal("0.01"));
         return amount.multiply(rate).setScale(4,BigDecimal.ROUND_HALF_DOWN);
+    }
+
+    public MapEntity getMapMember() {
+        if (getMember() != null) {
+            return new MapEntity(getMember().getId().toString(), getMember().getName());
+        } else {
+            return null;
+        }
     }
 
 }

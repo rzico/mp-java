@@ -2,6 +2,7 @@ package net.wit.controller.weex.member;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.AdminModel;
 import net.wit.controller.model.CouponModel;
@@ -86,6 +87,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         Enterprise enterprise = admin.getEnterprise();
 
@@ -93,6 +97,11 @@ public class AdminController extends BaseController {
             Admin r = enterpriseService.addAdmin(enterprise,adminMember);
             if (r==null) {
                 return Message.error("就业状态，请先解除就业关系");
+            }
+            try {
+                memberService.create(adminMember,member);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
             }
             AdminModel model = new AdminModel();
             model.bind(r);
@@ -117,6 +126,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
 
         Admin adminMember = adminService.find(id);
         if (adminMember==null) {
@@ -125,13 +137,17 @@ public class AdminController extends BaseController {
 
         if (shopId!=null) {
             Shop shop = shopService.find(shopId);
+            System.out.println(shopId);
             if (shop == null) {
                 return Message.error("店铺id无效");
             }
-
             adminMember.setShop(shop);
         }
+
         if (roleId!=null) {
+            if (adminMember.isOwner()) {
+                return Message.error("店主不能设置角色");
+            }
             Role role = roleService.find(roleId);
             List<Role> roles = adminMember.getRoles();
             if (roles==null) {
@@ -166,6 +182,9 @@ public class AdminController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Enterprise enterprise = admin.getEnterprise();
 
         if (adminMember.isOwner()) {
@@ -192,17 +211,19 @@ public class AdminController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getTopic()==null) {
-            return Message.error("没有开通专栏");
-        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有点亮专栏");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Enterprise enterprise = admin.getEnterprise();
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("enterprise", Filter.Operator.eq,enterprise));
         pageable.setFilters(filters);
+        pageable.setOrderProperty("shop");
+        pageable.setOrderDirection(Order.Direction.asc);
         Page<Admin> page = adminService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(AdminModel.bindList(page.getContent()));

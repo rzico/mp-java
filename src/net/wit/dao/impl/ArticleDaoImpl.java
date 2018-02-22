@@ -8,6 +8,7 @@ import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.*;
 
+import net.wit.entity.Member;
 import net.wit.entity.Tag;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;

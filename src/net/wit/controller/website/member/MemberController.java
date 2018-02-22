@@ -4,10 +4,7 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.MemberAttributeModel;
 import net.wit.controller.model.MemberModel;
-import net.wit.entity.Area;
-import net.wit.entity.BindUser;
-import net.wit.entity.Member;
-import net.wit.entity.Occupation;
+import net.wit.entity.*;
 import net.wit.plat.im.User;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -53,6 +51,9 @@ public class MemberController extends BaseController {
     @Resource(name = "bindUserServiceImpl")
     private BindUserService bindUserService;
 
+    @Resource(name = "depositServiceImpl")
+    private DepositService depositService;
+
     /**
      * 获取当前会员信息
      */
@@ -65,6 +66,9 @@ public class MemberController extends BaseController {
         }
         MemberModel model =new MemberModel();
         model.bind(member);
+
+        BigDecimal sm = depositService.summary(Deposit.Type.rebate,member);
+        model.setRebate(sm);
         return Message.bind(model,request);
    }
 

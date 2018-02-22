@@ -82,6 +82,18 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements MemberDa
 		}
 	}
 
+	public Member findByEmail(String email) {
+		if (email == null) {
+			return null;
+		}
+		try {
+			String jpql = "select members from Member members where lower(members.email) = lower(:email)";
+			return entityManager.createQuery(jpql, Member.class).setFlushMode(FlushModeType.COMMIT).setParameter("email", email).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 	public Member findByUUID(String uuid) {
 		if (uuid == null) {
 			return null;

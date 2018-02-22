@@ -55,8 +55,8 @@ public class MemberController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-
-
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 	/**
 	 * 主页
 	 */
@@ -69,11 +69,11 @@ public class MemberController extends BaseController {
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
 
-		model.addAttribute("areas",areaService.findAll());
+//		model.addAttribute("areas",areaService.findAll());
 
-		model.addAttribute("occupations",occupationService.findAll());
+//		model.addAttribute("occupations",occupationService.findAll());
 
-		model.addAttribute("tags",tagService.findList(Tag.Type.member));
+//		model.addAttribute("tags",tagService.findList(Tag.Type.member));
 
 		return "/admin/member/list";
 	}
@@ -108,8 +108,8 @@ public class MemberController extends BaseController {
     @ResponseBody
 	public Message save(Member member, Long areaId, Long occupationId, Long [] tagIds){
 		Member entity = new Member();	
-
-		entity.setAddress(member.getAddress());
+//
+//		entity.setAddress(member.getAddress());
 
 		entity.setBirth(member.getBirth());
 
@@ -120,10 +120,10 @@ public class MemberController extends BaseController {
 		entity.setIsLocked(member.getIsLocked());
 
 		entity.setName(member.getName());
-
-		entity.setPhone(member.getPhone());
-
-		entity.setZipCode(member.getZipCode());
+//
+//		entity.setPhone(member.getPhone());
+//
+//		entity.setZipCode(member.getZipCode());
 
 		entity.setArea(areaService.find(areaId));
 
@@ -201,32 +201,32 @@ public class MemberController extends BaseController {
 		entity.setCreateDate(member.getCreateDate());
 
 		entity.setModifyDate(member.getModifyDate());
-
-		entity.setAddress(member.getAddress());
-
-		entity.setAttributeValue0(member.getAttributeValue0());
-
-		entity.setAttributeValue1(member.getAttributeValue1());
-
-		entity.setAttributeValue2(member.getAttributeValue2());
-
-		entity.setAttributeValue3(member.getAttributeValue3());
-
-		entity.setAttributeValue4(member.getAttributeValue4());
-
-		entity.setAttributeValue5(member.getAttributeValue5());
-
-		entity.setAttributeValue6(member.getAttributeValue6());
-
-		entity.setAttributeValue7(member.getAttributeValue7());
-
-		entity.setAttributeValue8(member.getAttributeValue8());
+//
+//		entity.setAddress(member.getAddress());
+//
+//		entity.setAttributeValue0(member.getAttributeValue0());
+//
+//		entity.setAttributeValue1(member.getAttributeValue1());
+//
+//		entity.setAttributeValue2(member.getAttributeValue2());
+//
+//		entity.setAttributeValue3(member.getAttributeValue3());
+//
+//		entity.setAttributeValue4(member.getAttributeValue4());
+//
+//		entity.setAttributeValue5(member.getAttributeValue5());
+//
+//		entity.setAttributeValue6(member.getAttributeValue6());
+//
+//		entity.setAttributeValue7(member.getAttributeValue7());
+//
+//		entity.setAttributeValue8(member.getAttributeValue8());
 
 		entity.setAttributeValue9(member.getAttributeValue9());
 
 		entity.setBirth(member.getBirth());
-
-		entity.setEmail(member.getEmail());
+//
+//		entity.setEmail(member.getEmail());
 
 		entity.setGender(member.getGender());
 
@@ -243,20 +243,20 @@ public class MemberController extends BaseController {
 		entity.setLoginIp(member.getLoginIp());
 
 		entity.setName(member.getName());
-
-		entity.setPhone(member.getPhone());
-
-		entity.setPoint(member.getPoint() == null ? 0 : member.getPoint());
+//
+//		entity.setPhone(member.getPhone());
+//
+//		entity.setPoint(member.getPoint() == null ? 0 : member.getPoint());
 
 		entity.setUsername(member.getUsername());
-
-		entity.setZipCode(member.getZipCode());
+//
+//		entity.setZipCode(member.getZipCode());
 
 		entity.setArea(areaService.find(areaId));
 
 		entity.setAutograph(member.getAutograph());
 
-		entity.setLogo(member.getLogo());
+//		entity.setLogo(member.getLogo());
 
 		entity.setNickName(member.getNickName());
 
@@ -288,7 +288,31 @@ public class MemberController extends BaseController {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
 			filters.add(genderFilter);
 		}
+		Admin admin =adminService.getCurrent();
+//		System.out.println("admin.ID:"+admin.getId());
+		Enterprise enterprise=admin.getEnterprise();
+//		System.out.println("enter.ID:"+enterprise.getId());
 
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+		//代理商
+		if(enterprise.getType()== Enterprise.Type.agent){
+			if(enterprise.getMember()!=null){
+				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
+				filters.add(mediaTypeFilter);
+			}
+			else{
+				return Message.error("该商家未绑定");
+			}
+		}
+		//个人代理商(無權限)
+		//商家(無權限)
 		Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
 		User.userState(page.getContent());
 		return Message.success(PageBlock.bind(page), "admin.list.success");

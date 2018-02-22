@@ -26,7 +26,7 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>Transfer</title>
+    <title>提现管理</title>
 </head>
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 提现管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
@@ -47,7 +47,7 @@
                 <option value="${status.id}">${status.name}</option>
 				[/#list]
 			</select>
-         </span>
+        </span>
 		[/#if]
 		[#if types??]
         <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
@@ -57,7 +57,7 @@
                 <option value="${type.id}">${type.name}</option>
 				[/#list]
 			</select>
-         </span>
+        </span>
 		[/#if]
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
@@ -67,7 +67,11 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量审核</a>
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    <a href="javascript:;" onclick="" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量审核</a>
+                [/#if]
+            [/@adminDirective]
         </span>
     </div>
     <div class="mt-20">
@@ -354,7 +358,9 @@
     }
     /*查看*/
     function show(title, url, id, w, h) {
-        layer_show(title, url, w, h);
+        var w_1 = window.innerWidth * 0.5;
+        var h_1 = window.innerHeight * 0.6;
+        layer_show(title, url, w_1, h_1);
     }
     /*编辑*/
     function edit(title, url, id, w, h) {

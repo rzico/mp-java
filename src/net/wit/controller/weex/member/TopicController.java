@@ -3,6 +3,7 @@ package net.wit.controller.weex.member;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.TopicIndexModel;
+import net.wit.controller.model.TopicOptionModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -97,6 +98,7 @@ public class TopicController extends BaseController {
                 config.setUseCard(false);
                 config.setUseCashier(false);
                 config.setUseCoupon(false);
+                config.setPromoterType(TopicConfig.PromoterType.any);
             }
             topic.setConfig(config);
             Calendar calendar   =   new GregorianCalendar();
@@ -105,6 +107,7 @@ public class TopicController extends BaseController {
             topic.setExpire(calendar.getTime());
             topic.setTemplate(templateService.findDefault(Template.Type.topic));
             topicService.create(topic);
+            enterpriseService.create(topic);
             return Message.success("开通成功");
         } else {
             return Message.success("已经开通");
@@ -126,6 +129,12 @@ public class TopicController extends BaseController {
         Topic topic = member.getTopic();
         if (topic==null) {
             return Message.error("请先开通专栏");
+        }
+        if (topic.getLogo()==null) {
+            return Message.error("请设置专栏头像");
+        }
+        if (topic.getName()==null) {
+            return Message.error("请设置专栏名称");
         }
         enterpriseService.create(topic);
         return Message.success("申请成功");
@@ -171,7 +180,7 @@ public class TopicController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message submit(String name,String logo,Long categoryId,Long areaId,String address,Long templateId,Boolean useCoupon,Boolean useCard,Boolean useCashier,HttpServletRequest request){
+    public Message submit(String name,String logo,Long categoryId,Long areaId,String address,Long templateId,Boolean useCoupon,Boolean useCard,Boolean useCashier,TopicConfig.PromoterType promoterType,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -186,12 +195,22 @@ public class TopicController extends BaseController {
         }
         if (name!=null) {
             topic.setName(name);
+            if (admin!=null) {
+                Enterprise enterprise = admin.getEnterprise();
+                enterprise.setName(name);
+                enterpriseService.update(enterprise);
+            }
         }
         if (topic.getName().length()>27) {
             return Message.error("专栏名不能超过9个汉字");
         }
         if (logo!=null) {
             topic.setLogo(logo);
+            if (admin!=null) {
+                Enterprise enterprise = admin.getEnterprise();
+                enterprise.setLogo(logo);
+                enterpriseService.update(enterprise);
+            }
         }
         if (areaId!=null) {
             topic.setArea(areaService.find(areaId));
@@ -211,13 +230,14 @@ public class TopicController extends BaseController {
             config.setUseCard(false);
             config.setUseCashier(false);
             config.setUseCoupon(false);
+            config.setPromoterType(TopicConfig.PromoterType.any);
         }
         if (useCard!=null) {
             if (member.getMobile()==null) {
-                return Message.error("绑定手机才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             if (member.getName()==null) {
-                return Message.error("银行卡实名才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             config.setUseCard(useCard);
             if (useCard) {
@@ -226,25 +246,54 @@ public class TopicController extends BaseController {
         }
         if (useCoupon!=null) {
             if (member.getMobile()==null) {
-                return Message.error("绑定手机才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             if (member.getName()==null) {
-                return Message.error("银行卡实名才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             config.setUseCoupon(useCoupon);
         }
         if (useCashier!=null) {
             if (member.getMobile()==null) {
-                return Message.error("绑定手机才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             if (member.getName()==null) {
-                return Message.error("银行卡实名才能开通");
+                return Message.error("请绑定银行卡才能开通");
             }
             config.setUseCashier(useCashier);
+        }
+        if (promoterType!=null) {
+            config.setPromoterType(promoterType);
         }
         topic.setConfig(config);
         topicService.update(topic);
         return Message.success("修改成功");
+
+    }
+
+
+    /**
+     *  获取企业专栏信息
+     */
+    @RequestMapping(value = "/owner", method = RequestMethod.GET)
+    @ResponseBody
+    public Message ower(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Long ownerId = 0L;
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            ownerId = member.getId();
+        } else {
+            if (admin.getEnterprise()==null) {
+                ownerId = member.getId();
+            } else {
+                ownerId = admin.getEnterprise().getMember().getId();
+            }
+        }
+        return Message.success(ownerId,"获取成功");
 
     }
 
@@ -283,6 +332,22 @@ public class TopicController extends BaseController {
         }
 
 
+        return Message.bind(model,request);
+
+    }
+
+    /**
+     *  获取专栏信息
+     */
+    @RequestMapping(value = "/option", method = RequestMethod.GET)
+    @ResponseBody
+    public Message option(HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        TopicOptionModel model = new TopicOptionModel();
+        model.bind(member);
         return Message.bind(model,request);
 
     }

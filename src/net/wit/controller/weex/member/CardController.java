@@ -65,8 +65,14 @@ public class CardController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
     @Resource(name = "payBillServiceImpl")
     private PayBillService payBillService;
+
+    @Resource(name = "bankcardServiceImpl")
+    private BankcardService bankcardService;
 
     /**
      *   获取会员卡
@@ -89,6 +95,7 @@ public class CardController extends BaseController {
         model.bind(card);
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
+
         TopicCard topicCard = card.getTopicCard();
         data.put("mobile",member.getMobile());
         data.put("name",member.getName());
@@ -116,6 +123,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Card card = cardService.find(id);
         if (card==null) {
             return Message.error("无效卡号");
@@ -125,6 +135,19 @@ public class CardController extends BaseController {
         }
         CardViewModel model = new CardViewModel();
         model.bind(card);
+
+        Member cardMember = card.getMembers().get(0);
+        Bankcard bankcard = bankcardService.findDefault(cardMember);
+        if (bankcard!=null) {
+            model.setName(bankcard.getName());
+            model.setBindName(true);
+        }
+
+        if (cardMember.getMobile()!=null) {
+            model.setBindMobile(true);
+            model.setMobile(cardMember.getMobile());
+        }
+
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
         TopicCard topicCard = card.getTopicCard();
@@ -151,6 +174,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Card card = cardService.find(code);
         if (card==null) {
             return Message.error("无效卡号");
@@ -160,6 +186,20 @@ public class CardController extends BaseController {
         }
         CardViewModel model = new CardViewModel();
         model.bind(card);
+
+
+        Member cardMember = card.getMembers().get(0);
+        Bankcard bankcard = bankcardService.findDefault(cardMember);
+        if (bankcard!=null) {
+            model.setName(bankcard.getName());
+            model.setBindName(true);
+        }
+
+        if (cardMember.getMobile()!=null) {
+            model.setBindMobile(true);
+            model.setMobile(cardMember.getMobile());
+        }
+
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("card",model);
         TopicCard topicCard = card.getTopicCard();
@@ -173,7 +213,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Card.VIP vip,HttpServletRequest request){
+    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -182,6 +222,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Card card = cardService.find(id);
         if (card==null) {
             return Message.error("无效卡号");
@@ -189,7 +232,23 @@ public class CardController extends BaseController {
         if (!card.getOwner().equals(admin.getEnterprise().getMember())) {
             return Message.error("不是本店会员卡");
         }
-        card.setVip(vip);
+        if (vip!=null) {
+            card.setVip(vip);
+        }
+        if (name!=null) {
+            card.setName(name);
+        }
+        if (mobile!=null) {
+            card.setMobile(mobile);
+        }
+        if (shopId!=null) {
+            Shop shop = shopService.find(shopId);
+            if (shop==null) {
+                return Message.error("无效店铺 id");
+            }
+            card.setShop(shop);
+        }
+
         cardService.update(card);
         return Message.success("更新成功");
     }
@@ -212,6 +271,10 @@ public class CardController extends BaseController {
         }
 
         if (topic.getTopicCard()==null) {
+            return BigDecimal.ZERO;
+        }
+
+        if (topic.getTopicCard().getActivity()==null) {
             return BigDecimal.ZERO;
         }
 
@@ -260,6 +323,9 @@ public class CardController extends BaseController {
         if (admin==null) {
             return Message.error("没有开通收银台");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Shop shop = admin.getShop();
         if (shop==null) {
             return Message.error("没有分配门店");
@@ -294,6 +360,9 @@ public class CardController extends BaseController {
         BigDecimal effective = payBill.getEffectiveAmount();
         payBill.setFee(shop.getEnterprise().calcFee(effective));
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入充值金额");
+            }
             Payment payment = payBillService.cardFill(payBill);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("id",payBill.getId());
@@ -317,6 +386,9 @@ public class CardController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通收银台");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Shop shop = admin.getShop();
         if (shop==null) {
@@ -351,6 +423,9 @@ public class CardController extends BaseController {
         BigDecimal effective = payBill.getEffectiveAmount();
         payBill.setFee(shop.getEnterprise().calcFee(effective));
         try {
+            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+                return Message.error("请输入退款金额");
+            }
             Refunds refunds = payBillService.cardRefund(payBill);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("id",payBill.getId());
@@ -374,6 +449,9 @@ public class CardController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
         }
         Shop shop = admin.getShop();
         if (shop==null) {
@@ -417,6 +495,9 @@ public class CardController extends BaseController {
         if (enterprise==null) {
             return Message.error("没有开通店铺");
         }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
         Member owner = enterprise.getMember();
         if (owner.getTopic()==null) {
             return Message.error("没有开通专栏");
@@ -426,11 +507,38 @@ public class CardController extends BaseController {
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("owner", Filter.Operator.eq,owner));
+        if (!admin.getRoles().contains(roleService.find(1L))) {
+            Shop shop = admin.getShop();
+            if (shop!=null) {
+                filters.add(new Filter("shop", Filter.Operator.eq,shop));
+            } else {
+                Page<Card> page = new Page();
+                PageBlock model = PageBlock.bind(page);
+                model.setData(CardViewModel.bindList(page.getContent()));
+                return Message.bind(model,request);
+            }
+        }
         filters.add(new Filter("status", Filter.Operator.ne,Card.Status.none));
         pageable.setFilters(filters);
         Page<Card> page = cardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(CardViewModel.bindList(page.getContent()));
+        List<CardViewModel> cardList = CardViewModel.bindList(page.getContent());
+        for (CardViewModel c:cardList) {
+            Card card = cardService.find(c.getId());
+            Member cardMember = card.getMembers().get(0);
+            Bankcard bankcard = bankcardService.findDefault(cardMember);
+            if (bankcard!=null) {
+                c.setName(bankcard.getName());
+                c.setBindName(true);
+            }
+
+            if (cardMember.getMobile()!=null) {
+                c.setMobile(cardMember.getMobile());
+                c.setBindMobile(true);
+            }
+        }
+
+        model.setData(cardList);
         return Message.bind(model,request);
     }
 
