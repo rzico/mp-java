@@ -23,12 +23,11 @@ import java.util.Map;
 /**
  * Created by zhangsr on 2018/1/29.
  */
-public class Crypto {
+public class Kaga {
     public static String vendor_name="rzico";
     public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
-    public static String sessionURL = "http://api.neo-nihtan.com/api/session";
-    public static String gameListURL = "http://api.neo-nihtan.com/api/game/list";
-    public static String videoListURL = "http://video-list.neo-nihtan.com/video/list";
+    public static String sessionURL = "http://api.neo-nihtan.com/api/kaga/open";
+    public static String gameListURL = "http://api.neo-nihtan.com/api/game/kaga";
 
     public static String encrypt(String key, String data) {
         String hash = "";
@@ -100,17 +99,18 @@ public class Crypto {
         return result;
     }
 
-    public static String getSession(String ip,Member member) {
+    public static String getSession(String game,String ip,Member member) {
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
         data.put("user_name",member.getUsername());
         data.put("user_ip",ip);
         data.put("vendor_name",vendor_name);
+        data.put("mobile","1");
+        data.put("game_id",game);
         data.put("pc_redirect","http://weex.udzyw.com?game=true");
         data.put("mo_redirect","http://weex.udzyw.com?game=true");
         String dataStr = JsonUtils.toJson(data);
         String hash = encrypt(key,dataStr);
-
         String resp = post(sessionURL+"?hash="+hash,dataStr);
         return resp;
     }
@@ -126,13 +126,8 @@ public class Crypto {
         return resp;
     }
 
-    public static String videoList() {
-        String resp = get(videoListURL,"");
-        return resp;
-    }
-
 
     public static void main(String[] args) throws Exception {
-        Crypto.videoList();
+        Kaga.gameList();
     }
 }
