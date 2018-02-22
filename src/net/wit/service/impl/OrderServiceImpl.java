@@ -386,6 +386,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public void confirm(Order order, Admin operator)  throws Exception {
 		Assert.notNull(order);
 
+		orderDao.lock(order,LockModeType.PESSIMISTIC_WRITE);
+
 		order.setOrderStatus(Order.OrderStatus.confirmed);
 		order.setExpire(null);
 		orderDao.merge(order);
@@ -411,6 +413,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 */
 	public void complete(Order order, Admin operator)  throws Exception {
 		Assert.notNull(order);
+
+		orderDao.lock(order,LockModeType.PESSIMISTIC_WRITE);
 
 		Member member = order.getMember();
 		memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
@@ -898,6 +902,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 
 			order.setShippingStatus(Order.ShippingStatus.returned);
+			order.setReturnedDate(new Date());
 			order.setExpire(null);
 			orderDao.merge(order);
 			OrderLog orderLog = new OrderLog();
@@ -963,37 +968,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 	}
 
-	void evictCompleted() {
+	public void evictCompleted() {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("orderStatus", Filter.Operator.eq,Order.OrderStatus.confirmed));
 		filters.add(new Filter("shippingStatus", Operator.le, Order.ShippingStatus.shipped));
-		filters.add(new Filter("shippingDate", Operator.le, DateUtils.addDays(new Date(),-7) ));
-		List<Payment> data = paymentDao.findList(null,null,filters,null);
-		for (Payment payment:data) {
-			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
-			String resultCode = null;
+		filters.add(new Filter("shippingDate", Operator.le, DateUtils.addDays(new Date(),-6) ));
+		List<Order> data = orderDao.findList(null,null,filters,null);
+		for (Order order:data) {
 			try {
-				if (paymentPlugin == null) {
-					resultCode = "0001";
-				} else {
-					resultCode = paymentPlugin.queryOrder(payment,null);
-				}
+				complete(order,null);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
-			}
-			switch (resultCode) {
-				case "0000":
-					try {
-						this.handle(payment);
-					} catch (Exception e) {
-						logger.error(e.getMessage());
-					}
-				case "0001":
-					try {
-						this.close(payment);
-					} catch (Exception e) {
-						logger.error(e.getMessage());
-					}
 			}
 		}
 
