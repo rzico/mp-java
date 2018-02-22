@@ -106,8 +106,8 @@ public class Crypto {
         data.put("user_name",member.getUsername());
         data.put("user_ip",ip);
         data.put("vendor_name",vendor_name);
-        data.put("pc_redirect","http://weex.udzyw.com?game=true");
-        data.put("mo_redirect","http://weex.udzyw.com?game=true");
+        data.put("pc_redirect","http://weex.udzyw.com?home=true");
+        data.put("mo_redirect","http://weex.udzyw.com?home=true");
         String dataStr = JsonUtils.toJson(data);
         String hash = encrypt(key,dataStr);
 
