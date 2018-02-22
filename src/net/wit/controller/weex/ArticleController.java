@@ -2,6 +2,7 @@ package net.wit.controller.weex;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticlePreviewModel;
@@ -166,6 +167,8 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         pageable.setFilters(filters);
+        pageable.setOrderProperty("hits");
+        pageable.setOrderDirection(Order.Direction.desc);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleListModel.bindList(page.getContent()));
@@ -186,6 +189,8 @@ public class ArticleController extends BaseController {
         List<Tag> tags = null;
         tags = tagService.findList(4L);
         pageable.setFilters(filters);
+        pageable.setOrderProperty("hits");
+        pageable.setOrderDirection(Order.Direction.desc);
         Page<Article> page = articleService.findPage(null,null,tags,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleListModel.bindList(page.getContent()));

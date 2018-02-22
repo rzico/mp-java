@@ -302,7 +302,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		//指定读取证书格式为PKCS12
 		KeyStore keyStore = KeyStore.getInstance("PKCS12");
 		String rootPath = request.getSession().getServletContext().getRealPath("/");
-		String path = rootPath+"/cert/weixin.pfx";
+		String path = rootPath+"/cert/weixin_cert.p12";
 		//读取本机存放的PKCS12证书文件
 		FileInputStream instream = new FileInputStream(new File(path));
 		try {

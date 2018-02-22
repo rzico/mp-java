@@ -384,6 +384,7 @@ public class ArticleController extends BaseController {
 			}
 		}
 
+
 		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
