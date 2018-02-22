@@ -46,6 +46,7 @@ public class NihtanController extends BaseController {
     @ResponseBody
     public Message gameList(HttpServletRequest request,ModelMap model) {
         String resp = Crypto.gameList();
+        System.out.println("========="+resp);
         Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
         return Message.success(data,"获取成功");
     }

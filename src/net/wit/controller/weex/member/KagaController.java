@@ -62,7 +62,7 @@ public class KagaController extends BaseController {
            JSONObject tb = games.getJSONObject(i);
            GameListModel m = new GameListModel();
            m.setGame(tb.getString("gameId"));
-           m.setLogo(tb.getString("iconURLPrefix"));
+           m.setLogo(tb.getString("iconURLPrefix")+"&type=square");
            data.add(m);
         }
         return Message.success(data,"获取成功");
