@@ -59,13 +59,13 @@ public class NihtanController extends BaseController {
         model.addAttribute("requestUrl",bundle.getString("nihtan.host"));
         model.addAttribute("requestMethod","post");
         model.addAttribute("requestCharset","utf-8");
-
-        if (nihtan==null) {
-            Member member = memberService.find(43L);
-            String sessionResp = Crypto.getSession(request.getRemoteAddr(), member);
-            Map<String, String> data = JsonUtils.toObject(sessionResp, Map.class);
-            nihtan =data.get("token");
-        }
+//
+//        if (nihtan==null) {
+//            Member member = memberService.find(43L);
+//            String sessionResp = Crypto.getSession(request.getRemoteAddr(), member);
+//            Map<String, String> data = JsonUtils.toObject(sessionResp, Map.class);
+//            nihtan =data.get("token");
+//        }
 
         Map<String,String> parameterMap = new HashMap<>();
 
@@ -86,7 +86,7 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/check")
     public String check(HttpServletRequest request,ModelMap model){
-//        System.out.println("check");
+        System.out.println("check");
         String json = WebUtils.getBodyParams(request);
         System.out.println(json);
         if (json!=null && !json.equals("")) {
