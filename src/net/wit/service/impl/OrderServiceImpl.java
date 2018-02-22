@@ -12,6 +12,7 @@ import net.wit.Filter.Operator;
 
 import net.wit.dao.*;
 import net.wit.entity.Order;
+import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.SettingUtils;
 import org.apache.commons.lang.StringUtils;
@@ -783,6 +784,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		order.setShippingStatus(Order.ShippingStatus.shipped);
+		order.setShippingDate(new Date());
 		order.setExpire(null);
 		orderDao.merge(order);
 
@@ -960,5 +962,42 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 	}
+
+	void evictCompleted() {
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("orderStatus", Filter.Operator.eq,Order.OrderStatus.confirmed));
+		filters.add(new Filter("shippingStatus", Operator.le, Order.ShippingStatus.shipped));
+		filters.add(new Filter("shippingDate", Operator.le, DateUtils.addDays(new Date(),-7) ));
+		List<Payment> data = paymentDao.findList(null,null,filters,null);
+		for (Payment payment:data) {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
+			String resultCode = null;
+			try {
+				if (paymentPlugin == null) {
+					resultCode = "0001";
+				} else {
+					resultCode = paymentPlugin.queryOrder(payment,null);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			switch (resultCode) {
+				case "0000":
+					try {
+						this.handle(payment);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				case "0001":
+					try {
+						this.close(payment);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+			}
+		}
+
+	}
+
 
 }

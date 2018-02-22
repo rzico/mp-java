@@ -269,6 +269,14 @@ public class Order extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Area area;
 
+	/** 发货时间 */
+	@Column(columnDefinition="datetime comment '发货时间'")
+	private Date shippingDate;
+
+	/** 退货时间 */
+	@Column(columnDefinition="datetime comment '退货时间'")
+	private Date returnedDate;
+
 	/** 买家 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -672,6 +680,22 @@ public class Order extends BaseEntity {
 
 	public Boolean getIsDistribution() {
 		return isDistribution;
+	}
+
+	public Date getShippingDate() {
+		return shippingDate;
+	}
+
+	public void setShippingDate(Date shippingDate) {
+		this.shippingDate = shippingDate;
+	}
+
+	public Date getReturnedDate() {
+		return returnedDate;
+	}
+
+	public void setReturnedDate(Date returnedDate) {
+		this.returnedDate = returnedDate;
 	}
 
 	/**
