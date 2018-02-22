@@ -5,12 +5,11 @@
  */
 package net.wit.plugin.weixin;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.security.KeyStore;
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -342,5 +341,129 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			httpclient.close();
 		}
 	}
+
+
+	/**
+	 * 申请退款
+	 */
+	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		DecimalFormat decimalFormat = new DecimalFormat("#");
+		BigDecimal money = refunds.getAmount().multiply(new BigDecimal(100));
+		map.put("appid", pluginConfig.getAttribute("appId"));
+		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+		map.put("out_trade_no",refunds.getPayment().getSn());
+		map.put("out_refund_no",refunds.getSn());
+		map.put("total_fee", decimalFormat.format(money));
+		map.put("refund_fee", decimalFormat.format(money));
+		try {
+			map.put("sign",getSign(map));
+		} catch (Exception e) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg","签名出错");
+			return finalpackage;
+		}
+
+		String reqUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+
+		try {
+			String xml = WeiXinUtils.getRequestXml(map);
+			String jsonStr = payHttps(reqUrl,xml,request);
+
+				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
+
+				if(resultMap.containsKey("sign")){
+					String sign = getSign(resultMap);
+					if(!sign.equals(resultMap.get("sign"))){
+						finalpackage.put("return_code", "FAIL");
+						finalpackage.put("result_msg", "验证签名不通过");
+						return finalpackage;
+					}else{
+						if("SUCCESS".equals(resultMap.get("return_code").toString()) && "SUCCESS".equals(resultMap.get("result_code").toString())){
+							finalpackage.put("return_code", "SUCCESS");
+							finalpackage.put("result_msg", "提交成功");
+							return finalpackage;
+						}else{
+							finalpackage.put("return_code", "FAIL");
+							finalpackage.put("result_msg", resultMap.get("err_code_des").toString());
+							return finalpackage;
+						}
+					}
+				}else{
+
+					finalpackage.put("return_code", "FAIL");
+					finalpackage.put("result_msg", resultMap.get("return_msg").toString());
+					return finalpackage;
+				}
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg","提交银行出错");
+			return finalpackage;
+		}
+	}
+
+	/**
+	 * 查询退款
+	 */
+	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		map.put("appid", pluginConfig.getAttribute("appId"));
+		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("out_refund_no", refunds.getSn());
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+		try {
+			map.put("sign",getSign(map));
+		} catch (Exception e) {
+			throw new Exception("签名出错");
+		}
+
+		String reqUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
+		try {
+			String xml = WeiXinUtils.getRequestXml(map);
+			String jsonStr = payHttps(reqUrl,xml,request);
+
+				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
+				if (resultMap.containsKey("sign")) {
+					String sign = getSign(resultMap);
+					if(!sign.equals(resultMap.get("sign").toString())){
+						throw new Exception("签名出错");
+					} else {
+						if ("SUCCESS".equals(resultMap.get("return_code").toString()) && "SUCCESS".equals(resultMap.get("result_code").toString())) {
+							int count = Integer.parseInt(resultMap.get("refund_count").toString())-1;
+							if ("SUCCESS".equals(resultMap.get("refund_status_"+count).toString())) {
+								return "0000";
+							} else if ("REFUNDCLOSE".equals(resultMap.get("refund_status_"+count).toString())) {
+								return "0001";
+							} else if("CHANGE".equals(resultMap.get("refund_status_"+count).toString())){
+								return "0001";
+							} else {
+								return "9999";
+							}
+						} else {
+							throw new Exception(resultMap.get("err_code_des").toString());
+						}
+					}
+				} else {
+					throw new Exception(resultMap.get("err_code_des").toString());
+				}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new Exception("提交查询出错");
+		}
+	}
+
+	/**
+	 * 申请通知
+	 */
+	public String refundsVerify(HttpServletRequest request) {
+		return "";
+	}
+
 
 }
