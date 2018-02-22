@@ -14,6 +14,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.FriendsDao;
+import net.wit.dao.MemberFollowDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +37,10 @@ import net.wit.service.ArticleService;
 public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implements ArticleService {
 	@Resource(name = "articleDaoImpl")
 	private ArticleDao articleDao;
+	@Resource(name = "memberFollowDaoImpl")
+	private MemberFollowDao memberFollowDao;
+	@Resource(name = "friendsDaoImpl")
+	private FriendsDao friendsDao;
 
 	@Resource(name = "articleDaoImpl")
 	public void setBaseDao(ArticleDao articleDao) {
@@ -93,4 +99,22 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	public Page<Article> findPage(Date beginDate,Date endDate, List<Tag> tags, Pageable pageable) {
 		return articleDao.findPage(beginDate,endDate,tags,pageable);
 	}
+
+	public Page<Article> findCircle(Member member,List<Tag> tags, Pageable pageable) {
+		List<Member> members = new ArrayList<>();
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("member", Filter.Operator.eq,member));
+	    List<MemberFollow> follows = memberFollowDao.findList(null,null,filters,null);
+        for (MemberFollow follow:follows) {
+        	members.add(follow.getFollow());
+		}
+	    List<Friends> friends =	friendsDao.findList(null,null,filters,null);
+		for (Friends friend:friends) {
+			members.add(friend.getFriend());
+		}
+		return articleDao.findCircle(members,tags,pageable);
+
+	}
+
+
 }
