@@ -230,11 +230,11 @@ public class RefundsController extends BaseController {
 		types.add(new MapEntity("recharge","钱包充值"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("members",memberService.findAll());
+//		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("payments",paymentService.findAll());
+//		model.addAttribute("payments",paymentService.findAll());
 
-		model.addAttribute("orderss",orderService.findAll());
+//		model.addAttribute("orderss",orderService.findAll());
 
 		model.addAttribute("data",refundsService.find(id));
 

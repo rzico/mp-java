@@ -1,5 +1,6 @@
 package net.wit.service.impl;
 
+import net.sf.json.JSONObject;
 import net.wit.dao.WeixinUpDao;
 import net.wit.service.WeixinUpService;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class WeixinUpServiceImpl implements WeixinUpService {
     }
 
     @Override
-    public StringBuffer DownArticle(String url) throws IOException {
+    public JSONObject DownArticle(String url) throws IOException {
         return weixinUpDao.DownArticle(url);
     }
 }
