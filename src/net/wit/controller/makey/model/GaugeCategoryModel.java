@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GaugeCategoryModel extends BaseModel implements Serializable {
+
     private Long id;
     private String name;
     private int count;

@@ -23,9 +23,18 @@ public class GaugeModel extends BaseModel implements Serializable {
     private BigDecimal marketPrice;
     /** 现价 */
     private BigDecimal price;
-    
-    /** 人数 */
-    private Long eval;
+
+    /** 测评须知 */
+    private String notice;
+
+    /** 常模修订说明 */
+    private String revisionNote;
+
+    /** 测评人数 */
+    private Long evaluation;
+
+    /** 测评简介 */
+    private String content;
 
     public Long getId() {
         return id;
@@ -75,12 +84,36 @@ public class GaugeModel extends BaseModel implements Serializable {
         this.price = price;
     }
 
-    public Long getEval() {
-        return eval;
+    public String getNotice() {
+        return notice;
     }
 
-    public void setEval(Long eval) {
-        this.eval = eval;
+    public void setNotice(String notice) {
+        this.notice = notice;
+    }
+
+    public String getRevisionNote() {
+        return revisionNote;
+    }
+
+    public void setRevisionNote(String revisionNote) {
+        this.revisionNote = revisionNote;
+    }
+
+    public Long getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(Long evaluation) {
+        this.evaluation = evaluation;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void bind(Gauge gauge) {
@@ -88,9 +121,12 @@ public class GaugeModel extends BaseModel implements Serializable {
         this.title = gauge.getTitle();
         this.subTitle = gauge.getSubTitle();
         this.thumbnail = gauge.getContent();
-        this.eval = gauge.getEvaluation();
+        this.evaluation = gauge.getEvaluation();
         this.price = gauge.getPrice();
         this.marketPrice = gauge.getMarketPrice();
+        this.content = gauge.getContent();
+        this.revisionNote = gauge.getRevisionNote();
+        this.notice = gauge.getNotice();
     }
 
     public static List<GaugeModel> bindList(List<Gauge> gauges) {
