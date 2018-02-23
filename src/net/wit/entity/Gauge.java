@@ -149,7 +149,6 @@ public class Gauge extends BaseEntity {
     private List<GaugeQuestion> questions = new ArrayList<GaugeQuestion>();
 
     /** 所属商品 */
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Product product;

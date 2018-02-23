@@ -60,6 +60,12 @@ public class GaugeController extends BaseController {
 	@Resource(name = "distributionServiceImpl")
 	private DistributionService distributionService;
 
+	@Resource(name = "gaugeCategoryServiceImpl")
+	private GaugeCategoryService gaugeCategoryService;
+
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
+
 
 
 	/**
@@ -102,7 +108,9 @@ public class GaugeController extends BaseController {
 		userTypes.add(new MapEntity("school","学校用户"));
 		model.addAttribute("userTypes",userTypes);
 
-		model.addAttribute("products",productService.findAll());
+		model.addAttribute("gaugeCategorys",gaugeCategoryService.findAll());
+
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/gauge/add";
 	}
@@ -116,15 +124,11 @@ public class GaugeController extends BaseController {
 	public Message save(Gauge gauge, Long productId){
 		Gauge entity = new Gauge();	
 
-		entity.setCreateDate(gauge.getCreateDate());
-
-		entity.setModifyDate(gauge.getModifyDate());
-
 		entity.setBrokerage(gauge.getBrokerage());
 
 		entity.setContent(gauge.getContent());
 
-		entity.setDeleted(gauge.getDeleted());
+		entity.setDeleted(false);
 
 		entity.setDistribution(gauge.getDistribution());
 
@@ -146,8 +150,6 @@ public class GaugeController extends BaseController {
 
 		entity.setUserType(gauge.getUserType());
 
-		entity.setProduct(productService.find(productId));
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -194,7 +196,9 @@ public class GaugeController extends BaseController {
 		userTypes.add(new MapEntity("school","学校用户"));
 		model.addAttribute("userTypes",userTypes);
 
-		model.addAttribute("products",productService.findAll());
+		model.addAttribute("gaugeCategorys",gaugeCategoryService.findAll());
+
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		model.addAttribute("data",gaugeService.find(id));
 

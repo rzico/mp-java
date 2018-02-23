@@ -116,11 +116,26 @@
         </div>
 
                     <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">市场价：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="price" name="price" onInput="floatInit(this)">
+                    </div>
+                    </div>
+
+                    <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">销售价：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="marketPrice" name="marketPrice" onInput="floatInit(this)">
+                    </div>
+                    </div>
+
+                    <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">推广佣金（%）：</label>
             <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="0.6" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
                     </div>
                     </div>
+
                     <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">分销佣金（%）：</label>
             <div class="formControls col-xs-8 col-sm-9">
