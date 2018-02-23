@@ -10,64 +10,32 @@
     <link rel="Bookmark" href="/favicon.ico" >
     <link rel="Shortcut Icon" href="/favicon.ico" />
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="/lib/html5shiv.js"></script>
-    <script type="text/javascript" src="/lib/respond.min.js"></script>
-
+    <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
 
     <!--[if IE 6]>
-    <script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
-    <link href="/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">测评简介：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="content" name="content">
-            </div>
-        </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true">
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评人数：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>主标题：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="evaluation" value="" placeholder="" id="evaluation" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="notice" name="notice">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模修订说明：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="revisionNote" name="revisionNote">
+                <input type="text" class="input-text" value="" placeholder="" id="title" name="title">
             </div>
         </div>
 
@@ -79,53 +47,88 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>主标题：</label>
+            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="title" name="title">
+                <div class="uploader-thum-container">
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="hidden" value="" id="thumbnail" name="thumbnail">
+                </div>
             </div>
         </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if types??]
+            [#if types??]
                 [#list types as type]
                     <div class="radio-box">
                         <input name="type" type="radio" id="type-${type_index}" value="${type.id}">
                         <label for="type-${type_index}">${type.name}</label>
                     </div>
                 [/#list]
-                [/#if]
+            [/#if]
             </div>
         </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if userTypes??]
+            [#if userTypes??]
                 [#list userTypes as userType]
                     <div class="radio-box">
                         <input name="userType" type="radio" id="userType-${userType_index}" value="${userType.id}">
                         <label for="userType-${userType_index}">${userType.name}</label>
                     </div>
                 [/#list]
-                [/#if]
+            [/#if]
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Product：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if products??]
-				<select name="productId" class="select" style="background-color: #FFFFFF">
-                    [#list products as product]
-					<option value="${product.id}">${product.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+            <label class="form-label col-xs-4 col-sm-2">测评简介：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评人数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="evaluation" value="" placeholder="" id="evaluation" onInput="intInit(this)">
+            </div>
+        </div>
+
+       <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="notice" id="notice" style="height:100px;width:300px;"></textarea>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模修订说明：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                    <textarea class="input-text" name="revisionNote" id="revisionNote" style="height:100px;width:300px;"></textarea>
+            </div>
+        </div>
+
+                    <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">推广佣金（%）：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="0.6" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
+                    </div>
+                    </div>
+                    <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">分销佣金（%）：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="0.6" placeholder="" id="distribution" name="distribution" onInput="percentInit(this)">
+                    </div>
+                    </div>
+
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -136,19 +139,26 @@
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
-        <script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
-        <script type="text/javascript" src="/h-ui/js/H-ui.min.js"></script>
-        <script type="text/javascript" src="/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
         <!--请在下方写此页面业务相关的脚本-->
-        <script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
-        <script type="text/javascript" src="/lib/jquery.ISelect/jquery.lSelect.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
+
+                <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+                <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+                <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+                <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+                <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
 
         <script type="text/javascript">
             $(function(){
@@ -158,6 +168,8 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+
+                var ue = UE.getEditor('content');
 
                 $("#form-add").validate({
                     rules:{

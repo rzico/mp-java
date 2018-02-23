@@ -36,6 +36,9 @@ public class GaugeModel extends BaseModel implements Serializable {
     /** 测评简介 */
     private String content;
 
+    /** 测评亮点 */
+    private List<String> spots;
+
     public Long getId() {
         return id;
     }
@@ -116,6 +119,14 @@ public class GaugeModel extends BaseModel implements Serializable {
         this.content = content;
     }
 
+    public List<String> getSpots() {
+        return spots;
+    }
+
+    public void setSpots(List<String> spots) {
+        this.spots = spots;
+    }
+
     public void bind(Gauge gauge) {
         this.id = gauge.getId();
         this.title = gauge.getTitle();
@@ -127,6 +138,8 @@ public class GaugeModel extends BaseModel implements Serializable {
         this.content = gauge.getContent();
         this.revisionNote = gauge.getRevisionNote();
         this.notice = gauge.getNotice();
+        this.spots = new ArrayList<>();
+        this.spots.addAll(gauge.getSpots());
     }
 
     public static List<GaugeModel> bindList(List<Gauge> gauges) {

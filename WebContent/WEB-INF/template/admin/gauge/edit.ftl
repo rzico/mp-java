@@ -14,20 +14,20 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
 
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <!--[if IE 6]>
-    <script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
 
-    <link href="/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="page-container">
@@ -134,24 +134,24 @@
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
             </div>
         </div>
-            [#else]
+        [#else]
             查找失败
         [/#if]
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
-        <script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
-        <script type="text/javascript" src="/h-ui/js/H-ui.min.js"></script>
-        <script type="text/javascript" src="/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
         <!--请在下方写此页面业务相关的脚本-->
-        <script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
-        <script type="text/javascript" src="/lib/jquery.ISelect/jquery.lSelect.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");

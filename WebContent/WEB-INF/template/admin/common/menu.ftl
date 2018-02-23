@@ -41,6 +41,14 @@
                 </ul>
             </dd>
         [/#if]
+            [#if (admin.type=="operate")]
+                <dt><i class="Hui-iconfont">&#xe60d;</i> 测评管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+                <dd>
+                    <ul>
+                        <li><a data-href="../gauge/index.jhtml" data-title="量表管理" href="javascript:;">量表管理</a></li>
+                    </ul>
+                </dd>
+            [/#if]
         [#if (admin.type=="operate"||admin.type=="shop"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
             <dt><i class="Hui-iconfont">&#xe60d;</i> 客户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         [/#if]

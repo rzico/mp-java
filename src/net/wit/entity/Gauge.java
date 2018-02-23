@@ -95,6 +95,11 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     private List<MemberAttribute> revisionAttributes = new ArrayList<MemberAttribute>();
 
+    /** 亮点 */
+    @ElementCollection
+    @CollectionTable(name = "wx_gauge_spot")
+    private List<String> spots = new ArrayList<String>();
+
     /** 常模修订说明 */
     @Length(max = 200)
     @NotNull
@@ -321,5 +326,13 @@ public class Gauge extends BaseEntity {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public List<String> getSpots() {
+        return spots;
+    }
+
+    public void setSpots(List<String> spots) {
+        this.spots = spots;
     }
 }
