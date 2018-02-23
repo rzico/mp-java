@@ -119,10 +119,12 @@ public class NihtanController extends BaseController {
                 Game game = new Game();
                 game.setGame(jsonObject.getString("game"));
                 game.setTableNo(jsonObject.getString("table"));
+                game.setRoundNo("0");
                 if (jsonObject.containsKey("round_no")) {
                     game.setRoundNo(jsonObject.getString("round_no"));
-                } else {
-                    game.setRoundNo(jsonObject.getString("round_id"));
+                }
+                if ("0".equals(game.getRoundNo())) {
+                    game.setRoundNo(jsonObject.getString("created_at"));
                 }
                 game.setDebit(new BigDecimal(jsonObject.getString("amount")));
                 game.setCredit(BigDecimal.ZERO);
@@ -168,11 +170,12 @@ public class NihtanController extends BaseController {
         JSONObject jsonObject = JSONObject.fromObject(json);
         String game = jsonObject.getString("game");
         String table = jsonObject.getString("table");
-        String round_no = "#";
+        String round_no = "0";
         if (jsonObject.containsKey("round_no")) {
             round_no = jsonObject.getString("round_no");
-        } else {
-            round_no = jsonObject.getString("round_id");
+        }
+        if ("0".equals(round_no)) {
+            round_no = jsonObject.getString("created_at");
         }
         JSONArray datas = jsonObject.getJSONArray("data");
         for (int i = 0 ; i<datas.size(); i++) {
