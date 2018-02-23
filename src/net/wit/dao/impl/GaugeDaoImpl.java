@@ -3,13 +3,13 @@ package net.wit.dao.impl;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
+import net.wit.entity.Article;
+import net.wit.entity.Tag;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -38,7 +38,7 @@ public class GaugeDaoImpl extends BaseDaoImpl<Gauge, Long> implements GaugeDao {
 	 * @param pageable
 	 * @return Page<Gauge>
 	 */
-	public Page<Gauge> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<Gauge> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Gauge> criteriaQuery = criteriaBuilder.createQuery(Gauge.class);
 		Root<Gauge> root = criteriaQuery.from(Gauge.class);
@@ -54,6 +54,14 @@ public class GaugeDaoImpl extends BaseDaoImpl<Gauge, Long> implements GaugeDao {
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
+		if (tags != null && !tags.isEmpty()) {
+			Subquery<Gauge> subquery = criteriaQuery.subquery(Gauge.class);
+			Root<Gauge> subqueryRoot = subquery.from(Gauge.class);
+			subquery.select(subqueryRoot);
+			subquery.where(criteriaBuilder.equal(subqueryRoot, root), subqueryRoot.join("tags").in(tags));
+			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.exists(subquery));
+		}
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}

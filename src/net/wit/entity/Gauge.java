@@ -149,6 +149,13 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     private Product product;
 
+    /** 量表标签*/
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "wx_gauge_tag")
+    @OrderBy("orders asc")
+    @JsonIgnore
+    private List<Tag> tags = new ArrayList<Tag>();
+
     /** 是否删除 */
     @NotNull
     @Column(columnDefinition="bit comment '是否删除'")
@@ -306,5 +313,13 @@ public class Gauge extends BaseEntity {
 
     public void setGaugeCategory(GaugeCategory gaugeCategory) {
         this.gaugeCategory = gaugeCategory;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }

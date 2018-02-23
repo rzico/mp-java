@@ -1,16 +1,14 @@
 package net.wit.controller.makey;
 
 import net.wit.*;
+import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.makey.model.GaugeCategoryModel;
 import net.wit.controller.makey.model.GaugeListModel;
 import net.wit.controller.makey.model.GaugeModel;
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticleViewModel;
-import net.wit.entity.Article;
-import net.wit.entity.Gauge;
-import net.wit.entity.GaugeCategory;
-import net.wit.entity.Member;
+import net.wit.entity.*;
 import net.wit.service.GaugeCategoryService;
 import net.wit.service.GaugeService;
 import org.springframework.stereotype.Controller;
@@ -61,14 +59,14 @@ public class GaugeController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long gaugeCategoryId, Pageable pageable, HttpServletRequest request){
+    public Message list(Long gaugeCategoryId,Long tagId, Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (gaugeCategoryId!=null) {
             GaugeCategory category = gaugeCategoryService.find(gaugeCategoryId);
             filters.add(new Filter("gaugeCategory", Filter.Operator.eq, category));
         }
         pageable.setFilters(filters);
-        Page<Gauge> page = gaugeService.findPage(null,null,pageable);
+        Page<Gauge> page = gaugeService.findPage(null,null, List< Tag > tags,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(GaugeListModel.bindList(page.getContent()));
         return Message.bind(model,request);

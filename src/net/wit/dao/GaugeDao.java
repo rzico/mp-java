@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Gauge;
+import net.wit.entity.Tag;
 
 
 /**
@@ -26,5 +27,5 @@ public interface GaugeDao extends BaseDao<Gauge, Long> {
 	 * @param pageable
 	 * @return Page<Gauge>
 	 */
-	Page<Gauge> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Gauge> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable);
 }

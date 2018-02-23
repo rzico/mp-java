@@ -83,7 +83,7 @@ public class GaugeServiceImpl extends BaseServiceImpl<Gauge, Long> implements Ga
 		super.delete(gauge);
 	}
 
-	public Page<Gauge> findPage(Date beginDate,Date endDate, Pageable pageable) {
-		return gaugeDao.findPage(beginDate,endDate,pageable);
+	public Page<Gauge> findPage(Date beginDate,Date endDate, List<Tag> tags, Pageable pageable) {
+		return gaugeDao.findPage(beginDate,endDate,tags,pageable);
 	}
 }

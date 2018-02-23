@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Gauge;
+import net.wit.entity.Tag;
 
 /**
  * @ClassName: GaugeService
@@ -16,5 +17,5 @@ import net.wit.entity.Gauge;
  */
 
 public interface GaugeService extends BaseService<Gauge, Long> {
-	Page<Gauge> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<Gauge> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable);
 }
