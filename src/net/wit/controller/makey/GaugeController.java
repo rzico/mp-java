@@ -11,6 +11,7 @@ import net.wit.controller.model.ArticleViewModel;
 import net.wit.entity.*;
 import net.wit.service.GaugeCategoryService;
 import net.wit.service.GaugeService;
+import net.wit.service.TagService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +38,9 @@ public class GaugeController extends BaseController {
 
     @Resource(name = "gaugeServiceImpl")
     private GaugeService gaugeService;
+
+    @Resource(name = "tagServiceImpl")
+    private TagService tagService;
 
 
     /**
@@ -66,7 +70,8 @@ public class GaugeController extends BaseController {
             filters.add(new Filter("gaugeCategory", Filter.Operator.eq, category));
         }
         pageable.setFilters(filters);
-        Page<Gauge> page = gaugeService.findPage(null,null, List< Tag > tags,pageable);
+        List<Tag> tags = tagService.findList(tagId);
+        Page<Gauge> page = gaugeService.findPage(null,null,tags,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(GaugeListModel.bindList(page.getContent()));
         return Message.bind(model,request);
