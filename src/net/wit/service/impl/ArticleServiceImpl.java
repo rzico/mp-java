@@ -102,15 +102,17 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 
 	public Page<Article> findCircle(Member member,List<Tag> tags, Pageable pageable) {
 		List<Member> members = new ArrayList<>();
-		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(new Filter("member", Filter.Operator.eq,member));
-	    List<MemberFollow> follows = memberFollowDao.findList(null,null,filters,null);
-        for (MemberFollow follow:follows) {
-        	members.add(follow.getFollow());
-		}
-	    List<Friends> friends =	friendsDao.findList(null,null,filters,null);
-		for (Friends friend:friends) {
-			members.add(friend.getFriend());
+		if (member!=null) {
+			List<Filter> filters = new ArrayList<Filter>();
+			filters.add(new Filter("member", Filter.Operator.eq, member));
+			List<MemberFollow> follows = memberFollowDao.findList(null, null, filters, null);
+			for (MemberFollow follow : follows) {
+				members.add(follow.getFollow());
+			}
+			List<Friends> friends = friendsDao.findList(null, null, filters, null);
+			for (Friends friend : friends) {
+				members.add(friend.getFriend());
+			}
 		}
 		return articleDao.findCircle(members,tags,pageable);
 

@@ -80,11 +80,12 @@ public class ArticleDaoImpl extends BaseDaoImpl<Article, Long> implements Articl
 		Predicate restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.conjunction();
 		if (members != null && !members.isEmpty()) {
-			Subquery<Member> subquery = criteriaQuery.subquery(Member.class);
-			Root<Member> subqueryRoot = subquery.from(Member.class);
-			subquery.select(subqueryRoot);
-			subquery.where(criteriaBuilder.equal(subqueryRoot, root.get("member")), subqueryRoot.get("id").in(members));
-			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.exists(subquery));
+//			Subquery<Member> subquery = criteriaQuery.subquery(Member.class);
+//			Root<Member> subqueryRoot = subquery.from(Member.class);
+//			subquery.select(subqueryRoot);
+//			subquery.where(criteriaBuilder.equal(subqueryRoot, root), subqueryRoot.get("id").in(members));
+//			CriteriaBuilder.In<Member> in = criteriaBuilder.in(root.<Member>get("member"));
+			restrictions = criteriaBuilder.and(restrictions,root.get("member").in(members));
 		}
 		if (tags != null && !tags.isEmpty()) {
 			Subquery<Article> subquery = criteriaQuery.subquery(Article.class);
