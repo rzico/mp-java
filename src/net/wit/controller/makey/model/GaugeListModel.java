@@ -25,6 +25,8 @@ public class GaugeListModel extends BaseModel implements Serializable {
     private BigDecimal marketPrice;
     /** 现价 */
     private BigDecimal price;
+    /** 标签名 */
+    private List<TagModel> tags = new ArrayList<TagModel>();
 
     /** 人数 */
     private Long evaluation;
@@ -85,6 +87,14 @@ public class GaugeListModel extends BaseModel implements Serializable {
         this.evaluation = evaluation;
     }
 
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     public void bind(Gauge gauge) {
         this.id = gauge.getId();
         this.title = gauge.getTitle();
@@ -93,6 +103,7 @@ public class GaugeListModel extends BaseModel implements Serializable {
         this.evaluation = gauge.getEvaluation();
         this.price = gauge.getPrice();
         this.marketPrice = gauge.getMarketPrice();
+        this.tags = TagModel.bindList(gauge.getTags());
     }
 
     public static List<GaugeListModel> bindList(List<Gauge> gauges) {

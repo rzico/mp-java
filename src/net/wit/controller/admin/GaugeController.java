@@ -271,7 +271,7 @@ public class GaugeController extends BaseController {
 			filters.add(userTypeFilter);
 		}
 
-		Page<Gauge> page = gaugeService.findPage(beginDate,endDate,pageable);
+		Page<Gauge> page = gaugeService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
