@@ -110,6 +110,7 @@ public class TopicController extends BaseController {
             enterpriseService.create(topic);
             return Message.success("开通成功");
         } else {
+            enterpriseService.create(topic);
             return Message.success("已经开通");
         }
 
