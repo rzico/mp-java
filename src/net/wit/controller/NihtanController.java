@@ -119,7 +119,11 @@ public class NihtanController extends BaseController {
                 Game game = new Game();
                 game.setGame(jsonObject.getString("game"));
                 game.setTableNo(jsonObject.getString("table"));
-                game.setRoundNo(jsonObject.getString("round_no"));
+                if (jsonObject.containsKey("round_no")) {
+                    game.setRoundNo(jsonObject.getString("round_no"));
+                } else {
+                    game.setRoundNo(jsonObject.getString("round_id"));
+                }
                 game.setDebit(new BigDecimal(jsonObject.getString("amount")));
                 game.setCredit(BigDecimal.ZERO);
                 game.setMember(member);
@@ -156,15 +160,20 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/history")
     public String history(String hash,HttpServletRequest request,ModelMap model){
-//        System.out.println("history");
+        System.out.println("history");
         String json = WebUtils.getBodyParams(request);
-//        System.out.println(json);
+        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
         JSONObject jsonObject = JSONObject.fromObject(json);
         String game = jsonObject.getString("game");
         String table = jsonObject.getString("table");
-        String round_no = jsonObject.getString("round_no");
+        String round_no = "#";
+        if (jsonObject.containsKey("round_no")) {
+            round_no = jsonObject.getString("round_no");
+        } else {
+            round_no = jsonObject.getString("round_id");
+        }
         JSONArray datas = jsonObject.getJSONArray("data");
         for (int i = 0 ; i<datas.size(); i++) {
             JSONObject user = datas.getJSONObject(i);
