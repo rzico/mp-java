@@ -5,13 +5,15 @@
  */
 package net.wit.plugin.weixin;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
+import java.security.KeyStore;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 
 import net.wit.entity.BindUser;
@@ -22,16 +24,17 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.util.MD5Utils;
 import net.wit.plat.weixin.util.WeiXinUtils;
 
-import net.wit.util.SignUtils;
-import net.wit.util.XmlUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
@@ -291,6 +294,56 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 	}
 
 	/**
+	 * https双向签名认证，用于支付申请退款
+	 *
+	 * */
+	public String payHttps(String url,String xml,HttpServletRequest request) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		//指定读取证书格式为PKCS12
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		String rootPath = request.getSession().getServletContext().getRealPath("/");
+		String path = rootPath+"/cert/weixin_cert.p12";
+		//读取本机存放的PKCS12证书文件
+		FileInputStream instream = new FileInputStream(new File(path));
+		try {
+			//指定PKCS12的密码(商户ID)
+			keyStore.load(instream,pluginConfig.getAttribute("partner").toCharArray());
+		} finally {
+			instream.close();
+		}
+		SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore,pluginConfig.getAttribute("partner").toCharArray()).build();
+		//指定TLS版本
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+				sslcontext,new String[] { "TLSv1" },null,
+				SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+		//设置httpclient的SSLSocketFactory
+		CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+		try {
+			HttpPost httpost = new HttpPost(url); // 设置响应头信息
+			httpost.addHeader("Connection", "keep-alive");
+			httpost.addHeader("Accept", "*/*");
+			httpost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+			httpost.addHeader("Host", "api.mch.weixin.qq.com");
+			httpost.addHeader("X-Requested-With", "XMLHttpRequest");
+			httpost.addHeader("Cache-Control", "max-age=0");
+			httpost.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
+			httpost.setEntity(new StringEntity(xml, "UTF-8"));
+			CloseableHttpResponse response = httpclient.execute(httpost);
+			try {
+				HttpEntity entity = response.getEntity();
+				String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+				EntityUtils.consume(entity);
+				return jsonStr;
+			}finally {
+				response.close();
+			}
+		}finally {
+			httpclient.close();
+		}
+	}
+
+
+	/**
 	 * 申请退款
 	 */
 	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
@@ -314,21 +367,11 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			return finalpackage;
 		}
 
-		String reqUrl = "https://pay.swiftpass.cn/pay/gateway";
+		String reqUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
 
-		CloseableHttpResponse response = null;
-		CloseableHttpClient client = null;
-		String res = null;
 		try {
-			HttpPost httpPost = new HttpPost(reqUrl);
 			String xml = WeiXinUtils.getRequestXml(map);
-			StringEntity entityParams = new StringEntity(xml,"utf-8");
-			httpPost.setEntity(entityParams);
-			httpPost.setHeader("Content-Type", "text/xml;charset=utf-8");
-			client = HttpClients.createDefault();
-			response = client.execute(httpPost);
-			if(response != null && response.getEntity() != null){
-				String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+			String jsonStr = payHttps(reqUrl,xml,request);
 
 				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
 
@@ -355,31 +398,11 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 					finalpackage.put("result_msg", resultMap.get("return_msg").toString());
 					return finalpackage;
 				}
-			} else {
-				finalpackage.put("return_code", "FAIL");
-				finalpackage.put("result_msg","提交银行出错");
-				return finalpackage;
-			}
 		}catch (Exception e) {
 			logger.error(e.getMessage());
 			finalpackage.put("return_code", "FAIL");
 			finalpackage.put("result_msg","提交银行出错");
 			return finalpackage;
-		} finally {
-			if(response != null){
-				try {
-					response.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if(client != null){
-				try {
-					client.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -400,19 +423,10 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			throw new Exception("签名出错");
 		}
 
-		String reqUrl = "https://pay.swiftpass.cn/pay/gateway";
-		CloseableHttpResponse response = null;
-		CloseableHttpClient client = null;
-		String res = null;
+		String reqUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
 		try {
-			HttpPost httpPost = new HttpPost(reqUrl);
 			String xml = WeiXinUtils.getRequestXml(map);
-			StringEntity entityParams = new StringEntity(xml, "utf-8");
-			httpPost.setEntity(entityParams);
-			client = HttpClients.createDefault();
-			response = client.execute(httpPost);
-			if (response != null && response.getEntity() != null) {
-				String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+			String jsonStr = payHttps(reqUrl,xml,request);
 
 				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
 				if (resultMap.containsKey("sign")) {
@@ -438,27 +452,9 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 				} else {
 					throw new Exception(resultMap.get("err_code_des").toString());
 				}
-			} else {
-				throw new Exception("提交查询出错");
-			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			throw new Exception("提交查询出错");
-		} finally {
-			if (response != null) {
-				try {
-					response.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (client != null) {
-				try {
-					client.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
