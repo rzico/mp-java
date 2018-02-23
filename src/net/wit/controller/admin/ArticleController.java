@@ -151,7 +151,6 @@ public class ArticleController extends BaseController {
 
 		entity.setIsTop(article.getIsTop());
 
-
 		entity.setAuthor(article.getAuthor());
 
 		entity.setContent(article.getContent());
@@ -269,10 +268,11 @@ public class ArticleController extends BaseController {
 
 		entity.setIsTop(article.getIsTop());
 
-
 		entity.setAuthor(article.getAuthor());
 
-		entity.setContent(article.getContent());
+		if (entity.getMediaType().equals(Article.MediaType.html)) {
+			entity.setContent(article.getContent());
+		}
 
 		entity.setMediaType(article.getMediaType());
 
@@ -383,6 +383,7 @@ public class ArticleController extends BaseController {
 				return Message.error("该商家未绑定");
 			}
 		}
+
 
 		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

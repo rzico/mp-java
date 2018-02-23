@@ -35,8 +35,8 @@ import org.tuckey.web.filters.urlrewrite.Run;
  * @author 降魔战队
  * @date 2018-2-1 14:1:27
  */
- 
- 
+
+
 @Service("rechargeServiceImpl")
 public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> implements RechargeService {
 
@@ -56,7 +56,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 	public void setBaseDao(RechargeDao rechargeDao) {
 		super.setBaseDao(rechargeDao);
 	}
-	
+
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)

@@ -12,5 +12,5 @@ public interface WeixinUpService {
 
     String ArticleUpLoad(Long[] ids,String appID,String appsecret,String templatepath);
 
-    StringBuffer DownArticle(String url) throws IOException;
+    JSONObject DownArticle(String url) throws IOException;
 }

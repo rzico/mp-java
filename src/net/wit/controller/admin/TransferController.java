@@ -111,7 +111,7 @@ public class TransferController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Transfer transfer,Long memberId){
-		Transfer entity = new Transfer();	
+		Transfer entity = new Transfer();
 
 		entity.setCreateDate(transfer.getCreateDate());
 
@@ -130,7 +130,7 @@ public class TransferController extends BaseController {
 		entity.setType(transfer.getType());
 
 		entity.setMember(memberService.find(memberId));
-		
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -158,8 +158,8 @@ public class TransferController extends BaseController {
             return Message.error("admin.delete.error");
         }
     }
-	
-	
+
+
 	/**
 	 * 编辑
 	 */
@@ -184,7 +184,7 @@ public class TransferController extends BaseController {
 		return "/admin/transfer/edit";
 	}
 
-	
+
 	/**
      * 更新
      */
@@ -220,14 +220,14 @@ public class TransferController extends BaseController {
             return Message.error(e.getMessage());
         }
 	}
-	
+
 
 	/**
      * 列表
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Transfer.Status status, Transfer.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Transfer.Status status, Transfer.Type type, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);

@@ -2,6 +2,7 @@ package net.wit.controller.website;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.*;
 import net.wit.entity.*;
@@ -119,6 +120,8 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
 
         pageable.setFilters(filters);
+        pageable.setOrderProperty("hits");
+        pageable.setOrderDirection(Order.Direction.desc);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleListModel.bindList(page.getContent()));

@@ -1,5 +1,7 @@
 package net.wit.dao;
 
+import net.sf.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,5 +18,5 @@ public interface WeixinUpDao {
      */
     String ArticleUpLoad(Long[] ids,String appID,String appsecret,String templatepath);
 
-    StringBuffer DownArticle(String url) throws IOException;
+    JSONObject DownArticle(String url) throws IOException;
 }

@@ -397,16 +397,18 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "grabarticle", method = RequestMethod.GET)
     @ResponseBody
     public Message articleGrab(String articlePath, HttpServletRequest request){
-        StringBuffer s=new StringBuffer();
-        System.out.println(articlePath);
         try {
-            s.append(weixinUpService.DownArticle(articlePath));
-        } catch (IOException e) {
+            JSONObject jsonObject=weixinUpService.DownArticle(articlePath);
+            if(jsonObject!=null){
+                return Message.success(jsonObject,"抓取成功");
+            }
+            else {
+                return Message.error("URL参数错误,抓取失败");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return Message.error("URL参数错误,抓取失败");
         }
-        JSONArray jsonArrays=JSONArray.fromObject(s.toString());
-        return Message.success(jsonArrays,"抓取成功");
     }
 
 }
