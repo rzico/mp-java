@@ -86,9 +86,9 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/check")
     public String check(HttpServletRequest request,ModelMap model){
-        System.out.println("check");
+//        System.out.println("check");
         String json = WebUtils.getBodyParams(request);
-        System.out.println(json);
+//        System.out.println(json);
         if (json!=null && !json.equals("")) {
             JSONObject jsonObject = JSONObject.fromObject(json);
             Member member = memberService.findByUsername(jsonObject.getString("user_id"));
@@ -109,8 +109,8 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/transaction")
     public String transaction(String hash,HttpServletRequest request,ModelMap model){
         String json = WebUtils.getBodyParams(request);
-        System.out.println("transaction");
-        System.out.println(json);
+//        System.out.println("transaction");
+//        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
             JSONObject jsonObject = JSONObject.fromObject(json);
@@ -123,8 +123,8 @@ public class NihtanController extends BaseController {
                 if (jsonObject.containsKey("round_no")) {
                     game.setRoundNo(jsonObject.getString("round_no"));
                 }
-                if ("0".equals(game.getRoundNo())) {
-                    game.setRoundNo(jsonObject.getString("created_at"));
+                if (jsonObject.containsKey("round_id")) {
+                    game.setRoundNo(jsonObject.getString("round_id"));
                 }
                 game.setDebit(new BigDecimal(jsonObject.getString("amount")));
                 game.setCredit(BigDecimal.ZERO);
@@ -153,7 +153,7 @@ public class NihtanController extends BaseController {
 //            data.put("credits","0");
 //        }
         model.addAttribute("notifyMessage",JsonUtils.toJson(data));
-        System.out.println(JsonUtils.toJson(data));
+//        System.out.println(JsonUtils.toJson(data));
         return "common/notify";
     }
 
@@ -162,9 +162,9 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/history")
     public String history(String hash,HttpServletRequest request,ModelMap model){
-        System.out.println("history");
+//        System.out.println("history");
         String json = WebUtils.getBodyParams(request);
-        System.out.println(json);
+//        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
         JSONObject jsonObject = JSONObject.fromObject(json);
@@ -174,8 +174,8 @@ public class NihtanController extends BaseController {
         if (jsonObject.containsKey("round_no")) {
             round_no = jsonObject.getString("round_no");
         }
-        if ("0".equals(round_no)) {
-            round_no = jsonObject.getString("created_at");
+        if (jsonObject.containsKey("round_id")) {
+            round_no = jsonObject.getString("round_id");
         }
         JSONArray datas = jsonObject.getJSONArray("data");
         for (int i = 0 ; i<datas.size(); i++) {
@@ -237,7 +237,7 @@ public class NihtanController extends BaseController {
 //                    data.put("status","ok");
 //                    data.put("credits","0");
         model.addAttribute("notifyMessage",JsonUtils.toJson(data));
-        System.out.println(JsonUtils.toJson(data));
+//        System.out.println(JsonUtils.toJson(data));
         return "common/notify";
     }
 
