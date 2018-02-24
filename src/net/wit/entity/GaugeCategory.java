@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
@@ -42,20 +43,19 @@ public class GaugeCategory extends OrderEntity {
 
 	/** 上级分类 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private GaugeCategory parent;
-
-	/** 会员 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Member member;
 
 	/** 下级分类 */
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
 	@OrderBy("orders asc")
+	@JsonIgnore
 	private Set<GaugeCategory> children = new HashSet<GaugeCategory>();
 
 	/** 量表 */
 	@OneToMany(mappedBy = "gaugeCategory", fetch = FetchType.LAZY)
 	@Where(clause="deleted=0")
+	@JsonIgnore
 	private Set<Gauge> gauges = new HashSet<Gauge>();
 
 	/**
@@ -183,13 +183,5 @@ public class GaugeCategory extends OrderEntity {
 	 */
 	@PreRemove
 	public void preRemove() {
-	}
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
 	}
 }

@@ -32,19 +32,6 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>层级：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="grade" value="" placeholder="" id="grade" onInput="intInit(this)">
-            </div>
-        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
@@ -54,40 +41,13 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>树路径：</label>
+            <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="treePath" name="treePath">
+                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Member：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Parent：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if parents??]
-				<select name="parentId" class="select" style="background-color: #FFFFFF">
-                    [#list parents as parent]
-					<option value="${parent.id}">${parent.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-        <div class="row cl">
+         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
@@ -122,16 +82,9 @@
 
                 $("#form-add").validate({
                     rules:{
-                        grade:{
-                            required:true,
-                        },
                         name:{
                             required:true,
-                        },
-                        treePath:{
-                            required:true,
-                        },
-
+                        }
                     },
                     onkeyup:false,
                     focusCleanup:true,

@@ -131,7 +131,7 @@ public class GaugeModel extends BaseModel implements Serializable {
         this.id = gauge.getId();
         this.title = gauge.getTitle();
         this.subTitle = gauge.getSubTitle();
-        this.thumbnail = gauge.getContent();
+        this.thumbnail = gauge.getThumbnail();
         this.evaluation = gauge.getEvaluation();
         this.price = gauge.getPrice();
         this.marketPrice = gauge.getMarketPrice();

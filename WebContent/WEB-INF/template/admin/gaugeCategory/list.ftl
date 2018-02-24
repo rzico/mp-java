@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>GaugeCategory</title>
+    <title>量表分类</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> GaugeCategory <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 量表分类 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -47,8 +47,8 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; GaugeCategory &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增GaugeCategory</a>
+                <a href="javascript:;" onclick="add('首页 &gt; 量表分类 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增分类</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
@@ -121,9 +121,7 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(7).attr('style', 'text-align: left;');
-                $(row).children('td').eq(8).attr('style', 'text-align: left;');
-
+                $(row).children('td').eq(4).attr('style', 'text-align: left;');
             },
             "aoColumns": [
                 {
@@ -147,33 +145,13 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "orders",
-                    "sTitle": "Orders",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "grade",
-                    "sTitle": "层级",
-                    "sClass": "center"
-                },
-                {
                     "mData": "name",
                     "sTitle": "名称",
                     "sClass": "center"
                 },
                 {
-                    "mData": "treePath",
-                    "sTitle": "树路径",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapParent",
-                    "sTitle": "Parent",
+                    "mData": "orders",
+                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
@@ -206,30 +184,10 @@
                     }
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [9],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','gaugeCategoryView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [10],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; GaugeCategory &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表分类 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -238,7 +196,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 8, 9, 10]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 6]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

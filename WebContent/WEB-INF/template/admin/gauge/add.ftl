@@ -59,6 +59,20 @@
 
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">分类：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+            [#if gaugeCategorys??]
+                <select name="gaugeCategoryId" class="select" style="background-color: #FFFFFF">
+                    [#list gaugeCategorys as gaugeCategory]
+                        <option value="${gaugeCategory.id}">${gaugeCategory.name}</option>
+                    [/#list]
+				</select>
+            [/#if]
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
             [#if types??]
@@ -90,7 +104,11 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评简介：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
+                <div class="uploader-thum-container">
+                    <div id="contentFileList" class="uploader-list"></div>
+                    <div id="contentFilePicker">选择图片</div>
+                    <input type="hidden" value="" id="content" name="content">
+                </div>
             </div>
         </div>
 
@@ -98,6 +116,14 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评人数：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" name="evaluation" value="" placeholder="" id="evaluation" onInput="intInit(this)">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>亮点介绍：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots1" >
+                <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots2" >
             </div>
         </div>
 
@@ -196,6 +222,8 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+
+                new $uploadpicture("contentFileList","contentFilePicker");
 
                 var ue = UE.getEditor('content');
 

@@ -94,25 +94,10 @@ public class GaugeCategoryController extends BaseController {
 	public Message save(GaugeCategory gaugeCategory, Long parentId, Long memberId){
 		GaugeCategory entity = new GaugeCategory();	
 
-		entity.setCreateDate(gaugeCategory.getCreateDate());
-
-		entity.setModifyDate(gaugeCategory.getModifyDate());
-
 		entity.setOrders(gaugeCategory.getOrders() == null ? 0 : gaugeCategory.getOrders());
-
-		entity.setGrade(gaugeCategory.getGrade() == null ? 0 : gaugeCategory.getGrade());
 
 		entity.setName(gaugeCategory.getName());
 
-		entity.setTreePath(gaugeCategory.getTreePath());
-
-		entity.setMember(memberService.find(memberId));
-
-		entity.setParent(gaugeCategoryService.find(parentId));
-		
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
         try {
             gaugeCategoryService.save(entity);
             return Message.success(entity,"admin.save.success");
@@ -160,26 +145,11 @@ public class GaugeCategoryController extends BaseController {
     @ResponseBody
 	public Message update(GaugeCategory gaugeCategory, Long parentId, Long memberId){
 		GaugeCategory entity = gaugeCategoryService.find(gaugeCategory.getId());
-		
-		entity.setCreateDate(gaugeCategory.getCreateDate());
-
-		entity.setModifyDate(gaugeCategory.getModifyDate());
 
 		entity.setOrders(gaugeCategory.getOrders() == null ? 0 : gaugeCategory.getOrders());
 
-		entity.setGrade(gaugeCategory.getGrade() == null ? 0 : gaugeCategory.getGrade());
-
 		entity.setName(gaugeCategory.getName());
 
-		entity.setTreePath(gaugeCategory.getTreePath());
-
-		entity.setMember(memberService.find(memberId));
-
-		entity.setParent(gaugeCategoryService.find(parentId));
-		
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
         try {
             gaugeCategoryService.update(entity);
             return Message.success(entity,"admin.update.success");

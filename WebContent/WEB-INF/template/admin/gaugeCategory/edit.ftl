@@ -34,59 +34,17 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
+                </div>
+            </div>
+            <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>层级：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.grade}" placeholder="" id="grade" name="grade" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>树路径：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.treePath}" placeholder="" id="treePath" name="treePath">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Member：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Parent：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if parents??]
-				<select name="parentId" class="select" style="background-color: #FFFFFF">
-                    [#list parents as parent]
-					<option[#if data.parent?? && parent.id == data.parent.id] selected[/#if] value="${parent.id}">${parent.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
             </div>
         </div>
         <div class="row cl">
@@ -124,16 +82,9 @@
 
                 $("#form-update").validate({
                     rules:{
-                        grade:{
-                            required:true,
-                        },
                         name:{
                             required:true,
-                        },
-                        treePath:{
-                            required:true,
-                        },
-
+                        }
                     },
                     onkeyup:false,
                     focusCleanup:true,

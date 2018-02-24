@@ -34,100 +34,185 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">测评简介：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.content}" placeholder="" id="content" name="content">
-            </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>主标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
                 </div>
             </div>
-        </div>
 
-        <div class="row cl">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>副标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.subTitle}" placeholder="" id="subTitle" name="subTitle">
+                </div>
+            </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                        <div id="fileList" class="uploader-list">
+                            [#if data.thumbnail??]
+                                <div class="file-item thumbnail">
+                                    <img width="100px" height="100px" src="${data.thumbnail}"/>
+                                    <div class="info"></div>
+                                </div>'
+                            [/#if]
+                        </div>
+                        <div id="filePicker">选择图片</div>
+                        <input type="hidden" value="${data.thumbnail}" id="thumbnail" name="thumbnail">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">分类：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                    [#if gaugeCategorys??]
+                        <select name="articleCategoryId" class="select" style="background-color: #FFFFFF">
+                            [#list gaugeCategorys as gaugeCategory]
+                                <option [#if data.gaugeCategory?? && gaugeCategory.id == data.gaugeCategory.id] selected[/#if] value="${gaugeCategory.id}">${gaugeCategory.name}</option>
+                            [/#list]
+				</select>
+                    [/#if]
+				</span>
+				</span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模类型：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if types??]
+                        [#list types as type]
+                            <div class="radio-box">
+                                <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
+                                <label for="type-${type_index}">${type.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户类型：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if userTypes??]
+                        [#list userTypes as userType]
+                            <div class="radio-box">
+                                <input name="userType" type="radio" id="userType-${userType_index}" value="${userType.id}"[#if userType.id == data.userType] checked[/#if]>
+                                <label for="userType-${userType_index}">${userType.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评简介：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                        <div id="contentFileList" class="uploader-list">
+                            [#if data.content??]
+                                <div class="file-item thumbnail">
+                                    <img width="100px" height="100px" src="${data.content}"/>
+                                    <div class="info"></div>
+                                </div>'
+                            [/#if]
+                        </div>
+                        <div id="contentFilePicker">选择图片</div>
+                        <input type="hidden" value="${data.content}" id="content" name="content">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评人数：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.evaluation}" placeholder="" id="evaluation" name="evaluation" onInput="intInit(this)">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.notice}" placeholder="" id="notice" name="notice">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>亮点介绍：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    [#if data.spots?? && data.spots?size>0]
+                        [#list data.spots as spot]
+                            <input type="text" class="input-text" style="width:100px;" value="${spot}" name="spots" placeholder="" id="spots" >
+                        [/#list]
+                    [#else]
+                        <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots1" >
+                        <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots2" >
+                    [/#if]
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模修订说明：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.revisionNote}" placeholder="" id="revisionNote" name="revisionNote">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <textarea class="input-text" name="notice" id="notice" value="${data.notice}" style="height:100px;width:300px;">${data.notice}</textarea>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>副标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.subTitle}" placeholder="" id="subTitle" name="subTitle">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模修订说明：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <textarea class="input-text" name="revisionNote" id="revisionNote" value="${data.revisionNote}" style="height:100px;width:300px;">${data.revisionNote}</textarea>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>主标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>市场价：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.price}" placeholder="" id="price" name="price" onInput="floatInit(this)">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if types??]
-                [#list types as type]
-                    <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
-                        <label for="type-${type_index}">${type.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>销售价：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.marketPrice}" placeholder="" id="marketPrice" name="marketPrice" onInput="floatInit(this)">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if userTypes??]
-                [#list userTypes as userType]
-                    <div class="radio-box">
-                        <input name="userType" type="radio" id="userType-${userType_index}" value="${userType.id}"[#if userType.id == data.userType] checked[/#if]>
-                        <label for="userType-${userType_index}">${userType.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>推广佣金（%）：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.brokerage}" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Product：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if products??]
-				<select name="productId" class="select" style="background-color: #FFFFFF">
-                    [#list products as product]
-					<option[#if data.product?? && product.id == data.product.id] selected[/#if] value="${product.id}">${product.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分销佣金（%）：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.distribution}" placeholder="" id="distribution" name="distribution" onInput="percentInit(this)">
+                </div>
             </div>
-        </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">标签：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if tags??]
+                        [#list tags as tag]
+                            <div class="check-box">
+                                [#assign checkUp = "false"]
+                                [#list data.tags as dataTag]
+                                    [#if dataTag.id == tag.id]
+                                        [#assign checkUp = "true"]
+                                    [/#if]
+                                [/#list]
+                                <label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${tag.id}" name="tagIds" >${tag.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -160,6 +245,8 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+
+                new $uploadpicture("contentFileList","contentFilePicker");
 
                 $("#form-update").validate({
                     rules:{
