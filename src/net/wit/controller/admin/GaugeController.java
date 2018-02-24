@@ -121,7 +121,7 @@ public class GaugeController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Gauge gauge, Long productId){
+	public Message save(Gauge gauge, Long [] tagIds){
 		Gauge entity = new Gauge();	
 
 		entity.setBrokerage(gauge.getBrokerage());
@@ -151,6 +151,8 @@ public class GaugeController extends BaseController {
 		entity.setType(gauge.getType());
 
 		entity.setUserType(gauge.getUserType());
+
+		entity.setTags(tagService.findList(tagIds));
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -213,7 +215,7 @@ public class GaugeController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Gauge gauge, Long productId){
+	public Message update(Gauge gauge, Long [] tagIds){
 		Gauge entity = gaugeService.find(gauge.getId());
 		
 		entity.setCreateDate(gauge.getCreateDate());
@@ -246,7 +248,7 @@ public class GaugeController extends BaseController {
 
 		entity.setUserType(gauge.getUserType());
 
-		entity.setProduct(productService.find(productId));
+		entity.setTags(tagService.findList(tagIds));
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");

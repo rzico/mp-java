@@ -17,8 +17,8 @@ import java.util.Set;
 
  */
 @Entity
-@Table(name = "wx_gauge_category")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_gauge_category_sequence")
+@Table(name = "ky_gauge_category")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "ky_gauge_category_sequence")
 public class GaugeCategory extends OrderEntity {
 
 	private static final long serialVersionUID = 42L;

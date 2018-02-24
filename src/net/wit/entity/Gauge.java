@@ -99,7 +99,7 @@ public class Gauge extends BaseEntity {
 
     /** 亮点 */
     @ElementCollection
-    @CollectionTable(name = "wx_gauge_spot")
+    @CollectionTable(name = "ky_gauge_spot")
     private List<String> spots = new ArrayList<String>();
 
     /** 常模修订说明 */
@@ -157,7 +157,7 @@ public class Gauge extends BaseEntity {
 
     /** 量表标签*/
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "wx_gauge_tag")
+    @JoinTable(name = "ky_gauge_tag")
     @OrderBy("orders asc")
     @JsonIgnore
     private List<Tag> tags = new ArrayList<Tag>();
