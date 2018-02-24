@@ -45,6 +45,7 @@
                 <dt><i class="Hui-iconfont">&#xe60d;</i> 测评管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
                 <dd>
                     <ul>
+                        <li><a data-href="../gauge_category/index.jhtml" data-title="量表分类" href="javascript:;">量表分类</a></li>
                         <li><a data-href="../gauge/index.jhtml" data-title="量表管理" href="javascript:;">量表管理</a></li>
                     </ul>
                 </dd>

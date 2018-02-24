@@ -47,7 +47,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
                     <div id="fileList" class="uploader-list"></div>
@@ -88,7 +88,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">测评简介：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评简介：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
             </div>
@@ -116,28 +116,28 @@
         </div>
 
                     <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">市场价：</label>
+                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>市场价：</label>
             <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="price" name="price" onInput="floatInit(this)">
                     </div>
                     </div>
 
                     <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">销售价：</label>
+                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>销售价：</label>
             <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="marketPrice" name="marketPrice" onInput="floatInit(this)">
                     </div>
                     </div>
 
                     <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">推广佣金（%）：</label>
+                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>推广佣金（%）：</label>
             <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="0.6" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
                     </div>
                     </div>
 
                     <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">分销佣金（%）：</label>
+                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分销佣金（%）：</label>
             <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="0.6" placeholder="" id="distribution" name="distribution" onInput="percentInit(this)">
                     </div>

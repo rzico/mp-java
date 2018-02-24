@@ -3,9 +3,7 @@ package net.wit.controller.makey;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.makey.model.GaugeCategoryModel;
-import net.wit.controller.makey.model.GaugeListModel;
-import net.wit.controller.makey.model.GaugeModel;
+import net.wit.controller.makey.model.*;
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticleViewModel;
 import net.wit.entity.*;
@@ -56,6 +54,47 @@ public class GaugeController extends BaseController {
         GaugeModel model =new GaugeModel();
         model.bind(gauge);
         return Message.bind(model,request);
+    }
+
+
+    /**
+     *  用户详资
+     */
+    @RequestMapping(value = "/userAttributes", method = RequestMethod.GET)
+    @ResponseBody
+    public Message userAttributes(Long id,HttpServletRequest request){
+        Gauge gauge = gaugeService.find(id);
+        if (gauge==null) {
+            return Message.error("无效量表编号");
+        }
+        return Message.bind(GaugeAttributeModel.bindList(gauge.getUserAttributes()),request);
+    }
+
+    /**
+     *  常模修订
+     */
+    @RequestMapping(value = "/revisionAttributes", method = RequestMethod.GET)
+    @ResponseBody
+    public Message revisionAttributes(Long id,HttpServletRequest request){
+        Gauge gauge = gaugeService.find(id);
+        if (gauge==null) {
+            return Message.error("无效量表编号");
+        }
+        return Message.bind(GaugeAttributeModel.bindList(gauge.getRevisionAttributes()),request);
+    }
+
+
+    /**
+     *  获取题目
+     */
+    @RequestMapping(value = "/question", method = RequestMethod.GET)
+    @ResponseBody
+    public Message question(Long id,HttpServletRequest request){
+        Gauge gauge = gaugeService.find(id);
+        if (gauge==null) {
+            return Message.error("无效量表编号");
+        }
+        return Message.bind(GaugeQuestionModel.bindList(gauge.getQuestions()),request);
     }
 
     /**

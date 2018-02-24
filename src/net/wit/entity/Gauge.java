@@ -73,6 +73,8 @@ public class Gauge extends BaseEntity {
     private String subTitle;
 
     /** 缩列图 */
+    @NotNull
+    @Column(columnDefinition="varchar(255) not null comment '缩列图'")
     private String thumbnail;
 
     /** 测评须知 */

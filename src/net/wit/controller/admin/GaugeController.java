@@ -126,6 +126,8 @@ public class GaugeController extends BaseController {
 
 		entity.setBrokerage(gauge.getBrokerage());
 
+		entity.setThumbnail(gauge.getThumbnail());
+
 		entity.setContent(gauge.getContent());
 
 		entity.setDeleted(false);
