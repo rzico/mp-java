@@ -237,6 +237,14 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
+
+
+
+<script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+
+<script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");

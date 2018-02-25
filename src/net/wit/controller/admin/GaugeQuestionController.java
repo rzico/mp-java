@@ -57,14 +57,13 @@ public class GaugeQuestionController extends BaseController {
 	 * 主页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(ModelMap model) {
+	public String index(Long gaugeId,ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("text","文字"));
 		types.add(new MapEntity("image","图片"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("gauges",gaugeService.findAll());
+		model.addAttribute("gaugeId",gaugeId);
 
 		return "/admin/gaugeQuestion/list";
 	}
@@ -74,14 +73,13 @@ public class GaugeQuestionController extends BaseController {
 	 * 添加
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String add(ModelMap model) {
+	public String add(Long gaugeId,ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("text","文字"));
 		types.add(new MapEntity("image","图片"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("gauges",gaugeService.findAll());
+		model.addAttribute("gaugeId",gaugeId);
 
 		return "/admin/gaugeQuestion/add";
 	}

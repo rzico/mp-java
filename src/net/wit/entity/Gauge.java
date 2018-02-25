@@ -145,10 +145,10 @@ public class Gauge extends BaseEntity {
     private BigDecimal distribution;
 
     /** 题库*/
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "gauge",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orders asc")
     @JsonIgnore
-    private List<GaugeQuestion> questions = new ArrayList<GaugeQuestion>();
+    private List<GaugeQuestion> gaugeQuestions = new ArrayList<GaugeQuestion>();
 
     /** 所属商品 */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -289,12 +289,12 @@ public class Gauge extends BaseEntity {
         this.revisionAttributes = revisionAttributes;
     }
 
-    public List<GaugeQuestion> getQuestions() {
-        return questions;
+    public List<GaugeQuestion> getGaugeQuestions() {
+        return gaugeQuestions;
     }
 
-    public void setQuestions(List<GaugeQuestion> questions) {
-        this.questions = questions;
+    public void setGaugeQuestions(List<GaugeQuestion> gaugeQuestions) {
+        this.gaugeQuestions = gaugeQuestions;
     }
 
     public String getThumbnail() {

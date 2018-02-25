@@ -94,7 +94,7 @@ public class GaugeController extends BaseController {
         if (gauge==null) {
             return Message.error("无效量表编号");
         }
-        return Message.bind(GaugeQuestionModel.bindList(gauge.getQuestions()),request);
+        return Message.bind(GaugeQuestionModel.bindList(gauge.getGaugeQuestions()),request);
     }
 
     /**
