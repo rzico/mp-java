@@ -10,6 +10,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Evaluation;
+import net.wit.entity.EvaluationAttribute;
+import net.wit.entity.Order;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -57,4 +60,5 @@ public class MemberAttributeDaoImpl extends BaseDaoImpl<MemberAttribute, Long> i
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
 }

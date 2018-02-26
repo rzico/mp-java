@@ -72,6 +72,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "couponCodeDaoImpl")
 	private CouponCodeDao couponCodeDao;
 
+	@Resource(name = "evaluationDaoImpl")
+	private EvaluationDao evaluationDao;
+
 	@Resource(name = "cardBillDaoImpl")
 	private CardBillDao cardBillDao;
 
@@ -383,7 +386,13 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				topicDao.merge(topic);
 				messageService.topicPushTo(topic);
 				enterpriseService.create(topic);
+			} else
+			if (payment.getType() == Payment.Type.evaluation) {
+				Evaluation evaluation = payment.getEvaluation();
+				evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
+				evaluationDao.merge(evaluation);
 			}
+
 		}
 	}
 

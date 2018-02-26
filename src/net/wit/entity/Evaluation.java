@@ -42,6 +42,11 @@ public class Evaluation extends BaseEntity {
     @Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '订单编号'")
     private String sn;
 
+    /** 缩列图 */
+    @NotNull
+    @Column(columnDefinition="varchar(255) not null comment '缩列图'")
+    private String thumbnail;
+
     /** 状态 */
     @NotNull
     @Column(columnDefinition="int(11) not null comment '状态 {waiting:待付款,paid:已付款,completed:已完成,cancelled:已取消}'")
@@ -200,5 +205,13 @@ public class Evaluation extends BaseEntity {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
