@@ -60,7 +60,7 @@ public class GaugeQuestionModel extends BaseModel implements Serializable {
     public void bind(GaugeQuestion gaugeQuestion) {
         this.id = gaugeQuestion.getId();
         this.title = gaugeQuestion.getTitle();
-        this.content = new ArrayList<>();
+        this.content = new ArrayList<GaugeQuestionOptionModel>();
         if (gaugeQuestion.getContent()!=null) {
             this.content = JsonUtils.toObject(gaugeQuestion.getContent(), List.class);
         }

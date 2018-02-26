@@ -44,7 +44,6 @@ public class Gauge extends BaseEntity {
         complex
     };
 
-
     /** 量表分类 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

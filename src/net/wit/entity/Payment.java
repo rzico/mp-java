@@ -34,7 +34,6 @@ public class Payment extends BaseEntity {
 	 * 类型
 	 */
 	public enum Type {
-
 		/** 购物支付 */
 		payment,
 		/** 钱包充值 */
@@ -93,7 +92,7 @@ public class Payment extends BaseEntity {
 
 	/** 三方单号 */
 	@Column(columnDefinition="varchar(50) comment '三方单号'")
-	private String  tranSn;
+	private String tranSn;
 
 	/** 类型 */
 	@Column(columnDefinition="int(11) not null comment '类型 {payment:消费支付,recharge:钱包充值}'")
