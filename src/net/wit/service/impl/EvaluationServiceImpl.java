@@ -58,6 +58,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public Evaluation update(Evaluation evaluation, String... ignoreProperties) {
+		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
 		return super.update(evaluation, ignoreProperties);
 	}
 

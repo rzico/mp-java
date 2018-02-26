@@ -100,7 +100,7 @@ public class Evaluation extends BaseEntity {
     private Member member;
 
     /** 测评记录*/
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "evaluation", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("orders asc")
     @JsonIgnore
     private List<EvalAnswer> evalAnswers = new ArrayList<EvalAnswer>();

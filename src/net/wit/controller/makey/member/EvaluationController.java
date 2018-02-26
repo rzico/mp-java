@@ -44,6 +44,9 @@ public class EvaluationController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
+    @Resource(name = "gaugeQuestionServiceImpl")
+    private GaugeQuestionService gaugeQuestionService;
+
     @Resource(name = "memberAttributeServiceImpl")
     private MemberAttributeService memberAttributeService;
 
@@ -156,11 +159,33 @@ public class EvaluationController extends BaseController {
     @RequestMapping(value = "/answer", method = RequestMethod.POST)
     @ResponseBody
     public Message question(Long id,String body,HttpServletRequest request){
-        Gauge gauge = gaugeService.find(id);
-        if (gauge==null) {
-            return Message.error("无效量表编号");
+        Evaluation evaluation = evaluationService.find(id);
+        if (evaluation==null) {
+            return Message.error("无效测评编号");
         }
-        return Message.bind(GaugeQuestionModel.bindList(gauge.getGaugeQuestions()),request);
+        Member member = memberService.getCurrent();
+
+        List<EvaluationAnswerModel> answers = new ArrayList<EvaluationAnswerModel>();
+        List<EvalAnswer> evals = new ArrayList<EvalAnswer>();
+        answers = JsonUtils.toObject(body,List.class);
+
+        for (EvaluationAnswerModel answer:answers) {
+            GaugeQuestion question = gaugeQuestionService.find(answer.getQuestionId());
+            if (question!=null) {
+                EvalAnswer eas = new EvalAnswer();
+                eas.setAnswer(answer.getOptionId());
+                eas.setContent(question.getContent());
+                eas.setTitle(question.getTitle());
+                eas.setEvaluation(evaluation);
+                eas.setGauge(evaluation.getGauge());
+                eas.setMember(evaluation.getMember());
+                eas.setScore(answer.getScore());
+                evals.add(eas);
+            }
+        }
+        evaluation.setEvalAnswers(evals);
+        evaluationService.update(evaluation);
+        return Message.success("答题完毕");
     }
 
     /**
