@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -66,11 +68,11 @@ public class EvaluationController extends BaseController {
         if (gauge==null) {
             return Message.error("无效量表编号");
         }
-
         Member member = memberService.getCurrent();
         Evaluation  eval =  new Evaluation();
         eval.setDeleted(false);
         eval.setEval(0L);
+        eval.setThumbnail(gauge.getThumbnail());
         eval.setSn(snService.generate(Sn.Type.order));
         eval.setEvalStatus(Evaluation.EvalStatus.waiting);
         eval.setGauge(gauge);
@@ -80,9 +82,14 @@ public class EvaluationController extends BaseController {
         eval.setSubTitle(gauge.getSubTitle());
         eval.setTotal(new Long(gauge.getGaugeQuestions().size()));
         Payment payment = evaluationService.create(eval);
+        Map<String,Object> data = new HashMap<String,Object>();
         PaymentModel model = new PaymentModel();
         model.bind(payment);
-        return Message.bind(model,request);
+        data.put("payment",model);
+        EvaluationListModel evalm = new EvaluationListModel();
+        evalm.bind(eval);
+        data.put("evaluation",evalm);
+        return Message.bind(data,request);
     }
 
 
@@ -202,6 +209,22 @@ public class EvaluationController extends BaseController {
         Page<Evaluation> page = evaluationService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(EvaluationListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+
+    /**
+     * 详情
+     */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(Long id,HttpServletRequest request){
+        Evaluation evaluation = evaluationService.find(id);
+        if (evaluation==null) {
+            return Message.error("无效测评编号");
+        }
+        EvaluationModel model =new EvaluationModel();
+        model.bind(evaluation);
         return Message.bind(model,request);
     }
 

@@ -23,9 +23,9 @@ import java.util.List;
  */
  
  
-@Service("EvaluationAttributeServiceImpl")
+@Service("evaluationAttributeServiceImpl")
 public class EvaluationAttributeServiceImpl extends BaseServiceImpl<EvaluationAttribute, Long> implements EvaluationAttributeService {
-	@Resource(name = "evaluationAttributeAttributeDaoImpl")
+	@Resource(name = "evaluationAttributeDaoImpl")
 	private EvaluationAttributeDao evaluationAttributeDao;
 
 	@Resource(name = "snServiceImpl")
