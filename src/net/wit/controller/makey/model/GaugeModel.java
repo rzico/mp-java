@@ -135,6 +135,22 @@ public class GaugeModel extends BaseModel implements Serializable {
         this.spots = spots;
     }
 
+    public Gauge.UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Gauge.UserType userType) {
+        this.userType = userType;
+    }
+
+    public Gauge.Type getType() {
+        return type;
+    }
+
+    public void setType(Gauge.Type type) {
+        this.type = type;
+    }
+
     public void bind(Gauge gauge) {
         this.id = gauge.getId();
         this.title = gauge.getTitle();
