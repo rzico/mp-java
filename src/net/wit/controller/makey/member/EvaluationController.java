@@ -1,5 +1,7 @@
 package net.wit.controller.makey.member;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,10 +107,11 @@ public class EvaluationController extends BaseController {
             return Message.error("无效测评编号");
         }
         Member member = memberService.getCurrent();
-        List<GaugeAttributeModel> attrs = new ArrayList<GaugeAttributeModel>();
-        attrs = JsonUtils.toObject(body,List.class);
-        for (GaugeAttributeModel attr:attrs) {
-            MemberAttribute attribute = memberAttributeService.find(attr.getId());
+        JSONArray attrs = JSONArray.fromObject(body);
+
+        for (int i=0;i<attrs.size();i++) {
+            JSONObject attr = attrs.getJSONObject(i);
+            MemberAttribute attribute = memberAttributeService.find(attr.getLong("id"));
            EvaluationAttribute eva = evaluationAttributeService.find(evaluation,attribute,EvaluationAttribute.Type.user);
            if (eva==null) {
                eva = new EvaluationAttribute();
@@ -116,10 +120,10 @@ public class EvaluationController extends BaseController {
                eva.setMemberAttribute(attribute);
                eva.setName(attribute.getName());
                eva.setType(EvaluationAttribute.Type.user);
-               eva.setValue(attr.getValue());
+               eva.setValue(attr.getString("value"));
                evaluationAttributeService.save(eva);
            } else {
-               eva.setValue(attr.getValue());
+               eva.setValue(attr.getString("value"));
                evaluationAttributeService.update(eva);
            }
         }
@@ -137,10 +141,11 @@ public class EvaluationController extends BaseController {
             return Message.error("无效测评编号");
         }
         Member member = memberService.getCurrent();
-        List<GaugeAttributeModel> attrs = new ArrayList<GaugeAttributeModel>();
-        attrs = JsonUtils.toObject(body,List.class);
-        for (GaugeAttributeModel attr:attrs) {
-            MemberAttribute attribute = memberAttributeService.find(attr.getId());
+        JSONArray attrs = JSONArray.fromObject(body);
+
+        for (int i=0;i<attrs.size();i++) {
+            JSONObject attr = attrs.getJSONObject(i);
+            MemberAttribute attribute = memberAttributeService.find(attr.getLong("id"));
             EvaluationAttribute eva = evaluationAttributeService.find(evaluation,attribute,EvaluationAttribute.Type.revision);
             if (eva==null) {
                 eva = new EvaluationAttribute();
@@ -149,10 +154,10 @@ public class EvaluationController extends BaseController {
                 eva.setMemberAttribute(attribute);
                 eva.setName(attribute.getName());
                 eva.setType(EvaluationAttribute.Type.revision);
-                eva.setValue(attr.getValue());
+                eva.setValue(attr.getString("value"));
                 evaluationAttributeService.save(eva);
             } else {
-                eva.setValue(attr.getValue());
+                eva.setValue(attr.getString("value"));
                 evaluationAttributeService.update(eva);
             }
         }
@@ -163,7 +168,7 @@ public class EvaluationController extends BaseController {
     /**
      *  提交答案
      */
-    @RequestMapping(value = "/answer", method = RequestMethod.POST)
+    @RequestMapping(value = "/answer")
     @ResponseBody
     public Message question(Long id,String body,HttpServletRequest request){
         Evaluation evaluation = evaluationService.find(id);
@@ -172,27 +177,28 @@ public class EvaluationController extends BaseController {
         }
         Member member = memberService.getCurrent();
 
-        List<EvaluationAnswerModel> answers = new ArrayList<EvaluationAnswerModel>();
+        JSONArray answers = JSONArray.fromObject(body);
         List<EvalAnswer> evals = new ArrayList<EvalAnswer>();
-        answers = JsonUtils.toObject(body,List.class);
 
-        for (EvaluationAnswerModel answer:answers) {
-            GaugeQuestion question = gaugeQuestionService.find(answer.getQuestionId());
+        for (int i=0;i<answers.size();i++) {
+            JSONObject ar = answers.getJSONObject(i);
+            GaugeQuestion question = gaugeQuestionService.find(ar.getLong("questionId"));
             if (question!=null) {
                 EvalAnswer eas = new EvalAnswer();
-                eas.setAnswer(answer.getOptionId());
+                eas.setAnswer(ar.getLong("optionId"));
                 eas.setContent(question.getContent());
                 eas.setTitle(question.getTitle());
                 eas.setEvaluation(evaluation);
                 eas.setGauge(evaluation.getGauge());
                 eas.setMember(evaluation.getMember());
-                eas.setScore(answer.getScore());
+                eas.setScore(new BigDecimal(ar.getString("score")));
                 evals.add(eas);
             }
         }
         evaluation.setEvalAnswers(evals);
         evaluationService.update(evaluation);
         return Message.success("答题完毕");
+
     }
 
     /**

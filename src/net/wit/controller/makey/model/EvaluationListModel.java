@@ -8,6 +8,7 @@ import net.wit.entity.Gauge;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //文章列表图
@@ -23,6 +24,10 @@ public class EvaluationListModel extends BaseModel implements Serializable {
     private String thumbnail;
     /** 现价 */
     private BigDecimal price;
+    /** 时间 */
+    private Date createDate;
+    /** 订单 */
+    private String sn;
 
     /** 完成 */
     private Long eval;
@@ -85,6 +90,22 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.total = total;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
     public void bind(Evaluation evaluation) {
         this.id = evaluation.getId();
         this.title = evaluation.getTitle();
@@ -93,6 +114,9 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.eval = evaluation.getEval();
         this.price = evaluation.getPrice();
         this.total = evaluation.getTotal();
+
+        this.sn = evaluation.getSn();
+        this.createDate = evaluation.getCreateDate();
     }
 
     public static List<EvaluationListModel> bindList(List<Evaluation> evaluations) {
