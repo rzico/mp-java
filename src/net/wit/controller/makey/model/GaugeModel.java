@@ -3,6 +3,8 @@ package net.wit.controller.makey.model;
 import net.wit.controller.model.BaseModel;
 import net.wit.entity.Gauge;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -23,6 +25,12 @@ public class GaugeModel extends BaseModel implements Serializable {
     private BigDecimal marketPrice;
     /** 现价 */
     private BigDecimal price;
+
+    /** 用户类型 */
+    private Gauge.UserType userType;
+
+    /** 常模类型 */
+    private Gauge.Type type;
 
     /** 测评须知 */
     private String notice;
@@ -130,6 +138,8 @@ public class GaugeModel extends BaseModel implements Serializable {
     public void bind(Gauge gauge) {
         this.id = gauge.getId();
         this.title = gauge.getTitle();
+        this.type = gauge.getType();
+        this.userType = gauge.getUserType();
         this.subTitle = gauge.getSubTitle();
         this.thumbnail = gauge.getThumbnail();
         this.evaluation = gauge.getEvaluation();

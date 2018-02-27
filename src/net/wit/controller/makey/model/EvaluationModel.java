@@ -1,7 +1,9 @@
 package net.wit.controller.makey.model;
 
+import net.wit.controller.model.ArticleContentModel;
 import net.wit.controller.model.BaseModel;
 import net.wit.entity.Evaluation;
+import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,7 +16,7 @@ public class EvaluationModel extends BaseModel implements Serializable {
     
     private Long id;
     /**  结果 */
-    private String result;
+    private List<EvaluationResultModel> result;
 
     public Long getId() {
         return id;
@@ -24,17 +26,31 @@ public class EvaluationModel extends BaseModel implements Serializable {
         this.id = id;
     }
 
-    public String getResult() {
+    public List<EvaluationResultModel> getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(List<EvaluationResultModel> result) {
         this.result = result;
     }
 
     public void bind(Evaluation evaluation) {
         this.id = evaluation.getId();
-        this.result = evaluation.getResult();
+
+        List<EvaluationResultModel> templates = new ArrayList<EvaluationResultModel>();
+        if (evaluation.getResult()!=null) {
+            templates = JsonUtils.toObject(evaluation.getResult(), List.class);
+        } else {
+            EvaluationResultModel model = new EvaluationResultModel();
+            model.setType("text");
+            model.setResult("测试结果，你很正常");
+            templates.add(model);
+            EvaluationResultModel model1 = new EvaluationResultModel();
+            model1.setType("image");
+            model1.setResult("http://cdn.rzico.com/upload/image/20180224/1519471294626043302.jpg");
+            templates.add(model1);
+        }
+
     }
 
     public static List<EvaluationModel> bindList(List<Evaluation> evaluations) {
