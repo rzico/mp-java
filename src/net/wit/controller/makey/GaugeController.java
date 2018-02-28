@@ -41,7 +41,7 @@ public class GaugeController extends BaseController {
     private TagService tagService;
 
     /**
-     * 详情
+     *  详情
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
