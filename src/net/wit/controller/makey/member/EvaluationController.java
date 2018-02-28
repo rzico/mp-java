@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * @ClassName: EvaluationController
  * @author 降魔战队
@@ -62,6 +61,22 @@ public class EvaluationController extends BaseController {
     private EvaluationAttributeService evaluationAttributeService;
 
     /**
+     * 判断量表是否存在
+     */
+    @RequestMapping(value = "/exists")
+    @ResponseBody
+    public Message exists(Long id,HttpServletRequest request) {
+        Gauge gauge = gaugeService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("evalStatus", Filter.Operator.eq, Evaluation.EvalStatus.paid));
+        filters.add(new Filter("gauge", Filter.Operator.eq, gauge));
+        List<Evaluation> data = evaluationService.findList(1,filters,null);
+        EvaluationListModel model = new EvaluationListModel();
+        model.bind(data.get(0));
+        return Message.bind(model,request);
+    }
+
+    /**
      * 创建订单
      */
     @RequestMapping(value = "/create")
@@ -96,6 +111,7 @@ public class EvaluationController extends BaseController {
         evalm.bind(eval);
         data.put("evaluation",evalm);
         return Message.bind(data,request);
+
     }
 
 

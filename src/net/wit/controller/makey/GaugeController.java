@@ -40,7 +40,6 @@ public class GaugeController extends BaseController {
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
 
-
     /**
      * 详情
      */
