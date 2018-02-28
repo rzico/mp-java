@@ -1,4 +1,4 @@
-package net.wit.entity.articleentity;
+package net.wit.robot.article;
 
 /**
  * Created by Eric on 2018/2/3.
