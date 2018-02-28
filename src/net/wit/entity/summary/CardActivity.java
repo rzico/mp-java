@@ -45,4 +45,6 @@ public class CardActivity extends BaseModel implements Serializable {
     public void setVip(Card.VIP vip) {
         this.vip = vip;
     }
+
+
 }

@@ -111,7 +111,11 @@ public class Crypto {
         String dataStr = JsonUtils.toJson(data);
         String hash = encrypt(key,dataStr);
 
+        System.out.println(data);
+
         String resp = post(sessionURL+"?hash="+hash,dataStr);
+
+        System.out.println(resp);
         return resp;
     }
 
