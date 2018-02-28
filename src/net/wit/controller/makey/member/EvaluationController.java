@@ -66,7 +66,7 @@ public class EvaluationController extends BaseController {
      */
     @RequestMapping(value = "/create")
     @ResponseBody
-    public Message create(Long id,HttpServletRequest request){
+    public Message create(Long id,Long xuid,HttpServletRequest request){
         Gauge gauge = gaugeService.find(id);
         if (gauge==null) {
             return Message.error("无效量表编号");
@@ -84,6 +84,9 @@ public class EvaluationController extends BaseController {
         eval.setTitle(gauge.getTitle());
         eval.setSubTitle(gauge.getSubTitle());
         eval.setTotal(new Long(gauge.getGaugeQuestions().size()));
+        if (xuid!=null) {
+            eval.setPromoter(memberService.find(xuid));
+        }
         Payment payment = evaluationService.create(eval);
         Map<String,Object> data = new HashMap<String,Object>();
         PaymentModel model = new PaymentModel();
@@ -218,6 +221,23 @@ public class EvaluationController extends BaseController {
         return Message.bind(model,request);
     }
 
+
+    /**
+     *  我的推广
+     */
+    @RequestMapping(value = "/promoter", method = RequestMethod.GET)
+    @ResponseBody
+    public Message promoter(Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("promoter", Filter.Operator.eq, member));
+        filters.add(new Filter("evalStatus", Filter.Operator.eq, Evaluation.EvalStatus.completed));
+        pageable.setFilters(filters);
+        Page<Evaluation> page = evaluationService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(EvaluationListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
 
     /**
      * 详情

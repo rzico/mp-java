@@ -111,6 +111,14 @@ public class Evaluation extends BaseEntity {
     @JsonIgnore
     private String result;
 
+
+    /** 推广 */
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(updatable = false)
+    private Member promoter;
+
+
     public String getSn() {
         return sn;
     }
@@ -213,5 +221,13 @@ public class Evaluation extends BaseEntity {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public Member getPromoter() {
+        return promoter;
+    }
+
+    public void setPromoter(Member promoter) {
+        this.promoter = promoter;
     }
 }
