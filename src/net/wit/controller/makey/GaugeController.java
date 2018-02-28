@@ -56,31 +56,17 @@ public class GaugeController extends BaseController {
         return Message.bind(model,request);
     }
 
-
-    /**
-     *  用户详资
-     */
-    @RequestMapping(value = "/userAttributes", method = RequestMethod.GET)
-    @ResponseBody
-    public Message userAttributes(Long id,HttpServletRequest request){
-        Gauge gauge = gaugeService.find(id);
-        if (gauge==null) {
-            return Message.error("无效量表编号");
-        }
-        return Message.bind(GaugeAttributeModel.bindList(gauge.getUserAttributes()),request);
-    }
-
     /**
      *  常模修订
      */
-    @RequestMapping(value = "/revisionAttributes", method = RequestMethod.GET)
+    @RequestMapping(value = "/attributes", method = RequestMethod.GET)
     @ResponseBody
     public Message revisionAttributes(Long id,HttpServletRequest request){
         Gauge gauge = gaugeService.find(id);
         if (gauge==null) {
             return Message.error("无效量表编号");
         }
-        return Message.bind(GaugeAttributeModel.bindList(gauge.getRevisionAttributes()),request);
+        return Message.bind(GaugeAttributeModel.bindList(gauge.getAttributes()),request);
     }
 
 

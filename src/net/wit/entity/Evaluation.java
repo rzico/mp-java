@@ -58,6 +58,26 @@ public class Evaluation extends BaseEntity {
     @Column(columnDefinition="varchar(255) not null comment '主标题'")
     private String title;
 
+    /** 学校/企业 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '学校/企业'")
+    private String attr1;
+
+    /** 班级/部门 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '班级/部门'")
+    private String attr2;
+
+    /** 学号/工号 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '学号/工号'")
+    private String attr3;
+
+    /**  姓名 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '姓名'")
+    private String attr4;
+
     /** 副标题 */
     @Length(max = 200)
     @NotNull
@@ -111,13 +131,11 @@ public class Evaluation extends BaseEntity {
     @JsonIgnore
     private String result;
 
-
     /** 推广 */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
     private Member promoter;
-
 
     public String getSn() {
         return sn;
@@ -230,4 +248,37 @@ public class Evaluation extends BaseEntity {
     public void setPromoter(Member promoter) {
         this.promoter = promoter;
     }
+
+    public String getAttr1() {
+        return attr1;
+    }
+
+    public void setAttr1(String attr1) {
+        this.attr1 = attr1;
+    }
+
+    public String getAttr2() {
+        return attr2;
+    }
+
+    public void setAttr2(String attr2) {
+        this.attr2 = attr2;
+    }
+
+    public String getAttr3() {
+        return attr3;
+    }
+
+    public void setAttr3(String attr3) {
+        this.attr3 = attr3;
+    }
+
+    public String getAttr4() {
+        return attr4;
+    }
+
+    public void setAttr4(String attr4) {
+        this.attr4 = attr4;
+    }
+
 }

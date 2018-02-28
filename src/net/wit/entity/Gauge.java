@@ -82,19 +82,12 @@ public class Gauge extends BaseEntity {
     @Column(columnDefinition="varchar(255) not null comment '测评须知'")
     private String notice;
 
-    /** 用户资料*/
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ky_gauge_user_attribute")
-    @OrderBy("orders asc")
-    @JsonIgnore
-    private List<MemberAttribute> userAttributes = new ArrayList<MemberAttribute>();
-
     /** 修订收集*/
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ky_gauge_revision_attribute")
+    @JoinTable(name = "ky_gauge_attribute")
     @OrderBy("orders asc")
     @JsonIgnore
-    private List<MemberAttribute> revisionAttributes = new ArrayList<MemberAttribute>();
+    private List<MemberAttribute> attributes = new ArrayList<MemberAttribute>();
 
     /** 亮点 */
     @ElementCollection
@@ -272,20 +265,12 @@ public class Gauge extends BaseEntity {
         this.deleted = deleted;
     }
 
-    public List<MemberAttribute> getUserAttributes() {
-        return userAttributes;
+    public List<MemberAttribute> getAttributes() {
+        return attributes;
     }
 
-    public void setUserAttributes(List<MemberAttribute> userAttributes) {
-        this.userAttributes = userAttributes;
-    }
-
-    public List<MemberAttribute> getRevisionAttributes() {
-        return revisionAttributes;
-    }
-
-    public void setRevisionAttributes(List<MemberAttribute> revisionAttributes) {
-        this.revisionAttributes = revisionAttributes;
+    public void setAttributes(List<MemberAttribute> attributes) {
+        this.attributes = attributes;
     }
 
     public List<GaugeQuestion> getGaugeQuestions() {

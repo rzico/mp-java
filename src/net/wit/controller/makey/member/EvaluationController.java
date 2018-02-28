@@ -100,45 +100,30 @@ public class EvaluationController extends BaseController {
 
 
     /**
-     *  用户信息采集
+     *  用户信息
      */
-    @RequestMapping(value = "/userAttributes", method = RequestMethod.POST)
+    @RequestMapping(value = "/userinfo", method = RequestMethod.POST)
     @ResponseBody
-    public Message userAttributes(Long id,String body,HttpServletRequest request){
+    public Message userinfo(Long id,String attr1,String attr2,String attr3,String attr4,HttpServletRequest request){
         Evaluation evaluation = evaluationService.find(id);
         if (evaluation==null) {
             return Message.error("无效测评编号");
         }
         Member member = memberService.getCurrent();
-        JSONArray attrs = JSONArray.fromObject(body);
-
-        for (int i=0;i<attrs.size();i++) {
-            JSONObject attr = attrs.getJSONObject(i);
-            MemberAttribute attribute = memberAttributeService.find(attr.getLong("id"));
-           EvaluationAttribute eva = evaluationAttributeService.find(evaluation,attribute,EvaluationAttribute.Type.user);
-           if (eva==null) {
-               eva = new EvaluationAttribute();
-               eva.setEvaluation(evaluation);
-               eva.setMember(member);
-               eva.setMemberAttribute(attribute);
-               eva.setName(attribute.getName());
-               eva.setType(EvaluationAttribute.Type.user);
-               eva.setValue(attr.getString("value"));
-               evaluationAttributeService.save(eva);
-           } else {
-               eva.setValue(attr.getString("value"));
-               evaluationAttributeService.update(eva);
-           }
-        }
+        evaluation.setAttr1(attr1);
+        evaluation.setAttr2(attr2);
+        evaluation.setAttr3(attr3);
+        evaluation.setAttr4(attr4);
+        evaluationService.update(evaluation);
         return Message.success("保存成功");
     }
 
     /**
      *  常模修订
      */
-    @RequestMapping(value = "/revisionAttributes", method = RequestMethod.GET)
+    @RequestMapping(value = "/attributes")
     @ResponseBody
-    public Message revisionAttributes(Long id,String body,HttpServletRequest request){
+    public Message attributes(Long id,String body,HttpServletRequest request){
         Evaluation evaluation = evaluationService.find(id);
         if (evaluation==null) {
             return Message.error("无效测评编号");
