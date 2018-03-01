@@ -51,6 +51,8 @@ public class EvaluationModel extends BaseModel implements Serializable {
             templates.add(model1);
         }
 
+        this.result = templates;
+
     }
 
     public static List<EvaluationModel> bindList(List<Evaluation> evaluations) {

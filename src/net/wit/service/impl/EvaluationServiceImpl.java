@@ -7,6 +7,7 @@ import net.wit.dao.EvaluationDao;
 import net.wit.dao.PaymentDao;
 import net.wit.entity.*;
 import net.wit.entity.Evaluation;
+import net.wit.entity.summary.EvaluationSummary;
 import net.wit.service.EvaluationService;
 import net.wit.service.EvaluationService;
 import net.wit.service.SnService;
@@ -101,5 +102,12 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		paymentDao.persist(payment);
         return payment;
 	}
+
+	/**
+	 */
+	public List<EvaluationSummary> sumPromoter(Gauge gauge,Date beginDate, Date endDate) {
+		return evaluationDao.sumPromoter(gauge,beginDate,endDate);
+	}
+
 
 }

@@ -6,6 +6,7 @@ import net.wit.entity.Evaluation;
 import net.wit.entity.Gauge;
 import net.wit.entity.Payment;
 import net.wit.entity.Tag;
+import net.wit.entity.summary.EvaluationSummary;
 
 import java.util.Date;
 import java.util.List;
@@ -20,4 +21,9 @@ public interface EvaluationService extends BaseService<Evaluation, Long> {
 	Page<Evaluation> findPage(Date beginDate, Date endDate, Pageable pageable);
 
 	public Payment create(Evaluation evaluation);
+
+	/**
+	 */
+	List<EvaluationSummary> sumPromoter(Gauge gauge,Date beginDate, Date endDate);
+
 }

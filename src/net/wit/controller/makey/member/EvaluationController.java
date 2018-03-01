@@ -8,6 +8,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.makey.model.*;
 import net.wit.controller.model.PaymentModel;
 import net.wit.entity.*;
+import net.wit.entity.summary.EvaluationSummary;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import org.springframework.stereotype.Controller;
@@ -222,6 +223,21 @@ public class EvaluationController extends BaseController {
         return Message.bind(model,request);
     }
 
+
+    /**
+     *  推广排序
+     */
+    @RequestMapping(value = "/promoter_list", method = RequestMethod.GET)
+    @ResponseBody
+    public Message promoterList(Long id,Pageable pageable, HttpServletRequest request){
+        Gauge gauge = gaugeService.find(id);
+        if (gauge==null) {
+            return Message.error("无效量表编号");
+        }
+
+        List<EvaluationSummary> data = evaluationService.sumPromoter(gauge,null,null);
+        return Message.bind(data,request);
+    }
 
     /**
      *  我的推广

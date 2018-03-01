@@ -4,13 +4,18 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.dao.EvaluationDao;
 import net.wit.dao.EvaluationDao;
+import net.wit.entity.*;
 import net.wit.entity.Evaluation;
-import net.wit.entity.Evaluation;
-import net.wit.entity.Tag;
+import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.EvaluationSummary;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.FlushModeType;
+import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -53,4 +58,34 @@ public class EvaluationDaoImpl extends BaseDaoImpl<Evaluation, Long> implements 
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	/**
+	 */
+	public List<EvaluationSummary> sumPromoter(Gauge gauge,Date beginDate, Date endDate) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select evaluation.promoter,count(evaluation.id) as count "+
+						"from Evaluation evaluation where evaluation.gauge=:gauge and evaluation.createDate>=:b and evaluation.createDate<:e "+
+						"group by evaluation.member order by count(evaluation.id) desc ";
+
+		Query query = entityManager.createQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("gauge", gauge).
+				setParameter("b", b).
+				setParameter("e", e);
+
+		List result = query.getResultList();
+		List<EvaluationSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			EvaluationSummary rw = new EvaluationSummary();
+			rw.setMember((Member) row[0]);
+			rw.setCount((Long) row[1]);
+			data.add(rw);
+		}
+		return data;
+	}
+
 }
