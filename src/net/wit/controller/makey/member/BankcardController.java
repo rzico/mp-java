@@ -187,6 +187,8 @@ public class BankcardController extends BaseController {
     @ResponseBody
     public Message submit(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
+        System.out.println(body);
+        System.out.println(captcha);
         Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
         redisService.remove(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
@@ -210,6 +212,8 @@ public class BankcardController extends BaseController {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+
+            System.out.println(mima);
 
 //            String mima = rsaService.decryptValue(body, request);
 //            rsaService.removePrivateKey(request);
