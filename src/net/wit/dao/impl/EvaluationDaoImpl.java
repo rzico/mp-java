@@ -62,19 +62,23 @@ public class EvaluationDaoImpl extends BaseDaoImpl<Evaluation, Long> implements 
 	/**
 	 */
 	public List<EvaluationSummary> sumPromoter(Gauge gauge,Date beginDate, Date endDate) {
-		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
-		Date e = DateUtils.truncate(endDate,Calendar.DATE);
-		e =DateUtils.addDays(e,1);
+//		Date b = null;
+//		if (beginDate!=null)  {
+//			b = DateUtils.truncate(beginDate,Calendar.DATE);
+//		}
+//		Date e = null;
+//		if (endDate!=null) {
+//			e = DateUtils.truncate(endDate,Calendar.DATE);
+//			e =DateUtils.addDays(e,1);
+//		}
 		String jpql =
 				"select evaluation.promoter,count(evaluation.id) as count "+
-						"from Evaluation evaluation where evaluation.gauge=:gauge and evaluation.createDate>=:b and evaluation.createDate<:e "+
-						"group by evaluation.member order by count(evaluation.id) desc ";
+						"from Evaluation evaluation where evaluation.gauge=:gauge and evaluation.promoter is not null "+
+						"group by evaluation.promoter order by count(evaluation.id) desc ";
 
 		Query query = entityManager.createQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
-				setParameter("gauge", gauge).
-				setParameter("b", b).
-				setParameter("e", e);
+				setParameter("gauge", gauge);
 
 		List result = query.getResultList();
 		List<EvaluationSummary> data = new ArrayList<>();

@@ -246,6 +246,7 @@ public class BankcardController extends BaseController {
             String resp =  EntityUtils.toString(response.getEntity());
             JSONObject result = JSONObject.fromObject(resp);
 
+            System.out.println(result);
             if ("0".equals(result.getString("error_code"))) {
                 JSONObject inf = result.getJSONObject("result").getJSONObject("information");
                 if (!"1".equals(inf.getString("iscreditcard"))){
@@ -275,9 +276,10 @@ public class BankcardController extends BaseController {
                 } else {
                     bankcardService.save(bankcard);
                 }
+                System.out.println(bankcard);
                 if (member.getMobile()==null) {
                     Member m = memberService.findByMobile(data.get("mobile"));
-                    if (m==null) {
+                    if (m!=null) {
                         m.setUsername(null);
                         m.setMobile(null);
                         memberService.save(m);

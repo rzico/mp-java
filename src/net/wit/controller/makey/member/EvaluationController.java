@@ -67,10 +67,12 @@ public class EvaluationController extends BaseController {
     @RequestMapping(value = "/exists")
     @ResponseBody
     public Message exists(Long id,HttpServletRequest request) {
+        Member member = memberService.getCurrent();
         Gauge gauge = gaugeService.find(id);
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("evalStatus", Filter.Operator.eq, Evaluation.EvalStatus.paid));
         filters.add(new Filter("gauge", Filter.Operator.eq, gauge));
+        filters.add(new Filter("member", Filter.Operator.eq, member));
         List<Evaluation> data = evaluationService.findList(1,filters,null);
         EvaluationListModel model = new EvaluationListModel();
         model.bind(data.get(0));
