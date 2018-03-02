@@ -107,8 +107,8 @@ public class Kaga {
         data.put("vendor_name",vendor_name);
         data.put("mobile","1");
         data.put("game_id",game);
-        data.put("pc_redirect","http://weex.udzyw.com?home=true");
-        data.put("mo_redirect","http://weex.udzyw.com?home=true");
+        data.put("pc_redirect","http://weex.udzyw.com/?home=true");
+        data.put("mo_redirect","http://weex.udzyw.com/?home=true");
         String dataStr = JsonUtils.toJson(data);
         String hash = encrypt(key,dataStr);
         String resp = post(sessionURL+"?hash="+hash,dataStr);
