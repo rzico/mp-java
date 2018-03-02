@@ -66,7 +66,7 @@ public class NihtanController extends BaseController {
         List<GameListModel> data = new ArrayList<>();
         for (int i=0;i<sicboArr.size();i++) {
            JSONObject tb = sicboArr.getJSONObject(i);
-           if ("1".equals(tb.getString("active"))) {
+//           if ("0".equals(tb.getString("active"))) {
                GameListModel m = new GameListModel();
                m.setGame("Sicbo");
                m.setTable(tb.getString("table"));
@@ -82,14 +82,14 @@ public class NihtanController extends BaseController {
                String rng = "";
                for (int j = 0; j < ranges.size(); j++) {
                    JSONObject range = ranges.getJSONObject(j);
-                   if (range.getString("status").equals("1")) {
+//                   if (range.getString("status").equals("0")) {
                        rng = range.getString("min") + "-" + range.getString("max");
                        break;
-                   }
+//                   }
                }
                m.setRanges(rng);
                data.add(m);
-           }
+//           }
         }
 
 
@@ -99,7 +99,7 @@ public class NihtanController extends BaseController {
         JSONArray  pokerArr = poker.getJSONArray("tables");
         for (int i=0;i<pokerArr.size();i++) {
             JSONObject tb = pokerArr.getJSONObject(i);
-            if ("1".equals(tb.getString("active"))) {
+//            if ("0".equals(tb.getString("active"))) {
                 GameListModel m = new GameListModel();
                 m.setGame("Poker");
                 m.setTable(tb.getString("table"));
@@ -115,14 +115,14 @@ public class NihtanController extends BaseController {
                 String rng = "";
                 for (int j = 0; j < ranges.size(); j++) {
                     JSONObject range = ranges.getJSONObject(j);
-                    if (range.getString("status").equals("1")) {
+//                    if (range.getString("status").equals("0")) {
                         rng = range.getString("min") + "-" + range.getString("max");
                         break;
-                    }
+//                    }
                 }
                 m.setRanges(rng);
                 data.add(m);
-            }
+//            }
         }
 
 
@@ -132,7 +132,7 @@ public class NihtanController extends BaseController {
         JSONArray  tigerArr = tiger.getJSONArray("tables");
         for (int i=0;i<tigerArr.size();i++) {
             JSONObject tb = tigerArr.getJSONObject(i);
-            if ("1".equals(tb.getString("active"))) {
+//            if ("0".equals(tb.getString("active"))) {
                 GameListModel m = new GameListModel();
                 m.setGame("Dragon-Tiger");
                 m.setTable(tb.getString("table"));
@@ -148,14 +148,14 @@ public class NihtanController extends BaseController {
                 String rng = "";
                 for (int j = 0; j < ranges.size(); j++) {
                     JSONObject range = ranges.getJSONObject(j);
-                    if (range.getString("status").equals("1")) {
+//                    if (range.getString("status").equals("0")) {
                         rng = range.getString("min") + "-" + range.getString("max");
                         break;
-                    }
+//                    }
                 }
                 m.setRanges(rng);
                 data.add(m);
-            }
+//            }
         }
 
 
@@ -165,7 +165,7 @@ public class NihtanController extends BaseController {
         JSONArray  baccaratArr = baccarat.getJSONArray("tables");
         for (int i=0;i<baccaratArr.size();i++) {
             JSONObject tb = baccaratArr.getJSONObject(i);
-            if ("1".equals(tb.getString("active"))) {
+//            if ("0".equals(tb.getString("active"))) {
                 GameListModel m = new GameListModel();
                 m.setGame("Baccarat");
                 m.setTable(tb.getString("table"));
@@ -181,14 +181,14 @@ public class NihtanController extends BaseController {
                 String rng = "";
                 for (int j = 0; j < ranges.size(); j++) {
                     JSONObject range = ranges.getJSONObject(j);
-                    if (range.getString("status").equals("1")) {
+//                    if (range.getString("status").equals("0")) {
                         rng = range.getString("min") + "-" + range.getString("max");
                         break;
-                    }
+//                    }
                 }
                 m.setRanges(rng);
                 data.add(m);
-            }
+//            }
         }
 
         return Message.success(data,"获取成功");
