@@ -66,28 +66,30 @@ public class NihtanController extends BaseController {
         List<GameListModel> data = new ArrayList<>();
         for (int i=0;i<sicboArr.size();i++) {
            JSONObject tb = sicboArr.getJSONObject(i);
-           GameListModel m = new GameListModel();
-           m.setGame("Sicbo");
-           m.setTable(tb.getString("table"));
+           if ("1".equals(tb.getString("active"))) {
+               GameListModel m = new GameListModel();
+               m.setGame("Sicbo");
+               m.setTable(tb.getString("table"));
 //           JSONArray mts = tb.getJSONArray("maintenance");
-           m.setDealer("none");
+               m.setDealer("none");
 //           for (int j=0;j<mts.size();j++) {
 //               JSONObject mt = mts.getJSONObject(j);
 //               if (mt.getString("status").equals("1")) {
 //                   m.setDealer(mt.getString("division"));
 //               }
 //           }
-            JSONArray ranges = tb.getJSONArray("ranges");
-            String rng = "";
-            for (int j=0;j<ranges.size();j++) {
-                JSONObject range = ranges.getJSONObject(j);
-                if (range.getString("status").equals("1")) {
-                   rng = range.getString("min")+"-"+range.getString("max");
-                   break;
-                }
-            }
-            m.setRanges(rng);
-            data.add(m);
+               JSONArray ranges = tb.getJSONArray("ranges");
+               String rng = "";
+               for (int j = 0; j < ranges.size(); j++) {
+                   JSONObject range = ranges.getJSONObject(j);
+                   if (range.getString("status").equals("1")) {
+                       rng = range.getString("min") + "-" + range.getString("max");
+                       break;
+                   }
+               }
+               m.setRanges(rng);
+               data.add(m);
+           }
         }
 
 
@@ -97,28 +99,30 @@ public class NihtanController extends BaseController {
         JSONArray  pokerArr = poker.getJSONArray("tables");
         for (int i=0;i<pokerArr.size();i++) {
             JSONObject tb = pokerArr.getJSONObject(i);
-            GameListModel m = new GameListModel();
-            m.setGame("Poker");
-            m.setTable(tb.getString("table"));
+            if ("1".equals(tb.getString("active"))) {
+                GameListModel m = new GameListModel();
+                m.setGame("Poker");
+                m.setTable(tb.getString("table"));
 //            JSONArray mts = tb.getJSONArray("maintenance");
-            m.setDealer("none");
+                m.setDealer("none");
 //            for (int j=0;j<mts.size();j++) {
 //                JSONObject mt = mts.getJSONObject(j);
 //                if (mt.getString("status").equals("1")) {
 //                    m.setDealer(mt.getString("division"));
 //                }
 //            }
-            JSONArray ranges = tb.getJSONArray("ranges");
-            String rng = "";
-            for (int j=0;j<ranges.size();j++) {
-                JSONObject range = ranges.getJSONObject(j);
-                if (range.getString("status").equals("1")) {
-                    rng = range.getString("min")+"-"+range.getString("max");
-                    break;
+                JSONArray ranges = tb.getJSONArray("ranges");
+                String rng = "";
+                for (int j = 0; j < ranges.size(); j++) {
+                    JSONObject range = ranges.getJSONObject(j);
+                    if (range.getString("status").equals("1")) {
+                        rng = range.getString("min") + "-" + range.getString("max");
+                        break;
+                    }
                 }
+                m.setRanges(rng);
+                data.add(m);
             }
-            m.setRanges(rng);
-            data.add(m);
         }
 
 
@@ -128,28 +132,30 @@ public class NihtanController extends BaseController {
         JSONArray  tigerArr = tiger.getJSONArray("tables");
         for (int i=0;i<tigerArr.size();i++) {
             JSONObject tb = tigerArr.getJSONObject(i);
-            GameListModel m = new GameListModel();
-            m.setGame("Dragon-Tiger");
-            m.setTable(tb.getString("table"));
+            if ("1".equals(tb.getString("active"))) {
+                GameListModel m = new GameListModel();
+                m.setGame("Dragon-Tiger");
+                m.setTable(tb.getString("table"));
 //            JSONArray mts = tb.getJSONArray("maintenance");
-            m.setDealer("none");
+                m.setDealer("none");
 //            for (int j=0;j<mts.size();j++) {
 //                JSONObject mt = mts.getJSONObject(j);
 //                if (mt.getString("status").equals("1")) {
 //                    m.setDealer(mt.getString("division"));
 //                }
 //            }
-            JSONArray ranges = tb.getJSONArray("ranges");
-            String rng = "";
-            for (int j=0;j<ranges.size();j++) {
-                JSONObject range = ranges.getJSONObject(j);
-                if (range.getString("status").equals("1")) {
-                    rng = range.getString("min")+"-"+range.getString("max");
-                    break;
+                JSONArray ranges = tb.getJSONArray("ranges");
+                String rng = "";
+                for (int j = 0; j < ranges.size(); j++) {
+                    JSONObject range = ranges.getJSONObject(j);
+                    if (range.getString("status").equals("1")) {
+                        rng = range.getString("min") + "-" + range.getString("max");
+                        break;
+                    }
                 }
+                m.setRanges(rng);
+                data.add(m);
             }
-            m.setRanges(rng);
-            data.add(m);
         }
 
 
@@ -159,28 +165,30 @@ public class NihtanController extends BaseController {
         JSONArray  baccaratArr = baccarat.getJSONArray("tables");
         for (int i=0;i<baccaratArr.size();i++) {
             JSONObject tb = baccaratArr.getJSONObject(i);
-            GameListModel m = new GameListModel();
-            m.setGame("Baccarat");
-            m.setTable(tb.getString("table"));
+            if ("1".equals(tb.getString("active"))) {
+                GameListModel m = new GameListModel();
+                m.setGame("Baccarat");
+                m.setTable(tb.getString("table"));
 //            JSONArray mts = tb.getJSONArray("maintenance");
-            m.setDealer("none");
+                m.setDealer("none");
 //            for (int j=0;j<mts.size();j++) {
 //                JSONObject mt = mts.getJSONObject(j);
 //                if (mt.getString("status").equals("1")) {
 //                    m.setDealer(mt.getString("division"));
 //                }
 //            }
-            JSONArray ranges = tb.getJSONArray("ranges");
-            String rng = "";
-            for (int j=0;j<ranges.size();j++) {
-                JSONObject range = ranges.getJSONObject(j);
-                if (range.getString("status").equals("1")) {
-                    rng = range.getString("min")+"-"+range.getString("max");
-                    break;
+                JSONArray ranges = tb.getJSONArray("ranges");
+                String rng = "";
+                for (int j = 0; j < ranges.size(); j++) {
+                    JSONObject range = ranges.getJSONObject(j);
+                    if (range.getString("status").equals("1")) {
+                        rng = range.getString("min") + "-" + range.getString("max");
+                        break;
+                    }
                 }
+                m.setRanges(rng);
+                data.add(m);
             }
-            m.setRanges(rng);
-            data.add(m);
         }
 
         return Message.success(data,"获取成功");

@@ -28,7 +28,7 @@ public class Crypto {
     public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
     public static String sessionURL = "http://api.wapceo.com/api/session";
     public static String gameListURL = "http://api.wapceo.com/api/game/list";
-    public static String videoListURL = "http://video-list.neo-nihtan.com/video/list";
+    public static String videoListURL = "http://video-list.wapceo.com/video/list";
 
     public static String encrypt(String key, String data) {
         String hash = "";
