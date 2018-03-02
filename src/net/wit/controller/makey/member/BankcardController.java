@@ -183,7 +183,7 @@ public class BankcardController extends BaseController {
     /**
      *  绑定银行卡
      */
-    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    @RequestMapping(value = "/submit")
     @ResponseBody
     public Message submit(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
