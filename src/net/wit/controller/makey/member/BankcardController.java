@@ -5,12 +5,14 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
 import net.wit.service.*;
+import net.wit.util.Base64Util;
 import net.wit.util.HttpUtils;
 import net.wit.util.JsonUtils;
 import net.wit.util.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,9 +64,10 @@ public class BankcardController extends BaseController {
      */
     @RequestMapping(value = "/query")
     @ResponseBody
-    public Message query(HttpServletRequest request){
-       String banknum = rsaService.decryptParameter("banknum", request);
-       rsaService.removePrivateKey(request);
+    public Message query(String banknum,HttpServletRequest request){
+        banknum = Base64Util.decode(banknum);
+        // rsaService.decryptParameter("banknum", request);
+//        rsaService.removePrivateKey(request);
         if (banknum==null) {
             return Message.error("银行卡号解密为空");
         }
@@ -97,9 +100,10 @@ public class BankcardController extends BaseController {
      */
     @RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
     @ResponseBody
-    public Message sendMobile(HttpServletRequest request) {
-        String m = rsaService.decryptParameter("mobile", request);
-        rsaService.removePrivateKey(request);
+    public Message sendMobile(String mobile,HttpServletRequest request) {
+        String m = Base64Util.decode(mobile);
+//        String m = rsaService.decryptParameter("mobile", request);
+//        rsaService.removePrivateKey(request);
         if (m==null) {
             Member member = memberService.getCurrent();
             if (member!=null & member.getMobile()!=null) {
@@ -129,7 +133,7 @@ public class BankcardController extends BaseController {
      */
     @RequestMapping(value = "/captcha", method = RequestMethod.POST)
     @ResponseBody
-    public Message captcha(HttpServletRequest request){
+    public Message captcha(String captcha,HttpServletRequest request){
         Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
@@ -140,8 +144,9 @@ public class BankcardController extends BaseController {
             if (!member.getMobile().equals(safeKey.getKey())) {
                 return Message.error("无效验证码");
             }
-            String captcha = rsaService.decryptParameter("captcha", request);
-            rsaService.removePrivateKey(request);
+            captcha = Base64Util.decode(captcha);
+//            String captcha = rsaService.decryptParameter("captcha", request);
+//            rsaService.removePrivateKey(request);
             if (member==null) {
                 return Message.error("无效验证码");
             }
@@ -185,8 +190,9 @@ public class BankcardController extends BaseController {
                 return Message.error("无效验证码");
             }
 
-            String mima = rsaService.decryptValue(body, request);
-            rsaService.removePrivateKey(request);
+            String mima = Base64Util.decode(body);
+//            String mima = rsaService.decryptValue(body, request);
+//            rsaService.removePrivateKey(request);
 
             if (mima==null) {
                 return Message.error("数据解密失败");
