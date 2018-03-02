@@ -103,7 +103,7 @@ public class BankcardController extends BaseController {
      * 手机验证码登录时，发送验证码
      * mobile 手机号
      */
-    @RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
+    @RequestMapping(value = "/send_mobile")
     @ResponseBody
     public Message sendMobile(String mobile,HttpServletRequest request) {
         String m = null;
