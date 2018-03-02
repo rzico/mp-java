@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 
@@ -65,7 +66,11 @@ public class BankcardController extends BaseController {
     @RequestMapping(value = "/query")
     @ResponseBody
     public Message query(String banknum,HttpServletRequest request){
-        banknum = Base64Util.decode(banknum);
+        try {
+            banknum = new String(org.apache.commons.codec.binary.Base64.decodeBase64(banknum),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         // rsaService.decryptParameter("banknum", request);
 //        rsaService.removePrivateKey(request);
         if (banknum==null) {
@@ -101,7 +106,12 @@ public class BankcardController extends BaseController {
     @RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
     @ResponseBody
     public Message sendMobile(String mobile,HttpServletRequest request) {
-        String m = Base64Util.decode(mobile);
+        String m = null;
+        try {
+            m = new String(org.apache.commons.codec.binary.Base64.decodeBase64(mobile),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 //        String m = rsaService.decryptParameter("mobile", request);
 //        rsaService.removePrivateKey(request);
         if (m==null) {
@@ -144,7 +154,11 @@ public class BankcardController extends BaseController {
             if (!member.getMobile().equals(safeKey.getKey())) {
                 return Message.error("无效验证码");
             }
-            captcha = Base64Util.decode(captcha);
+            try {
+                captcha = new String(org.apache.commons.codec.binary.Base64.decodeBase64(captcha),"utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 //            String captcha = rsaService.decryptParameter("captcha", request);
 //            rsaService.removePrivateKey(request);
             if (member==null) {
@@ -190,7 +204,13 @@ public class BankcardController extends BaseController {
                 return Message.error("无效验证码");
             }
 
-            String mima = Base64Util.decode(body);
+            String mima = null;
+            try {
+                mima = new String(org.apache.commons.codec.binary.Base64.decodeBase64(body),"utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
 //            String mima = rsaService.decryptValue(body, request);
 //            rsaService.removePrivateKey(request);
 
