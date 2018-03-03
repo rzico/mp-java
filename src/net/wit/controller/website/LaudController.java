@@ -1,4 +1,4 @@
-package net.wit.controller.applet;
+package net.wit.controller.website;
 
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
@@ -26,8 +26,8 @@ import java.util.Map;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("appletLaudController")
-@RequestMapping("/applet/laud")
+@Controller("websiteLaudController")
+@RequestMapping("/website/laud")
 public class LaudController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
@@ -68,6 +68,7 @@ public class LaudController extends BaseController {
    }
 
 
+
     /**
      *  点赞情况
      */
@@ -96,5 +97,6 @@ public class LaudController extends BaseController {
         data.put("count",count);
         return Message.bind(data,request);
     }
+
 
 }

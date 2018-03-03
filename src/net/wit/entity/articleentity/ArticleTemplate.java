@@ -1,4 +1,4 @@
-package net.wit.entity;
+package net.wit.entity.articleentity;
 
 import java.util.List;
 
@@ -14,6 +14,9 @@ public class ArticleTemplate {
 
     //文章内容
     List<ArticleContent> templates;
+
+    //文章背景音乐
+    ArticleMusic music;
 
     public String getTitle() {
         return Title;
@@ -37,5 +40,13 @@ public class ArticleTemplate {
 
     public void setTemplates(List<ArticleContent> templates) {
         this.templates = templates;
+    }
+
+    public ArticleMusic getMusic() {
+        return music;
+    }
+
+    public void setMusic(ArticleMusic music) {
+        this.music = music;
     }
 }

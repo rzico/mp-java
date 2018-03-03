@@ -2,9 +2,8 @@ package net.wit.controller.applet;
 
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleReviewModel;
+import net.wit.controller.model.ArticleListModel;
 import net.wit.entity.Article;
-import net.wit.entity.ArticleReview;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +22,9 @@ import java.util.List;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("appletReviewController")
-@RequestMapping("/applet/review")
-public class ReviewController extends BaseController {
+@Controller("appletRecommendController")
+@RequestMapping("/applet/recommend")
+public class RecommendController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
@@ -42,9 +41,6 @@ public class ReviewController extends BaseController {
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
 
-    @Resource(name = "articleReviewServiceImpl")
-    private ArticleReviewService articleReviewService;
-
     /**
      *  评论列表,带分页
      */
@@ -56,11 +52,11 @@ public class ReviewController extends BaseController {
             return Message.error("无效文章编号");
         }
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("article", Filter.Operator.eq,article));
+        filters.add(new Filter("member", Filter.Operator.eq,article.getMember()));
         pageable.setFilters(filters);
-        Page<ArticleReview> page = articleReviewService.findPage(null,null,pageable);
+        Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(ArticleReviewModel.bindList(page.getContent()));
+        model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

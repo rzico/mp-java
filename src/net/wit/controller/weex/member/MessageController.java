@@ -142,7 +142,9 @@ public class MessageController extends BaseController {
             }
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.share)) {
-            url = "file://view/article/preview.js?articleId="+message.getId()+"&publish=true";
+            Map<String,Object> data = JsonUtils.toObject(message.getExt(),Map.class);
+            String oid = data.get("id").toString();
+            url = "file://view/article/preview.js?articleId="+oid+"&publish=true";
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.message)) {
             if (message.getExt()!=null) {
