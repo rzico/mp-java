@@ -238,7 +238,7 @@ public class EvaluationController extends BaseController {
         }
 
         List<EvaluationSummary> data = evaluationService.sumPromoter(gauge,null,null);
-        return Message.bind(data,request);
+        return Message.bind(PromoterListModel.bindList(data),request);
     }
 
     /**

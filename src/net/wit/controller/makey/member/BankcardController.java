@@ -106,14 +106,20 @@ public class BankcardController extends BaseController {
     @RequestMapping(value = "/send_mobile")
     @ResponseBody
     public Message sendMobile(String mobile,HttpServletRequest request) {
+
         String m = null;
-        try {
-            m = new String(org.apache.commons.codec.binary.Base64.decodeBase64(mobile),"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+
+        if (mobile!=null) {
+            try {
+                m = new String(org.apache.commons.codec.binary.Base64.decodeBase64(mobile), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
+
 //        String m = rsaService.decryptParameter("mobile", request);
 //        rsaService.removePrivateKey(request);
+
         if (m==null) {
             Member member = memberService.getCurrent();
             if (member!=null & member.getMobile()!=null) {
@@ -122,6 +128,7 @@ public class BankcardController extends BaseController {
                 return Message.error("无效手机号");
             }
         }
+
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
 
