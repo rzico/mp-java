@@ -28,8 +28,8 @@ import java.util.*;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("makeyBankcardController")
-@RequestMapping("/makey/member/bankcard")
+@Controller("appletBankcardController")
+@RequestMapping("/applet/member/bankcard")
 public class BankcardController extends BaseController {
 
     private String queryApi="http://api43.market.alicloudapi.com";

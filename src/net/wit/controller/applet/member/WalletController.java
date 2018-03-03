@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 
-@Controller("makeyMemberWalletController")
-@RequestMapping("/makey/member/wallet")
+@Controller("appletMemberWalletController")
+@RequestMapping("/applet/member/wallet")
 public class WalletController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
