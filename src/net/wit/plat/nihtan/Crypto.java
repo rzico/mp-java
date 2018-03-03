@@ -103,7 +103,12 @@ public class Crypto {
     public static String getSession(String ip,Member member) {
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
-        data.put("user_name",member.getUsername());
+
+        if (member.getNickName()!=null) {
+            data.put("user_name", member.getNickName());
+        } else {
+            data.put("user_name", member.getUsername());
+        }
         data.put("user_ip",ip);
         data.put("vendor_name",vendor_name);
         data.put("pc_redirect","http://weex.udzyw.com/?home=true");

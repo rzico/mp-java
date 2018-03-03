@@ -102,7 +102,12 @@ public class Kaga {
     public static String getSession(String game,String ip,Member member) {
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
-        data.put("user_name",member.getUsername());
+
+        if (member.getNickName()!=null) {
+            data.put("user_name", member.getNickName());
+        } else {
+            data.put("user_name", member.getUsername());
+        }
         data.put("user_ip",ip);
         data.put("vendor_name",vendor_name);
         data.put("mobile","1");
