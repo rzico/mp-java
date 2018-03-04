@@ -2,12 +2,15 @@ package net.wit.controller.weex.member;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.GameListModel;
+import net.wit.entity.GameList;
 import net.wit.entity.Member;
 import net.wit.plat.nihtan.Crypto;
 import net.wit.plat.nihtan.Kaga;
+import net.wit.service.GameListService;
 import net.wit.service.MemberService;
 import net.wit.util.JsonUtils;
 import org.springframework.stereotype.Controller;
@@ -34,6 +37,9 @@ public class KagaController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
+    @Resource(name = "gameListServiceImpl")
+    private GameListService gameListService;
+
     /**
      *  游戏列表
      */
@@ -42,7 +48,40 @@ public class KagaController extends BaseController {
     @ResponseBody
     public Message gameList(HttpServletRequest request,ModelMap model) {
         String resp = Kaga.gameList();
-        Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
+        System.out.println(resp);
+        JSONObject jsonObject = JSONObject.fromObject(resp);
+
+        JSONArray  games = jsonObject.getJSONArray("games");
+        List<GameListModel> data = new ArrayList<>();
+        for (int i=0;i<games.size();i++) {
+            JSONObject tb = games.getJSONObject(i);
+            GameListModel m = new GameListModel();
+            m.setGame(tb.getString("gameId"));
+            m.setLogo(tb.getString("iconURLPrefix")+"&type=square");
+            data.add(m);
+        }
+        int i= 0;
+        for (GameListModel g:data) {
+            i = i+1;
+            GameList gl = gameListService.find(GameList.Type.kage,g.getGame(),"#");
+            if (gl==null) {
+                gl = new GameList();
+                gl.setType(GameList.Type.kage);
+                gl.setOrders(i);
+                gl.setGame(g.getGame());
+                gl.setTableNo("#");
+                gl.setRanges("#");
+                gl.setStatus(GameList.Status.enabled);
+                gl.setName(g.getGame());
+                gl.setLogo(g.getLogo());
+                gameListService.save(gl);
+            } else {
+                gl.setOrders(i);
+                gl.setLogo(g.getLogo());
+                gameListService.update(gl);
+            }
+        }
+
         return Message.success(data,"获取成功");
     }
     /**
@@ -53,19 +92,13 @@ public class KagaController extends BaseController {
     @ResponseBody
     public Message list(HttpServletRequest request,ModelMap model){
         String resp = Kaga.gameList();
-        System.out.println(resp);
-        JSONObject jsonObject = JSONObject.fromObject(resp);
+        List<Filter> filters = new ArrayList<Filter>();
 
-        JSONArray  games = jsonObject.getJSONArray("games");
-        List<GameListModel> data = new ArrayList<>();
-        for (int i=0;i<games.size();i++) {
-           JSONObject tb = games.getJSONObject(i);
-           GameListModel m = new GameListModel();
-           m.setGame(tb.getString("gameId"));
-           m.setLogo(tb.getString("iconURLPrefix")+"&type=square");
-           data.add(m);
-        }
-        return Message.success(data,"获取成功");
+        filters.add(new Filter("status", Filter.Operator.eq, GameList.Status.enabled));
+        filters.add(new Filter("type", Filter.Operator.eq, GameList.Type.kage));
+        List<GameList> gl = gameListService.findList(null,null,filters,null);
+
+        return Message.success(GameListModel.bindList(gl),"获取成功");
     }
 
     /**

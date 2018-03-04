@@ -3,6 +3,7 @@ package net.wit.plat.nihtan;
 import net.wit.entity.Member;
 import net.wit.util.JsonUtils;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -17,6 +18,7 @@ import org.springframework.util.Assert;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,6 +101,63 @@ public class Kaga {
         return result;
     }
 
+    /**
+     * 去掉url中的路径，留下请求参数部分
+     * @param strURL url地址
+     * @return url请求参数部分
+     * @author lzf
+     */
+    private static String TruncateUrlPage(String strURL){
+        String strAllParam=null;
+        String[] arrSplit=null;
+        strURL=strURL.trim();
+        arrSplit=strURL.split("[?]");
+        if(strURL.length()>1){
+            if(arrSplit.length>1){
+                for (int i=1;i<arrSplit.length;i++){
+                    strAllParam = arrSplit[i];
+                }
+            }
+        }
+        return strAllParam;
+    }
+
+    /**
+     * 解析出url参数中的键值对
+     * 如 "index.jsp?Action=del&id=123"，解析出Action:del,id:123存入map中
+     * @param URL  url地址
+     * @return  url请求参数部分
+     * @author lzf
+     */
+    public static Map<String, String> urlSplit(String URL){
+        Map<String, String> mapRequest = new HashMap<String, String>();
+        String[] arrSplit=null;
+        String strUrlParam=TruncateUrlPage(URL);
+        if(strUrlParam==null){
+            return mapRequest;
+        }
+        arrSplit=strUrlParam.split("[&]");
+        for(String strSplit:arrSplit){
+            String[] arrSplitEqual=null;
+            arrSplitEqual= strSplit.split("[=]");
+            //解析出键值
+            if(arrSplitEqual.length>1){
+                //正确解析
+                mapRequest.put(arrSplitEqual[0], arrSplitEqual[1]);
+            }else{
+                if(arrSplitEqual[0]!=""){
+                    //只有参数没有值，不加入
+                    mapRequest.put(arrSplitEqual[0], "");
+                }
+            }
+        }
+        return mapRequest;
+    }
+
+    public static String getQueryString(String url, String name) {
+        return urlSplit(url).get(name);
+    }
+
     public static String getSession(String game,String ip,Member member) {
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
@@ -112,12 +171,24 @@ public class Kaga {
         data.put("vendor_name",vendor_name);
         data.put("mobile","1");
         data.put("game_id",game);
-        data.put("pc_redirect","http://weex.udzyw.com/?home=true");
-        data.put("mo_redirect","http://weex.udzyw.com/?home=true");
+        data.put("pc_redirect","http://weex.udzyw.com/home");
+        data.put("mo_redirect","http://weex.udzyw.com/home");
         String dataStr = JsonUtils.toJson(data);
+        System.out.println(dataStr);
         String hash = encrypt(key,dataStr);
         String resp = post(sessionURL+"?hash="+hash,dataStr);
-        return resp;
+        System.out.println(resp);
+        String url = "https://gmtestcdn.kga8.com/?p="+
+                URLEncoder.encode(getQueryString(resp,"p"))+"&g="+
+                URLEncoder.encode(getQueryString(resp,"g"))+"&cr="+
+                URLEncoder.encode(getQueryString(resp,"cr"))+"&t="+
+                URLEncoder.encode(getQueryString(resp,"t"))+"&u="+
+                URLEncoder.encode(getQueryString(resp,"u"))+"&loc="+
+                URLEncoder.encode(getQueryString(resp,"loc"))+"&ak="+
+                URLEncoder.encode(getQueryString(resp,"ak"))+"&l="+
+                URLEncoder.encode(getQueryString(resp,"l"));
+
+        return url;
     }
 
 
@@ -133,6 +204,17 @@ public class Kaga {
 
 
     public static void main(String[] args) throws Exception {
-        Kaga.gameList();
+        String resp = "https://gmtestcdn.kga8.com/?p=NIHTANZH&g=Stonehenge&cr=CNY&t=9da062f2-ac08-4d78-995c-a5c626c8843e&u=13860431130&loc=zh-cn&ak=833E33CE84EE4719AD8763C911719C4A&l=exit";
+        String url = "https://gmtestcdn.kga8.com/?p="+
+                URLEncoder.encode(getQueryString(resp,"p"))+"&g="+
+                URLEncoder.encode(getQueryString(resp,"g"))+"&cr="+
+                URLEncoder.encode(getQueryString(resp,"cr"))+"&t="+
+                URLEncoder.encode(getQueryString(resp,"t"))+"&u="+
+                URLEncoder.encode(getQueryString(resp,"u"))+"&loc="+
+                URLEncoder.encode(getQueryString(resp,"loc"))+"&ak="+
+                URLEncoder.encode(getQueryString(resp,"ak"))+"&l="+
+                URLEncoder.encode(getQueryString(resp,"l"));
+        System.out.println(url);
+
     }
 }

@@ -2,13 +2,16 @@ package net.wit.controller.weex.member;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.GameListModel;
 import net.wit.controller.model.OccupationModel;
+import net.wit.entity.GameList;
 import net.wit.entity.Member;
 import net.wit.entity.Occupation;
 import net.wit.plat.nihtan.Crypto;
+import net.wit.service.GameListService;
 import net.wit.service.MemberService;
 import net.wit.service.OccupationService;
 import net.wit.util.JsonUtils;
@@ -38,6 +41,9 @@ public class NihtanController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
+    @Resource(name = "gameListServiceImpl")
+    private GameListService gameListService;
+
     /**
      *  游戏列表
      */
@@ -47,17 +53,7 @@ public class NihtanController extends BaseController {
     public Message gameList(HttpServletRequest request,ModelMap model) {
         String resp = Crypto.gameList();
         System.out.println("========="+resp);
-        Map<String,Object> data = JsonUtils.toObject(resp,Map.class);
-        return Message.success(data,"获取成功");
-    }
-    /**
-     *  游戏列表
-     */
 
-    @RequestMapping(value = "/list")
-    @ResponseBody
-    public Message list(HttpServletRequest request,ModelMap model){
-        String resp = Crypto.gameList();
         JSONObject jsonObject = JSONObject.fromObject(resp);
 
         JSONObject sicbo = jsonObject.getJSONObject("Sicbo");
@@ -65,30 +61,36 @@ public class NihtanController extends BaseController {
         JSONArray  sicboArr = sicbo.getJSONArray("tables");
         List<GameListModel> data = new ArrayList<>();
         for (int i=0;i<sicboArr.size();i++) {
-           JSONObject tb = sicboArr.getJSONObject(i);
+            JSONObject tb = sicboArr.getJSONObject(i);
 //           if ("0".equals(tb.getString("active"))) {
-               GameListModel m = new GameListModel();
-               m.setGame("Sicbo");
-               m.setTable(tb.getString("table"));
+            GameListModel m = new GameListModel();
+            m.setGame("Sicbo");
+            m.setTable(tb.getString("table"));
+            if (tb.containsKey("type")) {
+                m.setType(tb.getString("type"));
+            } else {
+                m.setType("n");
+            }
+
 //           JSONArray mts = tb.getJSONArray("maintenance");
-               m.setDealer("none");
+            m.setDealer("none");
 //           for (int j=0;j<mts.size();j++) {
 //               JSONObject mt = mts.getJSONObject(j);
 //               if (mt.getString("status").equals("1")) {
 //                   m.setDealer(mt.getString("division"));
 //               }
 //           }
-               JSONArray ranges = tb.getJSONArray("ranges");
-               String rng = "";
-               for (int j = 0; j < ranges.size(); j++) {
-                   JSONObject range = ranges.getJSONObject(j);
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j = 0; j < ranges.size(); j++) {
+                JSONObject range = ranges.getJSONObject(j);
 //                   if (range.getString("status").equals("0")) {
-                       rng = range.getString("min") + "-" + range.getString("max");
-                       break;
+                rng = range.getString("min") + "-" + range.getString("max");
+                break;
 //                   }
-               }
-               m.setRanges(rng);
-               data.add(m);
+            }
+            m.setRanges(rng);
+            data.add(m);
 //           }
         }
 
@@ -100,32 +102,36 @@ public class NihtanController extends BaseController {
         for (int i=0;i<pokerArr.size();i++) {
             JSONObject tb = pokerArr.getJSONObject(i);
 //            if ("0".equals(tb.getString("active"))) {
-                GameListModel m = new GameListModel();
-                m.setGame("Poker");
-                m.setTable(tb.getString("table"));
+            GameListModel m = new GameListModel();
+            m.setGame("Poker");
+            m.setTable(tb.getString("table"));
+            if (tb.containsKey("type")) {
+                m.setType(tb.getString("type"));
+            } else {
+                m.setType("n");
+            }
+
 //            JSONArray mts = tb.getJSONArray("maintenance");
-                m.setDealer("none");
+            m.setDealer("none");
 //            for (int j=0;j<mts.size();j++) {
 //                JSONObject mt = mts.getJSONObject(j);
 //                if (mt.getString("status").equals("1")) {
 //                    m.setDealer(mt.getString("division"));
 //                }
 //            }
-                JSONArray ranges = tb.getJSONArray("ranges");
-                String rng = "";
-                for (int j = 0; j < ranges.size(); j++) {
-                    JSONObject range = ranges.getJSONObject(j);
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j = 0; j < ranges.size(); j++) {
+                JSONObject range = ranges.getJSONObject(j);
 //                    if (range.getString("status").equals("0")) {
-                        rng = range.getString("min") + "-" + range.getString("max");
-                        break;
+                rng = range.getString("min") + "-" + range.getString("max");
+                break;
 //                    }
-                }
-                m.setRanges(rng);
-                data.add(m);
+            }
+            m.setRanges(rng);
+            data.add(m);
 //            }
         }
-
-
 
         JSONObject tiger = jsonObject.getJSONObject("Dragon-Tiger");
 
@@ -133,28 +139,33 @@ public class NihtanController extends BaseController {
         for (int i=0;i<tigerArr.size();i++) {
             JSONObject tb = tigerArr.getJSONObject(i);
 //            if ("0".equals(tb.getString("active"))) {
-                GameListModel m = new GameListModel();
-                m.setGame("Dragon-Tiger");
-                m.setTable(tb.getString("table"));
+            GameListModel m = new GameListModel();
+            m.setGame("Dragon-Tiger");
+            m.setTable(tb.getString("table"));
+            if (tb.containsKey("type")) {
+                m.setType(tb.getString("type"));
+            } else {
+                m.setType("n");
+            }
 //            JSONArray mts = tb.getJSONArray("maintenance");
-                m.setDealer("none");
+            m.setDealer("none");
 //            for (int j=0;j<mts.size();j++) {
 //                JSONObject mt = mts.getJSONObject(j);
 //                if (mt.getString("status").equals("1")) {
 //                    m.setDealer(mt.getString("division"));
 //                }
 //            }
-                JSONArray ranges = tb.getJSONArray("ranges");
-                String rng = "";
-                for (int j = 0; j < ranges.size(); j++) {
-                    JSONObject range = ranges.getJSONObject(j);
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j = 0; j < ranges.size(); j++) {
+                JSONObject range = ranges.getJSONObject(j);
 //                    if (range.getString("status").equals("0")) {
-                        rng = range.getString("min") + "-" + range.getString("max");
-                        break;
+                rng = range.getString("min") + "-" + range.getString("max");
+                break;
 //                    }
-                }
-                m.setRanges(rng);
-                data.add(m);
+            }
+            m.setRanges(rng);
+            data.add(m);
 //            }
         }
 
@@ -166,32 +177,103 @@ public class NihtanController extends BaseController {
         for (int i=0;i<baccaratArr.size();i++) {
             JSONObject tb = baccaratArr.getJSONObject(i);
 //            if ("0".equals(tb.getString("active"))) {
-                GameListModel m = new GameListModel();
-                m.setGame("Baccarat");
-                m.setTable(tb.getString("table"));
+            GameListModel m = new GameListModel();
+            m.setGame("Baccarat");
+            m.setTable(tb.getString("table"));
+            if (tb.containsKey("type")) {
+                m.setType(tb.getString("type"));
+            } else {
+                m.setType("n");
+            }
+
 //            JSONArray mts = tb.getJSONArray("maintenance");
-                m.setDealer("none");
+            m.setDealer("none");
 //            for (int j=0;j<mts.size();j++) {
 //                JSONObject mt = mts.getJSONObject(j);
 //                if (mt.getString("status").equals("1")) {
 //                    m.setDealer(mt.getString("division"));
 //                }
 //            }
-                JSONArray ranges = tb.getJSONArray("ranges");
-                String rng = "";
-                for (int j = 0; j < ranges.size(); j++) {
-                    JSONObject range = ranges.getJSONObject(j);
+            JSONArray ranges = tb.getJSONArray("ranges");
+            String rng = "";
+            for (int j = 0; j < ranges.size(); j++) {
+                JSONObject range = ranges.getJSONObject(j);
 //                    if (range.getString("status").equals("0")) {
-                        rng = range.getString("min") + "-" + range.getString("max");
-                        break;
+                rng = range.getString("min") + "-" + range.getString("max");
+                break;
 //                    }
-                }
-                m.setRanges(rng);
-                data.add(m);
+            }
+            m.setRanges(rng);
+            data.add(m);
 //            }
         }
 
-        return Message.success(data,"获取成功");
+        int i= 0;
+        for (GameListModel g:data) {
+            i = i+1;
+            GameList gl = gameListService.find(GameList.Type.nihtan,g.getGame(),g.getTable());
+            if (gl==null) {
+                gl = new GameList();
+                gl.setType(GameList.Type.nihtan);
+                gl.setOrders(i);
+                gl.setGame(g.getGame());
+                gl.setTableNo(g.getTable());
+                gl.setRanges(g.getRanges());
+                gl.setStatus(GameList.Status.enabled);
+                if (gl.getGame().equals("Baccarat")) {
+                    if ("r".equals(g.getType())) {
+                        gl.setName("常规百家乐");
+                    } else
+                    if ("b".equals(g.getType())) {
+                        gl.setName("奖金百家乐");
+                    } else
+                    if ("s".equals(g.getType())) {
+                        gl.setName("超级六");
+                    } else {
+                        gl.setName("百家乐");
+                    }
+                } else
+                if (gl.getGame().equals("Poker")) {
+                    if ("r".equals(g.getType())) {
+                        gl.setName("常规扑克");
+                    } else
+                    if ("b".equals(g.getType())) {
+                        gl.setName("奖金扑克");
+                    } else {
+                        gl.setName("德州扑克");
+                    }
+                } else
+                if (gl.getGame().equals("Dragon-Tiger")) {
+                    gl.setName("龙虎");
+                } else
+                if (gl.getGame().equals("Poker")) {
+                    gl.setName("骰宝");
+                }
+                gameListService.save(gl);
+            } else {
+                gl.setOrders(i);
+                gl.setRanges(g.getRanges());
+                gameListService.update(gl);
+            }
+        }
+        Map<String,Object> data11 = JsonUtils.toObject(resp,Map.class);
+        return Message.success(data11,"获取成功");
+    }
+
+    /**
+     *  游戏列表
+     */
+
+    @RequestMapping(value = "/list")
+    @ResponseBody
+    public Message list(HttpServletRequest request,ModelMap model){
+        List<Filter> filters = new ArrayList<Filter>();
+
+        filters.add(new Filter("status", Filter.Operator.eq, GameList.Status.enabled));
+        filters.add(new Filter("type", Filter.Operator.eq, GameList.Type.nihtan));
+        List<GameList> gl = gameListService.findList(null,null,filters,null);
+
+        return Message.success(GameListModel.bindList(gl),"获取成功");
     }
 
     /**
@@ -223,7 +305,11 @@ public class NihtanController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
         params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?nihtan="+data.get("token")+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
-        params.put("video",video.get(game.replace("-","_")+"_"+table));
+        if (video.containsKey(video.get(game.replace("-","_")+"_"+table))) {
+            params.put("video", video.get(game.replace("-", "_") + "_" + table));
+        } else {
+            return Message.error("没有获取视频数据");
+        }
         System.out.println(params);
         return Message.success(params,"获取成功");
 

@@ -1,9 +1,7 @@
 package net.wit.controller.model;
 
 import net.sf.json.JSONObject;
-import net.wit.entity.Goods;
-import net.wit.entity.Member;
-import net.wit.entity.Product;
+import net.wit.entity.*;
 import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
@@ -15,6 +13,8 @@ import java.util.Map;
 public class GameListModel extends BaseModel implements Serializable {
     /** 名称 */
     private String game;
+    /** 类型 */
+    private String type;
     /** 桌号 */
     private String table;
     /** 头像 */
@@ -64,13 +64,30 @@ public class GameListModel extends BaseModel implements Serializable {
         this.ranges = ranges;
     }
 
-    public List<GameListModel> bind(String game, String json) {
-        List<GameListModel> games = new ArrayList<>();
-        JSONObject oj = JSONObject.fromObject(json);
-        if (oj.containsKey(game)) {
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void bind(GameList game) {
+        this.setLogo(game.getLogo());
+        this.setGame(game.getGame());
+        this.setRanges(game.getRanges());
+        this.setTable(game.getTableNo());
+        this.setDealer(game.getName());
+    }
+
+    public static List<GameListModel> bindList(List<GameList> games) {
+        List<GameListModel> gs = new ArrayList<>();
+        for (GameList game:games) {
+           GameListModel md = new GameListModel();
+           md.bind(game);
+           gs.add(md);
         }
-        return games;
+        return gs;
     }
 
 }

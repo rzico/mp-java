@@ -93,7 +93,7 @@ public class NihtanController extends BaseController {
             JSONObject jsonObject = JSONObject.fromObject(json);
             Member member = memberService.findByUsername(jsonObject.getString("user_id"));
             if (member!=null) {
-                model.addAttribute("notifyMessage",member.getBalance());
+                model.addAttribute("notifyMessage",member.getBalance().setScale(0,BigDecimal.ROUND_FLOOR).longValue());
             } else {
                 model.addAttribute("notifyMessage",0);
             }
