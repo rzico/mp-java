@@ -29,6 +29,8 @@ public class EvaluationListModel extends BaseModel implements Serializable {
     /** 订单 */
     private String sn;
 
+    private Long gaugeId;
+
     /** 完成 */
     private Long eval;
     /** 题目 */
@@ -106,6 +108,14 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.sn = sn;
     }
 
+    public Long getGaugeId() {
+        return gaugeId;
+    }
+
+    public void setGaugeId(Long gaugeId) {
+        this.gaugeId = gaugeId;
+    }
+
     public void bind(Evaluation evaluation) {
         this.id = evaluation.getId();
         this.title = evaluation.getTitle();
@@ -114,6 +124,8 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.eval = evaluation.getEval();
         this.price = evaluation.getPrice();
         this.total = evaluation.getTotal();
+
+        this.gaugeId = evaluation.getGauge().getId();
 
         this.sn = evaluation.getSn();
         this.createDate = evaluation.getCreateDate();
