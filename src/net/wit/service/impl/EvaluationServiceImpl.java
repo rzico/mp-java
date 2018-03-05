@@ -52,6 +52,8 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public Evaluation update(Evaluation evaluation) {
+		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
+		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
 		return super.update(evaluation);
 	}
 
