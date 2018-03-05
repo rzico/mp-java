@@ -1,4 +1,5 @@
 package net.wit.controller.model;
+import net.wit.entity.Article;
 import net.wit.entity.Member;
 import net.wit.util.MD5Utils;
 
@@ -76,4 +77,15 @@ public class MemberListModel extends BaseModel implements Serializable {
         this.tags = TagModel.bindList(member.getTags());
         this.md5 = MD5Utils.getMD5Str(member.getMobile());
      }
+
+
+    public static List<MemberListModel> bindList(List<Member> members) {
+        List<MemberListModel> ms = new ArrayList<MemberListModel>();
+        for (Member member:members) {
+            MemberListModel m = new MemberListModel();
+            m.bind(member);
+            ms.add(m);
+        }
+        return ms;
+    }
 }
