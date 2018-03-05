@@ -206,7 +206,7 @@ public class NihtanController extends BaseController {
         int i= 0;
         for (GameListModel g:data) {
             i = i+1;
-            GameList gl = gameListService.find(GameList.Type.nihtan,g.getGame(),g.getTable());
+            GameList gl = gameListService.find(GameList.Type.nihtan,g.getGame(),g.getTable(),g.getRanges());
             if (gl==null) {
                 gl = new GameList();
                 gl.setType(GameList.Type.nihtan);

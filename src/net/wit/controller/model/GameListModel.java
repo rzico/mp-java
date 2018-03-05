@@ -88,6 +88,7 @@ public class GameListModel extends BaseModel implements Serializable {
         this.setRanges(game.getRanges());
         this.setTable(game.getTableNo());
         this.setDealer(game.getName());
+        this.setType(game.getType().name());
     }
 
     public static List<GameListModel> bindList(List<GameList> games) {

@@ -90,8 +90,8 @@ public class GameListServiceImpl extends BaseServiceImpl<GameList, Long> impleme
 		return gameListDao.findPage(beginDate,endDate,pageable);
 	}
 
-	public GameList find(GameList.Type type, String game, String tableNo) {
-		return gameListDao.find(type,game,tableNo);
+	public GameList find(GameList.Type type, String game, String tableNo,String ranges) {
+		return gameListDao.find(type,game,tableNo,ranges);
 	}
 
 }

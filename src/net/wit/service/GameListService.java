@@ -16,5 +16,5 @@ import java.util.Date;
 public interface GameListService extends BaseService<GameList, Long> {
 	Page<GameList> findPage(Date beginDate, Date endDate, Pageable pageable);
 
-	public GameList find(GameList.Type type, String game, String tableNo);
+	public GameList find(GameList.Type type, String game, String tableNo,String ranges);
 }

@@ -56,13 +56,14 @@ public class GameListDaoImpl extends BaseDaoImpl<GameList, Long> implements Game
 		return super.findPage(criteriaQuery,pageable);
 	}
 
-	public GameList find(GameList.Type type, String game, String tableNo) {
-		String jpql = "select gameList from GameList gameList where gameList.type=:type and gameList.game = :game and gameList.tableNo=:tableNo";
+	public GameList find(GameList.Type type, String game, String tableNo,String ranges) {
+		String jpql = "select gameList from GameList gameList where gameList.type=:type and gameList.ranges=:ranges and gameList.game = :game and gameList.tableNo=:tableNo";
 		try {
 			return entityManager.createQuery(jpql, GameList.class).setFlushMode(FlushModeType.COMMIT)
 					.setParameter("type", type)
 					.setParameter("game", game)
 					.setParameter("tableNo", tableNo)
+					.setParameter("ranges", ranges)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
