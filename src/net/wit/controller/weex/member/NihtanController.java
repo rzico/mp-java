@@ -246,7 +246,7 @@ public class NihtanController extends BaseController {
                 if (gl.getGame().equals("Dragon-Tiger")) {
                     gl.setName("龙虎");
                 } else
-                if (gl.getGame().equals("Poker")) {
+                if (gl.getGame().equals("Sicbo")) {
                     gl.setName("骰宝");
                 }
                 gameListService.save(gl);
@@ -305,9 +305,11 @@ public class NihtanController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
         params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?nihtan="+data.get("token")+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
-        if (video.containsKey(video.get(game.replace("-","_")+"_"+table))) {
-            params.put("video", video.get(game.replace("-", "_") + "_" + table));
+        String key = game.replace("-","_")+"_"+table;
+        if (video.containsKey(key)) {
+            params.put("video", video.get(key));
         } else {
+            params.put("video", "");
             return Message.error("没有获取视频数据");
         }
         System.out.println(params);
