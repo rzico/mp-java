@@ -6,6 +6,7 @@ import net.wit.controller.model.DepositModel;
 import net.wit.entity.Deposit;
 import net.wit.entity.Member;
 import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.NihtanDepositSummary;
 import net.wit.service.DepositService;
 import net.wit.service.MemberService;
 import org.apache.commons.lang.time.DateUtils;
@@ -108,7 +109,7 @@ public class NihtanDepositController extends BaseController {
         }
         Date b = DateUtils.truncate(new Date(),Calendar.DATE);
         Date e =DateUtils.addDays(b,1);
-        List<DepositSummary> deps = depositService.sumPage(member,b,e);
+        List<NihtanDepositSummary> deps = depositService.sumNihtanPage(member,b,e);
         return Message.bind(deps,request);
     }
 
