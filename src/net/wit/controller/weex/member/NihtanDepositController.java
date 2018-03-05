@@ -27,7 +27,7 @@ import java.util.*;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexMemberDepositController")
+@Controller("weexMemberNihtanDepositController")
 @RequestMapping("/weex/member/nihtan/deposit")
 public class NihtanDepositController extends BaseController {
 
