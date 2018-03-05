@@ -18,6 +18,7 @@ import net.wit.entity.Member;
 import net.wit.entity.PayBill;
 import net.wit.entity.Shop;
 import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.NihtanDepositSummary;
 import net.wit.entity.summary.PayBillShopSummary;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
@@ -107,5 +108,34 @@ public class DepositDaoImpl extends BaseDaoImpl<Deposit, Long> implements Deposi
 		return data;
 
 	}
+
+	public List<NihtanDepositSummary> sumNihtanPage(Member member, Date beginDate, Date endDate) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select deposit.memo,sum(deposit.credit)-sum(deposit.debit) "+
+						"from Deposit deposit where deposit.createDate>=:b and deposit.createDate<:e and deposit.member=:member "+
+						"group by deposit.memo order by deposit.memo ";
+
+		Query query = entityManager.createQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("b", b).
+				setParameter("e", e).
+				setParameter("member",member);
+
+		List result = query.getResultList();
+		List<NihtanDepositSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			NihtanDepositSummary rw = new NihtanDepositSummary();
+			rw.setType((String) row[0]);
+			rw.setAmount((BigDecimal) row[1]);
+			data.add(rw);
+		}
+		return data;
+
+	}
+
 
 }

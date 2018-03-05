@@ -15,6 +15,7 @@ import net.wit.Principal;
 import net.wit.Filter.Operator;
 
 import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.NihtanDepositSummary;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -93,4 +94,8 @@ public class DepositServiceImpl extends BaseServiceImpl<Deposit, Long> implement
 	public List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate) {
 		return depositDao.sumPage(member,beginDate,endDate);
 	}
+	public List<NihtanDepositSummary> sumNihtanPage(Member member, Date beginDate, Date endDate) {
+		return depositDao.sumNihtanPage(member,beginDate,endDate);
+	}
+
 }

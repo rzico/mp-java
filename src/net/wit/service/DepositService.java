@@ -10,6 +10,7 @@ import net.wit.Pageable;
 import net.wit.entity.Deposit;
 import net.wit.entity.Member;
 import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.NihtanDepositSummary;
 
 /**
  * @ClassName: DepositService
@@ -23,4 +24,7 @@ public interface DepositService extends BaseService<Deposit, Long> {
 	/**
 	 */
 	List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate);
+
+	List<NihtanDepositSummary> sumNihtanPage(Member member, Date beginDate, Date endDate);
+
 }
