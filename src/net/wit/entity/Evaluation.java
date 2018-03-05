@@ -90,6 +90,12 @@ public class Evaluation extends BaseEntity {
     @Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '现价'")
     private BigDecimal price;
 
+    /** 奖金 */
+    @Min(0)
+    @Digits(integer = 12, fraction = 3)
+    @Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '奖金'")
+    private BigDecimal rebate;
+
     /** 对应量表 */
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -281,4 +287,11 @@ public class Evaluation extends BaseEntity {
         this.attr4 = attr4;
     }
 
+    public BigDecimal getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(BigDecimal rebate) {
+        this.rebate = rebate;
+    }
 }

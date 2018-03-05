@@ -391,6 +391,26 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				Evaluation evaluation = payment.getEvaluation();
 				evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
 				evaluationDao.merge(evaluation);
+                if (evaluation.getPromoter()!=null && evaluation.getRebate().compareTo(BigDecimal.ZERO)>0) {
+                	Member member = evaluation.getPromoter();
+					member.setBalance(member.getBalance().add(evaluation.getRebate()));
+					memberDao.merge(member);
+					memberDao.flush();
+
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.rebate);
+					deposit.setMemo("推广奖励金");
+					deposit.setMember(member);
+					deposit.setCredit(evaluation.getRebate());
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+				}
+
 			}
 
 		}

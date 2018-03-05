@@ -24,13 +24,14 @@ public class EvaluationListModel extends BaseModel implements Serializable {
     private String thumbnail;
     /** 现价 */
     private BigDecimal price;
+    /** 奖金 */
+    private BigDecimal rebate;
     /** 时间 */
     private Date createDate;
     /** 订单 */
     private String sn;
-
+    /** 量表 */
     private Long gaugeId;
-
     /** 完成 */
     private Long eval;
     /** 题目 */
@@ -116,6 +117,14 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.gaugeId = gaugeId;
     }
 
+    public BigDecimal getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(BigDecimal rebate) {
+        this.rebate = rebate;
+    }
+
     public void bind(Evaluation evaluation) {
         this.id = evaluation.getId();
         this.title = evaluation.getTitle();
@@ -123,6 +132,7 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.thumbnail = evaluation.getThumbnail();
         this.eval = evaluation.getEval();
         this.price = evaluation.getPrice();
+        this.rebate = evaluation.getRebate();
         this.total = evaluation.getTotal();
 
         this.gaugeId = evaluation.getGauge().getId();
