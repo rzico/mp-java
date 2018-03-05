@@ -78,7 +78,7 @@ public class EnterpriseController extends BaseController {
 
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
-            data.put("status","success");
+            data.put("status",admin.getEnterprise().getStatus());
             Enterprise enterprise = admin.getEnterprise();
 
             data.put("logo",enterprise.getLogo());
