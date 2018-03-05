@@ -73,13 +73,13 @@ public class TopicController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (type!=null && type.equals("applet")) {
+            String url = "pages/shop/index/index?id=" + member.getId();
+            return Message.success((Object) url,"复制成功");
+        } else {
             String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+member.getId();
             String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return Message.success((Object) MenuManager.codeUrlO2(redirectUrl),"复制成功");
-        } else {
-            String url = "pages/shop/index/index?id=" + member.getId();
-            return Message.success((Object) url,"复制成功");
         }
     }
 
