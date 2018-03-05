@@ -36,8 +36,9 @@ public class DepositController extends BaseController {
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
 
+
     /**
-     * 汇总
+     * 收银台
      */
     @RequestMapping(value = "view", method = RequestMethod.GET)
     @ResponseBody
@@ -103,16 +104,39 @@ public class DepositController extends BaseController {
      */
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
-    public Message summary(Date billDate,HttpServletRequest request){
+    public Message summary(Date billDate,String type,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Date b = DateUtils.truncate(billDate,Calendar.MONTH);
-        Date e = DateUtils.truncate(billDate,Calendar.MONTH);
-        e =DateUtils.addMonths(e,1);
-        e =DateUtils.addDays(e,-1);
-        List<DepositSummary> deps = depositService.sumPage(member,b,e);
+        if (type==null) {
+            type = "1";
+        }
+        Date d = DateUtils.truncate(billDate, Calendar.DATE);
+        Date e = DateUtils.truncate(billDate, Calendar.DATE);
+        if (type!=null) {
+            if ("1".equals(type)) {
+                d = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.truncate(billDate, Calendar.MONTH);
+                e = DateUtils.addMonths(e,1);
+                e = DateUtils.addDays(e,-1);
+            }
+            if ("2".equals(type)) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(d);
+                calendar.set(Calendar.MONTH, 0);
+                calendar.set(Calendar.DATE, 1);
+                d = calendar.getTime();
+
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(d);
+                calendar1.set(Calendar.MONTH, 0);
+                calendar1.set(Calendar.DATE, 1);
+                calendar1.roll(Calendar.DAY_OF_YEAR, -1);
+                e = calendar1.getTime();
+            }
+        }
+        List<DepositSummary> deps = depositService.sumPage(member,d,e);
         return Message.bind(deps,request);
     }
 

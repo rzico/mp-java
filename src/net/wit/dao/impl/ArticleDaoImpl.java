@@ -65,4 +65,38 @@ public class ArticleDaoImpl extends BaseDaoImpl<Article, Long> implements Articl
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	/**
+	 * @Title：findPage
+	 * @Description：标准代码
+	 * @param pageable
+	 * @return Page<Article>
+	 */
+	public Page<Article> findCircle(List<Member> members,List<Tag> tags, Pageable pageable) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
+		Root<Article> root = criteriaQuery.from(Article.class);
+		criteriaQuery.select(root);
+		Predicate restrictions = criteriaBuilder.conjunction();
+		restrictions = criteriaBuilder.conjunction();
+		if (members != null && !members.isEmpty()) {
+//			Subquery<Member> subquery = criteriaQuery.subquery(Member.class);
+//			Root<Member> subqueryRoot = subquery.from(Member.class);
+//			subquery.select(subqueryRoot);
+//			subquery.where(criteriaBuilder.equal(subqueryRoot, root), subqueryRoot.get("id").in(members));
+//			CriteriaBuilder.In<Member> in = criteriaBuilder.in(root.<Member>get("member"));
+			restrictions = criteriaBuilder.and(restrictions,root.get("member").in(members));
+		}
+		if (tags != null && !tags.isEmpty()) {
+			Subquery<Article> subquery = criteriaQuery.subquery(Article.class);
+			Root<Article> subqueryRoot = subquery.from(Article.class);
+			subquery.select(subqueryRoot);
+			subquery.where(criteriaBuilder.equal(subqueryRoot, root), subqueryRoot.join("tags").in(tags));
+			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.exists(subquery));
+		}
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
+		criteriaQuery.where(restrictions);
+		return super.findPage(criteriaQuery,pageable);
+	}
+
 }

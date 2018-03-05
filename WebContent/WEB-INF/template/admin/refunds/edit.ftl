@@ -112,7 +112,11 @@
             <div class="formControls col-xs-8 col-sm-9">
                 [#if data.status=="waiting"]
                 <!--
-                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交退款&nbsp;&nbsp;">
+                [@adminDirective]
+                        [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                            <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交退款&nbsp;&nbsp;">
+                        [/#if]
+                    [/@adminDirective]
                 -->
                 [/#if]
                 [#if data.status=="confirmed"]

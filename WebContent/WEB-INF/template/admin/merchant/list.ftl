@@ -47,9 +47,15 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 商户资料 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增商户</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+        [@adminDirective]
+            [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                <a href="javascript:;" onclick="add('首页 &gt; 商户资料 &gt; 新增','add.jhtml','','510')"
+                   class="btn btn-primary radius">
+                    <i class="Hui-iconfont">&#xe600;</i> 新增商户</a>
+                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">
+                    &#xe6e2;</i> 批量删除</a>
+            [/#if]
+        [/@adminDirective]
         </span>
     </div>
     <div class="mt-20">
@@ -190,11 +196,15 @@
                     "sTitle": "营业执照",
                     "sClass": "center"
                 },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
-                }
+    [@adminDirective]
+        [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+            {
+                "mData": "id",
+                "sTitle": "操作",
+                "sClass": "center"
+            }
+        [/#if]
+    [/@adminDirective]
             ],
             "aoColumnDefs": [
                 {
@@ -249,20 +259,30 @@
                         }
                     }
                 },
-                {
-                    "aTargets": [12],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 商户资料 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
-                        }else{
-                            return "";
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    {
+                        "aTargets": [12],
+                        "mRender": function (data, display, row) {
+                            if(data != null){
+                                return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 商户资料 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                                        "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            }else{
+                                return "";
+                            }
                         }
-                    }
 
-                },
-                //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 10, 11, 12]}// 制定列不参与排序
+                    },
+                [/#if]
+            [/@adminDirective]
+            [@adminDirective]
+                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                    //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                    {"orderable": false, "aTargets": [0, 10, 11, 12]}// 制定列不参与排序
+                [#else]
+                    {"orderable": false, "aTargets": [0, 10, 11]}
+                [/#if]
+            [/@adminDirective]
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

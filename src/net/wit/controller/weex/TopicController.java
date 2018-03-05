@@ -69,13 +69,18 @@ public class TopicController extends BaseController {
      */
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     @ResponseBody
-    public Message menu(HttpServletRequest request,HttpServletResponse response){
+    public Message menu(String type,HttpServletRequest request,HttpServletResponse response){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
-        String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+member.getId();
-        String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
-        redirectUrl = URLEncoder.encode(redirectUrl);
-        return Message.success((Object) MenuManager.codeUrlO2(redirectUrl),"复制成功");
+        if (type!=null && type.equals("applet")) {
+            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+member.getId();
+            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            redirectUrl = URLEncoder.encode(redirectUrl);
+            return Message.success((Object) MenuManager.codeUrlO2(redirectUrl),"复制成功");
+        } else {
+            String url = "pages/shop/index/index?id=" + member.getId();
+            return Message.success((Object) url,"复制成功");
+        }
     }
 
     /**

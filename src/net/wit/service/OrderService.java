@@ -141,4 +141,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	void returns(Order order, Admin operator) throws Exception;
 
 
+	void evictCompleted();
+
+
 }

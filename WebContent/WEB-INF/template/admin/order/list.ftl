@@ -82,7 +82,11 @@
                 <a href="javascript:;" onclick="add('首页 &gt; 订单管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe600;</i> 新增订单管理</a>
                 -->
+            [@adminDirective]
+            [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+            [/#if]
+            [/@adminDirective]
         </span>
     </div>
     <div class="mt-20">

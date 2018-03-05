@@ -56,6 +56,7 @@ public class CommonController extends BaseController {
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("modulus", StringUtils.base64Encode(publicKey.getModulus().toByteArray()));
 		data.put("exponent", StringUtils.base64Encode(publicKey.getPublicExponent().toByteArray()));
+		data.put("key", StringUtils.base64Encode(publicKey.getEncoded()));
 		return Message.bind(data,request);
 	}
 

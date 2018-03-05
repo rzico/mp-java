@@ -19,4 +19,5 @@ import net.wit.entity.Tag;
 
 public interface ArticleService extends BaseService<Article, Long> {
 	Page<Article> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable);
+	Page<Article> findCircle(Member member,List<Tag> tags, Pageable pageable);
 }

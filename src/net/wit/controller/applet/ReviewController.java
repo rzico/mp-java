@@ -18,7 +18,7 @@ import java.util.List;
 
 
 /**
- * @ClassName: ReviewController
+ * @ClassName: ArticleController
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
@@ -62,6 +62,6 @@ public class ReviewController extends BaseController {
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleReviewModel.bindList(page.getContent()));
         return Message.bind(model,request);
-   }
+    }
 
 }

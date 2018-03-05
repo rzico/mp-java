@@ -247,7 +247,7 @@ public class BankcardController extends BaseController {
                 }
                 if (member.getMobile()==null) {
                     Member m = memberService.findByMobile(data.get("mobile"));
-                    if (m==null) {
+                    if (m!=null) {
                         m.setUsername(null);
                         m.setMobile(null);
                         memberService.save(m);

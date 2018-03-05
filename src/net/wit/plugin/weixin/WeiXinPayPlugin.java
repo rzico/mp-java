@@ -5,12 +5,15 @@
  */
 package net.wit.plugin.weixin;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
+import java.security.KeyStore;
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 
 import net.wit.entity.BindUser;
@@ -21,11 +24,17 @@ import net.wit.plugin.PaymentPlugin;
 import net.wit.util.MD5Utils;
 import net.wit.plat.weixin.util.WeiXinUtils;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
@@ -283,5 +292,178 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 	public Integer getTimeout() {
 		return 30;
 	}
+
+	/**
+	 * https双向签名认证，用于支付申请退款
+	 *
+	 * */
+	public String payHttps(String url,String xml,HttpServletRequest request) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		//指定读取证书格式为PKCS12
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		String rootPath = request.getSession().getServletContext().getRealPath("/");
+		String path = rootPath+"/cert/weixin_cert.p12";
+		//读取本机存放的PKCS12证书文件
+		FileInputStream instream = new FileInputStream(new File(path));
+		try {
+			//指定PKCS12的密码(商户ID)
+			keyStore.load(instream,pluginConfig.getAttribute("partner").toCharArray());
+		} finally {
+			instream.close();
+		}
+		SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore,pluginConfig.getAttribute("partner").toCharArray()).build();
+		//指定TLS版本
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+				sslcontext,new String[] { "TLSv1" },null,
+				SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+		//设置httpclient的SSLSocketFactory
+		CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+		try {
+			HttpPost httpost = new HttpPost(url); // 设置响应头信息
+			httpost.addHeader("Connection", "keep-alive");
+			httpost.addHeader("Accept", "*/*");
+			httpost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+			httpost.addHeader("Host", "api.mch.weixin.qq.com");
+			httpost.addHeader("X-Requested-With", "XMLHttpRequest");
+			httpost.addHeader("Cache-Control", "max-age=0");
+			httpost.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
+			httpost.setEntity(new StringEntity(xml, "UTF-8"));
+			CloseableHttpResponse response = httpclient.execute(httpost);
+			try {
+				HttpEntity entity = response.getEntity();
+				String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+				EntityUtils.consume(entity);
+				return jsonStr;
+			}finally {
+				response.close();
+			}
+		}finally {
+			httpclient.close();
+		}
+	}
+
+
+	/**
+	 * 申请退款
+	 */
+	public Map<String, Object> refunds(Refunds refunds,HttpServletRequest request) {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		DecimalFormat decimalFormat = new DecimalFormat("#");
+		BigDecimal money = refunds.getAmount().multiply(new BigDecimal(100));
+		map.put("appid", pluginConfig.getAttribute("appId"));
+		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+		map.put("out_trade_no",refunds.getPayment().getSn());
+		map.put("out_refund_no",refunds.getSn());
+		map.put("total_fee", decimalFormat.format(money));
+		map.put("refund_fee", decimalFormat.format(money));
+		try {
+			map.put("sign",getSign(map));
+		} catch (Exception e) {
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg","签名出错");
+			return finalpackage;
+		}
+
+		String reqUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+
+		try {
+			String xml = WeiXinUtils.getRequestXml(map);
+			String jsonStr = payHttps(reqUrl,xml,request);
+
+				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
+
+				if(resultMap.containsKey("sign")){
+					String sign = getSign(resultMap);
+					if(!sign.equals(resultMap.get("sign"))){
+						finalpackage.put("return_code", "FAIL");
+						finalpackage.put("result_msg", "验证签名不通过");
+						return finalpackage;
+					}else{
+						if("SUCCESS".equals(resultMap.get("return_code").toString()) && "SUCCESS".equals(resultMap.get("result_code").toString())){
+							finalpackage.put("return_code", "SUCCESS");
+							finalpackage.put("result_msg", "提交成功");
+							return finalpackage;
+						}else{
+							finalpackage.put("return_code", "FAIL");
+							finalpackage.put("result_msg", resultMap.get("err_code_des").toString());
+							return finalpackage;
+						}
+					}
+				}else{
+
+					finalpackage.put("return_code", "FAIL");
+					finalpackage.put("result_msg", resultMap.get("return_msg").toString());
+					return finalpackage;
+				}
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+			finalpackage.put("return_code", "FAIL");
+			finalpackage.put("result_msg","提交银行出错");
+			return finalpackage;
+		}
+	}
+
+	/**
+	 * 查询退款
+	 */
+	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
+		PluginConfig pluginConfig = getPluginConfig();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+		map.put("appid", pluginConfig.getAttribute("appId"));
+		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("out_refund_no", refunds.getSn());
+		map.put("nonce_str", String.valueOf(new Date().getTime()));
+		try {
+			map.put("sign",getSign(map));
+		} catch (Exception e) {
+			throw new Exception("签名出错");
+		}
+
+		String reqUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
+		try {
+			String xml = WeiXinUtils.getRequestXml(map);
+			String jsonStr = payHttps(reqUrl,xml,request);
+
+				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
+				if (resultMap.containsKey("sign")) {
+					String sign = getSign(resultMap);
+					if(!sign.equals(resultMap.get("sign").toString())){
+						throw new Exception("签名出错");
+					} else {
+						if ("SUCCESS".equals(resultMap.get("return_code").toString()) && "SUCCESS".equals(resultMap.get("result_code").toString())) {
+							int count = Integer.parseInt(resultMap.get("refund_count").toString())-1;
+							if ("SUCCESS".equals(resultMap.get("refund_status_"+count).toString())) {
+								return "0000";
+							} else if ("REFUNDCLOSE".equals(resultMap.get("refund_status_"+count).toString())) {
+								return "0001";
+							} else if("CHANGE".equals(resultMap.get("refund_status_"+count).toString())){
+								return "0001";
+							} else {
+								return "9999";
+							}
+						} else {
+							throw new Exception(resultMap.get("err_code_des").toString());
+						}
+					}
+				} else {
+					throw new Exception(resultMap.get("err_code_des").toString());
+				}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new Exception("提交查询出错");
+		}
+	}
+
+	/**
+	 * 申请通知
+	 */
+	public String refundsVerify(HttpServletRequest request) {
+		return "";
+	}
+
 
 }

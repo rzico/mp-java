@@ -30,37 +30,63 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
     <!-- form class="form form-horizontal" id="form-article-add" -->
-        [#if data??]
+    [#if data??]
         <div class="cl pd-5 bg-1 bk-gray mt-20">
-        [#if data.status == 'unpaid' ]<!-- 待付款 -->
-            <button type="button" class="btn btn-success radius" id="confirmId" onclick="confirm(${data.id});" name="">
-                订单确认
-            </button>
-            <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
-                订单关闭
-            </button>
-        [#elseif data.status == 'unshipped']<!-- 待发货 -->
-            <button type="button" class="btn btn-success radius" id="shippingId" onclick="shipping(${data.id});" name="">
-                订单发货
-            </button>
-            <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});" name="">
-                订单关闭
-            </button>
-        [#elseif data.status == 'shipped']<!-- 已发货 -->
-            <button type="button" class="btn btn-success radius" id="returnsId" onclick="returns(${data.id});" name="">
-                订单退货
-            </button>
-        [#elseif data.status == 'returning']<!-- C端用户申请退货中 -->
-            <button type="button" class="btn btn-success radius" id="returnsId" onclick="returns(${data.id});" name="">
-                同意退货
-            </button>
-        [#elseif data.status == 'refunding']<!-- C端用户申请退款中 -->
-            <button type="button" class="btn btn-success radius" id="agreerefundsId" onclick="agreerefunds(${data.id});" name="">
-                 同意退款
-            </button>
-        [#elseif data.status == 'completed']<!-- 已完成 -->
+                [#if data.status == 'unpaid' ]<!-- 待付款 -->
+                [@adminDirective]
+                    [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                        <button type="button" class="btn btn-success radius" id="confirmId"
+                                onclick="confirm(${data.id});" name="">
+                            订单确认
+                        </button>
+                        <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});"
+                                name="">
+                            订单关闭
+                        </button>[/#if]
+                [/@adminDirective]
+                [#elseif data.status == 'unshipped']<!-- 待发货 -->
+                [@adminDirective]
+                    [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                        <button type="button" class="btn btn-success radius" id="shippingId"
+                                onclick="shipping(${data.id});" name="">
+                            订单发货
+                        </button>
+                        <button type="button" class="btn btn-success radius" id="cancelId" onclick="cancel(${data.id});"
+                                name="">
+                            订单关闭
+                        </button>
+                    [/#if]
+                [/@adminDirective]
+                [#elseif data.status == 'shipped']<!-- 已发货 -->
+                [@adminDirective]
+                    [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                        <button type="button" class="btn btn-success radius" id="returnsId"
+                                onclick="returns(${data.id});" name="">
+                            订单退货
+                        </button>
+                    [/#if]
+                [/@adminDirective]
+                [#elseif data.status == 'returning']<!-- C端用户申请退货中 -->
+                [@adminDirective]
+                    [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                        <button type="button" class="btn btn-success radius" id="returnsId"
+                                onclick="returns(${data.id});" name="">
+                            同意退货
+                        </button>
+                    [/#if]
+                [/@adminDirective]
+                [#elseif data.status == 'refunding']<!-- C端用户申请退款中 -->
+                [@adminDirective]
+                    [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+                        <button type="button" class="btn btn-success radius" id="agreerefundsId"
+                                onclick="agreerefunds(${data.id});" name="">
+                            同意退款
+                        </button>
+                    [/#if]
+                [/@adminDirective]
+                [#elseif data.status == 'completed']<!-- 已完成 -->
 
-        [/#if]
+            [/#if]
         </div>
         <div class="mt-20"></div>
         <div id="tab-system" class="HuiTab">
