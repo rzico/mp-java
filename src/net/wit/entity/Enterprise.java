@@ -28,6 +28,15 @@ public class Enterprise extends BaseEntity {
 
     private static final long serialVersionUID = 24L;
 
+    public enum Status{
+        /** 待审核  */
+        waiting,
+        /** 已审核 */
+        success,
+        /** 已关闭 */
+        failure
+        };
+
     public enum Type{
         /** 运营商 */
         operate,
@@ -55,6 +64,11 @@ public class Enterprise extends BaseEntity {
     @NotNull
     @Column(columnDefinition="int(11) not null comment '类型 {operate:运营商,agent:代理商,personal:个人代理商,shop:入驻商家}'")
     private Type type;
+
+    /** 状态 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null comment '状态 {waiting:待审核,success:已审核,failure:已关闭}'")
+    private Status status;
 
     /** 地区 null 代表没有区域限制 */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -147,6 +161,14 @@ public class Enterprise extends BaseEntity {
 
     public void setCreditLine(BigDecimal creditLine) {
         this.creditLine = creditLine;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public MapEntity getMapArea() {
