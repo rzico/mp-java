@@ -63,7 +63,7 @@ public class KagaController extends BaseController {
         int i= 0;
         for (GameListModel g:data) {
             i = i+1;
-            GameList gl = gameListService.find(GameList.Type.kage,g.getGame(),"#");
+            GameList gl = gameListService.find(GameList.Type.kage,g.getGame(),"#","#");
             if (gl==null) {
                 gl = new GameList();
                 gl.setType(GameList.Type.kage);
@@ -71,12 +71,12 @@ public class KagaController extends BaseController {
                 gl.setGame(g.getGame());
                 gl.setTableNo("#");
                 gl.setRanges("#");
+                gl.setVip("#");
                 gl.setStatus(GameList.Status.enabled);
                 gl.setName(g.getGame());
                 gl.setLogo(g.getLogo());
                 gameListService.save(gl);
             } else {
-                gl.setOrders(i);
                 gl.setLogo(g.getLogo());
                 gameListService.update(gl);
             }
