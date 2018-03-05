@@ -973,6 +973,10 @@ public class Member extends BaseEntity {
 		}
 	}
 
+	public BigDecimal effectiveBalance() {
+		return getBalance().subtract(getFreezeBalance());
+	}
+
 	public String userId() {
 		String uid = getUsername();
 		if (uid!=null && "gm_".equals(uid.substring(0,3))) {
