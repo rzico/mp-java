@@ -15,6 +15,8 @@ public class GameListModel extends BaseModel implements Serializable {
     private String game;
     /** 类型 */
     private String type;
+    /** 星级 */
+    private String vip;
     /** 桌号 */
     private String table;
     /** 头像 */
@@ -70,6 +72,14 @@ public class GameListModel extends BaseModel implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getVip() {
+        return vip;
+    }
+
+    public void setVip(String vip) {
+        this.vip = vip;
     }
 
     public void bind(GameList game) {

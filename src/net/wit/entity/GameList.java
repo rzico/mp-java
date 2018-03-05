@@ -63,6 +63,10 @@ public class GameList extends OrderEntity {
 	@Column(columnDefinition="varchar(255) comment '游戏名'")
 	private String name;
 
+	/**  星级 */
+	@Column(columnDefinition="varchar(255) comment '星级'")
+	private String vip;
+
 	/** 状态 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '状态'")
 	private Status status;
@@ -140,4 +144,11 @@ public class GameList extends OrderEntity {
 		this.type = type;
 	}
 
+	public String getVip() {
+		return vip;
+	}
+
+	public void setVip(String vip) {
+		this.vip = vip;
+	}
 }

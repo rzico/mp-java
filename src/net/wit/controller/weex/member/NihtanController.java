@@ -62,36 +62,35 @@ public class NihtanController extends BaseController {
         List<GameListModel> data = new ArrayList<>();
         for (int i=0;i<sicboArr.size();i++) {
             JSONObject tb = sicboArr.getJSONObject(i);
-//           if ("0".equals(tb.getString("active"))) {
-            GameListModel m = new GameListModel();
-            m.setGame("Sicbo");
-            m.setTable(tb.getString("table"));
-            if (tb.containsKey("type")) {
-                m.setType(tb.getString("type"));
-            } else {
-                m.setType("n");
-            }
 
-//           JSONArray mts = tb.getJSONArray("maintenance");
-            m.setDealer("none");
-//           for (int j=0;j<mts.size();j++) {
-//               JSONObject mt = mts.getJSONObject(j);
-//               if (mt.getString("status").equals("1")) {
-//                   m.setDealer(mt.getString("division"));
-//               }
-//           }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
+                GameListModel m = new GameListModel();
+                m.setGame("Sicbo");
+                m.setTable(tb.getString("table"));
+                if (tb.containsKey("type")) {
+                    m.setType(tb.getString("type"));
+                } else {
+                    m.setType("n");
+                }
+                m.setDealer("none");
+                if (j==0) {
+                  m.setVip("vip1");
+                } else
+                if (j==1) {
+                    m.setVip("vip2");
+                } else
+                if (j==2) {
+                    m.setVip("vip3");
+                } else {
+                    m.setVip("vip1");
+                }
                 JSONObject range = ranges.getJSONObject(j);
-//                   if (range.getString("status").equals("0")) {
                 rng = range.getString("min") + "-" + range.getString("max");
-                break;
-//                   }
+                m.setRanges(rng);
+                data.add(m);
             }
-            m.setRanges(rng);
-            data.add(m);
-//           }
         }
 
 
@@ -101,36 +100,35 @@ public class NihtanController extends BaseController {
         JSONArray  pokerArr = poker.getJSONArray("tables");
         for (int i=0;i<pokerArr.size();i++) {
             JSONObject tb = pokerArr.getJSONObject(i);
-//            if ("0".equals(tb.getString("active"))) {
-            GameListModel m = new GameListModel();
-            m.setGame("Poker");
-            m.setTable(tb.getString("table"));
-            if (tb.containsKey("type")) {
-                m.setType(tb.getString("type"));
-            } else {
-                m.setType("n");
-            }
 
-//            JSONArray mts = tb.getJSONArray("maintenance");
-            m.setDealer("none");
-//            for (int j=0;j<mts.size();j++) {
-//                JSONObject mt = mts.getJSONObject(j);
-//                if (mt.getString("status").equals("1")) {
-//                    m.setDealer(mt.getString("division"));
-//                }
-//            }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
                 JSONObject range = ranges.getJSONObject(j);
-//                    if (range.getString("status").equals("0")) {
                 rng = range.getString("min") + "-" + range.getString("max");
-                break;
-//                    }
+                GameListModel m = new GameListModel();
+                m.setGame("Poker");
+                m.setTable(tb.getString("table"));
+                if (tb.containsKey("type")) {
+                    m.setType(tb.getString("type"));
+                } else {
+                    m.setType("n");
+                }
+                m.setDealer("none");
+                m.setRanges(rng);
+                if (j==0) {
+                    m.setVip("vip1");
+                } else
+                if (j==1) {
+                    m.setVip("vip2");
+                } else
+                if (j==2) {
+                    m.setVip("vip3");
+                } else {
+                    m.setVip("vip1");
+                }
+                data.add(m);
             }
-            m.setRanges(rng);
-            data.add(m);
-//            }
         }
 
         JSONObject tiger = jsonObject.getJSONObject("Dragon-Tiger");
@@ -138,35 +136,34 @@ public class NihtanController extends BaseController {
         JSONArray  tigerArr = tiger.getJSONArray("tables");
         for (int i=0;i<tigerArr.size();i++) {
             JSONObject tb = tigerArr.getJSONObject(i);
-//            if ("0".equals(tb.getString("active"))) {
-            GameListModel m = new GameListModel();
-            m.setGame("Dragon-Tiger");
-            m.setTable(tb.getString("table"));
-            if (tb.containsKey("type")) {
-                m.setType(tb.getString("type"));
-            } else {
-                m.setType("n");
-            }
-//            JSONArray mts = tb.getJSONArray("maintenance");
-            m.setDealer("none");
-//            for (int j=0;j<mts.size();j++) {
-//                JSONObject mt = mts.getJSONObject(j);
-//                if (mt.getString("status").equals("1")) {
-//                    m.setDealer(mt.getString("division"));
-//                }
-//            }
-            JSONArray ranges = tb.getJSONArray("ranges");
+             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
                 JSONObject range = ranges.getJSONObject(j);
-//                    if (range.getString("status").equals("0")) {
+                GameListModel m = new GameListModel();
+                m.setGame("Dragon-Tiger");
+                m.setTable(tb.getString("table"));
+                if (tb.containsKey("type")) {
+                    m.setType(tb.getString("type"));
+                } else {
+                    m.setType("n");
+                }
+                m.setDealer("none");
+                if (j==0) {
+                    m.setVip("vip1");
+                } else
+                if (j==1) {
+                    m.setVip("vip2");
+                } else
+                if (j==2) {
+                    m.setVip("vip3");
+                } else {
+                    m.setVip("vip1");
+                }
                 rng = range.getString("min") + "-" + range.getString("max");
-                break;
-//                    }
+                m.setRanges(rng);
+                data.add(m);
             }
-            m.setRanges(rng);
-            data.add(m);
-//            }
         }
 
 
@@ -176,36 +173,34 @@ public class NihtanController extends BaseController {
         JSONArray  baccaratArr = baccarat.getJSONArray("tables");
         for (int i=0;i<baccaratArr.size();i++) {
             JSONObject tb = baccaratArr.getJSONObject(i);
-//            if ("0".equals(tb.getString("active"))) {
-            GameListModel m = new GameListModel();
-            m.setGame("Baccarat");
-            m.setTable(tb.getString("table"));
-            if (tb.containsKey("type")) {
-                m.setType(tb.getString("type"));
-            } else {
-                m.setType("n");
-            }
-
-//            JSONArray mts = tb.getJSONArray("maintenance");
-            m.setDealer("none");
-//            for (int j=0;j<mts.size();j++) {
-//                JSONObject mt = mts.getJSONObject(j);
-//                if (mt.getString("status").equals("1")) {
-//                    m.setDealer(mt.getString("division"));
-//                }
-//            }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
                 JSONObject range = ranges.getJSONObject(j);
-//                    if (range.getString("status").equals("0")) {
+                GameListModel m = new GameListModel();
+                m.setGame("Baccarat");
+                m.setTable(tb.getString("table"));
+                if (tb.containsKey("type")) {
+                    m.setType(tb.getString("type"));
+                } else {
+                    m.setType("n");
+                }
+                m.setDealer("none");
                 rng = range.getString("min") + "-" + range.getString("max");
-                break;
-//                    }
+                m.setRanges(rng);
+                if (j==0) {
+                    m.setVip("vip1");
+                } else
+                if (j==1) {
+                    m.setVip("vip2");
+                } else
+                if (j==2) {
+                    m.setVip("vip3");
+                } else {
+                    m.setVip("vip1");
+                }
+                data.add(m);
             }
-            m.setRanges(rng);
-            data.add(m);
-//            }
         }
 
         int i= 0;
@@ -220,6 +215,7 @@ public class NihtanController extends BaseController {
                 gl.setTableNo(g.getTable());
                 gl.setRanges(g.getRanges());
                 gl.setStatus(GameList.Status.enabled);
+                gl.setVip(g.getVip());
                 if (gl.getGame().equals("Baccarat")) {
                     if ("r".equals(g.getType())) {
                         gl.setName("常规百家乐");
@@ -251,9 +247,10 @@ public class NihtanController extends BaseController {
                 }
                 gameListService.save(gl);
             } else {
-                gl.setOrders(i);
-                gl.setRanges(g.getRanges());
-                gameListService.update(gl);
+                if (gl.getVip()==null) {
+                    gl.setVip(g.getVip());
+                    gameListService.update(gl);
+                }
             }
         }
         Map<String,Object> data11 = JsonUtils.toObject(resp,Map.class);
