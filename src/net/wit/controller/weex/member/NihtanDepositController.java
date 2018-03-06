@@ -107,7 +107,7 @@ public class NihtanDepositController extends BaseController {
         if (member==null) {
             return Message.error("无效会员id");
         }
-        Date b = DateUtils.truncate(new Date(),Calendar.DATE);
+        Date b = DateUtils.truncate(billDate,Calendar.DATE);
         Date e =DateUtils.addDays(b,1);
         List<NihtanDepositSummary> deps = depositService.sumNihtanPage(member,b,e);
         return Message.bind(deps,request);

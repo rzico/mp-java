@@ -130,7 +130,7 @@ public class NihtanController extends BaseController {
                 game.setCredit(BigDecimal.ZERO);
                 game.setMember(member);
                 game.setStatus(Game.Status.transaction);
-                game.setMemo(jsonObject.getString("range"));
+                game.setMemo(game.getGame());
                 try {
                     gameService.sumbit(game);
                     data.put("code","200");

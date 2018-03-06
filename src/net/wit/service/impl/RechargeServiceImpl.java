@@ -124,7 +124,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			Deposit deposit = new Deposit();
 			deposit.setBalance(agent.getBalance());
 			deposit.setType(Deposit.Type.payment);
-			deposit.setMemo("代"+member.getUsername()+"充值");
+			deposit.setMemo("转账");
 			deposit.setMember(agent);
 			deposit.setCredit(BigDecimal.ZERO);
 			deposit.setDebit(recharge.getAmount());
@@ -141,7 +141,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			Deposit memberDeposit = new Deposit();
 			memberDeposit.setBalance(member.getBalance());
 			memberDeposit.setType(Deposit.Type.recharge);
-			memberDeposit.setMemo(recharge.getMemo());
+			memberDeposit.setMemo("充值");
 			memberDeposit.setMember(member);
 			memberDeposit.setCredit(recharge.getAmount());
 			memberDeposit.setDebit(BigDecimal.ZERO);

@@ -110,7 +110,7 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
 			deposit.setType(Deposit.Type.payment);
-			deposit.setMemo(game.getGame()+"."+game.getTableNo()+",no."+game.getRoundNo());
+			deposit.setMemo(game.getMemo());
 			deposit.setMember(member);
 			deposit.setCredit(BigDecimal.ZERO);
 			deposit.setDebit(game.getDebit());
