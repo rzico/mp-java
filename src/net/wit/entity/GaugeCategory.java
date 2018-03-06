@@ -35,10 +35,12 @@ public class GaugeCategory extends OrderEntity {
 
 	/** 树路径 */
 	@Column(nullable = false,columnDefinition="varchar(255) not null comment '树路径'")
+	@JsonIgnore
 	private String treePath;
 
 	/** 层级 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '层级'")
+	@JsonIgnore
 	private Integer grade;
 
 	/** 上级分类 */

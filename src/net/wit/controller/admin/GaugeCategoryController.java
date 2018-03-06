@@ -67,9 +67,6 @@ public class GaugeCategoryController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
-
-		model.addAttribute("members",memberService.findAll());
-
 		return "/admin/gaugeCategory/list";
 	}
 
