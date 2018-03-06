@@ -162,23 +162,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "count",
-                    "sTitle": "短信条数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "descr",
-                    "sTitle": "错误说明",
-                    "sClass": "center"
-                },
-                {
                     "mData": "fee",
                     "sTitle": "发送费用",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "status",
-                    "sTitle": "发送状态",
                     "sClass": "center"
                 },
                 {
@@ -210,36 +195,8 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
-                {
-                    "aTargets": [9],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if statuss??]
-                            [#list statuss as status]
-                                if ("${status.id}" == data) {
-                                    return "${status.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [10],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 手机短信 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
-                        }else{
-                            return "";
-                        }
-                    }
-
-                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 10]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
