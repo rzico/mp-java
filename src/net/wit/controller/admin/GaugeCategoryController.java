@@ -80,8 +80,6 @@ public class GaugeCategoryController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
 
-		model.addAttribute("members",memberService.findAll());
-
 		return "/admin/gaugeCategory/add";
 	}
 
@@ -129,9 +127,6 @@ public class GaugeCategoryController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
-
-		model.addAttribute("members",memberService.findAll());
-
 		model.addAttribute("data",gaugeCategoryService.find(id));
 
 		return "/admin/gaugeCategory/edit";

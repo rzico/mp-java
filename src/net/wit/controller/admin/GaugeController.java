@@ -85,8 +85,6 @@ public class GaugeController extends BaseController {
 		userTypes.add(new MapEntity("school","学校用户"));
 		model.addAttribute("userTypes",userTypes);
 
-		model.addAttribute("products",productService.findAll());
-
 		return "/admin/gauge/list";
 	}
 

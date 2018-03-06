@@ -23,8 +23,8 @@ import java.util.ResourceBundle;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("appletMemberTransferController")
-@RequestMapping("/applet/member/transfer")
+@Controller("makeyMemberTransferController")
+@RequestMapping("/makey/member/transfer")
 public class TransferController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
