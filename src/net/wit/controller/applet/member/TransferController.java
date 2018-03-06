@@ -1,8 +1,7 @@
-package net.wit.controller.weex.member;
+package net.wit.controller.applet.member;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.WalletModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,8 @@ import java.util.ResourceBundle;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexMemberTransferController")
-@RequestMapping("/weex/member/transfer")
+@Controller("appletMemberTransferController")
+@RequestMapping("/applet/member/transfer")
 public class TransferController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
@@ -90,20 +89,7 @@ public class TransferController extends BaseController {
     }
 
     /**
-     * 获取可提现金额
-     */
-    @RequestMapping(value = "effectiveBalance", method = RequestMethod.POST)
-    @ResponseBody
-    public Message effectiveBalance(BigDecimal amount,HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-        return Message.success(member.effectiveBalance(),"success");
-    }
-
-    /**
-     * 提交提现
+     *
      */
     @RequestMapping(value = "submit")
     @ResponseBody
@@ -112,8 +98,8 @@ public class TransferController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.effectiveBalance().compareTo(amount) < 0) {
-            return Message.error("可提现余额不足");
+        if (member.getBalance().compareTo(amount) < 0) {
+            return Message.error("账户余额不足");
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Transfer transfer = new Transfer();

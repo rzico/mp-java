@@ -10,9 +10,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Goods;
+import net.wit.entity.Product;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import net.wit.Page;
@@ -30,6 +33,7 @@ import net.wit.entity.Member;
 
 @Repository("memberDaoImpl")
 public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements MemberDao {
+
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
