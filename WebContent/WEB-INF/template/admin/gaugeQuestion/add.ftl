@@ -66,8 +66,8 @@
                     <th width="100">操作</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr class="text-c">
+                <tbody  id="option">
+                <tr class="text-c hidden" >
                     <td>
                         <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
                     </td>
@@ -83,7 +83,7 @@
                         <input type="text" class="input-text" value="" placeholder="" id="score" name="score"  onInput="floatInit(this)">
                     </td>
                     <td class="td-manage">
-                        <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                        <a style="text-decoration:none" class="ml-5" onClick="del_row(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
                     </td>
                 </tr>
                 </tbody>
@@ -93,7 +93,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" onClick="add_row()"type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
             </div>
         </div>
 
@@ -133,6 +133,7 @@
         <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
 
         <script type="text/javascript">
+            var $option = $("#option");
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -186,7 +187,22 @@
                         });
                     }
                 });
+
             });
+
+            function add_row() {
+                alert(1);
+                var $row = $option.find("tr:eq(0)").clone().show();
+                $row.removeClass("hidden");
+
+                $row.appendTo($option);
+            }
+
+            function del_row(val) {
+                var $this = val;
+                $this.closest("tr").remove();
+            }
+
         </script>
 </body>
 </html>

@@ -188,7 +188,6 @@
                 /*处理查询数据*/searchValue
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
                 /*处理常量*/
                 var _type =  $('select[name="type"]').val();
                 var index = layer.msg('加载中', {
@@ -201,8 +200,7 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-                        "type":_type,
-                        "searchValue":_searchValue
+                        "type":_type
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',
