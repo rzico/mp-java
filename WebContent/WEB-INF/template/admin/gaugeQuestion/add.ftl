@@ -83,7 +83,7 @@
                         <input type="text" class="input-text" value="" placeholder="" id="score" name="score"  onInput="floatInit(this)">
                     </td>
                     <td class="td-manage">
-                        <a style="text-decoration:none" class="ml-5" onClick="del_row(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                        <a style="text-decoration:none" class="ml-5" onClick="del_opt(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
                     </td>
                 </tr>
                 </tbody>
@@ -93,7 +93,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" onClick="add_row()"type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" onClick="add_opt()" type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
             </div>
         </div>
 
@@ -134,6 +134,7 @@
 
         <script type="text/javascript">
             var $option = $("#option");
+            var rw =0;
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -190,15 +191,18 @@
 
             });
 
-            function add_row() {
+            function add_opt() {
                 alert(1);
                 var $row = $option.find("tr:eq(0)").clone().show();
                 $row.removeClass("hidden");
-
+                rw = rw +1''
+                $row.find("#fileList").attr("id","fileList"+rw);
+                $row.find("#filePicker").attr("id","filePicker"+rw);
                 $row.appendTo($option);
+                new $uploadpicture("fileList"+rw,"filePicker"+rw);
             }
 
-            function del_row(val) {
+            function del_opt(val) {
                 var $this = val;
                 $this.closest("tr").remove();
             }

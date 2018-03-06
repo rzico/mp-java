@@ -186,10 +186,6 @@
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
-                var _beginDate = $("#datemin").val();
-                var _endDate   = $("#datemax").val();
-                /*处理常量*/
-                var _type =  $('select[name="type"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -198,9 +194,7 @@
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
                         "aoData": JSON.stringify(aoData),
-                        "beginDate":_beginDate,
-                        "endDate":_endDate,
-                        "type":_type
+                        "gaugeId":${gaugeId}
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',

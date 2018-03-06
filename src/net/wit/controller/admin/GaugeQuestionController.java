@@ -146,10 +146,9 @@ public class GaugeQuestionController extends BaseController {
 		types.add(new MapEntity("text","文字"));
 		types.add(new MapEntity("image","图片"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("gauges",gaugeService.findAll());
-
-		model.addAttribute("data",gaugeQuestionService.find(id));
+		GaugeQuestion question = gaugeQuestionService.find(id);
+		model.addAttribute("data",question);
+		model.addAttribute("gaugeId",question.getGauge().getId());
 
 		return "/admin/gaugeQuestion/edit";
 	}
@@ -195,12 +194,12 @@ public class GaugeQuestionController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, GaugeQuestion.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Long gaugeId,Date beginDate, Date endDate, GaugeQuestion.Type type, Pageable pageable, ModelMap model) {
+
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		if (type!=null) {
-			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
-			filters.add(typeFilter);
-		}
+		Filter typeFilter = new Filter("gauge", Filter.Operator.eq, gaugeService.find(gaugeId));
+		filters.add(typeFilter);
+
 
 		Page<GaugeQuestion> page = gaugeQuestionService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
