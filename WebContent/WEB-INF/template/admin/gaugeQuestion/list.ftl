@@ -32,7 +32,7 @@
 <div class="page-container">
     <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
-                <a href="javascript:;" onclick="add('新增','add.jhtml?gaugeId=${qaugeId}','650','410')" class="btn btn-primary radius">
+                <a href="javascript:;" onclick="add('新增','add.jhtml?gaugeId=','650','410')" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe600;</i> 新增题目</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>

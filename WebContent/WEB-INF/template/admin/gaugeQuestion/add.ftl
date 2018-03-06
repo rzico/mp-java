@@ -28,6 +28,11 @@
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
     <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+    <style>
+        img {
+            width:80px;
+        }
+    </style>
 </head>
 <body>
 <div class="page-container">
@@ -134,7 +139,8 @@
 
         <script type="text/javascript">
             var $option = $("#option");
-            var rw =0;
+            var rw = 0;
+
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -195,17 +201,18 @@
                 alert(1);
                 var $row = $option.find("tr:eq(0)").clone().show();
                 $row.removeClass("hidden");
-                rw = rw +1''
+                $row.appendTo($option);
+
+                rw = rw +1;
                 $row.find("#fileList").attr("id","fileList"+rw);
                 $row.find("#filePicker").attr("id","filePicker"+rw);
-                $row.appendTo($option);
                 new $uploadpicture("fileList"+rw,"filePicker"+rw);
-            }
+            };
 
             function del_opt(val) {
                 var $this = val;
                 $this.closest("tr").remove();
-            }
+            };
 
         </script>
 </body>
