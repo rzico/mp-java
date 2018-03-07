@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,6 +10,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -90,7 +92,7 @@ public class GaugeQuestionController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(GaugeQuestion gaugeQuestion, Long gaugeId){
+	public Message save(GaugeQuestion gaugeQuestion,String [] name,String [] image, BigDecimal [] score,Long gaugeId){
 		GaugeQuestion entity = new GaugeQuestion();	
 
 		entity.setCreateDate(gaugeQuestion.getCreateDate());
@@ -99,7 +101,17 @@ public class GaugeQuestionController extends BaseController {
 
 		entity.setOrders(gaugeQuestion.getOrders() == null ? 0 : gaugeQuestion.getOrders());
 
-		entity.setContent(gaugeQuestion.getContent());
+		List<Map<String,Object>> data = new ArrayList<>();
+		for (int i=0;i<name.length;i++) {
+			Map<String,Object> q = new HashMap<String, Object>();
+			q.put("id",i);
+			q.put("name",name[i]);
+			q.put("image",image[i]);
+			q.put("score",score[i]);
+			data.add(q);
+		}
+
+		entity.setContent(JsonUtils.toJson(data));
 
 		entity.setTitle(gaugeQuestion.getTitle());
 

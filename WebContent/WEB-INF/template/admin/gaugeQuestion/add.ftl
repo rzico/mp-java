@@ -37,6 +37,7 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
+        <input type="hidden" value="${gaugeId}" id="gaugeId" name="gaugeId">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>题目：</label>
             <div class="formControls col-xs-8 col-sm-9">
