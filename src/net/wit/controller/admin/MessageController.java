@@ -41,6 +41,7 @@ import net.wit.controller.admin.model.*;
 @Controller("adminMessageController")
 @RequestMapping("/admin/message")
 public class MessageController extends BaseController {
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 	
@@ -55,8 +56,6 @@ public class MessageController extends BaseController {
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
-
-
 
 	/**
 	 * 主页
@@ -159,7 +158,6 @@ public class MessageController extends BaseController {
 		return net.wit.Message.error(s+",部份发送失败");
 	}
 
-
 	/**
      * 删除
      */
@@ -174,7 +172,6 @@ public class MessageController extends BaseController {
             return net.wit.Message.error("admin.delete.error");
         }
     }
-	
 	
 	/**
 	 * 编辑
@@ -258,8 +255,7 @@ public class MessageController extends BaseController {
 		Page<net.wit.entity.Message> page = messageService.findPage(beginDate,endDate,pageable);
 		return net.wit.Message.success(PageBlock.bind(page), "admin.list.success");
 	}
-	
-	
+
 	/**
 	 * 会员管理视图
 	 */
