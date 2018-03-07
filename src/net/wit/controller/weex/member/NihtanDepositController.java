@@ -46,7 +46,10 @@ public class NihtanDepositController extends BaseController {
     public Message view(Long id,HttpServletRequest request){
         Member member = memberService.find(id);
         if (member==null) {
-            return Message.error("无效会员id");
+            member = memberService.getCurrent();
+            if (member==null) {
+                return Message.error("无效会员id");
+            }
         }
         Date b = DateUtils.truncate(new Date(),Calendar.DATE);
         Date e =DateUtils.addDays(b,1);
@@ -82,7 +85,10 @@ public class NihtanDepositController extends BaseController {
     public Message list(Long id,Date billDate,Pageable pageable, HttpServletRequest request){
         Member member = memberService.find(id);
         if (member==null) {
-            return Message.error("无效会员id");
+            member = memberService.getCurrent();
+            if (member==null) {
+                return Message.error("无效会员id");
+            }
         }
         List<Filter> filters = new ArrayList<Filter>();
         if (billDate!=null) {
@@ -105,7 +111,10 @@ public class NihtanDepositController extends BaseController {
     public Message summary(Long id,Date billDate,String type,HttpServletRequest request){
         Member member = memberService.find(id);
         if (member==null) {
-            return Message.error("无效会员id");
+            member = memberService.getCurrent();
+            if (member==null) {
+                return Message.error("无效会员id");
+            }
         }
         Date b = DateUtils.truncate(billDate,Calendar.DATE);
         Date e =DateUtils.addDays(b,1);
