@@ -178,7 +178,6 @@
                             success: function(message){
                                 layer.close(load);
                                 if(message.type ==  "success"){
-                                    alert(message.data);
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
                                     parent.closeWindow(index, '添加成功');

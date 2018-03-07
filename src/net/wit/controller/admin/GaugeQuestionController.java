@@ -10,6 +10,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.controller.makey.model.GaugeQuestionOptionModel;
 import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -170,6 +171,17 @@ public class GaugeQuestionController extends BaseController {
 		model.addAttribute("types",types);
 		GaugeQuestion question = gaugeQuestionService.find(id);
 		model.addAttribute("data",question);
+		List<GaugeQuestionOptionModel> opts = JsonUtils.toObject(question.getContent(),List.class);
+//		List<Map<String,String>> data = new ArrayList<>();
+//		for (int i=0;i<opts.size();i++) {
+//				Map<String, String> q = new HashMap<String, String>();
+//				q.put("name",  opts[i][1]);
+//				q.put("image", opts[i][2]);
+//				q.put("score", opts[i][3]);
+//				data.add(q);
+//		}
+		model.addAttribute("options",opts);
+		model.addAttribute("options_length",opts.size());
 		model.addAttribute("gaugeId",question.getGauge().getId());
 
 		return "/admin/gaugeQuestion/edit";
@@ -181,16 +193,33 @@ public class GaugeQuestionController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(GaugeQuestion gaugeQuestion, Long gaugeId){
+	public Message update(GaugeQuestion gaugeQuestion,String [] name,String [] image, BigDecimal [] score, Long gaugeId){
 		GaugeQuestion entity = gaugeQuestionService.find(gaugeQuestion.getId());
-		
-		entity.setCreateDate(gaugeQuestion.getCreateDate());
 
-		entity.setModifyDate(gaugeQuestion.getModifyDate());
 
 		entity.setOrders(gaugeQuestion.getOrders() == null ? 0 : gaugeQuestion.getOrders());
 
-		entity.setContent(gaugeQuestion.getContent());
+		List<Map<String,Object>> data = new ArrayList<>();
+		for (int i=0;i<name.length;i++) {
+			if (gaugeQuestion.getType().equals(GaugeQuestion.Type.text) && name[i]!=null && !"".equals(name[i])) {
+				Map<String, Object> q = new HashMap<String, Object>();
+				q.put("id", i);
+				q.put("name", name[i]);
+				q.put("image", image[i]);
+				q.put("score", score[i]);
+				data.add(q);
+			}
+			if (gaugeQuestion.getType().equals(GaugeQuestion.Type.image) && image[i]!=null && !"".equals(image[i])) {
+				Map<String, Object> q = new HashMap<String, Object>();
+				q.put("id", i);
+				q.put("name", name[i]);
+				q.put("image", image[i]);
+				q.put("score", score[i]);
+				data.add(q);
+			}
+		}
+
+		entity.setContent(JsonUtils.toJson(data));
 
 		entity.setTitle(gaugeQuestion.getTitle());
 
@@ -218,9 +247,9 @@ public class GaugeQuestionController extends BaseController {
 	@ResponseBody
 	public Message list(Long gaugeId,Date beginDate, Date endDate, GaugeQuestion.Type type, Pageable pageable, ModelMap model) {
 
-//		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-//		Filter typeFilter = new Filter("gauge", Filter.Operator.eq, gaugeService.find(gaugeId));
-//		filters.add(typeFilter);
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		Filter typeFilter = new Filter("gauge", Filter.Operator.eq, gaugeService.find(gaugeId));
+		filters.add(typeFilter);
 
 
 		Page<GaugeQuestion> page = gaugeQuestionService.findPage(beginDate,endDate,pageable);

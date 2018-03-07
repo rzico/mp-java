@@ -60,7 +60,7 @@
                                 <div class="file-item thumbnail">
                                     <img width="100px" height="100px" src="${data.thumbnail}"/>
                                     <div class="info"></div>
-                                </div>'
+                                </div>
                             [/#if]
                         </div>
                         <div id="filePicker">选择图片</div>
