@@ -27,7 +27,7 @@ import java.util.Map;
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
- 
+
 @Controller("appletArticleController")
 @RequestMapping("applet/article")
 public class ArticleController extends BaseController {

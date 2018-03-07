@@ -1,6 +1,7 @@
 package net.wit.controller.admin;
 
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -151,7 +152,6 @@ public class ArticleController extends BaseController {
 
 		entity.setIsTop(article.getIsTop());
 
-
 		entity.setAuthor(article.getAuthor());
 
 		entity.setContent(article.getContent());
@@ -269,10 +269,11 @@ public class ArticleController extends BaseController {
 
 		entity.setIsTop(article.getIsTop());
 
-
 		entity.setAuthor(article.getAuthor());
 
-		entity.setContent(article.getContent());
+		if (entity.getMediaType().equals(Article.MediaType.html)) {
+			entity.setContent(article.getContent());
+		}
 
 		entity.setMediaType(article.getMediaType());
 
@@ -384,6 +385,7 @@ public class ArticleController extends BaseController {
 			}
 		}
 
+
 		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
@@ -478,15 +480,55 @@ public class ArticleController extends BaseController {
 	@RequestMapping(value = "/propaganda", method = RequestMethod.POST)
 	public @ResponseBody
 	Message Propaganda(Long[] ids, HttpServletRequest request){
+
+		Admin admin=adminService.getCurrent();
+		//判断用户有没有所属企业
+		if(admin.getEnterprise()==null){
+			return Message.error("企业不存在");
+		}
+
+		//判断用户公司属于哪种企业类型
+		Enterprise enterprise=admin.getEnterprise();
+		if(enterprise==null){
+			return Message.error("您还未绑定企业");
+		}
+
+		//判断企业是否被删除
+		if(enterprise.getDeleted()){
+			Message.error("您的企业不存在");
+		}
+
+		if(enterprise.getMember()==null){
+			return Message.error("该专栏商家尚未入驻");
+		}
+
+		Member member=enterprise.getMember();
+		Topic topic=member.getTopic();
+		if(topic==null){
+			return Message.error("该专栏无效");
+		}
+		//比较该专栏过期时间
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date overtime=topic.getExpire();
+		Date nowtime=new Date();
+		if(overtime.before(nowtime)){
+			return Message.error("该专栏已到期");
+		}
+
+		//专栏公众号设置
+		if(topic.getConfig()==null||topic.getConfig().getWxAppId().equals("")||topic.getConfig().getWxAppSerect().equals("")){
+			return Message.error("您未绑定公众号");
+		}
+
 		try {
 			String rootPath = request.getSession().getServletContext().getRealPath("/");
-			Properties properties=new Properties();
-			FileInputStream fileInputStream=new FileInputStream(rootPath+"/WEB-INF/classes/config.properties");
-			properties.load(fileInputStream);
-			fileInputStream.close();
-			String appID=properties.getProperty("weixin.appid");
-			String appsecret=properties.getProperty("weixin.secret");
-			weixinUpService.ArticleUpLoad(ids,appID,appsecret,rootPath);
+//			Properties properties=new Properties();
+//			FileInputStream fileInputStream=new FileInputStream(rootPath+"/WEB-INF/classes/config.properties");
+//			properties.load(fileInputStream);
+//			fileInputStream.close();
+//			String appID=properties.getProperty("weixin.appid");
+//			String appsecret=properties.getProperty("weixin.secret");
+			weixinUpService.ArticleUpLoad(ids,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath);
 			return Message.success("admin.propaganda.success");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -182,6 +182,8 @@ public class LoginController extends BaseController {
 //                member.setPoint(0L);
 //                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
+                member.setFreezeBalance(BigDecimal.ZERO);
+                member.setVip(Member.VIP.vip1);
                 member.setIsEnabled(true);
                 member.setIsLocked(false);
                 member.setLoginFailureCount(0);
@@ -372,6 +374,8 @@ public class LoginController extends BaseController {
 //            member.setPoint(0L);
 //            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
+            member.setFreezeBalance(BigDecimal.ZERO);
+            member.setVip(Member.VIP.vip1);
             member.setIsEnabled(true);
             member.setIsLocked(false);
             member.setLoginFailureCount(0);
@@ -500,6 +504,8 @@ public class LoginController extends BaseController {
 //            member.setPoint(0L);
 //            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
+            member.setFreezeBalance(BigDecimal.ZERO);
+            member.setVip(Member.VIP.vip1);
             member.setIsEnabled(true);
             member.setIsLocked(false);
             member.setLoginFailureCount(0);

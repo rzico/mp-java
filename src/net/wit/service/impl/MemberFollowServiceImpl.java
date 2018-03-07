@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.FriendsDao;
 import net.wit.dao.MemberDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;

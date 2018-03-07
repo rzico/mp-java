@@ -90,7 +90,20 @@ public class TransferController extends BaseController {
     }
 
     /**
-     *
+     * 获取可提现金额
+     */
+    @RequestMapping(value = "effectiveBalance", method = RequestMethod.POST)
+    @ResponseBody
+    public Message effectiveBalance(BigDecimal amount,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        return Message.success(member.effectiveBalance(),"success");
+    }
+
+    /**
+     * 提交提现
      */
     @RequestMapping(value = "submit")
     @ResponseBody
@@ -99,8 +112,8 @@ public class TransferController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.getBalance().compareTo(amount) < 0) {
-            return Message.error("账户余额不足");
+        if (member.effectiveBalance().compareTo(amount) < 0) {
+            return Message.error("可提现余额不足");
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Transfer transfer = new Transfer();

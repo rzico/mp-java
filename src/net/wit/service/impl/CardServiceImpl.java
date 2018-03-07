@@ -178,6 +178,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 				card.setCode(code);
 			}
 			card.setStatus(Card.Status.none);
+			card.setShop(shop);
 		} else {
 			card = myCard;
 			if (code!=null) {

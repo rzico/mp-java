@@ -268,7 +268,19 @@ public class RefundsController extends BaseController {
 					return Message.success(entity,"退款失败,款项退回账号");
 				} else
 				if ("9999".equals(resp)) {
-					return Message.success(entity,"正在处理中");
+					Map<String, Object> parameters = paymentPlugin.refunds(refunds,request);
+					if ("SUCCESS".equals(parameters.get("return_code"))) {
+						try {
+							refundsService.handle(refunds);
+							return Message.success(entity,"付款成功");
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+							//模拟异常通知，通知失败忽略异常，因为也算支付成了，只是通知失败
+							return Message.error("退款失败");
+						}
+					} else {
+						return Message.error("退款失败");
+					}
 				} else {
 					return Message.error("查询失败");
 				}
