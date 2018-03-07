@@ -49,7 +49,6 @@ public class GaugeQuestion extends OrderEntity {
      *  {id:序号,name:"你几岁了",image:"图片地址",score:分数} */
     @Lob
     @Column(columnDefinition="longtext comment '选项'")
-    @JsonIgnore
     private String content;
 
     /** 量表 */

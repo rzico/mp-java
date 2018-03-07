@@ -154,7 +154,7 @@
                     }
                 }, 
                  {
-                    "aTargets": [1],
+                    "aTargets": [2],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -185,7 +185,7 @@
                 {"orderable": false, "aTargets": [0, 5]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01

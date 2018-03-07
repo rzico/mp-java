@@ -103,12 +103,22 @@ public class GaugeQuestionController extends BaseController {
 
 		List<Map<String,Object>> data = new ArrayList<>();
 		for (int i=0;i<name.length;i++) {
-			Map<String,Object> q = new HashMap<String, Object>();
-			q.put("id",i);
-			q.put("name",name[i]);
-			q.put("image",image[i]);
-			q.put("score",score[i]);
-			data.add(q);
+			if (gaugeQuestion.getType().equals(GaugeQuestion.Type.text) && name[i]!=null && !"".equals(name[i])) {
+				Map<String, Object> q = new HashMap<String, Object>();
+				q.put("id", i);
+				q.put("name", name[i]);
+				q.put("image", image[i]);
+				q.put("score", score[i]);
+				data.add(q);
+			}
+			if (gaugeQuestion.getType().equals(GaugeQuestion.Type.image) && image[i]!=null && !"".equals(image[i])) {
+				Map<String, Object> q = new HashMap<String, Object>();
+				q.put("id", i);
+				q.put("name", name[i]);
+				q.put("image", image[i]);
+				q.put("score", score[i]);
+				data.add(q);
+			}
 		}
 
 		entity.setContent(JsonUtils.toJson(data));
@@ -208,9 +218,9 @@ public class GaugeQuestionController extends BaseController {
 	@ResponseBody
 	public Message list(Long gaugeId,Date beginDate, Date endDate, GaugeQuestion.Type type, Pageable pageable, ModelMap model) {
 
-		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		Filter typeFilter = new Filter("gauge", Filter.Operator.eq, gaugeService.find(gaugeId));
-		filters.add(typeFilter);
+//		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+//		Filter typeFilter = new Filter("gauge", Filter.Operator.eq, gaugeService.find(gaugeId));
+//		filters.add(typeFilter);
 
 
 		Page<GaugeQuestion> page = gaugeQuestionService.findPage(beginDate,endDate,pageable);

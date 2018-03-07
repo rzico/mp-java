@@ -178,7 +178,7 @@
                             success: function(message){
                                 layer.close(load);
                                 if(message.type ==  "success"){
-//                                    关闭当前页面
+                                    alert(message.data);
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
                                     parent.closeWindow(index, '添加成功');
@@ -199,7 +199,6 @@
             });
 
             function add_opt() {
-                alert(1);
                 var $row = $option.find("tr:eq(0)").clone().show();
                 $row.removeClass("hidden");
                 $row.appendTo($option);
