@@ -91,7 +91,6 @@ public class KagaController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Message list(HttpServletRequest request,ModelMap model){
-        String resp = Kaga.gameList();
         List<Filter> filters = new ArrayList<Filter>();
 
         filters.add(new Filter("status", Filter.Operator.eq, GameList.Status.enabled));
