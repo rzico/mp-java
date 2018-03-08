@@ -57,10 +57,9 @@ public class GaugeGeneController extends BaseController {
 	 * 主页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(ModelMap model) {
+	public String index(Long gaugeId,ModelMap model) {
 
-		model.addAttribute("gauges",gaugeService.findAll());
-
+		model.addAttribute("gaugeId",gaugeId);
 		return "/admin/gaugeGene/list";
 	}
 
@@ -69,9 +68,12 @@ public class GaugeGeneController extends BaseController {
 	 * 添加
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String add(ModelMap model) {
+	public String add(Long gaugeId,ModelMap model) {
 
-		model.addAttribute("gauges",gaugeService.findAll());
+		model.addAttribute("gaugeId",gaugeId);
+
+		Gauge gauge = gaugeService.find(gaugeId);
+		model.addAttribute("gaugeQuestions",gauge.getGaugeQuestions());
 
 		return "/admin/gaugeGene/add";
 	}
@@ -128,10 +130,9 @@ public class GaugeGeneController extends BaseController {
 	 * 编辑
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String edit(Long id, ModelMap model) {
+	public String edit(Long id,Long gaugeId, ModelMap model) {
 
-		model.addAttribute("gauges",gaugeService.findAll());
-
+		model.addAttribute("gaugeId",gaugeId);
 		model.addAttribute("data",gaugeGeneService.find(id));
 
 		return "/admin/gaugeGene/edit";

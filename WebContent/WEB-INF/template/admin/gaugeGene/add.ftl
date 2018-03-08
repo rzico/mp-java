@@ -10,35 +10,28 @@
     <link rel="Bookmark" href="/favicon.ico" >
     <link rel="Shortcut Icon" href="/favicon.ico" />
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="/lib/html5shiv.js"></script>
-    <script type="text/javascript" src="/lib/respond.min.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
 
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
 
     <!--[if IE 6]>
-    <script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
-    <link href="/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
-            </div>
-        </div>
-
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>因子：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -46,19 +39,27 @@
             </div>
         </div>
 
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Gauge：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if gauges??]
-				<select name="gaugeId" class="select" style="background-color: #FFFFFF">
-                    [#list gauges as gauge]
-					<option value="${gauge.id}">${gauge.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+            <label class="form-label col-xs-4 col-sm-2">：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+            [#if gaugeQuestions??]
+                [#list gaugeQuestions as question]
+                    <div class="check-box">
+                        <label class=""><input type="checkbox" value="${question.id}" name="questions" >${question.orders}</label>
+                    </div>
+                [/#list]
+            [/#if]
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">排序：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -69,18 +70,18 @@
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
-        <script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
-        <script type="text/javascript" src="/h-ui/js/H-ui.min.js"></script>
-        <script type="text/javascript" src="/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
         <!--请在下方写此页面业务相关的脚本-->
-        <script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
-        <script type="text/javascript" src="/lib/jquery.ISelect/jquery.lSelect.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
         <script type="text/javascript">

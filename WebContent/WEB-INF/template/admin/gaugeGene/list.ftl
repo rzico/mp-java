@@ -11,44 +11,29 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <style>
         .center {
             text-align: center;
         }
     </style>
-    <script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>GaugeGene</title>
+    <title>量表因子</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> GaugeGene <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
-                                               href="javascript:location.replace(location.href);" title="刷新"><i
-        class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-    <div class=""> 日期范围：
-        <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin"
-               class="input-text Wdate" style="width:120px;">
-        -
-        <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
-               class="input-text Wdate" style="width:120px;">
-
-        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
-        <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
-            <i class="Hui-iconfont">&#xe665;</i> 查询
-        </button>
-    </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; GaugeGene &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增GaugeGene</a>
+                <a href="javascript:;" onclick="add('首页 &gt; 量表管理 &gt; 因子','add.jhtml?gaugeId=${gaugeId}','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
@@ -64,16 +49,16 @@
     </div>
 </div>
 <!--_footer 作为公共模版分离出去-->
-<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
-<script type="text/javascript" src="/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script>
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-<script type="text/javascript" src="/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
     var table;
     var isSelectAll = false;
@@ -121,7 +106,7 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(6).attr('style', 'text-align: left;');
+                $(row).children('td').eq(4).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -145,22 +130,17 @@
                     "sTitle": "修改日期",
                     "sClass": "center"
                 },
-                {
-                    "mData": "orders",
-                    "sTitle": "Orders",
-                    "sClass": "center"
-                },
-                {
                     "mData": "name",
                     "sTitle": "因子",
                     "sClass": "center"
                 },
-                {
-                    "mData": "mapGauge",
-                    "sTitle": "Gauge",
-                    "sClass": "center"
-                },
-                {
+               {
+                   "mData": "orders",
+                   "sTitle": "排序",
+                   "sClass": "center"
+               },
+
+               {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -193,17 +173,7 @@
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','gaugeView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [7],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; GaugeGene &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 因子','edit.jhtml?gaugeId=${gaugeId}&id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -212,13 +182,9 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 6, 7]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 6]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
-                var _beginDate = $("#datemin").val();
-                var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {
@@ -228,11 +194,7 @@
                 $.ajax({
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
-                        "aoData": JSON.stringify(aoData),
-                        "beginDate":_beginDate,
-                        "endDate":_endDate,
-
-                        "searchValue":_searchValue
+                        "aoData": JSON.stringify(aoData)
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',
@@ -265,7 +227,7 @@
 
     /*搜索*/
     function search(){
-     table.ajax.reload();
+        table.ajax.reload();
     }
     /*添加*/
     function add(title, url, w, h) {
