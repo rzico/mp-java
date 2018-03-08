@@ -62,7 +62,7 @@ public class EnterpriseController extends BaseController {
 		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","入驻商家"));
+		types.add(new MapEntity("shop","合作商家"));
 		model.addAttribute("types",types);
 
 //		model.addAttribute("areas",areaService.findAll());
@@ -81,10 +81,8 @@ public class EnterpriseController extends BaseController {
 		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","入驻商家"));
+		types.add(new MapEntity("shop","合作商家"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("areas",areaService.findAll());
 
 		return "/admin/enterprise/add";
 	}
@@ -152,8 +150,6 @@ public class EnterpriseController extends BaseController {
 		types.add(new MapEntity("personal","个人代理商"));
 		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("data",enterpriseService.find(id));
 
