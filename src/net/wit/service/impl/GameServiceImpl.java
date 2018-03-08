@@ -105,6 +105,12 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 			if (member.getBalance().compareTo(BigDecimal.ZERO)<0) {
 				throw new Exception("余额不足");
 			}
+			BigDecimal freeze = game.getDebit().multiply(new BigDecimal("0.333")).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			if (member.getFreezeBalance().compareTo(freeze)>0) {
+				member.setFreezeBalance(member.getFreezeBalance().subtract(freeze));
+			} else {
+				member.setFreezeBalance(BigDecimal.ZERO);
+			}
 			memberDao.merge(member);
 			memberDao.flush();
 			Deposit deposit = new Deposit();
