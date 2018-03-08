@@ -10,6 +10,7 @@ import net.wit.entity.Game;
 import net.wit.entity.Member;
 import net.wit.plat.im.User;
 import net.wit.plat.nihtan.Crypto;
+import net.wit.plat.nihtan.Kaga;
 import net.wit.service.CategoryService;
 import net.wit.service.GameService;
 import net.wit.service.MemberService;
@@ -80,6 +81,20 @@ public class NihtanController extends BaseController {
 
     }
 
+
+    /**
+     *  进入游戏
+     */
+
+    @RequestMapping(value = "/kaga")
+    public String kaga(String data,String hash,HttpServletRequest request,ModelMap model){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        model.addAttribute("data",data);
+        model.addAttribute("hash",hash);
+        model.addAttribute("url", Kaga.sessionURL);
+        return "common/kaga";
+
+    }
 
     /**
      *  进入游戏同步金额

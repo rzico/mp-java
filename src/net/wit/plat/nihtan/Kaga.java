@@ -26,6 +26,7 @@ import java.util.Map;
  * Created by zhangsr on 2018/1/29.
  */
 public class Kaga {
+
     public static String vendor_name="rzico";
     public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
     public static String sessionURL = "http://api.wapceo.com/api/kaga/open";
@@ -171,24 +172,12 @@ public class Kaga {
         data.put("vendor_name",vendor_name);
         data.put("mobile","1");
         data.put("game_id",game);
-        data.put("pc_redirect","http://weex.udzyw.com/home");
-        data.put("mo_redirect","http://weex.udzyw.com/home");
+        data.put("pc_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
+        data.put("mo_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
         String dataStr = JsonUtils.toJson(data);
-        System.out.println(dataStr);
         String hash = encrypt(key,dataStr);
         String resp = post(sessionURL+"?hash="+hash,dataStr);
-        System.out.println(resp);
-        String url = "https://gmtestcdn.kga8.com/?p="+
-                URLEncoder.encode(getQueryString(resp,"p"))+"&g="+
-                URLEncoder.encode(getQueryString(resp,"g"))+"&cr="+
-                URLEncoder.encode(getQueryString(resp,"cr"))+"&t="+
-                URLEncoder.encode(getQueryString(resp,"t"))+"&u="+
-                URLEncoder.encode(getQueryString(resp,"u"))+"&loc="+
-                URLEncoder.encode(getQueryString(resp,"loc"))+"&ak="+
-                URLEncoder.encode(getQueryString(resp,"ak"))+"&l="+
-                URLEncoder.encode(getQueryString(resp,"l"));
-
-        return url;
+        return resp;
     }
 
 

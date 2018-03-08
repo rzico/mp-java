@@ -301,7 +301,7 @@ public class NihtanController extends BaseController {
         System.out.println(video);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
-        params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?nihtan="+data.get("token")+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
+        params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?nihtan="+URLEncoder.encode(data.get("token"))+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
         String key = game.replace("-","_")+"_"+table;
         if (video.containsKey(key)) {
             params.put("video", video.get(key));
