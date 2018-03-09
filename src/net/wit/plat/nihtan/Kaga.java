@@ -175,8 +175,12 @@ public class Kaga {
         data.put("pc_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
         data.put("mo_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
         String dataStr = JsonUtils.toJson(data);
+        System.out.println("data="+JsonUtils.toJson(data));
         String hash = encrypt(key,dataStr);
-        String resp = post(sessionURL+"?hash="+hash,dataStr);
+        System.out.println("hash="+hash);
+        System.out.println("api.url="+"http://api.wapceo.com/api/kaga/open?hash="+hash);
+        String resp = post("http://api.wapceo.com/api/kaga/open?hash="+hash,dataStr);
+        System.out.println("resp="+resp);
         return resp;
     }
 

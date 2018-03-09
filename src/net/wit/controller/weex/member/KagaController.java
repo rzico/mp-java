@@ -13,6 +13,7 @@ import net.wit.plat.nihtan.Kaga;
 import net.wit.service.GameListService;
 import net.wit.service.MemberService;
 import net.wit.util.JsonUtils;
+import org.apache.commons.net.util.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,30 +113,33 @@ public class KagaController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+//
+//        Map<String,String> data = new HashMap<String,String>();
+//        data.put("user_id",member.getUsername());
+//
+//        if (member.getNickName()!=null) {
+//            data.put("user_name", member.getNickName());
+//        } else {
+//            data.put("user_name", member.getUsername());
+//        }
+//        data.put("user_ip",request.getRemoteAddr());
+//        data.put("vendor_name",Kaga.vendor_name);
+//        data.put("mobile","1");
+//        data.put("game_id",game);
+//        data.put("pc_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
+//        data.put("mo_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
+//
+//        String dataStr = JsonUtils.toJson(data);
+//
+//        String hash = Kaga.encrypt(Kaga.key,dataStr);
+//
+//        String hdata = URLEncoder.encode(Base64.encodeBase64String(dataStr.getBytes()));
+//
+//        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//
+//        String resp = bundle.getString("nihtan.url")+"/api/kaga.jhtml?data="+hdata+"&hash="+URLEncoder.encode(hash);
 
-        Map<String,String> data = new HashMap<String,String>();
-        data.put("user_id",member.getUsername());
-
-        if (member.getNickName()!=null) {
-            data.put("user_name", member.getNickName());
-        } else {
-            data.put("user_name", member.getUsername());
-        }
-        data.put("user_ip",request.getRemoteAddr());
-        data.put("vendor_name",Kaga.vendor_name);
-        data.put("mobile","1");
-        data.put("game_id",game);
-        data.put("pc_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
-        data.put("mo_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
-
-        String dataStr = JsonUtils.toJson(data);
-        String hash = Kaga.encrypt(Kaga.key,dataStr);
-
-        String hdata = URLEncoder.encode(dataStr);
-
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-
-        String resp = "http://"+bundle.getString("weixin.url")+"/api/kaga.jhtml?data="+hdata+"&hash="+URLEncoder.encode(hash);
+        String resp = Kaga.getSession(game,request.getRemoteAddr(),member);
 
         Map<String,String> params = new HashMap<>();
         params.put("url",resp);

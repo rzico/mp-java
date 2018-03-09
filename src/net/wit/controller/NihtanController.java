@@ -17,6 +17,7 @@ import net.wit.service.MemberService;
 import net.wit.service.RedisService;
 import net.wit.util.JsonUtils;
 import net.wit.util.WebUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +91,11 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/kaga")
     public String kaga(String data,String hash,HttpServletRequest request,ModelMap model){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        model.addAttribute("data",data);
+        try {
+            model.addAttribute("data", new String(Base64.decode(data),"utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         model.addAttribute("hash",hash);
         model.addAttribute("url", Kaga.sessionURL);
         return "common/kaga";
