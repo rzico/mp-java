@@ -11,6 +11,7 @@ import java.util.List;
 public class ArticleCategoryModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
+    private String thumbnail;
 
     public Long getId() {
         return id;
@@ -28,9 +29,18 @@ public class ArticleCategoryModel extends BaseModel implements Serializable {
         this.name = name;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     public void bind(ArticleCategory catalog) {
         this.id = catalog.getId();
         this.name = catalog.getName();
+        this.thumbnail = catalog.getThumbnail();
     }
 
     public static List<ArticleCategoryModel> bindList(List<ArticleCategory> catalogs) {
