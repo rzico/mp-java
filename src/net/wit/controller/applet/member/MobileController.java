@@ -102,7 +102,7 @@ public class MobileController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(HttpServletRequest request){
+    public Message submit(String captcha,HttpServletRequest request){
         Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
@@ -112,7 +112,6 @@ public class MobileController extends BaseController {
         Member member = memberService.getCurrent();
         try {
 
-            String captcha = null;
             try {
                 captcha = new String(org.apache.commons.codec.binary.Base64.decodeBase64(captcha),"utf-8");
             } catch (UnsupportedEncodingException e) {
@@ -156,7 +155,7 @@ public class MobileController extends BaseController {
      */
     @RequestMapping(value = "/captcha", method = RequestMethod.POST)
     @ResponseBody
-    public Message captcha(HttpServletRequest request){
+    public Message captcha(String captcha,HttpServletRequest request){
         Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
@@ -168,7 +167,6 @@ public class MobileController extends BaseController {
                 return Message.error("无效验证码");
             }
 
-            String captcha = null;
             try {
                 captcha = new String(org.apache.commons.codec.binary.Base64.decodeBase64(captcha),"utf-8");
             } catch (UnsupportedEncodingException e) {
