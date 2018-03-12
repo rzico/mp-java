@@ -35,6 +35,10 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Long hits;
     /** 点赞数 */
     private Long laud;
+    /** 是否评论 */
+    private Boolean isReview;
+    /** 是否赞赏 */
+    private Boolean isReward;
     /** 是否发布 */
     private Boolean isPublish;
     /** 内容 */
@@ -170,6 +174,22 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.shareNickName = shareNickName;
     }
 
+    public Boolean getIsReview() {
+        return isReview;
+    }
+
+    public void setIsReview(Boolean isReview) {
+        this.isReview = isReview;
+    }
+
+    public Boolean getIsReward() {
+        return isReward;
+    }
+
+    public void setIsReward(Boolean isReward) {
+        this.isReward = isReward;
+    }
+
     public void bind(Article article, Member shareUser) {
         this.id = article.getId();
         this.title = article.getTitle();
@@ -177,6 +197,8 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.music = article.getMusic();
         this.thumbnail = article.getThumbnail();
         this.createDate = article.getCreateDate();
+        this.isReview = article.getIsReview();
+        this.isReward = article.getIsReward();
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();

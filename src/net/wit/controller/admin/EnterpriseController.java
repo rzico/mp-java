@@ -62,7 +62,7 @@ public class EnterpriseController extends BaseController {
 		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","入驻商家"));
+		types.add(new MapEntity("shop","合作商家"));
 		model.addAttribute("types",types);
 
 //		model.addAttribute("areas",areaService.findAll());
@@ -81,10 +81,14 @@ public class EnterpriseController extends BaseController {
 		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","城市代理商"));
 		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","入驻商家"));
+		types.add(new MapEntity("shop","合作商家"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("areas",areaService.findAll());
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("waiting","待审核"));
+		statuss.add(new MapEntity("success","已审核"));
+		statuss.add(new MapEntity("failure","已关闭"));
+		model.addAttribute("statuss",statuss);
 
 		return "/admin/enterprise/add";
 	}
@@ -108,6 +112,8 @@ public class EnterpriseController extends BaseController {
 		entity.setBrokerage(enterprise.getBrokerage());
 
 		entity.setType(enterprise.getType());
+
+		entity.setStatus(enterprise.getStatus());
 
 		entity.setArea(areaService.find(areaId));
 		
@@ -153,7 +159,11 @@ public class EnterpriseController extends BaseController {
 		types.add(new MapEntity("shop","入驻商家"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("areas",areaService.findAll());
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("waiting","待审核"));
+		statuss.add(new MapEntity("success","已审核"));
+		statuss.add(new MapEntity("failure","已关闭"));
+		model.addAttribute("statuss",statuss);
 
 		model.addAttribute("data",enterpriseService.find(id));
 
@@ -175,6 +185,8 @@ public class EnterpriseController extends BaseController {
 		entity.setBrokerage(enterprise.getBrokerage());
 
 		entity.setType(enterprise.getType());
+
+		entity.setStatus(enterprise.getStatus());
 
 		entity.setArea(areaService.find(areaId));
 		
@@ -223,10 +235,14 @@ public class EnterpriseController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Enterprise.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Enterprise.Type type,Enterprise.Status status, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
+			filters.add(typeFilter);
+		}
+		if (status!=null) {
+			Filter typeFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(typeFilter);
 		}
 		Admin admin =adminService.getCurrent();

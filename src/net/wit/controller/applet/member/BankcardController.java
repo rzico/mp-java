@@ -1,4 +1,4 @@
-package net.wit.controller.weex.member;
+package net.wit.controller.applet.member;
 
 import net.sf.json.JSONObject;
 import net.wit.Message;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 
@@ -27,8 +28,8 @@ import java.util.*;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexMemberBankcardController")
-@RequestMapping("/weex/member/bankcard")
+@Controller("appletBankcardController")
+@RequestMapping("/applet/member/bankcard")
 public class BankcardController extends BaseController {
 
     private String queryApi="http://api43.market.alicloudapi.com";
@@ -62,9 +63,14 @@ public class BankcardController extends BaseController {
      */
     @RequestMapping(value = "/query")
     @ResponseBody
-    public Message query(HttpServletRequest request){
-       String banknum = rsaService.decryptParameter("banknum", request);
-       rsaService.removePrivateKey(request);
+    public Message query(String banknum,HttpServletRequest request){
+        try {
+            banknum = new String(org.apache.commons.codec.binary.Base64.decodeBase64(banknum),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        // rsaService.decryptParameter("banknum", request);
+//        rsaService.removePrivateKey(request);
         if (banknum==null) {
             return Message.error("银行卡号解密为空");
         }
@@ -95,11 +101,24 @@ public class BankcardController extends BaseController {
      * 手机验证码登录时，发送验证码
      * mobile 手机号
      */
-    @RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
+    @RequestMapping(value = "/send_mobile")
     @ResponseBody
-    public Message sendMobile(HttpServletRequest request) {
-        String m = rsaService.decryptParameter("mobile", request);
-        rsaService.removePrivateKey(request);
+    public Message sendMobile(String mobile,HttpServletRequest request) {
+
+
+        String m = null;
+
+        if (mobile!=null) {
+            try {
+                m = new String(org.apache.commons.codec.binary.Base64.decodeBase64(mobile), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        String m = rsaService.decryptParameter("mobile", request);
+//        rsaService.removePrivateKey(request);
+
         if (m==null) {
             Member member = memberService.getCurrent();
             if (member!=null & member.getMobile()!=null) {
@@ -108,6 +127,7 @@ public class BankcardController extends BaseController {
                 return Message.error("无效手机号");
             }
         }
+
         int challege = StringUtils.Random6Code();
         String securityCode = String.valueOf(challege);
 
@@ -129,7 +149,7 @@ public class BankcardController extends BaseController {
      */
     @RequestMapping(value = "/captcha", method = RequestMethod.POST)
     @ResponseBody
-    public Message captcha(HttpServletRequest request){
+    public Message captcha(String captcha,HttpServletRequest request){
         Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
             return Message.error("验证码已过期");
@@ -140,8 +160,13 @@ public class BankcardController extends BaseController {
             if (!member.getMobile().equals(safeKey.getKey())) {
                 return Message.error("无效验证码");
             }
-            String captcha = rsaService.decryptParameter("captcha", request);
-            rsaService.removePrivateKey(request);
+            try {
+                captcha = new String(org.apache.commons.codec.binary.Base64.decodeBase64(captcha),"utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+//            String captcha = rsaService.decryptParameter("captcha", request);
+//            rsaService.removePrivateKey(request);
             if (member==null) {
                 return Message.error("无效验证码");
             }
@@ -164,10 +189,12 @@ public class BankcardController extends BaseController {
     /**
      *  绑定银行卡
      */
-    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    @RequestMapping(value = "/submit")
     @ResponseBody
     public Message submit(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
+        System.out.println(body);
+        System.out.println(captcha);
         Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
         redisService.remove(Member.MOBILE_BIND_CAPTCHA);
         if (redis==null) {
@@ -185,8 +212,17 @@ public class BankcardController extends BaseController {
                 return Message.error("无效验证码");
             }
 
-            String mima = rsaService.decryptValue(body, request);
-            rsaService.removePrivateKey(request);
+            String mima = null;
+            try {
+                mima = new String(org.apache.commons.codec.binary.Base64.decodeBase64(body),"utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(mima);
+
+//            String mima = rsaService.decryptValue(body, request);
+//            rsaService.removePrivateKey(request);
 
             if (mima==null) {
                 return Message.error("数据解密失败");
@@ -216,6 +252,7 @@ public class BankcardController extends BaseController {
             String resp =  EntityUtils.toString(response.getEntity());
             JSONObject result = JSONObject.fromObject(resp);
 
+            System.out.println(result);
             if ("0".equals(result.getString("error_code"))) {
                 JSONObject inf = result.getJSONObject("result").getJSONObject("information");
                 if (!"1".equals(inf.getString("iscreditcard"))){
@@ -245,6 +282,7 @@ public class BankcardController extends BaseController {
                 } else {
                     bankcardService.save(bankcard);
                 }
+                System.out.println(bankcard);
                 if (member.getMobile()==null) {
                     Member m = memberService.findByMobile(data.get("mobile"));
                     if (m!=null) {

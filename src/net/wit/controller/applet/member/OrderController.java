@@ -39,6 +39,7 @@ public class OrderController extends BaseController {
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
+
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
 	@Resource(name = "receiverServiceImpl")
@@ -150,7 +151,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,String memo,Long xuid) {
+	Message create(Long id,Integer quantity,Long receiverId,Long xuid,String memo) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -169,8 +170,10 @@ public class OrderController extends BaseController {
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
+			if (product.getIsLowStock(quantity)) {
+				return Message.error("库存不足");
+			}
 		}
-
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
 
 		OrderModel model = new OrderModel();
@@ -181,7 +184,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 支付
 	 */
-	@RequestMapping(value = "/payment", method = RequestMethod.POST)
+	@RequestMapping(value = "/payment")
 	public @ResponseBody Message payment(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
@@ -294,7 +297,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 签收
 	 */
-	@RequestMapping(value = "/completed", method = RequestMethod.POST)
+	@RequestMapping(value = "/completed")
 	public @ResponseBody
 	Message completed(String sn) {
 		Member member = memberService.getCurrent();
@@ -305,7 +308,8 @@ public class OrderController extends BaseController {
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			try {
 				orderService.complete(order, null);
-				return Message.success("关闭成功");
+
+				return Message.success("签收成功");
 			} catch (Exception e) {
 				return Message.error(e.getMessage());
 			}
@@ -317,17 +321,21 @@ public class OrderController extends BaseController {
 	/**
 	 * 提醒卖家发货
 	 */
-	@RequestMapping(value = "/shipp_remind", method = RequestMethod.GET)
+	@RequestMapping(value = "/shipp_remind", method = RequestMethod.POST)
 	public @ResponseBody
 	Message shippRemind(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("sn订单无效");
+		}
 		OrderLog orderLog = new OrderLog();
 		orderLog.setOrder(order);
 		orderLog.setType(OrderLog.Type.shipping);
 		orderLog.setContent("请卖家尽快发货");
 		orderLog.setOperator(member.userId());
 		messageService.orderSellerPushTo(orderLog);
+
 		return Message.success("提醒成功");
 	}
 
@@ -360,6 +368,29 @@ public class OrderController extends BaseController {
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
 		Page<Order> page = orderService.findPage(null,null,status,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(OrderListModel.bindList(page.getContent()));
+		return Message.bind(model,request);
+	}
+
+
+	@RequestMapping(value = "/promoter", method = RequestMethod.GET)
+	public @ResponseBody
+	Message promoter(Pageable pageable, HttpServletRequest request) {
+
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("promoter", Filter.Operator.eq,member));
+		filters.add(new Filter("status", Filter.Operator.eq,Order.OrderStatus.completed));
+
+		pageable.setFilters(filters);
+		pageable.setOrderDirection(net.wit.Order.Direction.desc);
+		pageable.setOrderProperty("modifyDate");
+		Page<Order> page = orderService.findPage(null,null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
