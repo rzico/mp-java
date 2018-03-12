@@ -27,18 +27,6 @@ public class GaugeResult extends OrderEntity {
 
     private static final long serialVersionUID = 24L;
 
-    /**  最小得分 */
-    @Min(0)
-    @Digits(integer = 12, fraction = 3)
-    @Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '最小得分'")
-    private BigDecimal minscore;
-
-    /**  最大得分 */
-    @Min(0)
-    @Digits(integer = 12, fraction = 3)
-    @Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '最大得分'")
-    private BigDecimal maxscore;
-
     /** 量表 */
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,6 +38,18 @@ public class GaugeResult extends OrderEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private  GaugeGene gaugeGene;
+
+    /** 水平设置
+     *  [{gene:"因子",attribute:"显性"}] */
+    @Lob
+    @Column(columnDefinition="longtext comment '水平设置'")
+    private String attribute;
+
+    /** 因子关系
+     *  [{gene:"因子"}] */
+    @Lob
+    @Column(columnDefinition="longtext comment '因子关系'")
+    private String scompare;
 
     /** 结果模板 */
     @Lob
@@ -63,22 +63,6 @@ public class GaugeResult extends OrderEntity {
 
     public void setGauge(Gauge gauge) {
         this.gauge = gauge;
-    }
-
-    public BigDecimal getMinscore() {
-        return minscore;
-    }
-
-    public void setMinscore(BigDecimal minscore) {
-        this.minscore = minscore;
-    }
-
-    public BigDecimal getMaxscore() {
-        return maxscore;
-    }
-
-    public void setMaxscore(BigDecimal maxscore) {
-        this.maxscore = maxscore;
     }
 
     public GaugeGene getGaugeGene() {
@@ -95,5 +79,21 @@ public class GaugeResult extends OrderEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
+    }
+
+    public String getScompare() {
+        return scompare;
+    }
+
+    public void setScompare(String scompare) {
+        this.scompare = scompare;
     }
 }

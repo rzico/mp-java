@@ -100,9 +100,6 @@ public class GaugeResultController extends BaseController {
 
 		entity.setContent(gaugeResult.getContent());
 
-		entity.setMaxscore(gaugeResult.getMaxscore());
-
-		entity.setMinscore(gaugeResult.getMinscore());
 
 		entity.setGauge(gaugeService.find(gaugeId));
 
@@ -169,9 +166,6 @@ public class GaugeResultController extends BaseController {
 
 		entity.setContent(gaugeResult.getContent());
 
-		entity.setMaxscore(gaugeResult.getMaxscore());
-
-		entity.setMinscore(gaugeResult.getMinscore());
 
 		entity.setGauge(gaugeService.find(gaugeId));
 

@@ -24,6 +24,14 @@ public class GaugeGene extends OrderEntity {
 
     private static final long serialVersionUID = 24L;
 
+
+    public enum ScoreType{
+        /**  得分总和  */
+        total,
+        /**  最大得分 */
+        smax
+    };
+
     /** 因子 */
     @Length(max = 200)
     @NotNull
@@ -37,11 +45,17 @@ public class GaugeGene extends OrderEntity {
     @JsonIgnore
     private List<GaugeQuestion> questions = new ArrayList<GaugeQuestion>();
 
-    /** 对应题目 */
-    @OneToMany(fetch = FetchType.LAZY)
-    @OrderBy("orders asc")
-    @JsonIgnore
-    private List<GaugeResult> results = new ArrayList<GaugeResult>();
+    /** 计算方式 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null comment '计算方式 {total:得分总和,smax:最大得分}'")
+    private ScoreType scoreType;
+
+    /** 水平 数值为百份号
+     *  [{name:"隐性",min:0,max:25}] */
+
+    @Lob
+    @Column(columnDefinition="longtext comment '水平'")
+    private String attribute;
 
     /** 量表 */
     @NotNull
@@ -73,11 +87,19 @@ public class GaugeGene extends OrderEntity {
         this.questions = questions;
     }
 
-    public List<GaugeResult> getResults() {
-        return results;
+    public String getAttribute() {
+        return attribute;
     }
 
-    public void setResults(List<GaugeResult> results) {
-        this.results = results;
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
+    }
+
+    public ScoreType getScoreType() {
+        return scoreType;
+    }
+
+    public void setScoreType(ScoreType scoreType) {
+        this.scoreType = scoreType;
     }
 }
