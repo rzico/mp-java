@@ -148,7 +148,7 @@ public class WeiXinController extends BaseController {
 
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        out.print("echostr");
+        out.print(echostr);
         out.flush();
         return true;
 
