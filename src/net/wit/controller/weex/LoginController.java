@@ -85,7 +85,7 @@ public class LoginController extends BaseController {
             return Message.error("无效手机号");
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
+        if (bundle.containsKey("weex") && "2".equals(bundle.getString("weex"))) {
             if (memberService.findByMobile(m)==null) {
                 return Message.error("没有注册不能登录");
             }
