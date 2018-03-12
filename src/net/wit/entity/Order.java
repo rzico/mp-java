@@ -71,11 +71,20 @@ public class Order extends BaseEntity {
 	 */
 	public enum ShippingMethod {
 
-		/** 卖家配送 */
+		/** 普通快递 */
 		shipping,
 
 		/** 线下提货 */
-		pickup
+		pickup,
+
+		/** 统仓统配 */
+		warehouse,
+
+		/** 存入卡包 */
+		ecard,
+
+		/** 虚拟货品 */
+		virtual
 	}
 
 	/**
@@ -268,6 +277,14 @@ public class Order extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Area area;
+
+	/** 发货时间 */
+	@Column(columnDefinition="datetime comment '发货时间'")
+	private Date shippingDate;
+
+	/** 退货时间 */
+	@Column(columnDefinition="datetime comment '退货时间'")
+	private Date returnedDate;
 
 	/** 买家 */
 	@JsonIgnore
@@ -672,6 +689,22 @@ public class Order extends BaseEntity {
 
 	public Boolean getIsDistribution() {
 		return isDistribution;
+	}
+
+	public Date getShippingDate() {
+		return shippingDate;
+	}
+
+	public void setShippingDate(Date shippingDate) {
+		this.shippingDate = shippingDate;
+	}
+
+	public Date getReturnedDate() {
+		return returnedDate;
+	}
+
+	public void setReturnedDate(Date returnedDate) {
+		this.returnedDate = returnedDate;
 	}
 
 	/**

@@ -65,15 +65,15 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20">
-        <span class="l">
-            [@adminDirective]
-                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
-                    <a href="javascript:;" onclick="" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量审核</a>
-                [/#if]
-            [/@adminDirective]
-        </span>
-    </div>
+    [#--<div class="cl pd-5 bg-1 bk-gray mt-20">--]
+        [#--<span class="l">--]
+            [#--[@adminDirective]--]
+                [#--[#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]--]
+                    [#--<a href="javascript:;" onclick="" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量</a>--]
+                [#--[/#if]--]
+            [#--[/@adminDirective]--]
+        [#--</span>--]
+    [#--</div>--]
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">

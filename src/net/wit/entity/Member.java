@@ -49,6 +49,21 @@ public class Member extends BaseEntity {
 		secrecy
 	}
 
+	/**
+	 * 星级
+	 */
+	public enum VIP {
+
+		/** v1 */
+		vip1,
+
+		/** v2 */
+		vip2,
+
+		/** v3 */
+		vip3
+	}
+
 	/** "身份信息"参数名称 */
 	public static final String PRINCIPAL_ATTRIBUTE_NAME = "MEMBER.PRINCIPAL";
 
@@ -98,6 +113,11 @@ public class Member extends BaseEntity {
 	@Min(0)
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '余额'")
 	private BigDecimal balance;
+
+	/** 冻结 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '冻结'")
+	private BigDecimal freezeBalance;
 
 	/** 是否启用 */
 	@NotNull
@@ -193,6 +213,11 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private String sign;
 
+	/** 星级 */
+	@NotNull
+	@Column(columnDefinition="int(11) comment '星级 { vip1:vip1,vip2:vip2,vip3:vip3}'")
+	private VIP vip;
+
 //	/** 会员注册项值0 */
 //	@Length(max = 200)
 //	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
@@ -281,7 +306,6 @@ public class Member extends BaseEntity {
 
 	/** 推广 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private Member promoter;
 
@@ -349,6 +373,14 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private Set<MemberFollow> fans = new HashSet<MemberFollow>();
 
+	public VIP getVip() {
+		return vip;
+	}
+
+	public void setVip(VIP vip) {
+		this.vip = vip;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -380,7 +412,16 @@ public class Member extends BaseEntity {
 //	public void setPoint(Long point) {
 //		this.point = point;
 //	}
-//
+
+
+	public BigDecimal getFreezeBalance() {
+		return freezeBalance;
+	}
+
+	public void setFreezeBalance(BigDecimal freezeBalance) {
+		this.freezeBalance = freezeBalance;
+	}
+
 	public BigDecimal getBalance() {
 		return balance;
 	}
@@ -929,6 +970,10 @@ public class Member extends BaseEntity {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public BigDecimal effectiveBalance() {
+		return getBalance().subtract(getFreezeBalance());
 	}
 
 	public String userId() {

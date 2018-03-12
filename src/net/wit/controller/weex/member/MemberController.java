@@ -3,9 +3,7 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.MemberAttributeModel;
-import net.wit.controller.model.MemberModel;
-import net.wit.controller.model.MemberOptionModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.plat.im.User;
 import net.wit.service.*;
@@ -79,6 +77,27 @@ public class MemberController extends BaseController {
         return Message.bind(model,request);
    }
 
+
+    /**
+     *  我推广的会员
+     */
+    @RequestMapping(value = "/promoter", method = RequestMethod.GET)
+    @ResponseBody
+    public Message promoter(Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("promoter", Filter.Operator.eq,member));
+
+        pageable.setFilters(filters);
+        Page<Member> page = memberService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(MemberListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
 
     /**
      * 获取权限
