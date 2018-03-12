@@ -50,7 +50,7 @@ public class Evaluation extends BaseEntity {
     /** 状态 */
     @NotNull
     @Column(columnDefinition="int(11) not null comment '状态 {waiting:待付款,paid:已付款,completed:已完成,cancelled:已取消}'")
-    private EvalStatus  evalStatus;
+    private EvalStatus evalStatus;
 
     /** 主标题 */
     @Length(max = 200)
