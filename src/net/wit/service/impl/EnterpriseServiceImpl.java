@@ -128,6 +128,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setLogo(topic.getLogo());
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.shop);
+			enterprise.setStatus(Enterprise.Status.waiting);
 			enterpriseDao.persist(enterprise);
 		}
 		Admin admin = adminDao.findByMember(member);
@@ -175,6 +176,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setLogo(member.getLogo());
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.personal);
+			enterprise.setStatus(Enterprise.Status.waiting);
 			enterpriseDao.persist(enterprise);
 		}
 		Admin admin = adminDao.findByMember(member);

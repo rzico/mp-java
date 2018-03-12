@@ -53,8 +53,10 @@ public class Article extends BaseEntity{
         /** 视频 */
         video,
         /** 商品 */
-        product
-    };
+        product,
+        /** 链接 */
+        href
+        };
 
     /** 类型 */
     @NotNull

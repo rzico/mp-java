@@ -1,4 +1,4 @@
-package net.wit.entity.eqxiuentity;
+package net.wit.robot.eqxiu;
 
 import java.util.List;
 
