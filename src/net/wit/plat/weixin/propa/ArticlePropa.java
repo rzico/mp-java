@@ -66,6 +66,14 @@ public class ArticlePropa {
     //没用 上传报错45002
     private static final String UPVIDEO="https://api.weixin.qq.com/cgi-bin/media/uploadvideo?access_token=ACCESS_TOKEN";
 
+    //获取第三方平台component_access_token
+    private static final String COMPONENTTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_component_token";
+
+    //获取预授权码
+    private static final String AUTHCODE="https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=COMPONENT_TOKEN";
+
+    //授权码换取调用接口调用凭据
+    private static final String CODEANDTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=COMPONENT_TOKEN";
 
     /**
      * 把二进制流转化为byte字节数组
@@ -454,5 +462,42 @@ public class ArticlePropa {
         return WeixinApi.httpRequest(ArticlePropa.DOWNLOAD_DATA.replace("ACCESS_TOKEN",token),"POST",string);
     }
 
+    /**
+     * 获取第三方平台component_access_token
+     *
+     * @param appId 第三方平台appid
+     * @param appSecret 第三方平台appsecret
+     * @param verifyTicket 微信后台推送的ticket，此ticket会定时推送
+     * @return  component_access_token
+     * 其他类型的素材消息，则响应的直接为素材的内容，开发者可以自行保存为文件
+     */
+    public static String getComponentToken(String appId,String appSecret, String verifyTicket){
+        String string ="{\"component_appid\":\""+appId+"\" ,\"component_appsecret\": \""+appSecret+"\"component_verify_ticket\": \""+verifyTicket+"\"}";
+        JSONObject jsonObject=WeixinApi.httpRequest(ArticlePropa.COMPONENTTOKEN,"POST",string);
+        System.out.println("获取的第三方平台的Token:"+jsonObject);
+        return jsonObject.get("component_access_token").toString();
+    }
 
+    /**
+     * 获取第三方平台预授权码pre_auth_code
+     *
+     * @param appId 第三方平台appId
+     * @param ComponentToken 第三方平台access_token
+     * @return  component_access_token
+     * 其他类型的素材消息，则响应的直接为素材的内容，开发者可以自行保存为文件
+     */
+    public static String getAuthCode(String ComponentToken,String appId){
+        String string="{\"component_appid\":\""+appId+"\"}";
+        JSONObject jsonObject=WeixinApi.httpRequest(ArticlePropa.AUTHCODE.replace("COMPONENT_TOKEN",ComponentToken),"POST",string);
+        System.out.println("获取的第三方平台的预授权码:"+jsonObject);
+        return jsonObject.get("pre_auth_code").toString();
+    }
+
+
+    public static String getAuthorizationCode(String ComponentToken, String appId, String authCode){
+        String string="{\"component_appid\":\""+appId+"\" ,\"authorization_code\": \""+authCode+"\"}";
+        JSONObject jsonObject=WeixinApi.httpRequest(ArticlePropa.CODEANDTOKEN.replace("COMPONENT_TOKEN",ComponentToken),"POST",string);
+        System.out.println("换取的令牌:"+jsonObject);
+        return jsonObject.get("authorization_info").toString();
+    }
 }
