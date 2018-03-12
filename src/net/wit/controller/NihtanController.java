@@ -77,7 +77,7 @@ public class NihtanController extends BaseController {
         parameterMap.put("g",game);
         parameterMap.put("t",table);
         parameterMap.put("r",range);
-        parameterMap.put("m","1");
+        parameterMap.put("m","0");
         model.addAttribute("parameterMap",parameterMap);
         return "common/play";
 
