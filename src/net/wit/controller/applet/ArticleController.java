@@ -65,6 +65,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "memberFollowServiceImpl")
     private MemberFollowService memberFollowService;
 
+    @Resource(name = "tagServiceImpl")
+    private TagService tagService;
+
     /**
      * 文章预览详情
      */
@@ -138,7 +141,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Boolean isTop,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,Long tagId,Boolean isTop,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
@@ -157,11 +160,15 @@ public class ArticleController extends BaseController {
         } else {
             filters.add(new Filter("isAudit", Filter.Operator.eq, true));
         }
+        List<Tag> tags = null;
+        if (tagId!=null) {
+            tags = tagService.findList(tagId);
+        }
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
 
         pageable.setFilters(filters);
-        Page<Article> page = articleService.findPage(null,null,null,pageable);
+        Page<Article> page = articleService.findPage(null,null,tags,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
