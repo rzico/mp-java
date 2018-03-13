@@ -11,6 +11,8 @@ import java.util.Set;
 public class ProductCategoryModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
+    private String thumbnail;
+
     private int count;
 
     public Long getId() {
@@ -37,10 +39,19 @@ public class ProductCategoryModel extends BaseModel implements Serializable {
         this.count = count;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     public void bind(ProductCategory productCategory) {
         this.id = productCategory.getId();
         this.name = productCategory.getName();
         this.count = productCategory.getProducts().size();
+        this.thumbnail = productCategory.getThumbnail();
     }
     public static List<ProductCategoryModel> bindList(List<ProductCategory> productCategories) {
         List<ProductCategoryModel> ms = new ArrayList<ProductCategoryModel>();

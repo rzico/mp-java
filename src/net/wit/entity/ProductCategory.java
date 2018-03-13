@@ -45,6 +45,11 @@ public class ProductCategory extends OrderEntity {
 	@Column(nullable = false,columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 缩略图 */
+	@Length(max = 200)
+	@Column(length = 200,columnDefinition="varchar(255) comment '缩略图'")
+	private String thumbnail;
+
 	/** 树路径 */
 	@Column(nullable = false,columnDefinition="varchar(255) not null comment '树路径'")
 	private String treePath;
@@ -185,6 +190,7 @@ public class ProductCategory extends OrderEntity {
 		this.products = products;
 	}
 
+
 	/**
 	 * 获取树路径
 	 * 
@@ -215,5 +221,13 @@ public class ProductCategory extends OrderEntity {
 
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 }
