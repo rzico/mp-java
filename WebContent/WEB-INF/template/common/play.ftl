@@ -30,5 +30,6 @@
       [/#list]
     </form>
 </div>
+</body>
 
 </html>
