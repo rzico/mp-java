@@ -51,10 +51,11 @@ public class GaugeGene extends OrderEntity {
     private ScoreType scoreType;
 
     /** 水平 数值为百份号
-     *  [{name:"隐性",min:0,max:25}] */
+     *  [{name:"隐性",smin:0,smax:25}] */
 
     @Lob
     @Column(columnDefinition="longtext comment '水平'")
+    @JsonIgnore
     private String attribute;
 
     /** 量表 */

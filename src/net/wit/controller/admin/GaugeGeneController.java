@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,6 +10,9 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.controller.makey.model.GaugeGeneAttributeModel;
+import net.wit.controller.makey.model.GaugeQuestionOptionModel;
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -42,6 +46,10 @@ import net.wit.controller.admin.model.*;
 @Controller("adminGaugeGeneController")
 @RequestMapping("/admin/gaugeGene")
 public class GaugeGeneController extends BaseController {
+
+	@Resource(name = "gaugeQuestionServiceImpl")
+	private GaugeQuestionService gaugeQuestionService;
+
 	@Resource(name = "gaugeGeneServiceImpl")
 	private GaugeGeneService gaugeGeneService;
 	
@@ -50,7 +58,6 @@ public class GaugeGeneController extends BaseController {
 
 	@Resource(name = "productServiceImpl")
 	private ProductService productService;
-
 
 
 	/**
@@ -72,6 +79,11 @@ public class GaugeGeneController extends BaseController {
 
 		model.addAttribute("gaugeId",gaugeId);
 
+		List<MapEntity> scoreTypes = new ArrayList<>();
+		scoreTypes.add(new MapEntity("total","因子得分总和"));
+		scoreTypes.add(new MapEntity("smax","因子最大得分"));
+		model.addAttribute("scoreTypes",scoreTypes);
+
 		Gauge gauge = gaugeService.find(gaugeId);
 		model.addAttribute("gaugeQuestions",gauge.getGaugeQuestions());
 
@@ -84,16 +96,31 @@ public class GaugeGeneController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(GaugeGene gaugeGene, Long gaugeId){
+	public Message save(String name, Integer orders, GaugeGene.ScoreType scoreType,Long gaugeId, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
 		GaugeGene entity = new GaugeGene();	
 
-		entity.setCreateDate(gaugeGene.getCreateDate());
+		entity.setOrders(orders);
 
-		entity.setModifyDate(gaugeGene.getModifyDate());
+		entity.setScoreType(scoreType);
 
-		entity.setOrders(gaugeGene.getOrders() == null ? 0 : gaugeGene.getOrders());
+		entity.setName(name);
 
-		entity.setName(gaugeGene.getName());
+		entity.setQuestions(gaugeQuestionService.findList(questions));
+
+
+		List<Map<String,Object>> data = new ArrayList<>();
+		for (int i=0;i<sname.length;i++) {
+			if (sname[i]!=null) {
+				Map<String, Object> q = new HashMap<String, Object>();
+				q.put("sname", sname[i]);
+				q.put("smin", smin[i]);
+				q.put("smax", smax[i]);
+				data.add(q);
+			}
+		}
+
+		entity.setAttribute(JsonUtils.toJson(data));
+
 
 		entity.setGauge(gaugeService.find(gaugeId));
 		
@@ -131,9 +158,22 @@ public class GaugeGeneController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id,Long gaugeId, ModelMap model) {
+		GaugeGene gaugeGene = gaugeGeneService.find(id);
 
 		model.addAttribute("gaugeId",gaugeId);
-		model.addAttribute("data",gaugeGeneService.find(id));
+		List<GaugeGeneAttributeModel> opts = JsonUtils.toObject(gaugeGene.getAttribute(),List.class);
+
+		List<MapEntity> scoreTypes = new ArrayList<>();
+		scoreTypes.add(new MapEntity("total","因子得分总和"));
+		scoreTypes.add(new MapEntity("smax","因子最大得分"));
+		model.addAttribute("scoreTypes",scoreTypes);
+		model.addAttribute("options",opts);
+		model.addAttribute("options_length",opts.size());
+
+		Gauge gauge = gaugeGene.getGauge();
+		model.addAttribute("gaugeQuestions",gauge.getGaugeQuestions());
+
+		model.addAttribute("data",gaugeGene);
 
 		return "/admin/gaugeGene/edit";
 	}
@@ -144,19 +184,32 @@ public class GaugeGeneController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(GaugeGene gaugeGene, Long gaugeId){
-		GaugeGene entity = gaugeGeneService.find(gaugeGene.getId());
-		
-		entity.setCreateDate(gaugeGene.getCreateDate());
+	public Message update(Long id,String name, Integer orders, GaugeGene.ScoreType scoreType,Long gaugeId, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
+		GaugeGene entity = gaugeGeneService.find(id);
 
-		entity.setModifyDate(gaugeGene.getModifyDate());
 
-		entity.setOrders(gaugeGene.getOrders() == null ? 0 : gaugeGene.getOrders());
+		entity.setOrders(orders);
 
-		entity.setName(gaugeGene.getName());
+		entity.setScoreType(scoreType);
 
-		entity.setGauge(gaugeService.find(gaugeId));
-		
+		entity.setName(name);
+
+
+		entity.setQuestions(gaugeQuestionService.findList(questions));
+
+		List<Map<String,Object>> data = new ArrayList<>();
+		for (int i=0;i<sname.length;i++) {
+			if (sname[i]!=null) {
+				Map<String, Object> q = new HashMap<String, Object>();
+				q.put("sname", sname[i]);
+				q.put("smin", smin[i]);
+				q.put("smax", smax[i]);
+				data.add(q);
+			}
+		}
+
+		entity.setAttribute(JsonUtils.toJson(data));
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -175,7 +228,11 @@ public class GaugeGeneController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Long gaugeId,Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		Filter typeFilter = new Filter("gauge", Filter.Operator.eq, gaugeService.find(gaugeId));
+		filters.add(typeFilter);
 
 		Page<GaugeGene> page = gaugeGeneService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

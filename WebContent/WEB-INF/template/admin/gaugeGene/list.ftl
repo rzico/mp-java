@@ -26,14 +26,14 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>量表因子</title>
+    <title>GaugeGene</title>
 </head>
 <body>
 <div class="page-container">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 量表管理 &gt; 因子','add.jhtml?gaugeId=${gaugeId}','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增</a>
+                <a href="javascript:;" onclick="add('首页 &gt; GaugeGene &gt; 新增','add.jhtml?gaugeId=${gaugeId}','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增因子</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
@@ -106,7 +106,7 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(4).attr('style', 'text-align: left;');
+                $(row).children('td').eq(6).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -130,17 +130,17 @@
                     "sTitle": "修改日期",
                     "sClass": "center"
                 },
+                {
                     "mData": "name",
                     "sTitle": "因子",
                     "sClass": "center"
                 },
-               {
-                   "mData": "orders",
-                   "sTitle": "排序",
-                   "sClass": "center"
-               },
-
-               {
+                {
+                    "mData": "orders",
+                    "sTitle": "排序",
+                    "sClass": "center"
+                },
+                {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -156,7 +156,7 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
@@ -173,7 +173,7 @@
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 因子','edit.jhtml?gaugeId=${gaugeId}&id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; GaugeGene &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -185,6 +185,7 @@
                 {"orderable": false, "aTargets": [0, 6]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
+                /*处理查询数据*/
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {
@@ -194,7 +195,8 @@
                 $.ajax({
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
-                        "aoData": JSON.stringify(aoData)
+                        "aoData": JSON.stringify(aoData),
+                        "gaugeId":${gaugeId}
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',
@@ -227,13 +229,14 @@
 
     /*搜索*/
     function search(){
-        table.ajax.reload();
+     table.ajax.reload();
     }
     /*添加*/
     function add(title, url, w, h) {
         var index = layer.open({
             type:2,
-            title:title,
+            title: false,
+            closeBtn: 0, //不显示
             content:url
         });
         layer.full(index);
@@ -246,7 +249,8 @@
     function edit(title, url, id, w, h) {
         var index = layer.open({
             type:2,
-            title:title,
+            title: false,
+            closeBtn: 0, //不显示
             content:url
         });
         layer.full(index);

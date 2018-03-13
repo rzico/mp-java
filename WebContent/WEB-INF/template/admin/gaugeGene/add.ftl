@@ -33,6 +33,7 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
         <div class="row cl">
+            <input type="hidden" value="${gaugeId}" id="gaugeId" name="gaugeId">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>因子：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
@@ -41,7 +42,7 @@
 
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">：</label>
+            <label class="form-label col-xs-4 col-sm-2">题目：</label>
             <div class="formControls col-xs-8 col-sm-9">
             [#if gaugeQuestions??]
                 [#list gaugeQuestions as question]
@@ -50,6 +51,60 @@
                     </div>
                 [/#list]
             [/#if]
+            </div>
+        </div>
+
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>计分类型：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+            [#if scoreTypes??]
+                [#list scoreTypes as scoreType]
+                    <div class="radio-box">
+                        <input name="scoreType" type="radio" id="scoreType-${scoreType_index}" value="${scoreType.id}">
+                        <label for="type-${scoreType_index}">${scoreType.name}</label>
+                    </div>
+                [/#list]
+            [/#if]
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">水平设置：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <table class="table table-border table-bordered table-bg table-hover table-sort">
+                    <thead>
+                    <tr class="text-c">
+                        <th width="100">名称</th>
+                        <th width="100">最小值(%)</th>
+                        <th width="100">最大值(%)</th>
+                    </tr>
+                    </thead>
+                    <tbody  id="option">
+                    <tr class="text-c hidden" >
+                        <td>
+                            <input type="text" class="input-text" value="" placeholder="" id="sname" name="sname">
+                        </td>
+                        <td class="text-c">
+                            <input type="text" class="input-text" value="" placeholder="" id="smin" name="smin"  onInput="floatInit(this)">
+                        </td>
+                        <td class="text-c">
+                            <input type="text" class="input-text" value="" placeholder="" id="smax" name="smax"  onInput="floatInit(this)">
+                        </td>
+                        <td class="td-manage">
+                            <a style="text-decoration:none" class="ml-5" onClick="del_opt(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"></label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input class="btn btn-primary radius" onClick="add_opt()" type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
             </div>
         </div>
 
@@ -85,6 +140,7 @@
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
         <script type="text/javascript">
+            var $option = $("#option");
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -96,6 +152,9 @@
                 $("#form-add").validate({
                     rules:{
                         name:{
+                            required:true,
+                        },
+                        questions:{
                             required:true,
                         },
 
@@ -136,6 +195,19 @@
                     }
                 });
             });
+
+
+            function add_opt() {
+                var $row = $option.find("tr:eq(0)").clone().show();
+                $row.removeClass("hidden");
+                $row.appendTo($option);
+            };
+
+            function del_opt(val) {
+                var $this = val;
+                $this.closest("tr").remove();
+            };
+
         </script>
 </body>
 </html>

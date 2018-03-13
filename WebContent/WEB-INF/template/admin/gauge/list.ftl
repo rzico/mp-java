@@ -213,6 +213,11 @@
                 },
                 {
                     "mData": "id",
+                    "sTitle": "设置",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
                 }
@@ -277,9 +282,20 @@
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='题目' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 题目','../gaugeQuestion/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>题目</i></a>" +
-                                   "<a title='因子' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 因子','../gaugeGene/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>因子</i></a>" +
-                                   "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>修改</i></a>" +
-                                   "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                    "<a title='因子' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 因子','../gaugeGene/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>因子</i></a>" +
+                                    "<a title='结果' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 结果','../gaugeResult/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>结果</i></a>";
+                        }else{
+                            return "";
+                        }
+                    }
+
+                },
+                {
+                    "aTargets": [14],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return  "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
                         }

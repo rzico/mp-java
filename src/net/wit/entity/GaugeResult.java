@@ -39,6 +39,10 @@ public class GaugeResult extends OrderEntity {
     @JsonIgnore
     private  GaugeGene gaugeGene;
 
+    /** 标题  */
+    @Column(columnDefinition="varchar(255) not null comment '标题'")
+    private String title;
+
     /** 水平设置
      *  [{gene:"因子",attribute:"显性"}] */
     @Lob
@@ -56,6 +60,14 @@ public class GaugeResult extends OrderEntity {
     @Column(columnDefinition="longtext comment '结果模板'")
     @JsonIgnore
     private String content;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Gauge getGauge() {
         return gauge;
