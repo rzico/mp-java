@@ -67,7 +67,7 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; Gauge &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <a href="javascript:;" onclick="add('首页 &gt; 量表管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe600;</i> 新增量表</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>

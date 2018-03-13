@@ -33,12 +33,6 @@ public class GaugeResult extends OrderEntity {
     @JsonIgnore
     private  Gauge gauge;
 
-    /** 对应因子 */
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private  GaugeGene gaugeGene;
-
     /** 标题  */
     @Column(columnDefinition="varchar(255) not null comment '标题'")
     private String title;
@@ -50,7 +44,7 @@ public class GaugeResult extends OrderEntity {
     private String attribute;
 
     /** 因子关系
-     *  [{gene:"因子"}] */
+     *  [] */
     @Lob
     @Column(columnDefinition="longtext comment '因子关系'")
     private String scompare;
@@ -77,14 +71,6 @@ public class GaugeResult extends OrderEntity {
         this.gauge = gauge;
     }
 
-    public GaugeGene getGaugeGene() {
-        return gaugeGene;
-    }
-
-    public void setGaugeGene(GaugeGene gaugeGene) {
-        this.gaugeGene = gaugeGene;
-    }
-
     public String getContent() {
         return content;
     }
@@ -108,4 +94,6 @@ public class GaugeResult extends OrderEntity {
     public void setScompare(String scompare) {
         this.scompare = scompare;
     }
+
+
 }

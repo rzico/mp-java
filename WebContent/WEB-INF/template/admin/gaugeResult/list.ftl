@@ -32,7 +32,7 @@
 <div class="page-container">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; GaugeResult &gt; 新增','add.jhtml?gaugeId=${gaugeId}','','510')" class="btn btn-primary radius">
+                <a href="javascript:;" onclick="add('首页 &gt; 量表管理 &gt; 新增','add.jhtml?gaugeId=${gaugeId}','','510')" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe600;</i> 新增结果</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
@@ -106,7 +106,7 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(6).attr('style', 'text-align: left;');
+                $(row).children('td').eq(4).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -173,7 +173,7 @@
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; GaugeResult &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -192,6 +192,7 @@
                     icon: 16
                     ,shade: 0.01
                 });
+
                 $.ajax({
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
@@ -235,7 +236,7 @@
     function add(title, url, w, h) {
         var index = layer.open({
             type:2,
-            title:title,
+            title:false,
             content:url
         });
         layer.full(index);
@@ -248,7 +249,7 @@
     function edit(title, url, id, w, h) {
         var index = layer.open({
             type:2,
-            title:title,
+            title:false,
             content:url
         });
         layer.full(index);

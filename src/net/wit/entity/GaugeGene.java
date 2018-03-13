@@ -1,6 +1,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.sf.json.JSONObject;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -102,5 +103,17 @@ public class GaugeGene extends OrderEntity {
 
     public void setScoreType(ScoreType scoreType) {
         this.scoreType = scoreType;
+    }
+
+    public List<String> getAttributes() {
+        List<String> data = new ArrayList<>();
+        if (getAttribute()!=null) {
+            net.sf.json.JSONArray attrs = net.sf.json.JSONArray.fromObject(getAttribute());
+            for (int i=0;i<attrs.size();i++) {
+                JSONObject attr = attrs.getJSONObject(i);
+                data.add(attr.getString("sname"));
+            }
+        }
+        return data;
     }
 }

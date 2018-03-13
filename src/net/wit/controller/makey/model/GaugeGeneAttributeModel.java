@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 //文章列表图
 
 public class GaugeGeneAttributeModel extends BaseModel implements Serializable {
-    /** 题目 */
+    /** 水平 */
     private String sname;
     /**  最小值 */
     private BigDecimal smin;
-    /** 最大值 */
+    /**  最大值 */
     private BigDecimal smax;
 
     public String getSname() {

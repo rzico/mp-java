@@ -142,6 +142,12 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     private List<GaugeQuestion> gaugeQuestions = new ArrayList<GaugeQuestion>();
 
+    /** 因子*/
+    @OneToMany(mappedBy = "gauge",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orders asc")
+    @JsonIgnore
+    private List<GaugeGene> gaugeGenes = new ArrayList<GaugeGene>();
+
     /** 所属商品 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -319,5 +325,13 @@ public class Gauge extends BaseEntity {
 
     public void setSpots(List<String> spots) {
         this.spots = spots;
+    }
+
+    public List<GaugeGene> getGaugeGenes() {
+        return gaugeGenes;
+    }
+
+    public void setGaugeGenes(List<GaugeGene> gaugeGenes) {
+        this.gaugeGenes = gaugeGenes;
     }
 }
