@@ -20,10 +20,9 @@
         }
     </style>
 </head>
-<body  onload="javascript: document.forms[0].submit();">
+<body onload="javascript: document.forms[0].submit();">
 
 <div class="demo">
-
     <p>重定向...</p>
     <form action="${requestUrl}"[#if requestMethod??] method="${requestMethod}"[/#if][#if requestCharset?has_content] accept-charset="${requestCharset}"[/#if]>
       [#list parameterMap.entrySet() as entry]
