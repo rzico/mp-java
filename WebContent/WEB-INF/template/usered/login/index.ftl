@@ -143,7 +143,7 @@
                                 $(":submit").prop("disabled", false);
                                 layer.msg(message.content, {icon: 1, time: 1000});
                                 if (message.type == "success") {
-                                    location.href = "${base}/usered/index/main.jhtml";
+                                    location.href = "${base}/usered/index/main1.jhtml";
                                 }
                             },
                             error: function (message) {
