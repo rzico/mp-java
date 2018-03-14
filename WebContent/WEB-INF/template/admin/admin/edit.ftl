@@ -58,7 +58,7 @@
                     [#if roles??]
                         [#list roles as role]
                             <div class="check-box">
-                                <label class=""><input type="checkbox" [#if data.roles?seq_contains(role)] checked [/#if] value="${role.id}" name="roleIds" >${role.name}</label>
+                                <input type="checkbox" value="${role.id}" name="roleIds"  [#if dataRoles?seq_contains(role)] checked [/#if]><label class="">${role.name}</label>
                             </div>
                         [/#list]
                     [/#if]

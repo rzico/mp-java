@@ -195,7 +195,10 @@ public class AdminController extends BaseController {
 
 		model.addAttribute("roles",roleService.findAll());
 
-		model.addAttribute("data",adminService.find(id));
+        Admin admin = adminService.find(id);
+		model.addAttribute("dataRoles",admin.getRoles());
+
+		model.addAttribute("data",admin);
 
 		return "/admin/admin/edit";
 	}

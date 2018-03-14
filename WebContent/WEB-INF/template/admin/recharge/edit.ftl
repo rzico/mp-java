@@ -57,7 +57,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">充值金额：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    <span> ${data.amount}&nbsp;&nbsp;(人民币:元)</span>
+                    <span> ${data.amount}</span>
                 </div>
             </div>
 
