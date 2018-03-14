@@ -63,8 +63,8 @@ public class BankcardController extends BaseController {
     @RequestMapping(value = "/query")
     @ResponseBody
     public Message query(HttpServletRequest request){
-       String banknum = rsaService.decryptParameter("banknum", request);
-       rsaService.removePrivateKey(request);
+        String banknum = rsaService.decryptParameter("banknum", request);
+        rsaService.removePrivateKey(request);
         if (banknum==null) {
             return Message.error("银行卡号解密为空");
         }
