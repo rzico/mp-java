@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Plugin - 互亿无线
  * 
- * @author SHOP++ Team
+ * @author
  * @version 3.0
  */
 @Component("iHuYiSmsPlugin")

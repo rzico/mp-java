@@ -121,11 +121,11 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 					List<SmsPlugin> sms = pluginService.getSmsPlugins(true);
 					String msg = "【" + bundle.getString("signature") + "】" + content;
 					if (sms.size()>0) {
-						if ("86".equals(mobile.substring(0,2))) {
+						//if ("86".equals(mobile.substring(0,2))) {
 							sms.get(0).sendSms(mobile, msg);
-						} else {
-							sms.get(0).sendIRTSms(mobile, msg);
-						}
+						//} else {
+						//	sms.get(0).sendIRTSms(mobile, msg);
+						//}
 					}
 				}
 			});

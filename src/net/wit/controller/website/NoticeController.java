@@ -76,10 +76,13 @@ public class NoticeController extends BaseController {
              NoticeModel m = new NoticeModel();
              m.setType("tel");
              m.setTitle("欢迎咨询 "+admin.getEnterprise().getPhone());
+             m.setUrl("tel://"+admin.getEnterprise().getPhone());
+             data.add(m);
          } else {
              NoticeModel m = new NoticeModel();
              m.setType("none");
              m.setTitle("欢迎咨询光临！");
+             data.add(m);
          }
          return Message.bind(data,request);
     }
