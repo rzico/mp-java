@@ -385,7 +385,7 @@ public class OrderController extends BaseController {
 
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("promoter", Filter.Operator.eq,member));
-		filters.add(new Filter("status", Filter.Operator.eq,Order.OrderStatus.completed));
+		filters.add(new Filter("orderStatus", Filter.Operator.eq,Order.OrderStatus.completed));
 
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);

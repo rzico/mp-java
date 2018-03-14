@@ -108,9 +108,9 @@ public class Recharge extends BaseEntity {
 	@JsonIgnore
 	private Member member;
 
-	/** 代理 */
+	/** 员工 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private Admin admin;
 
@@ -225,4 +225,5 @@ public class Recharge extends BaseEntity {
 			return null;
 		}
 	}
+
 }

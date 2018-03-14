@@ -377,4 +377,28 @@ public class OrderController extends BaseController {
 
 
 
+
+	@RequestMapping(value = "/promoter", method = RequestMethod.GET)
+	public @ResponseBody
+	Message promoter(Pageable pageable, HttpServletRequest request) {
+
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("promoter", Filter.Operator.eq,member));
+		filters.add(new Filter("orderStatus", Filter.Operator.eq,Order.OrderStatus.completed));
+
+		pageable.setFilters(filters);
+		pageable.setOrderDirection(net.wit.Order.Direction.desc);
+		pageable.setOrderProperty("modifyDate");
+		Page<Order> page = orderService.findPage(null,null,null,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(OrderListModel.bindList(page.getContent()));
+		return Message.bind(model,request);
+	}
+
+
 }

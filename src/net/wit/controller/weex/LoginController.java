@@ -110,6 +110,29 @@ public class LoginController extends BaseController {
      * 手机验证码登录时，发送验证码
      * mobile 手机号
      */
+    @RequestMapping(value = "/send_test", method = RequestMethod.GET)
+    @ResponseBody
+    public Message sendMobile(String m,HttpServletRequest request) {
+        int challege = StringUtils.Random6Code();
+        String securityCode = String.valueOf(challege);
+
+        SafeKey safeKey = new SafeKey();
+        safeKey.setKey(m);
+        safeKey.setValue(securityCode);
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
+        redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
+
+        Smssend smsSend = new Smssend();
+        smsSend.setMobile(m);
+        smsSend.setContent("验证码 :" + securityCode + ",只用于登录使用。");
+        smssendService.smsSend(smsSend);
+        return Message.success("发送成功");
+    }
+
+    /**
+     * 手机验证码登录时，发送验证码
+     * mobile 手机号
+     */
     @RequestMapping(value = "/send_email")
     @ResponseBody
     public Message sendMail(String email,HttpServletRequest request) {

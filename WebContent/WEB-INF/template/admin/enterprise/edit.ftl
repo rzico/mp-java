@@ -87,6 +87,23 @@
                     <input type="text" class="input-text" value="${data.brokerage}" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
                 </div>
             </div>
+
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">状态：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if statuss??]
+                        [#list statuss as status]
+                            <div class="radio-box">
+                                <input name="status" type="radio" id="type-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
+                                <label for="status-${status_index}">${status.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
             <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
