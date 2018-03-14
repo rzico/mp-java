@@ -50,6 +50,9 @@ public class TransferController extends BaseController {
     @Resource(name = "snServiceImpl")
     private SnService snService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     @Resource(name = "bankcardServiceImpl")
     private BankcardService bankcardService;
 
@@ -99,7 +102,12 @@ public class TransferController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        return Message.success(member.effectiveBalance(),"success");
+        BigDecimal effective = member.effectiveBalance();
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            effective = effective.subtract(admin.getEnterprise().getCreditLine());
+        }
+        return Message.success(effective,"success");
     }
 
     /**
@@ -112,9 +120,17 @@ public class TransferController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        if (member.effectiveBalance().compareTo(amount) < 0) {
+
+        BigDecimal effective = member.effectiveBalance();
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            effective = effective.subtract(admin.getEnterprise().getCreditLine());
+        }
+
+        if (effective.compareTo(amount) < 0) {
             return Message.error("可提现余额不足");
         }
+
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Transfer transfer = new Transfer();
         Bankcard card = bankcardService.findDefault(member);
