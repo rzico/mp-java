@@ -19,7 +19,10 @@ import net.wit.Filter.Operator;
 import net.wit.dao.DepositDao;
 import net.wit.dao.MemberDao;
 import net.wit.plat.im.Push;
+import net.wit.plugin.SmsPlugin;
 import net.wit.service.MessageService;
+import net.wit.service.PluginConfigService;
+import net.wit.service.PluginService;
 import net.wit.util.JsonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -55,6 +58,10 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
+
+	@Resource(name = "pluginServiceImpl")
+	private PluginService pluginService;
+
 
 	@Resource(name = "smssendDaoImpl")
 	public void setBaseDao(SmssendDao smssendDao) {
@@ -111,23 +118,14 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 			taskExecutor.execute(new Runnable() {
 				public void run() {
 					ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-					String smsSingleRequestServerUrl = "http://smssh1.253.com/msg/send/json";
-					String msg = "【" + bundle.getString("signature") + "】"+content;
-					String phone = mobile;
-					String report= "true";
-					String r = "0000";
-					try {
-						SmsSendRequest smsSingleRequest = new SmsSendRequest(bundle.getString("softwareSerialNo"), bundle.getString("password"), msg, phone, report);
-						String requestJson = JsonUtils.toJson(smsSingleRequest);
-						String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
-						SmsSendResponse smsSingleResponse = JsonUtils.toObject(response, SmsSendResponse.class);
-						if (smsSingleResponse.getCode().equals("0")) {
-							r = "0000";
+					List<SmsPlugin> sms = pluginService.getSmsPlugins(true);
+					String msg = "【" + bundle.getString("signature") + "】" + content;
+					if (sms.size()>0) {
+						if ("86".equals(mobile.substring(0,2))) {
+							sms.get(0).sendSms(mobile, msg);
 						} else {
-							r = "-"+smsSingleResponse.getErrorMsg();
+							sms.get(0).sendIRTSms(mobile, msg);
 						}
-					} catch (Exception e) {
-						r = "-9999";
 					}
 				}
 			});

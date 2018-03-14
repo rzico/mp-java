@@ -1,14 +1,11 @@
-package net.wit.controller.website;
+package net.wit.controller.applet;
 
-import net.wit.*;
 import net.wit.Message;
-import net.wit.Order;
+import net.wit.Pageable;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleListModel;
-import net.wit.controller.model.ArticleViewModel;
-import net.wit.controller.model.GoodsListModel;
 import net.wit.controller.model.NoticeModel;
-import net.wit.entity.*;
+import net.wit.entity.Admin;
+import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +24,8 @@ import java.util.List;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("websiteNoticeController")
-@RequestMapping("website/notice")
+@Controller("appletNoticeController")
+@RequestMapping("applet/notice")
 public class NoticeController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
