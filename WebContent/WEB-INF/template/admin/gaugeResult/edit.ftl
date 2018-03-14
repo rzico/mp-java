@@ -14,66 +14,81 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
 
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
     <!--[if IE 6]>
-    <script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
 
-    <link href="/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
+            <input type="hidden"value="${gaugeId}" id="gaugeId" name="gaugeId">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
+                </div>
             </div>
-        </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">水平：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    [#if gaugeGenes??]
+                        [#list gaugeGenes as gaugeGene]
+                            <input type="hidden" value="${gaugeGene.id}" id="genes" name="genes">
+                            <label for="attr-${gaugeGene_index}">${gaugeGene.name}=</label>
+                            <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+			          	<select id="attr-${gaugeGene_index}" name="attrs" class="select" style="background-color: #FFFFFF">
+					       <option value="任意">任意</option>
+                            [#list gaugeGene.attributes as attribute]
+                                <option value="${attribute}">${attribute}</option>
+                            [/#list]
+				        </select>
+			            </span>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">得分：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    [#if gaugeGenes??]
+                        [#list gaugeGenes as gaugeGene]
+                            [#if gaugeGene_index>0]
+                                <label> > </label>
+                            [/#if]
+                            <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+			          	<select id="scompare-${gaugeGene_index}" name="scompare" class="select" style="background-color: #FFFFFF">
+                            [#list gaugeGenes as gene]
+                                <option value="${gene.id}">${gene.name}</option>
+                            [/#list]
+				        </select>
+			            </span>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">结果模板：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.content}" placeholder="" id="content" name="content">
-            </div>
+            <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
         </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Gauge：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if gauges??]
-				<select name="gaugeId" class="select" style="background-color: #FFFFFF">
-                    [#list gauges as gauge]
-					<option[#if data.gauge?? && gauge.id == data.gauge.id] selected[/#if] value="${gauge.id}">${gauge.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">GaugeGene：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if gaugeGenes??]
-				<select name="gaugeGeneId" class="select" style="background-color: #FFFFFF">
-                    [#list gaugeGenes as gaugeGene]
-					<option[#if data.gaugeGene?? && gaugeGene.id == data.gaugeGene.id] selected[/#if] value="${gaugeGene.id}">${gaugeGene.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
@@ -87,18 +102,27 @@
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
-        <script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
-        <script type="text/javascript" src="/h-ui/js/H-ui.min.js"></script>
-        <script type="text/javascript" src="/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
         <!--请在下方写此页面业务相关的脚本-->
-        <script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-        <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
-        <script type="text/javascript" src="/lib/jquery.ISelect/jquery.lSelect.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+
+
+<script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
@@ -106,6 +130,12 @@
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
+                });
+
+                var ue = UE.getEditor('content');-
+
+                ue.ready(function() {//编辑器初始化完成再赋值
+                    ue.setContent('${data.content}');
                 });
 
                 $("#form-update").validate({
