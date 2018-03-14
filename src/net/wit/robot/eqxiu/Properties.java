@@ -1,12 +1,15 @@
-package net.wit.entity.eqxiuentity;
+package net.wit.robot.eqxiu;
 
 import java.util.List;
 
 /**
  * Created by Eric on 2018/2/24.
  */
-public class InProperties {
+public class Properties {
 
+//    private PageScroll pageScroll;
+//    private List<String> triggerGroup;
+    private String thumbSrc;
     private boolean scratch;
     private String src;
     private ImgStyle imgStyle;
@@ -78,5 +81,25 @@ public class InProperties {
     public Var getVar() {
         return var;
     }
+//    public void setPageScroll(PageScroll pageScroll) {
+//        this.pageScroll = pageScroll;
+//    }
+//    public PageScroll getPageScroll() {
+//        return pageScroll;
+//    }
+//
+//    public void setTriggerGroup(List<String> triggerGroup) {
+//        this.triggerGroup = triggerGroup;
+//    }
+//    public List<String> getTriggerGroup() {
+//        return triggerGroup;
+//    }
 
+    public void setThumbSrc(String thumbSrc) {
+        this.thumbSrc = thumbSrc;
+    }
+    public String getThumbSrc() {
+        return thumbSrc;
+    }
 }
+
