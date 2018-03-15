@@ -76,12 +76,28 @@
                     <span> ${message("Transfer.Type."+data.type)}</span>
                 </div>
             </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">提现金额：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span id="voucher">${data.amount}</span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">凭证号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span id="voucher">${data.voucher}</span>
+                </div>
+            </div>
+
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>当前状态：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     <span> ${message("Transfer.Status."+data.status)}</span>
                 </div>
             </div>
+
             <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">备注：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -101,7 +117,8 @@
                 [#if data.status=="waiting"]
                     [@adminDirective]
                         [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
-                            <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交付款&nbsp;&nbsp;">
+                            <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交银行&nbsp;&nbsp;">
+                            <input class="btn btn-primary radius" type="button" onclick="edit(${data.id})" value="&nbsp;&nbsp;手动转账&nbsp;&nbsp;">
                         [/#if]
                     [/@adminDirective]
                 [/#if]
@@ -195,7 +212,7 @@
 
             /*编辑*/
             function edit(id) {
-                var w_1 = window.innerWidth * 0.3;
+                var w_1 = window.innerWidth * 0.4;
                 var h_1 = window.innerHeight * 0.5;
                 layer_show("手动转账", "../transfer/manualTransfer.jhtml?id="+id, w_1, h_1);
             }

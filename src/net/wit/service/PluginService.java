@@ -8,6 +8,7 @@ package net.wit.service;
 import java.util.List;
 
 import net.wit.plugin.PaymentPlugin;
+import net.wit.plugin.SmsPlugin;
 import net.wit.plugin.StoragePlugin;
 
 /**
@@ -51,6 +52,15 @@ public interface PluginService {
 	List<StoragePlugin> getStoragePlugins(boolean isEnabled);
 
 	/**
+	 * 获取短信插件
+	 *
+	 * @param isEnabled
+	 *            是否启用
+	 * @return 短信插件
+	 */
+	List<SmsPlugin> getSmsPlugins(boolean isEnabled);
+
+	/**
 	 * 获取支付插件
 	 * 
 	 * @param id
@@ -67,5 +77,14 @@ public interface PluginService {
 	 * @return 存储插件
 	 */
 	StoragePlugin getStoragePlugin(String id);
+
+	/**
+	 * 获取短信插件
+	 *
+	 * @param id
+	 *            ID
+	 * @return 短信插件
+	 */
+	SmsPlugin getSmsPlugin(String id);
 
 }

@@ -111,6 +111,7 @@ public class RechargeController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Recharge recharge, Long memberId){
+		Admin admin = adminService.getCurrent();
 		Recharge entity = new Recharge();
 
 		entity.setSn(snService.generate(Sn.Type.recharge));
@@ -123,7 +124,7 @@ public class RechargeController extends BaseController {
 
 		entity.setMethod(Recharge.Method.offline);
 
-		entity.setOperator(recharge.getOperator());
+		entity.setOperator(admin.getName());
 
 		entity.setStatus(Recharge.Status.success);
 
@@ -132,7 +133,9 @@ public class RechargeController extends BaseController {
 		entity.setMember(memberService.find(memberId));
 
 		entity.setTransferDate(new Date());
-		
+
+		entity.setAdmin(admin);
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
