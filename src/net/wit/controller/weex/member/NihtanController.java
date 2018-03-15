@@ -299,6 +299,9 @@ public class NihtanController extends BaseController {
         }
 
         GameList gameList = gameListService.find(GameList.Type.nihtan,game,table,range);
+        if (gameList==null) {
+            return Message.error("游戏没开通");
+        }
         if (member.getVip().compareTo(Member.VIP.valueOf(gameList.getVip()))<0) {
             return Message.error(gameList.getVip()+"级才能进入");
         }
