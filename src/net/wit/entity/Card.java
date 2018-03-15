@@ -37,7 +37,11 @@ public class Card extends BaseEntity {
 		/** vip2 团队成员 */
 		vip2,
 		/** vip3 */
-		vip3
+		vip3,
+		/** vip4 */
+		vip4,
+		/** vip5 */
+		vip5
 	};
 
 	/** 状态 */

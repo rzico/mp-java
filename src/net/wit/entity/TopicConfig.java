@@ -19,6 +19,7 @@ public class TopicConfig implements Serializable {
 	private static final long serialVersionUID = 61L;
 
 	public static enum PromoterType{
+
 		/** 所有用户 */
 		any,
 		/** 普通会员 */
