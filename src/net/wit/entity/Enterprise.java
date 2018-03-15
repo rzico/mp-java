@@ -60,6 +60,12 @@ public class Enterprise extends BaseEntity {
     @Column(columnDefinition="varchar(255) not null comment 'logo'")
     private String logo;
 
+    /** 400 */
+    @Length(max = 200)
+    @NotNull
+    @Column(columnDefinition="varchar(255) not null comment '服务电话'")
+    private String phone;
+
     /** 类型 */
     @NotNull
     @Column(columnDefinition="int(11) not null comment '类型 {operate:运营商,agent:代理商,personal:个人代理商,shop:入驻商家}'")
@@ -169,6 +175,14 @@ public class Enterprise extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public MapEntity getMapArea() {

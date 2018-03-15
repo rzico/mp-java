@@ -54,6 +54,11 @@ public class ArticleCategory extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 缩略图 */
+	@Length(max = 200)
+	@Column(length = 200,columnDefinition="varchar(255) comment '缩略图'")
+	private String thumbnail;
+
 	/** 页面标题 */
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) comment '页面标题'")
@@ -173,6 +178,14 @@ public class ArticleCategory extends OrderEntity {
 
 	public void setArticles(Set<Article> articles) {
 		this.articles = articles;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 
 	/**

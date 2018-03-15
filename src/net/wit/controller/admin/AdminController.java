@@ -95,8 +95,8 @@ public class AdminController extends BaseController {
 		genders.add(new MapEntity("female","女"));
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
-
-		model.addAttribute("areas",areaService.findAll());
+//
+//		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("roles",roleService.findAll());
 
@@ -190,12 +190,15 @@ public class AdminController extends BaseController {
 		genders.add(new MapEntity("female","女"));
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
-
-		model.addAttribute("areas",areaService.findAll());
+//
+//		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("roles",roleService.findAll());
 
-		model.addAttribute("data",adminService.find(id));
+        Admin admin = adminService.find(id);
+		model.addAttribute("dataRoles",admin.getRoles());
+
+		model.addAttribute("data",admin);
 
 		return "/admin/admin/edit";
 	}
