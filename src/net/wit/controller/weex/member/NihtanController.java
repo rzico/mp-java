@@ -298,6 +298,11 @@ public class NihtanController extends BaseController {
             range = "5-100";
         }
 
+        GameList gameList = gameListService.find(GameList.Type.nihtan,game,table,range);
+        if (member.getVip().compareTo(Member.VIP.valueOf(gameList.getVip()))<0) {
+            return Message.error(gameList.getVip()+"级才能进入");
+        }
+
         System.out.println(video);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
