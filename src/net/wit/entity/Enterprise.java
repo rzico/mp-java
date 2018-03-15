@@ -60,11 +60,17 @@ public class Enterprise extends BaseEntity {
     @Column(columnDefinition="varchar(255) not null comment 'logo'")
     private String logo;
 
-    /** 400 */
+    /** 服务电话 */
     @Length(max = 200)
     @NotNull
     @Column(columnDefinition="varchar(255) not null comment '服务电话'")
     private String phone;
+
+    /** 联系人 */
+    @Length(max = 200)
+    @NotNull
+    @Column(columnDefinition="varchar(255) not null comment '联系人'")
+    private String linkman;
 
     /** 类型 */
     @NotNull
@@ -183,6 +189,15 @@ public class Enterprise extends BaseEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+
+    public String getLinkman() {
+        return linkman;
+    }
+
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
     }
 
     public MapEntity getMapArea() {
