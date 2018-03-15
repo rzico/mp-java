@@ -283,9 +283,27 @@ public class BankcardController extends BaseController {
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Message save(String body,HttpServletRequest request){
+    public Message save(String captcha,String body,HttpServletRequest request){
         Member member = memberService.getCurrent();
+        if (captcha!=null) {
+            Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
+            redisService.remove(Member.MOBILE_BIND_CAPTCHA);
+            if (redis == null) {
+                return Message.error("验证码已过期");
+            }
+            SafeKey safeKey = JsonUtils.toObject(redis.getValue(), SafeKey.class);
+            if (captcha==null) {
+                return Message.error("无效验证码");
+            }
+            if (safeKey.hasExpired()) {
+                return Message.error("验证码已过期");
+            }
+            if (!captcha.equals(safeKey.getValue())) {
+                return Message.error("无效验证码");
+            }
+        }
         try {
+
             String mima = rsaService.decryptValue(body, request);
             rsaService.removePrivateKey(request);
 

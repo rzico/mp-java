@@ -65,6 +65,8 @@ public class IHuYiPlugin extends SmsPlugin {
 		data.put("content",content);
 		String resp = post(Url,data);
 
+		System.out.print(resp);
+
 		Document doc = null;
 		try {
 			doc = DocumentHelper.parseText(resp);

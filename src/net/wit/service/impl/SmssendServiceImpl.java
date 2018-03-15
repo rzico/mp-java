@@ -119,7 +119,7 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 				public void run() {
 					ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 					List<SmsPlugin> sms = pluginService.getSmsPlugins(true);
-					String msg = "【" + bundle.getString("signature") + "】" + content;
+					String msg = content;
 					if (sms.size()>0) {
 						if ("+".equals(mobile.substring(0,1)) && !"+86".equals(mobile.substring(0,3))) {
 							sms.get(0).sendIRTSms(mobile, msg);

@@ -48,7 +48,7 @@ public class ChuangLanSmsPlugin extends SmsPlugin {
 		PluginConfig config = getPluginConfig();
 		Map<String,Object> data = new HashMap<String,Object>();
 		try {
-			SmsSendRequest smsSingleRequest = new SmsSendRequest(config.getAttribute("appid"), config.getAttribute("appkey"), content, mobile,"true");
+			SmsSendRequest smsSingleRequest = new SmsSendRequest(config.getAttribute("appid"), config.getAttribute("appkey"), "【"+config.getAttribute("sign")+"】"+content, mobile,"true");
 			String requestJson = JsonUtils.toJson(smsSingleRequest);
 			String response = ChuangLanSmsUtil.sendSmsByPost("http://smssh1.253.com/msg/send/json", requestJson);
 			SmsSendResponse smsSingleResponse = JsonUtils.toObject(response, SmsSendResponse.class);
@@ -73,7 +73,7 @@ public class ChuangLanSmsPlugin extends SmsPlugin {
 		PluginConfig config = getPluginConfig();
 		Map<String,Object> data = new HashMap<String,Object>();
 		try {
-			SmsSendRequest smsSingleRequest = new SmsSendRequest(config.getAttribute("appid"), config.getAttribute("appkey"), content, mobile,"true");
+			SmsSendRequest smsSingleRequest = new SmsSendRequest(config.getAttribute("appid"), config.getAttribute("appkey"), "【"+config.getAttribute("sign")+"】"+content, mobile,"true");
 			String requestJson = JsonUtils.toJson(smsSingleRequest);
 			String response = ChuangLanSmsUtil.sendSmsByPost("http://smssh1.253.com/msg/send/json", requestJson);
 			SmsSendResponse smsSingleResponse = JsonUtils.toObject(response, SmsSendResponse.class);

@@ -96,7 +96,7 @@ public class LoginController extends BaseController {
         SafeKey safeKey = new SafeKey();
         safeKey.setKey(m);
         safeKey.setValue(securityCode);
-        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
+        safeKey.setExpire( DateUtils.addSeconds(new Date(),10*60));
         redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();
