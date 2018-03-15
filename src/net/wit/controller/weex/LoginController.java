@@ -203,7 +203,7 @@ public class LoginController extends BaseController {
                 member.setNickName(null);
                 member.setLogo(null);
 //                member.setPoint(0L);
-//                member.setAmount(BigDecimal.ZERO);
+                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setFreezeBalance(BigDecimal.ZERO);
                 member.setVip(Member.VIP.vip1);
@@ -395,7 +395,7 @@ public class LoginController extends BaseController {
             member.setNickName(nickName);
             member.setLogo(headImg);
 //            member.setPoint(0L);
-//            member.setAmount(BigDecimal.ZERO);
+            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setFreezeBalance(BigDecimal.ZERO);
             member.setVip(Member.VIP.vip1);
@@ -525,7 +525,7 @@ public class LoginController extends BaseController {
             member.setNickName("收款机（"+code+"）");
             member.setLogo("http://cdn.rzico.com/weex/resources/images/logo.png");
 //            member.setPoint(0L);
-//            member.setAmount(BigDecimal.ZERO);
+            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setFreezeBalance(BigDecimal.ZERO);
             member.setVip(Member.VIP.vip1);

@@ -62,14 +62,12 @@ public class Enterprise extends BaseEntity {
 
     /** 服务电话 */
     @Length(max = 200)
-    @NotNull
-    @Column(columnDefinition="varchar(255) not null comment '服务电话'")
+    @Column(columnDefinition="varchar(255) comment '服务电话'")
     private String phone;
 
     /** 联系人 */
     @Length(max = 200)
-    @NotNull
-    @Column(columnDefinition="varchar(255) not null comment '联系人'")
+    @Column(columnDefinition="varchar(255) comment '联系人'")
     private String linkman;
 
     /** 类型 */
