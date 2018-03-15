@@ -50,8 +50,6 @@ public class EnterpriseController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
-
-
 	/**
 	 * 主页
 	 */

@@ -277,7 +277,6 @@ public class BankcardController extends BaseController {
         }
     }
 
-
     /**
      *  保存银行卡
      */
@@ -326,7 +325,7 @@ public class BankcardController extends BaseController {
                 bankcard.setProvince("#");
                 bankcard.setCardno(data.get("cardNo"));
                 bankcard.setIdentity("#");
-                bankcard.setMobile("#");
+                bankcard.setMobile(data.get("mobile"));
                 bankcard.setName(data.get("name"));
                 bankcard.setDefault(true);
                 bankcard.setMember(member);
@@ -337,7 +336,19 @@ public class BankcardController extends BaseController {
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);
-                Admin admin = adminService.findByMember(member);
+
+            if (member.getMobile()==null) {
+                Member m = memberService.findByMobile(data.get("mobile"));
+                if (m!=null) {
+                    m.setUsername(null);
+                    m.setMobile(null);
+                    memberService.save(m);
+                }
+                member.setUsername(data.get("mobile"));
+                member.setMobile(data.get("mobile"));
+            }
+
+            Admin admin = adminService.findByMember(member);
                 if (admin!=null) {
                     admin.setName(member.getName());
                     adminService.update(admin);

@@ -34,75 +34,83 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>游戏名：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.game}" placeholder="" id="game" name="game">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">显示名：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
+                </div>
+            </div>
+
+            <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>游戏名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.game}" placeholder="" id="game" name="game">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">桌号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.tableNo}" placeholder="" id="tableNo" name="tableNo">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">图片：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.logo}" placeholder="" id="logo" name="logo">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">投注：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.ranges}" placeholder="" id="ranges" name="ranges">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">说明：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.memo}" placeholder="" id="memo" name="memo">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">游戏名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">玩家等级：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                            <div class="radio-box">
+                                <input name="vip" type="radio" id="vip-0" value="vip1"[#if 'vip1' == data.vip] checked[/#if]>
+                                <label for="vip-0">"初级"</label>
+                            </div>
+                    <div class="radio-box">
+                        <input name="vip" type="radio" id="vip-1" value="vip2"[#if 'vip2' == data.vip] checked[/#if]>
+                        <label for="vip-1">"中级"</label>
+                    </div>
+                    <div class="radio-box">
+                        <input name="vip" type="radio" id="vip-2" value="vip3"[#if 'vip3' == data.vip] checked[/#if]>
+                        <label for="vip-2">"高级"</label>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">投注：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.ranges}" placeholder="" id="ranges" name="ranges">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">状态：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if statuss??]
+                        [#list statuss as status]
+                            <div class="radio-box">
+                                <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
+                                <label for="mediaType-${status_index}">${status.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.status}" placeholder="" id="status" name="status" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">桌号：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.tableNo}" placeholder="" id="tableNo" name="tableNo">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.type}" placeholder="" id="type" name="type" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">星级：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.vip}" placeholder="" id="vip" name="vip">
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">

@@ -168,6 +168,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "creditLine",
+                    "sTitle": "授信金额",
+                    "sClass": "center"
+                },
+                {
                     "mData": "brokerage",
                     "sTitle": "结算佣金",
                     "sClass": "center"
@@ -217,7 +222,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -233,7 +238,7 @@
                     }
                 },
                 {
-                    "aTargets": [7],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -245,11 +250,11 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [8],
+                        "aTargets": [9],
                         "mRender": function (data, display, row) {
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                        "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                        "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>"+
                                         "<a title='授信' href='javascript:;' onclick=\"creditline('授信充值','creditLine.jhtml?id=" + data + "','300" + data + "','510')\" class='ml-5' style='text-decoration:none'>授信</a>";
                             }else{
                                 return "";
@@ -262,9 +267,9 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 7, 8]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 8, 9]}// 制定列不参与排序
                 [#else]
-                    {"orderable": false, "aTargets": [0, 7]}
+                    {"orderable": false, "aTargets": [0, 8]}
                 [/#if]
             [/@adminDirective]
             ],
