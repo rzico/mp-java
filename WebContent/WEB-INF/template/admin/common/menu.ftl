@@ -28,7 +28,7 @@
                     <li><a data-href="../smssend/index.jhtml" data-title="短信管理" href="javascript:;">短信管理</a></li>
                     <li><a data-href="../log/index.jhtml" data-title="日志管理" href="javascript:;">日志管理</a></li>
                     <li><a data-href="../message/index.jhtml" data-title="消息管理" href="javascript:;">消息管理</a></li>
-                    <li><a data-href="../message/index.jhtml" data-title="消息管理" href="javascript:;">消息管理</a></li>
+                    <li><a data-href="../gamelist/index.jhtml" data-title="游戏管理" href="javascript:;">游戏管理</a></li>
                 </ul>
             </dd>
         </dl>
