@@ -1,4 +1,4 @@
-package net.wit.robot.article;
+package net.wit.robot.articleEntity;
 
 import java.util.List;
 
