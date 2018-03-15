@@ -61,6 +61,7 @@ public class EnterpriseController extends BaseController {
 
     @Resource(name = "enterpriseServiceImpl")
     private EnterpriseService enterpriseService;
+    
 
     /**
      *   企业信息

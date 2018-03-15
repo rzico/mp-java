@@ -191,6 +191,7 @@ public class Enterprise extends BaseEntity {
         this.phone = phone;
     }
 
+
     public String getLinkman() {
         return linkman;
     }
