@@ -87,6 +87,7 @@ public class CustomServiceController extends BaseController {
 
 		entity.setName(customService.getName());
 
+		entity.setLogo(customService.getLogo());
 		entity.setQq(customService.getQq());
 
 		entity.setWechat(customService.getWechat());
@@ -147,6 +148,8 @@ public class CustomServiceController extends BaseController {
 		entity.setModifyDate(customService.getModifyDate());
 
 		entity.setDescription(customService.getDescription());
+
+		entity.setLogo(customService.getLogo());
 
 		entity.setName(customService.getName());
 

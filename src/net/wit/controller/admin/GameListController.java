@@ -190,6 +190,8 @@ public class GameListController extends BaseController {
 
 		entity.setGame(gameList.getGame());
 
+		entity.setLogo(gameList.getLogo());
+
 		entity.setMemo(gameList.getMemo());
 
 		entity.setName(gameList.getName());
