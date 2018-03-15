@@ -120,6 +120,11 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			if (agent.getBalance().compareTo(BigDecimal.ZERO)<0) {
 				throw new RuntimeException("代理商余额不足");
 			}
+			if (agent.getFreezeBalance().compareTo(recharge.getAmount())>0) {
+				agent.setFreezeBalance(agent.getFreezeBalance().subtract(recharge.getAmount()));
+			} else {
+				agent.setFreezeBalance(BigDecimal.ZERO);
+			}
 			memberDao.merge(agent);
 			Deposit deposit = new Deposit();
 			deposit.setBalance(agent.getBalance());
@@ -137,6 +142,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 
 			memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
+			member.setFreezeBalance(member.getFreezeBalance().add(recharge.effectiveAmount()));
 			memberDao.merge(member);
 			Deposit memberDeposit = new Deposit();
 			memberDeposit.setBalance(member.getBalance());
@@ -172,6 +178,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			recharge.setTransferDate(new Date());
 			rechargeDao.persist(recharge);
 			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
+			member.setFreezeBalance(member.getFreezeBalance().add(recharge.effectiveAmount()));
 			memberDao.merge(member);
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());

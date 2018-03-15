@@ -75,7 +75,6 @@ public class Admin extends BaseEntity {
     /**
      * E-mail
      */
-    @Email
     @Length(max = 200)
     @Column(columnDefinition = "varchar(255) comment '邮箱'")
     private String email;
@@ -311,6 +310,8 @@ public class Admin extends BaseEntity {
     public void setShop(Shop shop) {
         this.shop = shop;
     }
+
+
 
     public MapEntity getMapMember() {
         if (getMember() != null) {

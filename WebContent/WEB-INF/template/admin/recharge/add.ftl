@@ -35,7 +35,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="请输入手机号或邮箱" id="mobilemail" name="mobilemail" style="width:94%;">
+                <input type="text" class="input-text" value="" placeholder="请输入手机号或邮箱" id="mobilemail" name="mobilemail" style="width:54%;">
                 <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
                 <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
                     <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -68,9 +68,9 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>充值金：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>充值金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="amount" name="amount">
+                <input type="text" class="input-text" value="" placeholder="" id="amount" name="amount"  onInput="floatInit(this)">
             </div>
         </div>
 
