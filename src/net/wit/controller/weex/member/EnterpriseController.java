@@ -115,7 +115,7 @@ public class EnterpriseController extends BaseController {
      */
     @RequestMapping(value = "/create_agent")
     @ResponseBody
-    public Message create_enterprise(HttpServletRequest request){
+    public Message create_enterprise(String name,String mobile,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -123,8 +123,13 @@ public class EnterpriseController extends BaseController {
         if (member.getName()==null) {
             return Message.error("请先绑定银行卡");
         }
-        enterpriseService.createAgent(member);
+        Enterprise enterprise = enterpriseService.createAgent(member);
+        enterprise.setPhone(mobile);
+        enterprise.setLinkman(name);
+        enterpriseService.update(enterprise);
+
         return Message.success("申请成功");
+
     }
 
     /**
