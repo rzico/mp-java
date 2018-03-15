@@ -185,16 +185,10 @@ public class GameListController extends BaseController {
     @ResponseBody
 	public Message update(GameList gameList){
 		GameList entity = gameListService.find(gameList.getId());
-		
-		entity.setCreateDate(gameList.getCreateDate());
-
-		entity.setModifyDate(gameList.getModifyDate());
 
 		entity.setOrders(gameList.getOrders() == null ? 0 : gameList.getOrders());
 
 		entity.setGame(gameList.getGame());
-
-		entity.setLogo(gameList.getLogo());
 
 		entity.setMemo(gameList.getMemo());
 
@@ -205,8 +199,6 @@ public class GameListController extends BaseController {
 		entity.setStatus(gameList.getStatus() == null ? GameList.Status.enabled : gameList.getStatus());
 
 		entity.setTableNo(gameList.getTableNo());
-
-		entity.setType(gameList.getType() == null ? GameList.Type.nihtan : gameList.getType());
 
 		entity.setVip(gameList.getVip());
 		
@@ -228,7 +220,16 @@ public class GameListController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate,GameList.Type type,GameList.Status status, Pageable pageable, ModelMap model) {
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		if (type!=null) {
+			Filter authorityFilter = new Filter("type", Filter.Operator.eq, type);
+			filters.add(authorityFilter);
+		}
+		if (status!=null) {
+			Filter mediaTypeFilter = new Filter("status", Filter.Operator.eq, status);
+			filters.add(mediaTypeFilter);
+		}
 
 		Page<GameList> page = gameListService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
