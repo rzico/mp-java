@@ -1,0 +1,113 @@
+body {
+    line-height: 1.6;
+    font-family: -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+    color: #353535;
+    font-size: 14px;
+    width: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: #f6f8f9;
+}
+.top-bar{
+    width: 90%;
+    height: 30px;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1;
+    margin-top: 30px;
+    padding-left: 20px;
+    border-bottom: 1px solid rgba(99,99,99,0.1);
+}
+.middle-bar{
+    width: 90%;
+    height: 36px;
+    padding-left: 20px;
+}
+a{
+    text-decoration:none;
+    display: inline-block;
+    color: #999999;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+}
+img{
+    display: inline-block;
+    position: relative;
+    width: 90%;
+    height: 60%;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.middle-bar a{
+    width: 130px;
+    height: 36px;
+    float: right;
+    text-align: center;
+    line-height: 36px;
+    color: #FFFFFF;
+    background-color: #1aad19;
+    border-radius: 3px;
+}
+.middle-bar a:hover{
+    color: #b1ffd4;
+    background-color: #0dad5e;
+}
+h3{
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+}
+.tag{
+    float: left;
+    display: inline-block;
+    background: #FFFFFF;
+    box-shadow: 0 1px 20px 0 #E4E8EB;
+    border-radius: 2px;
+    margin: 20px 15px;
+    width: 20%;
+    height: 292px;
+    /*padding: 12px 15px 20px 20px;*/
+}
+
+.top{
+    margin: 0;
+    width: 100%;
+    height: 80%;
+    box-shadow: 0 0 0 0;
+}
+.zz{
+    position: relative;
+    top:-80%;
+    left: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: -1000;
+}
+.zz>a{
+    text-align: center;
+    color: #FFFFFF;
+}
+.tag .top a{
+    font-size: 18px;
+    width: 90%;
+    top: 11%;
+    left: 5%;
+}
+.down{
+    position: relative;
+    top:-80%;
+    margin: 0;
+    width: 100%;
+    height: 20%;
+    box-shadow: 0 0 0 0;
+}
+.tag .down a{
+    width: 90%;
+    left: 50%;
+    transform:  translate(-50%,-50%);
+}
