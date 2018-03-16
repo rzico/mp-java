@@ -343,8 +343,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 
-		messageService.orderMemberPushTo(orderLog);
-
 		//下单就锁定库存
 		for (OrderItem orderItem : order.getOrderItems()) {
 			if (orderItem != null) {
@@ -360,6 +358,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		if (cart!=null) {
 			cartDao.remove(cart);
 		}
+
+		messageService.orderMemberPushTo(orderLog);
+
 		return order;
 	}
 
