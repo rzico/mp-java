@@ -66,4 +66,7 @@ public interface MemberService extends BaseService<Member, Long> {
 	//发展成员
 	public void create(Member member, Member promoter) throws Exception;
 
+	//累计消费
+	public void addAmount(Member member,BigDecimal amount) throws Exception;
+
 }

@@ -25,7 +25,7 @@
     <meta name="description" content="">
 </head>
 <body>
-<div class="header"></div>
+[#--<div class="header"></div>--]
 <div class="loginWraper">
     <div class="loginBox">
         <form id="loginform" class="form form-horizontal" action="submit.jhtml" method="post">
