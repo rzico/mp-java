@@ -127,6 +127,8 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setCreditLine(BigDecimal.ZERO);
 			enterprise.setLogo(topic.getLogo());
 			enterprise.setMember(member);
+			enterprise.setLinkman(member.getName());
+			enterprise.setPhone(member.getMobile());
 			enterprise.setType(Enterprise.Type.shop);
 			enterprise.setStatus(Enterprise.Status.waiting);
 			enterpriseDao.persist(enterprise);

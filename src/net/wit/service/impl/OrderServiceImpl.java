@@ -343,8 +343,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 
-		messageService.orderMemberPushTo(orderLog);
-
 		//下单就锁定库存
 		for (OrderItem orderItem : order.getOrderItems()) {
 			if (orderItem != null) {
@@ -360,6 +358,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		if (cart!=null) {
 			cartDao.remove(cart);
 		}
+
+		messageService.orderMemberPushTo(orderLog);
+
 		return order;
 	}
 
@@ -500,12 +501,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			memberService.create(order.getMember(),order.getPromoter());
 		}
 
-		//没有发货，或是退货等状态完成，取无效订单
+		//没有发货，或是退货等状态完成，是无效订单
 		if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
 			card = order.getMember().card(order.getSeller());
 			if (card!=null && order.getPointDiscount().compareTo(BigDecimal.ZERO)>0) {
 				cardService.addPoint(card, order.getPointDiscount().longValue(), "订单退货", order);
 			}
+		}  else {
+			memberService.addAmount(member,order.getAmount());
 		}
 
 		//判断是会员

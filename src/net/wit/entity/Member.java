@@ -53,15 +53,16 @@ public class Member extends BaseEntity {
 	 * 星级
 	 */
 	public enum VIP {
-
 		/** v1 */
 		vip1,
-
 		/** v2 */
 		vip2,
-
 		/** v3 */
-		vip3
+		vip3,
+		/** vip4 */
+		vip4,
+		/** vip5 */
+		vip5
 	}
 
 	/** "身份信息"参数名称 */
@@ -104,10 +105,10 @@ public class Member extends BaseEntity {
 //	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
 //	private Long point;
 //
-//	/** 消费金额 */
-//	@Min(0)
-//	@Column(columnDefinition="decimal(21,6) default 0 comment '消费金额'")
-//	private BigDecimal amount;
+	/** 消费金额 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) default 0 comment '消费金额'")
+	private BigDecimal amount;
 
 	/** 余额 */
 	@Min(0)
@@ -814,15 +815,15 @@ public class Member extends BaseEntity {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-//
-//	public BigDecimal getAmount() {
-//		return amount;
-//	}
-//
-//	public void setAmount(BigDecimal amount) {
-//		this.amount = amount;
-//	}
-//
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
 	/**
 	 * 获取会员注册项值
 	 * 

@@ -3,11 +3,15 @@ package net.wit.dao.impl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.PropertyFilter;
 import net.wit.controller.model.ArticleContentModel;
 import net.wit.controller.model.ArticleModel;
 import net.wit.dao.WeixinUpDao;
 import net.wit.entity.Article;
-import net.wit.robot.article.*;
+import net.wit.robot.articleEntity.ArticleContent;
+import net.wit.robot.articleEntity.ArticleMusic;
+import net.wit.robot.articleEntity.ArticleTemplate;
 import net.wit.robot.eqxiu.*;
 import net.wit.plat.weixin.FormEntity.*;
 import net.wit.plat.weixin.pojo.AccessToken;
@@ -353,7 +357,14 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
             articleContents.add(articleContent);
         }
         articleTemlate.setTemplates(articleContents);
-        return JSONObject.fromObject(articleTemlate);
+        JsonConfig jsonConfig = new JsonConfig();
+        PropertyFilter filter = new PropertyFilter() {
+            public boolean apply(Object object, String fieldName, Object fieldValue) {
+                return null == fieldValue;
+            }
+        };
+        jsonConfig.setJsonPropertyFilter(filter);
+        return JSONObject.fromObject(articleTemlate,jsonConfig);
     }
 
     //微博爬虫算法(暂时无法使用)
@@ -418,7 +429,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
         stringBuffer1.append("&time="+RegularUtil.toString("createTime:([0-9])*,",stringBuffer).replace("createTime:","").replace(",",""));
 
-        System.out.println(stringBuffer1);
+//        System.out.println(stringBuffer1);
 
         ArticleTemplate articleTemplate =new ArticleTemplate();
 
@@ -430,8 +441,8 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
         articleMusic.setName(RegularUtil.toString("\"name\":\"(.)*.mp3\",",stringBuffer).replace("\"name\":\"","").replace(".mp3\",",""));
 
-        System.out.println(articleTemplate.getThumbnail()+"\r\n\r\n"+articleTemplate.getTitle());
-        System.out.println(articleMusic.getName());
+//        System.out.println(articleTemplate.getThumbnail()+"\r\n\r\n"+articleTemplate.getTitle());
+//        System.out.println(articleMusic.getName());
 
         String fileName=RegularUtil.toString("\"url\":\"(.)*\",\"name\"",stringBuffer).replace("\"url\":\"","").replace("\",\"name\"","");
 
@@ -439,7 +450,7 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
 
         String shz=fileName.substring(fileName.indexOf(".")+1,fileName.length());
 
-        System.out.println(surl+"\r\n\r\n"+fileName+"\r\n\r\n"+shz);
+//        System.out.println(surl+"\r\n\r\n"+fileName+"\r\n\r\n"+shz);
 
         File file=ArticlePropa.UrlToFile(surl,shz,System.getProperty("java.io.tmpdir"));
 
