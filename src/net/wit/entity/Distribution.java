@@ -31,6 +31,12 @@ public class Distribution extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 股东分红 */
+	@Min(0)
+	@NotNull
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '股东分红'")
+	private BigDecimal dividend;
+
 	/** 直接代理 百分比 */
 	@Min(0)
 	@NotNull

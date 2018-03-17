@@ -142,6 +142,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		card.setMobile(mobile);
 		card.setStatus(Card.Status.activate);
 		card.setVip(Card.VIP.vip1);
+		card.setType(Card.Type.member);
+		card.setBonus(BigDecimal.ZERO);
 		cardDao.merge(card);
 		if (!member.getCards().contains(card)) {
 			member.getCards().add(card);
@@ -164,6 +166,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card = new Card();
 			card.setOwner(topicCard.getTopic().getMember());
 			card.setVip(Card.VIP.vip1);
+			card.setType(Card.Type.member);
+			card.setBonus(BigDecimal.ZERO);
 			card.setStatus(Card.Status.none);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
@@ -216,6 +220,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			} else {
 				card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
 			}
+			card.setType(Card.Type.member);
+			card.setBonus(BigDecimal.ZERO);
 			card.setStatus(Card.Status.activate);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);

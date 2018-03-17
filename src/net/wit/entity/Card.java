@@ -44,6 +44,16 @@ public class Card extends BaseEntity {
 		vip5
 	};
 
+	public static enum  Type{
+		/** 会员 */
+		member,
+		/** 团队 */
+		team,
+		/** 股东 */
+		partner
+	};
+
+
 	/** 状态 */
 	@NotNull
 	@Column(columnDefinition="int(11) comment '状态 {none:空卡,activate:已激活,loss:已挂失}'")
@@ -53,6 +63,11 @@ public class Card extends BaseEntity {
 	@NotNull
 	@Column(columnDefinition="int(11) comment '等级 {vip1:VIP1,vip2:VIP2,vip3:VIP3}'")
 	private VIP vip;
+
+	/** 角色 */
+	@NotNull
+	@Column(columnDefinition="int(11) comment '角色 {member:会员,team:团队,partner:股东}'")
+	private Type type;
 
 	/** 最近使用日期 */
 	@Column(columnDefinition="datetime comment '最近使用日期'")
@@ -98,6 +113,12 @@ public class Card extends BaseEntity {
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '余额'")
 	private BigDecimal balance;
 
+	/** 分红比例
+	 *  指利润的百分比 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '分红比例'")
+	private BigDecimal bonus;
+
 	/** 积分 */
 	@Min(0)
 	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
@@ -122,6 +143,14 @@ public class Card extends BaseEntity {
 
 	public void setVip(VIP vip) {
 		this.vip = vip;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 	/** 推广 */
@@ -246,6 +275,14 @@ public class Card extends BaseEntity {
 
 	public void setPoint(Long point) {
 		this.point = point;
+	}
+
+	public BigDecimal getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(BigDecimal bonus) {
+		this.bonus = bonus;
 	}
 
 	public MapEntity getMapOwner(){
