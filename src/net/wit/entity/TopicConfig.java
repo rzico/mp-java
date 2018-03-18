@@ -24,15 +24,12 @@ public class TopicConfig implements Serializable {
 	private static final long serialVersionUID = 61L;
 
 	public static enum PromoterType{
-		/** 所有用户 */
+		/** 任何用户 */
 		any,
-		/** 普通会员 */
-		vip1,
-		/** 金卡会员 */
-		vip2,
-		/** 钻石会员 */
-		vip3
-
+		/** 团队成员 */
+		team,
+		/** 分红股东 */
+		partner
 	};
 
 	public static enum Pattern{

@@ -428,6 +428,28 @@ public class OrderItem extends BaseEntity {
 
 
 	/**
+	 * 计算分红金额
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public BigDecimal calcPartner() {
+		Product product = getProduct();
+
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null) {
+			BigDecimal d =
+					getSubtotal().multiply(
+							distribution.getDividend().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			return d;
+		} else {
+			return BigDecimal.ZERO;
+		}
+	}
+
+	/**
 	 * 计算分润积分
 	 *
 	 * @return 小计

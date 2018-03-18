@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.MemberDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -36,6 +37,9 @@ public class ReceiverServiceImpl extends BaseServiceImpl<Receiver, Long> impleme
 	@Resource(name = "receiverDaoImpl")
 	private ReceiverDao receiverDao;
 
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
 	@Resource(name = "receiverDaoImpl")
 	public void setBaseDao(ReceiverDao receiverDao) {
 		super.setBaseDao(receiverDao);
@@ -51,6 +55,18 @@ public class ReceiverServiceImpl extends BaseServiceImpl<Receiver, Long> impleme
 				receiverDao.merge(r);
 			}
 		}
+		Member member = receiver.getMember();
+		if (member!=null) {
+			if (member.getName()==null) {
+				member.setName(receiver.getConsignee());
+			};
+			if (member.getMobile()==null && receiver.getPhone().startsWith("1")) {
+				if (memberDao.findByMobile(receiver.getPhone())==null) {
+					member.setMobile(receiver.getPhone());
+				}
+			}
+		}
+		memberDao.merge(member);
 		super.save(receiver);
 	}
 
@@ -66,6 +82,18 @@ public class ReceiverServiceImpl extends BaseServiceImpl<Receiver, Long> impleme
 				}
 			}
 		}
+		Member member = receiver.getMember();
+		if (member!=null) {
+			if (member.getName()==null) {
+				member.setName(receiver.getConsignee());
+			};
+			if (member.getMobile()==null && receiver.getPhone().startsWith("1")) {
+				if (memberDao.findByMobile(receiver.getPhone())==null) {
+					member.setMobile(receiver.getPhone());
+				}
+			}
+		}
+		memberDao.merge(member);
 		return super.update(receiver);
 	}
 

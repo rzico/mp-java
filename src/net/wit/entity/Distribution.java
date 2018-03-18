@@ -125,6 +125,14 @@ public class Distribution extends OrderEntity {
 		this.point = point;
 	}
 
+	public BigDecimal getDividend() {
+		return dividend;
+	}
+
+	public void setDividend(BigDecimal dividend) {
+		this.dividend = dividend;
+	}
+
 	public BigDecimal calePointRate() {
 		BigDecimal p = getPoint();
 		return (new BigDecimal(10).subtract(p)).multiply(new BigDecimal("0.1"));

@@ -57,6 +57,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "smssendServiceImpl")
 	private SmssendService smssendService;
 
+	@Resource(name = "cardServiceImpl")
+	private CardService cardService;
+
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
 
@@ -242,6 +245,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					couponCodeDao.merge(couponCode);
 				}
 				messageService.payBillPushTo(payBill);
+				cardService.createAndActivate(member,payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
 			}else
 			if (payment.getType() == Payment.Type.card) {
 				Member member = payment.getPayee();
@@ -327,6 +331,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 				}
 				messageService.payBillPushTo(payBill);
+				cardService.createAndActivate(member,payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
 			} else
 			if (payment.getType() == Payment.Type.reward) {
 				Member member = payment.getPayee();

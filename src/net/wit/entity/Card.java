@@ -34,14 +34,10 @@ public class Card extends BaseEntity {
 	public static enum  VIP{
 		/** vip1 普通会员 */
 		vip1,
-		/** vip2 团队成员 */
+		/** vip2 金卡会员 */
 		vip2,
-		/** vip3 */
-		vip3,
-		/** vip4 */
-		vip4,
-		/** vip5 */
-		vip5
+		/** vip3 钻石会员*/
+		vip3
 	};
 
 	public static enum  Type{
@@ -118,6 +114,11 @@ public class Card extends BaseEntity {
 	@Min(0)
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '分红比例'")
 	private BigDecimal bonus;
+
+	/** 累计消费 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '累计消费'")
+	private BigDecimal amount;
 
 	/** 积分 */
 	@Min(0)
@@ -283,6 +284,14 @@ public class Card extends BaseEntity {
 
 	public void setBonus(BigDecimal bonus) {
 		this.bonus = bonus;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 
 	public MapEntity getMapOwner(){
