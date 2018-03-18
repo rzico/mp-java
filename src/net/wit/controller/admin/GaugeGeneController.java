@@ -110,7 +110,7 @@ public class GaugeGeneController extends BaseController {
 
 		List<Map<String,Object>> data = new ArrayList<>();
 		for (int i=0;i<sname.length;i++) {
-			if (sname[i]!=null) {
+			if (sname[i]!=null && !"".equals(sname[i])) {
 				Map<String, Object> q = new HashMap<String, Object>();
 				q.put("sname", sname[i]);
 				q.put("smin", smin[i]);
@@ -199,7 +199,7 @@ public class GaugeGeneController extends BaseController {
 
 		List<Map<String,Object>> data = new ArrayList<>();
 		for (int i=0;i<sname.length;i++) {
-			if (sname[i]!=null) {
+			if (sname[i]!=null && !"".equals(sname[i])) {
 				Map<String, Object> q = new HashMap<String, Object>();
 				q.put("sname", sname[i]);
 				q.put("smin", smin[i]);

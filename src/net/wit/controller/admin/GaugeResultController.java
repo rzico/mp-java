@@ -144,7 +144,10 @@ public class GaugeResultController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
-		model.addAttribute("data",gaugeResultService.find(id));
+		GaugeResult gaugeResult = gaugeResultService.find(id);
+		Gauge gauge = gaugeResult.getGauge();
+		model.addAttribute("data",gaugeResult);
+		model.addAttribute("gaugeGenes",gauge.getGaugeGenes());
 
 		return "/admin/gaugeResult/edit";
 	}

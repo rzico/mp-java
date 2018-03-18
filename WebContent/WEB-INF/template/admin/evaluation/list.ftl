@@ -26,14 +26,36 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>题目</title>
+    <title>订单管理</title>
 </head>
 <body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                               href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-    <div class="cl pd-5 bg-1 bk-gray">
+    <div class=""> 日期范围：
+        <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin"
+               class="input-text Wdate" style="width:120px;">
+        -
+        <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
+               class="input-text Wdate" style="width:120px;">
+		[#if evalStatuss??]
+			<span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="evalStatus" class="select" style="background-color: #FFFFFF;">
+					<option value="">状态</option>
+					[#list evalStatuss as evalStatus]
+					<option value="${evalStatus.id}">${evalStatus.name}</option>
+					[/#list]
+				</select>
+			</span>
+		[/#if]
+        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
+        <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+            <i class="Hui-iconfont">&#xe665;</i> 查询
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('新增','add.jhtml?gaugeId=${gaugeId}','650','410')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增题目</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
@@ -76,7 +98,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/gaugeQuestion/list.jhtml",
+            "sAjaxSource": "${base}/admin/evaluation/list.jhtml",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -106,8 +128,7 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(1).attr('style', 'text-align: left;');
-                $(row).children('td').eq(3).attr('style', 'text-align: left;');
+                $(row).children('td').eq(5).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -117,18 +138,63 @@
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
+                    "mData": "id",
+                    "sTitle": "ID",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "createDate",
+                    "sTitle": "创建日期",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "modifyDate",
+                    "sTitle": "修改日期",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "sn",
+                    "sTitle": "订单编号",
+                    "sClass": "center"
+                },
+                {
                     "mData": "title",
-                    "sTitle": "题目",
+                    "sTitle": "主标题",
                     "sClass": "center"
                 },
                 {
-                    "mData": "type",
-                    "sTitle": "题型",
+                    "mData": "evalStatus",
+                    "sTitle": "状态",
                     "sClass": "center"
                 },
                 {
-                    "mData": "orders",
-                    "sTitle": "排序",
+                    "mData": "price",
+                    "sTitle": "现价",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "attr1",
+                    "sTitle": "学校/企业",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "attr2",
+                    "sTitle": "班级/部门",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "attr3",
+                    "sTitle": "学号/工号",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "attr4",
+                    "sTitle": "姓名",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "rebate",
+                    "sTitle": "奖金",
                     "sClass": "center"
                 },
                 {
@@ -148,14 +214,26 @@
                         }
                     }
                 }, 
-                 {
+                {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [3],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
+                    "aTargets": [6],
+                    "mRender": function (data, display, row) {
                         if(data != null){
-                        [#if types??]
-                            [#list types as type]
-                                if ("${type.id}" == data) {
-                                    return "${type.name}";
+                        [#if evalStatuss??]
+                            [#list evalStatuss as evalStatus]
+                                if ("${evalStatus.id}" == data) {
+                                    return "${evalStatus.name}";
                                 }
                             [/#list]
                         [/#if]
@@ -165,10 +243,10 @@
                     }
                 },
                 {
-                    "aTargets": [4],
+                    "aTargets": [13],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('编辑','edit.jhtml?id=" + data + "','650','410')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                            return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 订单管理 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -177,10 +255,15 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 4]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 13]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/
+                /*处理查询数据*/searchValue
+                var _beginDate = $("#datemin").val();
+                var _endDate   = $("#datemax").val();
+                var _searchValue = $("#searchvalue").val();
+                /*处理常量*/
+                var _evalStatus =  $('select[name="evalStatus"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -189,7 +272,10 @@
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
                         "aoData": JSON.stringify(aoData),
-                        "gaugeId":${gaugeId}
+                        "beginDate":_beginDate,
+                        "endDate":_endDate,
+                        "evalStatus":_evalStatus,
+                        "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',
@@ -228,8 +314,7 @@
     function add(title, url, w, h) {
         var index = layer.open({
             type:2,
-            title: false,
-            closeBtn: 0, //不显示
+            title:title,
             content:url
         });
         layer.full(index);
@@ -242,8 +327,7 @@
     function edit(title, url, id, w, h) {
         var index = layer.open({
             type:2,
-            title: false,
-            closeBtn: 0, //不显示
+            title:title,
             content:url
         });
         layer.full(index);
@@ -259,7 +343,7 @@
     }
     /*删除全部*/
     function delAll(){
-        var url = "${base}/admin/gaugeQuestion/delete.jhtml";
+        var url = "${base}/admin/evaluation/delete.jhtml";
         var i = 0;
         $('input[type="checkbox"][name="ids"]:checked').each(
                 function() {
@@ -313,7 +397,7 @@
                 data: {
                     ids: id
                 },
-                url: '${base}/admin/gaugeQuestion/delete.jhtml',
+                url: '${base}/admin/evaluation/delete.jhtml',
                 dataType: 'json',
                 success: function (data) {
                     layer.close(load);
