@@ -227,6 +227,9 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		//购买后，即成为本店会员
 
 		if (card==null && topicCard!=null) {
+			if (promoter==null) {
+				return null;
+			}
 			card = new Card();
 			card.setOwner(topicCard.getTopic().getMember());
 			card.setVip(Card.VIP.vip1);
