@@ -35,12 +35,6 @@ public class ArticleController extends BaseController {
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
 
-    @Resource(name = "redisServiceImpl")
-    private RedisService redisService;
-
-    @Resource(name = "rsaServiceImpl")
-    private RSAService rsaService;
-
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
@@ -56,15 +50,13 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;
 
-    @Resource(name = "memberFollowServiceImpl")
-    private MemberFollowService memberFollowService;
-
     /**
      * 文章预览信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
     public Message view(Long id,Long xuid,HttpServletRequest request){
+
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
