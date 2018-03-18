@@ -66,6 +66,9 @@ public class EvaluationController extends BaseController {
 	@Resource(name = "occupationServiceImpl")
 	private OccupationService occupationService;
 
+	@Resource(name = "organizationServiceImpl")
+	private OrganizationService organizationService;
+
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
@@ -83,7 +86,7 @@ public class EvaluationController extends BaseController {
 		evalStatuss.add(new MapEntity("completed","已完成"));
 		evalStatuss.add(new MapEntity("cancelled","已取消"));
 		model.addAttribute("evalStatuss",evalStatuss);
-		model.addAttribute("organizations",occupationService.findAll());
+		model.addAttribute("organizations",organizationService.findAll());
 		return "/admin/evaluation/list";
 	}
 
