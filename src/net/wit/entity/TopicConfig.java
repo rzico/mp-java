@@ -1,9 +1,14 @@
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Lob;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @ClassName: SafeKey
@@ -19,15 +24,25 @@ public class TopicConfig implements Serializable {
 	private static final long serialVersionUID = 61L;
 
 	public static enum PromoterType{
-
-		/** 所有用户 */
+		/** 任何用户 */
 		any,
-		/** 普通会员 */
-		vip1,
-		/** 金卡会员 */
-		vip2,
-		/** 钻石会员 */
-		vip3
+		/** 团队成员 */
+		team,
+		/** 分红股东 */
+		partner
+	};
+
+	public static enum Pattern{
+		/** 无门槛，领卡，即成为团队成员 */
+		pattern1,
+		/** 购买任意商品，即成为团队成员 */
+		pattern2,
+		/** 购买分销商品，即成为团队成员 */
+		pattern3,
+		/** 单次消费满1000(设置)，即成为团队成员 */
+		pattern4,
+		/** 累计消费满3000(设置)，即成为团队成员 */
+		pattern5
 
 	};
 
@@ -35,6 +50,16 @@ public class TopicConfig implements Serializable {
 	@NotNull
 	@Column(columnDefinition="int(11) not null comment '团队类型'")
 	private PromoterType promoterType;
+
+	/**  团队模式 */
+	@NotNull
+	@Column(columnDefinition="int(11) not null comment '团队模式'")
+	private Pattern pattern;
+
+	/**  设置金额 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '设置金额'")
+	private BigDecimal amount;
 
 	/** 开通会员卡 */
 	@Column(columnDefinition="bit not null comment '开通会员卡'")
@@ -126,5 +151,21 @@ public class TopicConfig implements Serializable {
 
 	public void setAppetAppSerect(String appetAppSerect) {
 		this.appetAppSerect = appetAppSerect;
+	}
+
+	public Pattern getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(Pattern pattern) {
+		this.pattern = pattern;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 }

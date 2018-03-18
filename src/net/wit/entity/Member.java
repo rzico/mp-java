@@ -58,11 +58,7 @@ public class Member extends BaseEntity {
 		/** v2 */
 		vip2,
 		/** v3 */
-		vip3,
-		/** vip4 */
-		vip4,
-		/** vip5 */
-		vip5
+		vip3
 	}
 
 	/** "身份信息"参数名称 */
@@ -1002,7 +998,26 @@ public class Member extends BaseEntity {
 		return card;
 	}
 
+	//获取股东
+	public Member partner(Member seller) {
+		Card card = card(seller);
+		if (card==null) {
+			return null;
+		}
 
+		if (card.getType().equals(Card.Type.partner)) {
+			return this;
+		} else {
+			Member p = card.getPromoter();
+			if (p!=null) {
+                return p.partner(seller);
+			} else {
+				return null;
+			}
+		}
+	}
+
+	//是否有分润
 	public Boolean leaguer(Member seller) {
 		Card card = card(seller);
 		if (card==null) {
@@ -1010,10 +1025,14 @@ public class Member extends BaseEntity {
 		}
 
 		Topic topic = seller.getTopic();
-		if (topic.getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
+		TopicConfig config = topic.getConfig();
+		if (config.getPromoterType().equals(TopicConfig.PromoterType.any)) {
 			return true;
-		}
-		if (card.getVip().compareTo(Card.VIP.valueOf(topic.getConfig().getPromoterType().name()))>=0) {
+		} else
+		if ((config.getPromoterType().equals(TopicConfig.PromoterType.team) && card.getType().compareTo(Card.Type.team)>=0)){
+			return true;
+		} else
+		if ((config.getPromoterType().equals(TopicConfig.PromoterType.partner) && card.getType().equals(Card.Type.partner))) {
 			return true;
 		} else {
 			return false;

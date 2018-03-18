@@ -32,6 +32,8 @@ public class CardViewModel extends BaseModel implements Serializable {
     private String background;
     /** 状态 */
     private Card.Status status;
+    /** 角色 */
+    private Card.Type type;
     /** 等级 */
     private Card.VIP vip;
     /** 余额 */
@@ -164,6 +166,7 @@ public class CardViewModel extends BaseModel implements Serializable {
         Member member = card.getMembers().get(0);
         this.logo = member.getLogo();
 
+        this.type = card.getType();
         this.bindMobile = false;
         this.bindName = false;
         this.balance = card.getBalance();

@@ -48,10 +48,10 @@ public class WeexMemberInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		Member member = memberService.getCurrent();
 		String xuid = request.getHeader("x-uid");
-		if (member!=null ) {// && xuid!=null && xuid.equals(member.getUuid())) {
+		if (member!=null ) {  // && xuid!=null && xuid.equals(member.getUuid())) {
 			return true;
 		}
-		if (member==null) {
+		if (member==null && xuid!=null) {
 			member = memberService.findByUUID(xuid);
 			if (member != null) {
 
