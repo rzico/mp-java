@@ -24,6 +24,7 @@
                 <ul>
                     <li><a data-href="../admin/index.jhtml" data-title="操作员" href="javascript:;">操作员</a></li>
                     <li><a data-href="../area/index.jhtml" data-title="行政区域" href="javascript:;">行政区域</a></li>
+                    <li><a data-href="../organization/index.jhtml" data-title="学校企业" href="javascript:;">学校企业</a></li>
                     <li><a data-href="../smssend/index.jhtml" data-title="短信管理" href="javascript:;">短信管理</a></li>
                     <li><a data-href="../log/index.jhtml" data-title="日志管理" href="javascript:;">日志管理</a></li>
                     <li><a data-href="../message/index.jhtml" data-title="消息管理" href="javascript:;">消息管理</a></li>

@@ -49,6 +49,16 @@
 				</select>
 			</span>
 		[/#if]
+    [#if organizations??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="organization" class="select" style="background-color: #FFFFFF;">
+					<option value="">学校/企业</option>
+                    [#list organizations as organization]
+                        <option value="${organization.name}">${organization.name}</option>
+                    [/#list]
+				</select>
+			</span>
+    [/#if]
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -264,6 +274,7 @@
                 var _searchValue = $("#searchvalue").val();
                 /*处理常量*/
                 var _evalStatus =  $('select[name="evalStatus"]').val();
+                var _organization =  $('select[name="organization"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -275,6 +286,7 @@
                         "beginDate":_beginDate,
                         "endDate":_endDate,
                         "evalStatus":_evalStatus,
+                        "organization":_organization,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

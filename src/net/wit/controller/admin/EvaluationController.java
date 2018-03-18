@@ -83,6 +83,7 @@ public class EvaluationController extends BaseController {
 		evalStatuss.add(new MapEntity("completed","已完成"));
 		evalStatuss.add(new MapEntity("cancelled","已取消"));
 		model.addAttribute("evalStatuss",evalStatuss);
+		model.addAttribute("organizations",occupationService.findAll());
 		return "/admin/evaluation/list";
 	}
 
@@ -266,11 +267,15 @@ public class EvaluationController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Evaluation.EvalStatus evalStatus, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate,String organization, Evaluation.EvalStatus evalStatus, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (evalStatus!=null) {
 			Filter evalStatusFilter = new Filter("evalStatus", Filter.Operator.eq, evalStatus);
 			filters.add(evalStatusFilter);
+		}
+		if (organization!=null) {
+			Filter organizationFilter = new Filter("attr1", Filter.Operator.eq, organization);
+			filters.add(organizationFilter);
 		}
 
 		Page<Evaluation> page = evaluationService.findPage(beginDate,endDate,pageable);

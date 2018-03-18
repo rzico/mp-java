@@ -34,153 +34,94 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>订单编号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>${data.sn}</span>
                 </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>完成数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.eval}" placeholder="" id="eval" name="eval" onInput="intInit(this)">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>主标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>${data.title}</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>副标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>${data.subTitle}</span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">测评会员：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>${data.member.nickName}</span>
+                </div>
+            </div>
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if evalStatuss??]
-                [#list evalStatuss as evalStatus]
-                    <div class="radio-box">
-                        <input name="evalStatus" type="radio" id="evalStatus-${evalStatus_index}" value="${evalStatus.id}"[#if evalStatus.id == data.evalStatus] checked[/#if]>
-                        <label for="evalStatus-${evalStatus_index}">${evalStatus.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+                <span>${data.evalStatus.name}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">测评结果：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.result}" placeholder="" id="result" name="result">
+                ${data.result?html}
             </div>
         </div>
-
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>订单编号：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>完成进度：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.sn}" placeholder="" id="sn" name="sn">
+                <span>${data.eval}/${data.total}</span>
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>副标题：</label>
+            <label class="form-label col-xs-4 col-sm-2">推荐人：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.subTitle}" placeholder="" id="subTitle" name="subTitle">
-            </div>
-        </div>
+                <span>[#if data.promoter??]${data.promoter.nickName}[/#if]</span>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>主标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>总题数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.total}" placeholder="" id="total" name="total" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Gauge：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if gauges??]
-				<select name="gaugeId" class="select" style="background-color: #FFFFFF">
-                    [#list gauges as gauge]
-					<option[#if data.gauge?? && gauge.id == data.gauge.id] selected[/#if] value="${gauge.id}">${gauge.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Member：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩列图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thumbnail}" placeholder="" id="thumbnail" name="thumbnail">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Promoter：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if promoters??]
-				<select name="promoterId" class="select" style="background-color: #FFFFFF">
-                    [#list promoters as promoter]
-					<option[#if data.promoter?? && promoter.id == data.promoter.id] selected[/#if] value="${promoter.id}">${promoter.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">学校/企业：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.attr1}" placeholder="" id="attr1" name="attr1">
+                <span>${data.attr1}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">班级/部门：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.attr2}" placeholder="" id="attr2" name="attr2">
+                <span>${data.attr2}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">学号/工号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.attr3}" placeholder="" id="attr3" name="attr3">
+                <span>${data.attr3}</span>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">姓名：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.attr4}" placeholder="" id="attr4" name="attr4">
+                <span>${data.attr4}</span>
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;返回&nbsp;&nbsp;">
             </div>
         </div>
             [#else]
@@ -210,72 +151,11 @@
                     increaseArea: '20%'
                 });
 
-                $("#form-update").validate({
-                    rules:{
-                        eval:{
-                            required:true,
-                        },
-                        evalStatus:{
-                            required:true,
-                        },
-                        price:{
-                            required:true,
-                        },
-                        sn:{
-                            required:true,
-                        },
-                        subTitle:{
-                            required:true,
-                        },
-                        title:{
-                            required:true,
-                        },
-                        total:{
-                            required:true,
-                        },
-                        thumbnail:{
-                            required:true,
-                        },
-                        rebate:{
-                            required:true,
-                        },
+                $submit.onclick = function () {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.closeWindow(index, '添加成功');
+                }
 
-                    },
-                    onkeyup:false,
-                    focusCleanup:true,
-                    success:"valid",
-                    submitHandler:function(form){
-                        var load = layer.msg('加载中', {
-                            icon: 16
-                            ,shade: 0.01
-                        });
-                        $(form).ajaxSubmit({
-                            type: 'post',
-                            url: "${base}/admin/evaluation/update.jhtml" ,
-                            beforeSend: function() {
-                                $submit.prop("disabled", true);
-                            },
-                            success: function(message){
-                                layer.close(load);
-                                if(message.type ==  "success"){
-//                                    关闭当前页面
-                                    var index = parent.layer.getFrameIndex(window.name);
-                                    parent.add_row(message.data);
-                                    //关闭弹窗并提示
-                                    parent.closeWindow(index, '修改成功');
-                                }else{
-                                    $submit.prop("disabled", false);
-                                    parent.toast('修改失败',2);
-                                }
-                            },
-                            error: function(XmlHttpRequest, textStatus, errorThrown){
-                                $submit.prop("disabled", false);
-                                layer.close(load);
-                                parent.toast('修改失败',2);
-                            }
-                        });
-                    }
-                });
             });
         </script>
 </body>
