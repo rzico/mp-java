@@ -105,9 +105,18 @@ public class EnterpriseController extends BaseController {
 	public Message save(Enterprise enterprise, Long areaId,Long memberId){
 		Member member = memberService.find(memberId);
 		if (member==null) {
-			return Message.error("无效会员号");
+			return Message.error("请正确输入会员");
 		}
-		Enterprise entity = new Enterprise();	
+		ArrayList<Filter> filters = new ArrayList<>();
+		Filter memberFilter = new Filter("member", Filter.Operator.eq, member);
+		filters.add(memberFilter);
+
+		List<Enterprise> ens = enterpriseService.findList(null,null,filters,null);
+		if (ens.size()>0) {
+			return Message.error("已经存在企业了");
+		}
+
+		Enterprise entity = new Enterprise();
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
@@ -130,8 +139,7 @@ public class EnterpriseController extends BaseController {
             return Message.error("admin.data.valid");
         }
         try {
-			enterpriseService.save(entity);
-			enterpriseService.addAdmin(entity,member);
+			enterpriseService.addCreate(entity,member);
             return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -252,8 +260,8 @@ public class EnterpriseController extends BaseController {
 			filters.add(typeFilter);
 		}
 		if (status!=null) {
-			Filter typeFilter = new Filter("status", Filter.Operator.eq, status);
-			filters.add(typeFilter);
+			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
+			filters.add(statusFilter);
 		}
 		Admin admin =adminService.getCurrent();
 		Enterprise enterprise=admin.getEnterprise();

@@ -176,7 +176,7 @@
                                     parent.closeWindow(index, '修改成功');
                                 }else{
                                     $submit.prop("disabled", false);
-                                    parent.toast('修改失败',2);
+                                    parent.toast(message.content,2);
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){

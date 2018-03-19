@@ -68,7 +68,7 @@
                 [#if types??]
                 [#list types as type]
                     <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}">
+                        <input name="type" type="radio" id="type-${type_index}" value="${type.id} [#if type_index == 1] checked[/#if]">
                         <label for="type-${type_index}">${type.name}</label>
                     </div>
                 [/#list]
@@ -99,7 +99,7 @@
             [#if statuss??]
                 [#list statuss as status]
                     <div class="radio-box">
-                        <input name="status" type="radio" id="type-${status_index}" value="${status.id}">
+                        <input name="status" type="radio" id="type-${status_index}" value="${status.id}  [#if status_index == 1] checked[/#if]">
                         <label for="status-${status_index}">${status.name}</label>
                     </div>
                 [/#list]
@@ -153,16 +153,9 @@
                         brokerage:{
                             required:true,
                         },
-                        memberId:{
-                            required:true,
-                        },
                         name:{
                             required:true,
-                        },
-                        status:{
-                            required:true,
-                        },
-
+                        }
                     },
                     onkeyup:false,
                     focusCleanup:true,
@@ -188,7 +181,7 @@
                                     parent.closeWindow(index, '添加成功');
                                 }else{
                                     $submit.prop("disabled", false);
-                                    layer.msg('添加失败!',{icon:2,time:1000});
+                                    layer.msg(message.content,{icon:2,time:1000});
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
@@ -206,7 +199,7 @@
             function search(){
                 var url = "/admin/recharge/getMemberInfo.jhtml?phone="+$("#mobilemail").val();
 
-                layer.confirm("请确认手机号或是邮箱？",function(index){
+                layer.confirm("请确认手机号？",function(index){
                     var load = layer.msg("查询中..",{
                         icon:16,shade:0.01
                     });
