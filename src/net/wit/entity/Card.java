@@ -309,4 +309,5 @@ public class Card extends BaseEntity {
 			return null;
 		}
 	}
+
 }

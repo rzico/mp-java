@@ -168,4 +168,5 @@ public class TopicConfig implements Serializable {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
 }

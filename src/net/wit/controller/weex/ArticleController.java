@@ -94,6 +94,9 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/preview", method = RequestMethod.GET)
     @ResponseBody
     public Message preview(Long id,HttpServletRequest request){
+        System.out.print("preview");
+        System.out.print(id);
+
         Member member = memberService.getCurrent();
         Article article = articleService.find(id);
         if (article==null) {
