@@ -74,6 +74,11 @@ public class Article extends BaseEntity{
     @JsonIgnore
     private Member member;
 
+    /** 商品 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Goods goods;
+
     /** 标题 */
     @Length(max = 255)
     @Column(columnDefinition="varchar(255) comment '标题'")
@@ -509,6 +514,14 @@ public class Article extends BaseEntity{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Goods getGoods() {
+        return goods;
+    }
+
+    public void setGoods(Goods goods) {
+        this.goods = goods;
     }
 
     public MapEntity getMapTemplate() {
