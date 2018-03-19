@@ -15,6 +15,8 @@ import net.wit.Message;
 import net.wit.Order;
 import net.wit.Pageable;
 
+import net.wit.controller.model.ArticleContentModel;
+import net.wit.controller.model.ArticleModel;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -534,6 +536,22 @@ public class ArticleController extends BaseController {
 			e.printStackTrace();
 			return Message.error("admin.propaganda.error");
 		}
+	}
+
+	/**
+	 * 预览
+	 */
+	@RequestMapping(value = "/articleview", method = RequestMethod.GET)
+	public String articleView(Long id, ModelMap model) {
+		Article article=articleService.find(id);
+		ArticleModel articleModel=new ArticleModel();
+		articleModel.bind(article);
+		if(articleModel==null){
+			return "/404";
+		}
+		List<ArticleContentModel> articleContentModels=articleModel.getTemplates();
+		model.addAttribute("articles",articleContentModels);
+		return "/admin/article/view/articleView";
 	}
 
 
