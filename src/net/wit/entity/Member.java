@@ -1039,6 +1039,17 @@ public class Member extends BaseEntity {
 		}
 	}
 
+	public String displayName() {
+		if (getName()!=null) {
+			return getName();
+		} else
+		if (getNickName()!=null) {
+			return getNickName();
+		} else {
+			return userId();
+		}
+	}
+
 
 	public static Long decodeUserId(String userId) {
 		if (userId!=null) {

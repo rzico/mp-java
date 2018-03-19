@@ -213,7 +213,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,HttpServletRequest request){
+    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,Long promoterId,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -248,7 +248,6 @@ public class CardController extends BaseController {
             }
             card.setShop(shop);
         }
-
         cardService.update(card);
         return Message.success("更新成功");
     }
@@ -496,7 +495,7 @@ public class CardController extends BaseController {
             return Message.error("没有开通店铺");
         }
         if (admin.getEnterprise()==null) {
-            return Message.error("店铺已打洋,请先启APP");
+            return Message.error("店铺已打洋");
         }
         Member owner = enterprise.getMember();
         if (owner.getTopic()==null) {
