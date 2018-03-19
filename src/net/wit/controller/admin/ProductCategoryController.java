@@ -65,8 +65,6 @@ public class ProductCategoryController extends BaseController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
 
-		model.addAttribute("members",memberService.findAll());
-
 		return "/admin/productCategory/list";
 	}
 
@@ -76,8 +74,6 @@ public class ProductCategoryController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
-
-		model.addAttribute("members",memberService.findAll());
 
 		return "/admin/productCategory/add";
 	}
@@ -142,7 +138,6 @@ public class ProductCategoryController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
-		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("data",productCategoryService.find(id));
 
@@ -157,26 +152,17 @@ public class ProductCategoryController extends BaseController {
     @ResponseBody
 	public Message update(ProductCategory productCategory, Long parentId, Long memberId){
 		ProductCategory entity = productCategoryService.find(productCategory.getId());
-		
-		entity.setCreateDate(productCategory.getCreateDate());
-
-		entity.setModifyDate(productCategory.getModifyDate());
 
 		entity.setOrders(productCategory.getOrders() == null ? 0 : productCategory.getOrders());
 
-		entity.setGrade(productCategory.getGrade() == null ? 0 : productCategory.getGrade());
-
 		entity.setName(productCategory.getName());
 
-		entity.setTreePath(productCategory.getTreePath());
+		entity.setThumbnail(productCategory.getThumbnail());
+
 
 		entity.setMember(memberService.find(memberId));
 
-		entity.setParent(productCategoryService.find(parentId));
-		
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
+
         try {
             productCategoryService.update(entity);
             return Message.success(entity,"admin.update.success");

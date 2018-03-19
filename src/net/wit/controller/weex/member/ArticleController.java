@@ -214,13 +214,12 @@ public class ArticleController extends BaseController {
         article.setMediaType(Article.MediaType.image);
 
         if (isNew) {
+            if (goodsId!=null) {
+                article.setGoods(goodsService.find(goodsId));
+            }
             articleService.save(article);
         } else {
             articleService.update(article);
-        }
-
-        if (goodsId!=null) {
-            article.setGoods(goodsService.find(goodsId));
         }
 
         ArticleModel entityModel =new ArticleModel();
