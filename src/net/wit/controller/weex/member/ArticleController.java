@@ -76,6 +76,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
+    @Resource(name = "goodsServiceImpl")
+    private GoodsService goodsService;
+
     @Resource(name = "weixinUpServiceImpl")
     private WeixinUpService weixinUpService;
 
@@ -149,7 +152,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(String body, HttpServletRequest request) {
+    public Message submit(String body,Long goodsId, HttpServletRequest request) {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -214,6 +217,10 @@ public class ArticleController extends BaseController {
             articleService.save(article);
         } else {
             articleService.update(article);
+        }
+
+        if (goodsId!=null) {
+            article.setGoods(goodsService.find(goodsId));
         }
 
         ArticleModel entityModel =new ArticleModel();

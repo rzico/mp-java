@@ -75,22 +75,22 @@
 </head>
 <body>
 <div class="desktop">
-    <div style="margin-left: 80px;margin-top: 50px;">
-        <div class="tpanel">
-            <div class="title">时时拍</div>
-            <div class="sub_title">新营销利器，商家首选</div>
-        </div>
-        <div class="content">超强图文与小视频制作工具,众卖共享经济新零售分享社区。</div>
-        <div class="button"></div>
-    </div>
-    <div style="margin-left: 80px;margin-top: 50px;">
-        <div class="tpanel">
-            <div class="title">众卖芸店</div>
-            <div class="sub_title">开店必备，管店神器</div>
-        </div>
-        <div class="content">店铺收银系统、进销存、财务管理、电子会员卡一体化，集成线上商城，链接公众号与小程序。</div>
-        <div class="button"></div>
-    </div>
+    <#--<div style="margin-left: 80px;margin-top: 50px;">-->
+        <#--<div class="tpanel">-->
+            <#--<div class="title">时时拍</div>-->
+            <#--<div class="sub_title">新营销利器，商家首选</div>-->
+        <#--</div>-->
+        <#--<div class="content">超强图文与小视频制作工具,众卖共享经济新零售分享社区。</div>-->
+        <#--<div class="button"></div>-->
+    <#--</div>-->
+    <#--<div style="margin-left: 80px;margin-top: 50px;">-->
+        <#--<div class="tpanel">-->
+            <#--<div class="title">众卖芸店</div>-->
+            <#--<div class="sub_title">开店必备，管店神器</div>-->
+        <#--</div>-->
+        <#--<div class="content">店铺收银系统、进销存、财务管理、电子会员卡一体化，集成线上商城，链接公众号与小程序。</div>-->
+        <#--<div class="button"></div>-->
+    <#--</div>-->
 
 </div>
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>

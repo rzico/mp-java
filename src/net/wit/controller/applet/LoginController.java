@@ -105,7 +105,7 @@ public class LoginController extends BaseController {
                 member.setNickName(null);
                 member.setLogo(null);
 //                member.setPoint(0L);
-//                member.setAmount(BigDecimal.ZERO);
+                member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setFreezeBalance(BigDecimal.ZERO);
                 member.setVip(Member.VIP.vip1);
@@ -156,13 +156,13 @@ public class LoginController extends BaseController {
                 }
                 member.setLoginDate(new Date());
                 memberService.save(member);
-                if (!User.userAttr(member)) {
-                    return Message.success(Message.LOGIN_SUCCESS);
-                };
-
                 Map<String,String> data = new HashMap<>();
                 data.put("jsessionId",sessionId);
                 data.put("session_key",sessionKey);
+                if (!User.userAttr(member)) {
+                    return Message.success(data,Message.LOGIN_SUCCESS);
+                };
+
 //                data.put("userId", Base64.encodeBase64String(openId.getBytes()));
                 return Message.success(data,Message.LOGIN_SUCCESS);
 

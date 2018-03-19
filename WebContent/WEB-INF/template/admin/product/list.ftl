@@ -58,7 +58,7 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
 		<a href="javascript:;" onclick="add('首页 &gt; 产品档案 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增产品档案</a></span></div>
+                class="Hui-iconfont">&#xe600;</i> 新增产品</a></span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -148,6 +148,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "modifyDate",
+                    "sTitle": "修改日期",
+                    "sClass": "center"
+                },
+                {
                     "mData": "sn",
                     "sTitle": "编号",
                     "sClass": "center"
@@ -173,11 +178,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "cost",
-                    "sTitle": "成本价",
-                    "sClass": "center"
-                },
-                {
                     "mData": "marketPrice",
                     "sTitle": "市场价",
                     "sClass": "center"
@@ -188,13 +188,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "point",
-                    "sTitle": "赠送积分",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "isList",
-                    "sTitle": "是否列出",
+                    "mData": "cost",
+                    "sTitle": "成本价",
                     "sClass": "center"
                 },
                 {
@@ -226,6 +221,12 @@
                     }
                 },
                 {
+                    "aTargets": [3],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                },
+                {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
@@ -236,27 +237,17 @@
                     }
                 },
                 {
+                    "aTargets": [11],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                 {
                     "aTargets": [12],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [13],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 产品档案 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -268,7 +259,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 12, 13, 14]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 12]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

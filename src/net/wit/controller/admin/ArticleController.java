@@ -103,7 +103,7 @@ public class ArticleController extends BaseController {
 
 //		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
-//		model.addAttribute("tags",tagService.findList(Tag.Type.article));
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/list";
 	}
@@ -121,8 +121,8 @@ public class ArticleController extends BaseController {
 		authoritys.add(new MapEntity("isEncrypt","加密"));
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
-
-		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+//
+//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
@@ -239,8 +239,8 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-		model.addAttribute("articleCategorys",articleCategoryService.findAll());
-
+//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+//
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));

@@ -224,9 +224,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			sender.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
 //			sender.setPoint(0L);
 			sender.setBalance(BigDecimal.ZERO);
+			sender.setFreezeBalance(BigDecimal.ZERO);
 			sender.setIsEnabled(true);
 			sender.setIsLocked(false);
 			sender.setLoginFailureCount(0);
+			sender.setVip(Member.VIP.vip1);
+			sender.setAmount(BigDecimal.ZERO);
 			sender.setRegisterIp("127.0.0.1");
 			memberDao.persist(sender);
 			User.userAttr(sender);

@@ -50,6 +50,9 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	@Resource(name = "refundsDaoImpl")
 	private RefundsDao refundsDao;
 
+	@Resource(name = "vipDaoImpl")
+	private VipDao vipDao;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
@@ -275,5 +278,22 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			memberFollowDao.persist(follow);
 		}
 	}
+
+
+	//累计消费
+	public void addAmount(Member member,BigDecimal amount) throws Exception {
+		member.setAmount(member.getAmount().add(amount));
+	    List<Vip> vips = vipDao.findList(null,null,null,null);
+	    for (Vip vip:vips) {
+	    	if (vip.getAmount().compareTo(member.getAmount())<=0) {
+	    		if (member.getVip().compareTo(Member.VIP.valueOf(vip.getVip()))<0) {
+	    			member.setVip(Member.VIP.valueOf(vip.getVip()));
+				}
+			}
+		}
+		memberDao.merge(member);
+	    memberDao.flush();
+	}
+
 
 }

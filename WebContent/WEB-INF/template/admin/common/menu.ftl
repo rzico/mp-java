@@ -17,8 +17,7 @@
             <dt><i class="Hui-iconfont">&#xe60d;</i> 商品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="../goods/index.jhtml" data-title="商品总览" href="javascript:;">商品总览</a></li>
-                    <li><a data-href="../product/index.jhtml" data-title="商品详情" href="javascript:;">商品详情</a></li>
+                    <li><a data-href="../product/index.jhtml" data-title="商品管理" href="javascript:;">商品管理</a></li>
                 </ul>
             </dd>
         [/#if]
@@ -50,7 +49,7 @@
                     <li><a data-href="../member/index.jhtml" data-title="会员管理" href="javascript:;">会员管理</a></li>
                     [/#if]
                     [#if (admin.type=="operate"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
-                    <li><a data-href="../enterprise/index.jhtml" data-title="客户管理" href="javascript:;">客户管理</a></li>
+                    <li><a data-href="../enterprise/index.jhtml" data-title="合作伙伴" href="javascript:;">合作伙伴</a></li>
                     [/#if]
                     [#if (admin.type=="operate"||admin.type=="shop"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2"))]
                     <li><a data-href="../admin/index.jhtml" data-title="账号管理" href="javascript:;">账号管理</a></li>

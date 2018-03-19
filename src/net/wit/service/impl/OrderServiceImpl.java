@@ -27,12 +27,12 @@ import net.wit.entity.*;
 import org.springframework.util.Assert;
 
 /**
- * @ClassName: OrderDaoImpl
  * @author 降魔战队
+ * @ClassName: OrderDaoImpl
  * @date 2017-9-14 19:42:8
  */
- 
- 
+
+
 @Service("orderServiceImpl")
 public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements OrderService {
 	@Resource(name = "orderDaoImpl")
@@ -84,7 +84,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public void setBaseDao(OrderDao orderDao) {
 		super.setBaseDao(orderDao);
 	}
-	
+
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
@@ -127,8 +127,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		super.delete(order);
 	}
 
-	public Page<Order> findPage(Date beginDate,Date endDate, String status, Pageable pageable) {
-		return orderDao.findPage(beginDate,endDate,status,pageable);
+	public Page<Order> findPage(Date beginDate, Date endDate, String status, Pageable pageable) {
+		return orderDao.findPage(beginDate, endDate, status, pageable);
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            附言
 	 * @return 订单
 	 */
-	public Order build(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver,String memo) {
+	public Order build(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -182,6 +182,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setIsAllocatedStock(false);
 		order.setIsDistribution(false);
 		order.setRebateAmount(BigDecimal.ZERO);
+		order.setIsPartner(false);
+		order.setPartnerAmount(BigDecimal.ZERO);
 
 		if (receiver != null) {
 			order.setConsignee(receiver.getConsignee());
@@ -193,7 +195,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		List<OrderItem> orderItems = order.getOrderItems();
-		if (product!=null) {
+		if (product != null) {
 			OrderItem orderItem = new OrderItem();
 			orderItem.setName(product.getName());
 			orderItem.setSpec(product.getSpec());
@@ -260,8 +262,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setOrderStatus(Order.OrderStatus.unconfirmed);
 		order.setPaymentStatus(Order.PaymentStatus.unpaid);
 
-        //30分钟不付款过期
-		order.setExpire(DateUtils.addMinutes(new Date(),30));
+		//30分钟不付款过期
+		order.setExpire(DateUtils.addMinutes(new Date(), 30));
 
 		return order;
 
@@ -280,7 +282,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 * @return 订单
 	 */
-	public Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo,Long xuid, Admin operator) {
+	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -288,7 +290,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		Assert.notNull(receiver);
 
-		Order order = build(member,product ,quantity ,cart, receiver, memo);
+		Order order = build(member, product, quantity, cart, receiver, memo);
 
 		order.setSn(snDao.generate(Sn.Type.order));
 
@@ -308,33 +310,41 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setFee(BigDecimal.ZERO);
 
 		Card card = member.card(order.getSeller());
-		if (card!=null) {
-			Long point = order.getAmount().setScale(0,BigDecimal.ROUND_DOWN).longValue();
-			if (card.getPoint()>=point) {
+		if (card != null) {
+			Long point = order.getAmount().setScale(0, BigDecimal.ROUND_DOWN).longValue();
+			if (card.getPoint() >= point) {
 				order.setPointDiscount(new BigDecimal(point));
 			} else {
 				order.setPointDiscount(new BigDecimal(card.getPoint()));
 			}
 		}
+		//股东自已消费，直接获取返利，不给再分配
+		if (card!=null && card.getType().equals(Card.Type.partner)) {
+			order.setPromoter(null);
+			order.setPartner(member);
+		} else {
+			//分配给原有上传
+			if (card != null && card.getPromoter() != null) {
+				Member promoter = card.getPromoter();
+				if (promoter != null && promoter.equals(order.getSeller())) {
+					promoter = null;
+				}
+				order.setPromoter(promoter);
+			} else if (xuid != null) {
+				//新客户给推广人
+				Member promoter = memberDao.find(xuid);
+				if (promoter != null && promoter.equals(order.getSeller())) {
+					promoter = null;
+				}
+				order.setPromoter(promoter);
+			}
 
-		if (card!=null && card.getPromoter()!=null) {
-			Member promoter = card.getPromoter();
-			if (promoter!=null && promoter.equals(order.getSeller())) {
-				promoter = null;
+			if (order.getPromoter() != null) {
+				order.setPartner(member.partner(order.getPromoter()));
 			}
-			order.setPromoter(promoter);
-		} else
-		if (xuid!=null) {
-			Member promoter = memberDao.find(xuid);
-			if (promoter!=null && promoter.equals(order.getSeller())) {
-				promoter = null;
-			}
-			order.setPromoter(promoter);
 		}
-
-
 		orderDao.persist(order);
-		cardService.decPoint(card,order.getPointDiscount().longValue(),"订单支付",order);
+		cardService.decPoint(card, order.getPointDiscount().longValue(), "订单支付", order);
 
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.create);
@@ -343,13 +353,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 
-		messageService.orderMemberPushTo(orderLog);
-
 		//下单就锁定库存
 		for (OrderItem orderItem : order.getOrderItems()) {
 			if (orderItem != null) {
 				Product orderProduct = orderItem.getProduct();
-				if (orderProduct!=null) {
+				if (orderProduct != null) {
 					productDao.lock(orderProduct, LockModeType.PESSIMISTIC_WRITE);
 					orderProduct.setAllocatedStock(orderProduct.getAllocatedStock() + orderItem.getQuantity());
 					productDao.merge(orderProduct);
@@ -357,9 +365,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				}
 			}
 		}
-		if (cart!=null) {
+		if (cart != null) {
 			cartDao.remove(cart);
 		}
+
+		messageService.orderMemberPushTo(orderLog);
+
 		return order;
 	}
 
@@ -372,7 +383,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 */
 	public void update(Order order, Admin operator) {
-		return ;
+		return;
 	}
 
 	/**
@@ -383,10 +394,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void confirm(Order order, Admin operator)  throws Exception {
+	public void confirm(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 
-		orderDao.lock(order,LockModeType.PESSIMISTIC_WRITE);
+		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
 		order.setOrderStatus(Order.OrderStatus.confirmed);
 		order.setExpire(null);
@@ -399,7 +410,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 		messageService.orderMemberPushTo(orderLog);
-		return ;
+		return;
 	}
 
 
@@ -411,10 +422,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void complete(Order order, Admin operator)  throws Exception {
+	public void complete(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 
-		orderDao.lock(order,LockModeType.PESSIMISTIC_WRITE);
+		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
 		Member member = order.getMember();
 		memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
@@ -443,7 +454,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				if (orderItem != null) {
 					Product product = orderItem.getProduct();
 					if (product != null) {
-     					productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+						productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
 						product.setAllocatedStock(product.getAllocatedStock() - orderItem.getQuantity());
 						productDao.merge(product);
 						orderDao.flush();
@@ -470,7 +481,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (order.getPaymentMethod().equals(Order.PaymentMethod.online) || order.getPaymentMethod().equals(Order.PaymentMethod.deposit)) {
 				//扣除商家分配佣金
 				Member seller = order.getSeller();
-				memberDao.refresh(seller,LockModeType.PESSIMISTIC_WRITE);
+				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
 				//扣除平台手续费
 				BigDecimal samt = order.getAmountPaid().subtract(order.getFee());
 				seller.setBalance(seller.getBalance().add(samt));
@@ -481,7 +492,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setType(Deposit.Type.product);
 				NumberFormat nf = NumberFormat.getNumberInstance();
 				nf.setMaximumFractionDigits(2);
-				deposit.setMemo("货款结算(手续费:"+nf.format(order.getFee())+")");
+				deposit.setMemo("货款结算(手续费:" + nf.format(order.getFee()) + ")");
 				deposit.setMember(seller);
 				deposit.setCredit(samt);
 				deposit.setDebit(BigDecimal.ZERO);
@@ -490,29 +501,31 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setOrder(order);
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
-		    }
+			}
 		}
 
 		//建立分佣关系
-		memberService.create(order.getMember(),order.getSeller());
-		Card card = cardService.createAndActivate(order.getMember(),order.getSeller(),order.getPromoter());
-		if (card!=null) {
-			memberService.create(order.getMember(),order.getPromoter());
+		memberService.create(order.getMember(), order.getSeller());
+		Card card = cardService.createAndActivate(order.getMember(), order.getSeller(), order.getPromoter(), order.getAmount(), order.getDistPrice());
+		if (card != null) {
+			memberService.create(order.getMember(), order.getPromoter());
 		}
 
-		//没有发货，或是退货等状态完成，取无效订单
+		//没有发货，或是退货等状态完成，是无效订单
 		if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
 			card = order.getMember().card(order.getSeller());
-			if (card!=null && order.getPointDiscount().compareTo(BigDecimal.ZERO)>0) {
+			if (card != null && order.getPointDiscount().compareTo(BigDecimal.ZERO) > 0) {
 				cardService.addPoint(card, order.getPointDiscount().longValue(), "订单退货", order);
 			}
+		} else {
+			memberService.addAmount(member, order.getAmount());
 		}
 
 		//判断是会员
 		//计算分润
-		if (order.getPromoter()!=null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+		if (order.getPromoter() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
 			BigDecimal d = order.getDistribution();
-			if (d.compareTo(BigDecimal.ZERO)>0) {
+			if (d.compareTo(BigDecimal.ZERO) > 0) {
 				//扣除商家分配佣金
 				Member seller = order.getSeller();
 				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
@@ -538,121 +551,175 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					orderDao.merge(order);
 				}
 			}
-					for (OrderItem orderItem : order.getOrderItems()) {
-						if (orderItem != null) {
-							Member p1 = order.getPromoter();
-							Card c1 = p1.card(order.getSeller());
-							BigDecimal r1 = orderItem.calcPercent1();
-							if (r1.compareTo(BigDecimal.ZERO) > 0 && p1 != null && p1.leaguer(order.getSeller())) {
-								memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
-								p1.setBalance(p1.getBalance().add(r1));
-								memberDao.merge(p1);
-								memberDao.flush();
-								Deposit d1 = new Deposit();
-								d1.setBalance(p1.getBalance());
-								d1.setType(Deposit.Type.rebate);
-								d1.setMemo(orderItem.getName() + "奖励金");
-								d1.setMember(p1);
-								d1.setCredit(r1);
-								d1.setDebit(BigDecimal.ZERO);
-								d1.setDeleted(false);
-								d1.setOperator("system");
-								d1.setOrder(order);
-								depositDao.persist(d1);
-								messageService.depositPushTo(d1);
-							}
-							Long point1 = orderItem.calcPoint1();
-							if (point1.compareTo(0L) > 0 && c1 != null && p1 != null && p1.leaguer(order.getSeller())) {
-								cardService.addPoint(c1, point1, orderItem.getName() + "奖励", order);
-							}
-							Member p2 = null;
-							Card c2 = null;
-							if (p1 != null) {
-								c1 = p1.card(order.getSeller());
-								if (c1 != null) {
-									p2 = c1.getPromoter();
-									if (p2!=null) {
-										c2 = p2.card(order.getSeller());
-									}
-								}
-							}
-							BigDecimal r2 = orderItem.calcPercent2();
-							if (r2.compareTo(BigDecimal.ZERO) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
-								memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
-								p2.setBalance(p2.getBalance().add(r2));
-								memberDao.merge(p2);
-								memberDao.flush();
-								Deposit d2 = new Deposit();
-								d2.setBalance(p2.getBalance());
-								d2.setType(Deposit.Type.rebate);
-								d2.setMemo(orderItem.getName() + "奖励金");
-								d2.setMember(p2);
-								d2.setCredit(r2);
-								d2.setDebit(BigDecimal.ZERO);
-								d2.setDeleted(false);
-								d2.setOperator("system");
-								d2.setOrder(order);
-								depositDao.persist(d2);
-								messageService.depositPushTo(d2);
-							}
-							Long point2 = orderItem.calcPoint2();
-							if (point2.compareTo(0L) > 0 && c2 != null && p2 != null && p2.leaguer(order.getSeller())) {
-								cardService.addPoint(c2, point2, orderItem.getName() + "奖励", order);
-							}
-							Member p3 = null;
-							Card c3 = null;
+			for (OrderItem orderItem : order.getOrderItems()) {
+				if (orderItem != null) {
+					Member p1 = order.getPromoter();
+					Card c1 = p1.card(order.getSeller());
+					BigDecimal r1 = orderItem.calcPercent1();
+					if (r1.compareTo(BigDecimal.ZERO) > 0 && p1 != null && p1.leaguer(order.getSeller())) {
+						memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
+						p1.setBalance(p1.getBalance().add(r1));
+						memberDao.merge(p1);
+						memberDao.flush();
+						Deposit d1 = new Deposit();
+						d1.setBalance(p1.getBalance());
+						d1.setType(Deposit.Type.rebate);
+						d1.setMemo(orderItem.getName() + "奖励金");
+						d1.setMember(p1);
+						d1.setCredit(r1);
+						d1.setDebit(BigDecimal.ZERO);
+						d1.setDeleted(false);
+						d1.setOperator("system");
+						d1.setOrder(order);
+						depositDao.persist(d1);
+						messageService.depositPushTo(d1);
+					}
+					Long point1 = orderItem.calcPoint1();
+					if (point1.compareTo(0L) > 0 && c1 != null && p1 != null && p1.leaguer(order.getSeller())) {
+						cardService.addPoint(c1, point1, orderItem.getName() + "奖励", order);
+					}
+					Member p2 = null;
+					Card c2 = null;
+					if (p1 != null) {
+						c1 = p1.card(order.getSeller());
+						if (c1 != null) {
+							p2 = c1.getPromoter();
 							if (p2 != null) {
 								c2 = p2.card(order.getSeller());
-								if (c2 != null) {
-									p3 = c2.getPromoter();
-									if (p3!=null) {
-										c3 = p3.card(order.getSeller());
-									}
-								}
 							}
-							BigDecimal r3 = orderItem.calcPercent3();
-							if (r3.compareTo(BigDecimal.ZERO) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
-								memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
-								p3.setBalance(p3.getBalance().add(r3));
-								memberDao.merge(p3);
-								memberDao.flush();
-								Deposit d3 = new Deposit();
-								d3.setBalance(p3.getBalance());
-								d3.setType(Deposit.Type.rebate);
-								d3.setMemo(orderItem.getName() + "奖励金");
-								d3.setMember(p3);
-								d3.setCredit(r3);
-								d3.setDebit(BigDecimal.ZERO);
-								d3.setDeleted(false);
-								d3.setOperator("system");
-								d3.setOrder(order);
-								depositDao.persist(d3);
-								messageService.depositPushTo(d3);
-							}
-							Long point3 = orderItem.calcPoint3();
-							if (point3.compareTo(0L) > 0 && c3 != null && p3 != null && p3.leaguer(order.getSeller())) {
-								cardService.addPoint(c3, point3, orderItem.getName() + "奖励", order);
-							}
-
 						}
 					}
+					BigDecimal r2 = orderItem.calcPercent2();
+					if (r2.compareTo(BigDecimal.ZERO) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
+						memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
+						p2.setBalance(p2.getBalance().add(r2));
+						memberDao.merge(p2);
+						memberDao.flush();
+						Deposit d2 = new Deposit();
+						d2.setBalance(p2.getBalance());
+						d2.setType(Deposit.Type.rebate);
+						d2.setMemo(orderItem.getName() + "奖励金");
+						d2.setMember(p2);
+						d2.setCredit(r2);
+						d2.setDebit(BigDecimal.ZERO);
+						d2.setDeleted(false);
+						d2.setOperator("system");
+						d2.setOrder(order);
+						depositDao.persist(d2);
+						messageService.depositPushTo(d2);
+					}
+					Long point2 = orderItem.calcPoint2();
+					if (point2.compareTo(0L) > 0 && c2 != null && p2 != null && p2.leaguer(order.getSeller())) {
+						cardService.addPoint(c2, point2, orderItem.getName() + "奖励", order);
+					}
+					Member p3 = null;
+					Card c3 = null;
+					if (p2 != null) {
+						c2 = p2.card(order.getSeller());
+						if (c2 != null) {
+							p3 = c2.getPromoter();
+							if (p3 != null) {
+								c3 = p3.card(order.getSeller());
+							}
+						}
+					}
+					BigDecimal r3 = orderItem.calcPercent3();
+					if (r3.compareTo(BigDecimal.ZERO) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
+						memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
+						p3.setBalance(p3.getBalance().add(r3));
+						memberDao.merge(p3);
+						memberDao.flush();
+						Deposit d3 = new Deposit();
+						d3.setBalance(p3.getBalance());
+						d3.setType(Deposit.Type.rebate);
+						d3.setMemo(orderItem.getName() + "奖励金");
+						d3.setMember(p3);
+						d3.setCredit(r3);
+						d3.setDebit(BigDecimal.ZERO);
+						d3.setDeleted(false);
+						d3.setOperator("system");
+						d3.setOrder(order);
+						depositDao.persist(d3);
+						messageService.depositPushTo(d3);
+					}
+					Long point3 = orderItem.calcPoint3();
+					if (point3.compareTo(0L) > 0 && c3 != null && p3 != null && p3.leaguer(order.getSeller())) {
+						cardService.addPoint(c3, point3, orderItem.getName() + "奖励", order);
+					}
+
+				}
+			}
+
 		}
 
-		return ;
+		//计算股东分红
+		if (order.getPartner() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			BigDecimal partnerAmount = order.calcPartner();
+			Card pcard = order.getPartner().card(order.getSeller());
+
+			BigDecimal pt = partnerAmount.subtract(order.getDistribution());
+			if (pcard!=null && pt.compareTo(BigDecimal.ZERO)>0) {
+
+				BigDecimal pte = pt.multiply(pcard.getBonus().multiply(new BigDecimal("0.01"))).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+
+				Member seller = order.getSeller();
+				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
+				//扣除股东分红
+				seller.setBalance(seller.getBalance().subtract(pte));
+				memberDao.merge(seller);
+				memberDao.flush();
+				Deposit deposit = new Deposit();
+				deposit.setBalance(seller.getBalance());
+				deposit.setType(Deposit.Type.product);
+				deposit.setMemo("股东分红");
+				deposit.setMember(seller);
+				deposit.setCredit(BigDecimal.ZERO.subtract(pte));
+				deposit.setDebit(BigDecimal.ZERO);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				deposit.setOrder(order);
+				depositDao.persist(deposit);
+				messageService.depositPushTo(deposit);
+
+				Member partner = order.getPartner();
+				memberDao.refresh(partner, LockModeType.PESSIMISTIC_WRITE);
+				//股东分红
+				partner.setBalance(partner.getBalance().add(pte));
+				memberDao.merge(partner);
+				memberDao.flush();
+				Deposit deposit_partner = new Deposit();
+				deposit_partner.setBalance(seller.getBalance());
+				deposit_partner.setType(Deposit.Type.rebate);
+				deposit_partner.setMemo("股东分红");
+				deposit_partner.setMember(partner);
+				deposit_partner.setCredit(pte);
+				deposit_partner.setDebit(BigDecimal.ZERO);
+				deposit_partner.setDeleted(false);
+				deposit_partner.setOperator("system");
+				deposit_partner.setOrder(order);
+				depositDao.persist(deposit_partner);
+				messageService.depositPushTo(deposit_partner);
+
+			}
+
+		}
+
+		return;
 
 	}
 
-	/**
-	 * 订单取消
-	 *
-	 * @param order
-	 *            订单
-	 * @param operator
-	 *            操作员
-	 */
-	public void cancel(Order order, Admin operator)  throws Exception {
+		/**
+		 * 订单取消
+		 *
+		 * @param order
+		 *            订单
+		 * @param operator
+		 *            操作员
+		 */
+
+	public void cancel(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
-		orderDao.lock(order,LockModeType.PESSIMISTIC_WRITE);
+		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
 		CouponCode couponCode = order.getCouponCode();
 		if (couponCode != null) {
@@ -669,7 +736,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				if (orderItem != null) {
 					Product product = orderItem.getProduct();
 					if (product != null) {
-    					productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+						productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
 						product.setAllocatedStock(product.getAllocatedStock() - orderItem.getQuantity());
 						productDao.merge(product);
 						orderDao.flush();
@@ -684,7 +751,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderDao.merge(order);
 
 		Card card = order.getMember().card(order.getSeller());
-		if (card!=null && order.getPointDiscount().compareTo(BigDecimal.ZERO)>0) {
+		if (card != null && order.getPointDiscount().compareTo(BigDecimal.ZERO) > 0) {
 			cardService.addPoint(card, order.getPointDiscount().longValue(), "取消订单", order);
 		}
 
@@ -708,7 +775,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public Payment payment(Order order,Admin operator) throws Exception {
+	public Payment payment(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
@@ -717,21 +784,20 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		Payment payment = new Payment();
 
 		order.setFee(BigDecimal.ZERO);
-		if (card!=null) {
+		if (card != null) {
 			if (card.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("cardPayPlugin");
 			}
-		} else
-		if (payment.getPaymentPluginId()==null) {
+		} else if (payment.getPaymentPluginId() == null) {
 			Member member = order.getMember();
-			if (member.getBalance().compareTo(order.getAmountPayable())>=0) {
+			if (member.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("balancePayPlugin");
 			}
 		}
-		if (payment.getPaymentPluginId()==null) {
+		if (payment.getPaymentPluginId() == null) {
 			Topic topic = order.getSeller().getTopic();
-			if (topic==null) {
-				order.setFee(order.getAmountPayable().multiply(new BigDecimal("0.006")).setScale(2,BigDecimal.ROUND_UP));
+			if (topic == null) {
+				order.setFee(order.getAmountPayable().multiply(new BigDecimal("0.006")).setScale(2, BigDecimal.ROUND_UP));
 			} else {
 				order.setFee(topic.calcFee(order.getAmountPayable()));
 			}
@@ -766,7 +832,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
-		for (OrderItem orderItem:order.getOrderItems()) {
+		for (OrderItem orderItem : order.getOrderItems()) {
 			orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);
 			orderItem.setShippedQuantity(orderItem.getQuantity());
 		}
@@ -776,8 +842,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				if (orderItem != null) {
 					Product product = orderItem.getProduct();
 					if (product != null) {
-					    productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
-						product.setStock(product.getStock() - orderItem.getQuantity() );
+						productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+						product.setStock(product.getStock() - orderItem.getQuantity());
 						product.setAllocatedStock(product.getAllocatedStock() - orderItem.getQuantity());
 						productDao.merge(product);
 						orderDao.flush();
@@ -803,7 +869,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 	}
 
-	public void refunds(Order order,Admin operator) throws Exception {
+	public void refunds(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 
 		orderDao.refresh(order, LockModeType.PESSIMISTIC_WRITE);
@@ -817,7 +883,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setPaymentStatus(Order.PaymentStatus.refunding);
 		orderDao.merge(order);
 
-		for (Payment payment:order.getPayments()) {
+		for (Payment payment : order.getPayments()) {
 			if (payment.getStatus().equals(Payment.Status.success)) {
 				Refunds refunds = new Refunds();
 				refunds.setPaymentMethod(payment.getPaymentMethod());
@@ -840,13 +906,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setType(OrderLog.Type.refunds);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
 		orderLog.setOrder(order);
-		if (operator==null) {
+		if (operator == null) {
 			orderLog.setContent("买家申请退款");
 		} else {
 			orderLog.setContent("卖家确定退款");
 		}
 		orderLogDao.persist(orderLog);
-		if (operator==null) {
+		if (operator == null) {
 			messageService.orderSellerPushTo(orderLog);
 		} else {
 			messageService.orderMemberPushTo(orderLog);
@@ -863,12 +929,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 */
 
-	public void returns(Order order, Admin operator)  throws Exception {
+	public void returns(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 
 		orderDao.refresh(order, LockModeType.PESSIMISTIC_WRITE);
 
-		if (operator==null) {
+		if (operator == null) {
 			if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
 				throw new RuntimeException("不在发货状态");
 			}
@@ -878,7 +944,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 
-		if (operator!=null) {
+		if (operator != null) {
 
 			for (OrderItem orderItem : order.getOrderItems()) {
 				if (orderItem != null) {
@@ -893,7 +959,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						Product product = orderItem.getProduct();
 						if (product != null) {
 							productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
-							product.setStock(product.getStock() + orderItem.getQuantity() );
+							product.setStock(product.getStock() + orderItem.getQuantity());
 							productDao.merge(product);
 							orderDao.flush();
 						}
@@ -920,7 +986,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				order.setPaymentStatus(Order.PaymentStatus.refunding);
 				orderDao.merge(order);
 
-				for (Payment payment:order.getPayments()) {
+				for (Payment payment : order.getPayments()) {
 					if (payment.getStatus().equals(Payment.Status.success)) {
 						Refunds refunds = new Refunds();
 						refunds.setPaymentMethod(payment.getPaymentMethod());
@@ -949,7 +1015,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 			} else {
 				//不要退款，自动完成
-				complete(order,operator);
+				complete(order, operator);
 			}
 
 		} else {
@@ -970,13 +1036,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 	public void evictCompleted() {
 		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(new Filter("orderStatus", Filter.Operator.eq,Order.OrderStatus.confirmed));
+		filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
 		filters.add(new Filter("shippingStatus", Operator.le, Order.ShippingStatus.shipped));
-		filters.add(new Filter("shippingDate", Operator.le, DateUtils.addDays(new Date(),-6) ));
-		List<Order> data = orderDao.findList(null,null,filters,null);
-		for (Order order:data) {
+		filters.add(new Filter("shippingDate", Operator.le, DateUtils.addDays(new Date(), -6)));
+		List<Order> data = orderDao.findList(null, null, filters, null);
+		for (Order order : data) {
 			try {
-				complete(order,null);
+				complete(order, null);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
