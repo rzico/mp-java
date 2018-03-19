@@ -319,7 +319,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 		//股东自已消费，直接获取返利，不给再分配
-		if (card.getType().equals(Card.Type.partner)) {
+		if (card!=null && card.getType().equals(Card.Type.partner)) {
 			order.setPromoter(null);
 			order.setPartner(member);
 		} else {
