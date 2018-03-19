@@ -1,10 +1,12 @@
 package net.wit.controller.weex;
 
+import freemarker.template.*;
 import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
+import net.wit.entity.Template;
 import net.wit.plat.im.User;
 import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.*;
@@ -72,6 +74,14 @@ public class LoginController extends BaseController {
     @Resource(name = "roleServiceImpl")
     private RoleService roleService;
 
+    @Resource(name = "topicServiceImpl")
+    private TopicService topicService;
+
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
+    @Resource(name = "templateServiceImpl")
+    private TemplateService templateService;
     /**
      * 手机验证码登录时，发送验证码
      * mobile 手机号
@@ -247,7 +257,7 @@ public class LoginController extends BaseController {
             }
 
             messageService.login(member,request);
-
+            openTopic();
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
@@ -459,9 +469,10 @@ public class LoginController extends BaseController {
                 memberService.create(member,member.getPromoter());
             }
             messageService.login(member,request);
+            openTopic();
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
-            };
+            }
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -599,5 +610,38 @@ public class LoginController extends BaseController {
 
     }
 
-
+    /*开通专栏*/
+    public void openTopic() {
+        Member member = memberService.getCurrent();
+        Topic topic = member.getTopic();
+        if (topic == null) {
+            topic = new Topic();
+            topic.setName(member.getNickName());
+            topic.setBrokerage(new BigDecimal("0.6"));
+            topic.setStatus(Topic.Status.waiting);
+            topic.setHits(0L);
+            topic.setMember(member);
+            topic.setFee(new BigDecimal("588"));
+            topic.setLogo(member.getLogo());
+            topic.setType(Topic.Type.personal);
+            TopicConfig config = topic.getConfig();
+            if (config == null) {
+                config = new TopicConfig();
+                config.setUseCard(false);
+                config.setUseCashier(false);
+                config.setUseCoupon(false);
+                config.setPromoterType(TopicConfig.PromoterType.any);
+            }
+            topic.setConfig(config);
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(new Date());
+            calendar.add(calendar.MONTH, 1);
+            topic.setExpire(calendar.getTime());
+            topic.setTemplate(templateService.findDefault(Template.Type.topic));
+            topicService.create(topic);
+            enterpriseService.create(topic);
+            return;
+        }
+        return;
+    }
 }
