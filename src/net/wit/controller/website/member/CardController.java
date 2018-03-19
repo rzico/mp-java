@@ -300,6 +300,11 @@ public class CardController extends BaseController {
         } else {
             if (code != null) {
                Long shopId = null;
+               Long topicId = null;
+               if (code.substring(0,2).equals("85")) {
+                   topicId = Long.parseLong(code.substring(2))-100000000;
+                   code = null;
+               } else
                if (code.substring(0,2).equals("86")) {
                    shopId = Long.parseLong(code.substring(2,11))-100000000;
                    code = null;
@@ -313,17 +318,28 @@ public class CardController extends BaseController {
                } else {
                    return Message.error("无效code");
                }
-               Shop shop = shopService.find(shopId);
-               if (shop==null) {
-                   return Message.error("无效店铺 id");
-               }
-               Member owner = shop.getOwner();
-               if (owner.getTopic()==null) {
-                   return Message.error("没有开通专栏");
-               }
-               TopicCard topicCard = owner.getTopic().getTopicCard();
-               if (topicCard==null) {
-                   return Message.error("没有开通会员卡");
+               Shop shop = null;
+               Member owner = null;
+                TopicCard topicCard = null;
+               if (shopId!=null) {
+                   shop = shopService.find(shopId);
+                   if (shop == null) {
+                       return Message.error("无效店铺 id");
+                   }
+                   owner = shop.getOwner();
+                   if (owner.getTopic() == null) {
+                       return Message.error("没有开通专栏");
+                   }
+                   topicCard = owner.getTopic().getTopicCard();
+                   if (topicCard==null) {
+                       return Message.error("没有开通会员卡");
+                   }
+               } else {
+                   topicCard = topicCardService.find(topicId);
+                   if (topicCard==null) {
+                       return Message.error("没有开通会员卡");
+                   }
+                   owner = topicCard.getTopic().getMember();
                }
                if (card==null) {
                    card = cardService.create(owner.getTopic().getTopicCard(),shop, code, member);
