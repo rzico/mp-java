@@ -17,7 +17,7 @@
             <dt><i class="Hui-iconfont">&#xe60d;</i> 商品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="../productCategory/index.jhtml" data-title="商品分类" href="javascript:;">商品分类</a></li>
+                    <li><a data-href="../productCategory/index.jhtml" data-title="商品分类" href="javascript:;">商品分类 </a></li>
                     <li><a data-href="../product/index.jhtml" data-title="商品管理" href="javascript:;">商品管理</a></li>
                 </ul>
             </dd>
