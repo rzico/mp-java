@@ -95,7 +95,7 @@ public class LoginController extends BaseController {
             return Message.error("无效手机号");
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        if (bundle.containsKey("weex") && "2".equals(bundle.getString("weex"))) {
+        if (bundle.containsKey("weex") && "1".equals(bundle.getString("weex"))) {
             if (memberService.findByMobile(m)==null) {
                 return Message.error("没有注册不能登录");
             }
@@ -257,7 +257,7 @@ public class LoginController extends BaseController {
             }
 
             messageService.login(member,request);
-            openTopic();
+//            openTopic();
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             };
@@ -469,7 +469,7 @@ public class LoginController extends BaseController {
                 memberService.create(member,member.getPromoter());
             }
             messageService.login(member,request);
-            openTopic();
+//            openTopic();
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
             }
@@ -611,37 +611,37 @@ public class LoginController extends BaseController {
     }
 
     /*开通专栏*/
-    public void openTopic() {
-        Member member = memberService.getCurrent();
-        Topic topic = member.getTopic();
-        if (topic == null) {
-            topic = new Topic();
-            topic.setName(member.getNickName());
-            topic.setBrokerage(new BigDecimal("0.6"));
-            topic.setStatus(Topic.Status.waiting);
-            topic.setHits(0L);
-            topic.setMember(member);
-            topic.setFee(new BigDecimal("588"));
-            topic.setLogo(member.getLogo());
-            topic.setType(Topic.Type.personal);
-            TopicConfig config = topic.getConfig();
-            if (config == null) {
-                config = new TopicConfig();
-                config.setUseCard(false);
-                config.setUseCashier(false);
-                config.setUseCoupon(false);
-                config.setPromoterType(TopicConfig.PromoterType.any);
-            }
-            topic.setConfig(config);
-            Calendar calendar = new GregorianCalendar();
-            calendar.setTime(new Date());
-            calendar.add(calendar.MONTH, 1);
-            topic.setExpire(calendar.getTime());
-            topic.setTemplate(templateService.findDefault(Template.Type.topic));
-            topicService.create(topic);
-            enterpriseService.create(topic);
-            return;
-        }
-        return;
-    }
+//    public void openTopic() {
+//        Member member = memberService.getCurrent();
+//        Topic topic = member.getTopic();
+//        if (topic == null) {
+//            topic = new Topic();
+//            topic.setName(member.getNickName());
+//            topic.setBrokerage(new BigDecimal("0.6"));
+//            topic.setStatus(Topic.Status.waiting);
+//            topic.setHits(0L);
+//            topic.setMember(member);
+//            topic.setFee(new BigDecimal("588"));
+//            topic.setLogo(member.getLogo());
+//            topic.setType(Topic.Type.personal);
+//            TopicConfig config = topic.getConfig();
+//            if (config == null) {
+//                config = new TopicConfig();
+//                config.setUseCard(false);
+//                config.setUseCashier(false);
+//                config.setUseCoupon(false);
+//                config.setPromoterType(TopicConfig.PromoterType.any);
+//            }
+//            topic.setConfig(config);
+//            Calendar calendar = new GregorianCalendar();
+//            calendar.setTime(new Date());
+//            calendar.add(calendar.MONTH, 1);
+//            topic.setExpire(calendar.getTime());
+//            topic.setTemplate(templateService.findDefault(Template.Type.topic));
+//            topicService.create(topic);
+//            enterpriseService.create(topic);
+//            return;
+//        }
+//        return;
+//    }
 }
