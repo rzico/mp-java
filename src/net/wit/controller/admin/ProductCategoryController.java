@@ -57,8 +57,6 @@ public class ProductCategoryController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-
-
 	/**
 	 * 主页
 	 */
