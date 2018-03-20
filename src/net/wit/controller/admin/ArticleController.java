@@ -554,5 +554,4 @@ public class ArticleController extends BaseController {
 		return "/admin/article/view/articleView";
 	}
 
-
 }
