@@ -77,6 +77,39 @@ public class CardController extends BaseController {
     /**
      *   获取会员卡
      */
+    @RequestMapping(value = "check")
+    @ResponseBody
+    public Message check(Long authorId,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Member owner = memberService.find(authorId);
+        if (owner==null) {
+            return Message.error("无效商家id");
+        }
+        Card card = member.card(owner);
+        Map<String,Object> data = new HashMap<String,Object>();
+        if (card==null) {
+            data.put("status", "none");
+        } else {
+            data.put("status", card.getStatus());
+            CardModel model = new CardModel();
+            model.bind(card);
+            data.put("card", model);
+
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            int challege = StringUtils.Random6Code();
+            card.setSign(String.valueOf(challege));
+            cardService.update(card);
+            data.put("payCode", "http://" + bundle.getString("weixin.url") + "/q/818802" + card.getCode() + String.valueOf(challege) + ".jhtml");
+        }
+        return Message.bind(data,request);
+    }
+
+    /**
+     *   获取会员卡
+     */
     @RequestMapping(value = "/view")
     @ResponseBody
     public Message view(Long id,HttpServletRequest request){
