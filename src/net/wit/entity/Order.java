@@ -217,6 +217,13 @@ public class Order extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '分销佣金'")
 	private BigDecimal rebateAmount;
 
+	/** 股东分红 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '股东分红'")
+	private BigDecimal partnerAmount;
+
 	/** 赠送积分 */
 	@NotNull
 	@Min(0)
@@ -304,9 +311,19 @@ public class Order extends BaseEntity {
 	@JoinColumn(updatable = false)
 	private Member promoter;
 
+	/** 股东 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	private Member partner;
+
 	/** 是否已分配佣金 */
 	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
 	private Boolean isDistribution;
+
+	/** 是否已分配佣金 */
+	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
+	private Boolean isPartner;
 
 	/** 优惠码 */
 	@JsonIgnore
@@ -949,6 +966,30 @@ public class Order extends BaseEntity {
 		this.promoter = promoter;
 	}
 
+	public BigDecimal getPartnerAmount() {
+		return partnerAmount;
+	}
+
+	public void setPartnerAmount(BigDecimal partnerAmount) {
+		this.partnerAmount = partnerAmount;
+	}
+
+	public void setPartner(Member partner) {
+		this.partner = partner;
+	}
+
+	public void setIsPartner(Boolean isPartner) {
+		this.isPartner = isPartner;
+	}
+
+	public Boolean getIsPartner() {
+	    return this.isPartner;
+	}
+
+	public Member getPartner() {
+		return partner;
+	}
+
 	/**
 	 * 获取订单名称
 	 * 
@@ -1061,6 +1102,24 @@ public class Order extends BaseEntity {
 	}
 
 	/**
+	 * 获取分销商品价格
+	 *
+	 * @return 获取分销商品价格
+	 */
+	@Transient
+	public BigDecimal getDistPrice() {
+		BigDecimal price = new BigDecimal(0);
+		if (getOrderItems() != null) {
+			for (OrderItem orderItem : getOrderItems()) {
+				if (orderItem != null && orderItem.getSubtotal() != null && orderItem.getProduct()!=null && orderItem.getProduct().getDistribution()!=null) {
+					price = price.add(orderItem.getSubtotal());
+				}
+			}
+		}
+		return price;
+	}
+
+	/**
 	 * 获取订单金额
 	 * 
 	 * @return 订单金额
@@ -1106,6 +1165,26 @@ public class Order extends BaseEntity {
 								d = d.add(orderItem.calcPercent3());
 							}
 						}
+					}
+				}
+			}
+		}
+		return d;
+	}
+
+	/**
+	 * 获取股东红利
+	 *
+	 * @return 获取股东红利
+	 */
+	@Transient
+	public BigDecimal calcPartner() {
+		BigDecimal d = BigDecimal.ZERO;
+		if (getPartner()!=null ) {
+			if (getOrderItems() != null) {
+				for (OrderItem orderItem : getOrderItems()) {
+					if (orderItem != null && orderItem.getSubtotal() != null) {
+						d = d.add(orderItem.calcPartner());
 					}
 				}
 			}

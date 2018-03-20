@@ -34,15 +34,21 @@ public class Card extends BaseEntity {
 	public static enum  VIP{
 		/** vip1 普通会员 */
 		vip1,
-		/** vip2 团队成员 */
+		/** vip2 金卡会员 */
 		vip2,
-		/** vip3 */
-		vip3,
-		/** vip4 */
-		vip4,
-		/** vip5 */
-		vip5
+		/** vip3 钻石会员*/
+		vip3
 	};
+
+	public static enum  Type{
+		/** 会员 */
+		member,
+		/** 团队 */
+		team,
+		/** 股东 */
+		partner
+	};
+
 
 	/** 状态 */
 	@NotNull
@@ -53,6 +59,11 @@ public class Card extends BaseEntity {
 	@NotNull
 	@Column(columnDefinition="int(11) comment '等级 {vip1:VIP1,vip2:VIP2,vip3:VIP3}'")
 	private VIP vip;
+
+	/** 角色 */
+	@NotNull
+	@Column(columnDefinition="int(11) comment '角色 {member:会员,team:团队,partner:股东}'")
+	private Type type;
 
 	/** 最近使用日期 */
 	@Column(columnDefinition="datetime comment '最近使用日期'")
@@ -98,6 +109,17 @@ public class Card extends BaseEntity {
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '余额'")
 	private BigDecimal balance;
 
+	/** 分红比例
+	 *  指利润的百分比 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '分红比例'")
+	private BigDecimal bonus;
+
+	/** 累计消费 */
+	@Min(0)
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '累计消费'")
+	private BigDecimal amount;
+
 	/** 积分 */
 	@Min(0)
 	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
@@ -122,6 +144,14 @@ public class Card extends BaseEntity {
 
 	public void setVip(VIP vip) {
 		this.vip = vip;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 	/** 推广 */
@@ -248,6 +278,22 @@ public class Card extends BaseEntity {
 		this.point = point;
 	}
 
+	public BigDecimal getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(BigDecimal bonus) {
+		this.bonus = bonus;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
 	public MapEntity getMapOwner(){
 		if(getOwner() != null){
 			return new MapEntity(getOwner().getId().toString(),getOwner().getName());
@@ -263,4 +309,5 @@ public class Card extends BaseEntity {
 			return null;
 		}
 	}
+
 }

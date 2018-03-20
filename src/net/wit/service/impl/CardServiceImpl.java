@@ -20,6 +20,7 @@ import net.wit.Filter.Operator;
 import net.wit.dao.*;
 import net.wit.service.SmssendService;
 import net.wit.service.SnService;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -131,7 +132,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		return card;
 	}
 
-	public synchronized Card activate(Card card,Member member) {
+	public synchronized Card activate(Card card,Member member,Member promoter) {
 		String name = card.getName();
 		String mobile = card.getMobile();
 		cardDao.lock(card,LockModeType.PESSIMISTIC_WRITE);
@@ -142,6 +143,18 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		card.setMobile(mobile);
 		card.setStatus(Card.Status.activate);
 		card.setVip(Card.VIP.vip1);
+		card.setType(Card.Type.member);
+		card.setBonus(BigDecimal.ZERO);
+		card.setAmount(BigDecimal.ZERO);
+
+		TopicConfig config = card.getOwner().getTopic().getConfig();
+		if (config.getPattern().equals(TopicConfig.Pattern.pattern1)) {
+			card.setType(Card.Type.team);
+			if (card.getPromoter() == null) {
+				card.setPromoter(promoter);
+			}
+		}
+
 		cardDao.merge(card);
 		if (!member.getCards().contains(card)) {
 			member.getCards().add(card);
@@ -164,9 +177,12 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card = new Card();
 			card.setOwner(topicCard.getTopic().getMember());
 			card.setVip(Card.VIP.vip1);
+			card.setType(Card.Type.member);
+			card.setBonus(BigDecimal.ZERO);
 			card.setStatus(Card.Status.none);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
+			card.setAmount(BigDecimal.ZERO);
 			card.setPoint(0L);
 			if (code == null) {
 				topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
@@ -200,7 +216,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 
 
 	//分销关系，创建并激活会员卡
-	public synchronized Card createAndActivate(Member member,Member owner,Member promoter) {
+	public synchronized Card createAndActivate(Member member,Member owner,Member promoter,BigDecimal amount,BigDecimal distAmount) {
 
 		Card  card = member.card(owner);
 		TopicCard topicCard = null;
@@ -208,17 +224,23 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			topicCard = owner.getTopic().getTopicCard();
 		}
 
+		//购买后，即成为本店会员
+
 		if (card==null && topicCard!=null) {
+			if (promoter==null) {
+				return null;
+			}
 			card = new Card();
 			card.setOwner(topicCard.getTopic().getMember());
-			if (owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
-				card.setVip(Card.VIP.vip1);
-			} else {
-				card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
-			}
+			card.setVip(Card.VIP.vip1);
+			card.setType(Card.Type.member);
+			card.setBonus(BigDecimal.ZERO);
 			card.setStatus(Card.Status.activate);
 			card.setTopicCard(topicCard);
 			card.setBalance(BigDecimal.ZERO);
+			card.setAmount(BigDecimal.ZERO);
+			card.setName(member.getName());
+			card.setMobile(member.getMobile());
 			card.setPoint(0L);
 
 			topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
@@ -234,35 +256,50 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 
 			// 无法认识店铺，使用企业卡
 			card.setCode("85" + String.valueOf(topicCard.getId() + 100000000L) + String.valueOf(no + 10200L));
-			if (promoter!=null && promoter.leaguer(owner)) {
-				card.setPromoter(promoter);
-				cardDao.merge(card);
-			} else {
-				card = null;
-			}
-		} else {
-			if (card!=null) {
-				Boolean isNew = false;
-				if (!owner.getTopic().getConfig().getPromoterType().equals(TopicConfig.PromoterType.any)) {
-					if (card.getVip().compareTo(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name())) < 0) {
-						card.setVip(Card.VIP.valueOf(owner.getTopic().getConfig().getPromoterType().name()));
-						cardDao.merge(card);
-						isNew = true;
-					}
-				}
-				if (card.getPromoter() == null && isNew) {
-					if (promoter != null && promoter.leaguer(owner)) {
-						card.setPromoter(promoter);
-						cardDao.merge(card);
-					} else {
-						card = null;
-					}
-				} else {
-					card = null;
-				}
-			}
+			cardDao.merge(card);
 		}
 
+		if (card==null) {
+			return null;
+		}
+		if (!card.getType().equals(Card.Type.member)) {
+			return null;
+		}
+
+		card.setAmount(card.getAmount().add(amount));
+
+		TopicConfig config = owner.getTopic().getConfig();
+		if (config.getPattern().equals(TopicConfig.Pattern.pattern1)) {
+			card.setType(Card.Type.team);
+			if (card.getPromoter() == null) {
+				card.setPromoter(promoter);
+			}
+		} else
+		if (config.getPattern().equals(TopicConfig.Pattern.pattern2)) {
+			card.setType(Card.Type.team);
+			if (card.getPromoter() == null) {
+				card.setPromoter(promoter);
+			}
+		} else
+		if (config.getPattern().equals(TopicConfig.Pattern.pattern3) && (distAmount.compareTo(BigDecimal.ZERO)>0)) {
+			card.setType(Card.Type.team);
+			if (card.getPromoter() == null) {
+				card.setPromoter(promoter);
+			}
+		} else
+		if (config.getPattern().equals(TopicConfig.Pattern.pattern4) && (amount.compareTo(config.getAmount())>=0)) {
+			card.setType(Card.Type.team);
+			if (card.getPromoter() == null) {
+				card.setPromoter(promoter);
+			}
+		} else
+		if (config.getPattern().equals(TopicConfig.Pattern.pattern5) && (card.getAmount().compareTo(config.getAmount())>=0)) {
+			card.setType(Card.Type.team);
+			if (card.getPromoter() == null) {
+				card.setPromoter(promoter);
+			}
+		}
+		cardDao.merge(card);
 		return card;
 
 	}

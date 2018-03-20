@@ -41,6 +41,7 @@ import net.wit.controller.admin.model.*;
 @Controller("adminEnterpriseController")
 @RequestMapping("/admin/enterprise")
 public class EnterpriseController extends BaseController {
+
 	@Resource(name = "enterpriseServiceImpl")
 	private EnterpriseService enterpriseService;
 	
@@ -50,6 +51,8 @@ public class EnterpriseController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
 
 
 	/**
@@ -99,8 +102,21 @@ public class EnterpriseController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Enterprise enterprise, Long areaId){
-		Enterprise entity = new Enterprise();	
+	public Message save(Enterprise enterprise, Long areaId,Long memberId){
+		Member member = memberService.find(memberId);
+		if (member==null) {
+			return Message.error("请正确输入会员");
+		}
+		ArrayList<Filter> filters = new ArrayList<>();
+		Filter memberFilter = new Filter("member", Filter.Operator.eq, member);
+		filters.add(memberFilter);
+
+		List<Enterprise> ens = enterpriseService.findList(null,null,filters,null);
+		if (ens.size()>0) {
+			return Message.error("已经存在企业了");
+		}
+
+		Enterprise entity = new Enterprise();
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
@@ -116,12 +132,14 @@ public class EnterpriseController extends BaseController {
 		entity.setStatus(enterprise.getStatus());
 
 		entity.setArea(areaService.find(areaId));
+
+		entity.setMember(member);
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {
-            enterpriseService.save(entity);
+			enterpriseService.addCreate(entity,member);
             return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,8 +260,8 @@ public class EnterpriseController extends BaseController {
 			filters.add(typeFilter);
 		}
 		if (status!=null) {
-			Filter typeFilter = new Filter("status", Filter.Operator.eq, status);
-			filters.add(typeFilter);
+			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
+			filters.add(statusFilter);
 		}
 		Admin admin =adminService.getCurrent();
 		Enterprise enterprise=admin.getEnterprise();
@@ -283,5 +301,29 @@ public class EnterpriseController extends BaseController {
 	}
 
 
+
+	/**
+	 * 通过会员手机号调取会员信息
+	 */
+	@RequestMapping(value = "/getMemberInfo", method = RequestMethod.GET)
+	@ResponseBody
+	public Message getMemberInfo(String phone){
+		try {
+			Member member = memberService.findByMobile(phone);
+			if(member != null){
+				List<MapEntity> memberinfo = new ArrayList<>();
+				memberinfo.add(new MapEntity("name",member.getName()));
+				memberinfo.add(new MapEntity("mobile",member.getMobile()));
+				memberinfo.add(new MapEntity("email",member.getUsername()));
+				memberinfo.add(new MapEntity("id",member.getId().toString()));
+				return Message.success(memberinfo,"admin.update.success");
+			}else{
+				return Message.error("admin.update.error");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.update.error");
+		}
+	}
 
 }

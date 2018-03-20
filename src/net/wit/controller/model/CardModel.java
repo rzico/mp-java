@@ -25,6 +25,8 @@ public class CardModel extends BaseModel implements Serializable {
     private Card.Status status;
     /** 等级 */
     private Card.VIP vip;
+    /** 角色 */
+    private Card.Type type;
     /** 余额 */
     private BigDecimal balance;
     /** 积分 */
@@ -127,6 +129,7 @@ public class CardModel extends BaseModel implements Serializable {
         this.balance = card.getBalance();
         this.status = card.getStatus();
         this.vip = card.getVip();
+        this.type = card.getType();
         this.color = topic.getTopicCard().getColor();
         this.background = topic.getTopicCard().getBackground();
         if (card.getShop()!=null) {

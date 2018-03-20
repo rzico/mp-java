@@ -15,6 +15,8 @@ import net.wit.Message;
 import net.wit.Order;
 import net.wit.Pageable;
 
+import net.wit.controller.model.ArticleContentModel;
+import net.wit.controller.model.ArticleModel;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -101,7 +103,7 @@ public class ArticleController extends BaseController {
 
 //		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
-//		model.addAttribute("tags",tagService.findList(Tag.Type.article));
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/list";
 	}
@@ -119,8 +121,8 @@ public class ArticleController extends BaseController {
 		authoritys.add(new MapEntity("isEncrypt","加密"));
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
-
-		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+//
+//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
@@ -237,8 +239,8 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-		model.addAttribute("articleCategorys",articleCategoryService.findAll());
-
+//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+//
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
@@ -534,6 +536,22 @@ public class ArticleController extends BaseController {
 			e.printStackTrace();
 			return Message.error("admin.propaganda.error");
 		}
+	}
+
+	/**
+	 * 预览
+	 */
+	@RequestMapping(value = "/articleview", method = RequestMethod.GET)
+	public String articleView(Long id, ModelMap model) {
+		Article article=articleService.find(id);
+		ArticleModel articleModel=new ArticleModel();
+		articleModel.bind(article);
+		if(articleModel==null){
+			return "/404";
+		}
+		List<ArticleContentModel> articleContentModels=articleModel.getTemplates();
+		model.addAttribute("articles",articleContentModels);
+		return "/admin/article/view/articleView";
 	}
 
 

@@ -264,7 +264,7 @@ public class RechargeController extends BaseController {
 	@ResponseBody
 	public Message getMemberInfo(String phone){
 		try {
-			Member member = memberService.findByUsername(phone);
+			Member member = memberService.findByMobile(phone);
 			if(member != null){
 				List<MapEntity> memberinfo = new ArrayList<>();
 				memberinfo.add(new MapEntity("name",member.getName()));

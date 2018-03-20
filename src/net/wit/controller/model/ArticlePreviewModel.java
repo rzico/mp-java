@@ -142,7 +142,11 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.hasFavorite = false;
         this.hasLaud = false;
         this.hasFollow = false;
-        this.template = article.getTemplate().getSn();
+        if (article.getTemplate()!=null) {
+            this.template = article.getTemplate().getSn();
+        } else {
+            this.template = "1001";
+        }
     }
 
 }
