@@ -44,6 +44,8 @@ public class CardViewModel extends BaseModel implements Serializable {
     private String shopName;
     /** 推荐人 */
     private String promoter;
+    /** 股东比例 */
+    private BigDecimal bonus;
 
     public Long getId() {
         return id;
@@ -174,6 +176,14 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.type = type;
     }
 
+    public BigDecimal getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(BigDecimal bonus) {
+        this.bonus = bonus;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
@@ -188,6 +198,7 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.bindMobile = false;
         this.bindName = false;
         this.balance = card.getBalance();
+        this.bonus = card.getBonus();
         this.status = card.getStatus();
         this.vip = card.getVip();
         this.color = topic.getTopicCard().getColor();

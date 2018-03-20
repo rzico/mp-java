@@ -213,7 +213,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,Long promoterId,HttpServletRequest request){
+    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,Long promoterId,BigDecimal bonus,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -247,6 +247,9 @@ public class CardController extends BaseController {
                 return Message.error("无效店铺 id");
             }
             card.setShop(shop);
+        }
+        if (bonus!=null) {
+            card.setBonus(bonus);
         }
         cardService.update(card);
         return Message.success("更新成功");
