@@ -60,22 +60,38 @@ public class CouponController extends BaseController {
      */
     @RequestMapping(value = "/activate")
     @ResponseBody
-    public Message activate(Long id, HttpServletRequest request){
+    public Message activate(Long id,Long couponCodeId,Long xuid, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Coupon coupon = couponService.find(id);
-        if (coupon==null) {
-            return Message.error("无效优惠券id");
-        }
         CouponCode couponCode = null;
-        try {
-            couponCode = couponCodeService.build(coupon,member);
-        } catch (Exception e) {
-            return Message.error(e.getMessage());
-        }
+        if (couponCodeId!=null) {
+            couponCode = couponCodeService.find(couponCodeId);
+            if (couponCode==null) {
+                return Message.error("无效优惠券id");
+            }
+            if (xuid==null) {
+                return Message.error("请传入推荐人");
+            }
+            Member x = memberService.find(xuid);
+            if (!couponCode.getMember().equals(x)) {
+                return Message.error("已经被领取");
+            }
+            couponCode.setMember(member);
+            couponCodeService.update(couponCode);
 
+        } else {
+            Coupon coupon = couponService.find(id);
+            if (coupon == null) {
+                return Message.error("无效优惠券id");
+            }
+            try {
+                couponCode = couponCodeService.build(coupon, member);
+            } catch (Exception e) {
+                return Message.error(e.getMessage());
+            }
+        }
         CouponCodeModel model = new CouponCodeModel();
         model.bind(couponCode);
         return Message.success(model,"领取成功,已放入卡包");
