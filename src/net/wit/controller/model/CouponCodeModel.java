@@ -11,6 +11,8 @@ import java.util.List;
 public class CouponCodeModel extends BaseModel implements Serializable {
 
     private Long id;
+
+    private Long couponId;
     /** 商户 */
     private String name;
     /** 头像 */
@@ -90,9 +92,18 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         this.amount = amount;
     }
 
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Long couponId) {
+        this.couponId = couponId;
+    }
+
     public void bind(CouponCode couponCode) {
         this.id = couponCode.getId();
         Coupon coupon = couponCode.getCoupon();
+        this.couponId = coupon.getId();
         Member owner = coupon.getDistributor();
         if (owner.getTopic()!=null) {
             this.name = owner.getTopic().getName();
@@ -126,7 +137,11 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         nf.setMaximumFractionDigits(1);
         if (coupon.getType().equals(Coupon.Type.discount)) {
             this.amount = nf.format(coupon.getAmount())+"折";
-        } else {
+        } else
+        if (coupon.getType().equals(Coupon.Type.exchange)) {
+            this.amount = nf.format(coupon.getGoods().product().getPrice());
+        } else
+        {
             this.amount = nf.format(coupon.getAmount())+"元";
         }
     }
