@@ -69,7 +69,7 @@ public class CouponController extends BaseController {
      */
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(Coupon coupon,Long goodsId, HttpServletRequest request){
+    public Message submit(Coupon coupon, Long goodsId, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -84,6 +84,7 @@ public class CouponController extends BaseController {
         if (admin.getEnterprise()==null) {
             return Message.error("店铺已打洋,请先启APP");
         }
+
         Enterprise enterprise = admin.getEnterprise();
         Member owner = enterprise.getMember();
         Coupon entity = null;
@@ -135,8 +136,8 @@ public class CouponController extends BaseController {
             }
             entity.setGoods(goods);
             s = goods.product().getName();
+            entity.setAmount(BigDecimal.ZERO);
         }
-
         entity.setName(s);
         if (isNew) {
             couponService.save(entity);
