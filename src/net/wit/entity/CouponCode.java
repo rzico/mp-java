@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.PreRemove;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * Entity - 优惠码
@@ -48,6 +50,12 @@ public class CouponCode extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Member member;
+
+	/** 数量 */
+	@NotNull
+	@Min(0)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '数量'")
+	private Long stock;
 
 	/**
 	 * 获取号码
@@ -142,6 +150,14 @@ public class CouponCode extends BaseEntity {
 	 */
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	public Long getStock() {
+		return stock;
+	}
+
+	public void setStock(Long stock) {
+		this.stock = stock;
 	}
 
 	/**
