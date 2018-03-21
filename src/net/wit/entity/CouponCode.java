@@ -171,7 +171,7 @@ public class CouponCode extends BaseEntity {
 		return !isUsed && getCoupon().hasBegun() && !getCoupon().hasExpired() && !getCoupon().getDeleted();
 	}
 
-	public BigDecimal calculate(BigDecimal amount) {
+	public BigDecimal calculate(BigDecimal amount,Order order) {
       if (amount.compareTo(BigDecimal.ZERO)<0) {
           return  BigDecimal.ZERO;
 	  }
@@ -180,6 +180,7 @@ public class CouponCode extends BaseEntity {
 	  }
 	  Coupon coupon = getCoupon();
       BigDecimal discount = BigDecimal.ZERO;
+
 		if (coupon.getType().equals(Coupon.Type.fullcut)){
 			if (amount.compareTo(coupon.getMinimumPrice()) >= 0) {
 				discount = coupon.getAmount();
@@ -188,6 +189,17 @@ public class CouponCode extends BaseEntity {
 		if (coupon.getType().equals(Coupon.Type.discount)){
 			if (amount.compareTo(coupon.getMinimumPrice()) >= 0) {
 				discount = amount.multiply(coupon.getAmount().multiply(new BigDecimal(0.1))).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			}
+		} else
+		if (coupon.getType().equals(Coupon.Type.exchange) && order!=null){
+			for (OrderItem orderItem:order.getOrderItems()) {
+				if (coupon.getGoods().equals(orderItem.getProduct().getGoods())) {
+					if (orderItem.getQuantity()>getStock()) {
+						discount = discount.add(orderItem.getPrice().multiply(new BigDecimal(getStock())).setScale(2,BigDecimal.ROUND_DOWN));
+					} else {
+						discount = discount.add(orderItem.getSubtotal());
+					}
+				}
 			}
 		}
 		return discount.compareTo(amount)>0?amount:discount;
