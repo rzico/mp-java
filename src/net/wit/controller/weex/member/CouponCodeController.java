@@ -88,7 +88,12 @@ public class CouponCodeController extends BaseController {
             return Message.error("不是本店优惠券");
         }
         couponCode.setUsedDate(new Date());
-        couponCode.setIsUsed(true);
+        if (couponCode.getStock()>0) {
+            couponCode.setStock(couponCode.getStock()-1L);
+        }
+        if (couponCode.getStock()==0) {
+            couponCode.setIsUsed(true);
+        }
         couponCodeService.update(couponCode);
         return Message.success("核销成功");
     }
