@@ -176,8 +176,13 @@ public class LogController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Pageable pageable,String searchValue, ModelMap model) {
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("operator", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Log> page = logService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

@@ -208,7 +208,7 @@ public class CardController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Card.Status status, Card.VIP vip, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Card.Status status, Card.VIP vip,String searchValue, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status != null){
 			Filter statusFilter = new Filter("status",Filter.Operator.eq,status);
@@ -243,6 +243,10 @@ public class CardController extends BaseController {
 			else{
 				return Message.error("该商家未绑定");
 			}
+		}
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
 		}
 		Page<Card> page = cardService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

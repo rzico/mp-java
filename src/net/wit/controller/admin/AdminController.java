@@ -309,7 +309,7 @@ public class AdminController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Admin.Gender gender, Pageable pageable,String searchValue, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (gender!=null) {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
@@ -342,6 +342,10 @@ public class AdminController extends BaseController {
 			}
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

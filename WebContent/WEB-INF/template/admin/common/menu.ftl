@@ -75,7 +75,7 @@
             <dd>
                 <ul>
                 [#if (admin.type=="operate")&&(admin.role?contains("1"))]
-                    <li><a data-href="../admin.role/index.jhtml" data-title="角色管理" href="javascript:;">角色管理</a></li>
+                    <li><a data-href="../role/index.jhtml" data-title="角色管理" href="javascript:;">角色管理</a></li>
                 [/#if]
                 [#if (admin.type=="operate")&&(admin.role?contains("1")||admin.role?contains("2"))]
                     <li><a data-href="../tag/index.jhtml" data-title="标签管理" href="javascript:;">标签管理</a></li>
