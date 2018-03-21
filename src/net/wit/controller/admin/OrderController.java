@@ -426,7 +426,7 @@ public class OrderController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Order.OrderStatus orderStatus, Order.PaymentStatus paymentStatus, Order.ShippingStatus shippingStatus, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate,String searchValue, Order.OrderStatus orderStatus, Order.PaymentStatus paymentStatus, Order.ShippingStatus shippingStatus, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if(null != orderStatus){
 			Filter orderStatusFilter = new Filter("orderStatus",Filter.Operator.eq,orderStatus);
@@ -469,6 +469,10 @@ public class OrderController extends BaseController {
 			}
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("consignee", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Order> page = orderService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

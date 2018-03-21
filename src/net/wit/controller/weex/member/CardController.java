@@ -74,6 +74,9 @@ public class CardController extends BaseController {
     @Resource(name = "bankcardServiceImpl")
     private BankcardService bankcardService;
 
+    @Resource(name = "cardPointBillServiceImpl")
+    private CardPointBillService cardPointBillService;
+
     /**
      *   获取会员卡
      */
@@ -593,6 +596,22 @@ public class CardController extends BaseController {
         Page<CardBill> page = cardBillService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(CardBillModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+    /**
+     *  账单记录
+     */
+    @RequestMapping(value = "/point_bill", method = RequestMethod.GET)
+    @ResponseBody
+    public Message pointBill(Long id,Pageable pageable, HttpServletRequest request){
+        Card card = cardService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        pageable.setFilters(filters);
+        Page<CardPointBill> page = cardPointBillService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(CardPointBillModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

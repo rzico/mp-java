@@ -381,10 +381,10 @@
                 {"orderable": false, "aTargets": [0, 19]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 var _shippingStatus = $('select[name="shippingStatus"]').val();
                 var _paymentStatus = $('select[name="paymentStatus"]').val();
                 var _orderStatus = $('select[name="orderStatus"]').val();

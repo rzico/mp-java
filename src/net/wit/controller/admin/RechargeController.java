@@ -218,7 +218,7 @@ public class RechargeController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Recharge.Method method, Recharge.Status status, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Recharge.Method method, Recharge.Status status,String searchValue, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (method!=null) {
 			Filter methodFilter = new Filter("method", Filter.Operator.eq, method);
@@ -229,6 +229,10 @@ public class RechargeController extends BaseController {
 			filters.add(statusFilter);
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("sn", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Recharge> page = rechargeService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

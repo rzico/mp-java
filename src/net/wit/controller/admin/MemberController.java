@@ -282,7 +282,7 @@ public class MemberController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Member.Gender gender, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Member.Gender gender,String searchValue, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (gender!=null) {
 			Filter genderFilter = new Filter("gender", Filter.Operator.eq, gender);
@@ -313,6 +313,10 @@ public class MemberController extends BaseController {
 		}
 		//个人代理商(無權限)
 		//商家(無權限)
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("nickName", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
 		User.userState(page.getContent());
 		return Message.success(PageBlock.bind(page), "admin.list.success");

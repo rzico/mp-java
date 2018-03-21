@@ -148,7 +148,11 @@ public class CouponModel extends BaseModel implements Serializable {
         this.id = coupon.getId();
         this.color = coupon.getColor();
         this.scope = coupon.getScope();
-        this.amount = coupon.getAmount();
+        if (coupon.getType().equals(Coupon.Type.exchange)) {
+            this.amount = coupon.getGoods().product().getPrice();
+        } else {
+            this.amount = coupon.getAmount();
+        }
         this.beginDate = coupon.getBeginDate();
         this.endDate = coupon.getEndDate();
         this.name = coupon.getName();

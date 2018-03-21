@@ -425,13 +425,14 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 16,17, 20]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 5, 16, 17, 19, 20, 21]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
+//                alert(_searchValue);
                 /*处理常量*/
                 var _authority =  $('select[name="authority"]').val();
                 var _mediaType =  $('select[name="mediaType"]').val();

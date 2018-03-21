@@ -58,6 +58,9 @@ public class CouponController extends BaseController {
     @Resource(name = "couponCodeServiceImpl")
     private CouponCodeService couponCodeService;
 
+    @Resource(name = "goodsServiceImpl")
+    private GoodsService goodsService;
+
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
@@ -66,7 +69,7 @@ public class CouponController extends BaseController {
      */
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(Coupon coupon, HttpServletRequest request){
+    public Message submit(Coupon coupon, Long goodsId, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -81,6 +84,7 @@ public class CouponController extends BaseController {
         if (admin.getEnterprise()==null) {
             return Message.error("店铺已打洋,请先启APP");
         }
+
         Enterprise enterprise = admin.getEnterprise();
         Member owner = enterprise.getMember();
         Coupon entity = null;
@@ -121,6 +125,18 @@ public class CouponController extends BaseController {
             } else {
                 s = "满" + nf.format(coupon.getMinimumPrice()) + "元打" + nf.format(coupon.getAmount()) + "折";
             }
+        }
+        if (coupon.getType().equals(Coupon.Type.exchange)) {
+            if (goodsId==null) {
+                return Message.error("无效商品 id");
+            }
+            Goods goods = goodsService.find(goodsId);
+            if (goods==null) {
+                return Message.error("无效商品 id");
+            }
+            entity.setGoods(goods);
+            s = goods.product().getName();
+            entity.setAmount(BigDecimal.ZERO);
         }
         entity.setName(s);
         if (isNew) {
