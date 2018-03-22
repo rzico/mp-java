@@ -109,7 +109,9 @@ public class Coupon extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Goods goods;
 
-	/** 活动规则 */
+	/** 活动规则
+	 * {consume:0,card:0}
+	 * */
 	@Lob
 	@Column(columnDefinition="longtext comment '活动规则'")
 	@JsonIgnore
