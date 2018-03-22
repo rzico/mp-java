@@ -15,6 +15,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -107,6 +108,12 @@ public class Coupon extends BaseEntity {
 	/** 兑换商品 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Goods goods;
+
+	/** 活动规则 */
+	@Lob
+	@Column(columnDefinition="longtext comment '活动规则'")
+	@JsonIgnore
+	private String activity;
 
 	/**
 	 * 颜色
@@ -363,6 +370,14 @@ public class Coupon extends BaseEntity {
 
 	public void setGoods(Goods goods) {
 		this.goods = goods;
+	}
+
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
 	}
 
 	/**
