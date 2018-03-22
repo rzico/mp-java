@@ -33,4 +33,13 @@ public interface CouponCodeService extends BaseService<CouponCode, Long> {
 	 * @return 优惠码
 	 */
 	CouponCode build(Coupon coupon, Member member) throws Exception;
+
+	/**
+	 * 生成优惠码
+	 * @param coupon 优惠券
+	 * @param member 会员
+	 * @return 优惠码
+	 */
+	CouponCode build(Coupon coupon, Member member,Long amount) throws Exception;
+
 }

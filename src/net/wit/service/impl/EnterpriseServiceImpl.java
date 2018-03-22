@@ -283,5 +283,44 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 		}
 		return admin;
 	}
+	@Transactional
+	public Enterprise addCreate(Enterprise enterprise,Member member) {
+		enterpriseDao.persist(enterprise);
+		Admin admin = adminDao.findByMember(member);
+		if (admin==null) {
+			admin = new Admin();
+			admin.setUsername(member.userId());
+			admin.setName(member.getName());
+//			admin.setEmail(member.getEmail());
+			admin.setEnterprise(enterprise);
+			admin.setIsLocked(false);
+			admin.setIsEnabled(true);
+			admin.setLoginFailureCount(0);
+			admin.setMember(member);
+			admin.setPassword(member.getPassword());
+			if (admin.getPassword()==null) {
+				String m = admin.getUsername();
+				admin.setPassword(MD5Utils.getMD5Str(m));
+			}
+			if (member.getGender()!=null) {
+				admin.setGender(Admin.Gender.valueOf(member.getGender().name()));
+			}
+			List<Role> roles = admin.getRoles();
+			if (roles!=null) {
+				roles = new ArrayList<Role>();
+			}
+			roles.add(roleDao.find(1L));
+			admin.setRoles(roles);
+			adminDao.persist(admin);
+		} else {
+//			if (admin.getEnterprise()!=null) {
+//				return null;
+//			}
+			admin.setEnterprise(enterprise);
+			admin.setShop(null);
+			adminDao.merge(admin);
+		}
+		return enterprise;
+	}
 
 }

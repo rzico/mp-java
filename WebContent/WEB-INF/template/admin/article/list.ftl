@@ -405,7 +405,8 @@
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>" +
+                                    "<a title='预览' href='javascript:;' onclick=\"show('" + data + "','articleview.jhtml?id="+data+"','"+data+"','360','640')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe695;</i></a>";
                         }else{
                             return "";
                         }
@@ -424,13 +425,14 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 16,17, 20]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 5, 16, 17, 19, 20, 21]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
+//                alert(_searchValue);
                 /*处理常量*/
                 var _authority =  $('select[name="authority"]').val();
                 var _mediaType =  $('select[name="mediaType"]').val();

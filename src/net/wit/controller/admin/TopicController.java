@@ -298,7 +298,7 @@ public class TopicController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Topic.Status status, Topic.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Topic.Status status, Topic.Type type, Pageable pageable,String searchValue, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
@@ -343,6 +343,10 @@ public class TopicController extends BaseController {
 			else{
 				return Message.error("该商家未绑定");
 			}
+		}
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
 		}
 		Page<Topic> page = topicService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

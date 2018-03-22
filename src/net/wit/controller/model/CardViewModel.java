@@ -42,6 +42,10 @@ public class CardViewModel extends BaseModel implements Serializable {
     private Long point;
     /** 店铺 */
     private String shopName;
+    /** 推荐人 */
+    private String promoter;
+    /** 股东比例 */
+    private BigDecimal bonus;
 
     public Long getId() {
         return id;
@@ -156,6 +160,30 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.bindMobile = bindMobile;
     }
 
+    public String getPromoter() {
+        return promoter;
+    }
+
+    public void setPromoter(String promoter) {
+        this.promoter = promoter;
+    }
+
+    public Card.Type getType() {
+        return type;
+    }
+
+    public void setType(Card.Type type) {
+        this.type = type;
+    }
+
+    public BigDecimal getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(BigDecimal bonus) {
+        this.bonus = bonus;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
@@ -170,6 +198,7 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.bindMobile = false;
         this.bindName = false;
         this.balance = card.getBalance();
+        this.bonus = card.getBonus();
         this.status = card.getStatus();
         this.vip = card.getVip();
         this.color = topic.getTopicCard().getColor();
@@ -179,6 +208,11 @@ public class CardViewModel extends BaseModel implements Serializable {
             this.shopName = card.getShop().getName();
         } else {
             this.shopName = "";
+        }
+        if (card.getPromoter()!=null) {
+           this.promoter = card.getPromoter().displayName();
+        } else {
+            this.promoter = "";
         }
     }
 

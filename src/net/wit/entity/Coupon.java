@@ -15,6 +15,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -38,6 +39,8 @@ public class Coupon extends BaseEntity {
 		discount,
 		/*红包 */
 		redbag,
+		/*兑换 */
+		exchange,
 
 	};
 
@@ -76,7 +79,7 @@ public class Coupon extends BaseEntity {
 
 	/** 类型 */
 	@NotNull
-	@Column(columnDefinition="int(11) not null comment '类型 {fullcut:满减,discount:满折,redbag:红包}'")
+	@Column(columnDefinition="int(11) not null comment '类型 {fullcut:满减,discount:满折,redbag:红包,exchange:兑换}'")
 	private Type type;
 
 	/** 使用范围 */
@@ -101,6 +104,18 @@ public class Coupon extends BaseEntity {
 	/** 发放者 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member distributor;
+
+	/** 兑换商品 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Goods goods;
+
+	/** 活动规则
+	 * {consume:0,card:0}
+	 * */
+	@Lob
+	@Column(columnDefinition="longtext comment '活动规则'")
+	@JsonIgnore
+	private String activity;
 
 	/**
 	 * 颜色
@@ -349,6 +364,22 @@ public class Coupon extends BaseEntity {
 
 	public void setStock(Long stock) {
 		this.stock = stock;
+	}
+
+	public Goods getGoods() {
+		return goods;
+	}
+
+	public void setGoods(Goods goods) {
+		this.goods = goods;
+	}
+
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
 	}
 
 	/**

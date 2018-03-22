@@ -300,10 +300,10 @@
                 {"orderable": false, "aTargets": [0, 6, 9, 10, 11]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
                 var _gender =  $('select[name="gender"]').val();
                 var index = layer.msg('加载中', {

@@ -247,7 +247,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			BigDecimal discount = BigDecimal.ZERO;
 			for (CouponCode code : couponCodes) {
 				if (code.getCoupon().getDistributor().equals(order.getSeller()) && code.getEnabled() && !code.getCoupon().getScope().equals(Coupon.Scope.shop)) {
-					BigDecimal d = code.calculate(order.getPrice());
+					BigDecimal d = code.calculate(order.getPrice(),order);
 					if (d.compareTo(discount) > 0) {
 						order.setCouponDiscount(d);
 						order.setCouponCode(code);
@@ -319,7 +319,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 		//股东自已消费，直接获取返利，不给再分配
-		if (card.getType().equals(Card.Type.partner)) {
+		if (card!=null && card.getType().equals(Card.Type.partner)) {
 			order.setPromoter(null);
 			order.setPartner(member);
 		} else {

@@ -39,6 +39,10 @@ public class CouponModel extends BaseModel implements Serializable {
 
     /** 介绍 */
     private String introduction;
+    /**  商品 */
+    private String goodsName;
+    /**  id  */
+    private Long goodsId;
 
     public Long getId() {
         return id;
@@ -144,11 +148,35 @@ public class CouponModel extends BaseModel implements Serializable {
         this.shopName = shopName;
     }
 
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
+
+    public Long getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Long goodsId) {
+        this.goodsId = goodsId;
+    }
+
     public void bind(Coupon coupon) {
         this.id = coupon.getId();
         this.color = coupon.getColor();
         this.scope = coupon.getScope();
-        this.amount = coupon.getAmount();
+        if (coupon.getType().equals(Coupon.Type.exchange)) {
+            this.amount = coupon.getGoods().product().getPrice();
+            if (coupon.getGoods()!=null) {
+                this.goodsName = coupon.getGoods().product().getName();
+                this.goodsId = coupon.getGoods().getId();
+            }
+        } else {
+            this.amount = coupon.getAmount();
+        }
         this.beginDate = coupon.getBeginDate();
         this.endDate = coupon.getEndDate();
         this.name = coupon.getName();

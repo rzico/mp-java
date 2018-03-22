@@ -9,10 +9,12 @@ import net.wit.*;
 import net.wit.controller.model.GoodsListModel;
 import net.wit.controller.model.GoodsModel;
 import net.wit.controller.weex.BaseController;
+import net.wit.entity.Article;
 import net.wit.entity.Goods;
 import net.wit.entity.Product;
 import net.wit.entity.ProductCategory;
 import net.wit.service.*;
+import org.hibernate.annotations.Filters;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,11 +39,12 @@ public class ProductController extends BaseController {
 	private MemberService memberService;
 	@Resource(name = "productServiceImpl")
 	private ProductService productService;
+	@Resource(name = "articleServiceImpl")
+	private ArticleService articleService;
 	@Resource(name = "goodsServiceImpl")
 	private GoodsService goodsService;
 	@Resource(name = "productCategoryServiceImpl")
 	private ProductCategoryService productCategoryService;
-
 
 	/**
 	 * 详情
@@ -53,6 +56,22 @@ public class ProductController extends BaseController {
 		GoodsModel model =new GoodsModel();
 		model.bind(goods);
 		return Message.bind(model,request);
+	}
+
+	/**
+	 * 文章详情
+	 */
+	@RequestMapping(value = "/article", method = RequestMethod.GET)
+	public @ResponseBody
+	Message article(Long id,HttpServletRequest request) {
+		Goods goods = goodsService.find(id);
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("goods", Filter.Operator.eq,goods));
+		List<Article> art = articleService.findList(null,null,filters,null);
+        if (art.size()==0) {
+        	return Message.error("没有详情");
+		}
+		return Message.success((Object) art.get(0).getId(),"获取成功");
 	}
 
 	/**
@@ -75,4 +94,5 @@ public class ProductController extends BaseController {
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
 	}
+
 }

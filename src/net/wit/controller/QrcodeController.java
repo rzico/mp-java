@@ -2,9 +2,12 @@
 package net.wit.controller;
 
 import net.wit.Message;
+import net.wit.entity.Card;
 import net.wit.entity.Payment;
+import net.wit.entity.Topic;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
+import net.wit.util.ScanUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +55,22 @@ public class QrcodeController extends BaseController {
              if ("818801".equals(cmd)) {
                  String code = id.substring(6, id.length());
                  return "redirect:/#/card?code=" + code;
-             } else {
+             } else
+             if ("818802".equals(cmd)) {
+                 String code = id.substring(6, id.length());
+                 String c = code.substring(0,code.length()-6);
+                 Card card = cardService.find(c);
+                 if (card==null) {
+                     return "redirect:/#/";
+                 }
+                 Topic topic = card.getOwner().getTopic();
+                 if (topic!=null && topic.getTopicCard()!=null) {
+                     return "redirect:/#/card?code=85" + String.valueOf(100000000+topic.getTopicCard().getId())+"&xuid="+card.getMembers().get(0).getId();
+                 } else {
+                     return "redirect:/#/";
+                 }
+             } else
+             {
                  return "redirect:/#/";
              }
          } catch (Exception e) {

@@ -181,13 +181,17 @@ public class CategoryController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Category.Status status, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Category.Status status, Pageable pageable,String searchValue, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Category> page = categoryService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
