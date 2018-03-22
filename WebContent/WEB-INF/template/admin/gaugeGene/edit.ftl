@@ -49,7 +49,7 @@
                     [#if ranks??]
                         [#list ranks as rank]
                             <div class="radio-box">
-                                <input name="type" type="radio" id="rank-${rank_index}" value="${rank.id}"[#if rank.id == data.rank] checked[/#if]>
+                                <input name="rank" type="radio" id="rank-${rank_index}" value="${rank.id}"[#if rank.id == data.rank] checked[/#if]>
                                 <label for="rank-${rank_index}">${rank.name}</label>
                             </div>
                         [/#list]
@@ -70,8 +70,6 @@
                     [/#if]
                 </div>
             </div>
-
-
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>计分类型：</label>
@@ -113,6 +111,7 @@
                                 <a style="text-decoration:none" class="ml-5" onClick="del_opt(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
                             </td>
                         </tr>
+                        [#if options??]
                             [#list options as option]
                             <tr class="text-c" >
                                 <td>
@@ -129,6 +128,7 @@
                                 </td>
                             </tr>
                             [/#list]
+                        [/#if]
 
                         </tbody>
                     </table>
@@ -148,13 +148,13 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>表达式：</label>
                     <div class="formControls col-xs-8 col-sm-9">
-                        <input type="text" class="input-text" value="${attribute}" placeholder="" id="name" name="name">
+                        <input type="text" class="input-text" value="${attribute}" placeholder="" id="expr" name="expr">
                     </div>
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2"></label>
                     <div class="formControls col-xs-8 col-sm-9">
-                        [#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]
+                        ${expr_txt}
                     </div>
                 </div>
 
@@ -201,7 +201,6 @@
                     increaseArea: '20%'
                 });
 
-
                 $('input[name="rank"]').on('ifChanged', function(e) {
                     var r = $(this).val();//人员类别PK
                     if (r=='rank1') {
@@ -212,6 +211,14 @@
                         $("#rank1").addClass("hidden");
                     }
                 });
+
+                if ('${data.rank}'=='rank1') {
+                    $("#rank1").removeClass("hidden");
+                    $("#rank2").addClass("hidden");
+                } else {
+                    $("#rank2").removeClass("hidden");
+                    $("#rank1").addClass("hidden");
+                }
 
                 $("#form-update").validate({
                     rules:{

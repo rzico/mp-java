@@ -92,6 +92,8 @@ public class GaugeGeneController extends BaseController {
 		Gauge gauge = gaugeService.find(gaugeId);
 		model.addAttribute("gaugeQuestions",gauge.getGaugeQuestions());
 
+		model.addAttribute("expr_txt","[#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]");
+
 		return "/admin/gaugeGene/add";
 	}
 
@@ -101,17 +103,21 @@ public class GaugeGeneController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(String name, Integer orders, GaugeGene.ScoreType scoreType,Long gaugeId,String expr, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
+	public Message save(String name, Integer orders, GaugeGene.ScoreType scoreType,GaugeGene.Rank rank,Long gaugeId,String expr, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
 		GaugeGene entity = new GaugeGene();	
 
 		entity.setOrders(orders);
 
-		entity.setScoreType(scoreType);
+		if (scoreType==null) {
+			entity.setScoreType(GaugeGene.ScoreType.total);
+		} else {
+			entity.setScoreType(scoreType);
+		}
 
 		entity.setName(name);
 
 
-		if (entity.getRank().equals(GaugeGene.Rank.rank1)) {
+		if (rank.equals(GaugeGene.Rank.rank1)) {
 			entity.setQuestions(gaugeQuestionService.findList(questions));
 
 			List<Map<String, Object>> data = new ArrayList<>();
@@ -130,7 +136,7 @@ public class GaugeGeneController extends BaseController {
 			entity.setAttribute(expr);
 		}
 
-
+		entity.setRank(rank);
 		entity.setGauge(gaugeService.find(gaugeId));
 		
 		if (!isValid(entity)) {
@@ -170,7 +176,10 @@ public class GaugeGeneController extends BaseController {
 		GaugeGene gaugeGene = gaugeGeneService.find(id);
 
 		model.addAttribute("gaugeId",gaugeId);
-		List<GaugeGeneAttributeModel> opts = JsonUtils.toObject(gaugeGene.getAttribute(),List.class);
+		List<GaugeGeneAttributeModel> opts = null;
+		if (gaugeGene.getRank().equals(GaugeGene.Rank.rank1)) {
+			opts = JsonUtils.toObject(gaugeGene.getAttribute(),List.class);
+		}
 
 		List<MapEntity> ranks = new ArrayList<>();
 		ranks.add(new MapEntity("rank1","常规因子"));
@@ -181,11 +190,17 @@ public class GaugeGeneController extends BaseController {
 		scoreTypes.add(new MapEntity("total","因子得分总和"));
 		scoreTypes.add(new MapEntity("smax","因子最大得分"));
 		model.addAttribute("scoreTypes",scoreTypes);
-		model.addAttribute("options",opts);
-		model.addAttribute("options_length",opts.size());
+		if (opts!=null) {
+			model.addAttribute("options", opts);
+			model.addAttribute("options_length", opts.size());
+		} else {
+			model.addAttribute("options_length", 0);
+		}
 
 		Gauge gauge = gaugeGene.getGauge();
 		model.addAttribute("gaugeQuestions",gauge.getGaugeQuestions());
+
+		model.addAttribute("expr_txt","[#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]");
 
 		model.addAttribute("data",gaugeGene);
 
@@ -198,19 +213,25 @@ public class GaugeGeneController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Long id,String name, Integer orders, GaugeGene.ScoreType scoreType,String expr,Long gaugeId, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
+	public Message update(Long id,String name, Integer orders, GaugeGene.ScoreType scoreType,GaugeGene.Rank rank,String expr,Long gaugeId, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
 		GaugeGene entity = gaugeGeneService.find(id);
 
 
 		entity.setOrders(orders);
 
-		entity.setScoreType(scoreType);
+
+		if (scoreType==null) {
+			entity.setScoreType(GaugeGene.ScoreType.total);
+		} else {
+			entity.setScoreType(scoreType);
+		}
+
 
 		entity.setName(name);
 
 
 
-		if (entity.getRank().equals(GaugeGene.Rank.rank1)) {
+		if (rank.equals(GaugeGene.Rank.rank1)) {
 			entity.setQuestions(gaugeQuestionService.findList(questions));
 
 			List<Map<String, Object>> data = new ArrayList<>();
@@ -229,6 +250,7 @@ public class GaugeGeneController extends BaseController {
 			entity.setAttribute(expr);
 		}
 
+		entity.setRank(rank);
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");

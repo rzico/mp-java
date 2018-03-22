@@ -78,7 +78,12 @@ public class GaugeResultController extends BaseController {
 
 		model.addAttribute("gaugeId",gaugeId);
 		Gauge gauge = gaugeService.find(gaugeId);
+		model.addAttribute("gauge",gauge);
 		model.addAttribute("gaugeGenes",gauge.getGaugeGenes());
+
+
+		model.addAttribute("expr_txt","[#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]");
+
 		return "/admin/gaugeResult/add";
 	}
 
@@ -87,27 +92,31 @@ public class GaugeResultController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(GaugeResult gaugeResult, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
+	public Message save(GaugeResult gaugeResult,String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
 		GaugeResult entity = new GaugeResult();	
 
 		entity.setOrders(gaugeResult.getOrders() == null ? 0 : gaugeResult.getOrders());
 		entity.setTitle(gaugeResult.getTitle());
 		entity.setContent(gaugeResult.getContent());
+        Gauge gauge = gaugeService.find(gaugeId);
+		entity.setGauge(gauge);
 
-		entity.setGauge(gaugeService.find(gaugeId));
+		if (gauge.getMethod().equals(Gauge.Method.combined)) {
+			List<Map<String, Object>> attributes = new ArrayList<>();
 
-		List<Map<String,Object>> attributes = new ArrayList<>();
+			for (int i = 0; i < genes.length; i++) {
+				Map<String, Object> attr = new HashMap<>();
+				attr.put("gene", genes[i]);
+				attr.put("attribute", attrs[i]);
+				attributes.add(attr);
+			}
 
-		for (int i=0;i<genes.length;i++) {
-			Map<String,Object> attr = new HashMap<>();
-			attr.put("gene",genes[i]);
-			attr.put("attribute",attrs[i]);
-			attributes.add(attr);
+			entity.setAttribute(JsonUtils.toJson(attributes));
+
+			entity.setScompare(JsonUtils.toJson(scompare));
+		} else {
+			entity.setAttribute(expr);
 		}
-
-		entity.setAttribute(JsonUtils.toJson(attributes));
-
-		entity.setScompare(JsonUtils.toJson(scompare));
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -146,8 +155,11 @@ public class GaugeResultController extends BaseController {
 
 		GaugeResult gaugeResult = gaugeResultService.find(id);
 		Gauge gauge = gaugeResult.getGauge();
+		model.addAttribute("gauge",gauge);
 		model.addAttribute("data",gaugeResult);
 		model.addAttribute("gaugeGenes",gauge.getGaugeGenes());
+
+		model.addAttribute("expr_txt","[#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]");
 
 		return "/admin/gaugeResult/edit";
 	}
@@ -158,7 +170,7 @@ public class GaugeResultController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(GaugeResult gaugeResult, Long gaugeId, Long gaugeGeneId){
+	public Message update(GaugeResult gaugeResult, String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
 		GaugeResult entity = gaugeResultService.find(gaugeResult.getId());
 		
 		entity.setCreateDate(gaugeResult.getCreateDate());
@@ -168,9 +180,25 @@ public class GaugeResultController extends BaseController {
 		entity.setOrders(gaugeResult.getOrders() == null ? 0 : gaugeResult.getOrders());
 
 		entity.setContent(gaugeResult.getContent());
+		Gauge gauge = entity.getGauge();
+		entity.setGauge(gauge);
 
+		if (gauge.getMethod().equals(Gauge.Method.combined)) {
+			List<Map<String, Object>> attributes = new ArrayList<>();
 
-		entity.setGauge(gaugeService.find(gaugeId));
+			for (int i = 0; i < genes.length; i++) {
+				Map<String, Object> attr = new HashMap<>();
+				attr.put("gene", genes[i]);
+				attr.put("attribute", attrs[i]);
+				attributes.add(attr);
+			}
+
+			entity.setAttribute(JsonUtils.toJson(attributes));
+
+			entity.setScompare(JsonUtils.toJson(scompare));
+		} else {
+			entity.setAttribute(expr);
+		}
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");

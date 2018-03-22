@@ -42,6 +42,7 @@
         </div>
 
 
+        [#if gauge.method=='combined']
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">水平：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -81,7 +82,22 @@
             [/#if]
             </div>
         </div>
+        [#else]
 
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>表达式：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="expr" name="expr">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                ${expr_txt}
+                </div>
+            </div>
+
+        [/#if]
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
             <div class="formControls col-xs-8 col-sm-9">

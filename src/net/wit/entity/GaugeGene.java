@@ -66,9 +66,9 @@ public class GaugeGene extends OrderEntity {
     /** 水平 数值为百份号
      *  [{name:"隐性",smin:0,smax:25,expr:‘’}] */
 
+    @JsonIgnore
     @Lob
     @Column(columnDefinition="longtext comment '水平'")
-    @JsonIgnore
     private String attribute;
 
     /** 量表 */
@@ -125,7 +125,8 @@ public class GaugeGene extends OrderEntity {
         this.rank = rank;
     }
 
-    public List<String> getAttributes() {
+    @JsonIgnore
+    public List<String> Attributes() {
         List<String> data = new ArrayList<>();
         if (getAttribute()!=null) {
             net.sf.json.JSONArray attrs = net.sf.json.JSONArray.fromObject(getAttribute());

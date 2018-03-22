@@ -130,13 +130,13 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>表达式：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+                <input type="text" class="input-text" value="" placeholder="" id="expr" name="expr">
             </div>
         </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-9">
-                   [#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]
+                   ${expr_txt}
                  </div>
             </div>
 
@@ -198,11 +198,7 @@
                     rules:{
                         name:{
                             required:true,
-                        },
-                        questions:{
-                            required:true,
-                        },
-
+                        }
                     },
                     onkeyup:false,
                     focusCleanup:true,
