@@ -43,7 +43,21 @@
                 </div>
             </div>
 
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>因子类型：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if ranks??]
+                        [#list ranks as rank]
+                            <div class="radio-box">
+                                <input name="type" type="radio" id="rank-${rank_index}" value="${rank.id}"[#if rank.id == data.rank] checked[/#if]>
+                                <label for="rank-${rank_index}">${rank.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
 
+            <div class="hidden" id="rank1">
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">题目：</label>
                 <div class="formControls col-xs-8 col-sm-9">
@@ -127,7 +141,24 @@
                     <input class="btn btn-primary radius" onClick="add_opt()" type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
                 </div>
             </div>
+        </div>
 
+            <div class="hidden" id="rank2">
+
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>表达式：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="${attribute}" placeholder="" id="name" name="name">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2"></label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        [#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]
+                    </div>
+                </div>
+
+            </div>
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">排序：</label>
@@ -168,6 +199,18 @@
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
+                });
+
+
+                $('input[name="rank"]').on('ifChanged', function(e) {
+                    var r = $(this).val();//人员类别PK
+                    if (r=='rank1') {
+                        $("#rank1").removeClass("hidden");
+                        $("#rank2").addClass("hidden");
+                    } else {
+                        $("#rank2").removeClass("hidden");
+                        $("#rank1").addClass("hidden");
+                    }
                 });
 
                 $("#form-update").validate({

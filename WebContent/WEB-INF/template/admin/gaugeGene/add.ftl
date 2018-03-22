@@ -136,7 +136,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-9">
-
+                   [#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]
                  </div>
             </div>
 
