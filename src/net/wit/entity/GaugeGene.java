@@ -33,6 +33,13 @@ public class GaugeGene extends OrderEntity {
         smax
     };
 
+    public enum Rank{
+        /**  常规因子  */
+        rank1,
+        /**  二阶因子 */
+        rank2
+    };
+
     /** 因子 */
     @Length(max = 200)
     @NotNull
@@ -51,8 +58,13 @@ public class GaugeGene extends OrderEntity {
     @Column(columnDefinition="int(11) not null comment '计算方式 {total:得分总和,smax:最大得分}'")
     private ScoreType scoreType;
 
+    /** 因子类型 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '因子类型 {rank1:常规因子,rank2:二阶因子}'")
+    private Rank rank;
+
     /** 水平 数值为百份号
-     *  [{name:"隐性",smin:0,smax:25}] */
+     *  [{name:"隐性",smin:0,smax:25,expr:‘’}] */
 
     @Lob
     @Column(columnDefinition="longtext comment '水平'")
@@ -103,6 +115,14 @@ public class GaugeGene extends OrderEntity {
 
     public void setScoreType(ScoreType scoreType) {
         this.scoreType = scoreType;
+    }
+
+    public Rank getRank() {
+        return rank;
+    }
+
+    public void setRank(Rank rank) {
+        this.rank = rank;
     }
 
     public List<String> getAttributes() {

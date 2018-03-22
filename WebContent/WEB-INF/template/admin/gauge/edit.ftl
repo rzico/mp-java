@@ -113,6 +113,20 @@
             </div>
 
             <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评方法：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if methods??]
+                        [#list methods as method]
+                            <div class="radio-box">
+                                <input name="method" type="radio" id="userType-${method_index}" value="${method.id}"[#if method.id == data.method] checked[/#if]>
+                                <label for="method-${method_index}">${method.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评简介：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <div class="uploader-thum-container">

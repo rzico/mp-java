@@ -42,6 +42,22 @@
 
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>因子类型：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+            [#if ranks??]
+                [#list ranks as rank]
+                    <div class="radio-box">
+                        <input name="rank" type="radio" id="rank-${rank_index}" value="${rank.id}" onClick="rank('${rank.id}')" >
+                        <label for="rank-${rank_index}">${rank.name}</label>
+                    </div>
+                [/#list]
+            [/#if]
+            </div>
+        </div>
+
+
+        <div  id="rank1">
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">题目：</label>
             <div class="formControls col-xs-8 col-sm-9">
             [#if gaugeQuestions??]
@@ -105,6 +121,14 @@
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" onClick="add_opt()" type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
+            </div>
+        </div>
+
+        </div>
+        <div class="row cl" id="rank2">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>表达式：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
             </div>
         </div>
 
@@ -206,6 +230,12 @@
             function del_opt(val) {
                 var $this = val;
                 $this.closest("tr").remove();
+            };
+
+            function rank(val) {
+                $("#rank1").addClass("hidden");
+                $("#rank2").addClass("hidden");
+                $("#"+val).removeClass("hidden");
             };
 
         </script>

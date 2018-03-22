@@ -79,6 +79,11 @@ public class GaugeController extends BaseController {
 		types.add(new MapEntity("complex","多常模"));
 		model.addAttribute("types",types);
 
+		List<MapEntity> methods = new ArrayList<>();
+		methods.add(new MapEntity("combined","组合型"));
+		methods.add(new MapEntity("interpret","解释型"));
+		model.addAttribute("methods",methods);
+
 		List<MapEntity> userTypes = new ArrayList<>();
 		userTypes.add(new MapEntity("general","普通用户"));
 		userTypes.add(new MapEntity("enterprise","企业用户"));
@@ -94,6 +99,11 @@ public class GaugeController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
+
+		List<MapEntity> methods = new ArrayList<>();
+		methods.add(new MapEntity("combined","组合型"));
+		methods.add(new MapEntity("interpret","解释型"));
+		model.addAttribute("methods",methods);
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("single","单常模"));
@@ -146,6 +156,8 @@ public class GaugeController extends BaseController {
 
 		entity.setTitle(gauge.getTitle());
 
+		entity.setMethod(gauge.getMethod());
+
 		entity.setType(gauge.getType());
 
 		entity.setUserType(gauge.getUserType());
@@ -192,6 +204,11 @@ public class GaugeController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
+
+		List<MapEntity> methods = new ArrayList<>();
+		methods.add(new MapEntity("combined","组合型"));
+		methods.add(new MapEntity("interpret","解释型"));
+		model.addAttribute("methods",methods);
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("single","单常模"));
@@ -243,6 +260,8 @@ public class GaugeController extends BaseController {
 		entity.setSubTitle(gauge.getSubTitle());
 
 		entity.setTitle(gauge.getTitle());
+
+		entity.setMethod(gauge.getMethod());
 
 		entity.setType(gauge.getType());
 

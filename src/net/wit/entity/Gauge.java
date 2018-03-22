@@ -44,6 +44,13 @@ public class Gauge extends BaseEntity {
         complex
     };
 
+    public enum Method{
+        /**  组合型 */
+        combined,
+        /**  解释型 */
+        interpret
+    };
+
     /** 量表分类 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -58,6 +65,11 @@ public class Gauge extends BaseEntity {
     @NotNull
     @Column(columnDefinition="int(11) not null comment '常模类型 {single:单常模,complex:多常模}'")
     private Type type;
+
+    /** 测评方式 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '测评方式 {combined:组合型,interpret:解释型}'")
+    private Method method;
 
     /** 主标题 */
     @Length(max = 200)
@@ -206,7 +218,6 @@ public class Gauge extends BaseEntity {
         this.notice = notice;
     }
 
-
     public String getRevisionNote() {
         return revisionNote;
     }
@@ -333,5 +344,13 @@ public class Gauge extends BaseEntity {
 
     public void setGaugeGenes(List<GaugeGene> gaugeGenes) {
         this.gaugeGenes = gaugeGenes;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setMethod(Method method) {
+        this.method = method;
     }
 }

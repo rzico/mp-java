@@ -84,6 +84,11 @@ public class GaugeGeneController extends BaseController {
 		scoreTypes.add(new MapEntity("smax","因子最大得分"));
 		model.addAttribute("scoreTypes",scoreTypes);
 
+		List<MapEntity> ranks = new ArrayList<>();
+		ranks.add(new MapEntity("rank1","常规因子"));
+		ranks.add(new MapEntity("rank2","二阶因子"));
+		model.addAttribute("ranks",ranks);
+
 		Gauge gauge = gaugeService.find(gaugeId);
 		model.addAttribute("gaugeQuestions",gauge.getGaugeQuestions());
 
@@ -96,7 +101,7 @@ public class GaugeGeneController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(String name, Integer orders, GaugeGene.ScoreType scoreType,Long gaugeId, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
+	public Message save(String name, Integer orders, GaugeGene.ScoreType scoreType,Long gaugeId,String expr, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
 		GaugeGene entity = new GaugeGene();	
 
 		entity.setOrders(orders);
@@ -105,21 +110,25 @@ public class GaugeGeneController extends BaseController {
 
 		entity.setName(name);
 
-		entity.setQuestions(gaugeQuestionService.findList(questions));
 
+		if (entity.getRank().equals(GaugeGene.Rank.rank1)) {
+			entity.setQuestions(gaugeQuestionService.findList(questions));
 
-		List<Map<String,Object>> data = new ArrayList<>();
-		for (int i=0;i<sname.length;i++) {
-			if (sname[i]!=null && !"".equals(sname[i])) {
-				Map<String, Object> q = new HashMap<String, Object>();
-				q.put("sname", sname[i]);
-				q.put("smin", smin[i]);
-				q.put("smax", smax[i]);
-				data.add(q);
+			List<Map<String, Object>> data = new ArrayList<>();
+			for (int i = 0; i < sname.length; i++) {
+				if (sname[i] != null && !"".equals(sname[i])) {
+					Map<String, Object> q = new HashMap<String, Object>();
+					q.put("sname", sname[i]);
+					q.put("smin", smin[i]);
+					q.put("smax", smax[i]);
+					data.add(q);
+				}
 			}
-		}
+			entity.setAttribute(JsonUtils.toJson(data));
 
-		entity.setAttribute(JsonUtils.toJson(data));
+		} else {
+			entity.setAttribute(expr);
+		}
 
 
 		entity.setGauge(gaugeService.find(gaugeId));
@@ -163,6 +172,11 @@ public class GaugeGeneController extends BaseController {
 		model.addAttribute("gaugeId",gaugeId);
 		List<GaugeGeneAttributeModel> opts = JsonUtils.toObject(gaugeGene.getAttribute(),List.class);
 
+		List<MapEntity> ranks = new ArrayList<>();
+		ranks.add(new MapEntity("rank1","常规因子"));
+		ranks.add(new MapEntity("rank2","二阶因子"));
+		model.addAttribute("ranks",ranks);
+
 		List<MapEntity> scoreTypes = new ArrayList<>();
 		scoreTypes.add(new MapEntity("total","因子得分总和"));
 		scoreTypes.add(new MapEntity("smax","因子最大得分"));
@@ -184,7 +198,7 @@ public class GaugeGeneController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Long id,String name, Integer orders, GaugeGene.ScoreType scoreType,Long gaugeId, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
+	public Message update(Long id,String name, Integer orders, GaugeGene.ScoreType scoreType,String expr,Long gaugeId, Long [] questions, String [] sname,BigDecimal[] smin,BigDecimal [] smax){
 		GaugeGene entity = gaugeGeneService.find(id);
 
 
@@ -195,20 +209,26 @@ public class GaugeGeneController extends BaseController {
 		entity.setName(name);
 
 
-		entity.setQuestions(gaugeQuestionService.findList(questions));
 
-		List<Map<String,Object>> data = new ArrayList<>();
-		for (int i=0;i<sname.length;i++) {
-			if (sname[i]!=null && !"".equals(sname[i])) {
-				Map<String, Object> q = new HashMap<String, Object>();
-				q.put("sname", sname[i]);
-				q.put("smin", smin[i]);
-				q.put("smax", smax[i]);
-				data.add(q);
+		if (entity.getRank().equals(GaugeGene.Rank.rank1)) {
+			entity.setQuestions(gaugeQuestionService.findList(questions));
+
+			List<Map<String, Object>> data = new ArrayList<>();
+			for (int i = 0; i < sname.length; i++) {
+				if (sname[i] != null && !"".equals(sname[i])) {
+					Map<String, Object> q = new HashMap<String, Object>();
+					q.put("sname", sname[i]);
+					q.put("smin", smin[i]);
+					q.put("smax", smax[i]);
+					data.add(q);
+				}
 			}
+			entity.setAttribute(JsonUtils.toJson(data));
+
+		} else {
+			entity.setAttribute(expr);
 		}
 
-		entity.setAttribute(JsonUtils.toJson(data));
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
