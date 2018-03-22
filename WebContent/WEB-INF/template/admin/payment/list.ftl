@@ -70,7 +70,7 @@
         </span>
 		[/#if]
 
-        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
+        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的编号" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
@@ -383,10 +383,10 @@
             [/@adminDirective]
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
                 var _method =  $('select[name="method"]').val();
                 var _status =  $('select[name="status"]').val();

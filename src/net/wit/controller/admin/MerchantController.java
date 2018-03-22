@@ -322,7 +322,7 @@ public class MerchantController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate,String searchValue, Pageable pageable, ModelMap model) {
 		Admin admin =adminService.getCurrent();
 		Enterprise enterprise=admin.getEnterprise();
 		if(enterprise==null){
@@ -346,6 +346,10 @@ public class MerchantController extends BaseController {
 		//个人代理商(無權限)
 		//商家(無權限)
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("scompany", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Merchant> page = merchantService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

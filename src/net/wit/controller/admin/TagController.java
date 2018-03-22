@@ -195,7 +195,7 @@ public class TagController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Tag.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Tag.Type type, Pageable pageable,String searchValue, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
@@ -206,6 +206,10 @@ public class TagController extends BaseController {
 			pageable.getOrders().add(new Order("type", Order.Direction.asc));
 			pageable.getOrders().add(new Order(pageable.getOrderProperty(), pageable.getOrderDirection()));
 			pageable.setOrderProperty(null);
+		}
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
 		}
 		Page<Tag> page = tagService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
