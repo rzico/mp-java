@@ -66,7 +66,7 @@
                         [#list scoreTypes as scoreType]
                             <div class="radio-box">
                                 <input name="scoreType" type="radio" id="scoreType-${scoreType_index}" value="${scoreType.id}" [#if scoreType.id == data.scoreType] checked[/#if]>
-                                <label for="type-${scoreType_index}">${scoreType.name}</label>
+                                <label for="scoreType-${scoreType_index}">${scoreType.name}</label>
                             </div>
                         [/#list]
                     [/#if]

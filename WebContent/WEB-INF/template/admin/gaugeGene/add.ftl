@@ -47,7 +47,7 @@
             [#if ranks??]
                 [#list ranks as rank]
                     <div class="radio-box">
-                        <input name="rank" type="radio" id="rank-${rank_index}" value="${rank.id}" onClick="rank('${rank.id}')" >
+                        <input name="rank" type="radio" id="rank-${rank_index}" value="${rank.id}"  onClick="rank_opt();" >
                         <label for="rank-${rank_index}">${rank.name}</label>
                     </div>
                 [/#list]
@@ -56,7 +56,7 @@
         </div>
 
 
-        <div  id="rank1">
+        <div class="hidden" id="rank1">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">题目：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -79,7 +79,7 @@
                 [#list scoreTypes as scoreType]
                     <div class="radio-box">
                         <input name="scoreType" type="radio" id="scoreType-${scoreType_index}" value="${scoreType.id}">
-                        <label for="type-${scoreType_index}">${scoreType.name}</label>
+                        <label for="scoreType-${scoreType_index}">${scoreType.name}</label>
                     </div>
                 [/#list]
             [/#if]
@@ -87,7 +87,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">水平设置：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>水平设置：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
@@ -125,11 +125,21 @@
         </div>
 
         </div>
-        <div class="row cl" id="rank2">
+        <div class="hidden" id="rank2">
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>表达式：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
             </div>
+        </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+
+                 </div>
+            </div>
+
         </div>
 
         <div class="row cl">
@@ -171,6 +181,17 @@
                     checkboxClass: 'icheckbox-blue',
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
+                });
+
+                $('input[name="rank"]').on('ifChanged', function(e) {
+                    var r = $(this).val();//人员类别PK
+                    if (r=='rank1') {
+                        $("#rank1").removeClass("hidden");
+                        $("#rank2").addClass("hidden");
+                    } else {
+                        $("#rank2").removeClass("hidden");
+                        $("#rank1").addClass("hidden");
+                    }
                 });
 
                 $("#form-add").validate({
@@ -232,11 +253,6 @@
                 $this.closest("tr").remove();
             };
 
-            function rank(val) {
-                $("#rank1").addClass("hidden");
-                $("#rank2").addClass("hidden");
-                $("#"+val).removeClass("hidden");
-            };
 
         </script>
 </body>
