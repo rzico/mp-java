@@ -81,8 +81,14 @@ public class GaugeResultController extends BaseController {
 		model.addAttribute("gauge",gauge);
 		model.addAttribute("gaugeGenes",gauge.getGaugeGenes());
 
-
-		model.addAttribute("expr_txt","[#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]");
+		model.addAttribute("expr_txt",
+				"1.总分  = total\n" +
+						"2.总均分 = tavg\n" +
+						"3.阳性项目数 = positive\n" +
+						"4.阴性项目数=negative\n" +
+						"5.阳性项止均分=pavg\n" +
+						"6.因子平均分 = savg\n" +
+						"7.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
 
 		return "/admin/gaugeResult/add";
 	}
@@ -159,7 +165,14 @@ public class GaugeResultController extends BaseController {
 		model.addAttribute("data",gaugeResult);
 		model.addAttribute("gaugeGenes",gauge.getGaugeGenes());
 
-		model.addAttribute("expr_txt","[#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]");
+		model.addAttribute("expr_txt",
+				"1.总分  = total\n" +
+				"2.总均分 = tavg\n" +
+				"3.阳性项目数 = positive\n" +
+				"4.阴性项目数=negative\n" +
+				"5.阳性项止均分=pavg\n" +
+				"6.因子平均分 = savg\n" +
+				"7.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
 
 		return "/admin/gaugeResult/edit";
 	}

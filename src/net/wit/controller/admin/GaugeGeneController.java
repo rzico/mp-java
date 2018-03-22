@@ -200,7 +200,7 @@ public class GaugeGeneController extends BaseController {
 		Gauge gauge = gaugeGene.getGauge();
 		model.addAttribute("gaugeQuestions",gauge.getGaugeQuestions());
 
-		model.addAttribute("expr_txt","[#if P1>P2] (${P1_S}/23-${P2_S}*0.38)-283 [#else] 0 [/#if]");
+		model.addAttribute("expr_txt","[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
 
 		model.addAttribute("data",gaugeGene);
 

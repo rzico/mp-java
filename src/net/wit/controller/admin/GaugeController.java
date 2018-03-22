@@ -1,14 +1,19 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -93,6 +98,68 @@ public class GaugeController extends BaseController {
 		return "/admin/gauge/list";
 	}
 
+
+	/**
+	 * 测谎设置
+	 */
+	@RequestMapping(value = "/detect", method = RequestMethod.GET)
+	public String detect(Long id,ModelMap model) {
+
+		Gauge gauge = gaugeService.find(id);
+		model.addAttribute("id",id);
+		model.addAttribute("max",gauge.getGaugeQuestions().size());
+		model.addAttribute("min",1);
+		List<Map<String,Long>> data = new ArrayList<>();
+		if (gauge.getDetect()!=null) {
+			JSONObject jsonObject = JSONObject.fromObject(gauge.getDetect());
+			model.addAttribute("correct",jsonObject.getDouble("correct"));
+			JSONArray ar = jsonObject.getJSONArray("detect");
+			for (int i=0;i<ar.size();i++) {
+				JSONObject jb = ar.getJSONObject(i);
+				Map<String,Long> d = new HashMap<>();
+				d.put("A",jb.getLong("A"));
+				d.put("B",jb.getLong("B"));
+				data.add(d);
+			}
+		}
+		model.addAttribute("detect",data);
+		return "/admin/gauge/view/detect";
+	}
+
+
+	/**
+	 * 测谎设置
+	 */
+	@RequestMapping(value = "/detect", method = RequestMethod.POST)
+	@ResponseBody
+	public Message detect_submit(Long id, BigDecimal correct,Long [] A,Long [] B, ModelMap model) {
+
+		Gauge gauge = gaugeService.find(id);
+		List<Map<String,Long>> data = new ArrayList<>();
+		for (int i=0;i<A.length;i++) {
+			Map<String,Long> d = new HashMap<>();
+			if (A[i]!=null && A[i]>0) {
+				d.put("A", A[i]);
+				d.put("B", B[i]);
+				data.add(d);
+			}
+		}
+
+		Map<String,Object> dt = new HashMap<>();
+		dt.put("detect",data);
+		dt.put("correct",correct);
+
+		gauge.setDetect(JsonUtils.toJson(dt));
+
+		try {
+			gaugeService.update(gauge);
+			return Message.success(gauge,"admin.save.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.save.error");
+		}
+
+	}
 
 	/**
 	 * 添加

@@ -172,6 +172,18 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     private List<Tag> tags = new ArrayList<Tag>();
 
+    /** 测谎设置
+     *  {detect:[{A=1,B=2},{A=3,B=5}]
+     *   correct:30%
+     *  }
+     *
+     *
+     * */
+    @Lob
+    @Column(columnDefinition="longtext comment '测谎设置'")
+    @JsonIgnore
+    private String detect;
+
     /** 是否删除 */
     @NotNull
     @Column(columnDefinition="bit comment '是否删除'")
@@ -352,5 +364,13 @@ public class Gauge extends BaseEntity {
 
     public void setMethod(Method method) {
         this.method = method;
+    }
+
+    public String getDetect() {
+        return detect;
+    }
+
+    public void setDetect(String detect) {
+        this.detect = detect;
     }
 }
