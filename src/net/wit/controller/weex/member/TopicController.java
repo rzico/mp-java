@@ -288,7 +288,7 @@ public class TopicController extends BaseController {
      */
     @RequestMapping(value = "/owner", method = RequestMethod.GET)
     @ResponseBody
-    public Message ower(HttpServletRequest request){
+    public Message owner(HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
