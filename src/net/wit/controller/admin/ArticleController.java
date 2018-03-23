@@ -560,5 +560,9 @@ public class ArticleController extends BaseController {
 		return "/admin/article/view/articleView";
 	}
 
+	@RequestMapping(value = "/xiumi",method = RequestMethod.GET)
+	public String xiumiIndex(){
+		return "/admin/article/xiumi";
+	}
 
 }
