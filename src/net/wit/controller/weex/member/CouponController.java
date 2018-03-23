@@ -143,6 +143,11 @@ public class CouponController extends BaseController {
         }
         entity.setName(s);
 
+        if (atveType==null) {
+            atveType = 0L;
+            atveMinPrice = BigDecimal.ZERO;
+            atveAmount = 0L;
+        }
         Map<String,Object> activity = new HashMap<String,Object>();
         activity.put("type",atveType);
         activity.put("min",atveMinPrice);
