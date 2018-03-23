@@ -456,22 +456,22 @@ public class CardController extends BaseController {
                 data.put("status", "unclaimed");
             } else {
                 data.put("status", "activate");
+                Ticket ticket = WeixinApi.getWxCardTicket();
+                if (ticket!=null) {
+                    HashMap<String, Object> params = new HashMap<>();
+                    params.put("api_ticket", ticket.getTicket());
+                    params.put("timestamp", WeiXinUtils.getTimeStamp());
+                    params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+                    params.put("card_id", card.getTopicCard().getWeixinCardId());
+                    String sha1Sign1 = getCardSha1Sign(params);
+                    HashMap<String, Object> cardExt = new HashMap<>();
+                    cardExt.put("timestamp", params.get("timestamp"));
+                    cardExt.put("nonce_str", params.get("nonce_str"));
+                    cardExt.put("signature", sha1Sign1);
+                    data.put("cardExt",cardExt);
+                }
+                data.put("cardId",card.getTopicCard().getWeixinCardId());
             }
-            Ticket ticket = WeixinApi.getWxCardTicket();
-            if (ticket!=null) {
-                HashMap<String, Object> params = new HashMap<>();
-                params.put("api_ticket", ticket.getTicket());
-                params.put("timestamp", WeiXinUtils.getTimeStamp());
-                params.put("nonce_str", WeiXinUtils.CreateNoncestr());
-                params.put("card_id", card.getTopicCard().getWeixinCardId());
-                String sha1Sign1 = getCardSha1Sign(params);
-                HashMap<String, Object> cardExt = new HashMap<>();
-                cardExt.put("timestamp", params.get("timestamp"));
-                cardExt.put("nonce_str", params.get("nonce_str"));
-                cardExt.put("signature", sha1Sign1);
-                data.put("cardExt",cardExt);
-            }
-            data.put("cardId",card.getTopicCard().getWeixinCardId());
         } else {
             data.put("status","none");
         }
