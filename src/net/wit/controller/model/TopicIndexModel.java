@@ -31,6 +31,10 @@ public class TopicIndexModel extends BaseModel implements Serializable {
     private Boolean useCoupon;
     /** 开通收银台 */
     private Boolean useCashier;
+    /** 模板id */
+    private Long templateId;
+    /** 模板名 */
+    private String templateName;
 
     public Long getId() {
         return id;
@@ -141,5 +145,14 @@ public class TopicIndexModel extends BaseModel implements Serializable {
 
         this.noJob = false;
         this.isOwner = false;
+
+        this.templateId = 0L;
+        this.templateName = "默认";
+
+        if (topic.getTemplate()!=null) {
+            this.templateId = topic.getTemplate().getId();
+            this.templateName = topic.getTemplate().getName();
+        }
+
     }
 }
