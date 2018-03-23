@@ -21,10 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -92,7 +89,14 @@ public class CouponCodeController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        return Message.bind(CouponCodeModel.bindList(member.getCouponCodes()),request);
+
+        List<CouponCode> models = new ArrayList<>();
+        for (CouponCode c:member.getCouponCodes()) {
+            if (c.getEnabled()) {
+                models.add(c);
+            }
+        }
+        return Message.bind(CouponCodeModel.bindList(models),request);
     }
 
     /**
