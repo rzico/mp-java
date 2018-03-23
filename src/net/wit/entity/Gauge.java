@@ -89,9 +89,9 @@ public class Gauge extends BaseEntity {
     private String thumbnail;
 
     /** 测评须知 */
-    @Length(max = 200)
-    @NotNull
-    @Column(columnDefinition="varchar(255) not null comment '测评须知'")
+    @Lob
+    @Column(columnDefinition="longtext comment '测评须知'")
+    @JsonIgnore
     private String notice;
 
     /** 修订收集*/
@@ -107,9 +107,9 @@ public class Gauge extends BaseEntity {
     private List<String> spots = new ArrayList<String>();
 
     /** 常模修订说明 */
-    @Length(max = 200)
-    @NotNull
-    @Column(columnDefinition="varchar(255) not null comment '常模修订说明'")
+    @Lob
+    @Column(columnDefinition="longtext comment '常模修订说明'")
+    @JsonIgnore
     private String revisionNote;
 
     /** 测评人数 */
