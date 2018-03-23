@@ -43,6 +43,8 @@ public class CouponModel extends BaseModel implements Serializable {
     private String goodsName;
     /**  id  */
     private Long goodsId;
+    /**  ownerId  */
+    private Long ownerId;
 
     public Long getId() {
         return id;
@@ -164,6 +166,14 @@ public class CouponModel extends BaseModel implements Serializable {
         this.goodsId = goodsId;
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
     public void bind(Coupon coupon) {
         this.id = coupon.getId();
         this.color = coupon.getColor();
@@ -190,6 +200,7 @@ public class CouponModel extends BaseModel implements Serializable {
         } else {
             this.shopName = "来自平台优惠券";
         }
+        this.ownerId = coupon.getDistributor().getId();
     }
 
     public static List<CouponModel> bindList(List<Coupon> coupons) {
