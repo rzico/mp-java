@@ -12,8 +12,8 @@ import java.math.BigDecimal;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "nt_game")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "nt_game_sequence")
+@Table(name = "gm_game")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "gm_game_sequence")
 public class Game extends BaseEntity {
 
 	private static final long serialVersionUID = 49L;
