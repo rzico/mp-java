@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
+import net.wit.entity.Tag;
 import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
@@ -162,6 +163,12 @@ public class ArticleModel extends BaseModel implements Serializable {
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();
+        this.articleOption.setIsTop(false);
+        for (Tag tag:article.getTags()) {
+           if (tag.getId().equals(6L)) {
+               this.articleOption.setIsTop(true);
+           }
+        }
 
     }
 

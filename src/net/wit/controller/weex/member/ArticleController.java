@@ -79,6 +79,9 @@ public class ArticleController extends BaseController {
     @Resource(name = "goodsServiceImpl")
     private GoodsService goodsService;
 
+    @Resource(name = "tagServiceImpl")
+    private TagService tagService;
+
     @Resource(name = "weixinUpServiceImpl")
     private WeixinUpService weixinUpService;
 
@@ -294,7 +297,16 @@ public class ArticleController extends BaseController {
             edited = true;
         }
         if (isTop!=null) {
-            article.setIsTop(isTop);
+            Tag tag = tagService.find(6L);
+            if (isTop) {
+                if (!article.getTags().contains(tag)) {
+                    article.getTags().add(tag);
+                }
+            } else {
+                if (article.getTags().contains(tag)) {
+                    article.getTags().remove(tag);
+                }
+            }
             edited = true;
         }
         if (!edited) {

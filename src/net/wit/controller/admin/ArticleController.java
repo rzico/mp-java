@@ -103,8 +103,6 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
-
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/list";
