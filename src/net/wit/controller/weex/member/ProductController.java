@@ -58,6 +58,8 @@ public class ProductController extends BaseController {
 	@Resource(name = "productCategoryServiceImpl")
 	private ProductCategoryService productCategoryService;
 
+	@Resource(name = "articleServiceImpl")
+	private ArticleService articleService;
 
 	/**
 	 * 检查编号是否唯一
@@ -191,6 +193,22 @@ public class ProductController extends BaseController {
 		GoodsModel model =new GoodsModel();
 		model.bind(goods);
 		return Message.bind(model,request);
+	}
+
+	/**
+	 * 文章详情
+	 */
+	@RequestMapping(value = "/article", method = RequestMethod.GET)
+	public @ResponseBody
+	Message article(Long id,HttpServletRequest request) {
+		Goods goods = goodsService.find(id);
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("goods", Filter.Operator.eq,goods));
+		List<Article> art = articleService.findList(null,null,filters,null);
+		if (art.size()==0) {
+			return Message.success((Object) 0L,"获取成功");
+		}
+		return Message.success((Object) art.get(0).getId(),"获取成功");
 	}
 
 	/**

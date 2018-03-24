@@ -74,6 +74,42 @@ public class CardController extends BaseController {
     @Resource(name = "bankcardServiceImpl")
     private BankcardService bankcardService;
 
+    @Resource(name = "cardPointBillServiceImpl")
+    private CardPointBillService cardPointBillService;
+
+    /**
+     *   获取会员卡
+     */
+    @RequestMapping(value = "check")
+    @ResponseBody
+    public Message check(Long authorId,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Member owner = memberService.find(authorId);
+        if (owner==null) {
+            return Message.error("无效商家id");
+        }
+        Card card = member.card(owner);
+        Map<String,Object> data = new HashMap<String,Object>();
+        if (card==null) {
+            data.put("status", "none");
+        } else {
+            data.put("status", card.getStatus());
+            CardModel model = new CardModel();
+            model.bind(card);
+            data.put("card", model);
+
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            int challege = StringUtils.Random6Code();
+            card.setSign(String.valueOf(challege));
+            cardService.update(card);
+            data.put("payCode", "http://" + bundle.getString("weixin.url") + "/q/818802" + card.getCode() + String.valueOf(challege) + ".jhtml");
+        }
+        return Message.bind(data,request);
+    }
+
     /**
      *   获取会员卡
      */
@@ -213,7 +249,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,HttpServletRequest request){
+    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,Long promoterId,Card.Type type,BigDecimal bonus,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -248,7 +284,12 @@ public class CardController extends BaseController {
             }
             card.setShop(shop);
         }
-
+        if (bonus!=null) {
+            card.setBonus(bonus);
+        }
+        if (type!=null) {
+            card.setType(type);
+        }
         cardService.update(card);
         return Message.success("更新成功");
     }
@@ -496,7 +537,7 @@ public class CardController extends BaseController {
             return Message.error("没有开通店铺");
         }
         if (admin.getEnterprise()==null) {
-            return Message.error("店铺已打洋,请先启APP");
+            return Message.error("店铺已打洋");
         }
         Member owner = enterprise.getMember();
         if (owner.getTopic()==null) {
@@ -555,6 +596,22 @@ public class CardController extends BaseController {
         Page<CardBill> page = cardBillService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(CardBillModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+    /**
+     *  账单记录
+     */
+    @RequestMapping(value = "/point_bill", method = RequestMethod.GET)
+    @ResponseBody
+    public Message pointBill(Long id,Pageable pageable, HttpServletRequest request){
+        Card card = cardService.find(id);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        pageable.setFilters(filters);
+        Page<CardPointBill> page = cardPointBillService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(CardPointBillModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

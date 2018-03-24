@@ -97,7 +97,7 @@ public class DistributionController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(String name, BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point,  Integer orders, HttpServletRequest request){
+    public Message add(String name, BigDecimal dividend,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point,  Integer orders, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -134,6 +134,12 @@ public class DistributionController extends BaseController {
             catalog.setPoint(BigDecimal.ZERO);
         }
 
+        if (dividend!=null) {
+            catalog.setDividend(dividend);
+        } else {
+            catalog.setDividend(BigDecimal.ZERO);
+        }
+
         distributionService.save(catalog);
 
         DistributionModel model = new DistributionModel();
@@ -146,7 +152,7 @@ public class DistributionController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,String name,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point, Integer orders,HttpServletRequest request){
+    public Message update(Long id,String name,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point,BigDecimal dividend, Integer orders,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -187,6 +193,12 @@ public class DistributionController extends BaseController {
             catalog.setPoint(point);
         } else {
             catalog.setPoint(BigDecimal.ZERO);
+        }
+
+        if (dividend!=null) {
+            catalog.setDividend(dividend);
+        } else {
+            catalog.setDividend(BigDecimal.ZERO);
         }
 
         distributionService.save(catalog);

@@ -8,6 +8,7 @@ import net.wit.controller.model.CouponCodeModel;
 import net.wit.controller.model.CouponModel;
 import net.wit.entity.*;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -58,6 +61,9 @@ public class CouponController extends BaseController {
     @Resource(name = "couponCodeServiceImpl")
     private CouponCodeService couponCodeService;
 
+    @Resource(name = "goodsServiceImpl")
+    private GoodsService goodsService;
+
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
@@ -66,7 +72,7 @@ public class CouponController extends BaseController {
      */
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(Coupon coupon, HttpServletRequest request){
+    public Message submit(Coupon coupon,Long atveType,BigDecimal atveMinPrice,Long atveAmount, Long goodsId, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -81,6 +87,7 @@ public class CouponController extends BaseController {
         if (admin.getEnterprise()==null) {
             return Message.error("店铺已打洋,请先启APP");
         }
+
         Enterprise enterprise = admin.getEnterprise();
         Member owner = enterprise.getMember();
         Coupon entity = null;
@@ -122,7 +129,31 @@ public class CouponController extends BaseController {
                 s = "满" + nf.format(coupon.getMinimumPrice()) + "元打" + nf.format(coupon.getAmount()) + "折";
             }
         }
+        if (coupon.getType().equals(Coupon.Type.exchange)) {
+            if (goodsId==null) {
+                return Message.error("无效商品 id");
+            }
+            Goods goods = goodsService.find(goodsId);
+            if (goods==null) {
+                return Message.error("无效商品 id");
+            }
+            entity.setGoods(goods);
+            s = goods.product().getName();
+            entity.setAmount(BigDecimal.ZERO);
+        }
         entity.setName(s);
+
+        if (atveType==null) {
+            atveType = 0L;
+            atveMinPrice = BigDecimal.ZERO;
+            atveAmount = 0L;
+        }
+        Map<String,Object> activity = new HashMap<String,Object>();
+        activity.put("type",atveType);
+        activity.put("min",atveMinPrice);
+        activity.put("amount",atveAmount);
+        entity.setActivity(JsonUtils.toJson(activity));
+
         if (isNew) {
             couponService.save(entity);
         } else {

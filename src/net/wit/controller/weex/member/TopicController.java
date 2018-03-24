@@ -99,6 +99,8 @@ public class TopicController extends BaseController {
                 config.setUseCashier(false);
                 config.setUseCoupon(false);
                 config.setPromoterType(TopicConfig.PromoterType.any);
+                config.setPattern(TopicConfig.Pattern.pattern1);
+                config.setAmount(BigDecimal.ZERO);
             }
             topic.setConfig(config);
             Calendar calendar   =   new GregorianCalendar();
@@ -181,7 +183,7 @@ public class TopicController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message submit(String name,String logo,Long categoryId,Long areaId,String address,Long templateId,Boolean useCoupon,Boolean useCard,Boolean useCashier,TopicConfig.PromoterType promoterType,HttpServletRequest request){
+    public Message submit(String name,String logo,Long categoryId,Long areaId,String address,Long templateId,Boolean useCoupon,Boolean useCard,Boolean useCashier,TopicConfig.PromoterType promoterType,TopicConfig.Pattern pattern,BigDecimal amount,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -231,6 +233,8 @@ public class TopicController extends BaseController {
             config.setUseCard(false);
             config.setUseCashier(false);
             config.setUseCoupon(false);
+            config.setPattern(TopicConfig.Pattern.pattern1);
+            config.setAmount(BigDecimal.ZERO);
             config.setPromoterType(TopicConfig.PromoterType.any);
         }
         if (useCard!=null) {
@@ -266,6 +270,12 @@ public class TopicController extends BaseController {
         if (promoterType!=null) {
             config.setPromoterType(promoterType);
         }
+        if (pattern!=null) {
+            config.setPattern(pattern);
+        }
+        if (amount!=null) {
+            config.setAmount(amount);
+        }
         topic.setConfig(config);
         topicService.update(topic);
         return Message.success("修改成功");
@@ -278,7 +288,7 @@ public class TopicController extends BaseController {
      */
     @RequestMapping(value = "/owner", method = RequestMethod.GET)
     @ResponseBody
-    public Message ower(HttpServletRequest request){
+    public Message owner(HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);

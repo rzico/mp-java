@@ -76,6 +76,12 @@ public class ArticleController extends BaseController {
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
+    @Resource(name = "goodsServiceImpl")
+    private GoodsService goodsService;
+
+    @Resource(name = "tagServiceImpl")
+    private TagService tagService;
+
     @Resource(name = "weixinUpServiceImpl")
     private WeixinUpService weixinUpService;
 
@@ -149,7 +155,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(String body, HttpServletRequest request) {
+    public Message submit(String body,Long goodsId, HttpServletRequest request) {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -211,6 +217,9 @@ public class ArticleController extends BaseController {
         article.setMediaType(Article.MediaType.image);
 
         if (isNew) {
+            if (goodsId!=null) {
+                article.setGoods(goodsService.find(goodsId));
+            }
             articleService.save(article);
         } else {
             articleService.update(article);
@@ -288,7 +297,16 @@ public class ArticleController extends BaseController {
             edited = true;
         }
         if (isTop!=null) {
-            article.setIsTop(isTop);
+            Tag tag = tagService.find(6L);
+            if (isTop) {
+                if (!article.getTags().contains(tag)) {
+                    article.getTags().add(tag);
+                }
+            } else {
+                if (article.getTags().contains(tag)) {
+                    article.getTags().remove(tag);
+                }
+            }
             edited = true;
         }
         if (!edited) {

@@ -18,7 +18,7 @@ import net.wit.entity.*;
 public interface CardService extends BaseService<Card, Long> {
 	Page<Card> findPage(Date beginDate,Date endDate, Pageable pageable);
 
-	public Card activate(Card card,Member member);
+	public Card activate(Card card,Member member,Member promoter);
 
 	public Card find(String code);
 
@@ -27,7 +27,7 @@ public interface CardService extends BaseService<Card, Long> {
 	public Card create(TopicCard topicCard,Shop shop, String code,Member member);
 
 	//分销关系，创建并激活会员卡
-	public Card createAndActivate(Member member,Member owner,Member promoter);
+	public Card createAndActivate(Member member,Member owner,Member promoter,BigDecimal amount,BigDecimal distAmount);
 
 	//支付插件专用方法
 	public void payment(Card card,Payment payment) throws Exception;

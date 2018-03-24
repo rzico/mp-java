@@ -59,6 +59,16 @@
 			</select>
         </span>
 		[/#if]
+    [#if tags??]
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="tagIds" class="select" style="background-color: #FFFFFF;">
+				<option value="">标签</option>
+                [#list tags as tag]
+                    <option value="${tag.id}">${tag.name}</option>
+                [/#list]
+			</select>
+        </span>
+    [/#if]
 
         <input type="text" class="input-text" style="width:250px;height:32px;" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
@@ -405,7 +415,8 @@
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>" +
+                                    "<a title='预览' href='javascript:;' onclick=\"show('" + data + "','articleview.jhtml?id="+data+"','"+data+"','360','640')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe695;</i></a>";
                         }else{
                             return "";
                         }
@@ -424,17 +435,19 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 16,17, 20]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 5, 16, 17, 19, 20, 21]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
+//                alert(_searchValue);
                 /*处理常量*/
                 var _authority =  $('select[name="authority"]').val();
                 var _mediaType =  $('select[name="mediaType"]').val();
                 var _titleType =  $('select[name="titleType"]').val();
+                var _tagIds =  $('select[name="tagIds"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -448,6 +461,7 @@
                         "authority":_authority,
                         "mediaType":_mediaType,
                         "titleType":_titleType,
+                        "tagIds":_tagIds,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
