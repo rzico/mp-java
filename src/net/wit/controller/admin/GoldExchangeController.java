@@ -64,7 +64,7 @@ public class GoldExchangeController extends BaseController {
 		statuss.add(new MapEntity("failure","支付失败"));
 		model.addAttribute("statuss",statuss);
 
-		return "/admin/gmGoldExchange/list";
+		return "/admin/goldExchange/list";
 	}
 
 
