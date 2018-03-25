@@ -13,6 +13,14 @@
                     <li><a data-href="../transfer/index.jhtml" data-title="提现管理" href="javascript:;">提现管理</a></li>
                 </ul>
             </dd>
+            <dt><i class="Hui-iconfont">&#xe60d;</i> 金币管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a data-href="../goldProduct/index.jhtml" data-title="金币管理" href="javascript:;">金币管理</a></li>
+                    <li><a data-href="../goldBuy/index.jhtml" data-title="金币充值" href="javascript:;">金币充值</a></li>
+                    <li><a data-href="../goldExchange/index.jhtml" data-title="金币兑换" href="javascript:;">金币兑换</a></li>
+                </ul>
+            </dd>
             <dt><i class="Hui-iconfont">&#xe60d;</i> 客户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
