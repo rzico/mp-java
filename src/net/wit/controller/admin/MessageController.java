@@ -94,10 +94,6 @@ public class MessageController extends BaseController {
 		types.add(new MapEntity("favorite","收藏提醒"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("receivers",memberService.findAll());
-
 		return "/admin/message/add";
 	}
 
@@ -187,10 +183,6 @@ public class MessageController extends BaseController {
 		types.add(new MapEntity("follow","关注提醒"));
 		types.add(new MapEntity("favorite","收藏提醒"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("receivers",memberService.findAll());
 
 		model.addAttribute("data",messageService.find(id));
 

@@ -65,10 +65,6 @@ public class ReceiverController extends BaseController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
 
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
 		return "/admin/receiver/list";
 	}
 
@@ -79,9 +75,6 @@ public class ReceiverController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
 
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
 
 		return "/admin/receiver/add";
 	}
@@ -149,10 +142,6 @@ public class ReceiverController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
-
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("data",receiverService.find(id));
 
