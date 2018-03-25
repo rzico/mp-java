@@ -1,13 +1,17 @@
 package net.wit.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 
 import net.wit.Page;
 import net.wit.Pageable;
 
-import net.wit.entity.GoldBuy;
+import net.wit.dao.GoldDao;
+import net.wit.dao.MemberDao;
+import net.wit.entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,12 @@ import net.wit.service.GoldBuyService;
 public class GoldBuyServiceImpl extends BaseServiceImpl<GoldBuy, Long> implements GoldBuyService {
 	@Resource(name = "goldBuyDaoImpl")
 	private GoldBuyDao goldBuyDao;
+
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
+	@Resource(name = "goldDaoImpl")
+	private GoldDao goldDao;
 
 	@Resource(name = "goldBuyDaoImpl")
 	public void setBaseDao(GoldBuyDao goldBuyDao) {
@@ -76,4 +86,33 @@ public class GoldBuyServiceImpl extends BaseServiceImpl<GoldBuy, Long> implement
 	public Page<GoldBuy> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return goldBuyDao.findPage(beginDate,endDate,pageable);
 	}
+
+
+	@Transactional
+	public synchronized Boolean submit(GoldBuy goldBuy) throws Exception {
+		Member member = goldBuy.getMember();
+		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+		try {
+			goldBuy.setStatus(GoldBuy.Status.success);
+			goldBuyDao.persist(goldBuy);
+			member.setPoint(member.getPoint()+goldBuy.getGold());
+			memberDao.merge(member);
+			Gold deposit = new Gold();
+			deposit.setBalance(member.getPoint());
+			deposit.setType(Gold.Type.recharge);
+			deposit.setMemo(goldBuy.getMemo());
+			deposit.setMember(member);
+			deposit.setCredit(goldBuy.getGold());
+			deposit.setDebit(0L);
+			deposit.setDeleted(false);
+			deposit.setOperator("system");
+			deposit.setBoldBuy(goldBuy);
+			goldDao.persist(deposit);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			throw new RuntimeException("提交出错了");
+		}
+		return true;
+	}
+
 }

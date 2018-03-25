@@ -31,7 +31,6 @@ public class Game extends BaseEntity {
 
 	}
 
-
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '会员'")
@@ -49,13 +48,13 @@ public class Game extends BaseEntity {
 	@Column(columnDefinition="varchar(255) not null comment '局号'")
 	private String roundNo;
 
-	/** 支出金额 */
-	@Column(columnDefinition="decimal(21,6) not null comment '支出金额'")
-	private BigDecimal debit;
+	/** 投注数量 */
+	@Column(columnDefinition="decimal(21,6) not null comment '投注数量'")
+	private Long debit;
 
-	/** 收入金额 */
-	@Column(columnDefinition="decimal(21,6) not null comment '收入金额'")
-	private BigDecimal credit;
+	/** 收益数量 */
+	@Column(columnDefinition="decimal(21,6) not null comment '收益数量'")
+	private Long credit;
 
 	/** 状态 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '状态'")
@@ -98,19 +97,19 @@ public class Game extends BaseEntity {
 		this.roundNo = roundNo;
 	}
 
-	public BigDecimal getDebit() {
+	public Long getDebit() {
 		return debit;
 	}
 
-	public void setDebit(BigDecimal debit) {
+	public void setDebit(Long debit) {
 		this.debit = debit;
 	}
 
-	public BigDecimal getCredit() {
+	public Long getCredit() {
 		return credit;
 	}
 
-	public void setCredit(BigDecimal credit) {
+	public void setCredit(Long credit) {
 		this.credit = credit;
 	}
 

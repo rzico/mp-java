@@ -117,7 +117,7 @@ public class NihtanController extends BaseController {
             JSONObject jsonObject = JSONObject.fromObject(json);
             Member member = memberService.findByUsername(jsonObject.getString("user_id"));
             if (member!=null) {
-                model.addAttribute("notifyMessage",member.getBalance().setScale(0,BigDecimal.ROUND_FLOOR).longValue());
+                model.addAttribute("notifyMessage",member.getPoint());
             } else {
                 model.addAttribute("notifyMessage",0);
             }
@@ -150,8 +150,8 @@ public class NihtanController extends BaseController {
                 if (jsonObject.containsKey("round_id")) {
                     game.setRoundNo(jsonObject.getString("round_id"));
                 }
-                game.setDebit(new BigDecimal(jsonObject.getString("amount")));
-                game.setCredit(BigDecimal.ZERO);
+                game.setDebit(new Long(jsonObject.getString("amount")));
+                game.setCredit(0L);
                 game.setMember(member);
                 game.setStatus(Game.Status.transaction);
                 game.setMemo(game.getGame());
@@ -171,13 +171,7 @@ public class NihtanController extends BaseController {
                 data.put("status","error");
                 data.put("credits","0");
             }
-//        } else {
-//            data.put("code","500");
-//            data.put("status","error");
-//            data.put("credits","0");
-//        }
         model.addAttribute("notifyMessage",JsonUtils.toJson(data));
-//        System.out.println(JsonUtils.toJson(data));
         return "common/notify";
     }
 
@@ -186,11 +180,8 @@ public class NihtanController extends BaseController {
      */
     @RequestMapping(value = "/history")
     public String history(String hash,HttpServletRequest request,ModelMap model){
-//        System.out.println("history");
         String json = WebUtils.getBodyParams(request);
-//        System.out.println(json);
         Map<String,String> data = new HashMap<>();
-//        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
         JSONObject jsonObject = JSONObject.fromObject(json);
         String game = jsonObject.getString("game");
         String table = jsonObject.getString("table");
@@ -205,7 +196,7 @@ public class NihtanController extends BaseController {
         for (int i = 0 ; i<datas.size(); i++) {
             JSONObject user = datas.getJSONObject(i);
             String user_id = user.getString("user_id");
-            BigDecimal win_money = new BigDecimal(user.getString("total_win"));
+            Long win_money = new Long(user.getString("total_win"));
             Member member = memberService.findByUsername(user_id);
             if (member!=null) {
                 Game gameData = gameService.find(member,game,table,round_no);
@@ -232,36 +223,7 @@ public class NihtanController extends BaseController {
                 data.put("credits", "0");
             }
         }
-//            Member member = memberService.findByUsername(params.get("user_id"));
-//            if (member!=null) {
-//                Game game = gameService.find(params.get("game"),params.get("table"),params.get("round_no"));
-//                game.setCredit(game.getDebit());
-//
-//                try {
-//                    gameService.history(game);
-//                    data.put("code","200");
-//                    data.put("status","ok");
-//                    data.put("credits",params.get("amount"));
-//                } catch (Exception e) {
-//                    data.put("code","500");
-//                    data.put("status",e.getMessage());
-//                    data.put("credits","0");
-//                }
-//            } else {
-//                data.put("code","500");
-//                data.put("status","error");
-//                data.put("credits","0");
-//            }
-//        } else {
-//            data.put("code","500");
-//            data.put("status","error");
-//            data.put("credits","0");
-//        }
-//                    data.put("code","200");
-//                    data.put("status","ok");
-//                    data.put("credits","0");
         model.addAttribute("notifyMessage",JsonUtils.toJson(data));
-//        System.out.println(JsonUtils.toJson(data));
         return "common/notify";
     }
 

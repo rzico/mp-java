@@ -46,26 +46,21 @@ public class Gold extends BaseEntity {
 	@Column(columnDefinition="int(11) not null comment '类型 {recharge:充值,transfer:支付,transaction:退款,history:收益,reward:打赏}'")
 	private Type type;
 
-	/** 收入金额 */
-	@Column(columnDefinition="decimal(21,6) not null comment '收入金额'")
-	private BigDecimal credit;
+	/** 收入 */
+	@Column(columnDefinition="bigint(20) not null comment '收入'")
+	private Long credit;
 
-	/** 支出金额 */
-	@Column(columnDefinition="decimal(21,6) not null comment '支出金额'")
-	private BigDecimal debit;
+	/** 支出 */
+	@Column(columnDefinition="bigint(20) not null comment '支出'")
+	private Long debit;
 
 	/** 当前余额 */
-	@Column(columnDefinition="decimal(21,6) not null comment '当前余额'")
-	private BigDecimal balance;
+	@Column(columnDefinition="bigint(20) not null comment '当前余额'")
+	private Long balance;
 
 	/** 操作员 */
 	@Column(columnDefinition="varchar(255) comment '操作员'")
 	private String operator;
-
-	/** 游戏 */
-	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) comment '游戏'")
-	private String game;
 
 	/** 备注 */
 	@Length(max = 200)
@@ -76,6 +71,22 @@ public class Gold extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
 	private Member member;
+
+
+	/** 充值 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '充值'")
+	private GoldBuy boldBuy;
+
+	/** 提现 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '提现'")
+	private GoldExchange goldExchange;
+
+	/** 游戏 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '游戏'")
+	private Game game;
 
 	/** 是否删除 */
 	@NotNull
@@ -90,29 +101,6 @@ public class Gold extends BaseEntity {
 		this.type = type;
 	}
 
-	public BigDecimal getCredit() {
-		return credit;
-	}
-
-	public void setCredit(BigDecimal credit) {
-		this.credit = credit;
-	}
-
-	public BigDecimal getDebit() {
-		return debit;
-	}
-
-	public void setDebit(BigDecimal debit) {
-		this.debit = debit;
-	}
-
-	public BigDecimal getBalance() {
-		return balance;
-	}
-
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
 
 	public String getOperator() {
 		return operator;
@@ -146,11 +134,51 @@ public class Gold extends BaseEntity {
 		this.deleted = deleted;
 	}
 
-	public String getGame() {
+	public Long getCredit() {
+		return credit;
+	}
+
+	public void setCredit(Long credit) {
+		this.credit = credit;
+	}
+
+	public Long getDebit() {
+		return debit;
+	}
+
+	public void setDebit(Long debit) {
+		this.debit = debit;
+	}
+
+	public Long getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Long balance) {
+		this.balance = balance;
+	}
+
+	public GoldBuy getBoldBuy() {
+		return boldBuy;
+	}
+
+	public void setBoldBuy(GoldBuy boldBuy) {
+		this.boldBuy = boldBuy;
+	}
+
+	public GoldExchange getGoldExchange() {
+		return goldExchange;
+	}
+
+	public void setGoldExchange(GoldExchange goldExchange) {
+		this.goldExchange = goldExchange;
+	}
+
+	public Game getGame() {
 		return game;
 	}
 
-	public void setGame(String game) {
+	public void setGame(Game game) {
 		this.game = game;
 	}
 }

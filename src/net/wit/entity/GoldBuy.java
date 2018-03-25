@@ -40,8 +40,8 @@ public class GoldBuy extends BaseEntity {
 	private BigDecimal  amount;
 
 	/** 充值金币 */
-	@Column(columnDefinition="decimal(21,6) not null comment '充值金币'")
-	private BigDecimal  gold;
+	@Column(columnDefinition="bigint(20) not null comment '充值金币'")
+	private Long  gold;
 
 	/** 操作员 */
 	@Column(columnDefinition="varchar(255) comment '操作员'")
@@ -78,11 +78,11 @@ public class GoldBuy extends BaseEntity {
 		this.amount = amount;
 	}
 
-	public BigDecimal getGold() {
+	public Long getGold() {
 		return gold;
 	}
 
-	public void setGold(BigDecimal gold) {
+	public void setGold(Long gold) {
 		this.gold = gold;
 	}
 
