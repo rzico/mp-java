@@ -1,0 +1,17 @@
+1、 "/app/product/vedioProductList.jhtml?videoRoomId=" + videoRoomId
+2、/app/member/cash/gold.jhtml 获取用户余额
+3、/app/live/favoriteAnchor.jhtml 关注主播
+4、"/wap/product/findAllSpecByMainId.jhtml?mainProductId="+item.id 商品数据
+5、"/app/cart/list.jhtml”购物车商品
+6、"/app/product/vedioProductList.jhtml?videoRoomId=" 商品列表
+7、"/app/member/message/view.jhtml?id=" 消息详情
+8、"/app/member/couponCode/list.jhtml" 优惠券
+9、"/app/member/view.jhtml" 用户信息
+10、"/app/live/getOnAirList.jhtml”获取主播列表
+11、"/app/live/isAnchor.jhtml?anchorId="+id 是否是主播
+12、 "/app/live/getlatelyLive.jhtml?roomNum="+roomnum 获取上一次直播
+13、 "/app/live/getLiveVideoRoomInfo.jhtml?memberId="+menberid 获取主播信息
+14、  "/app/live/createLiveVideo.jhtml" 创建直播房间
+15、 "/app/live/closeLiveVideo.jhtml" 退出直播
+16、  "/app/member/order/getPaymentMethods.jhtml" 获取支付
+17、 "/app/token-login.jhtml" 登录接口
