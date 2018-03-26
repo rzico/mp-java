@@ -1,21 +1,15 @@
 package net.wit.controller.weex.member;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.DepositModel;
-import net.wit.controller.model.GameListModel;
 import net.wit.controller.model.GoldModel;
+import net.wit.controller.model.GoldProductModel;
 import net.wit.entity.*;
-import net.wit.entity.summary.DepositSummary;
 import net.wit.entity.summary.NihtanDepositSummary;
-import net.wit.plat.nihtan.Kaga;
 import net.wit.service.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -56,6 +50,18 @@ public class GoldController extends BaseController {
 
     @Resource(name = "goldProductServiceImpl")
     private GoldProductService goldProductService;
+
+    /**
+     * 金币商品
+     */
+    @RequestMapping(value = "/product", method = RequestMethod.GET)
+    @ResponseBody
+    public Message product(Date billDate, Pageable pageable, HttpServletRequest request) {
+        Page<GoldProduct> page = goldProductService.findPage(null, null, pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(GoldProductModel.bindList(page.getContent()));
+        return Message.bind(model, request);
+    }
 
     /**
      * 我的账单

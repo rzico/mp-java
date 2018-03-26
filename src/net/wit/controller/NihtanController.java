@@ -150,7 +150,8 @@ public class NihtanController extends BaseController {
                 if (jsonObject.containsKey("round_id")) {
                     game.setRoundNo(jsonObject.getString("round_id"));
                 }
-                game.setDebit(new Long(jsonObject.getString("amount")));
+                Double amount = jsonObject.getDouble("amount");
+                game.setDebit(new Long(Math.round(amount)));
                 game.setCredit(0L);
                 game.setMember(member);
                 game.setStatus(Game.Status.transaction);
@@ -196,7 +197,8 @@ public class NihtanController extends BaseController {
         for (int i = 0 ; i<datas.size(); i++) {
             JSONObject user = datas.getJSONObject(i);
             String user_id = user.getString("user_id");
-            Long win_money = new Long(user.getString("total_win"));
+            Double amount = jsonObject.getDouble("total_win");
+            Long win_money = new Long(Math.round(amount));
             Member member = memberService.findByUsername(user_id);
             if (member!=null) {
                 Game gameData = gameService.find(member,game,table,round_no);
