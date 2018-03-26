@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.GoldBuy;
 import net.wit.entity.GoldExchange;
 
 /**
@@ -17,4 +18,5 @@ import net.wit.entity.GoldExchange;
 
 public interface GoldExchangeService extends BaseService<GoldExchange, Long> {
 	Page<GoldExchange> findPage(Date beginDate, Date endDate, Pageable pageable);
+	public Boolean submit(GoldExchange goldExchange) throws Exception;
 }

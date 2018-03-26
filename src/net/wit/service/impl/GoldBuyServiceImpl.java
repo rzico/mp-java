@@ -9,6 +9,7 @@ import javax.persistence.LockModeType;
 import net.wit.Page;
 import net.wit.Pageable;
 
+import net.wit.dao.DepositDao;
 import net.wit.dao.GoldDao;
 import net.wit.dao.MemberDao;
 import net.wit.entity.*;
@@ -35,6 +36,9 @@ public class GoldBuyServiceImpl extends BaseServiceImpl<GoldBuy, Long> implement
 
 	@Resource(name = "goldDaoImpl")
 	private GoldDao goldDao;
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
 
 	@Resource(name = "goldBuyDaoImpl")
 	public void setBaseDao(GoldBuyDao goldBuyDao) {
@@ -93,21 +97,39 @@ public class GoldBuyServiceImpl extends BaseServiceImpl<GoldBuy, Long> implement
 		Member member = goldBuy.getMember();
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 		try {
-			goldBuy.setStatus(GoldBuy.Status.success);
-			goldBuyDao.persist(goldBuy);
+			member.setBalance(member.getBalance().subtract(goldBuy.getAmount()));
+			if (member.getBalance().compareTo(BigDecimal.ZERO)<0) {
+				throw new RuntimeException("余额不足");
+			}
+
 			member.setPoint(member.getPoint()+goldBuy.getGold());
 			memberDao.merge(member);
-			Gold deposit = new Gold();
-			deposit.setBalance(member.getPoint());
-			deposit.setType(Gold.Type.recharge);
+
+			goldBuy.setStatus(GoldBuy.Status.success);
+			goldBuyDao.persist(goldBuy);
+
+			Deposit deposit = new Deposit();
+			deposit.setBalance(member.getBalance());
+			deposit.setType(Deposit.Type.payment);
 			deposit.setMemo(goldBuy.getMemo());
 			deposit.setMember(member);
-			deposit.setCredit(goldBuy.getGold());
-			deposit.setDebit(0L);
+			deposit.setCredit(BigDecimal.ZERO);
+			deposit.setDebit(goldBuy.getAmount());
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
-			deposit.setBoldBuy(goldBuy);
-			goldDao.persist(deposit);
+			depositDao.persist(deposit);
+
+			Gold gold = new Gold();
+			gold.setBalance(member.getPoint());
+			gold.setType(Gold.Type.recharge);
+			gold.setMemo(goldBuy.getMemo());
+			gold.setMember(member);
+			gold.setCredit(goldBuy.getGold());
+			gold.setDebit(0L);
+			gold.setDeleted(false);
+			gold.setOperator("system");
+			gold.setBoldBuy(goldBuy);
+			goldDao.persist(gold);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			throw new RuntimeException("提交出错了");

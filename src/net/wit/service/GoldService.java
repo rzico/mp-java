@@ -8,6 +8,9 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Gold;
+import net.wit.entity.Member;
+import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.NihtanDepositSummary;
 
 /**
  * @ClassName: GmGoldService
@@ -17,4 +20,7 @@ import net.wit.entity.Gold;
 
 public interface GoldService extends BaseService<Gold, Long> {
 	Page<Gold> findPage(Date beginDate, Date endDate, Pageable pageable);
+	/**
+	 */
+	List<NihtanDepositSummary> sumPage(Member member, Date beginDate, Date endDate);
 }

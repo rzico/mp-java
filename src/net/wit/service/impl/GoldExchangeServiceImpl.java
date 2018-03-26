@@ -1,5 +1,6 @@
 package net.wit.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -8,12 +9,10 @@ import javax.persistence.LockModeType;
 import net.wit.Page;
 import net.wit.Pageable;
 
+import net.wit.dao.DepositDao;
 import net.wit.dao.GoldDao;
 import net.wit.dao.MemberDao;
-import net.wit.entity.Gold;
-import net.wit.entity.GoldBuy;
-import net.wit.entity.GoldExchange;
-import net.wit.entity.Member;
+import net.wit.entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +36,9 @@ public class GoldExchangeServiceImpl extends BaseServiceImpl<GoldExchange, Long>
 
 	@Resource(name = "goldDaoImpl")
 	private GoldDao goldDao;
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
 
 	@Resource(name = "goldExchangeDaoImpl")
 	public void setBaseDao(GoldExchangeDao goldExchangeDao) {
@@ -95,21 +97,39 @@ public class GoldExchangeServiceImpl extends BaseServiceImpl<GoldExchange, Long>
 		Member member = goldExchange.getMember();
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 		try {
+			if (member.getPoint()<goldExchange.getGold()) {
+				throw new RuntimeException("金币余额不足");
+			}
+
 			goldExchange.setStatus(GoldExchange.Status.success);
 			goldExchangeDao.persist(goldExchange);
 			member.setPoint(member.getPoint()-goldExchange.getGold());
+			member.setBalance(member.getBalance().add(goldExchange.getAmount()));
 			memberDao.merge(member);
-			Gold deposit = new Gold();
-			deposit.setBalance(member.getPoint());
-			deposit.setType(Gold.Type.exchange);
+
+			Gold gold = new Gold();
+			gold.setBalance(member.getPoint());
+			gold.setType(Gold.Type.exchange);
+			gold.setMemo(goldExchange.getMemo());
+			gold.setMember(member);
+			gold.setCredit(0L);
+			gold.setDebit(goldExchange.getGold());
+			gold.setDeleted(false);
+			gold.setOperator("system");
+			gold.setGoldExchange(goldExchange);
+			goldDao.persist(gold);
+
+			Deposit deposit = new Deposit();
+			deposit.setBalance(member.getBalance());
+			deposit.setType(Deposit.Type.product);
 			deposit.setMemo(goldExchange.getMemo());
 			deposit.setMember(member);
-			deposit.setCredit(0L);
-			deposit.setDebit(goldExchange.getGold());
+			deposit.setCredit(goldExchange.getAmount());
+			deposit.setDebit(BigDecimal.ZERO);
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
-			deposit.setGoldExchange(goldExchange);
-			goldDao.persist(deposit);
+			depositDao.persist(deposit);
+
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			throw new RuntimeException("提交出错了");

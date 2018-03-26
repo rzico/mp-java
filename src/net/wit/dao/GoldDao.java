@@ -8,6 +8,9 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Gold;
+import net.wit.entity.Member;
+import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.NihtanDepositSummary;
 
 
 /**
@@ -27,4 +30,7 @@ public interface GoldDao extends BaseDao<Gold, Long> {
 	 * @return Page<GmGold>
 	 */
 	Page<Gold> findPage(Date beginDate, Date endDate, Pageable pageable);
+	/**
+	 */
+	List<NihtanDepositSummary> sumPage(Member member, Date beginDate, Date endDate);
 }

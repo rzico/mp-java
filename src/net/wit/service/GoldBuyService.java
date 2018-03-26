@@ -7,7 +7,12 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Deposit;
+import net.wit.entity.Gold;
 import net.wit.entity.GoldBuy;
+import net.wit.entity.Member;
+
+import javax.persistence.LockModeType;
 
 /**
  * @ClassName: GoldBuyService
@@ -17,4 +22,5 @@ import net.wit.entity.GoldBuy;
 
 public interface GoldBuyService extends BaseService<GoldBuy, Long> {
 	Page<GoldBuy> findPage(Date beginDate, Date endDate, Pageable pageable);
+	public Boolean submit(GoldBuy goldBuy) throws Exception;
 }

@@ -1,6 +1,7 @@
 package net.wit.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -8,6 +9,9 @@ import net.wit.Page;
 import net.wit.Pageable;
 
 import net.wit.entity.Gold;
+import net.wit.entity.Member;
+import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.NihtanDepositSummary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,4 +80,9 @@ public class GoldServiceImpl extends BaseServiceImpl<Gold, Long> implements Gold
 	public Page<Gold> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return goldDao.findPage(beginDate,endDate,pageable);
 	}
+
+	public List<NihtanDepositSummary> sumPage(Member member, Date beginDate, Date endDate) {
+		return goldDao.sumPage(member,beginDate,endDate);
+	}
+
 }
