@@ -982,7 +982,7 @@ public class Member extends BaseEntity {
 	}
 
 	public BigDecimal effectiveBalance() {
-		return getBalance().subtract(getFreezeBalance());
+		return getBalance();
 	}
 
 	public String userId() {
