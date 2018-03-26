@@ -32,14 +32,22 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true">
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
+            <label class="form-label col-xs-4 col-sm-2"></label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="请输入手机号或邮箱" id="mobilemail" name="mobilemail" style="width:54%;">
+                <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
+                <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                    <i class="Hui-iconfont">&#xe665;</i> 查询
+                </button>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">金币数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="gold" name="gold">
             </div>
         </div>
 
@@ -50,41 +58,7 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">操作员：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="operator" name="operator">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if statuss??]
-                [#list statuss as status]
-                    <div class="radio-box">
-                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}">
-                        <label for="status-${status_index}">${status.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Member：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-        <div class="row cl">
+         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
@@ -166,6 +140,47 @@
                     }
                 });
             });
+
+
+            /* 搜索 */
+            function search(){
+                var url = "/admin/recharge/getMemberInfo.jhtml?phone="+$("#mobilemail").val();
+
+                layer.confirm("请确认手机号或是邮箱？",function(index){
+                    var load = layer.msg("查询中..",{
+                        icon:16,shade:0.01
+                    });
+                    $.ajax({
+                        type:'get',
+                        url:url,
+                        dataType:'json',
+                        success:function(data){
+                            layer.close(load);
+                            if(data.type == "success"){
+                                $.each(data.data, function (infoIndex, info){
+                                    if (info["id"] == "id"){
+                                        $("#memberId").val(info["name"]);
+                                    }else if(info["id"] == "email"){
+                                        $("#email").val(info["name"]);
+                                    }else if(info["id"] == "mobile"){
+                                        $("#mobile").val(info["name"]);
+                                    }else if(info["id"] == "name"){
+                                        $("#username").val(info["name"]);
+                                    }
+                                })
+                                layer.msg('读取成功!',{icon:16,time:1000});
+                            }else{
+                                layer.msg('读取失败!',{icon:16,time:1000});
+                            }
+                        },
+                        error:function(data){
+                            layer.close(load);
+                            layer.msg('读取失败!',{icon:16,time:1000});
+                        },
+                    });
+                });
+            }
+
         </script>
 </body>
 </html>

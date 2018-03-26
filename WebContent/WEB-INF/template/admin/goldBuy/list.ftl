@@ -54,6 +54,11 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
+		<a href="javascript:;" onclick="add('首页 &gt; 金币充值 &gt; 充值','add.jhtml','','510')" class="btn btn-primary radius"><i
+                class="Hui-iconfont">&#xe600;</i> 充金币</a>
+    </span></div>
+
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">

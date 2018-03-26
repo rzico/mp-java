@@ -1,5 +1,6 @@
 package net.wit.controller.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -7,6 +8,8 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.entity.Admin;
+import net.wit.entity.Member;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +53,9 @@ public class GoldBuyController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 
 
 	/**
@@ -89,33 +95,26 @@ public class GoldBuyController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(GoldBuy goldBuy, Long memberId){
-		GoldBuy entity = new GoldBuy();
+	public Message save(String memo,Long gold, Long memberId){
+		Admin admin = adminService.getCurrent();
+		Member member = memberService.find(memberId);
+        if (member==null) {
+        	return Message.error("无效用户名");
+		}
+		GoldBuy goldBuy = new GoldBuy();
+		goldBuy.setAmount(BigDecimal.ZERO);
+		goldBuy.setGold(gold);
+		goldBuy.setDeleted(false);
+		goldBuy.setMember(member);
+		goldBuy.setStatus(GoldBuy.Status.none);
+		goldBuy.setMemo("后台冲值");
 
-		entity.setCreateDate(goldBuy.getCreateDate());
-
-		entity.setModifyDate(goldBuy.getModifyDate());
-
-		entity.setAmount(goldBuy.getAmount());
-
-		entity.setDeleted(goldBuy.getDeleted());
-
-		entity.setGold(goldBuy.getGold());
-
-		entity.setMemo(goldBuy.getMemo());
-
-		entity.setOperator(goldBuy.getOperator());
-
-		entity.setStatus(goldBuy.getStatus());
-
-		entity.setMember(memberService.find(memberId));
-		
-		if (!isValid(entity)) {
+		if (!isValid(goldBuy)) {
             return Message.error("admin.data.valid");
         }
         try {
-            goldBuyService.save(entity);
-            return Message.success(entity,"admin.save.success");
+            goldBuyService.submit(goldBuy);
+            return Message.success(goldBuy,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("admin.save.error");
