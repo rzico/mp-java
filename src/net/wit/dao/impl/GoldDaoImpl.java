@@ -69,9 +69,9 @@ public class GoldDaoImpl extends BaseDaoImpl<Gold, Long> implements GoldDao {
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
-				"select deposit.memo,sum(deposit.credit)-sum(deposit.debit) "+
-						"from Gold deposit where deposit.createDate>=:b and deposit.createDate<:e and deposit.member=:member "+
-						"group by deposit.memo order by deposit.memo ";
+				"select gold.memo,sum(gold.credit)-sum(gold.debit) "+
+						"from Gold gold where gold.createDate>=:b and gold.createDate<:e and gold.member=:member "+
+						"group by gold.memo order by gold.memo ";
 
 		Query query = entityManager.createQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
@@ -85,7 +85,8 @@ public class GoldDaoImpl extends BaseDaoImpl<Gold, Long> implements GoldDao {
 			Object[] row = (Object[]) result.get(i);
 			NihtanDepositSummary rw = new NihtanDepositSummary();
 			rw.setType((String) row[0]);
-			rw.setAmount((BigDecimal) row[1]);
+			Long amt = (Long) row[1];
+			rw.setAmount(new BigDecimal(amt));
 			data.add(rw);
 		}
 		return data;
