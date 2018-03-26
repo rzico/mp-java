@@ -153,7 +153,7 @@ public class GoldBuyController extends BaseController {
 
 		model.addAttribute("data",goldBuyService.find(id));
 
-		return "/admin/gmGoldBuy/edit";
+		return "/admin/goldBuy/edit";
 	}
 
 	
