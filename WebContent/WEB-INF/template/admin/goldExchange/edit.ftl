@@ -33,7 +33,6 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
-        [#if data??]
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">会员：</label>
@@ -69,10 +68,7 @@
                 [/#if]
             </div>
         </div>
-            [#else]
-            查找失败
-        [/#if]
-    </form>
+     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
