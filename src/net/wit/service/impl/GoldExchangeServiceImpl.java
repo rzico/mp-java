@@ -97,6 +97,7 @@ public class GoldExchangeServiceImpl extends BaseServiceImpl<GoldExchange, Long>
 		Member member = goldExchange.getMember();
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 		try {
+
 			if (member.getPoint()<goldExchange.getGold()) {
 				throw new RuntimeException("金币余额不足");
 			}

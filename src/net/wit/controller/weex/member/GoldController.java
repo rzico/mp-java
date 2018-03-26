@@ -54,6 +54,9 @@ public class GoldController extends BaseController {
     @Resource(name = "goldProductServiceImpl")
     private GoldProductService goldProductService;
 
+    @Resource(name = "goldProductServiceImpl")
+    private ConfigService goldProductService;
+
     /**
      * 我的账单
      */
