@@ -142,6 +142,9 @@ public class GoldController extends BaseController {
         if (product == null) {
             return Message.error("无效金币");
         }
+        if (member.getBalance().compareTo(product.getPrice())<0) {
+            return Message.error("余额不足");
+        }
         GoldBuy goldBuy = new GoldBuy();
         goldBuy.setAmount(product.getPrice());
         goldBuy.setGold(product.getGold());
@@ -159,6 +162,16 @@ public class GoldController extends BaseController {
 
 
     /**
+     * 计算实到金额
+     */
+    @RequestMapping(value = "calculate", method = RequestMethod.POST)
+    @ResponseBody
+    public Message calculateFee(Long amount,HttpServletRequest request){
+        Config config = configService.find("exchange");
+        return Message.success(new BigDecimal(amount).multiply(config.getBigDecimal()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN),"success");
+    }
+
+    /**
      * 兑换金币
      */
     @RequestMapping(value = "/exchange", method = RequestMethod.POST)
@@ -167,6 +180,9 @@ public class GoldController extends BaseController {
         Member member = memberService.getCurrent();
         if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
+        }
+        if (member.getPoint()<amount) {
+            return Message.error("余额不足");
         }
         Config config = configService.find("exchange");
         GoldExchange goldExchange = new GoldExchange();
