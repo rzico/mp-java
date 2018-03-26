@@ -27,13 +27,13 @@ public class Config extends BaseEntity {
 
     /** key */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) not null comment 'key'")
+    @Column(name = "x_key",columnDefinition="varchar(255) not null comment 'key'")
     @NotNull
     private String key;
 
     /** value */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment 'value'")
+    @Column(name = "x_value",columnDefinition="varchar(255) comment 'value'")
     private String value;
 
     public String getKey() {
