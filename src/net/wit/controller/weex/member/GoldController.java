@@ -51,11 +51,11 @@ public class GoldController extends BaseController {
     @Resource(name = "goldExchangeServiceImpl")
     private GoldExchangeService goldExchangeService;
 
-    @Resource(name = "goldProductServiceImpl")
-    private GoldProductService goldProductService;
+    @Resource(name = "configServiceImpl")
+    private ConfigService configService;
 
     @Resource(name = "goldProductServiceImpl")
-    private ConfigService goldProductService;
+    private GoldProductService goldProductService;
 
     /**
      * 我的账单
@@ -162,8 +162,9 @@ public class GoldController extends BaseController {
         if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Config config = configService.find("exchange");
         GoldExchange goldExchange = new GoldExchange();
-        goldExchange.setAmount(new BigDecimal(amount).multiply());
+        goldExchange.setAmount(new BigDecimal(amount).multiply(config.getBigDecimal()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN));
         goldExchange.setGold(amount);
         goldExchange.setDeleted(false);
         goldExchange.setMember(member);
