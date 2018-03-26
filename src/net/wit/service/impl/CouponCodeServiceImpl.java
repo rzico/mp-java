@@ -115,8 +115,40 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 		couponCode.setIsUsed(false);
 		couponCode.setCoupon(coupon);
 		couponCode.setMember(member);
+		couponCode.setStock(1L);
 		couponCodeDao.persist(couponCode);
 		coupon.setStock(coupon.getStock()-1);
+		couponDao.merge(coupon);
+		return couponCode;
+	}
+
+	public CouponCode build(Coupon coupon, Member member,Long amount) throws Exception {
+		couponDao.lock(coupon, LockModeType.PESSIMISTIC_WRITE);
+		if (coupon.getStock().equals(0L)) {
+			throw new RuntimeException("已抢完,下次再来");
+		}
+		if (coupon.getStock().compareTo(amount)<0) {
+			throw new RuntimeException("库存不足，下次再来");
+		}
+		Boolean has = false;
+		for (CouponCode couponCode:member.getCouponCodes()) {
+			if (couponCode.getCoupon().equals(coupon)) {
+				has = true;
+				break;
+			}
+		}
+		if (has) {
+			throw new RuntimeException("你已经领取,不能领了");
+		}
+		CouponCode couponCode = new CouponCode();
+		String uuid = UUID.randomUUID().toString().toUpperCase();
+		couponCode.setCode(uuid.substring(0, 8) + uuid.substring(9, 13) + uuid.substring(14, 18) + uuid.substring(19, 23) + uuid.substring(24));
+		couponCode.setIsUsed(false);
+		couponCode.setCoupon(coupon);
+		couponCode.setMember(member);
+		couponCode.setStock(amount);
+		couponCodeDao.persist(couponCode);
+		coupon.setStock(coupon.getStock()-amount);
 		couponDao.merge(coupon);
 		return couponCode;
 	}

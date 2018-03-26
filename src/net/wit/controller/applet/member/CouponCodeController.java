@@ -1,10 +1,10 @@
-package net.wit.controller.website.member;
+package net.wit.controller.applet.member;
 
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.CardModel;
 import net.wit.controller.model.CouponCodeModel;
-import net.wit.entity.*;
+import net.wit.entity.CouponCode;
+import net.wit.entity.Member;
 import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
@@ -30,8 +30,8 @@ import java.util.*;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("websiteMemberCouponCodeController")
-@RequestMapping("/website/member/couponCode")
+@Controller("appletMemberCouponCodeController")
+@RequestMapping("/applet/member/couponCode")
 public class CouponCodeController extends BaseController {
 
     @Resource(name = "memberServiceImpl")

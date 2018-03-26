@@ -301,7 +301,7 @@ public class PaymentController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Payment.Method method, Payment.Status status, Payment.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Payment.Method method, Payment.Status status, Payment.Type type,String searchValue, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (method!=null) {
 			Filter methodFilter = new Filter("method", Filter.Operator.eq, method);
@@ -342,6 +342,10 @@ public class PaymentController extends BaseController {
 			}
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("sn", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Payment> page = paymentService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

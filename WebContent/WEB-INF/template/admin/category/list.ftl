@@ -235,7 +235,7 @@
                 /*处理查询数据*/searchValue
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
                 var _status =  $('select[name="status"]').val();
                 var index = layer.msg('加载中', {

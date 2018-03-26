@@ -227,7 +227,7 @@ public class TransferController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Transfer.Status status, Transfer.Type type, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Transfer.Status status, Transfer.Type type,String searchValue, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
@@ -238,6 +238,10 @@ public class TransferController extends BaseController {
 			filters.add(typeFilter);
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("sn", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Transfer> page = transferService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

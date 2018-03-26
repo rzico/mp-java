@@ -280,13 +280,17 @@ public class TopicCardController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, TopicCard.Status status, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, TopicCard.Status status,String searchValue, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("title", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<TopicCard> page = topicCardService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

@@ -217,6 +217,13 @@ public class FriendsController extends BaseController {
         Friends fds = friendsService.find(member,friend);
         if (fds!=null) {
             fds.setStatus(Friends.Status.black);
+            friendsService.update(fds);
+        }else{
+            fds=new Friends();
+            fds.setStatus(Friends.Status.black);
+            fds.setMember(member);
+            fds.setFriend(friend);
+            fds.setType(Friends.Type.leaguer);
             friendsService.save(fds);
         }
         return Message.success("拉黑成功");

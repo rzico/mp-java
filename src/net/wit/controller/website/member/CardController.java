@@ -440,6 +440,45 @@ public class CardController extends BaseController {
     }
 
 
+
+    /**
+     *   获取卡包参数
+     */
+    @RequestMapping(value = "weixin")
+    @ResponseBody
+    public Message weixin(Long authorId,HttpServletRequest request) {
+        Member member = memberService.getCurrent();
+        Member owner = memberService.find(authorId);
+        Map<String,Object> data = new HashMap<String,Object>();
+        if (owner.getTopic()!=null && owner.getTopic().getTopicCard()!=null) {
+            Card card = member.card(owner);
+            if (card==null) {
+                data.put("status", "unclaimed");
+            } else {
+                data.put("status", "activate");
+            }
+            Ticket ticket = WeixinApi.getWxCardTicket();
+            if (ticket!=null) {
+                HashMap<String, Object> params = new HashMap<>();
+                params.put("api_ticket", ticket.getTicket());
+                params.put("timestamp", WeiXinUtils.getTimeStamp());
+                params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+                params.put("card_id", owner.getTopic().getTopicCard().getWeixinCardId());
+                String sha1Sign1 = getCardSha1Sign(params);
+                HashMap<String, Object> cardExt = new HashMap<>();
+                cardExt.put("timestamp", params.get("timestamp"));
+                cardExt.put("nonce_str", params.get("nonce_str"));
+                cardExt.put("signature", sha1Sign1);
+                data.put("cardExt",cardExt);
+            }
+            data.put("cardId",owner.getTopic().getTopicCard().getWeixinCardId());
+
+        } else {
+            data.put("status","none");
+        }
+        return Message.bind(data,request);
+    }
+
     /**
      *  账单记录
      */

@@ -64,9 +64,6 @@ public class OrderLogController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
-
-		model.addAttribute("orderss",orderService.findAll());
-
 		return "/admin/orderLog/list";
 	}
 
@@ -76,9 +73,6 @@ public class OrderLogController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
-
-		model.addAttribute("orderss",orderService.findAll());
-
 		return "/admin/orderLog/add";
 	}
 
@@ -138,8 +132,6 @@ public class OrderLogController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
-		model.addAttribute("orderss",orderService.findAll());
-
 		model.addAttribute("data",orderLogService.find(id));
 
 		return "/admin/orderLog/edit";
@@ -196,15 +188,7 @@ public class OrderLogController extends BaseController {
 	 */
 	@RequestMapping(value = "/orderView", method = RequestMethod.GET)
 	public String orderView(Long id, ModelMap model) {
-		model.addAttribute("areas",areaService.findAll());
 
-		model.addAttribute("couponCodes",couponCodeService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("sellers",memberService.findAll());
-
-		model.addAttribute("order",orderService.find(id));
 		return "/admin/orderLog/view/orderView";
 	}
 

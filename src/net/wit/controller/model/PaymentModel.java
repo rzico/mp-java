@@ -22,7 +22,6 @@ public class PaymentModel extends BaseModel implements Serializable {
     private String paymentPluginId;
     /** 金额 */
     private BigDecimal amount;
-
     /** 交易时间 */
     private Date createDate;
 

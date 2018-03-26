@@ -280,7 +280,7 @@ public class ProductController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Long productCategoryId, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Long productCategoryId,String searchValue, Pageable pageable, ModelMap model) {
 		Member member = null;
 		Admin admin = adminService.getCurrent();
 		if (admin != null && admin.getEnterprise() != null){
@@ -318,6 +318,10 @@ public class ProductController extends BaseController {
 			}
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Product> page = productService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

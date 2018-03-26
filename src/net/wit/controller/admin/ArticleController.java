@@ -1,6 +1,8 @@
 package net.wit.controller.admin;
 
 import java.io.FileInputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -100,8 +102,6 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("audio","音频"));
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
-
-//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
@@ -338,7 +338,7 @@ public class ArticleController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Long tagIds, Article.Authority authority, Article.MediaType mediaType, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Long tagIds, Article.Authority authority, Article.MediaType mediaType, Pageable pageable,String searchValue, ModelMap model) {
 
 		Admin admin=adminService.getCurrent();
 		//判断用户有没有所属企业
@@ -387,6 +387,10 @@ public class ArticleController extends BaseController {
 			}
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("title", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 
 		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
@@ -552,6 +556,11 @@ public class ArticleController extends BaseController {
 		List<ArticleContentModel> articleContentModels=articleModel.getTemplates();
 		model.addAttribute("articles",articleContentModels);
 		return "/admin/article/view/articleView";
+	}
+
+	@RequestMapping(value = "/xiumi",method = RequestMethod.GET)
+	public String xiumiIndex(){
+		return "/admin/article/xiumi";
 	}
 
 }

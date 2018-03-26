@@ -48,8 +48,6 @@ public class TemplateController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-
-
 	/**
 	 * 主页
 	 */
@@ -206,13 +204,17 @@ public class TemplateController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Template.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Template.Type type, Pageable pageable,String searchValue, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
 			filters.add(typeFilter);
 		}
 
+		if(searchValue!=null){
+			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(mediaTypeFilter);
+		}
 		Page<Template> page = templateService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
