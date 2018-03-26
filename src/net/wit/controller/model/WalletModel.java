@@ -77,6 +77,8 @@ public class WalletModel extends BaseModel implements Serializable {
         this.balance = member.getBalance();
         this.binded = false;
         this.bankinfo = "未绑定";
+        this.gold = member.getPoint();
+        this.gift = member.getGift();
     }
 
     public Long getGold() {
