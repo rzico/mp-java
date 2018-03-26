@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -70,22 +71,26 @@ public class Gold extends BaseEntity {
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
+	@JsonIgnore
 	private Member member;
 
 
 	/** 充值 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '充值'")
+	@JsonIgnore
 	private GoldBuy boldBuy;
 
 	/** 提现 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '提现'")
+	@JsonIgnore
 	private GoldExchange goldExchange;
 
 	/** 游戏 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '游戏'")
+	@JsonIgnore
 	private Game game;
 
 	/** 是否删除 */

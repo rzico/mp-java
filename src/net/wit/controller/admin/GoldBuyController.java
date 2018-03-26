@@ -108,6 +108,7 @@ public class GoldBuyController extends BaseController {
 		goldBuy.setMember(member);
 		goldBuy.setStatus(GoldBuy.Status.none);
 		goldBuy.setMemo("后台冲值");
+		goldBuy.setOperator(admin.getName());
 
 		if (!isValid(goldBuy)) {
             return Message.error("admin.data.valid");
@@ -242,5 +243,29 @@ public class GoldBuyController extends BaseController {
 	}
 
 
+
+	/**
+	 * 通过会员手机号调取会员信息
+	 */
+	@RequestMapping(value = "/getMemberInfo", method = RequestMethod.GET)
+	@ResponseBody
+	public Message getMemberInfo(String phone){
+		try {
+			Member member = memberService.findByMobile(phone);
+			if(member != null){
+				List<MapEntity> memberinfo = new ArrayList<>();
+				memberinfo.add(new MapEntity("name",member.getName()));
+				memberinfo.add(new MapEntity("mobile",member.getMobile()));
+				memberinfo.add(new MapEntity("email",member.getUsername()));
+				memberinfo.add(new MapEntity("id",member.getId().toString()));
+				return Message.success(memberinfo,"admin.update.success");
+			}else{
+				return Message.error("admin.update.error");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.update.error");
+		}
+	}
 
 }

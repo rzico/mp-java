@@ -144,7 +144,7 @@
 
             /* 搜索 */
             function search(){
-                var url = "/admin/recharge/getMemberInfo.jhtml?phone="+$("#mobilemail").val();
+                var url = "/admin/goldBuy/getMemberInfo.jhtml?phone="+$("#mobilemail").val();
 
                 layer.confirm("请确认手机号或是邮箱？",function(index){
                     var load = layer.msg("查询中..",{
