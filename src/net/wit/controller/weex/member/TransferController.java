@@ -122,13 +122,13 @@ public class TransferController extends BaseController {
     @RequestMapping(value = "submit")
     @ResponseBody
     public Message submit(Transfer.Type type,BigDecimal amount,HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
 
         Config config = configService.find("transfer.min");
-
         if (config!=null) {
             if (amount.compareTo(config.getBigDecimal())<0) {
                 return Message.error("不能低于"+config.getValue()+"元");
