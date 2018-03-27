@@ -15,6 +15,10 @@ public class OrderListModel extends BaseModel implements Serializable {
 
     private Long id;
 
+
+    /**  买方 id */
+    private Long memberId;
+
     /**  头方头像 */
     private String logo;
 
@@ -166,12 +170,21 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.quantity = quantity;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
         this.sn = order.getSn();
         this.logo = order.getMember().getLogo();
         this.name = order.getMember().getNickName();
+        this.memberId = order.getMember().getId();
 
         this.sellerId = order.getSeller().getId();
         if (order.getSeller().getTopic()!=null) {
