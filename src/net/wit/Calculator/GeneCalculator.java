@@ -11,6 +11,7 @@ import net.wit.util.FreemarkerUtils;
 import org.springframework.ui.ModelMap;
 import org.tuckey.web.filters.urlrewrite.Run;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -19,14 +20,12 @@ import java.util.Map;
 /**
  * Created by zhangsr on 2018/3/27.
  */
-public class GeneCalculator {
+public class GeneCalculator implements Serializable {
 
     private Map<String,BigDecimal> genes = new HashMap<>();
     private Map<String,String> dimes = new HashMap<>();
     private Evaluation evaluation;
 
-    public GeneCalculator(){
-    }
 
     public BigDecimal score(GaugeQuestion question) {
         BigDecimal t = BigDecimal.ZERO;

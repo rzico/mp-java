@@ -108,13 +108,13 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
 		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
 		return super.update(evaluation, ignoreProperties);
-
-		GeneCalculator calculator = new GeneCalculator();
-		try {
-			calculator.calcAll(evaluation);
-		} catch (Exception e) {
-			throw new RuntimeException("计算出错");
-		}
+//
+////		GeneCalculator calculator = new GeneCalculator();
+//		try {
+//			calculator.calcAll(evaluation);
+//		} catch (Exception e) {
+//			throw new RuntimeException("计算出错");
+//		}
 
 
 	}
