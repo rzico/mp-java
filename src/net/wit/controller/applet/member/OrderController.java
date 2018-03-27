@@ -392,7 +392,7 @@ public class OrderController extends BaseController {
 		pageable.setOrderProperty("modifyDate");
 		Page<Order> page = orderService.findPage(null,null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
-		model.setData(OrderListModel.bindList(page.getContent()));
+		model.setData(OrderListModel.bindAndRebate(page.getContent()));
 		return Message.bind(model,request);
 	}
 

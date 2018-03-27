@@ -55,6 +55,9 @@ public class OrderListModel extends BaseModel implements Serializable {
     /**  收货人 */
     private String consignee;
 
+    /**  本单收益 */
+    private BigDecimal rebate;
+
     /** 商品 */
     private List<OrderItemModel> orderItems;
 
@@ -178,6 +181,14 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.memberId = memberId;
     }
 
+    public BigDecimal getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(BigDecimal rebate) {
+        this.rebate = rebate;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -203,7 +214,6 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.amount = order.getAmount();
         this.quantity = order.getQuantity();
         this.consignee = order.getConsignee();
-
     }
 
 
@@ -212,6 +222,17 @@ public class OrderListModel extends BaseModel implements Serializable {
         for (Order order:orders) {
             OrderListModel m = new OrderListModel();
             m.bind(order);
+            ms.add(m);
+        }
+        return ms;
+    }
+
+    public static List<OrderListModel> bindAndRebate(List<Order> orders) {
+        List<OrderListModel> ms = new ArrayList<OrderListModel>();
+        for (Order order:orders) {
+            OrderListModel m = new OrderListModel();
+            m.bind(order);
+            m.setRebate(order.getRebate());
             ms.add(m);
         }
         return ms;
