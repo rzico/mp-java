@@ -334,7 +334,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				//新客户给推广人
 				Member promoter = memberDao.find(xuid);
 				if (promoter.leaguer(order.getSeller())) {
-					if (promoter != null && promoter.equals(order.getSeller())) {
+					if (promoter != null && promoter.equals(order.getSeller()) ) {
 						promoter = null;
 					}
 					order.setPromoter(promoter);
