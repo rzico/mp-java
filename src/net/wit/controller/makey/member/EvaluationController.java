@@ -211,13 +211,14 @@ public class EvaluationController extends BaseController {
                 eas.setTitle(question.getTitle());
                 eas.setEvaluation(evaluation);
                 eas.setGauge(evaluation.getGauge());
+                eas.setGaugeQuestion(question);
                 eas.setMember(evaluation.getMember());
                 eas.setScore(new BigDecimal(ar.getString("score")));
                 evals.add(eas);
             }
         }
         evaluation.setEvalAnswers(evals);
-        evaluationService.update(evaluation);
+        evaluationService.answer(evaluation);
         return Message.success("答题完毕");
 
     }

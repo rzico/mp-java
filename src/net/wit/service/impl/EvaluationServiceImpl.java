@@ -2,6 +2,7 @@ package net.wit.service.impl;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.calculator.GeneCalculator;
 import net.wit.dao.EvaluationDao;
 import net.wit.dao.EvaluationDao;
 import net.wit.dao.PaymentDao;
@@ -52,8 +53,6 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public Evaluation update(Evaluation evaluation) {
-		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
-		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
 		return super.update(evaluation);
 	}
 
@@ -61,8 +60,6 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public Evaluation update(Evaluation evaluation, String... ignoreProperties) {
-		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
-		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
 		return super.update(evaluation, ignoreProperties);
 	}
 
@@ -104,6 +101,22 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		payment.setEvaluation(evaluation);
 		paymentDao.persist(payment);
         return payment;
+	}
+
+	@Transactional
+	public Evaluation answer(Evaluation evaluation, String... ignoreProperties) {
+		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
+		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
+		return super.update(evaluation, ignoreProperties);
+
+		GeneCalculator calculator = new GeneCalculator();
+		try {
+			calculator.calcAll(evaluation);
+		} catch (Exception e) {
+			throw new RuntimeException("计算出错");
+		}
+
+
 	}
 
 	/**

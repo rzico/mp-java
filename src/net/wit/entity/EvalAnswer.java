@@ -49,6 +49,12 @@ public class EvalAnswer extends OrderEntity {
     @JsonIgnore
     private Gauge gauge;
 
+    /** 题目 */
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private GaugeQuestion gaugeQuestion;
+
     /** 答案id */
     @Min(0)
     @NotNull
@@ -70,6 +76,14 @@ public class EvalAnswer extends OrderEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Evaluation evaluation;
+
+    public GaugeQuestion getGaugeQuestion() {
+        return gaugeQuestion;
+    }
+
+    public void setGaugeQuestion(GaugeQuestion gaugeQuestion) {
+        this.gaugeQuestion = gaugeQuestion;
+    }
 
     public GaugeQuestion.Type getType() {
         return type;

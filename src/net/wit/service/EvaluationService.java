@@ -25,5 +25,6 @@ public interface EvaluationService extends BaseService<Evaluation, Long> {
 	/**
 	 */
 	List<EvaluationSummary> sumPromoter(Gauge gauge,Date beginDate, Date endDate);
+	public Evaluation answer(Evaluation evaluation, String... ignoreProperties);
 
 }

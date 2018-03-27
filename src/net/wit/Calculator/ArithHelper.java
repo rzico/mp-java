@@ -1,4 +1,4 @@
-package net.wit.Calculator;
+package net.wit.calculator;
 
 public class ArithHelper {
 

@@ -1,4 +1,4 @@
-package net.wit.Calculator;
+package net.wit.calculator;
 
 import java.util.Collections;
 import java.util.Stack;
