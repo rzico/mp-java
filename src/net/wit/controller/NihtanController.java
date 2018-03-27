@@ -197,7 +197,7 @@ public class NihtanController extends BaseController {
         for (int i = 0 ; i<datas.size(); i++) {
             JSONObject user = datas.getJSONObject(i);
             String user_id = user.getString("user_id");
-            Double amount = jsonObject.getDouble("total_win");
+            Double amount = user.getDouble("total_win");
             Long win_money = new Long(Math.round(amount));
             Member member = memberService.findByUsername(user_id);
             if (member!=null) {
