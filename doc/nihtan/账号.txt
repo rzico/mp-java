@@ -9,4 +9,9 @@ APIKEY：ad67b893954834b44c6b558dbe840f1a
 
 国际短信
 APIID：I96016343
-APIKEY：ed1d89399bd514c9737f2dd92b905436 
+APIKEY：ed1d89399bd514c9737f2dd92b905436
+
+
+测试机
+阿里云47.96.191.116 root密码@WSX1qaz
+阿里云RDS：ucmapdatabase.mysql.rds.aliyuncs.comS：ucmapdatabase.mysql.rds.aliyuncs.comS：ucmapdatabase.mysql.rds.aliyuncs.com gamedb密码@WSX1qaz
