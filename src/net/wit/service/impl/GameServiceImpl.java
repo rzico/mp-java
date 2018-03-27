@@ -106,6 +106,12 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 				throw new Exception("余额不足");
 			}
 			member.setPoint(member.getPoint()-(game.getDebit()));
+			Long r = Math.round(game.getDebit()*0.333);
+			if (member.getFreezePoint()<r) {
+				member.setFreezePoint(0L);
+			} else {
+				member.setFreezePoint(member.getFreezePoint()-r);
+			}
 			memberDao.merge(member);
 			memberDao.flush();
 			Gold deposit = new Gold();

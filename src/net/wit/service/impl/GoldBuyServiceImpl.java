@@ -103,6 +103,7 @@ public class GoldBuyServiceImpl extends BaseServiceImpl<GoldBuy, Long> implement
 			}
 
 			member.setPoint(member.getPoint()+goldBuy.getGold());
+			member.setFreezePoint(member.getFreezePoint()+goldBuy.getGold());
 			memberDao.merge(member);
 
 			goldBuy.setStatus(GoldBuy.Status.success);

@@ -101,6 +101,11 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
 	private Long point;
 
+	/** 冻结积分 */
+	@Min(0)
+	@Column(columnDefinition="bigint(20) default 0 comment '冻结积分'")
+	private Long freezePoint;
+
 	/** 礼物 */
 	@Min(0)
 	@Column(columnDefinition="bigint(20) default 0 comment '礼物'")
@@ -567,7 +572,15 @@ public class Member extends BaseEntity {
 		this.mobile = mobile;
 	}
 
-//	public String getAttributeValue0() {
+	public Long getFreezePoint() {
+		return freezePoint;
+	}
+
+	public void setFreezePoint(Long freezePoint) {
+		this.freezePoint = freezePoint;
+	}
+
+	//	public String getAttributeValue0() {
 //		return attributeValue0;
 //	}
 //

@@ -168,7 +168,15 @@ public class GoldController extends BaseController {
     @ResponseBody
     public Message calculateFee(Long amount,HttpServletRequest request){
         Config config = configService.find("exchange");
-        return Message.success(new BigDecimal(amount).multiply(config.getBigDecimal()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN),"success");
+        Map<String,Object> data = new HashMap<>();
+        Member member = memberService.getCurrent();
+        Long p = member.getPoint()-member.getFreezePoint();
+        if (member == null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        data.put("usable",p);
+        data.put("arrival",new BigDecimal(amount).multiply(config.getBigDecimal()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+        return Message.success(data,"success");
     }
 
     /**
@@ -183,6 +191,10 @@ public class GoldController extends BaseController {
         }
         if (member.getPoint()<amount) {
             return Message.error("余额不足");
+        }
+        Long p = member.getPoint()-member.getFreezePoint();
+        if (amount>p) {
+            return Message.error("可兑换数量为"+p);
         }
         Config config = configService.find("exchange");
         GoldExchange goldExchange = new GoldExchange();
