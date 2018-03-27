@@ -160,6 +160,11 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     private List<GaugeGene> gaugeGenes = new ArrayList<GaugeGene>();
 
+    /** 结果*/
+    @OneToMany(mappedBy = "gauge",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<GaugeResult> gaugeResults = new ArrayList<GaugeResult>();
+
     /** 所属商品 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -372,5 +377,13 @@ public class Gauge extends BaseEntity {
 
     public void setDetect(String detect) {
         this.detect = detect;
+    }
+
+    public List<GaugeResult> getGaugeResults() {
+        return gaugeResults;
+    }
+
+    public void setGaugeResults(List<GaugeResult> gaugeResults) {
+        this.gaugeResults = gaugeResults;
     }
 }

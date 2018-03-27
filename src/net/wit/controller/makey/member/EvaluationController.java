@@ -12,6 +12,7 @@ import net.wit.entity.summary.EvaluationSummary;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -287,5 +288,16 @@ public class EvaluationController extends BaseController {
         model.bind(evaluation);
         return Message.bind(model,request);
     }
+
+    /**
+     * 报告
+     */
+    @RequestMapping(value = "/report", method = RequestMethod.GET)
+    public String report(Long id,HttpServletRequest request,ModelMap model){
+        Evaluation evaluation = evaluationService.find(id);
+        model.addAttribute("data",evaluation);
+        return "/common/report";
+    }
+
 
 }
