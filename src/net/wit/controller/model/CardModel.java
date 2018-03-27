@@ -120,6 +120,14 @@ public class CardModel extends BaseModel implements Serializable {
         this.point = point;
     }
 
+    public Card.Type getType() {
+        return type;
+    }
+
+    public void setType(Card.Type type) {
+        this.type = type;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
