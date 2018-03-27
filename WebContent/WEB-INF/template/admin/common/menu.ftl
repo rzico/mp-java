@@ -95,6 +95,7 @@
                 [#if (admin.type=="operate"||admin.type=="agent"||admin.type=="shop")&&(admin.role?contains("1")||admin.role?contains("2"))]
                     <li><a data-href="../log/index.jhtml" data-title="日志管理" href="javascript:;">日志管理</a></li>
                     <li><a data-href="../message/index.jhtml" data-title="消息管理" href="javascript:;">消息管理</a></li>
+                    <li><a data-href="../feedback/index.jhtml" data-title="问题反馈" href="javascript:;">问题反馈</a></li>
                 [/#if]
                 </ul>
             </dd>
