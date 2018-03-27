@@ -130,6 +130,7 @@ public class CardController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
         return Message.bind(CardModel.bindList(member.getCards()),request);
     }
 
@@ -463,7 +464,7 @@ public class CardController extends BaseController {
                 params.put("api_ticket", ticket.getTicket());
                 params.put("timestamp", WeiXinUtils.getTimeStamp());
                 params.put("nonce_str", WeiXinUtils.CreateNoncestr());
-                params.put("card_id", card.getTopicCard().getWeixinCardId());
+                params.put("card_id", owner.getTopic().getTopicCard().getWeixinCardId());
                 String sha1Sign1 = getCardSha1Sign(params);
                 HashMap<String, Object> cardExt = new HashMap<>();
                 cardExt.put("timestamp", params.get("timestamp"));
@@ -471,7 +472,8 @@ public class CardController extends BaseController {
                 cardExt.put("signature", sha1Sign1);
                 data.put("cardExt",cardExt);
             }
-            data.put("cardId",card.getTopicCard().getWeixinCardId());
+            data.put("cardId",owner.getTopic().getTopicCard().getWeixinCardId());
+
         } else {
             data.put("status","none");
         }

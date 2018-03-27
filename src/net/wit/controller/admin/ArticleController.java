@@ -103,8 +103,6 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
-
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
 
 		return "/admin/article/list";
@@ -558,6 +556,11 @@ public class ArticleController extends BaseController {
 		List<ArticleContentModel> articleContentModels=articleModel.getTemplates();
 		model.addAttribute("articles",articleContentModels);
 		return "/admin/article/view/articleView";
+	}
+
+	@RequestMapping(value = "/xiumi",method = RequestMethod.GET)
+	public String xiumiIndex(){
+		return "/admin/article/xiumi";
 	}
 
 }

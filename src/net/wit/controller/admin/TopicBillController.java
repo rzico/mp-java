@@ -80,10 +80,6 @@ public class TopicBillController extends BaseController {
 		statuss.add(new MapEntity("failure","支付失败"));
 		model.addAttribute("statuss",statuss);
 
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("payments",paymentService.findAll());
-
 		return "/admin/topicBill/list";
 	}
 
@@ -99,11 +95,6 @@ public class TopicBillController extends BaseController {
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
 		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("payments",paymentService.findAll());
-
 		return "/admin/topicBill/add";
 	}
 
@@ -170,10 +161,6 @@ public class TopicBillController extends BaseController {
 		statuss.add(new MapEntity("success","支付成功"));
 		statuss.add(new MapEntity("failure","支付失败"));
 		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("payments",paymentService.findAll());
 
 		model.addAttribute("data",topicBillService.find(id));
 
@@ -255,14 +242,6 @@ public class TopicBillController extends BaseController {
 		types.add(new MapEntity("recharge","钱包充值"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("orderss",orderService.findAll());
-
-		model.addAttribute("articleRewards",articleRewardService.findAll());
-
-		model.addAttribute("payees",memberService.findAll());
-
 		model.addAttribute("payment",paymentService.find(id));
 		return "/admin/topicBill/view/paymentView";
 	}
@@ -278,12 +257,6 @@ public class TopicBillController extends BaseController {
 		genders.add(new MapEntity("female","女"));
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
-
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("occupations",occupationService.findAll());
-
-		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
 		return "/admin/topicBill/view/memberView";

@@ -8,6 +8,7 @@ import net.wit.controller.model.CouponCodeModel;
 import net.wit.controller.model.CouponModel;
 import net.wit.entity.*;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -69,7 +72,7 @@ public class CouponController extends BaseController {
      */
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(Coupon coupon, Long goodsId, HttpServletRequest request){
+    public Message submit(Coupon coupon,Long atveType,BigDecimal atveMinPrice,Long atveAmount, Long goodsId, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -139,6 +142,18 @@ public class CouponController extends BaseController {
             entity.setAmount(BigDecimal.ZERO);
         }
         entity.setName(s);
+
+        if (atveType==null) {
+            atveType = 0L;
+            atveMinPrice = BigDecimal.ZERO;
+            atveAmount = 0L;
+        }
+        Map<String,Object> activity = new HashMap<String,Object>();
+        activity.put("type",atveType);
+        activity.put("min",atveMinPrice);
+        activity.put("amount",atveAmount);
+        entity.setActivity(JsonUtils.toJson(activity));
+
         if (isNew) {
             couponService.save(entity);
         } else {

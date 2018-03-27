@@ -104,7 +104,8 @@ public class LoginController extends BaseController {
                 member = new Member();
                 member.setNickName(null);
                 member.setLogo(null);
-//                member.setPoint(0L);
+                member.setPoint(0L);
+                member.setGift(0L);
                 member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setFreezeBalance(BigDecimal.ZERO);
