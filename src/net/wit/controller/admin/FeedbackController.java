@@ -60,6 +60,9 @@ public class FeedbackController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
 
 
 	/**
@@ -162,32 +165,41 @@ public class FeedbackController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Feedback feedback, Long memberId){
-		Feedback entity = feedbackService.find(feedback.getId());
+	public Message update(Long Id,String recontent, Long memberId){
+
+		Feedback entity=feedbackService.find(Id);
+
+		net.wit.entity.Message message=new net.wit.entity.Message();
+
+		message.setContent(recontent);
+
+		message.setType(net.wit.entity.Message.Type.feedback);
+
+		message.setDeleted(false);
+
+		message.setReceiver(entity.getMember());
+
+		message.setReaded(false);
+
+		message.setTitle("问题反馈回复");
+
+		message.setThumbnial("http://cdn.rzico.com/weex/resources/images/gm_10202.png");
+
+		message.setMember(null);
+
+		message.setSender(null);
 		
-		entity.setCreateDate(feedback.getCreateDate());
-
-		entity.setModifyDate(feedback.getModifyDate());
-
-		entity.setContent(feedback.getContent());
-
-		entity.setSolve(feedback.getSolve());
-
-		entity.setProblemPictrue1(feedback.getProblemPictrue1());
-
-		entity.setProblemPictrue2(feedback.getProblemPictrue2());
-
-		entity.setProblemPictrue3(feedback.getProblemPictrue3());
-
-		entity.setProblemPictrue4(feedback.getProblemPictrue4());
-
-		entity.setProblemPictrue5(feedback.getProblemPictrue5());
-
-		entity.setMember(memberService.find(memberId));
-		
-		if (!isValid(entity)) {
+		if (!isValid(message)) {
             return Message.error("admin.data.valid");
         }
+		try {
+			messageService.pushTo(message);
+			entity.setMessage(message);
+			entity.setSolve(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return net.wit.Message.error("admin.save.error");
+		}
         try {
             feedbackService.update(entity);
             return Message.success(entity,"admin.update.success");
@@ -251,8 +263,10 @@ public class FeedbackController extends BaseController {
 	public String feedbackView(Long id, ModelMap model) {
 		Feedback feedback =feedbackService.find(id);
 		MapEntity member=feedback.getMapMember();
+		MapEntity message=feedback.getMapMessage();
 		model.addAttribute("feedback",feedback);
 		model.addAttribute("member",member);
+		model.addAttribute("message",message);
 		return "/admin/feedback/view/feedbackView";
 	}
 

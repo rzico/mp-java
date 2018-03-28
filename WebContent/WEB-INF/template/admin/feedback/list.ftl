@@ -145,7 +145,7 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "isSolve",
+                    "mData": "solve",
                     "sTitle": "是否解决",
                     "sClass": "center"
                 },

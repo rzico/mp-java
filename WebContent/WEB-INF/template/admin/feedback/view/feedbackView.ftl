@@ -113,9 +113,11 @@
         </div>
     [#else]
     <div class="row cl">
-        <label class="form-label col-xs-2 col-sm-2">问题内容：</label>
+        <label class="form-label col-xs-2 col-sm-2">问题回复：</label>
         <div class="formControls col-xs-10 col-sm-9">
-            <input type="text" class="input-text" value="${feedback.recontent}" readonly="readonly">
+            [#if message??]
+            <input type="text" class="input-text" value="${message.name}" readonly="readonly">
+            [/#if]
         </div>
     </div>
     [/#if]
@@ -133,7 +135,39 @@
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
-
+<script type="text/javascript" >
+    $(
+            $(":submit").on('click', function () {
+                alert("123123123");
+                        $.ajax({
+                            url: "${base}/admin/feedback/update.jhtml",//这个就是请求地址对应sAjaxSource
+                            data: {
+                                "recontent": $("#recontent").val(),
+                                "Id":"${feedback.id}"
+                            },
+                            type: 'post',
+                            dataType: 'json',
+                            async: false,
+                            success: function (message) {
+                                if (message.type == "success") {
+                                    layer.msg('发送成功', {icon: 1, time: 1000});
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.add_row(message.data);
+                                    //关闭弹窗并提示
+                                    parent.closeWindow(index, '回复成功');
+                                } else {
+                                    layer.msg('回复失败!', {icon: 1, time: 1000});
+                                }
+                            },
+                            error: function (msg) {
+                                layer.close(load);
+                                layer.msg('回复用户失败!', {icon: 2, time: 1000});
+                            }
+                        });
+                    }
+            )
+    )
+</script>
 <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
 </body>
 </html>

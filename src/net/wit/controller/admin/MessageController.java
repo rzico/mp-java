@@ -92,6 +92,7 @@ public class MessageController extends BaseController {
 		types.add(new MapEntity("laud","点赞提醒"));
 		types.add(new MapEntity("follow","关注提醒"));
 		types.add(new MapEntity("favorite","收藏提醒"));
+		types.add(new MapEntity("feedback","问题回复"));
 		model.addAttribute("types",types);
 
 		return "/admin/message/add";

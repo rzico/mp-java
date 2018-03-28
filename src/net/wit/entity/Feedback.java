@@ -1,7 +1,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.wit.MapEntity;
+import net.wit.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -32,11 +32,10 @@ public class Feedback extends BaseEntity {
     @JsonIgnore
     private Member member;
 
-    /** 回复内容 */
-    @Lob
-    @Column(columnDefinition="longtext comment '回复内容'")
+    /** 回复消息 */
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private String recontent;
+    private Message message;
 
     /** 问题反馈图1 */
     @Length(max = 255)
@@ -132,18 +131,26 @@ public class Feedback extends BaseEntity {
         this.problemPictrue5 = problemPictrue5;
     }
 
-    public String getRecontent() {
-        return recontent;
+    public Message getMessage() {
+        return message;
     }
 
-    public void setRecontent(String recontent) {
-        this.recontent = recontent;
+    public void setMessage(Message message) {
+        this.message = message;
     }
 
     public MapEntity getMapMember() {
         if (getMember() != null) {
             return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
         } else {
+            return null;
+        }
+    }
+
+    public MapEntity getMapMessage(){
+        if(getMessage()!=null){
+            return new MapEntity(getMessage().getId().toString(),getMessage().getContent());
+        }else {
             return null;
         }
     }
