@@ -342,7 +342,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 
 			if (order.getPromoter() != null) {
-				order.setPartner(member.partner(order.getPromoter()));
+				order.setPartner(member.partner(order.getSeller()));
 			}
 		}
 		orderDao.persist(order);

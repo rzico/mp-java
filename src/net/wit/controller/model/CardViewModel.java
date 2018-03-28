@@ -210,7 +210,7 @@ public class CardViewModel extends BaseModel implements Serializable {
             this.shopName = "";
         }
         if (card.getPromoter()!=null) {
-           this.promoter = card.getPromoter().displayName();
+            this.promoter = card.getPromoter().displayName();
         } else {
             this.promoter = "";
         }
