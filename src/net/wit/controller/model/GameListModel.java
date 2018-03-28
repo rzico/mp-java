@@ -25,6 +25,8 @@ public class GameListModel extends BaseModel implements Serializable {
     private String dealer;
     /** 投注 */
     private String ranges;
+    /** 说明 */
+    private String memo;
 
     public String getGame() {
         return game;
@@ -90,6 +92,7 @@ public class GameListModel extends BaseModel implements Serializable {
         this.setDealer(game.getName());
         this.setType(game.getType().name());
         this.setVip(game.getVip());
+        this.memo = game.getMemo();
     }
 
     public static List<GameListModel> bindList(List<GameList> games) {

@@ -13,6 +13,7 @@ import net.wit.dao.DepositDao;
 import net.wit.dao.GoldDao;
 import net.wit.dao.MemberDao;
 import net.wit.entity.*;
+import net.wit.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,9 @@ public class GoldBuyServiceImpl extends BaseServiceImpl<GoldBuy, Long> implement
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
+
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
 
 	@Resource(name = "goldDaoImpl")
 	private GoldDao goldDao;
@@ -135,6 +139,9 @@ public class GoldBuyServiceImpl extends BaseServiceImpl<GoldBuy, Long> implement
 			logger.debug(e.getMessage());
 			throw new RuntimeException("提交出错了");
 		}
+
+		memberService.addAmount(member, goldBuy.getAmount());
+
 		return true;
 	}
 
