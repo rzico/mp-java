@@ -79,7 +79,9 @@ public class EvaluationController extends BaseController {
         filters.add(new Filter("member", Filter.Operator.eq, member));
         List<Evaluation> data = evaluationService.findList(1,filters,null);
         EvaluationListModel model = new EvaluationListModel();
-        model.bind(data.get(0));
+        if (data.size()>0) {
+            model.bind(data.get(0));
+        }
         return Message.bind(model,request);
     }
 

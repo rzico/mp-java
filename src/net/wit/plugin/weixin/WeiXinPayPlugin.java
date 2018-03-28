@@ -140,9 +140,17 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		packageParams.put("spbill_create_ip", request.getRemoteAddr());
 		packageParams.put("notify_url", getNotifyUrl(sn, NotifyMethod.async));
 		packageParams.put("trade_type", "JSAPI");
-	    BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
-	    if (bindUser!=null) {
-			packageParams.put("openid",bindUser.getOpenId());
+
+		if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
+			BindUser bindUser = findByUser(payment.getMember(),pluginConfig.getAttribute("applet"), BindUser.Type.weixin);
+			if (bindUser!=null) {
+				packageParams.put("openid",bindUser.getOpenId());
+			}
+		} else {
+			BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
+			if (bindUser!=null) {
+				packageParams.put("openid",bindUser.getOpenId());
+			}
 		}
 
 		try {
