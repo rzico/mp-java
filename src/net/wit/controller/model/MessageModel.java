@@ -116,7 +116,7 @@ public class MessageModel extends BaseModel implements Serializable {
             member = message.getSender();
         }
         this.userId = member.userId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.title = message.getTitle();
         this.content = message.getContent();

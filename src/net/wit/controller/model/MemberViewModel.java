@@ -118,7 +118,7 @@ public class MemberViewModel extends BaseModel implements Serializable {
         this.fans = member.getFans().size();
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
         this.qrcode = member.getQrcode();

@@ -71,7 +71,7 @@ public class MemberListModel extends BaseModel implements Serializable {
 
     public void bind(Member member) {
         this.id = member.getId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.name = member.getName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());

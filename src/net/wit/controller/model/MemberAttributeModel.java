@@ -160,7 +160,7 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
         this.id = member.getId();
         this.userId = member.userId();
         this.autograph = member.getAutograph();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.username = member.getUsername();
         this.gender = member.getGender();
         this.birthday = member.getBirth();
@@ -177,7 +177,7 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
             if (member.getPromoter().getName()!=null) {
                 this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().getName() + ")";
             } else {
-                this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().getNickName() + ")";
+                this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().displayName() + ")";
             }
         }
         this.occupation = occupation;

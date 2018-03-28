@@ -67,7 +67,7 @@ public class ShareModel extends BaseModel implements Serializable {
     public void bind(Article article, ArticleShare.ShareType shareType, Member member) {
         Setting setting = SettingUtils.get();
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        this.title = "【"+article.getMember().getNickName()+"】"+article.getTitle();
+        this.title = "【"+article.getMember().displayName()+"】"+article.getTitle();
         this.thumbnail = article.getThumbnail();
         this.descr = article.delHTMLTag();
         if (this.descr==null || this.descr=="") {
@@ -93,7 +93,7 @@ public class ShareModel extends BaseModel implements Serializable {
         Setting setting = SettingUtils.get();
         this.title = topic.getName();
         this.thumbnail = topic.getLogo();
-        this.descr = "【"+topic.getMember().getNickName()+"】在"+setting.getSiteName()+"开设的专栏，点击关注订阅它的动态";
+        this.descr = "【"+topic.getMember().displayName()+"】在"+setting.getSiteName()+"开设的专栏，点击关注订阅它的动态";
         this.shareType = shareType;
         if (shareType.equals(ArticleShare.ShareType.appWeex)) {
             this.url = "file://view/member/author.js?id=" + topic.getId();

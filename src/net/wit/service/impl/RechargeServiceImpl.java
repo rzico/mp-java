@@ -213,6 +213,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			payment.setSn(snService.generate(Sn.Type.payment));
 			payment.setType(Payment.Type.recharge);
 			payment.setRecharge(recharge);
+			payment.setStatus(Payment.Status.waiting);
 			paymentDao.persist(payment);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
