@@ -84,7 +84,7 @@ public class ArticleReviewModel extends BaseModel implements Serializable {
     public void bind(ArticleReview review) {
         this.id = review.getId();
         this.memberId = review.getMember().getId();
-        this.nickName = review.getMember().getNickName();
+        this.nickName = review.getMember().displayName();
         this.logo = review.getMember().getLogo();
         this.createDate = review.getCreateDate();
         this.content = review.getContent();

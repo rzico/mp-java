@@ -59,6 +59,16 @@
 			</select>
         </span>
 		[/#if]
+    [#if tags??]
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="tagIds" class="select" style="background-color: #FFFFFF;">
+				<option value="">标签</option>
+                [#list tags as tag]
+                    <option value="${tag.id}">${tag.name}</option>
+                [/#list]
+			</select>
+        </span>
+    [/#if]
 
         <input type="text" class="input-text" style="width:250px;height:32px;" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
@@ -437,6 +447,7 @@
                 var _authority =  $('select[name="authority"]').val();
                 var _mediaType =  $('select[name="mediaType"]').val();
                 var _titleType =  $('select[name="titleType"]').val();
+                var _tagIds =  $('select[name="tagIds"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -450,6 +461,7 @@
                         "authority":_authority,
                         "mediaType":_mediaType,
                         "titleType":_titleType,
+                        "tagIds":_tagIds,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

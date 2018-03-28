@@ -65,7 +65,7 @@ public class ArticleRewardModel extends BaseModel implements Serializable {
 
     public void bind(ArticleReward reward) {
         this.memberId = reward.getMember().getId();
-        this.nickName = reward.getMember().getNickName();
+        this.nickName = reward.getMember().displayName();
         this.logo = reward.getMember().getLogo();
         this.createDate = reward.getCreateDate();
         this.amount = reward.getAmount();

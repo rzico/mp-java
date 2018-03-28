@@ -360,24 +360,24 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				articleRewardDao.merge(reward);
 				messageService.rewardPushTo(reward);
 			} else
-//			if (payment.getType() == Payment.Type.recharge) {
-//				Member member = payment.getPayee();
-//				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-//				member.setBalance(member.getBalance().add(payment.getAmount()));
-//				memberDao.merge(member);
-//				Deposit deposit = new Deposit();
-//				deposit.setBalance(member.getBalance());
-//				deposit.setType(Deposit.Type.recharge);
-//				deposit.setMemo(payment.getMemo());
-//				deposit.setMember(member);
-//				deposit.setCredit(payment.getAmount());
-//				deposit.setDebit(BigDecimal.ZERO);
-//				deposit.setDeleted(false);
-//				deposit.setOperator("system");
-//				deposit.setPayment(payment);
-//				depositDao.persist(deposit);
-//				messageService.depositPushTo(deposit);
-//			} else
+			if (payment.getType() == Payment.Type.recharge) {
+				Member member = payment.getPayee();
+				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+				member.setBalance(member.getBalance().add(payment.getAmount()));
+				memberDao.merge(member);
+				Deposit deposit = new Deposit();
+				deposit.setBalance(member.getBalance());
+				deposit.setType(Deposit.Type.recharge);
+				deposit.setMemo(payment.getMemo());
+				deposit.setMember(member);
+				deposit.setCredit(payment.getAmount());
+				deposit.setDebit(BigDecimal.ZERO);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				deposit.setPayment(payment);
+				depositDao.persist(deposit);
+				messageService.depositPushTo(deposit);
+			} else
 			if (payment.getType() == Payment.Type.topic) {
 				TopicBill topicBill = payment.getTopicBill();
 				topicBill.setStatus(TopicBill.Status.success);

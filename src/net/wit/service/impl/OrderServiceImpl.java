@@ -323,8 +323,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setPromoter(null);
 			order.setPartner(member);
 		} else {
-			//分配给原有上传
-			if (card != null && card.getPromoter() != null) {
+			//分配给原有上传,只在成为团队成员，才能保持订单分配
+			if (card != null && card.getPromoter() != null && card.getPromoter().leaguer(order.getSeller())) {
 				Member promoter = card.getPromoter();
 				if (promoter != null && promoter.equals(order.getSeller())) {
 					promoter = null;
@@ -333,14 +333,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			} else if (xuid != null) {
 				//新客户给推广人
 				Member promoter = memberDao.find(xuid);
-				if (promoter != null && promoter.equals(order.getSeller())) {
-					promoter = null;
+				if (promoter.leaguer(order.getSeller())) {
+					if (promoter != null && promoter.equals(order.getSeller()) ) {
+						promoter = null;
+					}
+					order.setPromoter(promoter);
 				}
-				order.setPromoter(promoter);
 			}
 
 			if (order.getPromoter() != null) {
-				order.setPartner(member.partner(order.getPromoter()));
+				order.setPartner(member.partner(order.getSeller()));
 			}
 		}
 		orderDao.persist(order);
@@ -788,7 +790,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (card.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("cardPayPlugin");
 			}
-		} else
+		}
 		if (payment.getPaymentPluginId() == null) {
 			Member member = order.getMember();
 			if (member.getBalance().compareTo(order.getAmountPayable()) >= 0) {

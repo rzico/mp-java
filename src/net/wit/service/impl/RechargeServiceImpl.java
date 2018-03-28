@@ -17,8 +17,10 @@ import net.wit.Filter.Operator;
 
 import net.wit.dao.DepositDao;
 import net.wit.dao.MemberDao;
+import net.wit.dao.PaymentDao;
 import net.wit.plat.unspay.UnsPay;
 import net.wit.service.MemberService;
+import net.wit.service.SnService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -42,6 +44,12 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
+
+	@Resource(name = "paymentDaoImpl")
+	private PaymentDao paymentDao;
+
+	@Resource(name = "snServiceImpl")
+	private SnService snService;
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
@@ -120,11 +128,6 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			if (agent.getBalance().compareTo(BigDecimal.ZERO)<0) {
 				throw new RuntimeException("代理商余额不足");
 			}
-			if (agent.getFreezeBalance().compareTo(recharge.getAmount())>0) {
-				agent.setFreezeBalance(agent.getFreezeBalance().subtract(recharge.getAmount()));
-			} else {
-				agent.setFreezeBalance(BigDecimal.ZERO);
-			}
 			memberDao.merge(agent);
 			Deposit deposit = new Deposit();
 			deposit.setBalance(agent.getBalance());
@@ -142,7 +145,6 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 
 			memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
-			member.setFreezeBalance(member.getFreezeBalance().add(recharge.effectiveAmount()));
 			memberDao.merge(member);
 			Deposit memberDeposit = new Deposit();
 			memberDeposit.setBalance(member.getBalance());
@@ -178,7 +180,6 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			recharge.setTransferDate(new Date());
 			rechargeDao.persist(recharge);
 			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
-			member.setFreezeBalance(member.getFreezeBalance().add(recharge.effectiveAmount()));
 			memberDao.merge(member);
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
@@ -199,36 +200,27 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 	}
 
 	@Transactional
-	public synchronized void handle(Recharge recharge) throws Exception {
+	public synchronized Payment recharge(Recharge recharge) throws Exception {
 		Member member = recharge.getMember();
-		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+		Payment payment = new Payment();
 		try {
-			if (recharge != null && recharge.getStatus().equals(Recharge.Status.confirmed)) {
-				recharge.setStatus(Recharge.Status.success);
-				recharge.setTransferDate(new Date());
-				rechargeDao.merge(recharge);
-				member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
-				memberDao.merge(member);
-				memberDao.flush();
-				Deposit deposit = new Deposit();
-				deposit.setBalance(member.getBalance());
-				deposit.setType(Deposit.Type.recharge);
-				deposit.setMemo(recharge.getMemo());
-				deposit.setMember(member);
-				deposit.setCredit(recharge.effectiveAmount());
-				deposit.setDebit(BigDecimal.ZERO);
-				deposit.setDeleted(false);
-				deposit.setOperator("system");
-				deposit.setRecharge(recharge);
-				depositDao.persist(deposit);
-			} else {
-				throw  new RuntimeException("重复提交");
-			}
-
+			recharge.setStatus(Recharge.Status.waiting);
+			rechargeDao.persist(recharge);
+			payment.setAmount(recharge.getAmount());
+			payment.setMemo(recharge.getMemo());
+			payment.setMember(recharge.getMember());
+			payment.setMethod(Payment.Method.online);
+			payment.setPayee(member);
+			payment.setSn(snService.generate(Sn.Type.payment));
+			payment.setType(Payment.Type.recharge);
+			payment.setRecharge(recharge);
+			payment.setStatus(Payment.Status.waiting);
+			paymentDao.persist(payment);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
-			throw new RuntimeException("加款出错了");
+			throw new RuntimeException("提交出错了");
 		}
+		return payment;
 	}
 
 	@Transactional

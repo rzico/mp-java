@@ -37,7 +37,7 @@ public class UserModel extends BaseModel implements Serializable {
 
     public void bind(Member member) {
         this.id = member.getId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
      }
 }

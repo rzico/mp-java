@@ -256,5 +256,27 @@
                 });
             });
         </script>
+<script type="text/javascript">
+    UE.registerUI('dialog', function (editor, uiName) {
+        var btn = new UE.ui.Button({
+            name   : 'xiumi-connect',
+            title  : '秀米',
+            onclick: function () {
+                var dialog = new UE.ui.Dialog({
+                    iframeUrl: '${base}/admin/article/xiumi.jhtml',
+                    editor   : editor,
+                    name     : 'xiumi-connect',
+                    title    : "秀米图文消息助手",
+                    cssRules : "width: " + (window.innerWidth - 60) + "px;" + "height: " + (window.innerHeight - 60) + "px;",
+                });
+                dialog.render();
+                dialog.open();
+            }
+        });
+
+        return btn;
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="http://xiumi.us/connect/ue/v5/xiumi-ue-v5.css"/>
 </body>
 </html>

@@ -34,6 +34,7 @@ public class Payment extends BaseEntity {
 	 * 类型
 	 */
 	public enum Type {
+
 		/** 购物支付 */
 		payment,
 		/** 钱包充值 */
@@ -45,9 +46,7 @@ public class Payment extends BaseEntity {
 		/** 专栏激活     */
 		topic,
 		/** 会员卡    */
-		card,
-		/** 心里测评    */
-		evaluation
+		card
 	}
 
 	/**
@@ -94,7 +93,7 @@ public class Payment extends BaseEntity {
 
 	/** 三方单号 */
 	@Column(columnDefinition="varchar(50) comment '三方单号'")
-	private String tranSn;
+	private String  tranSn;
 
 	/** 类型 */
 	@Column(columnDefinition="int(11) not null comment '类型 {payment:消费支付,recharge:钱包充值}'")
@@ -169,6 +168,12 @@ public class Payment extends BaseEntity {
 	@JsonIgnore
 	private ArticleReward articleReward;
 
+	/** 充值 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private Recharge recharge;
+
 	/** 收款 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
@@ -180,12 +185,6 @@ public class Payment extends BaseEntity {
 	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private TopicBill topicBill;
-
-	/** 测评 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false)
-	@JsonIgnore
-	private Evaluation evaluation;
 
 	public String getSn() {
 		return sn;
@@ -339,12 +338,12 @@ public class Payment extends BaseEntity {
 		this.topicBill = topicBill;
 	}
 
-	public Evaluation getEvaluation() {
-		return evaluation;
+	public Recharge getRecharge() {
+		return recharge;
 	}
 
-	public void setEvaluation(Evaluation evaluation) {
-		this.evaluation = evaluation;
+	public void setRecharge(Recharge recharge) {
+		this.recharge = recharge;
 	}
 
 	/**

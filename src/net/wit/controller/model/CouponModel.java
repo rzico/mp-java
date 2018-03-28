@@ -43,6 +43,11 @@ public class CouponModel extends BaseModel implements Serializable {
     private String goodsName;
     /**  id  */
     private Long goodsId;
+    /**  ownerId  */
+    private Long ownerId;
+
+    /**  type   */
+    private CouponActivityModel activity;
 
     public Long getId() {
         return id;
@@ -164,6 +169,22 @@ public class CouponModel extends BaseModel implements Serializable {
         this.goodsId = goodsId;
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public CouponActivityModel getActivity() {
+        return activity;
+    }
+
+    public void setActivity(CouponActivityModel activity) {
+        this.activity = activity;
+    }
+
     public void bind(Coupon coupon) {
         this.id = coupon.getId();
         this.color = coupon.getColor();
@@ -189,6 +210,11 @@ public class CouponModel extends BaseModel implements Serializable {
             this.shopName = coupon.getDistributor().getTopic().getName();
         } else {
             this.shopName = "来自平台优惠券";
+        }
+        this.ownerId = coupon.getDistributor().getId();
+        this.activity = new CouponActivityModel();
+        if (coupon.getActivity()!=null) {
+            this.activity.bind(coupon.getActivity());
         }
     }
 

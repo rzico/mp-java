@@ -104,13 +104,6 @@ public class TopicController extends BaseController {
         if (member==null) {
             member = memberService.getCurrent();
         }
-        Admin admin = adminService.findByMember(member);
-        if (admin==null) {
-            return Message.error("没有开通");
-        }
-        if (admin.getEnterprise()==null) {
-            return Message.error("店铺已打洋,请先启APP");
-        }
         Topic topic = topicService.find(member);
         TopicViewModel model =new TopicViewModel();
         model.bind(member,member);

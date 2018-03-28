@@ -21,10 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -92,7 +89,14 @@ public class CouponCodeController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        return Message.bind(CouponCodeModel.bindList(member.getCouponCodes()),request);
+
+        List<CouponCode> models = new ArrayList<>();
+        for (CouponCode c:member.getCouponCodes()) {
+            if (c.getEnabled()) {
+                models.add(c);
+            }
+        }
+        return Message.bind(CouponCodeModel.bindList(models),request);
     }
 
     /**
@@ -125,7 +129,7 @@ public class CouponCodeController extends BaseController {
         data.put("mobile",member.getMobile());
         data.put("name",member.getName());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818803"+couponCode+".jhtml");
+        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818803"+couponCode.getCode()+".jhtml");
 
         Member owner = couponCode.getCoupon().getDistributor();
         if (owner.getTopic()!=null && owner.getTopic().getTopicCard()!=null) {

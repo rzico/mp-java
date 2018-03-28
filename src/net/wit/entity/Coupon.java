@@ -110,7 +110,7 @@ public class Coupon extends BaseEntity {
 	private Goods goods;
 
 	/** 活动规则
-	 * {consume:0,card:0}
+	 * {type:0,min:0,amount:0}
 	 * */
 	@Lob
 	@Column(columnDefinition="longtext comment '活动规则'")

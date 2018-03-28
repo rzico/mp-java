@@ -56,6 +56,9 @@ public class ShareController extends BaseController {
             return Message.error("无效文章编号");
         }
         Member member = memberService.getCurrent();
+        if(member==null){
+            return Message.error("您尚未登录");
+        }
         if (member.getLogo()==null) {
             return Message.error("请设置头像再分享");
         }

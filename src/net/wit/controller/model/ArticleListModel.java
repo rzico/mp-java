@@ -142,7 +142,7 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.id = article.getId();
         this.authorId = article.getMember().getId();
         this.createDate = article.getCreateDate();
-        this.author = article.getMember().getNickName();
+        this.author = article.getMember().displayName();
         this.logo = article.getMember().getLogo();
         this.title = article.getTitle();
         this.thumbnail = article.getThumbnail();

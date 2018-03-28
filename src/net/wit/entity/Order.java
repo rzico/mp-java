@@ -363,9 +363,15 @@ public class Order extends BaseEntity {
 	@OrderBy("createDate asc")
 	private Set<Refunds> refunds = new HashSet<Refunds>();
 
+	/** 账单 */
+	@JsonIgnore
+	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OrderBy("createDate asc")
+	private Set<Deposit> deposits = new HashSet<Deposit>();
+
 	/**
 	 * 获取订单编号
-	 * 
+	 *
 	 * @return 订单编号
 	 */
 	public String getSn() {
@@ -374,7 +380,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置订单编号
-	 * 
+	 *
 	 * @param sn
 	 *            订单编号
 	 */
@@ -384,7 +390,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取订单状态
-	 * 
+	 *
 	 * @return 订单状态
 	 */
 	public OrderStatus getOrderStatus() {
@@ -393,7 +399,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置订单状态
-	 * 
+	 *
 	 * @param orderStatus
 	 *            订单状态
 	 */
@@ -412,7 +418,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取支付状态
-	 * 
+	 *
 	 * @return 支付状态
 	 */
 	public PaymentStatus getPaymentStatus() {
@@ -421,7 +427,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置支付状态
-	 * 
+	 *
 	 * @param paymentStatus
 	 *            支付状态
 	 */
@@ -439,7 +445,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取配送状态
-	 * 
+	 *
 	 * @return 配送状态
 	 */
 	public ShippingStatus getShippingStatus() {
@@ -448,7 +454,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置配送状态
-	 * 
+	 *
 	 * @param shippingStatus
 	 *            配送状态
 	 */
@@ -458,7 +464,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取支付手续费
-	 * 
+	 *
 	 * @return 支付手续费
 	 */
 	public BigDecimal getFee() {
@@ -467,7 +473,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置支付手续费
-	 * 
+	 *
 	 * @param fee
 	 *            支付手续费
 	 */
@@ -485,7 +491,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取运费
-	 * 
+	 *
 	 * @return 运费
 	 */
 	public BigDecimal getFreight() {
@@ -494,7 +500,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置运费
-	 * 
+	 *
 	 * @param freight
 	 *            运费
 	 */
@@ -504,7 +510,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取优惠券折扣
-	 * 
+	 *
 	 * @return 优惠券折扣
 	 */
 	public BigDecimal getCouponDiscount() {
@@ -513,7 +519,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置优惠券折扣
-	 * 
+	 *
 	 * @param couponDiscount
 	 *            优惠券折扣
 	 */
@@ -523,7 +529,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取调整金额
-	 * 
+	 *
 	 * @return 调整金额
 	 */
 	public BigDecimal getOffsetAmount() {
@@ -532,7 +538,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置调整金额
-	 * 
+	 *
 	 * @param offsetAmount
 	 *            调整金额
 	 */
@@ -542,7 +548,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取已付金额
-	 * 
+	 *
 	 * @return 已付金额
 	 */
 	public BigDecimal getAmountPaid() {
@@ -551,7 +557,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置已付金额
-	 * 
+	 *
 	 * @param amountPaid
 	 *            已付金额
 	 */
@@ -561,7 +567,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取赠送积分
-	 * 
+	 *
 	 * @return 赠送积分
 	 */
 	public Long getPoint() {
@@ -570,7 +576,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置赠送积分
-	 * 
+	 *
 	 * @param point
 	 *            赠送积分
 	 */
@@ -580,7 +586,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取收货人
-	 * 
+	 *
 	 * @return 收货人
 	 */
 	public String getConsignee() {
@@ -589,7 +595,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置收货人
-	 * 
+	 *
 	 * @param consignee
 	 *            收货人
 	 */
@@ -599,7 +605,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取地区名称
-	 * 
+	 *
 	 * @return 地区名称
 	 */
 	public String getAreaName() {
@@ -608,7 +614,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置地区名称
-	 * 
+	 *
 	 * @param areaName
 	 *            地区名称
 	 */
@@ -618,7 +624,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取地址
-	 * 
+	 *
 	 * @return 地址
 	 */
 	public String getAddress() {
@@ -627,7 +633,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置地址
-	 * 
+	 *
 	 * @param address
 	 *            地址
 	 */
@@ -637,7 +643,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取邮编
-	 * 
+	 *
 	 * @return 邮编
 	 */
 	public String getZipCode() {
@@ -646,7 +652,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置邮编
-	 * 
+	 *
 	 * @param zipCode
 	 *            邮编
 	 */
@@ -656,7 +662,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取电话
-	 * 
+	 *
 	 * @return 电话
 	 */
 	public String getPhone() {
@@ -665,7 +671,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置电话
-	 * 
+	 *
 	 * @param phone
 	 *            电话
 	 */
@@ -675,7 +681,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取附言
-	 * 
+	 *
 	 * @return 附言
 	 */
 	public String getMemo() {
@@ -684,7 +690,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置附言
-	 * 
+	 *
 	 * @param memo
 	 *            附言
 	 */
@@ -726,7 +732,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取到期时间
-	 * 
+	 *
 	 * @return 到期时间
 	 */
 	public Date getExpire() {
@@ -735,7 +741,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置到期时间
-	 * 
+	 *
 	 * @param expire
 	 *            到期时间
 	 */
@@ -745,7 +751,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取锁定到期时间
-	 * 
+	 *
 	 * @return 锁定到期时间
 	 */
 	public Date getLockExpire() {
@@ -754,7 +760,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置锁定到期时间
-	 * 
+	 *
 	 * @param lockExpire
 	 *            锁定到期时间
 	 */
@@ -764,7 +770,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取是否已分配库存
-	 * 
+	 *
 	 * @return 是否已分配库存
 	 */
 	public Boolean getIsAllocatedStock() {
@@ -773,7 +779,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置是否已分配库存
-	 * 
+	 *
 	 * @param isAllocatedStock
 	 *            是否已分配库存
 	 */
@@ -783,7 +789,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取地区
-	 * 
+	 *
 	 * @return 地区
 	 */
 	public Area getArea() {
@@ -792,7 +798,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置地区
-	 * 
+	 *
 	 * @param area
 	 *            地区
 	 */
@@ -802,7 +808,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取会员
-	 * 
+	 *
 	 * @return 会员
 	 */
 	public Member getMember() {
@@ -811,7 +817,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置会员
-	 * 
+	 *
 	 * @param member
 	 *            会员
 	 */
@@ -829,7 +835,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取优惠码
-	 * 
+	 *
 	 * @return 优惠码
 	 */
 	public CouponCode getCouponCode() {
@@ -838,7 +844,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置优惠码
-	 * 
+	 *
 	 * @param couponCode
 	 *            优惠码
 	 */
@@ -848,7 +854,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取优惠券
-	 * 
+	 *
 	 * @return 优惠券
 	 */
 	public List<Coupon> getCoupons() {
@@ -857,7 +863,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置优惠券
-	 * 
+	 *
 	 * @param coupons
 	 *            优惠券
 	 */
@@ -865,9 +871,17 @@ public class Order extends BaseEntity {
 		this.coupons = coupons;
 	}
 
+	public Set<Deposit> getDeposits() {
+		return deposits;
+	}
+
+	public void setDeposits(Set<Deposit> deposits) {
+		this.deposits = deposits;
+	}
+
 	/**
 	 * 获取订单项
-	 * 
+	 *
 	 * @return 订单项
 	 */
 	public List<OrderItem> getOrderItems() {
@@ -876,7 +890,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置订单项
-	 * 
+	 *
 	 * @param orderItems
 	 *            订单项
 	 */
@@ -886,7 +900,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取订单日志
-	 * 
+	 *
 	 * @return 订单日志
 	 */
 	public List<OrderLog> getOrderLogs() {
@@ -895,7 +909,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置订单日志
-	 * 
+	 *
 	 * @param orderLogs
 	 *            订单日志
 	 */
@@ -905,7 +919,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取收款单
-	 * 
+	 *
 	 * @return 收款单
 	 */
 	public Set<Payment> getPayments() {
@@ -914,7 +928,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置收款单
-	 * 
+	 *
 	 * @param payments
 	 *            收款单
 	 */
@@ -924,7 +938,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取退款单
-	 * 
+	 *
 	 * @return 退款单
 	 */
 	public Set<Refunds> getRefunds() {
@@ -933,7 +947,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 设置退款单
-	 * 
+	 *
 	 * @param refunds
 	 *            退款单
 	 */
@@ -992,7 +1006,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取订单名称
-	 * 
+	 *
 	 * @return 订单名称
 	 */
 	@Transient
@@ -1013,7 +1027,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取商品重量
-	 * 
+	 *
 	 * @return 商品重量
 	 */
 	@Transient
@@ -1031,7 +1045,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取商品数量
-	 * 
+	 *
 	 * @return 商品数量
 	 */
 	@Transient
@@ -1049,7 +1063,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取已发货数量
-	 * 
+	 *
 	 * @return 已发货数量
 	 */
 	@Transient
@@ -1067,7 +1081,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取已退货数量
-	 * 
+	 *
 	 * @return 已退货数量
 	 */
 	@Transient
@@ -1085,7 +1099,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取商品价格
-	 * 
+	 *
 	 * @return 商品价格
 	 */
 	@Transient
@@ -1121,7 +1135,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取订单金额
-	 * 
+	 *
 	 * @return 订单金额
 	 */
 	@Transient
@@ -1194,7 +1208,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 获取应付金额
-	 * 
+	 *
 	 * @return 应付金额
 	 */
 	@Transient
@@ -1205,7 +1219,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 是否已过期  true 过期了
-	 * 
+	 *
 	 * @return 是否已过期
 	 */
 	@Transient
@@ -1215,7 +1229,7 @@ public class Order extends BaseEntity {
 
 	/**
 	 * 判断是否已锁定
-	 * 
+	 *
 	 * @param operator
 	 *            操作员
 	 * @return 是否已锁定
@@ -1284,7 +1298,7 @@ public class Order extends BaseEntity {
 			return "已完成";
 		}
 	}
-	
+
 	public String getStatus() {
 		if (getOrderStatus().equals(OrderStatus.unconfirmed) && getPaymentStatus().equals(PaymentStatus.unpaid)) {
 			return "unpaid";
@@ -1315,6 +1329,24 @@ public class Order extends BaseEntity {
 		} else {
 			return "completed";
 		}
+	}
+
+	/**
+	 * 获取本单收益
+	 *
+	 * @return 本单收益
+	 */
+	@Transient
+	public BigDecimal getRebate() {
+		BigDecimal rebate = BigDecimal.ZERO;
+		if (getDeposits() != null) {
+			for (Deposit deposit : getDeposits()) {
+				if (deposit != null && deposit.getType().equals(Deposit.Type.rebate)) {
+					rebate = rebate.add(deposit.getCredit());
+				}
+			}
+		}
+		return rebate;
 	}
 
 }

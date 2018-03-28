@@ -71,7 +71,7 @@ public class ArticleVoteListModel extends BaseModel implements Serializable {
     public void bind(ArticleVote articleVote) {
         this.id = articleVote.getId();
         this.memberId = articleVote.getMember().getId();
-        this.nickName = articleVote.getMember().getNickName();
+        this.nickName = articleVote.getMember().displayName();
         this.logo = articleVote.getMember().getLogo();
         this.title = articleVote.getTitle();
         this.value = articleVote.getValue();
