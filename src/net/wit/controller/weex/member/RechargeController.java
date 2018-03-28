@@ -4,6 +4,10 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.MemberModel;
 import net.wit.controller.model.MemberViewModel;
+import net.wit.*;
+import net.wit.Message;
+import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.ArticleRewardModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -78,20 +84,20 @@ public class RechargeController extends BaseController {
      */
     @RequestMapping(value = "submit")
     @ResponseBody
-    public Message submit(String username,String voucher,BigDecimal amount,HttpServletRequest request){
+    public Message submit(String username,String voucher,BigDecimal amount,HttpServletRequest request) {
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
         }
         if (member.getBalance().compareTo(amount) < 0) {
             return Message.error("账户余额不足");
         }
         Admin admin = adminService.findByMember(member);
-        if (admin==null) {
+        if (admin == null) {
             return Message.error("不是代理商");
         }
         Member user = memberService.findByUsername(username);
-        if (user==null) {
+        if (user == null) {
             return Message.error("无效用户名");
         }
         Recharge recharge = new Recharge();
@@ -103,13 +109,42 @@ public class RechargeController extends BaseController {
         recharge.setMember(user);
         recharge.setAdmin(admin);
         recharge.setSn(snService.generate(Sn.Type.recharge));
-        recharge.setMemo("代理商代充,"+admin.getName());
+        recharge.setMemo("代理商代充," + admin.getName());
         try {
-            rechargeService.agentSubmit(recharge,member);
+            rechargeService.agentSubmit(recharge, member);
         } catch (Exception e) {
             return Message.error(e.getMessage());
         }
         return Message.success("提交成功");
+    }
+
+    /**
+     *  提交充值
+     */
+    @RequestMapping(value = "/payment", method = RequestMethod.POST)
+    @ResponseBody
+    public Message payment(BigDecimal amount,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+
+        Recharge recharge = new Recharge();
+        recharge.setFee(BigDecimal.ZERO);
+        recharge.setAmount(amount);
+        recharge.setMember(member);
+        recharge.setMemo("钱包充值");
+        recharge.setMethod(Recharge.Method.online);
+        recharge.setStatus(Recharge.Status.waiting);
+        recharge.setSn(snService.generate(Sn.Type.recharge));
+        Payment payment = null;
+        try {
+            payment = rechargeService.recharge(recharge);
+        } catch (Exception e) {
+            return Message.error("提交失败");
+        }
+        if (payment==null) {
+            return Message.error("提交失败");
+        }
+        return Message.success((Object) payment.getSn(),"发布成功");
+
     }
 
 }

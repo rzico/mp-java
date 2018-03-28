@@ -56,6 +56,9 @@ public class TransferController extends BaseController {
     @Resource(name = "bankcardServiceImpl")
     private BankcardService bankcardService;
 
+    @Resource(name = "configServiceImpl")
+    private ConfigService configService;
+
     /**
      *
      */
@@ -76,11 +79,14 @@ public class TransferController extends BaseController {
     }
 
     private BigDecimal calculate(BigDecimal amount) {
-//        if (amount.compareTo(new BigDecimal(5000))>=0) {
-//            return BigDecimal.ZERO;
-//        } else {
+        Config config = configService.find("transfer.fee.type");
+        if (config==null) {
             return BigDecimal.ONE;
-//        }
+        } else {
+            Config fee = configService.find("transfer.fee");
+            return amount.multiply(fee.getBigDecimal().multiply(new BigDecimal("0.01")))
+                   .setScale(2,BigDecimal.ROUND_HALF_DOWN);
+        }
     }
 
     /**
@@ -116,9 +122,17 @@ public class TransferController extends BaseController {
     @RequestMapping(value = "submit")
     @ResponseBody
     public Message submit(Transfer.Type type,BigDecimal amount,HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Config config = configService.find("transfer.min");
+        if (config!=null) {
+            if (amount.compareTo(config.getBigDecimal())<0) {
+                return Message.error("不能低于"+config.getValue()+"元");
+            }
         }
 
         BigDecimal effective = member.effectiveBalance();

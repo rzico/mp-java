@@ -130,6 +130,7 @@ public class CardController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
         return Message.bind(CardModel.bindList(member.getCards()),request);
     }
 
