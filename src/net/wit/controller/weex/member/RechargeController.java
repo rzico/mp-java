@@ -121,7 +121,7 @@ public class RechargeController extends BaseController {
     /**
      *  提交充值
      */
-    @RequestMapping(value = "/payment", method = RequestMethod.POST)
+    @RequestMapping(value = "/payment")
     @ResponseBody
     public Message payment(BigDecimal amount,HttpServletRequest request){
         Member member = memberService.getCurrent();
