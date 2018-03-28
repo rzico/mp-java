@@ -87,7 +87,7 @@ public class PaymentModel extends BaseModel implements Serializable {
         this.createDate = payment.getCreateDate();
         this.memo = payment.getMemo();
         this.logo = payment.getPayee().getLogo();
-        this.nickName = payment.getPayee().getNickName();
+        this.nickName = payment.getPayee().displayName();
         this.paymentPluginId = payment.getPaymentPluginId();
     }
 }

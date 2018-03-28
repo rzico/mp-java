@@ -147,7 +147,7 @@ public class MemberModel extends BaseModel implements Serializable {
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();
         this.username = member.getUsername();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
         this.balance = member.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);

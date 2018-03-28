@@ -64,7 +64,7 @@ public class ArticleShareModel extends BaseModel implements Serializable {
 
     public void bind(ArticleShare share) {
         this.memberId = share.getMember().getId();
-        this.nickName = share.getMember().getNickName();
+        this.nickName = share.getMember().displayName();
         this.logo = share.getMember().getLogo();
         this.createDate = share.getCreateDate();
         this.shareType = share.getShareType();

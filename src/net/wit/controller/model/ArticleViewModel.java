@@ -224,7 +224,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         if (shareUser==null) {
             shareUser = article.getMember();
         }
-        this.shareNickName = shareUser.getNickName();
+        this.shareNickName = shareUser.displayName();
 
         if (article.getTemplate()==null) {
             this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
