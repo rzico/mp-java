@@ -84,6 +84,9 @@ public class LoginController extends BaseController {
             if (result.containsKey("unionid")) {
                 unionId = result.get("unionid").toString();
             }
+            if (unionId == null) {
+                unionId = "#";
+            }
 
             BindUser bindUser = null;
             if (unionId!=null) {
