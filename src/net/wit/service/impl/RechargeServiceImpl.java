@@ -205,6 +205,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 		Payment payment = new Payment();
 		try {
 			recharge.setStatus(Recharge.Status.waiting);
+			rechargeDao.persist(recharge);
 			payment.setAmount(recharge.getAmount());
 			payment.setMemo(recharge.getMemo());
 			payment.setMember(recharge.getMember());
