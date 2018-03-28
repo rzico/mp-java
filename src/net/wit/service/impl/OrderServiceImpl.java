@@ -790,7 +790,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (card.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("cardPayPlugin");
 			}
-		} else if (payment.getPaymentPluginId() == null) {
+		}
+		if (payment.getPaymentPluginId() == null) {
 			Member member = order.getMember();
 			if (member.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("balancePayPlugin");
