@@ -20,6 +20,7 @@ import net.wit.entity.summary.DepositSummary;
 public interface DepositService extends BaseService<Deposit, Long> {
 	Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable);
 	BigDecimal summary(Deposit.Type type,Member member);
+	BigDecimal summary(Deposit.Type type,Member member,Member seller);
 	/**
 	 */
 	List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate);

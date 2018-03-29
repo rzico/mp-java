@@ -234,6 +234,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 		deposit.setDebit(BigDecimal.ZERO);
 		deposit.setDeleted(false);
 		deposit.setOperator(admin.getName());
+		deposit.setSeller(member);
 		depositDao.persist(deposit);
 
 		enterprise.setCreditLine(enterprise.getCreditLine().add(amount));

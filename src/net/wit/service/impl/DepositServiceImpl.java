@@ -90,6 +90,9 @@ public class DepositServiceImpl extends BaseServiceImpl<Deposit, Long> implement
 	public BigDecimal summary(Deposit.Type type,Member member) {
 		return depositDao.summary(type,member);
 	}
+	public BigDecimal summary(Deposit.Type type,Member member,Member seller) {
+		return depositDao.summary(type,member,seller);
+	}
 	public List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate) {
 		return depositDao.sumPage(member,beginDate,endDate);
 	}

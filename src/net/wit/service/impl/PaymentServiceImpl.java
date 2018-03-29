@@ -201,6 +201,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					deposit.setOperator("system");
 					deposit.setPayment(payment);
 					deposit.setOrder(order);
+					deposit.setSeller(order.getSeller());
 					depositDao.persist(deposit);
 				}
 
@@ -233,6 +234,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
 						deposit.setPayBill(payBill);
+						deposit.setSeller(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -275,6 +277,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
 						deposit.setPayBill(payBill);
+						deposit.setSeller(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -354,6 +357,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setPayment(payment);
+				deposit.setSeller(payment.getPayee());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 				reward.setStatus(ArticleReward.Status.success);
@@ -375,6 +379,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setPayment(payment);
+				deposit.setSeller(payment.getPayee());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 			} else

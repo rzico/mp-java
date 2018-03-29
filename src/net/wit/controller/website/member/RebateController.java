@@ -3,8 +3,11 @@ package net.wit.controller.website.member;
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.DepositModel;
+import net.wit.controller.model.RebateModel;
+import net.wit.entity.Card;
 import net.wit.entity.Deposit;
 import net.wit.entity.Member;
+import net.wit.service.CardService;
 import net.wit.service.DepositService;
 import net.wit.service.MemberService;
 import org.springframework.stereotype.Controller;
@@ -32,6 +35,9 @@ public class RebateController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
+
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
 
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
@@ -68,6 +74,32 @@ public class RebateController extends BaseController {
         }
         BigDecimal sm = depositService.summary(type,member);
         return Message.bind(sm,request);
+    }
+
+
+    /**
+     *  总览
+     */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(Long authorId,Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Member owner = memberService.find(authorId);
+
+        BigDecimal sm = depositService.summary(Deposit.Type.rebate,member,owner);
+
+        RebateModel model = new RebateModel();
+        model.setRebate(sm);
+        long cont = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member) );
+        model.setContacts(cont);
+
+        long inv = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member),new Filter("type", Filter.Operator.eq, Card.Type.team) );
+        model.setInvalid(inv);
+
+        return Message.bind(model,request);
     }
 
 }
