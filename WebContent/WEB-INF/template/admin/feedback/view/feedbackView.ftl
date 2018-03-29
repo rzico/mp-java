@@ -138,7 +138,6 @@
 <script type="text/javascript" >
     $(
             $(":submit").on('click', function () {
-                alert("123123123");
                         $.ajax({
                             url: "${base}/admin/feedback/update.jhtml",//这个就是请求地址对应sAjaxSource
                             data: {
