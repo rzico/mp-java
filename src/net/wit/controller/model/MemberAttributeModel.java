@@ -160,7 +160,7 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
         this.id = member.getId();
         this.userId = member.userId();
         this.autograph = member.getAutograph();
-        this.nickName = member.displayName();
+        this.nickName = member.getNickName();
         this.username = member.getUsername();
         this.gender = member.getGender();
         this.birthday = member.getBirth();
