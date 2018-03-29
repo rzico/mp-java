@@ -17,12 +17,12 @@ public class RebateModel extends BaseModel implements Serializable {
     /**
      * 我的人脉
      */
-    private int contacts;
+    private long contacts;
 
     /**
      * 待维护人脉
      */
-    private int invalid;
+    private long invalid;
 
     public BigDecimal getRebate() {
         return rebate;
@@ -32,20 +32,19 @@ public class RebateModel extends BaseModel implements Serializable {
         this.rebate = rebate;
     }
 
-    public int getContacts() {
+    public long getContacts() {
         return contacts;
     }
 
-    public void setContacts(int contacts) {
+    public void setContacts(long contacts) {
         this.contacts = contacts;
     }
 
-    public int getInvalid() {
+    public long getInvalid() {
         return invalid;
     }
 
-    public void setInvalid(int invalid) {
+    public void setInvalid(long invalid) {
         this.invalid = invalid;
     }
-
 }

@@ -79,6 +79,19 @@ public class DepositDaoImpl extends BaseDaoImpl<Deposit, Long> implements Deposi
 			return null;
 		}
 	}
+	public BigDecimal summary(Deposit.Type type,Member member,Member seller) {
+		String jpql = "select sum(deposit.credit)-sum(deposit.debit) from Deposit deposit where  deposit.type =:type and deposit.member = :member and deposit.seller=:seller";
+		try {
+			return entityManager.createQuery(jpql,BigDecimal.class)
+					.setFlushMode(FlushModeType.COMMIT)
+					.setParameter("member", member)
+					.setParameter("type", type)
+					.setParameter("seller", seller)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 	public List<DepositSummary> sumPage(Member member, Date beginDate, Date endDate) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
