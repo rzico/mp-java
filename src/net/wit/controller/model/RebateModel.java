@@ -13,10 +13,12 @@ public class RebateModel extends BaseModel implements Serializable {
      * 奖励金
      */
     private BigDecimal rebate;
+
     /**
      * 我的人脉
      */
     private int contacts;
+
     /**
      * 待维护人脉
      */
@@ -45,4 +47,5 @@ public class RebateModel extends BaseModel implements Serializable {
     public void setInvalid(int invalid) {
         this.invalid = invalid;
     }
+
 }
