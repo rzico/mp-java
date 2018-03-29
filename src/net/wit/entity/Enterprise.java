@@ -198,6 +198,14 @@ public class Enterprise extends BaseEntity {
         this.linkman = linkman;
     }
 
+    public MapEntity getMapArea() {
+        if (getArea() != null) {
+            return new MapEntity(getArea().getId().toString(), getArea().getName());
+        } else {
+            return null;
+        }
+    }
+
     @JsonIgnore
     public BigDecimal calcFee(BigDecimal amount) {
         BigDecimal rate = this.brokerage.multiply(new BigDecimal("0.01"));
