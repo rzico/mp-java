@@ -173,7 +173,7 @@ public class FeedbackController extends BaseController {
 
 		message.setContent(recontent);
 
-		message.setType(net.wit.entity.Message.Type.feedback);
+		message.setType(net.wit.entity.Message.Type.message);
 
 		message.setDeleted(false);
 
