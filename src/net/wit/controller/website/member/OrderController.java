@@ -356,7 +356,7 @@ public class OrderController extends BaseController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(String status, Pageable pageable, HttpServletRequest request) {
+	Message list(Long authorId,String status, Pageable pageable, HttpServletRequest request) {
 
 		Member member = memberService.getCurrent();
 		if (member==null) {
@@ -365,6 +365,12 @@ public class OrderController extends BaseController {
 
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
+		if (authorId!=null) {
+			Member seller = memberService.find(authorId);
+			if (seller!=null) {
+				filters.add(new Filter("seller", Filter.Operator.eq,seller));
+			}
+		}
 
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);

@@ -344,6 +344,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (order.getPromoter() != null) {
 				order.setPartner(member.partner(order.getSeller()));
 			}
+
 		}
 		orderDao.persist(order);
 		cardService.decPoint(card, order.getPointDiscount().longValue(), "订单支付", order);
