@@ -1,10 +1,12 @@
 package net.wit.controller.weex.member;
 
 import net.wit.Message;
+import net.wit.controller.admin.BaseController;
 import net.wit.entity.Feedback;
 import net.wit.entity.Member;
 import net.wit.service.FeedbackService;
 import net.wit.service.MemberService;
+import net.wit.service.MessageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,13 +20,16 @@ import javax.annotation.Resources;
  */
 @Controller("weexMemberFeedbackController")
 @RequestMapping("/weex/member/feedback")
-public class FeedbackController {
+public class FeedbackController extends BaseController{
 
     @Resource(name = "feedbackServiceImpl")
     private FeedbackService feedbackService;
 
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
+
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
 
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
@@ -52,9 +57,37 @@ public class FeedbackController {
         }
         try {
             feedbackService.save(entity);
-            return Message.success("反馈成功,请耐心等待客服解答");
         } catch (Exception e) {
             return Message.error("反馈失败,服务器资源跑路了");
+        }
+        net.wit.entity.Message message=new net.wit.entity.Message();
+        message.setContent("已收到您的反馈，请耐心等待结果！");
+
+        message.setType(net.wit.entity.Message.Type.message);
+
+        message.setDeleted(false);
+
+        message.setReceiver(member);
+
+        message.setReaded(false);
+
+        message.setTitle("问题反馈回复");
+
+        message.setThumbnial("http://cdn.rzico.com/weex/resources/images/gm_10202.png");
+
+        message.setMember(null);
+
+        message.setSender(null);
+
+        if (!isValid(message)) {
+            return Message.error("问题已收到,消息推送失败");
+        }
+        try {
+            messageService.pushTo(message);
+            return Message.success("消息推送成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return net.wit.Message.error("admin.save.error");
         }
     }
 }
