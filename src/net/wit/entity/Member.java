@@ -1052,12 +1052,12 @@ public class Member extends BaseEntity {
 	}
 
 	public String displayName() {
-		if (getName()!=null) {
-			return getName();
-		} else
 		if (getNickName()!=null) {
 			return getNickName();
-		} else {
+		} else if (getName()!=null) {
+			return getName();
+		} else
+		{
 			return userId();
 		}
 	}
