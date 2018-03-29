@@ -11,8 +11,10 @@ import net.wit.entity.*;
 import net.wit.entity.summary.EvaluationSummary;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -194,14 +196,21 @@ public class EvaluationController extends BaseController {
      */
     @RequestMapping(value = "/answer")
     @ResponseBody
-    public Message question(Long id,String body,HttpServletRequest request){
+    public Message question(@RequestBody Long id, @RequestBody String body, HttpServletRequest request){
+        System.out.print(body);
+
         Evaluation evaluation = evaluationService.find(id);
         if (evaluation==null) {
             return Message.error("无效测评编号");
         }
         Member member = memberService.getCurrent();
 
-        JSONArray answers = JSONArray.fromObject(body);
+        String mBody = new String(Base64.decode(body));
+
+        System.out.print(mBody);
+
+
+        JSONArray answers = JSONArray.fromObject(mBody);
         List<EvalAnswer> evals = new ArrayList<EvalAnswer>();
 
         for (int i=0;i<answers.size();i++) {
