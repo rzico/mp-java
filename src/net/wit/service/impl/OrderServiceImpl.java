@@ -344,6 +344,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (order.getPromoter() != null) {
 				order.setPartner(member.partner(order.getSeller()));
 			}
+
 		}
 		orderDao.persist(order);
 		cardService.decPoint(card, order.getPointDiscount().longValue(), "订单支付", order);
@@ -673,7 +674,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				Deposit deposit = new Deposit();
 				deposit.setBalance(seller.getBalance());
 				deposit.setType(Deposit.Type.product);
-				deposit.setMemo("股东分红");
+				deposit.setMemo("支付分红佣金");
 				deposit.setMember(seller);
 				deposit.setCredit(BigDecimal.ZERO.subtract(pte));
 				deposit.setDebit(BigDecimal.ZERO);
@@ -701,6 +702,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit_partner.setOrder(order);
 				depositDao.persist(deposit_partner);
 				messageService.depositPushTo(deposit_partner);
+
+				order.setIsPartner(true);
+				orderDao.merge(order);
 
 			}
 
