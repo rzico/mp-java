@@ -10,6 +10,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -263,32 +264,32 @@ public class EnterpriseController extends BaseController {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
-		Admin admin =adminService.getCurrent();
-		Enterprise enterprise=admin.getEnterprise();
-
-		if(enterprise==null){
-			return Message.error("您还未绑定企业");
-		}
-		//判断企业是否被删除
-		if(enterprise.getDeleted()){
-			Message.error("您的企业不存在");
-		}
+//		Admin admin =adminService.getCurrent();
+//		Enterprise enterprise=admin.getEnterprise();
+//
+//		if(enterprise==null){
+//			return Message.error("您还未绑定企业");
+//		}
+//		//判断企业是否被删除
+//		if(enterprise.getDeleted()){
+//			Message.error("您的企业不存在");
+//		}
 		//代理商
 		//个人代理商(無權限)
 		//商家(無權限)
-		if(enterprise.getType()== Enterprise.Type.agent){
-			if(enterprise.getMember()!=null){
-				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
-				filters.add(mediaTypeFilter);
-			}
-			else{
-				return Message.error("该商家未绑定");
-			}
-		}
-		if(searchValue!=null){
-			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
-			filters.add(mediaTypeFilter);
-		}
+//		if(enterprise.getType()== Enterprise.Type.agent){
+//			if(enterprise.getMember()!=null){
+//				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+//				filters.add(mediaTypeFilter);
+//			}
+//			else{
+//				return Message.error("该商家未绑定");
+//			}
+//		}
+//		if(searchValue!=null){
+//			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
+//			filters.add(mediaTypeFilter);
+//		}
 		Page<Enterprise> page = enterpriseService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 
