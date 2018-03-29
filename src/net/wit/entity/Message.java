@@ -107,6 +107,7 @@ public class Message extends BaseEntity {
 	/** 消息来源 */
 	@Lob
 	@Column(columnDefinition="longtext comment '消息来源'")
+	@JsonIgnore
 	private String ext;
 
 	public Message.Type getType() {

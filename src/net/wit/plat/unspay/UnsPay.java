@@ -148,7 +148,7 @@ public class UnsPay {
         return data.get(errorCode);
     }
     public synchronized static String submit(Transfer transfer) {
-        return "0000";
+        return "3000";
 //        try {
 //            BigDecimal bal = queryBalance();
 //            if (bal.compareTo(transfer.effectiveAmount().add(BigDecimal.ONE))<=0) {
@@ -179,7 +179,7 @@ public class UnsPay {
     }
     //00，成功;10，处理中;20，失败  ;其他情况出错了
     public static String query(String sn) {
-        return "0000";
+        return "3000";
 //
 //        try {
 //            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
