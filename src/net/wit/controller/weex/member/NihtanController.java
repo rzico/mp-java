@@ -50,7 +50,7 @@ public class NihtanController extends BaseController {
 
     @RequestMapping(value = "/gameList")
     @ResponseBody
-    public Message gameList(HttpServletRequest request,ModelMap model) {
+    public Message gameList() {
         String resp = Crypto.gameList();
         System.out.println("========="+resp);
 
@@ -62,12 +62,22 @@ public class NihtanController extends BaseController {
         List<GameListModel> data = new ArrayList<>();
         for (int i=0;i<sicboArr.size();i++) {
             JSONObject tb = sicboArr.getJSONObject(i);
+            String status = "0";
 
+
+            JSONArray maintenance = tb.getJSONArray("maintenance");
+            for (int j = 0; j < maintenance.size(); j++) {
+                JSONObject mt = maintenance.getJSONObject(j);
+                if (mt.getString("status").equals("1")) {
+                    status = "1";
+                }
+            }
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
                 GameListModel m = new GameListModel();
                 m.setGame("Sicbo");
+                m.setStatus(status);
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -90,6 +100,8 @@ public class NihtanController extends BaseController {
                 rng = range.getString("min") + "-" + range.getString("max");
                 m.setRanges(rng);
                 data.add(m);
+
+
             }
         }
 
@@ -101,6 +113,19 @@ public class NihtanController extends BaseController {
         for (int i=0;i<pokerArr.size();i++) {
             JSONObject tb = pokerArr.getJSONObject(i);
 
+            String status = "0";
+            JSONArray maintenance = tb.getJSONObject("maintenance").getJSONArray("maintenance");
+            for (int j = 0; j < maintenance.size(); j++) {
+                JSONArray info = maintenance.getJSONObject(j).getJSONArray("info");
+                for (int r = 0; r < info.size(); r++) {
+                    JSONObject mt = info.getJSONObject(r);
+                    if (mt.getString("status").equals("1")) {
+                        status = "1";
+                    }
+                }
+
+            }
+
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
@@ -108,6 +133,7 @@ public class NihtanController extends BaseController {
                 rng = range.getString("min") + "-" + range.getString("max");
                 GameListModel m = new GameListModel();
                 m.setGame("Poker");
+                m.setStatus(status);
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -136,12 +162,24 @@ public class NihtanController extends BaseController {
         JSONArray  tigerArr = tiger.getJSONArray("tables");
         for (int i=0;i<tigerArr.size();i++) {
             JSONObject tb = tigerArr.getJSONObject(i);
+
+            String status = "0";
+
+
+            JSONArray maintenance = tb.getJSONArray("maintenance");
+            for (int j = 0; j < maintenance.size(); j++) {
+                JSONObject mt = maintenance.getJSONObject(j);
+                if (mt.getString("status").equals("1")) {
+                    status = "1";
+                }
+            }
              JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
                 JSONObject range = ranges.getJSONObject(j);
                 GameListModel m = new GameListModel();
                 m.setGame("Dragon-Tiger");
+                m.setStatus(status);
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -173,12 +211,28 @@ public class NihtanController extends BaseController {
         JSONArray  baccaratArr = baccarat.getJSONArray("tables");
         for (int i=0;i<baccaratArr.size();i++) {
             JSONObject tb = baccaratArr.getJSONObject(i);
+
+
+            String status = "0";
+            JSONArray maintenance = tb.getJSONObject("maintenance").getJSONArray("maintenance");
+            for (int j = 0; j < maintenance.size(); j++) {
+                JSONArray info = maintenance.getJSONObject(j).getJSONArray("info");
+                for (int r = 0; r < info.size(); r++) {
+                    JSONObject mt = info.getJSONObject(r);
+                    if (mt.getString("status").equals("1")) {
+                        status = "1";
+                    }
+                }
+
+            }
+
             JSONArray ranges = tb.getJSONArray("ranges");
             String rng = "";
             for (int j = 0; j < ranges.size(); j++) {
                 JSONObject range = ranges.getJSONObject(j);
                 GameListModel m = new GameListModel();
                 m.setGame("Baccarat");
+                m.setStatus(status);
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -203,58 +257,17 @@ public class NihtanController extends BaseController {
             }
         }
 
-        int i= 0;
-        for (GameListModel g:data) {
-            i = i+1;
-            GameList gl = gameListService.find(GameList.Type.nihtan,g.getGame(),g.getTable(),g.getRanges());
-            if (gl==null) {
-                gl = new GameList();
-                gl.setType(GameList.Type.nihtan);
-                gl.setOrders(i);
-                gl.setGame(g.getGame());
-                gl.setTableNo(g.getTable());
-                gl.setRanges(g.getRanges());
-                gl.setStatus(GameList.Status.enabled);
-                gl.setVip(g.getVip());
-                if (gl.getGame().equals("Baccarat")) {
-                    if ("r".equals(g.getType())) {
-                        gl.setName("常规百家乐");
-                    } else
-                    if ("b".equals(g.getType())) {
-                        gl.setName("奖金百家乐");
-                    } else
-                    if ("s".equals(g.getType())) {
-                        gl.setName("超级六");
-                    } else {
-                        gl.setName("百家乐");
-                    }
-                } else
-                if (gl.getGame().equals("Poker")) {
-                    if ("r".equals(g.getType())) {
-                        gl.setName("常规扑克");
-                    } else
-                    if ("b".equals(g.getType())) {
-                        gl.setName("奖金扑克");
-                    } else {
-                        gl.setName("德州扑克");
-                    }
-                } else
-                if (gl.getGame().equals("Dragon-Tiger")) {
-                    gl.setName("龙虎");
-                } else
-                if (gl.getGame().equals("Sicbo")) {
-                    gl.setName("骰宝");
-                }
-                gameListService.save(gl);
-            } else {
-                if (gl.getVip()==null) {
-                    gl.setVip(g.getVip());
-                    gameListService.update(gl);
-                }
+        for (GameListModel m:data) {
+            GameList gameList = gameListService.find(GameList.Type.nihtan,m.getGame(),m.getTable(),m.getRanges());
+            if (gameList!=null) {
+                gameList.setActive(m.getStatus());
+                gameListService.update(gameList);
             }
+
         }
         Map<String,Object> data11 = JsonUtils.toObject(resp,Map.class);
         return Message.success(data11,"获取成功");
+
     }
 
     /**
@@ -298,12 +311,16 @@ public class NihtanController extends BaseController {
             range = "5-100";
         }
 
+        gameList();
         GameList gameList = gameListService.find(GameList.Type.nihtan,game,table,range);
         if (gameList==null) {
             return Message.error("游戏没开通");
         }
         if (member.getVip().compareTo(Member.VIP.valueOf(gameList.getVip()))<0) {
             return Message.error(gameList.getVip()+"级才能进入");
+        }
+        if ("1".equals(gameList.getActive())) {
+            return Message.error("正在维护中");
         }
 
         System.out.println(video);

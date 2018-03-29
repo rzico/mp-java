@@ -80,6 +80,11 @@ public class GameList extends OrderEntity {
 	@Column(columnDefinition="varchar(255) comment '说明'")
 	private String memo;
 
+	/** 说明 */
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) comment '说明'")
+	private String active;
+
 	public String getGame() {
 		return game;
 	}
@@ -150,5 +155,13 @@ public class GameList extends OrderEntity {
 
 	public void setVip(String vip) {
 		this.vip = vip;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
 	}
 }

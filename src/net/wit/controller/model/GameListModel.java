@@ -27,6 +27,8 @@ public class GameListModel extends BaseModel implements Serializable {
     private String ranges;
     /** 说明 */
     private String memo;
+    /** 状态 */
+    private String status;
 
     public String getGame() {
         return game;
@@ -90,6 +92,14 @@ public class GameListModel extends BaseModel implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void bind(GameList game) {
