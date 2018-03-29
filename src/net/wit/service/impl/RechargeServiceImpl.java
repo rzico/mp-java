@@ -129,6 +129,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 				throw new RuntimeException("代理商余额不足");
 			}
 			memberDao.merge(agent);
+			memberDao.flush();
 			Deposit deposit = new Deposit();
 			deposit.setBalance(agent.getBalance());
 			deposit.setType(Deposit.Type.payment);
@@ -146,6 +147,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
 			memberDao.merge(member);
+			memberDao.flush();
 			Deposit memberDeposit = new Deposit();
 			memberDeposit.setBalance(member.getBalance());
 			memberDeposit.setType(Deposit.Type.recharge);
@@ -181,6 +183,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			rechargeDao.persist(recharge);
 			member.setBalance(member.getBalance().add(recharge.effectiveAmount()));
 			memberDao.merge(member);
+			memberDao.flush();
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
 			deposit.setType(Deposit.Type.recharge);
