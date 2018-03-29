@@ -21,6 +21,8 @@
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/ueditor/1.4.3/xiumi-ue-v5.css" />
+
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
@@ -139,6 +141,8 @@
 <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 
 <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/xiumi-ue-dialog-v5.js"></script>
+
 
         <script type="text/javascript">
             $(function(){
