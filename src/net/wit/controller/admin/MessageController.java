@@ -55,9 +55,7 @@ public class MessageController extends BaseController {
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
-
-
-
+	
 	/**
 	 * 主页
 	 */
@@ -72,6 +70,7 @@ public class MessageController extends BaseController {
 		types.add(new MapEntity("laud","点赞提醒"));
 		types.add(new MapEntity("follow","关注提醒"));
 		types.add(new MapEntity("favorite","收藏提醒"));
+
 		model.addAttribute("types",types);
 
 		return "/admin/message/list";
@@ -258,8 +257,6 @@ public class MessageController extends BaseController {
 		genders.add(new MapEntity("female","女"));
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
-
-		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("occupations",occupationService.findAll());
 

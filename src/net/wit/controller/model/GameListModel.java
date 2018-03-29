@@ -84,6 +84,14 @@ public class GameListModel extends BaseModel implements Serializable {
         this.vip = vip;
     }
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
     public void bind(GameList game) {
         this.setLogo(game.getLogo());
         this.setGame(game.getGame());

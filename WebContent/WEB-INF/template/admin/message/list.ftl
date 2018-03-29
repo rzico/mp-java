@@ -173,16 +173,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "type",
-                    "sTitle": "类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "deleted",
-                    "sTitle": "删除",
-                    "sClass": "center"
-                },
-                {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -222,32 +212,6 @@
                     }
                 },
                 {
-                    "aTargets": [9],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [8],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if types??]
-                            [#list types as type]
-                                if ("${type.id}" == data) {
-                                    return "${type.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
                     "aTargets": [4],
                     "mRender": function (data, display, row) {
                         if(data != null){
@@ -268,7 +232,7 @@
                     }
                 }, 
                 {
-                    "aTargets": [10],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return  "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
@@ -279,7 +243,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 4, 5, 10]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 4, 5, 8]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/

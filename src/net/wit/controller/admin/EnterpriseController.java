@@ -267,6 +267,7 @@ public class EnterpriseController extends BaseController {
 		}
 		Page<Enterprise> page = enterpriseService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
+
 	}
 	
 	

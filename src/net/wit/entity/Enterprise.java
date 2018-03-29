@@ -35,7 +35,7 @@ public class Enterprise extends BaseEntity {
         success,
         /** 已关闭 */
         failure
-        };
+    };
 
     public enum Type{
         /** 运营商 */
@@ -196,14 +196,6 @@ public class Enterprise extends BaseEntity {
 
     public void setLinkman(String linkman) {
         this.linkman = linkman;
-    }
-
-    public MapEntity getMapArea() {
-        if (getArea() != null) {
-            return new MapEntity(getArea().getId().toString(), getArea().getName());
-        } else {
-            return null;
-        }
     }
 
     @JsonIgnore
