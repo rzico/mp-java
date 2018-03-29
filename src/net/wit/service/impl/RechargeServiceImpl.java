@@ -140,6 +140,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
 			deposit.setRecharge(recharge);
+			deposit.setSeller(recharge.getMember());
 			depositDao.persist(deposit);
 
 			//充用户款
@@ -158,6 +159,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			memberDeposit.setDeleted(false);
 			memberDeposit.setOperator("system");
 			memberDeposit.setRecharge(recharge);
+			memberDeposit.setSeller(member);
 			depositDao.persist(memberDeposit);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
@@ -194,6 +196,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
 			deposit.setRecharge(recharge);
+			deposit.setSeller(member);
 			depositDao.persist(deposit);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());

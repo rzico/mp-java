@@ -188,6 +188,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					deposit.setPayment(payment);
 					deposit.setRefunds(refunds);
 					deposit.setOrder(order);
+					deposit.setSeller(order.getSeller());
 					depositDao.persist(deposit);
 				}
 
@@ -253,6 +254,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							deposit.setOperator("system");
 							deposit.setRefunds(refunds);
 							deposit.setPayBill(payBill);
+							deposit.setSeller(payBill.getOwner());
 							depositDao.persist(deposit);
 							messageService.depositPushTo(deposit);
 						}
@@ -289,6 +291,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							deposit.setOperator("system");
 							deposit.setRefunds(refunds);
 							deposit.setPayBill(payBill);
+							deposit.setSeller(payBill.getOwner());
 							depositDao.persist(deposit);
 							messageService.depositPushTo(deposit);
 						}
@@ -396,6 +399,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						deposit.setOperator("system");
 						deposit.setRefunds(refunds);
 						deposit.setPayBill(payBill);
+						deposit.setSeller(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -429,6 +433,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						deposit.setOperator("system");
 						deposit.setRefunds(refunds);
 						deposit.setPayBill(payBill);
+						deposit.setSeller(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}

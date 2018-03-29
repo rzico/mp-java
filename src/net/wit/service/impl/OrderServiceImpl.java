@@ -502,6 +502,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setOrder(order);
+				deposit.setSeller(order.getSeller());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 			}
@@ -546,6 +547,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					deposit.setDeleted(false);
 					deposit.setOperator("system");
 					deposit.setOrder(order);
+					deposit.setSeller(order.getSeller());
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 
@@ -574,6 +576,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						d1.setDeleted(false);
 						d1.setOperator("system");
 						d1.setOrder(order);
+						d1.setSeller(order.getSeller());
 						depositDao.persist(d1);
 						messageService.depositPushTo(d1);
 					}
@@ -608,6 +611,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						d2.setDeleted(false);
 						d2.setOperator("system");
 						d2.setOrder(order);
+						d2.setSeller(order.getSeller());
 						depositDao.persist(d2);
 						messageService.depositPushTo(d2);
 					}
@@ -642,6 +646,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						d3.setDeleted(false);
 						d3.setOperator("system");
 						d3.setOrder(order);
+						d3.setSeller(order.getSeller());
 						depositDao.persist(d3);
 						messageService.depositPushTo(d3);
 					}
@@ -681,6 +686,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setOrder(order);
+				deposit.setSeller(order.getSeller());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 
@@ -700,6 +706,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit_partner.setDeleted(false);
 				deposit_partner.setOperator("system");
 				deposit_partner.setOrder(order);
+				deposit_partner.setSeller(order.getSeller());
 				depositDao.persist(deposit_partner);
 				messageService.depositPushTo(deposit_partner);
 
