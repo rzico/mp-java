@@ -35,7 +35,7 @@ public class Enterprise extends BaseEntity {
         success,
         /** 已关闭 */
         failure
-    };
+        };
 
     public enum Type{
         /** 运营商 */
