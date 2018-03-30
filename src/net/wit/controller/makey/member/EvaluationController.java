@@ -196,7 +196,7 @@ public class EvaluationController extends BaseController {
      */
     @RequestMapping(value = "/answer")
     @ResponseBody
-    public Message question(@RequestBody Long id, @RequestBody String body, HttpServletRequest request){
+    public Message question(Long id,String body, HttpServletRequest request){
         System.out.print(body);
 
         Evaluation evaluation = evaluationService.find(id);
