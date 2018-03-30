@@ -3,6 +3,7 @@ package net.wit.service.impl;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.calculator.GeneCalculator;
+import net.wit.dao.EvalAnswerDao;
 import net.wit.dao.EvaluationDao;
 import net.wit.dao.EvaluationDao;
 import net.wit.dao.PaymentDao;
@@ -36,6 +37,9 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
+
+	@Resource(name = "evalAnswerDaoImpl")
+	private EvalAnswerDao evalAnswerDao;
 
 	@Resource(name = "evaluationDaoImpl")
 	public void setBaseDao(EvaluationDao evaluationDao) {
@@ -104,10 +108,13 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	}
 
 	@Transactional
-	public Evaluation answer(Evaluation evaluation, String... ignoreProperties) {
+	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) {
 		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
 		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
-        super.update(evaluation, ignoreProperties);
+        super.update(evaluation);
+        for (EvalAnswer answer:evals) {
+			evalAnswerDao.persist(answer);
+		}
 //        try {
 //	    	GeneCalculator calculator = new GeneCalculator();
 //            calculator.calcAll(evaluation);

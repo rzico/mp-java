@@ -2,10 +2,7 @@ package net.wit.service;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.entity.Evaluation;
-import net.wit.entity.Gauge;
-import net.wit.entity.Payment;
-import net.wit.entity.Tag;
+import net.wit.entity.*;
 import net.wit.entity.summary.EvaluationSummary;
 
 import java.util.Date;
@@ -25,6 +22,6 @@ public interface EvaluationService extends BaseService<Evaluation, Long> {
 	/**
 	 */
 	List<EvaluationSummary> sumPromoter(Gauge gauge,Date beginDate, Date endDate);
-	public Evaluation answer(Evaluation evaluation, String... ignoreProperties);
+	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals);
 
 }

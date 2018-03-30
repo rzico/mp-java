@@ -199,6 +199,8 @@ public class EvaluationController extends BaseController {
     public Message question(Long id,String body, HttpServletRequest request){
         System.out.printf(body);
 
+        id = 55L;
+        body = "W3sicXVlc3Rpb25JZCI6NDQzLCJvcHRpb25JZCI6MSwic2NvcmUiOjB9LHsicXVlc3Rpb25JZCI6NDQ0LCJvcHRpb25JZCI6MSwic2NvcmUiOjB9LHsicXVlc3Rpb25JZCI6NDQ1LCJvcHRpb25JZCI6MSwic2NvcmUiOjB9LHsicXVlc3Rpb25JZCI6NDQ3LCJvcHRpb25JZCI6MSwic2NvcmUiOjB9LHsicXVlc3Rpb25JZCI6NDQ5LCJvcHRpb25JZCI6Miwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NDUxLCJvcHRpb25JZCI6Miwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NDUyLCJvcHRpb25JZCI6MSwic2NvcmUiOjB9LHsicXVlc3Rpb25JZCI6NDU0LCJvcHRpb25JZCI6Miwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NDU1LCJvcHRpb25JZCI6MSwic2NvcmUiOjB9LHsicXVlc3Rpb25JZCI6NDU2LCJvcHRpb25JZCI6Miwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NDU3LCJvcHRpb25JZCI6Miwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NDU4LCJvcHRpb25JZCI6MSwic2NvcmUiOjB9LHsicXVlc3Rpb25JZCI6NDU5LCJvcHRpb25JZCI6NCwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NDYwLCJvcHRpb25JZCI6NCwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NTE2LCJvcHRpb25JZCI6Mywic2NvcmUiOjJ9LHsicXVlc3Rpb25JZCI6NTE3LCJvcHRpb25JZCI6Mywic2NvcmUiOjJ9LHsicXVlc3Rpb25JZCI6NTE4LCJvcHRpb25JZCI6NCwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NTE5LCJvcHRpb25JZCI6NCwic2NvcmUiOjF9LHsicXVlc3Rpb25JZCI6NTIwLCJvcHRpb25JZCI6Mywic2NvcmUiOjJ9LHsicXVlc3Rpb25JZCI6NTIxLCJvcHRpb25JZCI6Mywic2NvcmUiOjJ9LHsicXVlc3Rpb25JZCI6NTI0LCJvcHRpb25JZCI6Mywic2NvcmUiOjJ9LHsicXVlc3Rpb25JZCI6NTI2LCJvcHRpb25JZCI6Mywic2NvcmUiOjJ9LHsicXVlc3Rpb25JZCI6NTI4LCJvcHRpb25JZCI6Mywic2NvcmUiOjJ9LHsicXVlc3Rpb25JZCI6NTMwLCJvcHRpb25JZCI6Miwic2NvcmUiOjN9LHsicXVlc3Rpb25JZCI6NTMyLCJvcHRpb25JZCI6NCwic2NvcmUiOjF9XQ==";
         Evaluation evaluation = evaluationService.find(id);
         if (evaluation==null) {
             return Message.error("无效测评编号");
@@ -218,6 +220,7 @@ public class EvaluationController extends BaseController {
             GaugeQuestion question = gaugeQuestionService.find(ar.getLong("questionId"));
             if (question!=null) {
                 EvalAnswer eas = new EvalAnswer();
+                eas.setType(question.getType());
                 eas.setAnswer(ar.getLong("optionId"));
                 eas.setContent(question.getContent());
                 eas.setTitle(question.getTitle());
@@ -229,8 +232,8 @@ public class EvaluationController extends BaseController {
                 evals.add(eas);
             }
         }
-        evaluation.setEvalAnswers(evals);
-        evaluationService.answer(evaluation);
+//        evaluation.setEvalAnswers(evals);
+        evaluationService.answer(evaluation,evals);
         return Message.success("答题完毕");
 
     }
