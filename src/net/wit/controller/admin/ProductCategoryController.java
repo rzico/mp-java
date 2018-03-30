@@ -157,10 +157,6 @@ public class ProductCategoryController extends BaseController {
 
 		entity.setThumbnail(productCategory.getThumbnail());
 
-
-		entity.setMember(memberService.find(memberId));
-
-
         try {
             productCategoryService.update(entity);
             return Message.success(entity,"admin.update.success");
