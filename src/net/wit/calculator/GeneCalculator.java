@@ -154,7 +154,7 @@ public class GeneCalculator implements Serializable {
     public Boolean calcResult(GaugeResult result) throws Exception{
         ModelMap model = new ModelMap();
         for (String key : this.genes.keySet()) {
-            model.addAttribute(key,this.genes.get("key"));
+            model.addAttribute(key,this.genes.get(key));
         }
 
         BigDecimal s = BigDecimal.ZERO;

@@ -115,16 +115,16 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
         for (EvalAnswer answer:evals) {
 			evalAnswerDao.persist(answer);
 		}
-//        try {
-//	    	GeneCalculator calculator = new GeneCalculator();
-//            calculator.calcAll(evaluation);
-//            if (calculator.getResults().size()==0) {
-//                throw new RuntimeException("无效测试结果");
-//            }
-//            evaluation.setResult(calculator.getHtml());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+	    	GeneCalculator calculator = new GeneCalculator();
+            calculator.calcAll(evaluation);
+            if (calculator.getResults().size()==0) {
+                throw new RuntimeException("无效测试结果");
+            }
+            evaluation.setResult(calculator.getHtml());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return evaluation;
 
     }
