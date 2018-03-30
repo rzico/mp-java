@@ -171,6 +171,9 @@
                 </div>
             </div>
         </div>
+        <div class="">
+            ${data.result}
+        </div>
     </div> <!----></div>
 </body>
 </html>

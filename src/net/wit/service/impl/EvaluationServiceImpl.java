@@ -111,7 +111,6 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) {
 		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
 		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
-        super.update(evaluation);
         for (EvalAnswer answer:evals) {
 			evalAnswerDao.persist(answer);
 		}
@@ -125,6 +124,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
         } catch (Exception e) {
             e.printStackTrace();
         }
+		super.update(evaluation);
         return evaluation;
 
     }
