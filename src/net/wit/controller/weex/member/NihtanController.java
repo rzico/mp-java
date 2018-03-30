@@ -320,7 +320,7 @@ public class NihtanController extends BaseController {
             return Message.error(gameList.getVip()+"级才能进入");
         }
         if ("1".equals(gameList.getActive())) {
-            return Message.error("正在维护中");
+            return Message.error("休息中..");
         }
 
         System.out.println(video);
