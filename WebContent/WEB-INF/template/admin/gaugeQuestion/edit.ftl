@@ -86,7 +86,7 @@
                                 </div>
                             </td>
                             <td class="text-c">
-                                <input type="text" class="input-text" value="" placeholder="" id="score" name="score"  onInput="floatInit(this)">
+                                <input type="text" class="input-text" value="" placeholder="" id="score" name="score">
                             </td>
                             <td class="td-manage">
                                 <a style="text-decoration:none" class="ml-5" onClick="del_opt(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
@@ -110,7 +110,7 @@
                                     </div>
                                 </td>
                                 <td class="text-c">
-                                    <input type="text" class="input-text" value="${option.score}"  placeholder="" id="score" name="score"  onInput="floatInit(this)">
+                                    <input type="text" class="input-text" value="${option.score}"  placeholder="" id="score" name="score">
                                 </td>
                                 <td class="td-manage">
                                     <a style="text-decoration:none" class="ml-5" onClick="del_opt(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
