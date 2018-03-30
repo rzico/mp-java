@@ -197,7 +197,7 @@ public class EvaluationController extends BaseController {
     @RequestMapping(value = "/answer")
     @ResponseBody
     public Message question(Long id,String body, HttpServletRequest request){
-        System.out.print(body);
+        System.out.printf(body);
 
         Evaluation evaluation = evaluationService.find(id);
         if (evaluation==null) {
@@ -207,7 +207,7 @@ public class EvaluationController extends BaseController {
 
         String mBody = new String(Base64.decode(body));
 
-        System.out.print(mBody);
+        System.out.printf(mBody);
 
 
         JSONArray answers = JSONArray.fromObject(mBody);
