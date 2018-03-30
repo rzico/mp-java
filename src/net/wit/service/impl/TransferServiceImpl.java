@@ -119,6 +119,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
 			deposit.setTransfer(transfer);
+			deposit.setSeller(member);
 			depositDao.persist(deposit);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
@@ -193,6 +194,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
 			deposit.setTransfer(transfer);
+			deposit.setSeller(member);
 			depositDao.persist(deposit);
 			transfer.setTransferDate(new Date());
 			transfer.setStatus(Transfer.Status.failure);

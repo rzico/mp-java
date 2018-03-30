@@ -135,7 +135,7 @@ public class EnterpriseController extends BaseController {
 		entity.setArea(areaService.find(areaId));
 
 		entity.setMember(member);
-
+		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -292,7 +292,6 @@ public class EnterpriseController extends BaseController {
 //		}
 		Page<Enterprise> page = enterpriseService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
-
 	}
 	
 	

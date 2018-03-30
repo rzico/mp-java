@@ -170,6 +170,7 @@ public class SmssendServiceImpl extends BaseServiceImpl<Smssend, Long> implement
 			deposit.setDebit(smssend.getFee());
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
+			deposit.setSeller(member);
 			depositDao.persist(deposit);
 
 			this.addTask(smssend.getMobile(),smssend.getContent());

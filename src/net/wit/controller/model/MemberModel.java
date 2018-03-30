@@ -30,8 +30,6 @@ public class MemberModel extends BaseModel implements Serializable {
     private int coupon;
     /** 订单 */
     private int order;
-    /** 奖金 */
-    private BigDecimal rebate;
 
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
@@ -124,14 +122,6 @@ public class MemberModel extends BaseModel implements Serializable {
         this.order = order;
     }
 
-    public BigDecimal getRebate() {
-        return rebate;
-    }
-
-    public void setRebate(BigDecimal rebate) {
-        this.rebate = rebate;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -147,7 +137,7 @@ public class MemberModel extends BaseModel implements Serializable {
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();
         this.username = member.getUsername();
-        this.nickName = member.displayName();
+        this.nickName = member.getNickName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
         this.balance = member.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
@@ -159,6 +149,5 @@ public class MemberModel extends BaseModel implements Serializable {
             }
         }
         this.coupon = c;
-        this.rebate = BigDecimal.ZERO;
     }
 }
