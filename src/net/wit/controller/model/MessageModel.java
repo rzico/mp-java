@@ -116,7 +116,7 @@ public class MessageModel extends BaseModel implements Serializable {
             member = message.getSender();
         }
         this.userId = member.userId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.title = message.getTitle();
         this.content = message.getContent();
@@ -127,7 +127,11 @@ public class MessageModel extends BaseModel implements Serializable {
         }
         this.createDate = message.getCreateDate();
         this.type = message.getType();
-        this.ext = message.getExt();
+        if (message.getExt()==null) {
+            this.ext = "{}";
+        } else {
+            this.ext = message.getExt();
+        }
      }
 
     public static List<MessageModel> bindList(List<net.wit.entity.Message> messages) {

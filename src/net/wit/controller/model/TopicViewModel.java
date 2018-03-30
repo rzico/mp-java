@@ -173,7 +173,7 @@ public class TopicViewModel extends BaseModel implements Serializable {
             this.logo = topic.getLogo();
             this.hits = topic.getHits().intValue();
         } else {
-            this.name = member.getNickName();
+            this.name = member.displayName();
             this.logo = member.getLogo();
             this.hits = 0;
         }

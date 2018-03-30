@@ -269,14 +269,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.sn = order.getSn();
         this.memberId = order.getMember().getId();
         this.logo = order.getMember().getLogo();
-        this.name = order.getMember().getNickName();
+        this.name = order.getMember().displayName();
         this.sellerId = order.getSeller().getId();
         if (order.getSeller().getTopic()!=null) {
             this.sellerLogo = order.getSeller().getTopic().getLogo();
             this.sellerName = order.getSeller().getTopic().getName();
         } else {
             this.sellerLogo = order.getSeller().getLogo();
-            this.sellerName = order.getSeller().getNickName();
+            this.sellerName = order.getSeller().displayName();
         }
         this.status = order.getStatus();
         this.statusDescr = order.getStatusDescr();
@@ -307,7 +307,7 @@ public class OrderModel extends BaseModel implements Serializable {
            if (promoter.getName()!=null) {
                this.promoter = promoter.getName();
            } else {
-               this.promoter = promoter.getNickName();
+               this.promoter = promoter.displayName();
            }
         }
     }
@@ -318,7 +318,7 @@ public class OrderModel extends BaseModel implements Serializable {
         this.createDate = order.getCreateDate();
         this.sn = order.getSn();
         this.logo = order.getMember().getLogo();
-        this.name = order.getMember().getNickName();
+        this.name = order.getMember().displayName();
         this.status = order.getStatus();
         this.statusDescr = order.getStatusDescr();
 

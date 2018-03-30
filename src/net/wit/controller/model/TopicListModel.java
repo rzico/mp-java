@@ -97,7 +97,7 @@ public class TopicListModel extends BaseModel implements Serializable {
         this.followed = false;
         this.name = topic.getName();
         this.logo = topic.getLogo();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.tags = TagModel.bindList(member.getTags());
     }
 

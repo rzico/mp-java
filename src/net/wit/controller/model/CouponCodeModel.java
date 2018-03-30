@@ -109,7 +109,7 @@ public class CouponCodeModel extends BaseModel implements Serializable {
             this.name = owner.getTopic().getName();
             this.logo = owner.getTopic().getLogo();
         } else {
-            this.name = owner.getNickName();
+            this.name = owner.displayName();
             this.logo = owner.getLogo();
         }
         String sc = "全场";

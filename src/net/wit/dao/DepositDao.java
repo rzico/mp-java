@@ -30,6 +30,7 @@ public interface DepositDao extends BaseDao<Deposit, Long> {
 	 */
 	Page<Deposit> findPage(Date beginDate,Date endDate, Pageable pageable);
 	BigDecimal summary(Deposit.Type type,Member member);
+	BigDecimal summary(Deposit.Type type,Member member,Member seller);
 
 	/**
 	 */

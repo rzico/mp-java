@@ -84,16 +84,26 @@ public class CouponCodeController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(HttpServletRequest request){
+    public Message list(Long authorId,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
 
+        Member owner = null;
+        if (authorId!=null) {
+            owner = memberService.find(authorId);
+        }
+
         List<CouponCode> models = new ArrayList<>();
         for (CouponCode c:member.getCouponCodes()) {
             if (c.getEnabled()) {
-                models.add(c);
+                if (owner==null) {
+                    models.add(c);
+                } else
+                if (c.getCoupon().getDistributor().equals(owner)) {
+                    models.add(c);
+                }
             }
         }
         return Message.bind(CouponCodeModel.bindList(models),request);

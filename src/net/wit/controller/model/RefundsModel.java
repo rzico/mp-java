@@ -68,6 +68,6 @@ public class RefundsModel extends BaseModel implements Serializable {
         this.createDate = refunds.getCreateDate();
         this.memo = refunds.getMemo();
         this.logo = refunds.getPayee().getLogo();
-        this.nickName = refunds.getPayee().getNickName();
+        this.nickName = refunds.getPayee().displayName();
     }
 }

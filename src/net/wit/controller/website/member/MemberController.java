@@ -54,12 +54,15 @@ public class MemberController extends BaseController {
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
 
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
+
     /**
      * 获取当前会员信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(HttpServletRequest request){
+    public Message view(Long authorId,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -67,8 +70,6 @@ public class MemberController extends BaseController {
         MemberModel model =new MemberModel();
         model.bind(member);
 
-        BigDecimal sm = depositService.summary(Deposit.Type.rebate,member);
-        model.setRebate(sm);
         return Message.bind(model,request);
    }
 

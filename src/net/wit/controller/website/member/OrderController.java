@@ -356,7 +356,7 @@ public class OrderController extends BaseController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(String status, Pageable pageable, HttpServletRequest request) {
+	Message list(Long authorId,String status, Pageable pageable, HttpServletRequest request) {
 
 		Member member = memberService.getCurrent();
 		if (member==null) {
@@ -365,6 +365,12 @@ public class OrderController extends BaseController {
 
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
+		if (authorId!=null) {
+			Member seller = memberService.find(authorId);
+			if (seller!=null) {
+				filters.add(new Filter("seller", Filter.Operator.eq,seller));
+			}
+		}
 
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);
@@ -375,12 +381,9 @@ public class OrderController extends BaseController {
 		return Message.bind(model,request);
 	}
 
-
-
-
 	@RequestMapping(value = "/promoter", method = RequestMethod.GET)
 	public @ResponseBody
-	Message promoter(Pageable pageable, HttpServletRequest request) {
+	Message promoter(Long authorId,Pageable pageable, HttpServletRequest request) {
 
 		Member member = memberService.getCurrent();
 		if (member==null) {
@@ -390,13 +393,19 @@ public class OrderController extends BaseController {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("promoter", Filter.Operator.eq,member));
 		filters.add(new Filter("orderStatus", Filter.Operator.eq,Order.OrderStatus.completed));
+		if (authorId!=null) {
+		   Member owner = memberService.find(authorId);
+		   if (owner!=null) {
+			   filters.add(new Filter("seller", Filter.Operator.eq,owner));
+		   }
+		}
 
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
 		Page<Order> page = orderService.findPage(null,null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
-		model.setData(OrderListModel.bindList(page.getContent()));
+		model.setData(OrderListModel.bindAndRebate(page.getContent()));
 		return Message.bind(model,request);
 	}
 

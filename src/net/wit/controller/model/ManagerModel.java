@@ -94,7 +94,7 @@ public class ManagerModel extends BaseModel implements Serializable {
         this.id = member.getId();
         this.autograph = member.getAutograph();
 
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
         this.hasTopic = (member.getTopic()!=null);
