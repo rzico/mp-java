@@ -20,6 +20,9 @@ public class GoodsListModel extends BaseModel implements Serializable {
 
     /** 销售价 */
     private BigDecimal price;
+    /** 市场价 */
+    private BigDecimal marketPrice;
+
     /** 库存 */
     private Integer stock;
     /** 可用库存 */
@@ -73,6 +76,14 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.availableStock = availableStock;
     }
 
+    public BigDecimal getMarketPrice() {
+        return marketPrice;
+    }
+
+    public void setMarketPrice(BigDecimal marketPrice) {
+        this.marketPrice = marketPrice;
+    }
+
     public void bind(Goods goods) {
         this.id = goods.getId();
         Product product = goods.product();
@@ -88,6 +99,7 @@ public class GoodsListModel extends BaseModel implements Serializable {
 //        }
         this.setThumbnail(product.getThumbnail());
         this.setPrice(product.getPrice());
+        this.setMarketPrice(product.getMarketPrice());
     }
 
 
