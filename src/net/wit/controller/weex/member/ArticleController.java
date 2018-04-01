@@ -176,6 +176,11 @@ public class ArticleController extends BaseController {
         if (model.getTemplates()!=null) {
             content = JsonUtils.toJson(model.getTemplates());
         }
+        for (ArticleContentModel acm:model.getTemplates()) {
+            if (acm.getMediaType().equals(Article.MediaType.product)) {
+               goodsId = acm.getId();
+            }
+        }
         Boolean isDraft = model.getIsDraft();
 
         String votes = null;
