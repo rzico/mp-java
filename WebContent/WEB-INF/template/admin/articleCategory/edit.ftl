@@ -41,6 +41,27 @@
                     <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
                 </div>
             </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                        <div id="fileList" class="uploader-list">
+                            [#if data.thumbnail??]
+                                <div class="file-item thumbnail">
+                                    <img width="100px" height="100px" src="${data.thumbnail}"/>
+                                    <div class="info"></div>
+                                </div>'
+                            [/#if]
+                        </div>
+                        <div id="filePicker">选择图片</div>
+                        <input type="hidden" value="${data.thumbnail}" id="thumbnail" name="thumbnail">
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">

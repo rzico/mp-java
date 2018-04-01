@@ -96,7 +96,7 @@ public class LoginController extends BaseController {
         SafeKey safeKey = new SafeKey();
         safeKey.setKey(m);
         safeKey.setValue(securityCode);
-        safeKey.setExpire( DateUtils.addSeconds(new Date(),10*60));
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
         redisService.put(Member.MOBILE_LOGIN_CAPTCHA,JsonUtils.toJson(safeKey));
 
         Smssend smsSend = new Smssend();
@@ -204,7 +204,6 @@ public class LoginController extends BaseController {
                 member.setLogo(null);
                 member.setPoint(0L);
                 member.setFreezePoint(0L);
-                member.setGift(0L);
                 member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
                 member.setFreezeBalance(BigDecimal.ZERO);
@@ -528,7 +527,6 @@ public class LoginController extends BaseController {
             member.setNickName("收款机（"+code+"）");
             member.setLogo("http://cdn.rzico.com/weex/resources/images/logo.png");
             member.setPoint(0L);
-            member.setGift(0L);
             member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setFreezeBalance(BigDecimal.ZERO);

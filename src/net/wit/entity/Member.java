@@ -420,14 +420,6 @@ public class Member extends BaseEntity {
 		this.point = point;
 	}
 
-	public Long getGift() {
-		return gift;
-	}
-
-	public void setGift(Long gift) {
-		this.gift = gift;
-	}
-
 	public BigDecimal getFreezeBalance() {
 		return freezeBalance;
 	}
@@ -572,15 +564,7 @@ public class Member extends BaseEntity {
 		this.mobile = mobile;
 	}
 
-	public Long getFreezePoint() {
-		return freezePoint;
-	}
-
-	public void setFreezePoint(Long freezePoint) {
-		this.freezePoint = freezePoint;
-	}
-
-	//	public String getAttributeValue0() {
+//	public String getAttributeValue0() {
 //		return attributeValue0;
 //	}
 //
