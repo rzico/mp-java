@@ -133,6 +133,11 @@ public class Transfer extends BaseEntity {
 	@JsonIgnore
 	private Member member;
 
+	/** 代理 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Member promoter;
+
 	public Type getType() {
 		return type;
 	}
@@ -251,6 +256,14 @@ public class Transfer extends BaseEntity {
 
 	public void setDeposits(List<Deposit> deposits) {
 		this.deposits = deposits;
+	}
+
+	public Member getPromoter() {
+		return promoter;
+	}
+
+	public void setPromoter(Member promoter) {
+		this.promoter = promoter;
 	}
 
 	public BigDecimal effectiveAmount() {

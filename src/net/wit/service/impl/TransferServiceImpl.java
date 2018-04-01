@@ -106,6 +106,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			throw new RuntimeException("账户余额不足");
 		}
 		try {
+			transfer.setPromoter(member.getPromoter());
 			transferDao.persist(transfer);
 			member.setBalance(member.getBalance().subtract(transfer.getAmount()));
 			memberDao.merge(member);

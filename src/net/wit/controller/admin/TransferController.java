@@ -59,6 +59,9 @@ public class TransferController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 	/**
 	 * 主页
 	 */
@@ -288,18 +291,15 @@ public class TransferController extends BaseController {
 			return Message.error("凭证号不能为空!");
 		}
 
+		Admin admin = adminService.getCurrent();
 		Transfer entity = transferService.find(Id);
 		if(amount.compareTo(entity.getAmount()) != 0){
 			return Message.error("汇款金额不正确,请重新填写!");
 		}
-		Member member = memberService.getCurrent();
+
 		entity.setVoucher(voucher);
 		entity.setStatus(Transfer.Status.success);
-		if(member == null){
-			entity.setOperator("系统操作员");
-		}else{
-			entity.setOperator(member.getName());
-		}
+		entity.setOperator(admin.getName());
 
 		try {
 			transferService.update(entity);
