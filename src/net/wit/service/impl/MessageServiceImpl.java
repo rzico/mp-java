@@ -224,7 +224,6 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			sender.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
 			sender.setPoint(0L);
 			sender.setFreezePoint(0L);
-			sender.setGift(0L);
 			sender.setBalance(BigDecimal.ZERO);
 			sender.setFreezeBalance(BigDecimal.ZERO);
 			sender.setIsEnabled(true);
