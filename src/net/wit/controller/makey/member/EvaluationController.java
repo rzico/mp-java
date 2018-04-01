@@ -233,7 +233,10 @@ public class EvaluationController extends BaseController {
             }
         }
 //        evaluation.setEvalAnswers(evals);
-        evaluationService.answer(evaluation,evals);
+        Evaluation e = evaluationService.answer(evaluation,evals);
+        if (e==null) {
+            return Message.error("表达式有误");
+        }
         return Message.success("答题完毕");
 
     }
@@ -244,10 +247,12 @@ public class EvaluationController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Evaluation.EvalStatus status,Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
         List<Filter> filters = new ArrayList<Filter>();
         if (status!=null) {
             filters.add(new Filter("evalStatus", Filter.Operator.eq, status));
         }
+        filters.add(new Filter("member", Filter.Operator.eq, member));
         pageable.setFilters(filters);
         Page<Evaluation> page = evaluationService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);

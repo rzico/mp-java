@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -103,6 +104,11 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		payment.setSn(snService.generate(Sn.Type.payment));
 		payment.setMemo("购买测评");
 		payment.setEvaluation(evaluation);
+		if (payment.getAmount().equals(BigDecimal.ZERO)) {
+			payment.setStatus(Payment.Status.success);
+			evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
+			evaluationDao.merge(evaluation);
+		}
 		paymentDao.persist(payment);
         return payment;
 	}
@@ -122,7 +128,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
             }
             evaluation.setResult(calculator.getHtml());
         } catch (Exception e) {
-            e.printStackTrace();
+			return null;
         }
 		super.update(evaluation);
         return evaluation;
