@@ -212,9 +212,9 @@
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">冻结：</label>
+                <label class="form-label col-xs-4 col-sm-2">积分：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <span>${data.freezeBalance}</span>
+                    <span>${data.point}</span>
                 </div>
             </div>
             <div class="row cl">
