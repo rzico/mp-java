@@ -176,11 +176,14 @@ public class ArticleController extends BaseController {
         if (model.getTemplates()!=null) {
             content = JsonUtils.toJson(model.getTemplates());
         }
-        for (ArticleContentModel acm:model.getTemplates()) {
-            if (acm.getMediaType().equals(Article.MediaType.product)) {
-               goodsId = acm.getId();
+        if (goodsId==null) {
+            for (ArticleContentModel acm : model.getTemplates()) {
+                if (acm.getMediaType().equals(Article.MediaType.product)) {
+                    goodsId = acm.getId();
+                }
             }
         }
+
         Boolean isDraft = model.getIsDraft();
 
         String votes = null;
@@ -227,6 +230,11 @@ public class ArticleController extends BaseController {
             }
             articleService.save(article);
         } else {
+            if (article.getGoods()==null) {
+                if (goodsId!=null) {
+                    article.setGoods(goodsService.find(goodsId));
+                }
+            }
             articleService.update(article);
         }
 

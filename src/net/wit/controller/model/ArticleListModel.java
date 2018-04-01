@@ -181,9 +181,6 @@ public class ArticleListModel extends BaseModel implements Serializable {
                 this.price = product.getPrice();
                 this.marketPrice = product.getMarketPrice();
             }
-        } else {
-            this.price = new BigDecimal(284);
-            this.marketPrice = new BigDecimal("345");
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (article.getTemplate()==null) {
