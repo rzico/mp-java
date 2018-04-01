@@ -396,7 +396,6 @@ public class LoginController extends BaseController {
             member.setNickName(nickName);
             member.setLogo(headImg);
             member.setPoint(0L);
-            member.setGift(0L);
             member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
             member.setFreezeBalance(BigDecimal.ZERO);

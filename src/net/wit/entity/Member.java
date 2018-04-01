@@ -564,7 +564,15 @@ public class Member extends BaseEntity {
 		this.mobile = mobile;
 	}
 
-//	public String getAttributeValue0() {
+	public Long getFreezePoint() {
+		return freezePoint;
+	}
+
+	public void setFreezePoint(Long freezePoint) {
+		this.freezePoint = freezePoint;
+	}
+
+	//	public String getAttributeValue0() {
 //		return attributeValue0;
 //	}
 //
