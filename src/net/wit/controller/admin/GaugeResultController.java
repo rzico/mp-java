@@ -88,7 +88,11 @@ public class GaugeResultController extends BaseController {
 						"4.阴性项目数=negative\n" +
 						"5.阳性项止均分=pavg\n" +
 						"6.因子平均分 = savg\n" +
-						"7.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
+						"7.全局因子平均分 = stavg\n" +
+						"8.全局因子标准份 = devi\n" +
+						"9.因子选项数 = P1A,P2B\n" +
+						"10.指定题的结果 = Q3\n" +
+						"11.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
 
 		return "/admin/gaugeResult/add";
 	}
@@ -167,12 +171,17 @@ public class GaugeResultController extends BaseController {
 
 		model.addAttribute("expr_txt",
 				"1.总分  = total\n" +
-				"2.总均分 = tavg\n" +
-				"3.阳性项目数 = positive\n" +
-				"4.阴性项目数=negative\n" +
-				"5.阳性项止均分=pavg\n" +
-				"6.因子平均分 = savg\n" +
-				"7.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
+						"2.总均分 = tavg\n" +
+						"3.阳性项目数 = positive\n" +
+						"4.阴性项目数=negative\n" +
+						"5.阳性项止均分=pavg\n" +
+						"6.因子平均分 = savg\n" +
+						"7.全局因子平均分 = stavg\n" +
+						"8.全局因子标准份 = devi\n" +
+						"9.因子选项数 = P1A,P2B\n" +
+						"10.指定题的结果 = Q3\n" +
+						"11.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
+
 
 		return "/admin/gaugeResult/edit";
 	}

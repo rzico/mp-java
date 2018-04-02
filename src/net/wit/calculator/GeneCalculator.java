@@ -158,7 +158,10 @@ public class GeneCalculator implements Serializable {
         //因子平均分
         this.genes.put("savg", t.divide(new BigDecimal(this.getEvaluation().getGauge().getGaugeGenes().size())).setScale(5,BigDecimal.ROUND_HALF_DOWN));
         //所有用户的因子平均分
-        this.genes.put("savg", t.divide(new BigDecimal(this.getEvaluation().getGauge().getGaugeGenes().size())).setScale(5,BigDecimal.ROUND_HALF_DOWN));
+        this.genes.put("stavg", this.evaluation.getGauge().getTavg());
+        //所有用户的因子标准份
+        this.genes.put("devi", this.evaluation.getGauge().getDevi());
+
     }
 
 

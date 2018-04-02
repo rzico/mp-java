@@ -112,7 +112,7 @@ public class GaugeController extends BaseController {
 		List<Map<String,Long>> data = new ArrayList<>();
 		if (gauge.getDetect()!=null) {
 			JSONObject jsonObject = JSONObject.fromObject(gauge.getDetect());
-			model.addAttribute("correct",jsonObject.getDouble("correct"));
+			model.addAttribute("correct",jsonObject.getString("correct"));
 			JSONArray ar = jsonObject.getJSONArray("detect");
 			for (int i=0;i<ar.size();i++) {
 				JSONObject jb = ar.getJSONObject(i);
@@ -123,6 +123,21 @@ public class GaugeController extends BaseController {
 			}
 		}
 		model.addAttribute("detect",data);
+
+
+		model.addAttribute("expr_txt",
+				"1.总分  = total\n" +
+						"2.总均分 = tavg\n" +
+						"3.阳性项目数 = positive\n" +
+						"4.阴性项目数=negative\n" +
+						"5.阳性项止均分=pavg\n" +
+						"6.因子平均分 = savg\n" +
+						"7.全局因子平均分 = stavg\n" +
+						"8.全局因子标准份 = devi\n" +
+						"9.因子选项数 = P1A,P2B\n" +
+						"10.指定题的结果 = Q3\n" +
+						"11.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
+
 		return "/admin/gauge/view/detect";
 	}
 
@@ -132,7 +147,7 @@ public class GaugeController extends BaseController {
 	 */
 	@RequestMapping(value = "/detect", method = RequestMethod.POST)
 	@ResponseBody
-	public Message detect_submit(Long id, BigDecimal correct,Long [] A,Long [] B, ModelMap model) {
+	public Message detect_submit(Long id, String correct,Long [] A,Long [] B, ModelMap model) {
 
 		Gauge gauge = gaugeService.find(id);
 		List<Map<String,Long>> data = new ArrayList<>();

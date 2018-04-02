@@ -83,9 +83,15 @@
                 </div>
             </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>正确率：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>无效表达式：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${correct}" placeholder="" id="correct" name="correct"  onInput="percentInit(this)">
+                <input type="text" class="input-text" value="${correct}" placeholder="" id="correct" name="correct">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"></label>
+            <div class="formControls col-xs-8 col-sm-9">
+            ${expr_txt}
             </div>
         </div>
 

@@ -148,6 +148,18 @@ public class Gauge extends BaseEntity {
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '分销佣金'")
     private BigDecimal distribution;
 
+    /** 因子总平均分 */
+    @Min(0)
+    @Digits(integer = 12, fraction = 3)
+    @Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '因子总平均分'")
+    private BigDecimal tavg;
+
+    /** 因子标准差 */
+    @Min(0)
+    @Digits(integer = 12, fraction = 3)
+    @Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '因子标准差'")
+    private BigDecimal devi;
+
     /** 题库*/
     @OneToMany(mappedBy = "gauge",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orders asc")
@@ -385,5 +397,21 @@ public class Gauge extends BaseEntity {
 
     public void setGaugeResults(List<GaugeResult> gaugeResults) {
         this.gaugeResults = gaugeResults;
+    }
+
+    public BigDecimal getTavg() {
+        return tavg;
+    }
+
+    public void setTavg(BigDecimal tavg) {
+        this.tavg = tavg;
+    }
+
+    public BigDecimal getDevi() {
+        return devi;
+    }
+
+    public void setDevi(BigDecimal devi) {
+        this.devi = devi;
     }
 }
