@@ -1,5 +1,5 @@
 <html>
-<head><title>美心说</title>
+<head><title>测评报告</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <meta http-equiv="pragma" content="no-cache">
@@ -95,10 +95,10 @@
     .download_bar .download_btn {
         position: absolute;
         right: 10px;
-        margin: 7px 20px 7px 0;
+        margin: 0px 10px 0px 0;
         vertical-align: middle;
         color: #333;
-        padding: 6px;
+        padding: 2px;
         font-size: 12px;
         line-height: 12px;
         text-align: center;
@@ -158,20 +158,20 @@
         <div data-v-25ce5c3e="" id="download_bar" class="download_bar">
             <div class="title"><img src="/resources/images/logo.png" alt="美心说" class="logo">
                 <p><span class="name">美心说</span> <span class="desc" style="line-height: 38px;">分享领红包</span></p> <span
-                        href="javascript:;" id="download_btn" class="download_btn" style="top: 1px;">马上分享</span></div>
+                        href="javascript:;" id="download_btn" class="download_btn" style="top: 1px;"><img style="width:24px;height:24px" src="/resources/images/finger.png">马上分享</span></div>
             <span class="close_btn" style="top: 10px;"><span
                     class="close_icon iconfont icon-arrow-dropright"></span>
             </span>
         </div>
         <div data-v-25ce5c3e="" class="article">
             <div data-v-25ce5c3e="" class="main">
-                <div data-v-25ce5c3e="" class="article_meta"><h1 class="meta_title">测评报告</h1>
-                    <div class="meta clearfix"><span>2018-03-27  18:45</span> <span class="nickname"><a
-                            class="toappuser">张三</a></span> <span>阅读(14)</span></div>
+                <div data-v-25ce5c3e="" class="article_meta"><h1 class="meta_title">${data.title}</h1>
+                    <div class="meta clearfix"><span>${data.createDate?string('yyyy-MM-dd hh:mm:ss')}</span> <span class="nickname"><a
+                            class="toappuser">${data.member.nickName!}</a></span> <span></span></div>
                 </div>
             </div>
         </div>
-        <div class="">
+        <div style="padding:0px 15px">
             ${data.result}
         </div>
     </div> <!----></div>

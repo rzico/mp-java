@@ -210,6 +210,20 @@
 
 
             <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全局因子平均分：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.tavg}" placeholder="" id="tavg" name="tavg" onInput="floatInit(this)">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全局因子标准分：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.devi}" placeholder="" id="devi" name="devi" onInput="floatInit(this)">
+                </div>
+            </div>
+
+            <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">标签：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     [#if tags??]
