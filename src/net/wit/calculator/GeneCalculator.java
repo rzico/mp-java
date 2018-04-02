@@ -78,6 +78,15 @@ public class GeneCalculator implements Serializable {
         }
         this.genes.put(gene.getName(),s);
 
+        EvalGeneScore sc = new EvalGeneScore();
+        sc.setEvaluation(this.evaluation);
+        sc.setGauge(this.evaluation.getGauge());
+        sc.setGaugeGene(gene);
+        sc.setScore(s);
+        sc.setMember(this.evaluation.getMember());
+        sc.setName(gene.getName());
+        this.evaluation.getEvalGeneScores().add(sc);
+
         net.sf.json.JSONArray attrs = net.sf.json.JSONArray.fromObject(gene.getAttribute());
 
         for (int i=0;i<attrs.size();i++) {
@@ -85,7 +94,7 @@ public class GeneCalculator implements Serializable {
             BigDecimal smin = new BigDecimal(attr.getDouble("smin"));
             BigDecimal smax = new BigDecimal(attr.getDouble("smax"));
             if (smin.compareTo(s)<=0 && smax.compareTo(s)>=0) {
-                this.dimes.put(gene.getName(),attr.getString("name"));
+                this.dimes.put(gene.getName(),attr.getString("sname"));
             }
         }
 
@@ -147,6 +156,8 @@ public class GeneCalculator implements Serializable {
             this.genes.put("pavg", BigDecimal.ZERO);
         }
         //因子平均分
+        this.genes.put("savg", t.divide(new BigDecimal(this.getEvaluation().getGauge().getGaugeGenes().size())).setScale(5,BigDecimal.ROUND_HALF_DOWN));
+        //所有用户的因子平均分
         this.genes.put("savg", t.divide(new BigDecimal(this.getEvaluation().getGauge().getGaugeGenes().size())).setScale(5,BigDecimal.ROUND_HALF_DOWN));
     }
 

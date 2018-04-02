@@ -131,6 +131,12 @@ public class Evaluation extends BaseEntity {
     @JsonIgnore
     private List<EvalAnswer> evalAnswers = new ArrayList<EvalAnswer>();
 
+    /** 因子得分*/
+    @OneToMany(mappedBy = "evaluation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orders asc")
+    @JsonIgnore
+    private List<EvalGeneScore> evalGeneScores = new ArrayList<EvalGeneScore>();
+
     /** 测评结果*/
     @Lob
     @Column(columnDefinition="longtext comment '测评结果'")
@@ -293,5 +299,13 @@ public class Evaluation extends BaseEntity {
 
     public void setRebate(BigDecimal rebate) {
         this.rebate = rebate;
+    }
+
+    public List<EvalGeneScore> getEvalGeneScores() {
+        return evalGeneScores;
+    }
+
+    public void setEvalGeneScores(List<EvalGeneScore> evalGeneScores) {
+        this.evalGeneScores = evalGeneScores;
     }
 }
