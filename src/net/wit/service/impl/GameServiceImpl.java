@@ -106,12 +106,6 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 				throw new Exception("余额不足");
 			}
 			member.setPoint(member.getPoint()-(game.getDebit()));
-			Long r = Math.round(game.getDebit()*0.333);
-			if (member.getFreezePoint()<r) {
-				member.setFreezePoint(0L);
-			} else {
-				member.setFreezePoint(member.getFreezePoint()-r);
-			}
 			memberDao.merge(member);
 			memberDao.flush();
 			Gold deposit = new Gold();
@@ -139,6 +133,15 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 			if (game.getCredit()>0L) {
 				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 				member.setPoint(member.getPoint()+game.getCredit());
+
+				//赢了解 1/3
+				Long r = Math.round(game.getDebit()*0.333);
+				if (member.getFreezePoint()<r) {
+					member.setFreezePoint(0L);
+				} else {
+					member.setFreezePoint(member.getFreezePoint()-r);
+				}
+
 				memberDao.merge(member);
 				memberDao.flush();
 				Gold deposit = new Gold();
@@ -152,6 +155,15 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 				deposit.setOperator("system");
 				deposit.setGame(game);
 				goldDao.persist(deposit);
+			} else {
+				Long r = game.getDebit();
+				if (member.getFreezePoint()<r) {
+					member.setFreezePoint(0L);
+				} else {
+					member.setFreezePoint(member.getFreezePoint()-r);
+				}
+				memberDao.merge(member);
+				memberDao.flush();
 			}
 			game.setStatus(Game.Status.history);
 			gameDao.persist(game);

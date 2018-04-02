@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -43,6 +44,21 @@ public class NihtanController extends BaseController {
 
     @Resource(name = "gameListServiceImpl")
     private GameListService gameListService;
+
+    private String utc2time(String utcStr) {
+        SimpleDateFormat utcFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        utcFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date gpsUtcDate = null;
+        try {
+            gpsUtcDate = utcFormater.parse(utcStr);
+        } catch (Exception e) {
+            return "未知";
+        }
+        SimpleDateFormat localFormater = new SimpleDateFormat("HH:mm");
+        localFormater.setTimeZone(TimeZone.getDefault());
+        String localTime = localFormater.format(gpsUtcDate.getTime())+"开放";
+        return localTime;
+    }
 
     /**
      *  游戏列表
@@ -63,6 +79,7 @@ public class NihtanController extends BaseController {
         for (int i=0;i<sicboArr.size();i++) {
             JSONObject tb = sicboArr.getJSONObject(i);
             String status = "0";
+            String memo = "正常";
 
 
             JSONArray maintenance = tb.getJSONArray("maintenance");
@@ -70,6 +87,7 @@ public class NihtanController extends BaseController {
                 JSONObject mt = maintenance.getJSONObject(j);
                 if (mt.getString("status").equals("1")) {
                     status = "1";
+                    memo = utc2time(mt.getString("end_time"));
                 }
             }
             JSONArray ranges = tb.getJSONArray("ranges");
@@ -78,6 +96,7 @@ public class NihtanController extends BaseController {
                 GameListModel m = new GameListModel();
                 m.setGame("Sicbo");
                 m.setStatus(status);
+                m.setMemo(memo);
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -114,6 +133,7 @@ public class NihtanController extends BaseController {
             JSONObject tb = pokerArr.getJSONObject(i);
 
             String status = "0";
+            String memo = "正常";
             JSONArray maintenance = tb.getJSONObject("maintenance").getJSONArray("maintenance");
             for (int j = 0; j < maintenance.size(); j++) {
                 JSONArray info = maintenance.getJSONObject(j).getJSONArray("info");
@@ -121,6 +141,7 @@ public class NihtanController extends BaseController {
                     JSONObject mt = info.getJSONObject(r);
                     if (mt.getString("status").equals("1")) {
                         status = "1";
+                        memo = utc2time(mt.getString("end_time"));
                     }
                 }
 
@@ -134,6 +155,7 @@ public class NihtanController extends BaseController {
                 GameListModel m = new GameListModel();
                 m.setGame("Poker");
                 m.setStatus(status);
+                m.setMemo(memo);
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -164,12 +186,14 @@ public class NihtanController extends BaseController {
             JSONObject tb = tigerArr.getJSONObject(i);
 
             String status = "0";
+            String memo = "正常";
 
 
             JSONArray maintenance = tb.getJSONArray("maintenance");
             for (int j = 0; j < maintenance.size(); j++) {
                 JSONObject mt = maintenance.getJSONObject(j);
                 if (mt.getString("status").equals("1")) {
+                    memo = utc2time(mt.getString("end_time"));
                     status = "1";
                 }
             }
@@ -180,6 +204,8 @@ public class NihtanController extends BaseController {
                 GameListModel m = new GameListModel();
                 m.setGame("Dragon-Tiger");
                 m.setStatus(status);
+                m.setMemo(memo);
+
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -214,12 +240,14 @@ public class NihtanController extends BaseController {
 
 
             String status = "0";
+            String memo = "正常";
             JSONArray maintenance = tb.getJSONObject("maintenance").getJSONArray("maintenance");
             for (int j = 0; j < maintenance.size(); j++) {
                 JSONArray info = maintenance.getJSONObject(j).getJSONArray("info");
                 for (int r = 0; r < info.size(); r++) {
                     JSONObject mt = info.getJSONObject(r);
                     if (mt.getString("status").equals("1")) {
+                        memo = utc2time(mt.getString("end_time"));
                         status = "1";
                     }
                 }
@@ -233,6 +261,7 @@ public class NihtanController extends BaseController {
                 GameListModel m = new GameListModel();
                 m.setGame("Baccarat");
                 m.setStatus(status);
+                m.setMemo(memo);
                 m.setTable(tb.getString("table"));
                 if (tb.containsKey("type")) {
                     m.setType(tb.getString("type"));
@@ -261,6 +290,7 @@ public class NihtanController extends BaseController {
             GameList gameList = gameListService.find(GameList.Type.nihtan,m.getGame(),m.getTable(),m.getRanges());
             if (gameList!=null) {
                 gameList.setActive(m.getStatus());
+                gameList.setMemo(m.getMemo());
                 gameListService.update(gameList);
             }
 
@@ -277,6 +307,7 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Message list(HttpServletRequest request,ModelMap model){
+        gameList();
         List<Filter> filters = new ArrayList<Filter>();
 
         filters.add(new Filter("status", Filter.Operator.eq, GameList.Status.enabled));
