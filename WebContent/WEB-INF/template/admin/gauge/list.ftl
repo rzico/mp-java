@@ -70,7 +70,7 @@
 				</select>
 			</span>
     [/#if]
-        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
+        <input type="text" class="input-text" style="width:150px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
