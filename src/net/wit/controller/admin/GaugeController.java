@@ -71,8 +71,6 @@ public class GaugeController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
-
-
 	/**
 	 * 主页
 	 */
@@ -94,6 +92,11 @@ public class GaugeController extends BaseController {
 		userTypes.add(new MapEntity("enterprise","企业用户"));
 		userTypes.add(new MapEntity("school","学校用户"));
 		model.addAttribute("userTypes",userTypes);
+
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("enabled","发布"));
+		statuss.add(new MapEntity("disabled","关闭"));
+		model.addAttribute("statuss",statuss);
 
 		return "/admin/gauge/list";
 	}
@@ -136,7 +139,8 @@ public class GaugeController extends BaseController {
 						"8.全局因子标准份 = devi\n" +
 						"9.因子选项数 = P1A,P2B\n" +
 						"10.指定题的结果 = Q3\n" +
-						"11.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
+						"11.测谎通过率 = PASSED\n" +
+						"13.因子得份=因子名;表达式说明：[#if P1>P2] (${P1}/23-${P2}*0.38)-283 [#else] 0 [/#if]");
 
 		return "/admin/gauge/view/detect";
 	}
@@ -197,6 +201,11 @@ public class GaugeController extends BaseController {
 		userTypes.add(new MapEntity("enterprise","企业用户"));
 		userTypes.add(new MapEntity("school","学校用户"));
 		model.addAttribute("userTypes",userTypes);
+
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("enabled","发布"));
+		statuss.add(new MapEntity("disabled","关闭"));
+		model.addAttribute("statuss",statuss);
 
 		model.addAttribute("gaugeCategorys",gaugeCategoryService.findAll());
 
@@ -303,6 +312,11 @@ public class GaugeController extends BaseController {
 		userTypes.add(new MapEntity("school","学校用户"));
 		model.addAttribute("userTypes",userTypes);
 
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("enabled","发布"));
+		statuss.add(new MapEntity("disabled","关闭"));
+		model.addAttribute("statuss",statuss);
+
 		model.addAttribute("gaugeCategorys",gaugeCategoryService.findAll());
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
@@ -368,7 +382,6 @@ public class GaugeController extends BaseController {
             return Message.error("admin.update.error");
         }
 	}
-	
 
 	/**
      * 列表
@@ -389,8 +402,7 @@ public class GaugeController extends BaseController {
 		Page<Gauge> page = gaugeService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
-	
-	
+
 	/**
 	 * 产品档案视图
 	 */

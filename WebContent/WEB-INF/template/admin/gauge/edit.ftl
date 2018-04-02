@@ -227,7 +227,22 @@
                     [/#if]
                 </div>
             </div>
-        <div class="row cl">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发布状态：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if  statuss??]
+                        [#list statuss as status]
+                            <div class="radio-box">
+                                <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
+                                <label for="status-${status_index}">${status.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">

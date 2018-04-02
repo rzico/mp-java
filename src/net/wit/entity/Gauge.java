@@ -51,6 +51,13 @@ public class Gauge extends BaseEntity {
         interpret
     };
 
+    public enum Status{
+        /**   发布 */
+        enabled,
+        /**   关闭 */
+        disabled
+    };
+
     /** 量表分类 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -60,6 +67,11 @@ public class Gauge extends BaseEntity {
     @NotNull
     @Column(columnDefinition="int(11) not null comment '用户类型 {general:普通用户,enterprise:企业用户,school:学校用户}'")
     private UserType  userType;
+
+    /** 状态  */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 1 comment '状态 {enabled:发布,disabled:关闭}'")
+    private Status status;
 
     /** 常模类型 */
     @NotNull
@@ -188,6 +200,14 @@ public class Gauge extends BaseEntity {
     @OrderBy("orders asc")
     @JsonIgnore
     private List<Tag> tags = new ArrayList<Tag>();
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     /** 测谎设置
      *  {detect:[{A=1,B=2},{A=3,B=5}]

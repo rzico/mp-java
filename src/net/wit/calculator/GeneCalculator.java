@@ -3,6 +3,7 @@ package net.wit.calculator;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.wit.entity.*;
 import net.wit.util.FreemarkerUtils;
@@ -23,16 +24,50 @@ import java.util.Map;
  */
 public class GeneCalculator implements Serializable {
 
-    private Map<String,BigDecimal> genes = new HashMap<>();
+    private Map<String,Object> genes = new HashMap<>();
     private Map<String,String> dimes = new HashMap<>();
     private List<GaugeResult> results = new ArrayList();
     private Evaluation evaluation;
 
-    public Map<String, BigDecimal> getGenes() {
+    private String N2A(Long a) {
+        if (a.equals(1L)) {
+            return "A";
+        } else
+        if (a.equals(2L)) {
+            return "B";
+        } else
+        if (a.equals(3L)) {
+            return "C";
+        } else
+        if (a.equals(4L)) {
+            return "D";
+        } else {
+            throw new RuntimeException("error");
+        }
+    }
+
+    private Long A2N(String a) {
+        if (a.equals("A")) {
+            return 1L;
+        } else
+        if (a.equals("B")) {
+            return 2L;
+        } else
+        if (a.equals("C")) {
+            return 3L;
+        } else
+        if (a.equals("D")) {
+            return 4L;
+        } else {
+            throw new RuntimeException("error");
+        }
+    }
+
+    public Map<String, Object> getGenes() {
         return genes;
     }
 
-    public void setGenes(Map<String, BigDecimal> genes) {
+    public void setGenes(Map<String, Object> genes) {
         this.genes = genes;
     }
 
@@ -71,6 +106,59 @@ public class GeneCalculator implements Serializable {
         return t;
     }
 
+    public void P1A_calc(GaugeGene gene) {
+        Long a = 0L;
+        for (GaugeQuestion question:gene.getQuestions()) {
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question) && answer.getAnswer().equals(1L)) {
+                    a = a+1L;
+                }
+            }
+        }
+        this.genes.put(gene.getName()+"A",a);
+
+        Long b = 0L;
+        for (GaugeQuestion question:gene.getQuestions()) {
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question) && answer.getAnswer().equals(2L)) {
+                    b = b+1L;
+                }
+            }
+        }
+        this.genes.put(gene.getName()+"B",b);
+
+        Long c = 0L;
+        for (GaugeQuestion question:gene.getQuestions()) {
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question) && answer.getAnswer().equals(3L)) {
+                    c = c+1L;
+                }
+            }
+        }
+        this.genes.put(gene.getName()+"C",c);
+
+        Long d = 0L;
+        for (GaugeQuestion question:gene.getQuestions()) {
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question) && answer.getAnswer().equals(4L)) {
+                    d = d+1L;
+                }
+            }
+        }
+        this.genes.put(gene.getName()+"D",d);
+
+    }
+    public void Q3_calc() {
+        int i=0;
+        for (GaugeQuestion question:this.getEvaluation().getGauge().getGaugeQuestions()) {
+            i=i+1;
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question)) {
+                    this.genes.put("Q"+i,N2A(answer.getAnswer()));
+                }
+            }
+        }
+    }
     public void calc(GaugeGene gene) {
         BigDecimal s = BigDecimal.ZERO;
         for (GaugeQuestion question:gene.getQuestions()) {
@@ -161,6 +249,12 @@ public class GeneCalculator implements Serializable {
         this.genes.put("stavg", this.evaluation.getGauge().getTavg());
         //所有用户的因子标准份
         this.genes.put("devi", this.evaluation.getGauge().getDevi());
+        //指定因子选 A 的题数
+        for (GaugeGene ge:this.evaluation.getGauge().getGaugeGenes()) {
+            this.P1A_calc(ge);
+        }
+        //获取指定题的题案
+        this.Q3_calc();
 
     }
 
@@ -198,12 +292,61 @@ public class GeneCalculator implements Serializable {
         }
 
         this.calcExt();
+        this.calcInvaid(evaluation);
         for (GaugeResult result:evaluation.getGauge().getGaugeResults()) {
             if (this.calcResult(result)) {
                 results.add(result);
             }
         }
 
+    }
+
+
+    public void calcInvaid(Evaluation evaluation) throws Exception {
+
+        Long total = 0L;
+        Long eq = 0L;
+        String correct = "";
+        List<Map<String,Long>> data = new ArrayList<>();
+        if (evaluation.getGauge().getDetect()!=null) {
+            JSONObject jsonObject = JSONObject.fromObject(evaluation.getGauge().getDetect());
+            correct = jsonObject.getString("correct");
+            JSONArray ar = jsonObject.getJSONArray("detect");
+            for (int i=0;i<ar.size();i++) {
+                total= total+1;
+                JSONObject jb = ar.getJSONObject(i);
+                Map<String,Long> d = new HashMap<>();
+                Long A = new Long(this.genes.get("Q"+jb.getString("A")).toString());
+                Long B = new Long(this.genes.get("Q"+jb.getString("B")).toString());
+                if (A.equals(B)) {
+                    eq = eq + 1L;
+                }
+            }
+        }
+        if (total>0) {
+            this.genes.put("PASSED", eq * 100 / total);
+        } else {
+            this.genes.put("PASSED", 100);
+        }
+
+        ModelMap model = new ModelMap();
+        for (String key : this.genes.keySet()) {
+            model.addAttribute(key,this.genes.get("key"));
+        }
+
+        if (!"".equals(correct)) {
+            try {
+                String expr = FreemarkerUtils.process(correct, model);
+                double ret = Calculator.conversion(expr);
+                if (ret<=0) {
+                    throw new RuntimeException("无效答券");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TemplateException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String getHtml() {

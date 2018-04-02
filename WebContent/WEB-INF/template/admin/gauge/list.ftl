@@ -60,6 +60,16 @@
 				</select>
 			</span>
 		[/#if]
+    [#if statuss??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="status" class="select" style="background-color: #FFFFFF;">
+					<option value="">发布状态</option>
+                    [#list statuss as status]
+                        <option value="${status.id}">${status.name}</option>
+                    [/#list]
+				</select>
+			</span>
+    [/#if]
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -212,6 +222,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "status",
+                    "sTitle": "状态",
+                    "sClass": "center"
+                },
+                {
                     "mData": "id",
                     "sTitle": "设置",
                     "sClass": "center"
@@ -281,6 +296,22 @@
                     "aTargets": [13],
                     "mRender": function (data, display, row) {
                         if(data != null){
+                        [#if statuss??]
+                            [#list statuss as status]
+                                if ("${status.id}" == data) {
+                                    return "${status.name}";
+                                }
+                            [/#list]
+                        [/#if]
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [14],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
                             return  "<a title='题目' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 题目','../gaugeQuestion/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>题目</i></a>" +
                                     "<a title='因子' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 因子','../gaugeGene/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>因子</i></a>" +
                                     "<a title='结果' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 结果','../gaugeResult/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>结果</i></a>"+
@@ -292,7 +323,7 @@
 
                 },
                 {
-                    "aTargets": [14],
+                    "aTargets": [15],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return  "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -304,7 +335,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 13]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 14,15]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
