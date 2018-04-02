@@ -49,7 +49,7 @@ public class KagaController extends BaseController {
     @ResponseBody
     public Message gameList(HttpServletRequest request,ModelMap model) {
         String resp = Kaga.gameList();
-        System.out.println(resp);
+//        System.out.println(resp);
         JSONObject jsonObject = JSONObject.fromObject(resp);
 
         JSONArray  games = jsonObject.getJSONArray("games");
@@ -153,7 +153,7 @@ public class KagaController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("url",resp);
         params.put("video","");
-        System.out.println(params);
+//        System.out.println(params);
         return Message.success(params,"获取成功");
 
     }

@@ -68,7 +68,7 @@ public class NihtanController extends BaseController {
     @ResponseBody
     public Message gameList() {
         String resp = Crypto.gameList();
-        System.out.println("========="+resp);
+//        System.out.println("========="+resp);
 
         JSONObject jsonObject = JSONObject.fromObject(resp);
 
@@ -354,7 +354,7 @@ public class NihtanController extends BaseController {
             return Message.error("休息中..");
         }
 
-        System.out.println(video);
+//        System.out.println(video);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> params = new HashMap<>();
         params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?nihtan="+URLEncoder.encode(data.get("token"))+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
@@ -365,7 +365,7 @@ public class NihtanController extends BaseController {
             params.put("video", "");
             return Message.error("没有获取视频数据");
         }
-        System.out.println(params);
+//        System.out.println(params);
         return Message.success(params,"获取成功");
 
     }
