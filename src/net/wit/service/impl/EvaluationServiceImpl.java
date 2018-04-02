@@ -114,7 +114,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	}
 
 	@Transactional
-	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) {
+	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) throws Exception  {
 		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
 		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
         for (EvalAnswer answer:evals) {
@@ -128,7 +128,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
             }
             evaluation.setResult(calculator.getHtml());
         } catch (Exception e) {
-			return null;
+			throw new RuntimeException(e.getMessage());
         }
 		super.update(evaluation);
         return evaluation;

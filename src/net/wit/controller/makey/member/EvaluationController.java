@@ -233,7 +233,12 @@ public class EvaluationController extends BaseController {
             }
         }
 //        evaluation.setEvalAnswers(evals);
-        Evaluation e = evaluationService.answer(evaluation,evals);
+        Evaluation e = null;
+        try {
+            e = evaluationService.answer(evaluation,evals);
+        } catch (Exception e1) {
+            return Message.error(e1.getMessage());
+        }
         if (e==null) {
             return Message.error("表达式有误");
         }
