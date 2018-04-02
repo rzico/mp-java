@@ -216,7 +216,8 @@ public class GeneCalculator implements Serializable {
         }
         this.genes.put("total",t);
         //平均分
-        this.genes.put("tavg",t.divide(new BigDecimal(this.getEvaluation().getTotal())).setScale(5,BigDecimal.ROUND_HALF_DOWN));
+        BigDecimal tavg = t.divide(new BigDecimal(this.getEvaluation().getTotal()),5,BigDecimal.ROUND_HALF_DOWN);
+        this.genes.put("tavg",tavg);
         //阳性项目数
         Long y = 0L;
         BigDecimal yd = BigDecimal.ZERO;
@@ -239,12 +240,12 @@ public class GeneCalculator implements Serializable {
         this.genes.put("negative",new BigDecimal(n));
         //阳性项目均数
         if (y!=0L) {
-            this.genes.put("pavg", yd.divide(new BigDecimal(y)).setScale(5, BigDecimal.ROUND_HALF_DOWN));
+            this.genes.put("pavg", yd.divide(new BigDecimal(y),5,BigDecimal.ROUND_HALF_DOWN));
         } else {
             this.genes.put("pavg", BigDecimal.ZERO);
         }
         //因子平均分
-        this.genes.put("savg", t.divide(new BigDecimal(this.getEvaluation().getGauge().getGaugeGenes().size())).setScale(5,BigDecimal.ROUND_HALF_DOWN));
+        this.genes.put("savg", t.divide(new BigDecimal(this.getEvaluation().getGauge().getGaugeGenes().size()),5,BigDecimal.ROUND_HALF_DOWN));
         //所有用户的因子平均分
         this.genes.put("stavg", this.evaluation.getGauge().getTavg());
         //所有用户的因子标准份
