@@ -138,10 +138,12 @@ public class KagaController extends BaseController {
 //        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 //
 //        String resp = bundle.getString("nihtan.url")+"/api/kaga.jhtml?data="+hdata+"&hash="+URLEncoder.encode(hash);
+
         GameList gameList = gameListService.find(GameList.Type.kage,game,"#","#");
         if (gameList==null) {
             return Message.error("游戏没开通");
         }
+
         if (member.getVip().compareTo(Member.VIP.valueOf(gameList.getVip()))<0) {
             return Message.error(gameList.getVip()+"级才能进入");
         }

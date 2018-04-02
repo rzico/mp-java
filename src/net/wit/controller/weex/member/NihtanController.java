@@ -46,7 +46,7 @@ public class NihtanController extends BaseController {
     private GameListService gameListService;
 
     private String utc2time(String utcStr) {
-        SimpleDateFormat utcFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat utcFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         utcFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date gpsUtcDate = null;
         try {
