@@ -95,6 +95,7 @@ public class WeiXinController extends BaseController {
 
     //第三方公众平台Secret
     private static final String COMPONENT_SECRET="3bac4596d56f15a19dc9373011aa782c";
+
     /**
      * 付款页
      *
