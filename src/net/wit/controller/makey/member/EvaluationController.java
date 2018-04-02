@@ -290,7 +290,8 @@ public class EvaluationController extends BaseController {
         Member member = memberService.getCurrent();
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("promoter", Filter.Operator.eq, member));
-        filters.add(new Filter("evalStatus", Filter.Operator.eq, Evaluation.EvalStatus.completed));
+        filters.add(new Filter("evalStatus", Filter.Operator.ne, Evaluation.EvalStatus.waiting));
+        filters.add(new Filter("evalStatus", Filter.Operator.ne, Evaluation.EvalStatus.cancelled));
         pageable.setFilters(filters);
         Page<Evaluation> page = evaluationService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
