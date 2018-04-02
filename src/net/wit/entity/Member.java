@@ -979,7 +979,7 @@ public class Member extends BaseEntity {
 		}
 		if (getId()!=null) {
 			Long userId = getId() + 10200L;
-			return "u" + userId.toString();
+			return "id" + userId.toString();
 		} else {
 			return "";
 		}
@@ -1052,7 +1052,7 @@ public class Member extends BaseEntity {
 
 	public static Long decodeUserId(String userId) {
 		if (userId!=null) {
-			String uid = userId.substring(2);
+			String uid = userId.substring(3);
 			return Long.parseLong(uid)-10200;
 		} else {
 			return null;
