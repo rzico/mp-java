@@ -345,6 +345,7 @@
                 /*处理常量*/
                 var _type =  $('select[name="type"]').val();
                 var _userType =  $('select[name="userType"]').val();
+                var _status =  $('select[name="status"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -357,6 +358,7 @@
                         "endDate":_endDate,
                         "type":_type,
                         "userType":_userType,
+                        "status":_status,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

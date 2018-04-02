@@ -388,7 +388,7 @@ public class GaugeController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Gauge.Type type, Gauge.UserType userType, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Gauge.Type type, Gauge.UserType userType, Gauge.Status status, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
@@ -397,6 +397,10 @@ public class GaugeController extends BaseController {
 		if (userType!=null) {
 			Filter userTypeFilter = new Filter("userType", Filter.Operator.eq, userType);
 			filters.add(userTypeFilter);
+		}
+		if (status!=null) {
+			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
+			filters.add(statusFilter);
 		}
 
 		Page<Gauge> page = gaugeService.findPage(beginDate,endDate,null,pageable);
