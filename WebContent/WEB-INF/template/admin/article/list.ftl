@@ -426,9 +426,8 @@
                     "aTargets": [20],
                     "mRender": function (data, display, row) {
                         if (data != null && data.name == 'true') {
-                            return "<span class=\"label label-success radius\">已发布</span>";
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"publish(this,'"+data.id+"');\" name=\"\">取消发布</button>"
                         } else {
-                            <!-- return "<span class=\"label label-success radius\">点我发布</span>"; -->
                             return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"publish(this,'"+data.id+"');\" name=\"\">点我发布</button>"
                         }
                     }
@@ -607,7 +606,7 @@
 
     /*发布*/
     function publish(obj, id) {
-        layer.confirm('确认要发布吗？', function (index) {
+        layer.confirm('确认吗？', function (index) {
             var load = layer.msg('加载中', {
                 icon: 16
                 ,shade: 0.01
@@ -624,9 +623,9 @@
                     if (data.type == "success") {
                         $(obj).parents("tr").addClass("publish");
                         table.row('.publish').remove().draw( false );
-                        layer.msg('已发布!', {icon: 1, time: 1000});
+                        layer.msg(data.content, {icon: 1, time: 1000});
                     } else {
-                        layer.msg('发布失败!', {icon: 2, time: 1000});
+                        layer.msg(data.content, {icon: 2, time: 1000});
                     }
                 },
                 error: function (data) {
