@@ -1051,7 +1051,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public void evictCompleted() {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
-		filters.add(new Filter("shippingStatus", Operator.le, Order.ShippingStatus.shipped));
+		filters.add(new Filter("shippingStatus", Operator.eq, Order.ShippingStatus.shipped));
 		filters.add(new Filter("shippingDate", Operator.le, DateUtils.addDays(new Date(), -6)));
 		List<Order> data = orderDao.findList(null, null, filters, null);
 		for (Order order : data) {
