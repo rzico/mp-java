@@ -1,7 +1,10 @@
 package net.wit.controller.makey;
 
+import javafx.scene.shape.QuadCurve;
+import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Message;
+import net.wit.calculator.GeneCalculator;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.makey.model.*;
 import net.wit.controller.model.ArticleListModel;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,20 +79,6 @@ public class GaugeController extends BaseController {
     @RequestMapping(value = "/question", method = RequestMethod.GET)
     @ResponseBody
     public Message question(Long id,HttpServletRequest request){
-        Gauge gauge = gaugeService.find(id);
-        if (gauge==null) {
-            return Message.error("无效量表编号");
-        }
-        return Message.bind(GaugeQuestionModel.bindList(gauge.getGaugeQuestions()),request);
-    }
-
-
-    /**
-     *  检查语法
-     */
-    @RequestMapping(value = "/expr_check", method = RequestMethod.GET)
-    @ResponseBody
-    public Message exprCheck(Long id,HttpServletRequest request){
         Gauge gauge = gaugeService.find(id);
         if (gauge==null) {
             return Message.error("无效量表编号");

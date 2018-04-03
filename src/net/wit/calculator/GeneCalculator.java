@@ -41,6 +41,15 @@ public class GeneCalculator implements Serializable {
         } else
         if (a.equals(4L)) {
             return "D";
+        } else
+        if (a.equals(5L)) {
+            return "E";
+        } else
+        if (a.equals(6L)) {
+            return "F";
+        } else
+        if (a.equals(7L)) {
+            return "G";
         } else {
             throw new RuntimeException("error");
         }
@@ -58,6 +67,15 @@ public class GeneCalculator implements Serializable {
         } else
         if (a.equals("D")) {
             return 4L;
+        } else
+        if (a.equals("E")) {
+            return 5L;
+        } else
+        if (a.equals("F")) {
+            return 6L;
+        } else
+        if (a.equals("G")) {
+            return 7L;
         } else {
             throw new RuntimeException("error");
         }
@@ -147,6 +165,36 @@ public class GeneCalculator implements Serializable {
         }
         this.genes.put(gene.getName()+"D",d);
 
+        Long e = 0L;
+        for (GaugeQuestion question:gene.getQuestions()) {
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question) && answer.getAnswer().equals(5L)) {
+                    e = e+1L;
+                }
+            }
+        }
+        this.genes.put(gene.getName()+"E",e);
+
+        Long f = 0L;
+        for (GaugeQuestion question:gene.getQuestions()) {
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question) && answer.getAnswer().equals(6L)) {
+                    f = f+1L;
+                }
+            }
+        }
+        this.genes.put(gene.getName()+"F",f);
+
+
+        Long g = 0L;
+        for (GaugeQuestion question:gene.getQuestions()) {
+            for (EvalAnswer answer:this.evaluation.getEvalAnswers()) {
+                if (answer.getGaugeQuestion().equals(question) && answer.getAnswer().equals(7L)) {
+                    g = g+1L;
+                }
+            }
+        }
+        this.genes.put(gene.getName()+"G",g);
     }
     public void Q3_calc() {
         int i=0;

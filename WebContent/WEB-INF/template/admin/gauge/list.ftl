@@ -327,7 +327,8 @@
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return  "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>"+
+                                    "<a title='删除' href='javascript:;' onclick=\"check(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>语法检查</i></a>";
                         }else{
                             return "";
                         }
@@ -499,7 +500,32 @@
             });
         });
     }
-	
+    /*检查*/
+    function check(obj, id) {
+        layer.confirm('确认要检查表达式语法吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
+            $.ajax({
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                url: '${base}/admin/gauge/expr_check.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+
+                    layer.msg(data.content, {icon: 2, time: 5000});
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);

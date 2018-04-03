@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -13,6 +14,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.calculator.GeneCalculator;
 import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -436,6 +438,64 @@ public class GaugeController extends BaseController {
 		return "/admin/gauge/view/productView";
 	}
 
+
+
+	/**
+	 *  检查语法
+	 */
+	@RequestMapping(value = "/expr_check")
+	@ResponseBody
+	public Message exprCheck(Long id,HttpServletRequest request){
+
+		Gauge gauge = gaugeService.find(id);
+		if (gauge==null) {
+			return Message.error("无效量表编号");
+		}
+
+		Evaluation  eval =  new Evaluation();
+		eval.setDeleted(false);
+		eval.setEval(0L);
+		eval.setThumbnail(gauge.getThumbnail());
+		eval.setEvalStatus(Evaluation.EvalStatus.waiting);
+		eval.setGauge(gauge);
+		eval.setPrice(gauge.getPrice());
+		eval.setRebate(BigDecimal.ZERO);
+		eval.setTitle(gauge.getTitle());
+		eval.setSubTitle(gauge.getSubTitle());
+		eval.setTotal(new Long(gauge.getGaugeQuestions().size()));
+
+		eval.setEval(new Long(eval.getEvalAnswers().size()));
+
+		List<EvalAnswer> evals = new ArrayList<EvalAnswer>();
+
+		for (GaugeQuestion q:gauge.getGaugeQuestions()) {
+			EvalAnswer eas = new EvalAnswer();
+			eas.setType(q.getType());
+			eas.setAnswer(1L);
+			eas.setContent(q.getContent());
+			eas.setTitle(q.getTitle());
+			eas.setEvaluation(eval);
+			eas.setGauge(eval.getGauge());
+			eas.setGaugeQuestion(q);
+			eas.setScore(BigDecimal.ONE);
+			evals.add(eas);
+
+		}
+
+		eval.setEvalAnswers(evals);
+
+		try {
+			GeneCalculator calculator = new GeneCalculator();
+			calculator.calcAll(eval);
+			if (calculator.getResults().size()==0) {
+				return Message.error("无效结果");
+			}
+			eval.setResult(calculator.getHtml());
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
+		return Message.success("检测合法");
+	}
 
 
 }
