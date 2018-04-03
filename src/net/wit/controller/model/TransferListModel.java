@@ -83,7 +83,7 @@ public class TransferListModel extends BaseModel implements Serializable {
     public void bind(Transfer transfer) {
         Member member = transfer.getMember();
         this.id = transfer.getId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName()+"("+member.getMobile()+")";
         this.logo = member.getLogo();
         this.name = transfer.getName();
         this.bankname = transfer.getBankname();
