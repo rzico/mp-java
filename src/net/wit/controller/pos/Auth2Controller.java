@@ -108,7 +108,7 @@ public class Auth2Controller extends BaseController {
         Member member = memberService.findByUsername(mobile);
         Map<String, Object> map = new HashedMap();
         if (member!=null) {
-            Admin admin = adminService.getCurrent();
+            Admin admin = adminService.findByMember(member);
             if (admin!=null && admin.getEnterprise()!=null) {
                 map.put("mobile", mobile);
                 map.put("shopname", admin.getEnterprise().getName());
@@ -149,7 +149,7 @@ public class Auth2Controller extends BaseController {
         if (!member.getIsEnabled()) {
             return DataBlock.error("用户已经禁用了");
         }
-        Admin admin = adminService.getCurrent();
+        Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
             if (admin.getEnterprise().getHost()==null) {
                 return DataBlock.error("没有开通ERP");
@@ -256,9 +256,10 @@ public class Auth2Controller extends BaseController {
             member.setNickName(null);
             member.setLogo(null);
             member.setPassword(MD5Utils.getMD5Str(password));
-//                member.setPoint(0L);
-//                member.setAmount(BigDecimal.ZERO);
+            member.setPoint(0L);
+            member.setAmount(BigDecimal.ZERO);
             member.setBalance(BigDecimal.ZERO);
+            member.setFreezeBalance(BigDecimal.ZERO);
             member.setIsEnabled(true);
             member.setIsLocked(false);
             member.setLoginFailureCount(0);
