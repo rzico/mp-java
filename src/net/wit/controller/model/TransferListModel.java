@@ -88,7 +88,7 @@ public class TransferListModel extends BaseModel implements Serializable {
         this.name = transfer.getName();
         this.bankname = transfer.getBankname();
         this.cardno = transfer.getCardno();
-        this.amount = transfer.getAmount();
+        this.amount = transfer.effectiveAmount();
     }
 
 
