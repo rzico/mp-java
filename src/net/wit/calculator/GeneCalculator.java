@@ -365,8 +365,8 @@ public class GeneCalculator implements Serializable {
                 total= total+1;
                 JSONObject jb = ar.getJSONObject(i);
                 Map<String,Long> d = new HashMap<>();
-                Long A = new Long(this.genes.get("Q"+jb.getString("A")).toString());
-                Long B = new Long(this.genes.get("Q"+jb.getString("B")).toString());
+                String A = this.genes.get("Q"+jb.getString("A")).toString();
+                String B = this.genes.get("Q"+jb.getString("B")).toString();
                 if (A.equals(B)) {
                     eq = eq + 1L;
                 }

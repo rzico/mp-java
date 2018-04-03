@@ -452,6 +452,18 @@ public class GaugeController extends BaseController {
 			return Message.error("无效量表编号");
 		}
 
+		if (gauge.getGaugeQuestions().size()==0) {
+			return Message.error("请维护题库");
+		}
+
+		if (gauge.getGaugeGenes().size()==0) {
+			return Message.error("请维护因子");
+		}
+
+		if (gauge.getGaugeResults().size()==0) {
+			return Message.error("请维护结果");
+		}
+
 		Evaluation  eval =  new Evaluation();
 		eval.setDeleted(false);
 		eval.setEval(0L);
