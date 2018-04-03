@@ -1,15 +1,14 @@
 package net.wit.controller.pos;
 
-import net.wit.Message;
 import net.wit.Principal;
-import net.wit.Setting;
 import net.wit.controller.BaseController;
 import net.wit.entity.*;
 import net.wit.service.*;
-import net.wit.util.*;
+import net.wit.util.Base64Util;
+import net.wit.util.JsonUtils;
+import net.wit.util.MD5Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -29,9 +28,9 @@ import java.util.*;
 /**
  * Created by Xus on 2018/2/26.
  */
-@Controller("auth2Controller")
-@RequestMapping("/pos/auth2")
-public class Auth2Controller extends BaseController {
+@Controller("authController")
+@RequestMapping("/pos")
+public class AuthController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
@@ -246,7 +245,7 @@ public class Auth2Controller extends BaseController {
                 + member.displayName() + "</username>" + "<tenantId>"+ "1" + String.format("%08d", enterprise.getId()) + "</tenantId>" + "<code>"+ member.userId() + "</code>" + "<tenantName>" + enterprise.getName() + "</tenantName>" + "<shopId>" + shopId+ "</shopId>"
                 + "<shopName>" + enterprise.getName() + "</shopName>" + "<address>" + "#" + "</address>" + "<xsmCode>" + member.getMobile() + "</xsmCode>" + "<xsmAlias>" + member.getMobile() + "</xsmAlias>" + "<xsmPWD>" + member.getPassword()
                 + "</xsmPWD>" + "<licenseCode>" + "#" + "</licenseCode>" + "<legal>" + member.displayName() + "</legal>" + "<idCard>无</idCard>" + "<mobile>" + member.getMobile() + "</mobile>" + "<regionId>" + "#" + "</regionId>"
-                + "<lDate>" + sdf.format(new java.util.Date()) + "</lDate>" + "<online>1</online>" + "</userInfo></token>";
+                + "<lDate>" + sdf.format(new Date()) + "</lDate>" + "<online>1</online>" + "</userInfo></token>";
 
         return DataBlock.success(token,"执行成功");
     }

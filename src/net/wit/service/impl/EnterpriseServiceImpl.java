@@ -127,7 +127,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setCreditLine(BigDecimal.ZERO);
 			enterprise.setLogo(topic.getLogo());
 			enterprise.setMember(member);
-			enterprise.setLinkman(member.getName());
+			enterprise.setLinkman(member.displayName());
 			enterprise.setPhone(member.getMobile());
 			enterprise.setType(Enterprise.Type.shop);
 			enterprise.setStatus(Enterprise.Status.waiting);
@@ -137,7 +137,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 		if (admin == null) {
 			admin = new Admin();
 			admin.setUsername(member.userId());
-			admin.setName(member.getName());
+			admin.setName(member.displayName());
 //			admin.setEmail(member.getEmail());
 			admin.setEnterprise(enterprise);
 			admin.setIsLocked(false);
