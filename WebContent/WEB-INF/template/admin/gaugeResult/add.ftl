@@ -130,13 +130,15 @@
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
                 <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
-                <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/third-party/highcharts/highcharts.js"></script>
                 <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
                 <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
                 <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 
                 <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
                 <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/xiumi-ue-dialog-v5.js"></script>
+
+
+                <script type="text/javascript" src="${base}/resources/admin/lib/hcharts/Highcharts/5.0.6/js/highcharts-more.js"></script>
 
 
                 <script type="text/javascript">
