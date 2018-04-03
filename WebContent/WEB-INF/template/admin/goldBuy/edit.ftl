@@ -37,9 +37,24 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">会员：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                ${member.name}
+                ${data.member.name}
                 </div>
             </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">充值金币：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+            ${data.gold}
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">支付金额：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+            ${data.amount}
+            </div>
+        </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">备注：</label>
@@ -61,9 +76,8 @@
                 [#if statuss??]
                     [#list statuss as status]
                         [#if status.id == data.status]
-                        ${status.name}
+                            ${status.name}
                         [/#if]>
-
                     [/#list]
                 [/#if]
             </div>
