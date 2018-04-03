@@ -5,15 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.Setting;
@@ -61,6 +53,15 @@ public class Cart extends BaseEntity {
 	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<CartItem> cartItems = new HashSet<CartItem>();
+
+
+	/**
+	 * 删除前处理
+	 */
+	@PreRemove
+	public void preRemove() {
+		getCartItems().clear();
+	}
 
 	/**
 	 * 获取密钥
