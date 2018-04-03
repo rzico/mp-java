@@ -134,7 +134,7 @@ public class CardModel extends BaseModel implements Serializable {
         this.name = topic.getName();
         this.code = card.getCode();
         this.logo = card.getOwner().getLogo();
-        this.balance = card.getBalance();
+        this.balance = card.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
         this.status = card.getStatus();
         this.vip = card.getVip();
         this.type = card.getType();

@@ -56,10 +56,12 @@ public class MobileController extends BaseController {
     @ResponseBody
     public Message sendMobile(String mobile,HttpServletRequest request) {
         String m = null;
-        try {
-            m = new String(org.apache.commons.codec.binary.Base64.decodeBase64(mobile),"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (mobile!=null) {
+            try {
+                m = new String(org.apache.commons.codec.binary.Base64.decodeBase64(mobile), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 //        String m = rsaService.decryptParameter("mobile", request);
 //        rsaService.removePrivateKey(request);
