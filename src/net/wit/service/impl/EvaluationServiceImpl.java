@@ -3,10 +3,8 @@ package net.wit.service.impl;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.calculator.GeneCalculator;
-import net.wit.dao.EvalAnswerDao;
+import net.wit.dao.*;
 import net.wit.dao.EvaluationDao;
-import net.wit.dao.EvaluationDao;
-import net.wit.dao.PaymentDao;
 import net.wit.entity.*;
 import net.wit.entity.Evaluation;
 import net.wit.entity.summary.EvaluationSummary;
@@ -38,6 +36,9 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
+
+	@Resource(name = "gaugeDaoImpl")
+	private GaugeDao gaugeDao;
 
 	@Resource(name = "evalAnswerDaoImpl")
 	private EvalAnswerDao evalAnswerDao;
@@ -131,6 +132,9 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 			throw new RuntimeException(e.getMessage());
         }
 		super.update(evaluation);
+        Gauge gauge = evaluation.getGauge();
+        gauge.setEvaluation(gauge.getEvaluation()+1L);
+		gaugeDao.merge(gauge);
         return evaluation;
 
     }
