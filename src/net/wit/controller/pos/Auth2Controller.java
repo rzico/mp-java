@@ -105,7 +105,7 @@ public class Auth2Controller extends BaseController {
         if (!myKey.equals(key)) {
             return DataBlock.error("通讯密码无效");
         }
-        Member member = memberService.findByUsername(mobile);
+        Member member = memberService.findByMobile(mobile);
         Map<String, Object> map = new HashedMap();
         if (member!=null) {
             Admin admin = adminService.findByMember(member);
@@ -243,7 +243,7 @@ public class Auth2Controller extends BaseController {
         if (!safeKey.getValue().equals("778899") && !safeKey.getValue().equals(captcha)) {
             return DataBlock.error("验证码不正确");
         }
-        Member member = memberService.findByUsername(mobile);
+        Member member = memberService.findByMobile(mobile);
 
         if (member==null) {
             // 用户名注册时 获取的密码
@@ -269,9 +269,11 @@ public class Auth2Controller extends BaseController {
                 if (StringUtils.isEmpty(password)) {
                     password = Base64Util.decode(request.getParameter("enPassword"));
                 }
-                if (!DigestUtils.md5Hex(password).equals(member.getPassword())) {
-                    return DataBlock.error("密码不正确");
+                if (!StringUtils.isEmpty(password)) {
+                    member.setPassword(password);
+                    memberService.update(member);
                 }
+
          }
 
         Topic topic =  member.getTopic();
