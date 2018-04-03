@@ -258,7 +258,10 @@ public class GaugeController extends BaseController {
 		entity.setDevi(BigDecimal.ZERO);
 
 		entity.setTavg(BigDecimal.ZERO);
+
 		entity.setSpots(gauge.getSpots());
+
+		entity.setStatus(gauge.getStatus());
 
 		if (gaugeCategoryId!=null) {
 			entity.setGaugeCategory(gaugeCategoryService.find(gaugeCategoryId));
@@ -371,6 +374,8 @@ public class GaugeController extends BaseController {
 		entity.setUserType(gauge.getUserType());
 
 		entity.setTags(tagService.findList(tagIds));
+
+		entity.setStatus(gauge.getStatus());
 
 		entity.setSpots(gauge.getSpots());
 

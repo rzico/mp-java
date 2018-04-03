@@ -93,6 +93,7 @@ public class GaugeController extends BaseController {
             GaugeCategory category = gaugeCategoryService.find(gaugeCategoryId);
             filters.add(new Filter("gaugeCategory", Filter.Operator.eq, category));
         }
+        filters.add(new Filter("status", Filter.Operator.eq, Gauge.Status.enabled));
         pageable.setFilters(filters);
         List<Tag> tags = tagService.findList(tagId);
         Page<Gauge> page = gaugeService.findPage(null,null,tags,pageable);
