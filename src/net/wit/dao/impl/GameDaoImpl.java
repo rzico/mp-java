@@ -3,6 +3,7 @@ package net.wit.dao.impl;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -63,12 +64,17 @@ public class GameDaoImpl extends BaseDaoImpl<Game, Long> implements GameDao {
 	public Game find(Member member, String game, String tableNo, String roundNo) {
 		String jpql = "select game from Game game where game.member=:member and game.game = :game and game.tableNo=:tableNo and game.roundNo=:roundNo";
 		try {
-			return entityManager.createQuery(jpql, Game.class).setFlushMode(FlushModeType.COMMIT)
+			List<Game> g = entityManager.createQuery(jpql, Game.class).setFlushMode(FlushModeType.COMMIT)
 					.setParameter("member", member)
 					.setParameter("game", game)
 					.setParameter("tableNo", tableNo)
 					.setParameter("roundNo", roundNo)
-					.getSingleResult();
+					.getResultList();
+			if (g.size()>0) {
+				return g.get(0);
+			} else {
+				return null;
+			}
 		} catch (NoResultException e) {
 			return null;
 		}
