@@ -82,6 +82,20 @@ public class GaugeController extends BaseController {
         return Message.bind(GaugeQuestionModel.bindList(gauge.getGaugeQuestions()),request);
     }
 
+
+    /**
+     *  检查语法
+     */
+    @RequestMapping(value = "/expr_check", method = RequestMethod.GET)
+    @ResponseBody
+    public Message exprCheck(Long id,HttpServletRequest request){
+        Gauge gauge = gaugeService.find(id);
+        if (gauge==null) {
+            return Message.error("无效量表编号");
+        }
+        return Message.bind(GaugeQuestionModel.bindList(gauge.getGaugeQuestions()),request);
+    }
+
     /**
      *  列表
      */
