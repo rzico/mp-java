@@ -109,6 +109,11 @@ public class Enterprise extends BaseEntity {
     @JsonIgnore
     private Member member;
 
+    /** ERP主机 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Host host;
+
     public Type getType() {
         return type;
     }
@@ -195,6 +200,14 @@ public class Enterprise extends BaseEntity {
 
     public void setLinkman(String linkman) {
         this.linkman = linkman;
+    }
+
+    public Host getHost() {
+        return host;
+    }
+
+    public void setHost(Host host) {
+        this.host = host;
     }
 
     public MapEntity getMapArea() {
