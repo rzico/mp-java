@@ -5,7 +5,9 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCategoryModel;
 import net.wit.entity.ArticleCategory;
 import net.wit.plat.unspay.Merchant;
-import net.wit.service.*;
+import net.wit.service.ArticleCategoryService;
+import net.wit.service.OrderService;
+import net.wit.service.PaymentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,14 +32,9 @@ public class TESTController extends BaseController {
     @Resource(name = "paymentServiceImpl")
     private PaymentService paymentService;
 
-    @Resource(name = "cartServiceImpl")
-    private CartService cartService;
 
     @Resource(name = "orderServiceImpl")
     private OrderService orderService;
-
-    @Resource(name = "refundsServiceImpl")
-    private RefundsService refundsService;
 
     /**
      *  分类列表
@@ -67,17 +64,16 @@ public class TESTController extends BaseController {
     }
 
     /**
-     *  支付定时测试
+     *   任务测试
      */
     @RequestMapping(value = "task", method = RequestMethod.GET)
     @ResponseBody
-    public Message paymentQuery(HttpServletRequest request) throws Exception {
+    public Message task(Long tagIds,HttpServletRequest request) throws Exception {
         paymentService.query();
-        cartService.evictExpired();
-        orderService.evictCompleted();
         orderService.releaseStock();
-        refundsService.query();
-        return Message.success("success");
+        orderService.evictCompleted();
+        return Message.success("");
     }
+
 
 }

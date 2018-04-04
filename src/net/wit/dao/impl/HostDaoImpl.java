@@ -1,47 +1,43 @@
 package net.wit.dao.impl;
 
-import java.util.Calendar;
+import net.wit.Page;
+import net.wit.Pageable;
+import net.wit.dao.HostDao;
+import net.wit.dao.VipDao;
+import net.wit.entity.Host;
+import net.wit.entity.Vip;
+import org.apache.commons.lang.time.DateUtils;
+import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import javax.persistence.FlushModeType;
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.time.DateUtils;
-import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
-
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.dao.CartDao;
-import net.wit.entity.Cart;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
- * @ClassName: CartDaoImpl
+ * @ClassName: HostDaoImpl
  * @author 降魔战队
- * @date 2017-9-14 19:42:4
+ * @date 2017-9-14 19:42:6
  */
  
 
-@Repository("cartDaoImpl")
-public class CartDaoImpl extends BaseDaoImpl<Cart, Long> implements CartDao {
+@Repository("hostDaoImpl")
+public class HostDaoImpl extends BaseDaoImpl<Host, Long> implements HostDao {
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
 	 * @param beginDate
 	 * @param endDate
 	 * @param pageable
-	 * @return Page<Cart>
+	 * @return Page<Vip>
 	 */
-	public Page<Cart> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<Host> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Cart> criteriaQuery = criteriaBuilder.createQuery(Cart.class);
-		Root<Cart> root = criteriaQuery.from(Cart.class);
+		CriteriaQuery<Host> criteriaQuery = criteriaBuilder.createQuery(Host.class);
+		Root<Host> root = criteriaQuery.from(Host.class);
 		criteriaQuery.select(root);
 		Predicate restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.conjunction();
@@ -56,12 +52,5 @@ public class CartDaoImpl extends BaseDaoImpl<Cart, Long> implements CartDao {
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
-	}
-	public void evictExpired() {
-		String jpql = "delete from Cart cart where cart.modifyDate <= :expire";
-		entityManager.createQuery(jpql)
-				.setFlushMode(FlushModeType.COMMIT)
-				.setParameter("expire", DateUtils.addSeconds(new Date(), -Cart.TIMEOUT))
-				.executeUpdate();
 	}
 }

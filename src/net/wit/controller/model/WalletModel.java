@@ -80,7 +80,7 @@ public class WalletModel extends BaseModel implements Serializable {
         this.id = member.getId();
         this.nickName = member.displayName();
         this.logo = member.getLogo();
-        this.balance = member.getBalance();
+        this.balance = member.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
         this.binded = false;
         this.bankinfo = "未绑定";
         this.point = member.getPoint();

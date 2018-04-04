@@ -515,6 +515,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	public void query() {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("status", Filter.Operator.eq,Payment.Status.waiting));
+		filters.add(new Filter("paymentPluginId", Operator.isNotNull,null));
 		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
 		List<Payment> data = paymentDao.findList(null,null,filters,null);
 		for (Payment payment:data) {

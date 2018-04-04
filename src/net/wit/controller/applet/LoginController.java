@@ -74,7 +74,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "")
     public
     @ResponseBody
-    Message login(String code, HttpServletRequest request, HttpServletResponse response) {
+    Message login(String code,String nickName,String logo, HttpServletRequest request, HttpServletResponse response) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +bundle.getString("applet.appid") + "&secret=" + bundle.getString("applet.secret") + "&js_code=" + code + "&grant_type=authorization_code";
@@ -102,8 +102,8 @@ public class LoginController extends BaseController {
             }
             if (member==null) {
                 member = new Member();
-                member.setNickName(null);
-                member.setLogo(null);
+                member.setNickName(nickName);
+                member.setLogo(logo);
                 member.setPoint(0L);
                 member.setAmount(BigDecimal.ZERO);
                 member.setBalance(BigDecimal.ZERO);
@@ -114,6 +114,12 @@ public class LoginController extends BaseController {
                 member.setLoginFailureCount(0);
                 member.setRegisterIp(request.getRemoteAddr());
                 memberService.save(member);
+            } else {
+                if (nickName!=null) {
+                    member.setNickName(nickName);
+                    member.setLogo(logo);
+                    memberService.update(member);
+                }
             }
             try {
                 bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
