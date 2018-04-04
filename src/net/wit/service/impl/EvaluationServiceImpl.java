@@ -105,13 +105,14 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		payment.setSn(snService.generate(Sn.Type.payment));
 		payment.setMemo("购买测评");
 		payment.setEvaluation(evaluation);
-		if (payment.getAmount().equals(BigDecimal.ZERO)) {
+		if (payment.getAmount().compareTo(BigDecimal.ZERO)==0) {
 			payment.setStatus(Payment.Status.success);
 			evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
 			evaluationDao.merge(evaluation);
 		}
 		paymentDao.persist(payment);
-        return payment;
+
+		return payment;
 	}
 
 	@Transactional
