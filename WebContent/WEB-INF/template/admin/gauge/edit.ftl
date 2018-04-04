@@ -74,7 +74,7 @@
                 <label class="form-label col-xs-4 col-sm-2">分类：</label>
                 <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
                     [#if gaugeCategorys??]
-                        <select name="articleCategoryId" class="select" style="background-color: #FFFFFF">
+                        <select name="gaugeCategoryId" class="select" style="background-color: #FFFFFF">
                             [#list gaugeCategorys as gaugeCategory]
                                 <option [#if data.gaugeCategory?? && gaugeCategory.id == data.gaugeCategory.id] selected[/#if] value="${gaugeCategory.id}">${gaugeCategory.name}</option>
                             [/#list]

@@ -349,6 +349,8 @@ public class GaugeController extends BaseController {
 
 		entity.setDeleted(false);
 
+		entity.setThumbnail(gauge.getThumbnail());
+
 		entity.setDistribution(gauge.getDistribution());
 
 		entity.setEvaluation(gauge.getEvaluation() == null ? 0 : gauge.getEvaluation());
