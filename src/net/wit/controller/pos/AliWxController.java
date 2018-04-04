@@ -73,7 +73,7 @@ public class AliWxController extends BaseController {
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	@ResponseBody
-	public DataBlock submit(Long tenantId,String key,String type,String sn,String shopId,String shopName,String safeKey,BigDecimal amount,String operator, HttpServletRequest request) {
+	public DataBlock submit(Long tenantId,String key,String type,String sn,String safeKey,BigDecimal amount,String operator, HttpServletRequest request) {
 
 		Enterprise tenant = enterpriseService.find(tenantId);
 		if (tenant == null) {
