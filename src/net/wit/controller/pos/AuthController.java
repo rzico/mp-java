@@ -190,31 +190,31 @@ public class AuthController extends BaseController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public @ResponseBody
-    DataBlock login(String username, String password, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    net.wit.Message login(String username, String password, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         Member member = memberService.findByMobile(username);
         if (member == null) {
-            return DataBlock.error("用户名无效");
+            return net.wit.Message.error("用户名无效");
         }
         if (!member.getIsEnabled()) {
-            return DataBlock.error("用户已经禁用了");
+            return net.wit.Message.error("用户已经禁用了");
         }
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
             if (admin.getEnterprise().getHost()==null) {
-                return DataBlock.error("没有开通ERP");
+                return net.wit.Message.error("没有开通ERP");
             }
         } else {
-            return DataBlock.error("没有开通ERP");
+            return net.wit.Message.error("没有开通ERP");
         }
         Redis redis = redisService.findKey(Member.MOBILE_LOGIN_CAPTCHA);
         if (redis==null) {
-            return DataBlock.error("验证码已过期");
+            return net.wit.Message.error("验证码已过期");
         }
         redisService.remove(Member.MOBILE_LOGIN_CAPTCHA);
         SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
         String pwd = DigestUtils.md5Hex(member.getPassword() + safeKey.getValue() + "vst@2014-2020$$");
         if (!pwd.equals(password)) {
-            return DataBlock.error("登录密码无效");
+            return net.wit.Message.error("登录密码无效");
         }
         member.setLoginIp(request.getRemoteAddr());
         member.setLoginDate(new Date());
@@ -222,7 +222,7 @@ public class AuthController extends BaseController {
         memberService.update(member);
         Principal principal = new Principal(member.getId(),member.getUsername());
         redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
-        return DataBlock.success((Object)JsonUtils.toJson(principal),"登录成功");
+        return net.wit.Message.success("登录成功");
     }
 
     /**
