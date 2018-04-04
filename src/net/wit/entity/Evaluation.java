@@ -143,6 +143,12 @@ public class Evaluation extends BaseEntity {
     @JsonIgnore
     private String result;
 
+    /** 测评变量*/
+    @Lob
+    @Column(columnDefinition="longtext comment '测评变量'")
+    @JsonIgnore
+    private String evalvar;
+
     /** 推广 */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -307,5 +313,13 @@ public class Evaluation extends BaseEntity {
 
     public void setEvalGeneScores(List<EvalGeneScore> evalGeneScores) {
         this.evalGeneScores = evalGeneScores;
+    }
+
+    public String getEvalvar() {
+        return evalvar;
+    }
+
+    public void setEvalvar(String evalvar) {
+        this.evalvar = evalvar;
     }
 }

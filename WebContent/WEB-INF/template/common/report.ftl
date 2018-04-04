@@ -59,7 +59,7 @@
     }
 
     .article .meta a {
-        color: blue
+        color: #333
     }
 
     .article .meta span {
@@ -94,7 +94,7 @@
 
     .download_bar .download_btn {
         position: absolute;
-        right: 10px;
+        right: 5px;
         margin: 0px 10px 0px 0;
         vertical-align: middle;
         color: #333;
@@ -103,7 +103,7 @@
         line-height: 12px;
         text-align: center;
         border-radius: 10px;
-        border: 1px solid #666;
+        /*border: 1px solid #666;*/
         z-index: 100003
     }
 
@@ -157,7 +157,7 @@
     <div data-v-25ce5c3e="" class="slideIn">
         <div data-v-25ce5c3e="" id="download_bar" class="download_bar">
             <div class="title"><img src="/resources/images/logo.png" alt="美心说" class="logo">
-                <p><span class="name">美心说</span> <span class="desc" style="line-height: 38px;">分享领红包</span></p> <span
+                <p><span class="name">美心说</span> <span class="desc" style="line-height: 38px;">分享赚红包</span></p> <span
                         href="javascript:;" id="download_btn" class="download_btn" style="top: 1px;"><img style="width:24px;height:24px" src="/resources/images/finger.png">马上分享</span></div>
             <span class="close_btn" style="top: 10px;"><span
                     class="close_icon iconfont icon-arrow-dropright"></span>
@@ -166,8 +166,8 @@
         <div data-v-25ce5c3e="" class="article">
             <div data-v-25ce5c3e="" class="main">
                 <div data-v-25ce5c3e="" class="article_meta"><h1 class="meta_title">${data.title}</h1>
-                    <div class="meta clearfix"><span>${data.createDate?string('yyyy-MM-dd hh:mm:ss')}</span> <span class="nickname"><a
-                            class="toappuser">${data.member.nickName!}</a></span> <span></span></div>
+                    <#--<div class="meta clearfix"><span>${data.createDate?string('yyyy-MM-dd hh:mm:ss')}</span> <span class="nickname"><a-->
+                            <#--class="toappuser">${data.member.nickName!}</a></span> <span></span></div>-->
                 </div>
             </div>
         </div>

@@ -128,6 +128,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
                 throw new RuntimeException("无效测试结果");
             }
             evaluation.setResult(calculator.getHtml());
+            evaluation.setEvalvar(calculator.getVars());
         } catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
         }

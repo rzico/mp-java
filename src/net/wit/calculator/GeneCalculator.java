@@ -7,6 +7,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.wit.entity.*;
 import net.wit.util.FreemarkerUtils;
+import net.wit.util.JsonUtils;
 import org.springframework.ui.ModelMap;
 import org.tuckey.web.filters.urlrewrite.Run;
 
@@ -415,6 +416,10 @@ public class GeneCalculator implements Serializable {
             }
         }
         return s;
+    }
+
+    public String getVars() {
+        return JsonUtils.toJson(this.genes);
     }
 
 }
