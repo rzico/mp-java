@@ -112,6 +112,7 @@ public class DistributionController extends BaseController {
         catalog.setOrders(orders);
         catalog.setName(name);
         catalog.setMember(member);
+        catalog.setType(Distribution.Type.dividend);
 
         if (percent1!=null) {
             catalog.setPercent1(percent1);

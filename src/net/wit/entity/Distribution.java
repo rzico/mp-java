@@ -152,6 +152,7 @@ public class Distribution extends OrderEntity {
 		this.dividend = dividend;
 	}
 
+
 	public BigDecimal calePointRate() {
 		BigDecimal p = getPoint();
 		return (new BigDecimal(10).subtract(p)).multiply(new BigDecimal("0.1"));
@@ -160,6 +161,14 @@ public class Distribution extends OrderEntity {
 	public BigDecimal caleMoneyRate() {
 		BigDecimal p = getPoint();
 		return p.multiply(new BigDecimal("0.1"));
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 	/*删除前处理*/
