@@ -25,19 +25,38 @@ public class Distribution extends OrderEntity {
 
 	private static final long serialVersionUID = 920L;
 
+	/**
+	 * 类型
+	 */
+	public enum Type {
+		/**
+		 * 股东分红
+		 */
+		dividend,
+		/**
+		 * 全球公排
+		 */
+		global,
+	}
+
 	/** 策略名称 */
 	@NotNull
 	@Length(max = 200)
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
-	/** 股东分红 */
+	/** 类型 */
+	@Column(columnDefinition="int(11) not null comment '类型 {dividend:股东分红,global:全球公排}'")
+	private Type type;
+
+
+	/** 股东分红/公排基数 */
 	@Min(0)
 	@NotNull
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '股东分红'")
 	private BigDecimal dividend;
 
-	/** 直接代理 百分比 */
+	/** 直接代理/返佣比例 百分比 */
 	@Min(0)
 	@NotNull
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '直接代理'")
@@ -55,10 +74,10 @@ public class Distribution extends OrderEntity {
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '三级代理'")
 	private BigDecimal percent3;
 
-	/** 可提现比例 */
+	/** 现金比例 */
 	@Min(0)
 	@NotNull
-	@Column(columnDefinition="decimal(21,6) not null default 0 comment '可提现比例'")
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '现金比例'")
 	private BigDecimal point;
 
 	/** 会员 */
