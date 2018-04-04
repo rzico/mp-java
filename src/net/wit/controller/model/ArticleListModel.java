@@ -1,7 +1,10 @@
 package net.wit.controller.model;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleFavorite;
+import net.wit.entity.Product;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.*;
 
 //文章列表图
@@ -23,6 +26,10 @@ public class ArticleListModel extends BaseModel implements Serializable {
     private String thumbnail;
     /** 简说明 */
     private String htmlTag;
+    /** 销售价 */
+    private BigDecimal price;
+    /** 市场价 */
+    private BigDecimal marketPrice;
     /** 评论数 */
     private Long review;
     /** 阅读数 */
@@ -138,6 +145,23 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.authorId = authorId;
     }
 
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal getMarketPrice() {
+        return marketPrice;
+    }
+
+    public void setMarketPrice(BigDecimal marketPrice) {
+        this.marketPrice = marketPrice;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.authorId = article.getMember().getId();
@@ -151,6 +175,13 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.laud = article.getLaud();
         this.htmlTag = article.delHTMLTag();
         this.tags = TagModel.bindList(article.getTags());
+        if (article.getGoods()!=null) {
+            Product product = article.getGoods().product();
+            if (product!=null) {
+                this.price = product.getPrice();
+                this.marketPrice = product.getMarketPrice();
+            }
+        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (article.getTemplate()==null) {
             this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId();

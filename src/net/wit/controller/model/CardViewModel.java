@@ -197,7 +197,7 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.type = card.getType();
         this.bindMobile = false;
         this.bindName = false;
-        this.balance = card.getBalance();
+        this.balance = card.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
         this.bonus = card.getBonus();
         this.status = card.getStatus();
         this.vip = card.getVip();

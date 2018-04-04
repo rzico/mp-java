@@ -72,6 +72,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements Go
 		Goods goods = goodsDao.find(id);
 		for (Product product:goods.getProducts()) {
 			product.setDeleted(true);
+			product.setProductCategory(null);
 			productDao.merge(product);
 		}
 	}
@@ -84,6 +85,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements Go
 			Goods goods = goodsDao.find(id);
 			for (Product product:goods.getProducts()) {
 				product.setDeleted(true);
+				product.setProductCategory(null);
 				productDao.merge(product);
 			}
 		}
@@ -95,6 +97,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, Long> implements Go
 	public void delete(Goods goods) {
 		for (Product product:goods.getProducts()) {
 			product.setDeleted(true);
+			product.setProductCategory(null);
 			productDao.merge(product);
 		}
 	}
