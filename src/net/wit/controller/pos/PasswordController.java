@@ -80,8 +80,7 @@ public class PasswordController extends BaseController {
 	@RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
 	@ResponseBody
 	public DataBlock sendMobile(String mobile,String key, HttpServletRequest request) {
-		ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
-		String myKey = DigestUtils.md5Hex(mobile+bundle.getString("appKey"));
+		String myKey = DigestUtils.md5Hex(mobile+"myjsy2014$$");
 		if (!myKey.equals(key)) {
 			return DataBlock.error("通讯密码无效");
 		}
