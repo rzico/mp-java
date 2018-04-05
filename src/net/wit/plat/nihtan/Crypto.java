@@ -19,16 +19,20 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * Created by zhangsr on 2018/1/29.
  */
 public class Crypto {
-    public static String vendor_name="rzico";
-    public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
-    public static String sessionURL = "http://api.wapceo.com/api/session";
-    public static String gameListURL = "http://api.wapceo.com/api/game/list";
-    public static String videoListURL = "http://video-list.wapceo.com/video/list";
+
+//    public static String vendor_name="rzico";
+//    public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
+
+    public static String sessionURL = "http://api.{HOST}/api/session";
+    public static String gameListURL = "http://api.{HOST}/api/game/list";
+    public static String videoListURL = "http://video-list.{HOST}/video/list";
 
     public static String encrypt(String key, String data) {
         String hash = "";
@@ -101,6 +105,7 @@ public class Crypto {
     }
 
     public static String getSession(String ip,Member member) {
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
 
@@ -109,37 +114,41 @@ public class Crypto {
         } else {
             data.put("user_name", member.getUsername());
         }
+
         data.put("user_ip",ip);
-        data.put("vendor_name",vendor_name);
-        data.put("pc_redirect","http://weex.udzyw.com/home");
-        data.put("mo_redirect","http://weex.udzyw.com/home");
+        data.put("vendor_name",bundle.getString("nihtan.vendor"));
+        data.put("pc_redirect",bundle.getString("nihtan.url")+"/home");
+        data.put("mo_redirect",bundle.getString("nihtan.url")+"/home");
         String dataStr = JsonUtils.toJson(data);
-        String hash = encrypt(key,dataStr);
+        String hash = encrypt(bundle.getString("nihtan.key"),dataStr);
+        String resp = post(sessionURL.replace("{HOST}",bundle.getString("nihtan.host"))+"?hash="+hash,dataStr);
 
-        System.out.println(data);
+//      System.out.println(resp);
 
-        String resp = post(sessionURL+"?hash="+hash,dataStr);
-
-        System.out.println(resp);
         return resp;
+
     }
 
 
     public static String gameList() {
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> data = new HashMap<String,String>();
-        data.put("vendor_name",vendor_name);
+        data.put("vendor_name",bundle.getString("nihtan.vendor"));
         String dataStr = JsonUtils.toJson(data);
-        String hash = encrypt(key,dataStr);
+        String hash = encrypt(bundle.getString("nihtan.key"),dataStr);
 
-        String resp = post(gameListURL+"?hash="+hash,dataStr);
+        String resp = post(
+                gameListURL.replace("{HOST}",
+                bundle.getString("nihtan.host"))+"?hash="+hash,
+                dataStr);
         return resp;
     }
 
     public static String videoList() {
-        String resp = get(videoListURL,"");
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String resp = get(videoListURL.replace("{HOST}",bundle.getString("nihtan.host")),"");
         return resp;
     }
-
 
     public static void main(String[] args) throws Exception {
         Crypto.videoList();

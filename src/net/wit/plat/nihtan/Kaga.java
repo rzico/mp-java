@@ -21,16 +21,18 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * Created by zhangsr on 2018/1/29.
  */
 public class Kaga {
 
-    public static String vendor_name="rzico";
-    public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
-    public static String sessionURL = "http://api.wapceo.com/api/kaga/open";
-    public static String gameListURL = "http://api.wapceo.com/api/game/kaga";
+//    public static String vendor_name="rzico";
+//    public static String key="F02B3FD022617A7401E88D3D9A3E2A2C";
+    public static String sessionURL = "http://api.{HOST}/api/kaga/open";
+    public static String gameListURL = "http://api.{HOST}/api/game/kaga";
 
     public static String encrypt(String key, String data) {
         String hash = "";
@@ -160,6 +162,7 @@ public class Kaga {
     }
 
     public static String getSession(String game,String ip,Member member) {
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
 
@@ -169,30 +172,34 @@ public class Kaga {
             data.put("user_name", member.getUsername());
         }
         data.put("user_ip",ip);
-        data.put("vendor_name",vendor_name);
+        data.put("vendor_name",bundle.getString("nihtan.vendor"));
         data.put("mobile","1");
         data.put("game_id",game);
-        data.put("pc_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
-        data.put("mo_redirect", URLEncoder.encode("http://weex.udzyw.com/home"));
+        data.put("pc_redirect", URLEncoder.encode(bundle.getString("nihtan.url")+"/home"));
+        data.put("mo_redirect", URLEncoder.encode(bundle.getString("nihtan.url")+"/home"));
         String dataStr = JsonUtils.toJson(data);
-        System.out.println("data="+JsonUtils.toJson(data));
-        String hash = encrypt(key,dataStr);
-        System.out.println("hash="+hash);
-        System.out.println("api.url="+"http://api.wapceo.com/api/kaga/open?hash="+hash);
-        String resp = post("http://api.wapceo.com/api/kaga/open?hash="+hash,dataStr);
-        System.out.println("resp="+resp);
+
+        String hash = encrypt(bundle.getString("nihtan.key"),dataStr);
+
+        String resp = post(sessionURL.replace("{HOST}",bundle.getString("nihtan.host"))+"?hash="+hash,dataStr);
+
         return resp;
     }
 
 
     public static String gameList() {
-        Map<String,String> data = new HashMap<String,String>();
-        data.put("vendor_name",vendor_name);
-        String dataStr = JsonUtils.toJson(data);
-        String hash = encrypt(key,dataStr);
 
-        String resp = post(gameListURL+"?hash="+hash,dataStr);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        Map<String,String> data = new HashMap<String,String>();
+
+        data.put("vendor_name",bundle.getString("nihtan.vendor"));
+        String dataStr = JsonUtils.toJson(data);
+        String hash = encrypt(bundle.getString("nihtan.key"),dataStr);
+
+        String resp = post(gameListURL.replace("{HOST}",bundle.getString("nihtan.host"))+"?hash="+hash,dataStr);
+
         return resp;
+
     }
 
 
