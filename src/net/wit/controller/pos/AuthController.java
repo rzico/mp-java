@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by Xus on 2018/2/26.
+ * Created by Xus on 2018/2/26.  为兼容老版本加的功能
  */
 @Controller("authController")
 @RequestMapping("/pos")
