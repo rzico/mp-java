@@ -7,7 +7,9 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Order;
 import net.wit.entity.OrderRanking;
+import net.wit.entity.Payment;
 
 /**
  * @ClassName: OrderRankingService
@@ -17,4 +19,6 @@ import net.wit.entity.OrderRanking;
 
 public interface OrderRankingService extends BaseService<OrderRanking, Long> {
 	Page<OrderRanking> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+	public void add(Order order) throws Exception;
 }

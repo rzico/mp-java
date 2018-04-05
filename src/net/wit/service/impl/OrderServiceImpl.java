@@ -71,6 +71,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "cardServiceImpl")
 	private CardService cardService;
 
+	@Resource(name = "orderRankingServiceImpl")
+	private OrderRankingService orderRankingService;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
@@ -716,6 +719,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 
 		}
+
+		//计算公球公排
+		orderRankingService.add(order);
 
 		return;
 

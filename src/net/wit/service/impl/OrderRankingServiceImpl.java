@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 
 import net.wit.Filter;
 import net.wit.Page;
@@ -14,13 +15,14 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.*;
+import net.wit.service.MessageService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.OrderRankingDao;
 import net.wit.entity.*;
 import net.wit.service.OrderRankingService;
 
@@ -35,6 +37,24 @@ import net.wit.service.OrderRankingService;
 public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long> implements OrderRankingService {
 	@Resource(name = "orderRankingDaoImpl")
 	private OrderRankingDao orderRankingDao;
+
+	@Resource(name = "goodsDaoImpl")
+	private GoodsDao goodsDao;
+
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
+	@Resource(name = "cardDaoImpl")
+	private CardDao cardDao;
+
+	@Resource(name = "cardPointBillDaoImpl")
+	private CardPointBillDao cardPointBillDao;
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
 
 	@Resource(name = "orderRankingDaoImpl")
 	public void setBaseDao(OrderRankingDao orderRankingDao) {
@@ -85,5 +105,96 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 
 	public Page<OrderRanking> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return orderRankingDao.findPage(beginDate,endDate,pageable);
+	}
+
+	private void calc(Member member,Member seller,BigDecimal amount,Long point,OrderItem orderItem) {
+		Goods goods = orderItem.getProduct().getGoods();
+		goodsDao.refresh(goods, LockModeType.PESSIMISTIC_WRITE);
+		goods.setRanking(goods.getRanking()+1);
+		goodsDao.merge(goods);
+		goodsDao.flush();
+        OrderRanking orderRanking = new OrderRanking();
+        orderRanking.setAmount(amount);
+        orderRanking.setPoint(point);
+        orderRanking.setMember(member);
+        orderRanking.setOwner(seller);
+        orderRanking.setGoods(orderItem.getProduct().getGoods());
+        orderRanking.setName(orderItem.getName());
+        orderRanking.setSpec(orderItem.getSpec());
+        orderRanking.setOrders(goods.getRanking().intValue());
+        orderRankingDao.persist(orderRanking);
+        if (goods.getRanking()>2 && ((goods.getRanking()-1) % 2 ==0)) {
+           List<Filter> filters = new ArrayList<>();
+           filters.add(new Filter("goods",Operator.eq,goods));
+           List<OrderRanking> ors = orderRankingDao.findList(null,1,filters,null);
+           if (ors.size()>0) {
+           	  OrderRanking rk = ors.get(0);
+           	  if (rk.getOrders()<goods.getRanking()) {
+           	  	  //条件成立，出局一个
+                  Member rm = rk.getMember();
+                  memberDao.refresh(rm,LockModeType.PESSIMISTIC_WRITE);
+                  rm.setBalance(rm.getBalance().add(rk.getAmount()));
+                  memberDao.merge(rm);
+                  memberDao.flush();
+
+				  Deposit deposit = new Deposit();
+				  deposit.setBalance(rm.getBalance());
+				  deposit.setType(Deposit.Type.rebate);
+				  deposit.setMemo("消费返利");
+				  deposit.setMember(rm);
+				  deposit.setCredit(rk.getAmount());
+				  deposit.setDebit(BigDecimal.ZERO);
+				  deposit.setDeleted(false);
+				  deposit.setOperator("system");
+				  deposit.setOrder(orderItem.getOrder());
+				  deposit.setSeller(seller);
+				  depositDao.persist(deposit);
+				  messageService.depositPushTo(deposit);
+
+                  Card card = rm.card(seller);
+                  if (card!=null) {
+                  	 cardDao.refresh(card,LockModeType.PESSIMISTIC_WRITE);
+                  	 card.setPoint(card.getPoint()+rk.getPoint());
+                  	 cardDao.merge(card);
+                  	 cardDao.flush();
+                  	 CardPointBill pointBill = new CardPointBill();
+                  	 pointBill.setBalance(card.getPoint());
+                  	 pointBill.setCard(card);
+                  	 pointBill.setCredit(rk.getPoint());
+                  	 pointBill.setDebit(0L);
+                  	 pointBill.setDeleted(false);
+                  	 pointBill.setMemo("消费返利");
+                  	 pointBill.setOrder(orderItem.getOrder());
+                  	 pointBill.setOwner(seller);
+                  	 pointBill.setShop(null);
+                  	 pointBill.setOperator("system");
+                  	 cardPointBillDao.persist(pointBill);
+				  }
+
+				  orderRankingDao.remove(rk);
+			  }
+
+		   }
+		}
+	}
+
+	public void add(Order order) throws Exception {
+
+		for (OrderItem orderItem:order.getOrderItems()) {
+			Distribution distribution = orderItem.getProduct().getDistribution();
+			if (distribution!=null && distribution.getType().equals(Distribution.Type.global)) {
+
+			   int i = Math.round(orderItem.getSubtotal().divide(distribution.getDividend(),0,BigDecimal.ROUND_DOWN).floatValue());
+
+			   int point = Math.round(distribution.getDividend().multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_DOWN).floatValue());
+			   BigDecimal amount = distribution.getDividend().subtract(new BigDecimal(point));
+
+			   for (int r=0;r<i;r++) {
+			   	   calc(order.getMember(),order.getSeller(),amount,new Long(point),orderItem);
+				}
+
+			}
+		}
+
 	}
 }
