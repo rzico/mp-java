@@ -70,7 +70,7 @@ public class Live extends BaseEntity {
 
 	/**  回放地址  */
 	@Column(columnDefinition="varchar(255) comment '回放地址'")
-	private String hls_play_url;
+	private String hlsPlayUrl;
 
 	/** 在线数 */
 	@NotNull
@@ -170,12 +170,12 @@ public class Live extends BaseEntity {
 		this.status = status;
 	}
 
-	public String getHls_play_url() {
-		return hls_play_url;
+	public String getHlsPlayUrl() {
+		return hlsPlayUrl;
 	}
 
-	public void setHls_play_url(String hls_play_url) {
-		this.hls_play_url = hls_play_url;
+	public void setHlsPlayUrl(String hlsPlayUrl) {
+		this.hlsPlayUrl = hlsPlayUrl;
 	}
 
 	public Long getViewerCount() {
