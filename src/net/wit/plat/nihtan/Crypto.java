@@ -141,6 +141,7 @@ public class Crypto {
                 gameListURL.replace("{HOST}",
                 bundle.getString("nihtan.host"))+"?hash="+hash,
                 dataStr);
+
         return resp;
     }
 
