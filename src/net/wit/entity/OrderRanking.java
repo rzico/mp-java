@@ -111,4 +111,6 @@ public class OrderRanking extends OrderEntity{
     public void setMember(Member member) {
         this.member = member;
     }
+
+
 }
