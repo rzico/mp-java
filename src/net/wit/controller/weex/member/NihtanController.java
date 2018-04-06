@@ -331,7 +331,12 @@ public class NihtanController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
 
-        String sessionResp =  Crypto.getSession(request.getRemoteAddr(),member);
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip==null) {
+            ip = request.getRemoteAddr();
+        }
+
+        String sessionResp =  Crypto.getSession(ip,member);
 
         Map<String,String> data = JsonUtils.toObject(sessionResp,Map.class);
 

@@ -138,7 +138,9 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 	public synchronized void history(Game game) throws Exception {
 		Member member = game.getMember();
 		try {
-			if (game.getCredit()>0L) {
+			Long amount = game.getCredit();
+			gameDao.lock(game,LockModeType.PESSIMISTIC_WRITE);
+			if (amount>0L && game.getStatus().equals(Game.Status.transaction)) {
 				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 				member.setPoint(member.getPoint()+game.getCredit());
 

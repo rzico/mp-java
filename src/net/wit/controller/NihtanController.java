@@ -59,7 +59,7 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/play")
     public String play(String game,String table,String range,String nihtan,HttpServletRequest request,ModelMap model){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        model.addAttribute("requestUrl",bundle.getString("nihtan.host"));
+        model.addAttribute("requestUrl","http://session."+bundle.getString("nihtan.host"));
         model.addAttribute("requestMethod","post");
         model.addAttribute("requestCharset","utf-8");
 

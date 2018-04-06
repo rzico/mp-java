@@ -116,6 +116,7 @@ public class Crypto {
         }
 
         data.put("user_ip",ip);
+        System.out.printf(ip);
         data.put("vendor_name",bundle.getString("nihtan.vendor"));
         data.put("pc_redirect",bundle.getString("nihtan.url")+"/home");
         data.put("mo_redirect",bundle.getString("nihtan.url")+"/home");
@@ -123,7 +124,7 @@ public class Crypto {
         String hash = encrypt(bundle.getString("nihtan.key"),dataStr);
         String resp = post(sessionURL.replace("{HOST}",bundle.getString("nihtan.host"))+"?hash="+hash,dataStr);
 
-//      System.out.println(resp);
+        System.out.println(resp);
 
         return resp;
 

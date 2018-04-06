@@ -47,7 +47,7 @@
                 <div class="formControls col-xs-8 col-sm-9">
                     <div class="uploader-thum-container">
                         <div id="fileList" class="uploader-list">
-                            [#if data.thumbnail??]
+                            [#if data.logo??]
                                 <div class="file-item thumbnail">
                                     <img width="100px" height="100px" src="${data.logo}"/>
                                     <div class="info"></div>
