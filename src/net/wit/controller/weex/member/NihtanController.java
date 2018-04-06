@@ -360,7 +360,7 @@ public class NihtanController extends BaseController {
         params.put("url",bundle.getString("nihtan.url")+"/api/play.jhtml?nihtan="+URLEncoder.encode(data.get("token"))+"&game="+game+"&table="+table+"&range="+ URLEncoder.encode(range));
         String key = game.replace("-","_")+"_"+table;
         if (video.containsKey(key)) {
-            params.put("video", video.get(key));
+            params.put("video", video.get(key)+"_800x450");
         } else {
             params.put("video", "");
             return Message.error("没有获取视频数据");
