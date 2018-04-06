@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.LiveGroupDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,7 +36,8 @@ import net.wit.service.LiveService;
 public class LiveServiceImpl extends BaseServiceImpl<Live, Long> implements LiveService {
 	@Resource(name = "liveDaoImpl")
 	private LiveDao liveDao;
-
+	@Resource(name = "liveGroupDaoImpl")
+	private LiveGroupDao liveGroupDao;
 	@Resource(name = "liveDaoImpl")
 	public void setBaseDao(LiveDao liveDao) {
 		super.setBaseDao(liveDao);
@@ -85,5 +87,11 @@ public class LiveServiceImpl extends BaseServiceImpl<Live, Long> implements Live
 
 	public Page<Live> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return liveDao.findPage(beginDate,endDate,pageable);
+	}
+
+	public Payment create(Live live) throws Exception {
+		live.setStatus(Live.Status.success);
+        liveDao.persist(live);
+        return null;
 	}
 }

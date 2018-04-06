@@ -21,15 +21,22 @@ public class Live extends BaseEntity {
 
 	private static final long serialVersionUID = 17L;
 
+	/**
+	 * 状态
+	 */
+	public enum Status {
+		/** 等待支付 */
+		waiting,
+		/** 开通成功 */
+		success,
+		/** 失败关闭 */
+		failure
+	}
+
 	/** 主播 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
 	private Member member;
-
-	/** 群组 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '群组'")
-	private LiveGroup liveGroup;
 
 	/** 最后一次直播 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -65,8 +72,12 @@ public class Live extends BaseEntity {
 	private String playUrl;
 
 	/**  状态 0:上线 1:下线  */
+	@Column(columnDefinition="varchar(255) comment '是否在线'")
+	private String online;
+
+	/**  状态 */
 	@Column(columnDefinition="varchar(255) comment '状态'")
-	private String status;
+	private Status status;
 
 	/**  回放地址  */
 	@Column(columnDefinition="varchar(255) comment '回放地址'")
@@ -96,14 +107,6 @@ public class Live extends BaseEntity {
 
 	public void setMember(Member member) {
 		this.member = member;
-	}
-
-	public LiveGroup getLiveGroup() {
-		return liveGroup;
-	}
-
-	public void setLiveGroup(LiveGroup liveGroup) {
-		this.liveGroup = liveGroup;
 	}
 
 	public String getTitle() {
@@ -162,14 +165,6 @@ public class Live extends BaseEntity {
 		this.playUrl = playUrl;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public String getHlsPlayUrl() {
 		return hlsPlayUrl;
 	}
@@ -208,5 +203,21 @@ public class Live extends BaseEntity {
 
 	public void setLiveTape(LiveTape liveTape) {
 		this.liveTape = liveTape;
+	}
+
+	public String getOnline() {
+		return online;
+	}
+
+	public void setOnline(String online) {
+		this.online = online;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 }

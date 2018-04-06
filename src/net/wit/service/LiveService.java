@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Live;
+import net.wit.entity.Payment;
 
 /**
  * @ClassName: LiveService
@@ -17,4 +18,6 @@ import net.wit.entity.Live;
 
 public interface LiveService extends BaseService<Live, Long> {
 	Page<Live> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+	Payment create(Live live) throws Exception;
 }

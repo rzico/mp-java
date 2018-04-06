@@ -106,8 +106,6 @@ public class LiveGroupController extends BaseController {
 
 		entity.setNickname(liveGroup.getNickname());
 
-		entity.setLiveMember(memberService.find(liveMemberId));
-
 		entity.setMember(memberService.find(memberId));
 		
 		if (!isValid(entity)) {
@@ -170,8 +168,6 @@ public class LiveGroupController extends BaseController {
 		entity.setHeadpic(liveGroup.getHeadpic());
 
 		entity.setNickname(liveGroup.getNickname());
-
-		entity.setLiveMember(memberService.find(liveMemberId));
 
 		entity.setMember(memberService.find(memberId));
 		

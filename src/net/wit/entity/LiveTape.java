@@ -22,15 +22,15 @@ public class LiveTape extends BaseEntity {
 
 	private static final long serialVersionUID = 17L;
 
+	/** 房间 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '房间'")
+	private Live live;
+
 	/** 主播 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
 	private Member member;
-
-	/** 群组 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '群组'")
-	private LiveGroup liveGroup;
 
 	/**  标题  */
 	@Column(columnDefinition="varchar(255) comment '标题'")
@@ -51,6 +51,10 @@ public class LiveTape extends BaseEntity {
 	/**  位置  */
 	@Column(columnDefinition="varchar(255) comment '位置'")
 	private String location;
+
+	/**  推流地址  */
+	@Column(columnDefinition="varchar(255) comment '推流地址'")
+	private String pushUrl;
 
 	/**  观看地址  */
 	@Column(columnDefinition="varchar(255) comment '观看地址'")
@@ -91,12 +95,12 @@ public class LiveTape extends BaseEntity {
 		this.member = member;
 	}
 
-	public LiveGroup getLiveGroup() {
-		return liveGroup;
+	public Live getLive() {
+		return live;
 	}
 
-	public void setLiveGroup(LiveGroup liveGroup) {
-		this.liveGroup = liveGroup;
+	public void setLive(Live live) {
+		this.live = live;
 	}
 
 	public String getTitle() {
@@ -169,6 +173,14 @@ public class LiveTape extends BaseEntity {
 
 	public void setLikeCount(Long likeCount) {
 		this.likeCount = likeCount;
+	}
+
+	public String getPushUrl() {
+		return pushUrl;
+	}
+
+	public void setPushUrl(String pushUrl) {
+		this.pushUrl = pushUrl;
 	}
 
 	public Long getGift() {

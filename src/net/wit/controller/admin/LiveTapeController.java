@@ -127,8 +127,6 @@ public class LiveTapeController extends BaseController {
 
 		entity.setViewerCount(liveTape.getViewerCount() == null ? 0 : liveTape.getViewerCount());
 
-		entity.setLiveGroup(liveGroupService.find(liveGroupId));
-
 		entity.setMember(memberService.find(memberId));
 		
 		if (!isValid(entity)) {
@@ -209,8 +207,6 @@ public class LiveTapeController extends BaseController {
 		entity.setTitle(liveTape.getTitle());
 
 		entity.setViewerCount(liveTape.getViewerCount() == null ? 0 : liveTape.getViewerCount());
-
-		entity.setLiveGroup(liveGroupService.find(liveGroupId));
 
 		entity.setMember(memberService.find(memberId));
 		

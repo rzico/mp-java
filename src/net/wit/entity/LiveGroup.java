@@ -22,15 +22,15 @@ public class LiveGroup extends BaseEntity {
 
 	private static final long serialVersionUID = 17L;
 
+	/**  主播 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
+	private Live live;
+
 	/**  用户 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '用户'")
 	private Member member;
-
-	/**  主播 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
-	private Member liveMember;
 
 	/**  昵称  */
 	@Column(columnDefinition="varchar(255) comment '昵称'")
@@ -48,12 +48,12 @@ public class LiveGroup extends BaseEntity {
 		this.member = member;
 	}
 
-	public Member getLiveMember() {
-		return liveMember;
+	public Live getLive() {
+		return live;
 	}
 
-	public void setLiveMember(Member liveMember) {
-		this.liveMember = liveMember;
+	public void setLive(Live live) {
+		this.live = live;
 	}
 
 	public String getNickname() {
