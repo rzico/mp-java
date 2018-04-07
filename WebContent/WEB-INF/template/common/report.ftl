@@ -32,7 +32,7 @@
         box-sizing: border-box
     }
     .article .meta_title {
-        font-size: 24px;
+        font-size: 18px;
         text-align: left;
         line-height: 33px;
         padding: 0 0 6px;
