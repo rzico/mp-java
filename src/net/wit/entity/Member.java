@@ -103,7 +103,7 @@ public class Member extends BaseEntity {
 
 	/** 消费金额 */
 	@Min(0)
-	@Column(columnDefinition="decimal(21,6) default 0 comment '消费金额'")
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '消费金额'")
 	private BigDecimal amount;
 
 	/** 余额 */

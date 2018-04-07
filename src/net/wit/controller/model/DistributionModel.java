@@ -9,6 +9,7 @@ import java.util.List;
 public class DistributionModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
+    private Distribution.Type type;
     private BigDecimal percent1;
     private BigDecimal percent2;
     private BigDecimal percent3;
@@ -71,9 +72,19 @@ public class DistributionModel extends BaseModel implements Serializable {
         this.dividend = dividend;
     }
 
+
+    public Distribution.Type getType() {
+        return type;
+    }
+
+    public void setType(Distribution.Type type) {
+        this.type = type;
+    }
+
     public void bind(Distribution distribution) {
         this.id = distribution.getId();
         this.name = distribution.getName();
+        this.type = distribution.getType();
         this.percent1 = distribution.getPercent1();
         this.percent2 = distribution.getPercent2();
         this.percent3 = distribution.getPercent3();

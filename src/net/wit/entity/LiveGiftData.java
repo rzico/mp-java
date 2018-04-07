@@ -98,4 +98,12 @@ public class LiveGiftData extends BaseEntity {
 	public void setPrice(String price) {
 		this.price = price;
 	}
+
+	public LiveGift getLiveGift() {
+		return liveGift;
+	}
+
+	public void setLiveGift(LiveGift liveGift) {
+		this.liveGift = liveGift;
+	}
 }
