@@ -33,6 +33,7 @@
     }
     .article .meta_title {
         font-size: 18px;
+        font-weight: bold;
         text-align: left;
         line-height: 33px;
         padding: 0 0 6px;
