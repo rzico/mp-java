@@ -319,7 +319,7 @@ public class GeneCalculator implements Serializable {
         try {
             String expr = FreemarkerUtils.process(result.getAttribute(),model);
 
-            double ret = Calculator.conversion(expr);
+            double ret = Calculator.conversion(" "+expr+" ");
             s = new BigDecimal(ret);
         } catch (Exception e) {
             throw new RuntimeException("表达式错误");
