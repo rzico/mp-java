@@ -209,11 +209,19 @@ public class GeneCalculator implements Serializable {
         }
     }
     public void calc(GaugeGene gene) {
+
         BigDecimal s = BigDecimal.ZERO;
         for (GaugeQuestion question:gene.getQuestions()) {
             s = s.add(score(question));
         }
         this.genes.put(gene.getName(),s);
+
+        //因子平均分
+        if (gene.getQuestions().size()>0) {
+            this.genes.put(gene.getName() + "avg", s.divide(new BigDecimal(gene.getQuestions().size()), 5, BigDecimal.ROUND_HALF_DOWN));
+        } else {
+            this.genes.put(gene.getName() + "avg", BigDecimal.ZERO);
+        }
 
         EvalGeneScore sc = new EvalGeneScore();
         sc.setEvaluation(this.evaluation);
@@ -295,9 +303,10 @@ public class GeneCalculator implements Serializable {
         }
         //因子平均分
         this.genes.put("savg", t.divide(new BigDecimal(this.getEvaluation().getGauge().getGaugeGenes().size()),5,BigDecimal.ROUND_HALF_DOWN));
+
         //所有用户的因子平均分
         this.genes.put("stavg", this.evaluation.getGauge().getTavg());
-        //所有用户的因子标准份
+        //所有用户的因子标准分
         this.genes.put("devi", this.evaluation.getGauge().getDevi());
         //指定因子选 A 的题数
         for (GaugeGene ge:this.evaluation.getGauge().getGaugeGenes()) {
@@ -373,6 +382,7 @@ public class GeneCalculator implements Serializable {
                 }
             }
         }
+
         if (total>0) {
             this.genes.put("PASSED", eq * 100 / total);
         } else {
