@@ -187,6 +187,7 @@ public class Gauge extends BaseEntity {
     /** 结果*/
     @OneToMany(mappedBy = "gauge",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
+    @OrderBy("orders asc")
     private List<GaugeResult> gaugeResults = new ArrayList<GaugeResult>();
 
     /** 所属商品 */
