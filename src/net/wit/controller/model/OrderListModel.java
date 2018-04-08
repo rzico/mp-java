@@ -15,6 +15,10 @@ public class OrderListModel extends BaseModel implements Serializable {
 
     private Long id;
 
+
+    /**  买方 id */
+    private Long memberId;
+
     /**  头方头像 */
     private String logo;
 
@@ -50,6 +54,9 @@ public class OrderListModel extends BaseModel implements Serializable {
 
     /**  收货人 */
     private String consignee;
+
+    /**  本单收益 */
+    private BigDecimal rebate;
 
     /** 商品 */
     private List<OrderItemModel> orderItems;
@@ -166,12 +173,29 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.quantity = quantity;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public BigDecimal getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(BigDecimal rebate) {
+        this.rebate = rebate;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
         this.sn = order.getSn();
         this.logo = order.getMember().getLogo();
-        this.name = order.getMember().getNickName();
+        this.name = order.getMember().displayName();
+        this.memberId = order.getMember().getId();
 
         this.sellerId = order.getSeller().getId();
         if (order.getSeller().getTopic()!=null) {
@@ -179,7 +203,7 @@ public class OrderListModel extends BaseModel implements Serializable {
             this.sellerName = order.getSeller().getTopic().getName();
         } else {
             this.sellerLogo = order.getSeller().getLogo();
-            this.sellerName = order.getSeller().getNickName();
+            this.sellerName = order.getSeller().displayName();
         }
 
         this.status = order.getStatus();
@@ -190,7 +214,6 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.amount = order.getAmount();
         this.quantity = order.getQuantity();
         this.consignee = order.getConsignee();
-
     }
 
 
@@ -199,6 +222,17 @@ public class OrderListModel extends BaseModel implements Serializable {
         for (Order order:orders) {
             OrderListModel m = new OrderListModel();
             m.bind(order);
+            ms.add(m);
+        }
+        return ms;
+    }
+
+    public static List<OrderListModel> bindAndRebate(List<Order> orders) {
+        List<OrderListModel> ms = new ArrayList<OrderListModel>();
+        for (Order order:orders) {
+            OrderListModel m = new OrderListModel();
+            m.bind(order);
+            m.setRebate(order.getRebate());
             ms.add(m);
         }
         return ms;

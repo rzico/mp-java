@@ -15,7 +15,7 @@ public class MessageManager {
         try {
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             // 第三方用户唯一凭证
-            String appId = bundle.getString("weixin.app");// 睿商圈
+            String appId = bundle.getString("weixin.appid");// 睿商圈
             // String appId = "wxd9cfce3d40f0caf7";//测试号
             // 第三方用户唯一凭证密钥
             String appSecret = bundle.getString("weixin.secret");

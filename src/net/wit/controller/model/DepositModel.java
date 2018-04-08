@@ -100,7 +100,7 @@ public class DepositModel extends BaseModel implements Serializable {
         this.type = deposit.getType();
         this.amount = deposit.getCredit().subtract(deposit.getDebit());
         this.logo = deposit.getMember().getLogo();
-        this.nickName = deposit.getMember().getNickName();
+        this.nickName = deposit.getMember().displayName();
         this.createDate = deposit.getCreateDate();
         this.balance = deposit.getBalance();
         this.memo = deposit.getMemo();

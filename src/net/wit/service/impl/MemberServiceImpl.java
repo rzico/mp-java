@@ -177,6 +177,7 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			deposit.setOrder(payment.getOrder());
 			deposit.setMemo(payment.getMemo());
 			deposit.setPayment(payment);
+			deposit.setSeller(payment.getPayee());
 			depositDao.persist(deposit);
 
 		} catch (Exception  e) {
@@ -203,6 +204,7 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 			}
 			deposit.setMemo(refunds.getMemo());
 			deposit.setRefunds(refunds);
+			deposit.setSeller(refunds.getPayee());
 			depositDao.persist(deposit);
 			refunds.setMember(member);
 			refunds.setTranSn(refunds.getSn());

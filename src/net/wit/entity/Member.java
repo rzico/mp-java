@@ -101,14 +101,9 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
 	private Long point;
 
-	/** 礼物 */
-	@Min(0)
-	@Column(columnDefinition="bigint(20) default 0 comment '礼物'")
-	private Long gift;
-
 	/** 消费金额 */
 	@Min(0)
-	@Column(columnDefinition="decimal(21,6) default 0 comment '消费金额'")
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '消费金额'")
 	private BigDecimal amount;
 
 	/** 余额 */
@@ -413,14 +408,6 @@ public class Member extends BaseEntity {
 
 	public void setPoint(Long point) {
 		this.point = point;
-	}
-
-	public Long getGift() {
-		return gift;
-	}
-
-	public void setGift(Long gift) {
-		this.gift = gift;
 	}
 
 	public BigDecimal getFreezeBalance() {
@@ -982,7 +969,7 @@ public class Member extends BaseEntity {
 	}
 
 	public BigDecimal effectiveBalance() {
-		return getBalance().subtract(getFreezeBalance());
+		return getBalance();
 	}
 
 	public String userId() {
@@ -1052,12 +1039,12 @@ public class Member extends BaseEntity {
 	}
 
 	public String displayName() {
-		if (getName()!=null) {
-			return getName();
-		} else
 		if (getNickName()!=null) {
 			return getNickName();
-		} else {
+		} else if (getName()!=null) {
+			return getName();
+		} else
+		{
 			return userId();
 		}
 	}

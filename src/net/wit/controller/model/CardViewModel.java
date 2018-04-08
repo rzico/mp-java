@@ -197,7 +197,7 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.type = card.getType();
         this.bindMobile = false;
         this.bindName = false;
-        this.balance = card.getBalance();
+        this.balance = card.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
         this.bonus = card.getBonus();
         this.status = card.getStatus();
         this.vip = card.getVip();
@@ -210,7 +210,7 @@ public class CardViewModel extends BaseModel implements Serializable {
             this.shopName = "";
         }
         if (card.getPromoter()!=null) {
-           this.promoter = card.getPromoter().displayName();
+            this.promoter = card.getPromoter().displayName();
         } else {
             this.promoter = "";
         }

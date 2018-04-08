@@ -54,7 +54,7 @@ public class ArticleLaudModel extends BaseModel implements Serializable {
 
     public void bind(ArticleLaud laud) {
         this.memberId = laud.getMember().getId();
-        this.nickName = laud.getMember().getNickName();
+        this.nickName = laud.getMember().displayName();
         this.logo = laud.getMember().getLogo();
         this.createDate = laud.getCreateDate();
     }

@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 import net.wit.entity.Friends;
 import net.wit.entity.Member;
+import net.wit.entity.Template;
 import net.wit.entity.Topic;
 
 import java.io.Serializable;
@@ -167,13 +168,15 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.fans = member.getFans().size();
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();
+        Template template = null;
         Topic topic = member.getTopic();
         if (topic!=null) {
             this.name = topic.getName();
             this.logo = topic.getLogo();
             this.hits = topic.getHits().intValue();
+            template = topic.getTemplate();
         } else {
-            this.name = member.getNickName();
+            this.name = member.displayName();
             this.logo = member.getLogo();
             this.hits = 0;
         }
@@ -184,6 +187,10 @@ public class TopicViewModel extends BaseModel implements Serializable {
         if (shareUser==null) {
             shareUser = member;
         }
-        this.url = "http://" + bundle.getString("weixin.url") + "/#/c1001?id=" + member.getId()+"&xuid="+shareUser.getId();
+        if (template==null) {
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/c1001?id=" + member.getId() + "&xuid=" + shareUser.getId();
+        } else {
+            this.url = "http://" + bundle.getString("weixin.url") + "/#/c"+template.getSn()+"?id=" + member.getId() + "&xuid=" + shareUser.getId();
+        }
     }
 }

@@ -93,7 +93,7 @@ public class FriendsModel extends BaseModel implements Serializable {
     public void bind(Friends friends) {
         Member member = friends.getFriend();
         this.id = member.getId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.name = member.getName();
         if (member.getMobile()!=null) {

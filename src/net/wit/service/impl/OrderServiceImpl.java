@@ -71,6 +71,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "cardServiceImpl")
 	private CardService cardService;
 
+	@Resource(name = "orderRankingServiceImpl")
+	private OrderRankingService orderRankingService;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
@@ -323,8 +326,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setPromoter(null);
 			order.setPartner(member);
 		} else {
-			//分配给原有上传
-			if (card != null && card.getPromoter() != null) {
+			//分配给原有上传,只在成为团队成员，才能保持订单分配
+			if (card != null && card.getPromoter() != null && card.getPromoter().leaguer(order.getSeller())) {
 				Member promoter = card.getPromoter();
 				if (promoter != null && promoter.equals(order.getSeller())) {
 					promoter = null;
@@ -333,15 +336,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			} else if (xuid != null) {
 				//新客户给推广人
 				Member promoter = memberDao.find(xuid);
-				if (promoter != null && promoter.equals(order.getSeller())) {
-					promoter = null;
+				if (promoter.leaguer(order.getSeller())) {
+					if (promoter != null && promoter.equals(order.getSeller()) ) {
+						promoter = null;
+					}
+					order.setPromoter(promoter);
 				}
-				order.setPromoter(promoter);
 			}
 
 			if (order.getPromoter() != null) {
-				order.setPartner(member.partner(order.getPromoter()));
+				order.setPartner(member.partner(order.getSeller()));
 			}
+
 		}
 		orderDao.persist(order);
 		cardService.decPoint(card, order.getPointDiscount().longValue(), "订单支付", order);
@@ -499,6 +505,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setOrder(order);
+				deposit.setSeller(order.getSeller());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 			}
@@ -543,6 +550,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					deposit.setDeleted(false);
 					deposit.setOperator("system");
 					deposit.setOrder(order);
+					deposit.setSeller(order.getSeller());
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 
@@ -571,6 +579,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						d1.setDeleted(false);
 						d1.setOperator("system");
 						d1.setOrder(order);
+						d1.setSeller(order.getSeller());
 						depositDao.persist(d1);
 						messageService.depositPushTo(d1);
 					}
@@ -605,6 +614,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						d2.setDeleted(false);
 						d2.setOperator("system");
 						d2.setOrder(order);
+						d2.setSeller(order.getSeller());
 						depositDao.persist(d2);
 						messageService.depositPushTo(d2);
 					}
@@ -639,6 +649,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						d3.setDeleted(false);
 						d3.setOperator("system");
 						d3.setOrder(order);
+						d3.setSeller(order.getSeller());
 						depositDao.persist(d3);
 						messageService.depositPushTo(d3);
 					}
@@ -671,13 +682,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				Deposit deposit = new Deposit();
 				deposit.setBalance(seller.getBalance());
 				deposit.setType(Deposit.Type.product);
-				deposit.setMemo("股东分红");
+				deposit.setMemo("支付分红佣金");
 				deposit.setMember(seller);
 				deposit.setCredit(BigDecimal.ZERO.subtract(pte));
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setOrder(order);
+				deposit.setSeller(order.getSeller());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 
@@ -697,12 +709,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit_partner.setDeleted(false);
 				deposit_partner.setOperator("system");
 				deposit_partner.setOrder(order);
+				deposit_partner.setSeller(order.getSeller());
 				depositDao.persist(deposit_partner);
 				messageService.depositPushTo(deposit_partner);
+
+				order.setIsPartner(true);
+				orderDao.merge(order);
 
 			}
 
 		}
+
+		//计算公球公排
+		orderRankingService.add(order);
 
 		return;
 
@@ -788,7 +807,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (card.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("cardPayPlugin");
 			}
-		} else if (payment.getPaymentPluginId() == null) {
+		}
+		if (payment.getPaymentPluginId() == null) {
 			Member member = order.getMember();
 			if (member.getBalance().compareTo(order.getAmountPayable()) >= 0) {
 				payment.setPaymentPluginId("balancePayPlugin");
@@ -1037,7 +1057,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public void evictCompleted() {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("orderStatus", Filter.Operator.eq, Order.OrderStatus.confirmed));
-		filters.add(new Filter("shippingStatus", Operator.le, Order.ShippingStatus.shipped));
+		filters.add(new Filter("shippingStatus", Operator.eq, Order.ShippingStatus.shipped));
 		filters.add(new Filter("shippingDate", Operator.le, DateUtils.addDays(new Date(), -6)));
 		List<Order> data = orderDao.findList(null, null, filters, null);
 		for (Order order : data) {

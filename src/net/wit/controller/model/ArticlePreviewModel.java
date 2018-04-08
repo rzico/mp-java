@@ -136,7 +136,7 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.laud = article.getLaud();
         this.share = article.getShare();
         this.review = article.getReview();
-        this.nickName = article.getMember().getNickName();
+        this.nickName = article.getMember().displayName();
         this.logo = article.getMember().getLogo();
         this.memberId = article.getMember().getId();
         this.hasFavorite = false;

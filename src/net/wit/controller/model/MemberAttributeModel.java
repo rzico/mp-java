@@ -177,7 +177,7 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
             if (member.getPromoter().getName()!=null) {
                 this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().getName() + ")";
             } else {
-                this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().getNickName() + ")";
+                this.promoter = member.getPromoter().getMobile() + "(" + member.getPromoter().displayName() + ")";
             }
         }
         this.occupation = occupation;

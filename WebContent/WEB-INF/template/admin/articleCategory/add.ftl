@@ -40,6 +40,17 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="hidden" value="" id="thumbnail" name="thumbnail">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">

@@ -92,7 +92,7 @@ public class MemberFollowModel extends BaseModel implements Serializable {
 
     public void bind(Member member) {
         this.id = member.getId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.autograph = member.getAutograph();
         this.name = member.getName();
         this.logo = member.getLogo();

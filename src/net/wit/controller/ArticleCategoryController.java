@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,7 +35,9 @@ public class ArticleCategoryController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Long tagIds,HttpServletRequest request){
-        List<ArticleCategory> categories = articleCategoryService.findAll();
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("status", Filter.Operator.eq, ArticleCategory.Status.enabled));
+        List<ArticleCategory> categories = articleCategoryService.findList(null,null,filters,null);
         return Message.bind(ArticleCategoryModel.bindList(categories),request);
     }
 

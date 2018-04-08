@@ -189,27 +189,7 @@ public class RechargeController extends BaseController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
 	public Message update(Recharge recharge, Long memberId){
-		Recharge entity = rechargeService.find(recharge.getId());
-		try {
-
-				String resp = UnsPay.query(entity.getSn());
-				if ("00".equals(resp)) {
-					rechargeService.handle(entity);
-					return Message.success(entity,"充值成功");
-				} else
-				if ("20".equals(resp)) {
-					rechargeService.close(entity);
-					return Message.success(entity,"充值失败,款项退回账号");
-				} else
-				if ("10".equals(resp)) {
-					return Message.success(entity,"正在处理中");
-				} else {
-					return Message.error("查询失败");
-				}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Message.error(e.getMessage());
-		}
+	   return Message.error("error");
 	}
 	
 
@@ -312,13 +292,9 @@ public class RechargeController extends BaseController {
 		Member member = admin.getMember();
 		entity.setVoucher(voucher);
 		entity.setStatus(Recharge.Status.confirmed);
-		if(member == null){
-			entity.setOperator("系统操作员");
-		}else{
-			entity.setOperator(member.getName());
-		}
+		entity.setOperator(admin.getName());
 		try {
-			rechargeService.handle(entity);
+			rechargeService.submit(entity);
 			return Message.success(entity,"充值成功");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -13,6 +13,8 @@ public class WalletModel extends BaseModel implements Serializable {
     private String logo;
     /** 余额 */
     private BigDecimal balance;
+    /** 金币 */
+    private Long point;
     /** 银行卡 */
     private String bankinfo;
     /** 是否绑定 */
@@ -66,12 +68,21 @@ public class WalletModel extends BaseModel implements Serializable {
         this.binded = binded;
     }
 
+    public Long getPoint() {
+        return point;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
-        this.nickName = member.getNickName();
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
-        this.balance = member.getBalance();
+        this.balance = member.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
         this.binded = false;
         this.bankinfo = "未绑定";
+        this.point = member.getPoint();
     }
 }

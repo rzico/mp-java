@@ -177,8 +177,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "freezeBalance",
-                    "sTitle": "冻结",
+                    "mData": "point",
+                    "sTitle": "积分",
                     "sClass": "center"
                 },
                 {

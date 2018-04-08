@@ -45,7 +45,7 @@ public class Payment extends BaseEntity {
 		cashier,
 		/** 专栏激活     */
 		topic,
-		/** 会员卡    */
+		/** 充会员卡    */
 		card
 	}
 
@@ -167,6 +167,12 @@ public class Payment extends BaseEntity {
 	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private ArticleReward articleReward;
+
+	/** 充值 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private Recharge recharge;
 
 	/** 收款 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -330,6 +336,14 @@ public class Payment extends BaseEntity {
 
 	public void setTopicBill(TopicBill topicBill) {
 		this.topicBill = topicBill;
+	}
+
+	public Recharge getRecharge() {
+		return recharge;
+	}
+
+	public void setRecharge(Recharge recharge) {
+		this.recharge = recharge;
 	}
 
 	/**

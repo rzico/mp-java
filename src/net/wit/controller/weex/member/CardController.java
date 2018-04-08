@@ -548,15 +548,16 @@ public class CardController extends BaseController {
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("owner", Filter.Operator.eq,owner));
-        if (!admin.getRoles().contains(roleService.find(1L))) {
-            Shop shop = admin.getShop();
-            if (shop!=null) {
-                filters.add(new Filter("shop", Filter.Operator.eq,shop));
+        if (!member.equals(owner) && !admin.getRoles().contains(roleService.find(1L))) {
+            if (admin.getRoles().contains(roleService.find(2L))) {
+                Shop shop = admin.getShop();
+                if (shop != null) {
+                    filters.add(new Filter("shop", Filter.Operator.eq, shop));
+                } else {
+                    filters.add(new Filter("promoter", Filter.Operator.eq, member));
+                }
             } else {
-                Page<Card> page = new Page();
-                PageBlock model = PageBlock.bind(page);
-                model.setData(CardViewModel.bindList(page.getContent()));
-                return Message.bind(model,request);
+                filters.add(new Filter("promoter", Filter.Operator.eq, member));
             }
         }
         filters.add(new Filter("status", Filter.Operator.ne,Card.Status.none));

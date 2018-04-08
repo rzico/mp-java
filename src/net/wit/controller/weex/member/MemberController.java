@@ -71,9 +71,6 @@ public class MemberController extends BaseController {
         }
         MemberModel model =new MemberModel();
         model.bind(member);
-
-        BigDecimal sm = depositService.summary(Deposit.Type.rebate,member);
-        model.setRebate(sm);
         return Message.bind(model,request);
    }
 

@@ -109,6 +109,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			transferDao.persist(transfer);
 			member.setBalance(member.getBalance().subtract(transfer.getAmount()));
 			memberDao.merge(member);
+			memberDao.flush();
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
 			deposit.setType(Deposit.Type.transfer);
@@ -119,6 +120,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
 			deposit.setTransfer(transfer);
+			deposit.setSeller(member);
 			depositDao.persist(deposit);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
@@ -183,6 +185,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
 			member.setBalance(member.getBalance().add(transfer.getAmount()));
 			memberDao.merge(member);
+			memberDao.flush();
 			Deposit deposit = new Deposit();
 			deposit.setBalance(member.getBalance());
 			deposit.setType(Deposit.Type.transfer);
@@ -193,6 +196,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setDeleted(false);
 			deposit.setOperator("system");
 			deposit.setTransfer(transfer);
+			deposit.setSeller(member);
 			depositDao.persist(deposit);
 			transfer.setTransferDate(new Date());
 			transfer.setStatus(Transfer.Status.failure);

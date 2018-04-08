@@ -198,6 +198,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					deposit.setOperator("system");
 					deposit.setPayment(payment);
 					deposit.setOrder(order);
+					deposit.setSeller(order.getSeller());
 					depositDao.persist(deposit);
 				}
 
@@ -230,6 +231,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
 						deposit.setPayBill(payBill);
+						deposit.setSeller(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -272,6 +274,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setOperator("system");
 						deposit.setPayment(payment);
 						deposit.setPayBill(payBill);
+						deposit.setSeller(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -351,30 +354,32 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setPayment(payment);
+				deposit.setSeller(payment.getPayee());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 				reward.setStatus(ArticleReward.Status.success);
 				articleRewardDao.merge(reward);
 				messageService.rewardPushTo(reward);
 			} else
-//			if (payment.getType() == Payment.Type.recharge) {
-//				Member member = payment.getPayee();
-//				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-//				member.setBalance(member.getBalance().add(payment.getAmount()));
-//				memberDao.merge(member);
-//				Deposit deposit = new Deposit();
-//				deposit.setBalance(member.getBalance());
-//				deposit.setType(Deposit.Type.recharge);
-//				deposit.setMemo(payment.getMemo());
-//				deposit.setMember(member);
-//				deposit.setCredit(payment.getAmount());
-//				deposit.setDebit(BigDecimal.ZERO);
-//				deposit.setDeleted(false);
-//				deposit.setOperator("system");
-//				deposit.setPayment(payment);
-//				depositDao.persist(deposit);
-//				messageService.depositPushTo(deposit);
-//			} else
+			if (payment.getType() == Payment.Type.recharge) {
+				Member member = payment.getPayee();
+				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+				member.setBalance(member.getBalance().add(payment.getAmount()));
+				memberDao.merge(member);
+				Deposit deposit = new Deposit();
+				deposit.setBalance(member.getBalance());
+				deposit.setType(Deposit.Type.recharge);
+				deposit.setMemo(payment.getMemo());
+				deposit.setMember(member);
+				deposit.setCredit(payment.getAmount());
+				deposit.setDebit(BigDecimal.ZERO);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				deposit.setPayment(payment);
+				deposit.setSeller(payment.getPayee());
+				depositDao.persist(deposit);
+				messageService.depositPushTo(deposit);
+			} else
 			if (payment.getType() == Payment.Type.topic) {
 				TopicBill topicBill = payment.getTopicBill();
 				topicBill.setStatus(TopicBill.Status.success);
@@ -510,6 +515,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	public void query() {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("status", Filter.Operator.eq,Payment.Status.waiting));
+		filters.add(new Filter("paymentPluginId", Operator.isNotNull,null));
 		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
 		List<Payment> data = paymentDao.findList(null,null,filters,null);
 		for (Payment payment:data) {

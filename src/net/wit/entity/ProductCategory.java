@@ -20,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
@@ -52,28 +53,34 @@ public class ProductCategory extends OrderEntity {
 
 	/** 树路径 */
 	@Column(nullable = false,columnDefinition="varchar(255) not null comment '树路径'")
+	@JsonIgnore
 	private String treePath;
 
 	/** 层级 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '层级'")
+	@JsonIgnore
 	private Integer grade;
 
 	/** 上级分类 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private ProductCategory parent;
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Member member;
 
 	/** 下级分类 */
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
 	@OrderBy("orders asc")
+	@JsonIgnore
 	private Set<ProductCategory> children = new HashSet<ProductCategory>();
 
 	/** 商品 */
 	@OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
 	@Where(clause="deleted=0")
+	@JsonIgnore
 	private Set<Product> products = new HashSet<Product>();
 
 	/**
