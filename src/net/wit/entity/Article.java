@@ -190,7 +190,6 @@ public class Article extends BaseEntity{
     private Authority authority;
 
     /** 是否样例 */
-    @NotNull
     @Column(columnDefinition="bit comment '是否样例'")
     private Boolean isExample;
 

@@ -316,7 +316,7 @@ public class ArticleController extends BaseController {
 
 		entity.setIsDraft(false);
 
-		entity.setIsAudit(true);
+		entity.setIsAudit(!entity.getIsAudit());
 
 		if (!isValid(entity)) {
 			return Message.error("admin.data.valid");
@@ -324,10 +324,14 @@ public class ArticleController extends BaseController {
 
 		try {
 			articleService.update(entity);
-			return Message.success(entity,"发布成功");
+			if (entity.getIsAudit()) {
+				return Message.success(entity, "发布成功");
+			} else  {
+				return Message.success(entity, "取消成功");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Message.error("发布失败");
+			return Message.error("操作失败");
 		}
 
 	}

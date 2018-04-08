@@ -80,7 +80,7 @@ public class CardBillModel extends BaseModel implements Serializable {
         this.amount = cardBill.getCredit().subtract(cardBill.getDebit());
         this.logo = cardBill.getMember().getLogo();
         this.createDate = cardBill.getCreateDate();
-        this.balance = cardBill.getBalance();
+        this.balance = cardBill.getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);;
         this.memo = cardBill.getMemo();
     }
 

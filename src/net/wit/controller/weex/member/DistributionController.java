@@ -97,7 +97,7 @@ public class DistributionController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(String name, BigDecimal dividend,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point,  Integer orders, HttpServletRequest request){
+    public Message add(String name,Distribution.Type type, BigDecimal dividend,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point, Integer orders, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -112,6 +112,10 @@ public class DistributionController extends BaseController {
         catalog.setOrders(orders);
         catalog.setName(name);
         catalog.setMember(member);
+        if (type==null) {
+            type = Distribution.Type.dividend;
+        }
+        catalog.setType(type);
 
         if (percent1!=null) {
             catalog.setPercent1(percent1);
@@ -152,12 +156,11 @@ public class DistributionController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,String name,BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point,BigDecimal dividend, Integer orders,HttpServletRequest request){
+    public Message update(Long id,String name,Distribution.Type type, BigDecimal percent1,BigDecimal percent2, BigDecimal percent3, BigDecimal point,BigDecimal dividend, Integer orders,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-
 
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
@@ -174,6 +177,11 @@ public class DistributionController extends BaseController {
         catalog.setName(name);
         catalog.setMember(member);
 
+        if (type==null) {
+            type = Distribution.Type.dividend;
+        }
+        catalog.setType(type);
+
         if (percent1!=null) {
             catalog.setPercent1(percent1);
         } else {
@@ -189,6 +197,7 @@ public class DistributionController extends BaseController {
         } else {
             catalog.setPercent3(BigDecimal.ZERO);
         }
+
         if (point!=null) {
             catalog.setPoint(point);
         } else {
@@ -202,9 +211,11 @@ public class DistributionController extends BaseController {
         }
 
         distributionService.save(catalog);
+
         DistributionModel model = new DistributionModel();
         model.bind(catalog);
         return Message.success(model,"添加成功");
+
     }
 
 
