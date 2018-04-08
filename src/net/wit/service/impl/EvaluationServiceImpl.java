@@ -119,11 +119,11 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) throws Exception  {
 		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
 		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
-//        for (EvalAnswer answer:evals) {
-//			evalAnswerDao.persist(answer);
-//		}
-		evaluation.setEvalAnswers(evals);
 		evaluationDao.persist(evaluation);
+        for (EvalAnswer answer:evals) {
+			evalAnswerDao.persist(answer);
+		}
+		evaluationDao.refresh(evaluation);
         try {
 	    	GeneCalculator calculator = new GeneCalculator();
             calculator.calcAll(evaluation);
