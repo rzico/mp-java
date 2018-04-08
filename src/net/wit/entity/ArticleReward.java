@@ -38,6 +38,18 @@ public class ArticleReward extends BaseEntity {
 		failure
 	}
 
+	/**
+	 * 类型
+	 */
+	public enum Type {
+
+		/** 文章 */
+		article,
+
+		/** 直播 */
+		liveplay
+	}
+
 	/** IP */
 	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) comment 'IP'")
 	private String ip;
@@ -73,6 +85,10 @@ public class ArticleReward extends BaseEntity {
 	/** 交易状态 */
 	@Column(columnDefinition="int(11) not null comment '交易状态 {wait:等待支付,success:支付成功,failure:支付失败}'")
 	private Status status;
+
+	/** 打赏类型 */
+	@Column(columnDefinition="int(11) not null comment '打赏类型'")
+	private Type type;
 
 	public String getIp() {
 		return ip;
@@ -138,6 +154,13 @@ public class ArticleReward extends BaseEntity {
 		this.status = status;
 	}
 
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
