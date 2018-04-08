@@ -82,10 +82,10 @@ public class LiveTape extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '礼物数'")
 	private Long gift;
 
-	/** 开始时间 */
+	/** 结束时间 */
 	@DateBridge(resolution = Resolution.SECOND)
-	@Column(updatable = false,columnDefinition="datetime not null comment '开始时间'")
-	private Date startTime;
+	@Column(updatable = false,columnDefinition="datetime not null comment '结束时间'")
+	private Date endTime;
 
 	public Member getMember() {
 		return member;
@@ -191,11 +191,11 @@ public class LiveTape extends BaseEntity {
 		this.gift = gift;
 	}
 
-	public Date getStartTime() {
-		return startTime;
+	public Date getEndTime() {
+		return endTime;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 }

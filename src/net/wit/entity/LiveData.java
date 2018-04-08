@@ -30,6 +30,11 @@ public class LiveData extends BaseEntity {
 	/** 直播 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '直播'")
+	private Live live;
+
+	/** 直播 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '直播'")
 	private LiveTape liveTape;
 
 	/**  标题  */
@@ -55,11 +60,6 @@ public class LiveData extends BaseEntity {
 	/**  观看地址  */
 	@Column(columnDefinition="varchar(255) comment '观看地址'")
 	private String playUrl;
-
-	/** 开始时间 */
-	@DateBridge(resolution = Resolution.SECOND)
-	@Column(updatable = false,columnDefinition="datetime not null comment '开始时间'")
-	private Date startTime;
 
 	public Member getMember() {
 		return member;
@@ -109,14 +109,6 @@ public class LiveData extends BaseEntity {
 		this.location = location;
 	}
 
-	public Date getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-
 	public String getPlayUrl() {
 		return playUrl;
 	}
@@ -131,5 +123,13 @@ public class LiveData extends BaseEntity {
 
 	public void setLiveTape(LiveTape liveTape) {
 		this.liveTape = liveTape;
+	}
+
+	public Live getLive() {
+		return live;
+	}
+
+	public void setLive(Live live) {
+		this.live = live;
 	}
 }

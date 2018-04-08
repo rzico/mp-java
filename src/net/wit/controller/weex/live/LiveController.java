@@ -8,10 +8,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.LiveModel;
 import net.wit.controller.model.LiveTapeModel;
 import net.wit.controller.model.MemberModel;
-import net.wit.entity.Live;
-import net.wit.entity.LiveTape;
-import net.wit.entity.Member;
-import net.wit.entity.MemberFollow;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -48,6 +46,9 @@ public class LiveController extends BaseController {
 
     @Resource(name = "liveTapeServiceImpl")
     private LiveTapeService liveTapeService;
+
+    @Resource(name = "liveDataServiceImpl")
+    private LiveDataService liveDataService;
 
 
     /**
@@ -144,6 +145,7 @@ public class LiveController extends BaseController {
 
         liveTape.setTitle(live.getTitle());
         liveTape.setLocation(location);
+        liveTape.setEndTime(new Date());
         liveTapeService.save(liveTape);
 
         live.setOnline("0");
@@ -170,33 +172,27 @@ public class LiveController extends BaseController {
             return Message.error("无效直播id");
         }
 
-        String playUrl = "";
-        String pushUrl = "";
-        LiveTape liveTape = new LiveTape();
-        liveTape.setLive(live);
-        liveTape.setMember(member);
-        liveTape.setFrontcover(live.getFrontcover());
-        liveTape.setHeadpic(member.getLogo());
-        liveTape.setNickname(member.displayName());
-        liveTape.setGift(0L);
-        liveTape.setLikeCount(0L);
-        liveTape.setViewerCount(0L);
-        liveTape.setLocation(live.getLocation());
-        liveTape.setPlayUrl(playUrl);
-        liveTape.setPushUrl(pushUrl);
-        liveTape.setTitle(live.getTitle());
-        liveTape.setLocation(location);
-        liveTapeService.save(liveTape);
+        LiveData liveData = new LiveData();
 
-        live.setLiveTape(liveTape);
-        live.setPushUrl(pushUrl);
-        live.setPlayUrl(playUrl);
-        live.setOnline("1");
+        liveData.setLive(live);
+        liveData.setLiveTape(live.getLiveTape());
+        liveData.setMember(member);
+        liveData.setFrontcover(live.getFrontcover());
+        liveData.setHeadpic(member.getLogo());
+        liveData.setNickname(member.displayName());
+
+        liveData.setLocation(live.getLocation());
+        liveData.setPlayUrl(live.getPlayUrl());
+        liveDataService.save(liveData);
+
+        live.setViewerCount(live.getViewerCount()+1);
         liveService.update(live);
 
-        LiveTapeModel model = new LiveTapeModel();
-        model.bind(liveTape);
-        return Message.success(model,"success");
+        LiveTape liveTape = live.getLiveTape();
+        liveTape.setViewerCount(liveTape.getViewerCount()+1);
+        liveTapeService.update(liveTape);
+
+        return Message.success("success");
     }
 
 
@@ -217,16 +213,13 @@ public class LiveController extends BaseController {
         }
         LiveTape liveTape = live.getLiveTape();
 
-        liveTape.setTitle(live.getTitle());
-        liveTape.setLocation(location);
-        liveTapeService.save(liveTape);
-
-        live.setOnline("0");
+        live.setViewerCount(live.getViewerCount()-1);
         liveService.update(live);
 
-        LiveTapeModel model = new LiveTapeModel();
-        model.bind(liveTape);
-        return Message.success(model,"success");
+        liveTape.setViewerCount(liveTape.getViewerCount()-1);
+        liveTapeService.update(liveTape);
+
+        return Message.success("success");
     }
 
 
