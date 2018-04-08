@@ -110,6 +110,7 @@ public class EvaluationController extends BaseController {
         eval.setRebate(BigDecimal.ZERO);
         eval.setTitle(gauge.getTitle());
         eval.setSubTitle(gauge.getSubTitle());
+        eval.setSeconds(0L);
         eval.setTotal(new Long(gauge.getGaugeQuestions().size()));
         if (xuid!=null) {
             Member promoter = memberService.find(xuid);
@@ -196,7 +197,7 @@ public class EvaluationController extends BaseController {
      */
     @RequestMapping(value = "/answer")
     @ResponseBody
-    public Message question(Long id,String body, HttpServletRequest request){
+    public Message question(Long id,String body,Long seconds, HttpServletRequest request){
 //        System.out.printf(body);
 //
         Evaluation evaluation = evaluationService.find(id);
@@ -233,6 +234,7 @@ public class EvaluationController extends BaseController {
 //        evaluation.setEvalAnswers(evals);
         Evaluation e = null;
         try {
+            evaluation.setSeconds(seconds);
             e = evaluationService.answer(evaluation,evals);
         } catch (Exception e1) {
             return Message.error(e1.getMessage());

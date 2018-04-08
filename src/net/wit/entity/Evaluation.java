@@ -114,6 +114,12 @@ public class Evaluation extends BaseEntity {
     @Column(columnDefinition="bigint(20) not null default 0 comment '总题数'")
     private Long total;
 
+    /** 用时 */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="bigint(20) not null default 0 comment '用时'")
+    private Long seconds;
+
     /** 是否删除 */
     @NotNull
     @Column(columnDefinition="bit comment '是否删除'")
@@ -321,5 +327,13 @@ public class Evaluation extends BaseEntity {
 
     public void setEvalvar(String evalvar) {
         this.evalvar = evalvar;
+    }
+
+    public Long getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(Long seconds) {
+        this.seconds = seconds;
     }
 }

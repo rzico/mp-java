@@ -117,6 +117,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 
 	@Transactional
 	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) throws Exception  {
+		Long sec = evaluation.getSeconds();
         for (EvalAnswer answer:evals) {
 			evalAnswerDao.persist(answer);
 		}
@@ -128,6 +129,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
             if (calculator.getResults().size()==0) {
                 throw new RuntimeException("无效测试结果");
             }
+            evaluation.setSeconds(sec);
             evaluation.setResult(calculator.getHtml());
             evaluation.setEvalvar(calculator.getVars());
         } catch (Exception e) {
