@@ -266,6 +266,8 @@ public class GeneCalculator implements Serializable {
 
     //计算扩展变量
     public void calcExt() {
+        //用时秒数
+        this.genes.put("seconds",evaluation.getSeconds());
         //计算总数
         BigDecimal t = BigDecimal.ZERO;
         for (EvalAnswer as:this.evaluation.getEvalAnswers()) {
