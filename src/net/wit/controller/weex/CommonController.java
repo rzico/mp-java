@@ -2,10 +2,7 @@
 package net.wit.controller.weex;
 
 import net.wit.Message;
-import net.wit.entity.Admin;
-import net.wit.entity.Area;
-import net.wit.entity.Member;
-import net.wit.entity.Redis;
+import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.util.StringUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -57,6 +54,9 @@ public class CommonController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "pluginConfigServiceImpl")
+	private PluginConfigService pluginConfigService;
+
 	/**
 	 * 公钥
 	 */
@@ -77,28 +77,63 @@ public class CommonController extends BaseController {
 	@RequestMapping(value = "/resources", method = RequestMethod.GET)
 	@ResponseBody
 	public Message resources(HttpServletRequest request, HttpServletResponse response) {
-		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		Map<String,Object> data = new HashMap<String,Object>();
 		String ua = request.getHeader("user-agent");
+//		if (ua != null) {
+//			if (ua.indexOf("iOS")!=-1) {
+//				data.put("appVersion",bundle.getString("ios.version"));
+//				data.put("minVersion",bundle.getString("ios.min.version"));
+//				data.put("appUrl",bundle.getString("ios.url"));
+//			} else {
+//				data.put("appVersion",bundle.getString("android.version"));
+//				data.put("minVersion",bundle.getString("android.min.version"));
+//				data.put("appUrl",bundle.getString("android.url"));
+//			}
+//		} else {
+//			data.put("appVersion",bundle.getString("android.version"));
+//			data.put("minVersion",bundle.getString("android.min.version"));
+//			data.put("appUrl",bundle.getString("android.url"));
+//		}
+//		data.put("resVersion",bundle.getString("resource.version"));
+//		data.put("resUrl",bundle.getString("resource.url"));
+//
+//		data.put("key",bundle.getString("app.key"));
+//		return Message.bind(data,request);
+//		String ua = request.getHeader("user-agent");
 		if (ua != null) {
 			if (ua.indexOf("iOS")!=-1) {
-				data.put("appVersion",bundle.getString("ios.version"));
-				data.put("minVersion",bundle.getString("ios.min.version"));
-				data.put("appUrl",bundle.getString("ios.url"));
+				PluginConfig pluginConfig=pluginConfigService.findByPluginId("iosVersionPlugin");
+				if(pluginConfig==null){
+					return Message.error("您已断开链接请稍候再试!");
+				}
+				data.put("appVersion",pluginConfig.getAttribute("iosVersion"));
+				data.put("minVersion",pluginConfig.getAttribute("iosMinVersion"));
+				data.put("appUrl",pluginConfig.getAttribute("iosUrl"));
 			} else {
-				data.put("appVersion",bundle.getString("android.version"));
-				data.put("minVersion",bundle.getString("android.min.version"));
-				data.put("appUrl",bundle.getString("android.url"));
+				PluginConfig pluginConfig=pluginConfigService.findByPluginId("androidVersionPlugin");
+				if(pluginConfig==null){
+					return Message.error("您已断开链接请稍候再试!");
+				}
+				data.put("appVersion",pluginConfig.getAttribute("androidVersion"));
+				data.put("minVersion",pluginConfig.getAttribute("androidMinVersion"));
+				data.put("appUrl",pluginConfig.getAttribute("androidUrl"));
 			}
 		} else {
-			data.put("appVersion",bundle.getString("android.version"));
-			data.put("minVersion",bundle.getString("android.min.version"));
-			data.put("appUrl",bundle.getString("android.url"));
+			PluginConfig pluginConfig=pluginConfigService.findByPluginId("androidVersionPlugin");
+			if(pluginConfig==null){
+				return Message.error("您已断开链接请稍候再试!");
+			}
+			data.put("appVersion",pluginConfig.getAttribute("androidVersion"));
+			data.put("minVersion",pluginConfig.getAttribute("androidMinVersion"));
+			data.put("appUrl",pluginConfig.getAttribute("androidUrl"));
 		}
-		data.put("resVersion",bundle.getString("resource.version"));
-		data.put("resUrl",bundle.getString("resource.url"));
-
-		data.put("key",bundle.getString("app.key"));
+		PluginConfig pluginConfig=pluginConfigService.findByPluginId("resourceVersionPlugin");
+		if(pluginConfig==null){
+			return Message.error("您已断开链接请稍候再试!");
+		}
+		data.put("resVersion",pluginConfig.getAttribute("resourceVersion"));
+		data.put("resUrl",pluginConfig.getAttribute("resourceUrl"));
 		return Message.bind(data,request);
 	}
 

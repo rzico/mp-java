@@ -59,6 +59,14 @@
                             <li><a href="javascript:;" onClick="logout()">退出</a></li>
                         </ul>
                     </li>
+                    <li class="dropDown dropDown_hover">
+                        <a href="javascript:;" title="设置"><i class="Hui-iconfont" style="font-size:18px">&#xe62e;</i></a>
+                        <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="javascript:;" onClick="show('安卓版本设置','${base}/admin/settings/index.jhtml?type=0','400','600')">安卓版本</a></li>
+                            <li><a href="javascript:;" onClick="show('苹果版本设置','${base}/admin/settings/index.jhtml?type=1','400','600')">苹果版本</a></li>
+                            <li><a href="javascript:;" onClick="show('服务器版本设置','${base}/admin/settings/index.jhtml?type=2','400','600')">服务器版本</a></li>
+                        </ul>
+                    </li>
                     <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
                     <li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
@@ -190,7 +198,15 @@
         layer_show(title,url,w,h);
     }
 
-
+    /*查看*/
+    function show(title, url, id, w, h) {
+        layer_show(title, url, w, h);
+    }
+    /*关闭页面*/
+    function closeWindow(index, msg) {
+        layer.close(index);
+        layer.msg(msg, {icon: 1, time: 1000});
+    }
 </script>
 
 

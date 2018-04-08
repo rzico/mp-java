@@ -112,7 +112,7 @@ public interface BaseService<T, ID extends Serializable> {
 
 	/**
 	 * 保存实体对象
-	 * 
+	 *
 	 * @param entity
 	 *            实体对象
 	 */
