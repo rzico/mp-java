@@ -3,10 +3,7 @@ package net.wit.controller.weex.live;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleListModel;
-import net.wit.controller.model.LiveModel;
-import net.wit.controller.model.LiveTapeModel;
-import net.wit.controller.model.MemberModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -97,12 +94,24 @@ public class LiveController extends BaseController {
     /**
      *   获取直播间
      */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message  view(Long id,Pageable pageable,HttpServletRequest request) {
+        Live live = liveService.find(id);
+        LiveModel model = new LiveModel();
+        model.bind(live);
+        return Message.bind(model,request);
+    }
+
+    /**
+     *   获取直播间
+     */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message  list(Pageable pageable,HttpServletRequest request) {
         Page<Live> page = liveService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(LiveModel.bindList(page.getContent()));
+        model.setData(LiveListModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 
