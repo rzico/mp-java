@@ -1,12 +1,15 @@
 package net.wit.controller.model;
 import net.wit.entity.Live;
 import net.wit.entity.Member;
+import net.wit.entity.Order;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LiveModel extends BaseModel implements Serializable {
 
@@ -177,4 +180,17 @@ public class LiveModel extends BaseModel implements Serializable {
         this.pushUrl = live.getPushUrl();
         this.playUrl = live.getPlayUrl();
     }
+
+
+
+    public static List<LiveModel> bindList(List<Live> lives) {
+        List<LiveModel> ms = new ArrayList<LiveModel>();
+        for (Live live:lives) {
+            LiveModel m = new LiveModel();
+            m.bind(live);
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }
