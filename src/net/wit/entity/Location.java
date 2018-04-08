@@ -21,14 +21,13 @@ public class Location implements Serializable {
 	private static double rad(double d){
 		return d * Math.PI / 180.0;
 	}
+
 	/** 伟度 x */
 	@Column(columnDefinition="double comment '伟度'")
 	private double lat;
 	/** 经度 y */
 	@Column(columnDefinition="double comment '经度'")
 	private double lng;
-	@Column(columnDefinition="varchar(255) comment '位置'")
-	private String addr;
 
 	public double getLat() {
 		return lat;
@@ -44,14 +43,6 @@ public class Location implements Serializable {
 
 	public void setLng(double lng) {
 		this.lng = lng;
-	}
-
-	public String getAddr() {
-		return addr;
-	}
-
-	public void setAddr(String addr) {
-		this.addr = addr;
 	}
 
 	public double calcDistance(double lat,double lng) {
