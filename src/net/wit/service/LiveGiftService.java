@@ -22,4 +22,6 @@ public interface LiveGiftService extends BaseService<LiveGift, Long> {
 
 	void add(LiveGift gift, Member member, Live live) throws Exception;
 
+	void laud(Member member, Live live) throws Exception;
+
 }

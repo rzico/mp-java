@@ -92,4 +92,30 @@ public class GiftController extends BaseController {
 
     }
 
+    /**
+     *   点赞
+     */
+    @RequestMapping(value = "/laud", method = RequestMethod.GET)
+    @ResponseBody
+    public Message laud(Long liveId,Pageable pageable,HttpServletRequest request) {
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Live live = liveService.find(liveId);
+        if (live==null) {
+            return Message.error("房间号 id");
+        }
+
+        try {
+            liveGiftService.laud(member,live);
+        } catch (Exception e) {
+            return Message.success(e.getMessage());
+        }
+        return Message.success("送成功");
+
+    }
+
 }

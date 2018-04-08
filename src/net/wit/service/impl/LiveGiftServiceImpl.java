@@ -143,4 +143,15 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 
 	}
 
+
+	public void laud(Member member, Live live) throws Exception {
+
+		live.setLikeCount(live.getLikeCount()+1L);
+		liveDao.merge(live);
+
+		LiveTape liveTape = live.getLiveTape();
+		liveTape.setLikeCount(live.getLikeCount()+1L);
+		liveTapeDao.merge(liveTape);
+
+	}
 }
