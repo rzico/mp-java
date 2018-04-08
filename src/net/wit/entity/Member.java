@@ -89,7 +89,6 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '密码'")
 	private String password;
 
-
 	/** E-mail */
 	@Email
 	@Length(max = 200)

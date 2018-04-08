@@ -156,7 +156,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			payment.setMember(payBill.getMember());
 			payment.setStatus(Payment.Status.waiting);
 			payment.setMethod(Payment.Method.online);
-			payment.setType(Payment.Type.card);
+			payment.setType(Payment.Type.cardFill);
 			payment.setMemo("会员卡充值");
 			payment.setAmount(payBill.getPayBillAmount());
 			payment.setSn(snService.generate(Sn.Type.payment));

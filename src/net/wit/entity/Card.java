@@ -49,11 +49,22 @@ public class Card extends BaseEntity {
 		partner
 	};
 
+	public static enum  PaymentMethod{
+		/** 现结 */
+		immediate,
+		/** 月结 */
+		monthly
+	};
 
 	/** 状态 */
 	@NotNull
 	@Column(columnDefinition="int(11) comment '状态 {none:空卡,activate:已激活,loss:已挂失}'")
 	private Status status;
+
+	/** 支付方式 */
+	@NotNull
+	@Column(columnDefinition="int(11) comment '支付方式 {immediate:现结,monthly:月结}'")
+	private PaymentMethod paymentMethod;
 
 	/** 等级 */
 	@NotNull
@@ -130,6 +141,12 @@ public class Card extends BaseEntity {
 	@ManyToMany(mappedBy = "cards",fetch = FetchType.LAZY)
 	private List<Member> members = new ArrayList<Member>();
 
+	/** 推广 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member promoter;
+
+
 	public Status getStatus() {
 		return status;
 	}
@@ -154,10 +171,13 @@ public class Card extends BaseEntity {
 		this.type = type;
 	}
 
-	/** 推广 */
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Member promoter;
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 
 	/**
 	 * 获取号码

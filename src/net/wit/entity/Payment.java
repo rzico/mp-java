@@ -46,7 +46,7 @@ public class Payment extends BaseEntity {
 		/** 专栏激活     */
 		topic,
 		/** 充会员卡    */
-		card
+		cardFill
 	}
 
 	/**
@@ -63,8 +63,9 @@ public class Payment extends BaseEntity {
 		/** 余额支付 */
 		deposit,
 
-		/** 会员卡 */
+		/** 会员卡支付 */
 		card
+
 	}
 
 	/**

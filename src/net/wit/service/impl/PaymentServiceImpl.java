@@ -249,7 +249,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				messageService.payBillPushTo(payBill);
 				cardService.createAndActivate(member,payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
 			}else
-			if (payment.getType() == Payment.Type.card) {
+			if (payment.getType() == Payment.Type.cardFill) {
 				Member member = payment.getPayee();
 				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 				PayBill payBill = payment.getPayBill();
@@ -441,7 +441,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 				}
 			} else
-			if (payment.getType().equals(Payment.Type.card)) {
+			if (payment.getType().equals(Payment.Type.cardFill)) {
 				PayBill payBill = payment.getPayBill();
 				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setStatus(PayBill.Status.failure);
