@@ -86,4 +86,10 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 	public Page<LiveGift> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return liveGiftDao.findPage(beginDate,endDate,pageable);
 	}
+
+
+	public void add(LiveGift gift, Member member, Live live) throws Exception {
+
+	}
+
 }

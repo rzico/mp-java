@@ -36,10 +36,10 @@ public class LiveGift extends OrderEntity {
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
 	private String thumbnail;
 
-	/** 价值 */
+	/** 价格 */
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '价值'")
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '价格'")
 	private Long price;
 
 	/** 是否删除 */
