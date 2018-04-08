@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,6 +146,10 @@ public class EnterpriseController extends BaseController {
         Enterprise enterprise = admin.getEnterprise();
         if (enterprise==null) {
             return Message.error("不在就业状态");
+        }
+
+        if (enterprise.getMember().equals(member) && enterprise.getCreditLine().compareTo(BigDecimal.ZERO)>0) {
+            return Message.error("有授信企业不能解绑");
         }
 
         admin.setEnterprise(null);
