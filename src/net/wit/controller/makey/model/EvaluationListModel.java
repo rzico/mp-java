@@ -16,6 +16,10 @@ import java.util.List;
 public class EvaluationListModel extends BaseModel implements Serializable {
     
     private Long id;
+    /**  头像 */
+    private String logo;
+    /** 昵称 */
+    private String nickName;
     /** 标题 */
     private String title;
     /**  子标题 */
@@ -125,8 +129,26 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.rebate = rebate;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     public void bind(Evaluation evaluation) {
         this.id = evaluation.getId();
+        this.logo = evaluation.getMember().getLogo();
+        this.nickName = evaluation.getMember().displayName();
         this.title = evaluation.getTitle();
         this.subTitle = evaluation.getSubTitle();
         this.thumbnail = evaluation.getThumbnail();
