@@ -138,8 +138,8 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 	   liveDao.merge(live);
 
 	   LiveTape liveTape = live.getLiveTape();
-		liveTape.setGift(liveTape.getGift()+gift.getPrice());
-		liveTapeDao.merge(liveTape);
+	   liveTape.setGift(liveTape.getGift()+gift.getPrice());
+	   liveTapeDao.merge(liveTape);
 
 	}
 
