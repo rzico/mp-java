@@ -92,7 +92,7 @@ public class LiveController extends BaseController {
     }
 
     /**
-     *   获取直播间
+     *   用户信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
