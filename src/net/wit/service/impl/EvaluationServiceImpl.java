@@ -119,9 +119,11 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) throws Exception  {
 		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
 		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
-        for (EvalAnswer answer:evals) {
-			evalAnswerDao.persist(answer);
-		}
+//        for (EvalAnswer answer:evals) {
+//			evalAnswerDao.persist(answer);
+//		}
+		evaluation.setEvalAnswers(evals);
+		evaluationDao.persist(evaluation);
         try {
 	    	GeneCalculator calculator = new GeneCalculator();
             calculator.calcAll(evaluation);
@@ -137,6 +139,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
         Gauge gauge = evaluation.getGauge();
         gauge.setEvaluation(gauge.getEvaluation()+1L);
 		gaugeDao.merge(gauge);
+		evaluationDao.merge(evaluation);
         return evaluation;
 
     }

@@ -248,7 +248,7 @@ public class GeneCalculator implements Serializable {
     public void calcExpr(GaugeGene gene) throws Exception{
         ModelMap model = new ModelMap();
         for (String key : this.genes.keySet()) {
-            model.addAttribute(key,this.genes.get("key"));
+            model.addAttribute(key,this.genes.get(key));
         }
 
         BigDecimal s = BigDecimal.ZERO;
@@ -391,7 +391,7 @@ public class GeneCalculator implements Serializable {
 
         ModelMap model = new ModelMap();
         for (String key : this.genes.keySet()) {
-            model.addAttribute(key,this.genes.get("key"));
+            model.addAttribute(key,this.genes.get(key));
         }
 
         if (!"".equals(correct)) {
@@ -410,14 +410,17 @@ public class GeneCalculator implements Serializable {
     }
 
     public String getHtml() {
+        System.out.printf(JsonUtils.toJson(this.genes));
         ModelMap model = new ModelMap();
         for (String key : this.genes.keySet()) {
-            model.addAttribute(key,this.genes.get("key"));
+            model.addAttribute(key,this.genes.get(key));
         }
         String s="";
         for (GaugeResult r:this.results) {
             try {
-                String expr = FreemarkerUtils.process(r.getContent(),model);
+                System.out.printf(JsonUtils.toJson(model));
+                String text = r.getContent();
+                String expr = FreemarkerUtils.process(text,model);
                 s = s+expr;
             } catch (IOException e) {
                 e.printStackTrace();
