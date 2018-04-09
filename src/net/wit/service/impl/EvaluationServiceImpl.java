@@ -120,25 +120,25 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		Long sec = evaluation.getSeconds();
         for (EvalAnswer answer:evals) {
 			evalAnswerDao.persist(answer);
+			evalAnswerDao.flush();
 		}
-		evalAnswerDao.flush();
-		evaluation = evaluationDao.find(evaluation.getId());
+		Evaluation ev = evaluationDao.find(evaluation.getId());
         try {
 	    	GeneCalculator calculator = new GeneCalculator();
-            calculator.calcAll(evaluation);
+            calculator.calcAll(ev);
             if (calculator.getResults().size()==0) {
                 throw new RuntimeException("无效测试结果");
             }
-            evaluation.setSeconds(sec);
-            evaluation.setResult(calculator.getHtml());
-            evaluation.setEvalvar(calculator.getVars());
+			ev.setSeconds(sec);
+			ev.setResult(calculator.getHtml());
+			ev.setEvalvar(calculator.getVars());
         } catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
         }
-		evaluation.setEval(new Long(evaluation.getEvalAnswers().size()));
-		evaluation.setEvalStatus(Evaluation.EvalStatus.completed);
-		evaluationDao.merge(evaluation);
-        Gauge gauge = evaluation.getGauge();
+		ev.setEval(new Long(evaluation.getEvalAnswers().size()));
+		ev.setEvalStatus(Evaluation.EvalStatus.completed);
+		evaluationDao.merge(ev);
+        Gauge gauge = ev.getGauge();
         gauge.setEvaluation(gauge.getEvaluation()+1L);
 		gaugeDao.merge(gauge);
         return evaluation;
