@@ -24,9 +24,23 @@ public class Freight extends BaseEntity {
 		piece
 	}
 
+	/**
+	 *  付款方式
+	 */
+	public enum Method {
+		/** 买家付款 */
+		member,
+		/** 卖家包邮 */
+		seller
+	}
+
 	/** 类型 */
 	@Column(columnDefinition="int(11) not null comment '类型 {recharge:充值,payment:支付,refunds:退款}'")
 	private Type type;
+
+	/** 付款方式 */
+	@Column(columnDefinition="int(11) not null comment '付款方式 {member:买家付款,seller:卖家包邮}'")
+	private Method method;
 
 	/** 店主 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -59,5 +73,13 @@ public class Freight extends BaseEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Method getMethod() {
+		return method;
+	}
+
+	public void setMethod(Method method) {
+		this.method = method;
 	}
 }
