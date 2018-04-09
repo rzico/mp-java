@@ -121,11 +121,15 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		if (sec==null) {
 			sec = 0L;
 		}
+		Evaluation ev = evaluationDao.find(evaluation.getId());
+		ev.setSeconds(sec);
         for (EvalAnswer answer:evals) {
+        	answer.setEvaluation(ev);
+			answer.setGauge(ev.getGauge());
+			answer.setMember(ev.getMember());
 			evalAnswerDao.persist(answer);
 			evalAnswerDao.flush();
 		}
-		Evaluation ev = evaluationDao.find(evaluation.getId());
         try {
 	    	GeneCalculator calculator = new GeneCalculator();
             calculator.calcAll(ev);
