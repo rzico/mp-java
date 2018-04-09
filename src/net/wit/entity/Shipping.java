@@ -45,6 +45,11 @@ public class Shipping extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
+	/** 配送点 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private Enterprise enterprise;
+
 	/** 送货员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Admin admin;
