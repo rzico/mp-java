@@ -38,13 +38,4 @@ public class FreightTemplate extends BaseEntity {
 	public void setFreight(Freight freight) {
 		this.freight = freight;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 }
