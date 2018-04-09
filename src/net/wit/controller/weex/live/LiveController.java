@@ -138,6 +138,7 @@ public class LiveController extends BaseController {
         live.setStatus(Live.Status.waiting);
         live.setLocation(location);
 
+        liveService.save(live);
         LiveModel model = new LiveModel();
         model.bind(live);
         return Message.success(model,"success");
