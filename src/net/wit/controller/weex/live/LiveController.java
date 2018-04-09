@@ -118,7 +118,7 @@ public class LiveController extends BaseController {
     /**
      *   开通直播
      */
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/create")
     @ResponseBody
     public Message  create(String title,String frontcover,String location,HttpServletRequest request){
         Member member = memberService.getCurrent();
@@ -150,7 +150,7 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/play", method = RequestMethod.POST)
     @ResponseBody
-    public Message  play(Long id,String location,HttpServletRequest request){
+    public Message  play(Long id,String location,Boolean record,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -163,8 +163,10 @@ public class LiveController extends BaseController {
         Date tx = new Date();
         Long txTime = tx.getTime()+86400L;
 
-        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201);
         String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
+        if (record) {
+            pushUrl = pushUrl + "&record=mp4&record_interval=5400";
+        }
         LiveTape liveTape = new LiveTape();
         liveTape.setLive(live);
         liveTape.setMember(member);
@@ -175,7 +177,6 @@ public class LiveController extends BaseController {
         liveTape.setLikeCount(0L);
         liveTape.setViewerCount(0L);
         liveTape.setLocation(live.getLocation());
-        liveTape.setPlayUrl(playUrl);
         liveTape.setPushUrl(pushUrl);
         liveTape.setTitle(live.getTitle());
         liveTape.setLocation(location);
@@ -183,7 +184,6 @@ public class LiveController extends BaseController {
 
         live.setLiveTape(liveTape);
         live.setPushUrl(pushUrl);
-        live.setPlayUrl(playUrl);
         live.setOnline("1");
         liveService.update(live);
 
@@ -238,6 +238,12 @@ public class LiveController extends BaseController {
             return Message.error("无效直播id");
         }
 
+        Date tx = new Date();
+        Long txTime = tx.getTime()+300L;
+
+        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550?"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
+//        String hlsPlayUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550.m3u8";
+
         LiveData liveData = new LiveData();
 
         liveData.setLive(live);
@@ -248,7 +254,7 @@ public class LiveController extends BaseController {
         liveData.setNickname(member.displayName());
 
         liveData.setLocation(live.getLocation());
-        liveData.setPlayUrl(live.getPlayUrl());
+        liveData.setPlayUrl(playUrl);
         liveDataService.save(liveData);
 
         live.setViewerCount(live.getViewerCount()+1);
@@ -287,7 +293,5 @@ public class LiveController extends BaseController {
 
         return Message.success("success");
     }
-
-
 
 }

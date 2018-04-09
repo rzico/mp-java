@@ -179,6 +179,7 @@ public class LiveModel extends BaseModel implements Serializable {
         this.viewerCount = live.getViewerCount();
         this.pushUrl = live.getPushUrl();
         this.playUrl = live.getPlayUrl();
+        this.status = live.getStatus();
     }
 
 
