@@ -1,7 +1,11 @@
 
 package net.wit.entity;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity -  运费设置
@@ -55,6 +59,12 @@ public class Freight extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '名称'")
 	private String name;
 
+
+	/** 商品 */
+	@OneToMany(mappedBy = "freight", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<FreightTemplate> templates = new ArrayList<FreightTemplate>();
+
+
 	public Type getType() {
 		return type;
 	}
@@ -85,5 +95,13 @@ public class Freight extends BaseEntity {
 
 	public void setMethod(Method method) {
 		this.method = method;
+	}
+
+	public List<FreightTemplate> getTemplates() {
+		return templates;
+	}
+
+	public void setTemplates(List<FreightTemplate> templates) {
+		this.templates = templates;
 	}
 }
