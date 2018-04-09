@@ -66,6 +66,14 @@ public class LiveListModel extends BaseModel implements Serializable {
         this.headpic = headpic;
     }
 
+    public String getOnline() {
+        return online;
+    }
+
+    public void setOnline(String online) {
+        this.online = online;
+    }
+
     public Long getLikeCount() {
         return likeCount;
     }
