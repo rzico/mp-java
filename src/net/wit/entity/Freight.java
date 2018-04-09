@@ -20,8 +20,12 @@ public class Freight extends BaseEntity {
 	 *  类型
 	 */
 	public enum Type {
-		/** 计件 */
-		piece
+		/** 快递计件 */
+		piece,
+		/** 快递计重 */
+		weight,
+		/** 阶梯计件 */
+		segment
 	}
 
 	/**
