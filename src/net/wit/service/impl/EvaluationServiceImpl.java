@@ -118,6 +118,9 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	@Transactional
 	public Evaluation answer(Evaluation evaluation,List<EvalAnswer> evals) throws Exception  {
 		Long sec = evaluation.getSeconds();
+		if (sec==null) {
+			sec = 0L;
+		}
         for (EvalAnswer answer:evals) {
 			evalAnswerDao.persist(answer);
 			evalAnswerDao.flush();
@@ -135,13 +138,13 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
         } catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
         }
-		ev.setEval(new Long(evaluation.getEvalAnswers().size()));
+		ev.setEval(new Long(ev.getEvalAnswers().size()));
 		ev.setEvalStatus(Evaluation.EvalStatus.completed);
 		evaluationDao.merge(ev);
         Gauge gauge = ev.getGauge();
         gauge.setEvaluation(gauge.getEvaluation()+1L);
 		gaugeDao.merge(gauge);
-        return evaluation;
+        return ev;
 
     }
 
