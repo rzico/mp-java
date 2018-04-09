@@ -45,6 +45,10 @@ public class Shipping extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
+	/** 送货员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Admin admin;
+
 	/** 编号 */
 	@Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '编号'")
 	private String sn;
@@ -243,6 +247,14 @@ public class Shipping extends BaseEntity {
 
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
+	}
+
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
 	}
 
 	/**

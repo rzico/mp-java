@@ -44,6 +44,10 @@ public class Returns extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
+	/** 送货员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Admin admin;
+
 	/** 编号 */
 	@Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '编号'")
 	private String sn;
@@ -67,11 +71,11 @@ public class Returns extends BaseEntity {
 	@Column(updatable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '物流费用'")
 	private BigDecimal freight;
 
-	/** 发货人 */
+	/** 收货人 */
 	@NotEmpty
 	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) not null comment '发货人'")
-	private String shipper;
+	@Column(columnDefinition="varchar(255) not null comment '收货人'")
+	private String consignee;
 
 	/** 地区名称 */
 	@NotEmpty
@@ -210,23 +214,20 @@ public class Returns extends BaseEntity {
 		this.freight = freight;
 	}
 
-	/**
-	 * 获取发货人
-	 * 
-	 * @return 发货人
-	 */
-	public String getShipper() {
-		return shipper;
+	public Admin getAdmin() {
+		return admin;
 	}
 
-	/**
-	 * 设置发货人
-	 * 
-	 * @param shipper
-	 *            发货人
-	 */
-	public void setShipper(String shipper) {
-		this.shipper = shipper;
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
+	}
+
+	public String getConsignee() {
+		return consignee;
+	}
+
+	public void setConsignee(String consignee) {
+		this.consignee = consignee;
 	}
 
 	public String getAreaName() {

@@ -34,6 +34,10 @@ public class ReturnsItem extends BaseEntity {
 	@Column(nullable = false, updatable = false,columnDefinition="varchar(255) not null comment '商品名称'")
 	private String name;
 
+	/** 商品规格 */
+	@Column(updatable = false,columnDefinition="varchar(255) comment '商品规格'")
+	private String spec;
+
 	/** 数量 */
 	@NotNull
 	@Min(1)
@@ -48,11 +52,6 @@ public class ReturnsItem extends BaseEntity {
 	/** 商品 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Product product;
-
-	/** 仓库 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
-	private ProductStock productStock;
 
 	/**
 	 * 获取商品编号
@@ -138,11 +137,11 @@ public class ReturnsItem extends BaseEntity {
 		this.product = product;
 	}
 
-	public ProductStock getProductStock() {
-		return productStock;
+	public String getSpec() {
+		return spec;
 	}
 
-	public void setProductStock(ProductStock productStock) {
-		this.productStock = productStock;
+	public void setSpec(String spec) {
+		this.spec = spec;
 	}
 }

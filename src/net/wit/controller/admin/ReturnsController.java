@@ -123,7 +123,7 @@ public class ReturnsController extends BaseController {
 
 		entity.setPhone(returns.getPhone());
 
-		entity.setShipper(returns.getShipper());
+		entity.setConsignee(returns.getConsignee());
 
 		entity.setShippingMethod(returns.getShippingMethod());
 
@@ -212,7 +212,7 @@ public class ReturnsController extends BaseController {
 
 		entity.setPhone(returns.getPhone());
 
-		entity.setShipper(returns.getShipper());
+		entity.setConsignee(returns.getConsignee());
 
 		entity.setShippingMethod(returns.getShippingMethod());
 
