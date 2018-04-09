@@ -271,7 +271,9 @@ public class ReturnsController extends BaseController {
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
+
 		return "/admin/returns/view/memberView";
+
 	}
 
 
@@ -289,7 +291,9 @@ public class ReturnsController extends BaseController {
 		model.addAttribute("sellers",memberService.findAll());
 
 		model.addAttribute("order",orderService.find(id));
+
 		return "/admin/returns/view/orderView";
+
 	}
 
 
