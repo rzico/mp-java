@@ -33,6 +33,12 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
     private Boolean hasFavorite;
     /** 是否关注 */
     private Boolean hasFollow;
+    /** 是否评论 */
+    private Boolean isReview;
+    /** 是否赞赏 */
+    private Boolean isReward;
+    /** 是否发布 */
+    private Boolean isPublish;
 
     public Long getId() {
         return id;
@@ -130,6 +136,29 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.hasFollow = hasFollow;
     }
 
+    public Boolean getIsReview() {
+        return isReview;
+    }
+
+    public void setIsReview(Boolean isReview) {
+        this.isReview = isReview;
+    }
+
+    public Boolean getIsReward() {
+        return isReward;
+    }
+
+    public void setIsReward(Boolean isReward) {
+        this.isReward = isReward;
+    }
+
+    public Boolean getIsPublish() {
+        return isPublish;
+    }
+
+    public void setIsPublish(Boolean publish) {
+        isPublish = publish;
+    }
     public void bind(Article article) {
         this.id = article.getId();
         this.hits = article.getHits();
@@ -142,6 +171,9 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.hasFavorite = false;
         this.hasLaud = false;
         this.hasFollow = false;
+        this.isReview = article.getIsReview();
+        this.isReward = article.getIsReward();
+        this.isPublish = article.getIsPublish();
         if (article.getTemplate()!=null) {
             this.template = article.getTemplate().getSn();
         } else {
