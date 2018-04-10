@@ -217,7 +217,6 @@ public class ArticleController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         if (id!=null) {
             member = memberService.find(id);
-            filters.add(new Filter("member", Filter.Operator.eq,member));
         } else {
             filters.add(new Filter("isAudit", Filter.Operator.eq,true));
             tags = tagService.findList(4L,5L);
