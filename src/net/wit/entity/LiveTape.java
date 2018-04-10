@@ -84,7 +84,7 @@ public class LiveTape extends BaseEntity {
 
 	/** 结束时间 */
 	@DateBridge(resolution = Resolution.SECOND)
-	@Column(updatable = false,columnDefinition="datetime not null comment '结束时间'")
+	@Column(updatable = false,columnDefinition="datetime comment '结束时间'")
 	private Date endTime;
 
 	public Member getMember() {

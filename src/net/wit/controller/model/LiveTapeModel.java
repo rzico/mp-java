@@ -46,6 +46,9 @@ public class LiveTapeModel extends BaseModel implements Serializable {
     /** 礼物数 */
     private Long gift;
 
+    /** 是否关注 */
+    private Boolean isFollow;
+
     public Long getId() {
         return id;
     }
@@ -156,6 +159,14 @@ public class LiveTapeModel extends BaseModel implements Serializable {
 
     public void setGift(Long gift) {
         this.gift = gift;
+    }
+
+    public Boolean getFollow() {
+        return isFollow;
+    }
+
+    public void setFollow(Boolean follow) {
+        isFollow = follow;
     }
 
     public void bind(LiveTape live) {

@@ -51,6 +51,9 @@ public class LiveController extends BaseController {
     @Resource(name = "liveDataServiceImpl")
     private LiveDataService liveDataService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
     /*
 			     * KEY+ stream_id + txTime
 			     */
@@ -164,6 +167,9 @@ public class LiveController extends BaseController {
         Long txTime = tx.getTime()+86400L;
 
         String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
+        if(record==null){
+            record=false;
+        }
         if (record) {
             pushUrl = pushUrl + "&record=mp4&record_interval=5400";
         }
@@ -264,7 +270,16 @@ public class LiveController extends BaseController {
         liveTape.setViewerCount(liveTape.getViewerCount()+1);
         liveTapeService.update(liveTape);
 
-        return Message.success("success");
+        MemberFollow memberFollow=memberFollowService.find(member,live.getMember());
+
+        LiveTapeModel model=new LiveTapeModel();
+       model.bind(liveTape);
+        if (memberFollow==null){
+            model.setFollow(false);
+        }else {
+            model.setFollow(true);
+        }
+        return Message.success(model,"success");
     }
 
 
