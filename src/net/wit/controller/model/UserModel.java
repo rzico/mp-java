@@ -45,6 +45,46 @@ public class UserModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
+    public int getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(int favorite) {
+        this.favorite = favorite;
+    }
+
+    public int getFans() {
+        return fans;
+    }
+
+    public void setFans(int fans) {
+        this.fans = fans;
+    }
+
+    public int getFollow() {
+        return follow;
+    }
+
+    public void setFollow(int follow) {
+        this.follow = follow;
+    }
+
+    public String getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(String autograph) {
+        this.autograph = autograph;
+    }
+
+    public Member.VIP getVip() {
+        return vip;
+    }
+
+    public void setVip(Member.VIP vip) {
+        this.vip = vip;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
