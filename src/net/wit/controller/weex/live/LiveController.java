@@ -112,10 +112,15 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message  list(Pageable pageable,HttpServletRequest request) {
+    public Message  list(Pageable pageable,HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("online", Filter.Operator.eq,"0"));
+
+        pageable.setFilters(filters);
+        pageable.setOrderDirection(Order.Direction.desc);
         Page<Live> page = liveService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(LiveListModel.bindList(page.getContent()));
+        model.setData(LiveModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 
