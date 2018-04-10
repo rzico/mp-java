@@ -5,6 +5,8 @@ import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Resolution;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 /**
@@ -47,9 +49,11 @@ public class LiveGiftData extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '礼物名'")
 	private String giftName;
 
-	/**  礼物价值  */
-	@Column(columnDefinition="varchar(255) comment '礼物价值'")
-	private String price;
+	/** 价格 */
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '价格'")
+	private Long price;
 
 	public Member getMember() {
 		return member;
@@ -91,11 +95,21 @@ public class LiveGiftData extends BaseEntity {
 		this.giftName = giftName;
 	}
 
-	public String getPrice() {
+	public LiveGift getLiveGift() {
+		return liveGift;
+	}
+
+	public void setLiveGift(LiveGift liveGift) {
+		this.liveGift = liveGift;
+	}
+
+	public Long getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
+
+
 }

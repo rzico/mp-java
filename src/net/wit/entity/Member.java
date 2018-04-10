@@ -103,7 +103,7 @@ public class Member extends BaseEntity {
 
 	/** 消费金额 */
 	@Min(0)
-	@Column(columnDefinition="decimal(21,6) default 0 comment '消费金额'")
+	@Column(columnDefinition="decimal(21,6) not null default 0 comment '消费金额'")
 	private BigDecimal amount;
 
 	/** 余额 */
@@ -979,7 +979,7 @@ public class Member extends BaseEntity {
 		}
 		if (getId()!=null) {
 			Long userId = getId() + 10200L;
-			return "id" + userId.toString();
+			return "u" + userId.toString();
 		} else {
 			return "";
 		}
@@ -1052,7 +1052,7 @@ public class Member extends BaseEntity {
 
 	public static Long decodeUserId(String userId) {
 		if (userId!=null) {
-			String uid = userId.substring(3);
+			String uid = userId.substring(2);
 			return Long.parseLong(uid)-10200;
 		} else {
 			return null;
