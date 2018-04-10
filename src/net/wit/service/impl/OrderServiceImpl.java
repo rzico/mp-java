@@ -71,6 +71,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "cardServiceImpl")
 	private CardService cardService;
 
+	@Resource(name = "orderRankingServiceImpl")
+	private OrderRankingService orderRankingService;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
@@ -402,6 +405,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
+		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+			throw new RuntimeException("不能确定");
+		}
+
 		order.setOrderStatus(Order.OrderStatus.confirmed);
 		order.setExpire(null);
 		orderDao.merge(order);
@@ -429,6 +436,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		Assert.notNull(order);
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
+			throw new RuntimeException("不能完成");
+		}
 
 		Member member = order.getMember();
 		memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
@@ -717,6 +728,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		}
 
+		//计算公球公排
+		orderRankingService.add(order);
+
 		return;
 
 	}
@@ -733,6 +747,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public void cancel(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+			throw new RuntimeException("不能关闭");
+		}
 
 		CouponCode couponCode = order.getCouponCode();
 		if (couponCode != null) {
@@ -793,6 +811,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
+		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+			throw new RuntimeException("不能支付");
+		}
+
+
 		Card card = order.getMember().card(order.getSeller());
 		Payment payment = new Payment();
 
@@ -845,6 +868,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		Assert.notNull(order);
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		if (!order.getShippingStatus().equals(Order.ShippingStatus.unshipped)) {
+			throw new RuntimeException("不能发货");
+		}
 
 		for (OrderItem orderItem : order.getOrderItems()) {
 			orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);

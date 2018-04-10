@@ -81,6 +81,9 @@ public class TopicController extends BaseController {
         if (member.getNickName()==null) {
             return Message.error("请完善个人资料");
         }
+        if (member.getLogo()==null) {
+            return Message.error("请完善个人资料");
+        }
         Topic topic =  member.getTopic();
         if (topic==null) {
             topic = new Topic();

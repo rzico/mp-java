@@ -57,6 +57,7 @@ public class RewardController extends BaseController {
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("article", Filter.Operator.eq,article));
+        filters.add(new Filter("type", Filter.Operator.eq,ArticleReward.Type.article));
         pageable.setFilters(filters);
         Page<ArticleReward> page = articleRewardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);

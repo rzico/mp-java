@@ -10,6 +10,16 @@ public class UserModel extends BaseModel implements Serializable {
     private String nickName;
     /** 头像 */
     private String logo;
+    /** 收藏 */
+    private int favorite;
+    /** 粉丝 */
+    private int fans;
+    /** 关注 */
+    private int follow;
+    /** 签名 */
+    private String autograph;
+    /** 星级 */
+    private Member.VIP vip;
 
     public Long getId() {
         return id;
@@ -35,9 +45,54 @@ public class UserModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
+    public int getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(int favorite) {
+        this.favorite = favorite;
+    }
+
+    public int getFans() {
+        return fans;
+    }
+
+    public void setFans(int fans) {
+        this.fans = fans;
+    }
+
+    public int getFollow() {
+        return follow;
+    }
+
+    public void setFollow(int follow) {
+        this.follow = follow;
+    }
+
+    public String getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(String autograph) {
+        this.autograph = autograph;
+    }
+
+    public Member.VIP getVip() {
+        return vip;
+    }
+
+    public void setVip(Member.VIP vip) {
+        this.vip = vip;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
+        this.autograph = member.getAutograph();
+        this.fans = member.getFans().size();
+        this.favorite = member.getFavorites().size();
+        this.follow = member.getFollows().size();
         this.nickName = member.displayName();
         this.logo = member.getLogo();
+        this.vip = member.getVip();
      }
 }

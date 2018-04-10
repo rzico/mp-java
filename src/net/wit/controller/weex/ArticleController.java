@@ -193,9 +193,11 @@ public class ArticleController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("isAudit", Filter.Operator.eq,true));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("isPitch", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+
         List<Tag> tags = null;
-        tags = tagService.findList(4L);
+//        tags = tagService.findList(4L);
         pageable.setFilters(filters);
         pageable.setOrderProperty("hits");
         pageable.setOrderDirection(Order.Direction.desc);
@@ -217,7 +219,6 @@ public class ArticleController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         if (id!=null) {
             member = memberService.find(id);
-            filters.add(new Filter("member", Filter.Operator.eq,member));
         } else {
             filters.add(new Filter("isAudit", Filter.Operator.eq,true));
             tags = tagService.findList(4L,5L);

@@ -321,7 +321,7 @@ public class OrderItem extends BaseEntity {
 		Product product = getProduct();
 		//第一级分润
 		Distribution distribution = product.getDistribution();
-		if (distribution!=null) {
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend) ){
 			BigDecimal d1 =
 					getSubtotal().multiply(
 							distribution.getPercent1().multiply(new BigDecimal("0.01")))
@@ -344,7 +344,7 @@ public class OrderItem extends BaseEntity {
 		Product product = getProduct();
 		//第一级分润
 		Distribution distribution = product.getDistribution();
-		if (distribution!=null) {
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend)) {
 			BigDecimal d1 =
 					getSubtotal().multiply(
 							distribution.getPercent1().multiply(new BigDecimal("0.01")))
@@ -367,7 +367,7 @@ public class OrderItem extends BaseEntity {
 		Product product = getProduct();
 		//第一级分润
 		Distribution distribution = product.getDistribution();
-		if (distribution!=null) {
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend)) {
 			BigDecimal d2 =
 					getSubtotal().multiply(
 							distribution.getPercent2().multiply(new BigDecimal("0.01")))
@@ -391,7 +391,7 @@ public class OrderItem extends BaseEntity {
 		Product product = getProduct();
 		//第一级分润
 		Distribution distribution = product.getDistribution();
-		if (distribution!=null) {
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend)) {
 			BigDecimal d2 =
 					getSubtotal().multiply(
 							distribution.getPercent2().multiply(new BigDecimal("0.01")))
@@ -414,36 +414,13 @@ public class OrderItem extends BaseEntity {
 		Product product = getProduct();
 		//第一级分润
 		Distribution distribution = product.getDistribution();
-		if (distribution!=null) {
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend)) {
 			BigDecimal d3 =
 					getSubtotal().multiply(
 							distribution.getPercent3().multiply(new BigDecimal("0.01")))
 							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			d3 = d3.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			return d3;
-		} else {
-			return BigDecimal.ZERO;
-		}
-	}
-
-
-	/**
-	 * 计算分红金额
-	 *
-	 * @return 小计
-	 */
-	@JsonProperty
-	@Transient
-	public BigDecimal calcPartner() {
-		Product product = getProduct();
-
-		Distribution distribution = product.getDistribution();
-		if (distribution!=null) {
-			BigDecimal d =
-					getSubtotal().multiply(
-							distribution.getDividend().multiply(new BigDecimal("0.01")))
-							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			return d;
 		} else {
 			return BigDecimal.ZERO;
 		}
@@ -460,7 +437,7 @@ public class OrderItem extends BaseEntity {
 		Product product = getProduct();
 		//第一级分润
 		Distribution distribution = product.getDistribution();
-		if (distribution!=null) {
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend)) {
 			BigDecimal d3 =
 					getSubtotal().multiply(
 							distribution.getPercent3().multiply(new BigDecimal("0.01")))
@@ -469,6 +446,28 @@ public class OrderItem extends BaseEntity {
 			return p3;
 		} else {
 			return 0L;
+		}
+	}
+
+	/**
+	 * 计算分红金额
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public BigDecimal calcPartner() {
+		Product product = getProduct();
+
+		Distribution distribution = product.getDistribution();
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend)) {
+			BigDecimal d =
+					getSubtotal().multiply(
+							distribution.getDividend().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			return d;
+		} else {
+			return BigDecimal.ZERO;
 		}
 	}
 
