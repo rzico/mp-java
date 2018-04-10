@@ -2,6 +2,7 @@ package net.wit.controller.weex.live;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.*;
 import net.wit.entity.*;
@@ -307,6 +308,24 @@ public class LiveController extends BaseController {
         liveTapeService.update(liveTape);
 
         return Message.success("success");
+    }
+
+    /**
+     *  热点查询列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/slide", method = RequestMethod.GET)
+    @ResponseBody
+    public Message slide(Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("online", Filter.Operator.eq,"0"));
+
+        pageable.setFilters(filters);
+        pageable.setOrderDirection(Order.Direction.desc);
+        Page<Live> page = liveService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(LiveListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
     }
 
 }
