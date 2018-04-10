@@ -95,7 +95,9 @@ public class CardController extends BaseController {
             }
             card = member.card(owner);
         } else {
-            card = member.getCards().get(0);
+            if (member.getCards().size()>0) {
+                card = member.getCards().get(0);
+            }
         }
         Map<String,Object> data = new HashMap<String,Object>();
         if (card==null) {
