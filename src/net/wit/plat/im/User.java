@@ -126,6 +126,7 @@ public class User {
             HttpResponse response = httpClient.execute(httpPost);
             String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             Map resp = JsonUtils.toObject(jsonStr,Map.class);
+            System.out.printf(jsonStr);
             if ("OK".equals(resp.get("ActionStatus"))) {
                 return true;
             } else {
