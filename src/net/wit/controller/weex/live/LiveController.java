@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -157,7 +159,7 @@ public class LiveController extends BaseController {
     /**
      *   开始直播
      */
-    @RequestMapping(value = "/play", method = RequestMethod.POST)
+    @RequestMapping(value = "/play")
     @ResponseBody
     public Message  play(Long id,String location,Boolean record,HttpServletRequest request){
         Member member = memberService.getCurrent();
@@ -169,8 +171,16 @@ public class LiveController extends BaseController {
             return Message.error("无效直播id");
         }
 
+//        String string = "2018-04-30 23:59:59";
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            sdf.parse(string);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
         Date tx = new Date();
-        Long txTime = tx.getTime()+86400L;
+        Long txTime = tx.getTime()/1000+86400;
 
         String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
         if(record==null){
@@ -253,7 +263,8 @@ public class LiveController extends BaseController {
         Date tx = new Date();
         Long txTime = tx.getTime()+300L;
 
-        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
+        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201);
+//        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
 //        String hlsPlayUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550.m3u8";
 
         LiveData liveData = new LiveData();
