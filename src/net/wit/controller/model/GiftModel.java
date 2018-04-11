@@ -15,8 +15,11 @@ public class GiftModel extends BaseModel implements Serializable {
     /**  名称  */
     private String name;
 
-    /**  特效  */
+    /**  缩例图  */
     private String thumbnail;
+
+    /**  特效  */
+    private String animation;
 
     /**  价格  */
     private Long price;
@@ -45,6 +48,14 @@ public class GiftModel extends BaseModel implements Serializable {
         this.thumbnail = thumbnail;
     }
 
+    public String getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(String animation) {
+        this.animation = animation;
+    }
+
     public Long getPrice() {
         return price;
     }
@@ -57,6 +68,7 @@ public class GiftModel extends BaseModel implements Serializable {
         this.id = gift.getId();
         this.name = gift.getName();
         this.thumbnail = gift.getThumbnail();
+        this.animation = gift.getAnimation();
         this.price = gift.getPrice();
     }
 

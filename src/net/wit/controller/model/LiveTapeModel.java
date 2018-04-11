@@ -9,6 +9,8 @@ public class LiveTapeModel extends BaseModel implements Serializable {
     private Long id;
 
     private Long liveId;
+
+    private Long liveMemberId;
     /**  标题  */
     private String title;
 
@@ -171,9 +173,26 @@ public class LiveTapeModel extends BaseModel implements Serializable {
         isFollow = follow;
     }
 
+    public Long getLiveId() {
+        return liveId;
+    }
+
+    public void setLiveId(Long liveId) {
+        this.liveId = liveId;
+    }
+
+    public Long getLiveMemberId() {
+        return liveMemberId;
+    }
+
+    public void setLiveMemberId(Long liveMemberId) {
+        this.liveMemberId = liveMemberId;
+    }
+
     public void bind(LiveTape live) {
         this.id = live.getId();
         this.liveId=live.getLive().getId();
+        this.liveMemberId = live.getLive().getMember().getId();
         this.nickname = live.getNickname();
         this.headpic = live.getHeadpic();
         this.frontcover = live.getFrontcover();

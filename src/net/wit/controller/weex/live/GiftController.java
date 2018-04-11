@@ -88,7 +88,7 @@ public class GiftController extends BaseController {
         } catch (Exception e) {
             return Message.success(e.getMessage());
         }
-        return Message.success("送成功");
+        return Message.success(gift.getPrice(),"送成功");
 
     }
 

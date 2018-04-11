@@ -15,7 +15,10 @@ public class LiveModel extends BaseModel implements Serializable {
 
     private Long id;
 
+
     private Long liveId;
+
+    private Long liveMemberId;
     /**  标题  */
     private String title;
 
@@ -175,9 +178,18 @@ public class LiveModel extends BaseModel implements Serializable {
         this.gift = gift;
     }
 
+    public Long getLiveMemberId() {
+        return liveMemberId;
+    }
+
+    public void setLiveMemberId(Long liveMemberId) {
+        this.liveMemberId = liveMemberId;
+    }
+
     public void bind(Live live) {
         this.id = live.getId();
         this.liveId=live.getId();
+        this.liveMemberId=live.getMember().getId();
         this.nickname = live.getNickname();
         this.headpic = live.getHeadpic();
         this.frontcover = live.getFrontcover();
