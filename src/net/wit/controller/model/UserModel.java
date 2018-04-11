@@ -2,6 +2,7 @@ package net.wit.controller.model;
 import net.wit.entity.Member;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class UserModel extends BaseModel implements Serializable {
 
@@ -20,6 +21,12 @@ public class UserModel extends BaseModel implements Serializable {
     private String autograph;
     /** 星级 */
     private Member.VIP vip;
+    /** 性别 */
+    private Member.Gender gender;
+    /** 职业 */
+    private String occupation;
+    /** 生日 */
+    private Date birth;
 
     public Long getId() {
         return id;
@@ -85,6 +92,30 @@ public class UserModel extends BaseModel implements Serializable {
         this.vip = vip;
     }
 
+    public Member.Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Member.Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public Date getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Date birth) {
+        this.birth = birth;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -94,5 +125,8 @@ public class UserModel extends BaseModel implements Serializable {
         this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.vip = member.getVip();
+        this.birth = member.getBirth();
+        this.gender=member.getGender();
+        this.occupation=member.getOccupation().getName();
      }
 }
