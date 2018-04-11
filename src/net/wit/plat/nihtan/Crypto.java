@@ -124,7 +124,7 @@ public class Crypto {
         String hash = encrypt(bundle.getString("nihtan.key"),dataStr);
         String resp = post(sessionURL.replace("{HOST}",bundle.getString("nihtan.host"))+"?hash="+hash,dataStr);
 
-        System.out.println(resp);
+        System.out.println("获取令牌:"+resp);
 
         return resp;
 

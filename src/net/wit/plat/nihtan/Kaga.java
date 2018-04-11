@@ -183,6 +183,8 @@ public class Kaga {
 
         String resp = post(sessionURL.replace("{HOST}",bundle.getString("nihtan.host"))+"?hash="+hash,dataStr);
 
+        System.out.println("获取令牌:"+resp);
+
         return resp;
     }
 
