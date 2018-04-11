@@ -2,6 +2,7 @@ package net.wit.controller.model;
 import net.wit.entity.Member;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class UserModel extends BaseModel implements Serializable {
@@ -27,6 +28,8 @@ public class UserModel extends BaseModel implements Serializable {
     private String occupation;
     /** 生日 */
     private Date birth;
+    /** 余额 */
+    private BigDecimal balance;
 
     public Long getId() {
         return id;
@@ -116,6 +119,14 @@ public class UserModel extends BaseModel implements Serializable {
         this.birth = birth;
     }
 
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -130,5 +141,8 @@ public class UserModel extends BaseModel implements Serializable {
         if (member.getOccupation()!=null) {
             this.occupation = member.getOccupation().getName();
         }
+        this.balance = member.getBalance();
      }
+
+
 }
