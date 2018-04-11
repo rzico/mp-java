@@ -144,5 +144,4 @@ public class UserModel extends BaseModel implements Serializable {
         this.balance = member.getBalance();
      }
 
-
 }
