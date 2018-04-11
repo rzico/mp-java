@@ -270,16 +270,18 @@ public class LiveController extends BaseController {
         liveDataService.save(liveData);
 
         live.setViewerCount(live.getViewerCount()+1);
+        live.setPlayUrl(playUrl);
         liveService.update(live);
 
         LiveTape liveTape = live.getLiveTape();
+        liveTape.setPlayUrl(playUrl);
         liveTape.setViewerCount(liveTape.getViewerCount()+1);
         liveTapeService.update(liveTape);
 
         MemberFollow memberFollow=memberFollowService.find(member,live.getMember());
 
         LiveTapeModel model=new LiveTapeModel();
-       model.bind(liveTape);
+        model.bind(liveTape);
         if (memberFollow==null){
             model.setFollow(false);
         }else {
