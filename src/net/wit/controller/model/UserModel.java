@@ -127,6 +127,8 @@ public class UserModel extends BaseModel implements Serializable {
         this.vip = member.getVip();
         this.birth = member.getBirth();
         this.gender=member.getGender();
-        this.occupation=member.getOccupation().getName();
+        if (member.getOccupation()!=null) {
+            this.occupation = member.getOccupation().getName();
+        }
      }
 }
