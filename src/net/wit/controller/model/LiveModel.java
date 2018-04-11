@@ -14,6 +14,8 @@ import java.util.List;
 public class LiveModel extends BaseModel implements Serializable {
 
     private Long id;
+
+    private Long liveId;
     /**  标题  */
     private String title;
 
@@ -59,6 +61,14 @@ public class LiveModel extends BaseModel implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getLiveId() {
+        return liveId;
+    }
+
+    public void setLiveId(Long liveId) {
+        this.liveId = liveId;
     }
 
     public String getTitle() {
@@ -167,6 +177,7 @@ public class LiveModel extends BaseModel implements Serializable {
 
     public void bind(Live live) {
         this.id = live.getId();
+        this.liveId=live.getId();
         this.nickname = live.getNickname();
         this.headpic = live.getHeadpic();
         this.frontcover = live.getFrontcover();

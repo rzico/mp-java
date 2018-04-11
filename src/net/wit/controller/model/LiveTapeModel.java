@@ -7,6 +7,8 @@ import java.io.Serializable;
 public class LiveTapeModel extends BaseModel implements Serializable {
 
     private Long id;
+
+    private Long liveId;
     /**  标题  */
     private String title;
 
@@ -171,6 +173,7 @@ public class LiveTapeModel extends BaseModel implements Serializable {
 
     public void bind(LiveTape live) {
         this.id = live.getId();
+        this.liveId=live.getLive().getId();
         this.nickname = live.getNickname();
         this.headpic = live.getHeadpic();
         this.frontcover = live.getFrontcover();

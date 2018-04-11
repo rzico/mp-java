@@ -114,7 +114,7 @@ public class LiveController extends BaseController {
     @ResponseBody
     public Message  list(Pageable pageable,HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("online", Filter.Operator.eq,"0"));
+        filters.add(new Filter("online", Filter.Operator.eq,"1"));
 
         pageable.setFilters(filters);
         pageable.setOrderDirection(Order.Direction.desc);
@@ -323,7 +323,7 @@ public class LiveController extends BaseController {
     @ResponseBody
     public Message slide(Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("online", Filter.Operator.eq,"0"));
+        filters.add(new Filter("online", Filter.Operator.eq,"1"));
 
         pageable.setFilters(filters);
         pageable.setOrderDirection(Order.Direction.desc);
