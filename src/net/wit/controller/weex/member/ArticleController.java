@@ -82,9 +82,6 @@ public class ArticleController extends BaseController {
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
 
-    @Resource(name = "weixinUpServiceImpl")
-    private WeixinUpService weixinUpService;
-
     /**
      *  文章列表,带分页
      */
@@ -420,26 +417,6 @@ public class ArticleController extends BaseController {
         article.setDeleted(false);
         articleService.update(article);
         return Message.success("还原成功");
-    }
-
-    /**
-     *  文章抓取
-     */
-    @RequestMapping(value = "grabarticle", method = RequestMethod.GET)
-    @ResponseBody
-    public Message articleGrab(String articlePath, HttpServletRequest request){
-        try {
-            JSONObject jsonObject=weixinUpService.DownArticle(articlePath);
-            if(jsonObject!=null){
-                return Message.success(jsonObject,"抓取成功");
-            }
-            else {
-                return Message.error("URL参数错误,抓取失败");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("URL参数错误,抓取失败");
-        }
     }
 
 }

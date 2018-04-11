@@ -8,7 +8,6 @@ import net.wit.entity.Article;
 import net.wit.service.AreaService;
 import net.wit.service.ArticleService;
 import net.wit.service.RSAService;
-import net.wit.service.WeixinUpService;
 import net.wit.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -40,8 +39,6 @@ public class CommonController extends BaseController {
 	private AreaService areaService;
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
-	@Resource(name = "weixinUpServiceImpl")
-	private WeixinUpService weixinUpService;
 
 	/**
 	 * 404页面

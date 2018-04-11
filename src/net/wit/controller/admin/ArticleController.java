@@ -77,9 +77,6 @@ public class ArticleController extends BaseController {
 	@Resource(name = "occupationServiceImpl")
 	private OccupationService occupationService;
 
-	@Resource(name = "weixinUpServiceImpl")
-	private WeixinUpService weixinUpService;
-
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
@@ -538,7 +535,6 @@ public class ArticleController extends BaseController {
 //			fileInputStream.close();
 //			String appID=properties.getProperty("weixin.appid");
 //			String appsecret=properties.getProperty("weixin.secret");
-			weixinUpService.ArticleUpLoad(ids,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath);
 			return Message.success("admin.propaganda.success");
 		} catch (Exception e) {
 			e.printStackTrace();
