@@ -13,6 +13,7 @@ import net.wit.plat.nihtan.Kaga;
 import net.wit.service.GameListService;
 import net.wit.service.MemberService;
 import net.wit.util.JsonUtils;
+import net.wit.util.WebUtils;
 import org.apache.commons.net.util.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -113,6 +114,9 @@ public class KagaController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        if (member.getUsername()==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
 //
 //        Map<String,String> data = new HashMap<String,String>();
 //        data.put("user_id",member.getUsername());
@@ -148,7 +152,11 @@ public class KagaController extends BaseController {
             return Message.error(gameList.getVip()+"级才能进入");
         }
 
-        String resp = Kaga.getSession(game,request.getRemoteAddr(),member);
+
+        String ip = WebUtils.getAddr(request);
+
+
+        String resp = Kaga.getSession(game,ip,member);
 
         Map<String,String> params = new HashMap<>();
         params.put("url",resp);

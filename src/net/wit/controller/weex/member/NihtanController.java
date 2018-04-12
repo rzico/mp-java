@@ -330,11 +330,11 @@ public class NihtanController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip==null) {
-            ip = request.getRemoteAddr();
+        if (member.getUsername()==null) {
+            return Message.error(Message.SESSION_INVAILD);
         }
+
+        String ip = WebUtils.getAddr(request);
 
         String sessionResp =  Crypto.getSession(ip,member);
 

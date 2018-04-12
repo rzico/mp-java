@@ -105,6 +105,7 @@ public class Crypto {
     }
 
     public static String getSession(String ip,Member member) {
+
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String,String> data = new HashMap<String,String>();
         data.put("user_id",member.getUsername());
