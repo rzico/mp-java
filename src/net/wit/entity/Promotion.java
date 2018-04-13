@@ -65,6 +65,11 @@ public class Promotion extends OrderEntity{
     @JsonIgnore
     private Member owner;
 
+    /** 是否删除 */
+    @NotNull
+    @Column(nullable = false,columnDefinition="bit not null comment '是否删除'")
+    private Boolean deleted;
+
     /*删除前处理*/
     @PreRemove
     public void preRemove(){
@@ -118,4 +123,11 @@ public class Promotion extends OrderEntity{
         this.owner = owner;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

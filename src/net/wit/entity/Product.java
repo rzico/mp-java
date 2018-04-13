@@ -35,6 +35,18 @@ public class Product extends OrderEntity {
 
 	private static final long serialVersionUID = 41L;
 
+	/**
+	 * 产品类型
+	 */
+	public enum Type {
+
+		/** 实物 */
+		product,
+
+		/** 虚拟 */
+		dummy
+	}
+
 	/** 会员 */
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
