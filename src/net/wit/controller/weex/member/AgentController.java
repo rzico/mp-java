@@ -102,7 +102,7 @@ public class AgentController extends BaseController {
 
         entity.setVoucher(voucher);
         entity.setStatus(Transfer.Status.success);
-        entity.setOperator(admin.getName());
+        entity.setOperator(member.displayName());
         transferService.update(entity);
         return Message.success("success");
 

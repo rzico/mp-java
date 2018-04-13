@@ -41,9 +41,15 @@
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">充值人：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>充值账号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <span> ${data.mapMember.name}</span>
+                    <span> ${data.member.username}</span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户昵称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span> ${data.member.nickName}</span>
                 </div>
             </div>
 
