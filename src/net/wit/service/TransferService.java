@@ -25,6 +25,12 @@ public interface TransferService extends BaseService<Transfer, Long> {
 	 */
 	Transfer findBySn(String sn);
 	/**
+	 * 根据编号查找转账单
+	 * @param sn 编号(忽略大小写)
+	 * @return 转账单，若不存在则返回null
+	 */
+	Transfer findByOrderSn(String sn);
+	/**
 	 * 申请提现
 	 * @param transfer 转账单
 	 */

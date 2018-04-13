@@ -54,6 +54,7 @@ public class UnspayController extends BaseController {
     /**
      * 提交
      *
+     * @param 付款单号 sn
      * @param 银行名称 bankname
      * @param 卡号 cardno
      * @param 开户名 name
@@ -87,7 +88,7 @@ public class UnspayController extends BaseController {
             return Message.error("无效商户号");
         }
 
-      BigDecimal fee = enterprise.getTransfer();
+        BigDecimal fee = enterprise.getTransfer();
         if (fee.compareTo(BigDecimal.ONE)<0) {
             fee = BigDecimal.ONE;
         }
@@ -104,6 +105,7 @@ public class UnspayController extends BaseController {
         transfer.setFee(fee);
         transfer.setType(Transfer.Type.bankcard);
         transfer.setSn(snService.generate(Sn.Type.transfer));
+        transfer.setOrderSn(data.get("sn"));
         try {
             transferService.submit(transfer);
             return Message.success((Object) transfer.getSn(),"提交成功");
@@ -119,13 +121,13 @@ public class UnspayController extends BaseController {
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
     public Message query(String sn,String sign, HttpServletRequest request) {
-        Transfer transfer = transferService.findBySn(sn);
+        Transfer transfer = transferService.findByOrderSn(sn);
+        if (transfer == null) {
+            return Message.error("无效付款单号");
+        }
         String h = MD5Utils.getMD5Str(sn+transfer.getMember().getPassword());
         if (h.equals(sign)) {
             return Message.error("无效商户号");
-        }
-        if (transfer == null) {
-            return Message.error("无效付款单号");
         }
         if (transfer.getStatus().equals(Status.success)) {
             return Message.success((Object) "0000","支付成功");
