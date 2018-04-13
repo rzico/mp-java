@@ -11,10 +11,13 @@ import java.util.Date;
 import java.util.List;
 
 public class CouponActivityModel extends BaseModel implements Serializable {
+
     /** 0 无门槛 1 消费送 2 领卡送 3 需购买 */
     private Long atveType;
+
     /** 使用条件 */
     private BigDecimal atveMinPrice;
+
     /** 赠送数量  */
     private Long atveAmount;
 
