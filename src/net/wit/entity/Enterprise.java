@@ -98,6 +98,12 @@ public class Enterprise extends BaseEntity {
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '结算佣金'")
     private BigDecimal brokerage;
 
+    /** 提现手续费   */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '提现手续费'")
+    private BigDecimal transfer;
+
     /** 是否删除 */
     @NotNull
     @Column(columnDefinition="bit comment '是否删除'")
@@ -208,6 +214,14 @@ public class Enterprise extends BaseEntity {
 
     public void setHost(Host host) {
         this.host = host;
+    }
+
+    public BigDecimal getTransfer() {
+        return transfer;
+    }
+
+    public void setTransfer(BigDecimal transfer) {
+        this.transfer = transfer;
     }
 
     public MapEntity getMapArea() {
