@@ -41,7 +41,6 @@ public class Coupon extends BaseEntity {
 		redbag,
 		/*兑换 */
 		exchange,
-
 	};
 
 	public static enum Scope{
