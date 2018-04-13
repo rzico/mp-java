@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -56,6 +55,18 @@ public class LiveController extends BaseController {
 
     @Resource(name = "memberFollowServiceImpl")
     private MemberFollowService memberFollowService;
+
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
+    @Resource(name = "topicServiceImpl")
+    private TopicService topicService;
+
+    @Resource(name = "topicCardServiceImpl")
+    private TopicCardService topicCardService;
+
+    @Resource(name = "templateServiceImpl")
+    private TemplateService templateService;
 
     /*
 			     * KEY+ stream_id + txTime
@@ -136,20 +147,69 @@ public class LiveController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Live live = new Live();
-        live.setMember(member);
+
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("member", Filter.Operator.eq,member));
+        List<Live> lives = liveService.findList(null,null,filters,null);
+
+        Live live = null;
+        if (lives.size()>0) {
+            live = lives.get(0);
+        } else {
+            live = new Live();
+            live.setMember(member);
+            live.setGift(0L);
+            live.setLikeCount(0L);
+            live.setViewerCount(0L);
+            live.setOnline("0");
+            live.setStatus(Live.Status.waiting);
+        }
         live.setTitle(title);
         live.setFrontcover(frontcover);
         live.setHeadpic(member.getLogo());
         live.setNickname(member.displayName());
-        live.setGift(0L);
-        live.setLikeCount(0L);
-        live.setViewerCount(0L);
-        live.setOnline("0");
-        live.setStatus(Live.Status.waiting);
         live.setLocation(location);
-
         liveService.save(live);
+
+        if (member.getNickName()==null) {
+            member.setNickName(title);
+        }
+        if (member.getLogo()==null) {
+            member.setNickName(frontcover);
+        }
+        Topic topic =  member.getTopic();
+        if (topic==null) {
+            topic = new Topic();
+            topic.setName(member.getNickName());
+            topic.setBrokerage(new BigDecimal("0.6"));
+            topic.setStatus(Topic.Status.waiting);
+            topic.setHits(0L);
+            topic.setMember(member);
+            topic.setFee(new BigDecimal("588"));
+            topic.setLogo(member.getLogo());
+            topic.setType(Topic.Type.personal);
+            TopicConfig config = topic.getConfig();
+            if (config==null) {
+                config = new TopicConfig();
+                config.setUseCard(false);
+                config.setUseCashier(false);
+                config.setUseCoupon(false);
+                config.setPromoterType(TopicConfig.PromoterType.any);
+                config.setPattern(TopicConfig.Pattern.pattern1);
+                config.setAmount(BigDecimal.ZERO);
+            }
+            topic.setConfig(config);
+            Calendar calendar   =   new GregorianCalendar();
+            calendar.setTime(new Date());
+            calendar.add(calendar.MONTH, 1);
+            topic.setExpire(calendar.getTime());
+            topic.setTemplate(templateService.findDefault(Template.Type.topic));
+            topicService.create(topic);
+            enterpriseService.create(topic);
+        } else {
+            enterpriseService.create(topic);
+        }
+
         LiveModel model = new LiveModel();
         model.bind(live);
         return Message.success(model,"success");
