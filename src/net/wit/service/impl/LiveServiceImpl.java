@@ -15,6 +15,7 @@ import net.wit.Principal;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.LiveGroupDao;
+import net.wit.plat.im.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
