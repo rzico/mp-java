@@ -127,15 +127,15 @@ public class LiveController extends BaseController {
         Live live = null;
         if (lives.size()>0) {
             live = lives.get(0);
-            if (live.getStatus().equals(Live.Status.success)) {
-                return Message.success(true,"success");
-            }
+            LiveModel model = new LiveModel();
+            model.bind(live);
+            return Message.success(model,"已开通");
         }
-        return Message.success(false,"success");
+        return Message.success("未开通");
     }
 
     /**
-     *   用户信息
+     *   直播间信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
