@@ -109,6 +109,32 @@ public class LiveController extends BaseController {
     }
 
     /**
+     *   检查是否开通直播
+     */
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    @ResponseBody
+    public Message  check(Long memberId,Pageable pageable,HttpServletRequest request) {
+        Member member = null;
+        if (memberId!=null) {
+            member = memberService.find(memberId);
+        }
+        if (member==null) {
+            memberService.getCurrent();
+        }
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("member", Filter.Operator.eq,member));
+        List<Live> lives = liveService.findList(null,null,filters,null);
+        Live live = null;
+        if (lives.size()>0) {
+            live = lives.get(0);
+            if (live.getStatus().equals(Live.Status.success)) {
+                return Message.success(true,"success");
+            }
+        }
+        return Message.success(false,"success");
+    }
+
+    /**
      *   用户信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
