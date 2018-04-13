@@ -33,6 +33,10 @@ public class Promotion extends OrderEntity{
 
     }
 
+    /** 活动类型 */
+    @Column(columnDefinition="int(11) not null comment '活动类型 {give:买N送N,gift:满A赠B}'")
+    private Type type;
+
     /** 购买数量 */
     @NotNull
     @Min(1)
@@ -73,6 +77,14 @@ public class Promotion extends OrderEntity{
     /*删除前处理*/
     @PreRemove
     public void preRemove(){
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public Integer getQuantity() {

@@ -47,6 +47,10 @@ public class Product extends OrderEntity {
 		dummy
 	}
 
+	/** 商品类型 */
+	@Column(columnDefinition="int(11) not null comment '商品类型 {product:实物,dummy:虚拟}'")
+	private Type type;
+
 	/** 会员 */
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -182,6 +186,14 @@ public class Product extends OrderEntity {
 	@OrderBy("orders asc")
 	@JsonIgnore
 	private List<Tag> tags = new ArrayList<Tag>();
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
 
 	public String getSn() {
 		return sn;

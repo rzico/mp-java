@@ -87,7 +87,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public @ResponseBody
-	    Message save(String body, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+	    Message save(String body,Product.Type type,HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -101,6 +101,10 @@ public class ProductController extends BaseController {
 		GoodsModel model = JsonUtils.toObject(body,GoodsModel.class);
 		if (model==null) {
 			return Message.error("无效数据包");
+		}
+
+		if (type==null) {
+			type = Product.Type.product;
 		}
 
 		Goods goods = null;
@@ -130,6 +134,8 @@ public class ProductController extends BaseController {
 				}
 				product.setDeleted(false);
 			}
+
+			product.setType(type);
 			product.setName(model.getName());
 			product.setUnit(model.getUnit());
 
