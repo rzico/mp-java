@@ -117,4 +117,5 @@ public class Promotion extends OrderEntity{
     public void setOwner(Member owner) {
         this.owner = owner;
     }
+
 }
