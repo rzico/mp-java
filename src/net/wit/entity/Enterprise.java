@@ -42,7 +42,7 @@ public class Enterprise extends BaseEntity {
         operate,
         /** 代理商 */
         agent,
-        /** 个人 */
+        /** 推广员 */
         personal,
         /** 商家 */
         shop
