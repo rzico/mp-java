@@ -11,8 +11,9 @@ import java.math.BigDecimal;
 
 /**
  * Entity - 订单项
- * 
+ *
  */
+
 @Entity
 @Table(name = "wx_order_barrel")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_order_barrel_sequence")
