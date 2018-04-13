@@ -214,6 +214,7 @@ public class CardViewModel extends BaseModel implements Serializable {
         } else {
             this.promoter = "";
         }
+
     }
 
 

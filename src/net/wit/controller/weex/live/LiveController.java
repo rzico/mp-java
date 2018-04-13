@@ -2,6 +2,7 @@ package net.wit.controller.weex.live;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.*;
 import net.wit.entity.*;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +53,9 @@ public class LiveController extends BaseController {
 
     @Resource(name = "liveDataServiceImpl")
     private LiveDataService liveDataService;
+
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
 
     /*
 			     * KEY+ stream_id + txTime
@@ -108,10 +114,15 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message  list(Pageable pageable,HttpServletRequest request) {
+    public Message  list(Pageable pageable,HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("online", Filter.Operator.eq,"1"));
+
+        pageable.setFilters(filters);
+        pageable.setOrderDirection(Order.Direction.desc);
         Page<Live> page = liveService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(LiveListModel.bindList(page.getContent()));
+        model.setData(LiveModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 
@@ -148,7 +159,7 @@ public class LiveController extends BaseController {
     /**
      *   开始直播
      */
-    @RequestMapping(value = "/play", method = RequestMethod.POST)
+    @RequestMapping(value = "/play")
     @ResponseBody
     public Message  play(Long id,String location,Boolean record,HttpServletRequest request){
         Member member = memberService.getCurrent();
@@ -160,10 +171,21 @@ public class LiveController extends BaseController {
             return Message.error("无效直播id");
         }
 
+//        String string = "2018-04-30 23:59:59";
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            sdf.parse(string);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
         Date tx = new Date();
-        Long txTime = tx.getTime()+86400L;
+        Long txTime = tx.getTime()/1000+86400;
 
         String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
+        if(record==null){
+            record=false;
+        }
         if (record) {
             pushUrl = pushUrl + "&record=mp4&record_interval=5400";
         }
@@ -241,7 +263,8 @@ public class LiveController extends BaseController {
         Date tx = new Date();
         Long txTime = tx.getTime()+300L;
 
-        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550?"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
+        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201);
+//        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
 //        String hlsPlayUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550.m3u8";
 
         LiveData liveData = new LiveData();
@@ -258,13 +281,24 @@ public class LiveController extends BaseController {
         liveDataService.save(liveData);
 
         live.setViewerCount(live.getViewerCount()+1);
+        live.setPlayUrl(playUrl);
         liveService.update(live);
 
         LiveTape liveTape = live.getLiveTape();
+        liveTape.setPlayUrl(playUrl);
         liveTape.setViewerCount(liveTape.getViewerCount()+1);
         liveTapeService.update(liveTape);
 
-        return Message.success("success");
+        MemberFollow memberFollow=memberFollowService.find(member,live.getMember());
+
+        LiveTapeModel model=new LiveTapeModel();
+        model.bind(liveTape);
+        if (memberFollow==null){
+            model.setFollow(false);
+        }else {
+            model.setFollow(true);
+        }
+        return Message.success(model,"success");
     }
 
 
@@ -292,6 +326,24 @@ public class LiveController extends BaseController {
         liveTapeService.update(liveTape);
 
         return Message.success("success");
+    }
+
+    /**
+     *  热点查询列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/slide", method = RequestMethod.GET)
+    @ResponseBody
+    public Message slide(Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("online", Filter.Operator.eq,"1"));
+
+        pageable.setFilters(filters);
+        pageable.setOrderDirection(Order.Direction.desc);
+        Page<Live> page = liveService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(LiveListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
     }
 
 }

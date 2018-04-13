@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
 import net.wit.controller.model.MemberViewModel;
+import net.wit.controller.model.UserModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleReview;
 import net.wit.entity.Member;
@@ -42,7 +43,7 @@ public class UserController extends BaseController {
         if (member==null) {
             return Message.error("无效用户 id");
         }
-        MemberViewModel model = new MemberViewModel();
+        UserModel model = new UserModel();
         model.bind(member);
         return Message.bind(model,request);
    }

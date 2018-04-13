@@ -36,6 +36,11 @@ public class LiveGift extends OrderEntity {
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
 	private String thumbnail;
 
+	/** 动图效果 */
+	@Length(max = 200)
+	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '动图效果'")
+	private String animation;
+
 	/** 价格 */
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
@@ -77,5 +82,13 @@ public class LiveGift extends OrderEntity {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getAnimation() {
+		return animation;
+	}
+
+	public void setAnimation(String animation) {
+		this.animation = animation;
 	}
 }

@@ -106,6 +106,7 @@ public class UnsPay {
         }
         return result;
     }
+
     public static BigDecimal queryBalance() {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Map<String, Object> params = new HashMap<String, Object>();
@@ -120,6 +121,7 @@ public class UnsPay {
             return BigDecimal.ZERO;
         }
     }
+
     public static String getErrMsg(String errorCode) {
         Map<String,String> data=new HashMap<String, String>();
         data.put("0000","操作成功");
@@ -147,6 +149,7 @@ public class UnsPay {
         data.put("3000","保证金余额不足");
         return data.get(errorCode);
     }
+
     public synchronized static String submit(Transfer transfer) {
         try {
             BigDecimal bal = queryBalance();
@@ -174,8 +177,8 @@ public class UnsPay {
             logger.error(e.getMessage());
             return "9999";
         }
-
     }
+
     //00，成功;10，处理中;20，失败  ;其他情况出错了
     public static String query(String sn) {
         try {

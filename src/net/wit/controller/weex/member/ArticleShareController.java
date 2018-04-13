@@ -134,6 +134,9 @@ public class ArticleShareController extends BaseController {
         }
 
         String rootPath = request.getSession().getServletContext().getRealPath("/");
+        if (topic.getConfig().getWxAppId()==null) {
+            return Message.error("没有配置公众号");
+        }
         if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath).equals("success")){
             return Message.success("分享成功");
         }
