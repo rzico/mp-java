@@ -31,7 +31,6 @@ public class Transfer extends BaseEntity {
 	 */
 
 	public enum Type {
-
 		/** 微信钱包 */
 		weixin,
 		/** 支付宝 */
