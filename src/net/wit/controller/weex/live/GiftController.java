@@ -86,7 +86,7 @@ public class GiftController extends BaseController {
         try {
             liveGiftService.add(gift,member,live);
         } catch (Exception e) {
-            return Message.success(e.getMessage());
+            return Message.error(e.getMessage());
         }
         return Message.success(gift.getPrice(),"送成功");
 
