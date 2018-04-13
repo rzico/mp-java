@@ -151,9 +151,9 @@ public class NihtanController extends BaseController {
                     game.setRoundNo(jsonObject.getString("round_id"));
                 }
                 Double amount = jsonObject.getDouble("amount");
-                if (!game.getGame().equals("Sicbo") && !game.getGame().equals("Poker") && !game.getGame().equals("Dragon-Tiger") && !game.getGame().equals("Baccarat")) {
-                    amount = amount * 10;
-                }
+//                if (!game.getGame().equals("Sicbo") && !game.getGame().equals("Poker") && !game.getGame().equals("Dragon-Tiger") && !game.getGame().equals("Baccarat")) {
+//                    amount = amount * 10;
+//                }
                 game.setDebit(new Long(Math.round(amount)));
                 game.setCredit(0L);
                 game.setMember(member);
@@ -201,9 +201,9 @@ public class NihtanController extends BaseController {
             JSONObject user = datas.getJSONObject(i);
             String user_id = user.getString("user_id");
             Double amount = user.getDouble("total_win");
-            if (!game.equals("Sicbo") && !game.equals("Poker") && !game.equals("Dragon-Tiger") && !game.equals("Baccarat")) {
-                amount = amount * 10;
-            }
+//            if (!game.equals("Sicbo") && !game.equals("Poker") && !game.equals("Dragon-Tiger") && !game.equals("Baccarat")) {
+//                amount = amount * 10;
+//            }
             Long win_money = new Long(Math.round(amount));
 
             Member member = memberService.findByUsername(user_id);
