@@ -127,6 +127,9 @@ public class TransferController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        if (amount.compareTo(new BigDecimal(100))<0) {
+            return Message.error("提现金额必须大于100元");
+        }
 
         Config config = configService.find("transfer.min");
         if (config!=null) {

@@ -189,6 +189,11 @@ public class GoldController extends BaseController {
         if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        if (amount<100L) {
+            return Message.error("兑换金币必须大于100");
+        }
+
         if (member.getPoint()<amount) {
             return Message.error("余额不足");
         }

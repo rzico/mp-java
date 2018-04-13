@@ -103,6 +103,9 @@ public class RechargeController extends BaseController {
         if (user.equals(member)) {
             return Message.error("不能给自已充值");
         }
+        if (amount.compareTo(new BigDecimal(100))<0) {
+            return Message.error("充值金额必须大于100元");
+        }
         Recharge recharge = new Recharge();
         recharge.setStatus(Recharge.Status.waiting);
         recharge.setAmount(amount);
