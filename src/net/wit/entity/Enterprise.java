@@ -115,6 +115,11 @@ public class Enterprise extends BaseEntity {
     @JsonIgnore
     private Member member;
 
+    /** 父级企业--代理关系 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Enterprise parent;
+
     /** ERP主机 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -222,6 +227,14 @@ public class Enterprise extends BaseEntity {
 
     public void setTransfer(BigDecimal transfer) {
         this.transfer = transfer;
+    }
+
+    public Enterprise getParent() {
+        return parent;
+    }
+
+    public void setParent(Enterprise parent) {
+        this.parent = parent;
     }
 
     public MapEntity getMapArea() {
