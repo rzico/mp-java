@@ -99,13 +99,13 @@ public class Topic extends BaseEntity {
     /** 交易佣金 百分比 */
     @Min(0)
     @NotNull
-    @Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
+    @Column(columnDefinition="decimal(21,6) not null default 0.6 comment '交易佣金'")
     private BigDecimal brokerage;
 
     /** 收单佣金 百分比 */
     @Min(0)
     @NotNull
-    @Column(columnDefinition="decimal(21,6) not null default 0 comment '收单佣金'")
+    @Column(columnDefinition="decimal(21,6) not null default 0.4 comment '收单佣金'")
     private BigDecimal paybill;
 
     /** 模板 */
@@ -332,5 +332,11 @@ public class Topic extends BaseEntity {
         BigDecimal rate = getBrokerage().multiply(new BigDecimal("0.01"));
         return amount.multiply(rate).setScale(2,BigDecimal.ROUND_HALF_DOWN);
     }
+
+    public BigDecimal calcPaybill(BigDecimal amount) {
+        BigDecimal rate = getPaybill().multiply(new BigDecimal("0.01"));
+        return amount.multiply(rate).setScale(4,BigDecimal.ROUND_HALF_DOWN);
+    }
+
 
 }
