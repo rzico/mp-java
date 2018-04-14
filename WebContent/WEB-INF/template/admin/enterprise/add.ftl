@@ -84,13 +84,23 @@
                 </span>
             </div>
         </div>
+
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">结算佣金（%）：</label>
+            <label class="form-label col-xs-4 col-sm-2">分销佣金（%）：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="0.6" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
+                <input type="text" class="input-text" value="1" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
             </div>
         </div>
 
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">代付佣金（每笔）：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="2" placeholder="" id="transfer" name="transfer" onInput="floatInit(this)">
+            </div>
+        </div>
 
 
         <div class="row cl">

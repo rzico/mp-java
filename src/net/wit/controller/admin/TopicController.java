@@ -140,10 +140,6 @@ public class TopicController extends BaseController {
 	public Message save(Topic topic, Long areaId, Long templateId, Long memberId, Long categoryId){
 		Topic entity = new Topic();	
 
-		entity.setCreateDate(topic.getCreateDate());
-
-		entity.setModifyDate(topic.getModifyDate());
-
 		entity.setAddress(topic.getAddress());
 
 		entity.setBrokerage(topic.getBrokerage());
@@ -234,17 +230,16 @@ public class TopicController extends BaseController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
 	public Message update(Topic topic, Long areaId, Long templateId, Long memberId, Long categoryId){
+
 		Topic entity = topicService.find(topic.getId());
 
 		TopicConfig topicConfig = entity.getConfig();
-		
-		entity.setCreateDate(topic.getCreateDate());
-
-		entity.setModifyDate(topic.getModifyDate());
 
 		entity.setAddress(topic.getAddress());
 
 		entity.setBrokerage(topic.getBrokerage());
+
+		entity.setPaybill(topic.getPaybill());
 
 		entity.setExpire(topic.getExpire());
 

@@ -127,6 +127,8 @@ public class EnterpriseController extends BaseController {
 
 		entity.setBrokerage(enterprise.getBrokerage());
 
+		entity.setTransfer(enterprise.getTransfer());
+
 		entity.setType(enterprise.getType());
 
 		entity.setStatus(enterprise.getStatus());
@@ -199,6 +201,8 @@ public class EnterpriseController extends BaseController {
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
+
+		entity.setTransfer(enterprise.getTransfer());
 
 		entity.setBrokerage(enterprise.getBrokerage());
 

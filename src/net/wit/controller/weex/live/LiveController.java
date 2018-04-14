@@ -168,7 +168,7 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/create")
     @ResponseBody
-    public Message  create(String title,String frontcover,String location,HttpServletRequest request){
+    public Message create(String title,String frontcover,String location,HttpServletRequest request){
 
         Member member = memberService.getCurrent();
         if (member==null) {

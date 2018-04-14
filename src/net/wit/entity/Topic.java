@@ -102,6 +102,12 @@ public class Topic extends BaseEntity {
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '交易佣金'")
     private BigDecimal brokerage;
 
+    /** 收单佣金 百分比 */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '收单佣金'")
+    private BigDecimal paybill;
+
     /** 模板 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '模板'")
@@ -117,7 +123,7 @@ public class Topic extends BaseEntity {
     @Min(0)
     @NotNull
     @Column(columnDefinition="decimal(21,6) not null default 0 comment '年费'")
-    private BigDecimal  fee;
+    private BigDecimal fee;
 
     /** 专栏设置 */
     @Embedded
@@ -248,6 +254,14 @@ public class Topic extends BaseEntity {
         this.fee = fee;
     }
 
+    public BigDecimal getPaybill() {
+        return paybill;
+    }
+
+    public void setPaybill(BigDecimal paybill) {
+        this.paybill = paybill;
+    }
+
     public MapEntity getMapTemplate() {
         if (getTemplate() != null) {
             return new MapEntity(getTemplate().getId().toString(), getTemplate().getName());
@@ -318,4 +332,5 @@ public class Topic extends BaseEntity {
         BigDecimal rate = getBrokerage().multiply(new BigDecimal("0.01"));
         return amount.multiply(rate).setScale(2,BigDecimal.ROUND_HALF_DOWN);
     }
+
 }
