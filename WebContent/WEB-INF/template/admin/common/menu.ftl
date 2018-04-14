@@ -52,9 +52,6 @@
                     [#if (admin.type=="operate"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
                     <li><a data-href="../enterprise/index.jhtml" data-title="合作伙伴" href="javascript:;">合作伙伴</a></li>
                     [/#if]
-                    [#if (admin.type=="operate"||admin.type=="shop"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2"))]
-                    <li><a data-href="../admin/index.jhtml" data-title="账号管理" href="javascript:;">账号管理</a></li>
-                    [/#if]
                     [#if (admin.type=="operate"||admin.type=="shop"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
                     <li><a data-href="../topic/index.jhtml" data-title="专栏管理" href="javascript:;">专栏管理</a></li>
                     [/#if]
@@ -63,9 +60,6 @@
                     [/#if]
                     [#if (admin.type=="operate"||admin.type=="shop")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
                     <li><a data-href="../card/index.jhtml" data-title="会员卡管理" href="javascript:;">会员卡管理</a></li>
-                    [/#if]
-                    [#if (admin.type=="operate"||admin.type=="agent")&&(admin.role?contains("1")||admin.role?contains("2")||admin.role?contains("3"))]
-                    <li><a data-href="../merchant/index.jhtml" data-title="商户资料" href="javascript:;">商户资料</a></li>
                     [/#if]
                 </ul>
             </dd>

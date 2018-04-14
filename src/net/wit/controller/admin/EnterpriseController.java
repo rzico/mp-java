@@ -64,8 +64,8 @@ public class EnterpriseController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","代理商"));
-		types.add(new MapEntity("personal","推广员"));
-		types.add(new MapEntity("shop","合作商家"));
+		types.add(new MapEntity("personal","合作商"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 //		model.addAttribute("areas",areaService.findAll());
@@ -83,8 +83,8 @@ public class EnterpriseController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","代理商"));
-		types.add(new MapEntity("personal","推广员"));
-		types.add(new MapEntity("shop","合作商家"));
+		types.add(new MapEntity("personal","合作商"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -175,8 +175,8 @@ public class EnterpriseController extends BaseController {
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("operate","运营商"));
 		types.add(new MapEntity("agent","代理商"));
-		types.add(new MapEntity("personal","推广员"));
-		types.add(new MapEntity("shop","合作商家"));
+		types.add(new MapEntity("personal","合作商"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> statuss = new ArrayList<>();

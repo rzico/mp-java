@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>产品档案</title>
+    <title>商品管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 产品档案 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 商品管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -57,8 +57,8 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-		<a href="javascript:;" onclick="add('首页 &gt; 产品档案 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增产品</a></span></div>
+		<a href="javascript:;" onclick="add('首页 &gt; 商品管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
+                class="Hui-iconfont">&#xe600;</i> 新增</a></span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -128,8 +128,8 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(3).attr('style', 'text-align: left;');
                 $(row).children('td').eq(4).attr('style', 'text-align: left;');
+                $(row).children('td').eq(5).attr('style', 'text-align: left;');
             },
             "aoColumns": [
                 {
@@ -227,7 +227,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return data.name;
@@ -237,7 +237,7 @@
                     }
                 },
                 {
-                    "aTargets": [11],
+                    "aTargets": [12],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -247,7 +247,7 @@
                     }
                 },
                  {
-                    "aTargets": [12],
+                    "aTargets": [13],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 产品档案 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -259,7 +259,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 12]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 13]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
