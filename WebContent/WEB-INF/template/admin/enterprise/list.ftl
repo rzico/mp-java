@@ -182,6 +182,11 @@
                     "sTitle": "区域",
                     "sClass": "center"
                 },
+                {
+                    "mData": "mapParent",
+                    "sTitle": "上级",
+                    "sClass": "center"
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
@@ -242,10 +247,20 @@
                         }
                     }
                 },
+                {
+                    "aTargets": [8],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
+                    }
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [8],
+                        "aTargets": [9],
                         "mRender": function (data, display, row) {
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -262,9 +277,9 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 7, 8]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 7,8,9]}// 制定列不参与排序
                 [#else]
-                    {"orderable": false, "aTargets": [0, 7]}
+                    {"orderable": false, "aTargets": [0, 7,8]}
                 [/#if]
             [/@adminDirective]
             ],

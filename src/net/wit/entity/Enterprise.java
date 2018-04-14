@@ -259,4 +259,13 @@ public class Enterprise extends BaseEntity {
         }
     }
 
+
+    public MapEntity getMapParent() {
+        if (getParent() != null) {
+            return new MapEntity(getParent().getId().toString(), getParent().getName());
+        } else {
+            return null;
+        }
+    }
+
 }
