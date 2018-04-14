@@ -369,9 +369,9 @@ public abstract class BaseDaoImpl<T, ID extends Serializable> implements BaseDao
 		}
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		Predicate restrictions = criteriaQuery.getRestriction() != null ? criteriaQuery.getRestriction() : criteriaBuilder.conjunction();
-		if (StringUtils.isNotEmpty(pageable.getSearchProperty()) && StringUtils.isNotEmpty(pageable.getSearchValue())) {
-			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.like(root.<String> get(pageable.getSearchProperty()), "%" + pageable.getSearchValue() + "%"));
-		}
+//		if (StringUtils.isNotEmpty(pageable.getSearchProperty()) && StringUtils.isNotEmpty(pageable.getSearchValue())) {
+//			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.like(root.<String> get(pageable.getSearchProperty()), "%" + pageable.getSearchValue() + "%"));
+//		}
 		if (pageable.getFilters() != null) {
 			for (Filter filter : pageable.getFilters()) {
 				if (filter == null || StringUtils.isEmpty(filter.getProperty())) {

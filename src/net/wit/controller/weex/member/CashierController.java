@@ -116,6 +116,10 @@ public class CashierController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Topic topic = member.getTopic();
+        if (topic==null) {
+            return Message.error("没有品牌专栏");
+        }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有开通收银台");
@@ -133,7 +137,7 @@ public class CashierController extends BaseController {
         payBill.setCard(null);
         payBill.setCardDiscount(BigDecimal.ZERO);
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(shop.getEnterprise().calcFee(effective));
+        payBill.setFee(topic.calcPaybill(effective));
         payBill.setMethod(PayBill.Method.online);
         payBill.setStatus(PayBill.Status.none);
         payBill.setMember(member);

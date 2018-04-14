@@ -1,10 +1,12 @@
-package net.wit.controller.weex.live;
+package net.wit.controller.applet.live;
 
 import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.*;
+import net.wit.controller.model.LiveListModel;
+import net.wit.controller.model.LiveModel;
+import net.wit.controller.model.LiveTapeModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -18,8 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -29,8 +29,8 @@ import java.util.*;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexLiveController")
-@RequestMapping("/weex/live")
+@Controller("appletLiveController")
+@RequestMapping("/applet/live")
 public class LiveController extends BaseController {
     private static final char[] DIGITS_LOWER =
             {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -127,15 +127,15 @@ public class LiveController extends BaseController {
         Live live = null;
         if (lives.size()>0) {
             live = lives.get(0);
-            LiveModel model = new LiveModel();
-            model.bind(live);
-            return Message.success(model,"已开通");
+            if (live.getStatus().equals(Live.Status.success)) {
+                return Message.success(true,"success");
+            }
         }
-        return Message.success("未开通");
+        return Message.success(false,"success");
     }
 
     /**
-     *   直播间信息
+     *   用户信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
@@ -162,176 +162,6 @@ public class LiveController extends BaseController {
         model.setData(LiveModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
-
-    /**
-     *   开通直播
-     */
-    @RequestMapping(value = "/create")
-    @ResponseBody
-    public Message create(String title,String frontcover,String location,HttpServletRequest request){
-
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-
-        List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("member", Filter.Operator.eq,member));
-        List<Live> lives = liveService.findList(null,null,filters,null);
-
-        Live live = null;
-        if (lives.size()>0) {
-            live = lives.get(0);
-        } else {
-            live = new Live();
-            live.setMember(member);
-            live.setGift(0L);
-            live.setLikeCount(0L);
-            live.setViewerCount(0L);
-            live.setOnline("0");
-            live.setStatus(Live.Status.waiting);
-        }
-        live.setTitle(title);
-        live.setFrontcover(frontcover);
-        live.setHeadpic(member.getLogo());
-        live.setNickname(member.displayName());
-        live.setLocation(location);
-        liveService.save(live);
-
-        if (member.getNickName()==null) {
-            member.setNickName(title);
-        }
-        if (member.getLogo()==null) {
-            member.setNickName(frontcover);
-        }
-        Topic topic =  member.getTopic();
-        if (topic==null) {
-            topic = new Topic();
-            topic.setName(member.getNickName());
-            topic.setBrokerage(new BigDecimal("0.6"));
-            topic.setPaybill(new BigDecimal("0.4"));
-            topic.setStatus(Topic.Status.waiting);
-            topic.setHits(0L);
-            topic.setMember(member);
-            topic.setFee(new BigDecimal("588"));
-            topic.setLogo(member.getLogo());
-            topic.setType(Topic.Type.personal);
-            TopicConfig config = topic.getConfig();
-            if (config==null) {
-                config = new TopicConfig();
-                config.setUseCard(false);
-                config.setUseCashier(false);
-                config.setUseCoupon(false);
-                config.setPromoterType(TopicConfig.PromoterType.any);
-                config.setPattern(TopicConfig.Pattern.pattern1);
-                config.setAmount(BigDecimal.ZERO);
-            }
-            topic.setConfig(config);
-            Calendar calendar   =   new GregorianCalendar();
-            calendar.setTime(new Date());
-            calendar.add(calendar.MONTH, 1);
-            topic.setExpire(calendar.getTime());
-            topic.setTemplate(templateService.findDefault(Template.Type.topic));
-            topicService.create(topic);
-            enterpriseService.create(topic);
-        } else {
-            enterpriseService.create(topic);
-        }
-
-        LiveModel model = new LiveModel();
-        model.bind(live);
-        return Message.success(model,"success");
-   }
-
-
-    /**
-     *   开始直播
-     */
-    @RequestMapping(value = "/play")
-    @ResponseBody
-    public Message  play(Long id,String location,Boolean record,HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-        Live live = liveService.find(id);
-        if (live == null) {
-            return Message.error("无效直播id");
-        }
-
-//        String string = "2018-04-30 23:59:59";
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        try {
-//            sdf.parse(string);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-        Date tx = new Date();
-        Long txTime = tx.getTime()/1000+86400;
-
-        String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
-        if(record==null){
-            record=false;
-        }
-        if (record) {
-            pushUrl = pushUrl + "&record=mp4&record_interval=5400";
-        }
-        LiveTape liveTape = new LiveTape();
-        liveTape.setLive(live);
-        liveTape.setMember(member);
-        liveTape.setFrontcover(live.getFrontcover());
-        liveTape.setHeadpic(member.getLogo());
-        liveTape.setNickname(member.displayName());
-        liveTape.setGift(0L);
-        liveTape.setLikeCount(0L);
-        liveTape.setViewerCount(0L);
-        liveTape.setLocation(live.getLocation());
-        liveTape.setPushUrl(pushUrl);
-        liveTape.setTitle(live.getTitle());
-        liveTape.setLocation(location);
-        liveTapeService.save(liveTape);
-
-        live.setLiveTape(liveTape);
-        live.setPushUrl(pushUrl);
-        live.setOnline("1");
-        liveService.update(live);
-
-        LiveTapeModel model = new LiveTapeModel();
-        model.bind(liveTape);
-        return Message.success(model,"success");
-    }
-
-
-
-    /**
-     *   结束直播
-     */
-    @RequestMapping(value = "/stop", method = RequestMethod.POST)
-    @ResponseBody
-    public Message  stop(Long id,HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-        Live live = liveService.find(id);
-        if (live == null) {
-            return Message.error("无效直播id");
-        }
-        LiveTape liveTape = live.getLiveTape();
-
-        liveTape.setTitle(live.getTitle());
-        liveTape.setEndTime(new Date());
-        liveTapeService.save(liveTape);
-
-        live.setOnline("0");
-        liveService.update(live);
-
-        LiveTapeModel model = new LiveTapeModel();
-        model.bind(liveTape);
-        return Message.success(model,"success");
-    }
-
 
     /**
      *   进入房间

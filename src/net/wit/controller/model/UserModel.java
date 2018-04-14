@@ -8,6 +8,8 @@ import java.util.Date;
 public class UserModel extends BaseModel implements Serializable {
 
     private Long id;
+    /** 登录名 */
+    private String  userId;
     /** 昵称 */
     private String nickName;
     /** 头像 */
@@ -127,8 +129,17 @@ public class UserModel extends BaseModel implements Serializable {
         this.balance = balance;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
+        this.userId=member.userId();
         this.autograph = member.getAutograph();
         this.fans = member.getFans().size();
         this.favorite = member.getFavorites().size();
