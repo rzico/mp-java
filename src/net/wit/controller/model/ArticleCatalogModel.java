@@ -9,6 +9,7 @@ import java.util.List;
 //用户文集
 
 public class ArticleCatalogModel extends BaseModel implements Serializable {
+
     private Long id;
     private String name;
     private int count;
