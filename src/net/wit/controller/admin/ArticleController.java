@@ -74,6 +74,9 @@ public class ArticleController extends BaseController {
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
 
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
 	@Resource(name = "occupationServiceImpl")
 	private OccupationService occupationService;
 
@@ -142,8 +145,6 @@ public class ArticleController extends BaseController {
 
 		entity.setAuthority(article.getAuthority());
 
-		entity.setIsPitch(false);
-
 		entity.setIsPublish(true);
 
 		entity.setIsReview(article.getIsReview());
@@ -178,7 +179,9 @@ public class ArticleController extends BaseController {
 
 		entity.setArea(areaService.find(areaId));
 
-		entity.setMember(memberService.find(1L));
+		messageService.GMInit(net.wit.entity.Message.Type.message);
+
+		entity.setMember(memberService.findByUsername("gm_10202"));
 
 		entity.setTemplate(templateService.find(templateId));
 
@@ -189,6 +192,10 @@ public class ArticleController extends BaseController {
 		entity.setIsPitch(article.getIsPitch());
 
 		entity.setVotes(null);
+
+		entity.setIsAudit(false);
+
+		entity.setShare(0L);
 
 		entity.setTags(tagService.findList(tagIds));
 
@@ -202,6 +209,7 @@ public class ArticleController extends BaseController {
             e.printStackTrace();
             return Message.error("admin.save.error");
         }
+
 	}
 
 
@@ -290,8 +298,6 @@ public class ArticleController extends BaseController {
 		entity.setThumbnail(article.getThumbnail());
 
 		entity.setTags(tagService.findList(tagIds));
-
-		entity.setIsAudit(false);
 
 		entity.setIsPitch(article.getIsPitch());
 
