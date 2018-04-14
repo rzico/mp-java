@@ -199,7 +199,7 @@ public class Message extends BaseEntity {
 
 	public MapEntity getMapReceiver() {
 		if (getReceiver() != null) {
-			return new MapEntity(getReceiver().getId().toString(), getReceiver().getNickName()+(getReceiver().getName()==null?"":"("+getReceiver().getName()+")") );
+			return new MapEntity(getReceiver().getId().toString(), getReceiver().displayName() );
 		} else {
 			return null;
 		}
