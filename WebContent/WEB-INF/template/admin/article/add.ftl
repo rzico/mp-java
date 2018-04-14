@@ -136,6 +136,17 @@
             </div>
         </div>
 
+            <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">是否热点：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <div class="check-box">
+                    <input type="checkbox" name="isPitch" id="isPitch" value="true">
+                    <input type="hidden" name="_isPitch" value="false" />
+                    <label for="isPitch">&nbsp;</label>
+            </div>
+            </div>
+            </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">是否样例：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">

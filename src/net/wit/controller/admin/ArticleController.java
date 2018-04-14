@@ -122,7 +122,7 @@ public class ArticleController extends BaseController {
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
 //
-//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
@@ -186,6 +186,8 @@ public class ArticleController extends BaseController {
 
 		entity.setThumbnail(article.getThumbnail());
 
+		entity.setIsPitch(article.getIsPitch());
+
 		entity.setVotes(null);
 
 		entity.setTags(tagService.findList(tagIds));
@@ -239,7 +241,7 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 //
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
@@ -290,7 +292,9 @@ public class ArticleController extends BaseController {
 		entity.setTags(tagService.findList(tagIds));
 
 		entity.setIsAudit(false);
-		
+
+		entity.setIsPitch(article.getIsPitch());
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
