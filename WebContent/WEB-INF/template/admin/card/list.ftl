@@ -59,7 +59,7 @@
                     </select>
                 </span>
         [/#if]
-        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
+        <input type="text" class="input-text" style="width:250px" placeholder="输入卡号/手机号" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
@@ -196,6 +196,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "point",
+                    "sTitle": "积分",
+                    "sClass": "center"
+                },
+                {
                     "mData": "usedDate",
                     "sTitle": "最近使用日期",
                     "sClass": "center"
@@ -282,20 +287,10 @@
                     }
                 },
                 {
-                    "aTargets": [10],
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if (data != null){
                             return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [11],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
                         }else{
                             return "";
                         }
@@ -311,10 +306,20 @@
                         }
                     }
                 },
+                {
+                    "aTargets": [13],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
+                    }
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [13],
+                        "aTargets": [14],
                         "mRender": function (data, display, row) {
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 会员卡 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
@@ -329,9 +334,9 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 9, 10, 11]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0,  11, 12]}// 制定列不参与排序
                 [#else]
-                    {"orderable": false, "aTargets": [0, 9, 10]}
+                    {"orderable": false, "aTargets": [0, 11]}
                 [/#if]
             [/@adminDirective]
             ],

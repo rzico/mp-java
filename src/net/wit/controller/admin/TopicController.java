@@ -79,8 +79,8 @@ public class TopicController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("company","公司/企业"));
-		types.add(new MapEntity("individual","个体工商户"));
+		types.add(new MapEntity("company","企业"));
+		types.add(new MapEntity("individual","个体"));
 		types.add(new MapEntity("personal","个人"));
 		types.add(new MapEntity("student","学生"));
 		model.addAttribute("types",types);
@@ -112,18 +112,18 @@ public class TopicController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("company","公司/企业"));
-		types.add(new MapEntity("individual","个体工商户"));
+		types.add(new MapEntity("company","企业"));
+		types.add(new MapEntity("individual","个体"));
 		types.add(new MapEntity("personal","个人"));
 		types.add(new MapEntity("student","学生"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("areas",areaService.findAll());
-
+//		model.addAttribute("areas",areaService.findAll());
+//
 		model.addAttribute("categorys",categoryService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
+//
+//		model.addAttribute("members",memberService.findAll());
+//
 		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
 
 		model.addAttribute("templates",templateService.findList(Template.Type.topic));
@@ -202,19 +202,19 @@ public class TopicController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("company","公司/企业"));
-		types.add(new MapEntity("individual","个体工商户"));
+		types.add(new MapEntity("company","企业"));
+		types.add(new MapEntity("individual","个体"));
 		types.add(new MapEntity("personal","个人"));
 		types.add(new MapEntity("student","学生"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("areas",areaService.findAll());
+//
+//		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("categorys",categoryService.findAll());
 
 		//model.addAttribute("members",memberService.findAll());
 
-		//model.addAttribute("tags",tagService.findList(Tag.Type.topic));
+		model.addAttribute("tags",tagService.findList(Tag.Type.topic));
 
 		model.addAttribute("templates",templateService.findList(Template.Type.topic));
 

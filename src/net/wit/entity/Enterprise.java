@@ -253,7 +253,7 @@ public class Enterprise extends BaseEntity {
 
     public MapEntity getMapMember() {
         if (getMember() != null) {
-            return new MapEntity(getMember().getId().toString(), getMember().getName());
+            return new MapEntity(getMember().getId().toString(), getMember().displayName());
         } else {
             return null;
         }
