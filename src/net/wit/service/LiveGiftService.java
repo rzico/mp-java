@@ -7,7 +7,9 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Live;
 import net.wit.entity.LiveGift;
+import net.wit.entity.Member;
 
 /**
  * @ClassName: LiveGiftService
@@ -17,4 +19,9 @@ import net.wit.entity.LiveGift;
 
 public interface LiveGiftService extends BaseService<LiveGift, Long> {
 	Page<LiveGift> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+	void add(LiveGift gift, Member member, Live live) throws Exception;
+
+	void laud(Member member, Live live) throws Exception;
+
 }

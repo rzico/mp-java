@@ -68,4 +68,16 @@ public class TransferDaoImpl extends BaseDaoImpl<Transfer, Long> implements Tran
 			return null;
 		}
 	}
+	public Transfer findByOrderSn(String sn) {
+		if (sn == null) {
+			return null;
+		}
+		String jpql = "select transfer from Transfer transfer where lower(transfer.orderSn) = lower(:sn)";
+		try {
+			return entityManager.createQuery(jpql, Transfer.class).setFlushMode(FlushModeType.COMMIT).setParameter("sn", sn).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 }

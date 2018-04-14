@@ -63,9 +63,9 @@ public class EnterpriseController extends BaseController {
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","城市代理商"));
-		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","合作商家"));
+		types.add(new MapEntity("agent","代理商"));
+		types.add(new MapEntity("personal","合作商"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 //		model.addAttribute("areas",areaService.findAll());
@@ -82,9 +82,9 @@ public class EnterpriseController extends BaseController {
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","城市代理商"));
-		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","合作商家"));
+		types.add(new MapEntity("agent","代理商"));
+		types.add(new MapEntity("personal","合作商"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -126,6 +126,8 @@ public class EnterpriseController extends BaseController {
 		entity.setDeleted(false);
 
 		entity.setBrokerage(enterprise.getBrokerage());
+
+		entity.setTransfer(enterprise.getTransfer());
 
 		entity.setType(enterprise.getType());
 
@@ -172,9 +174,9 @@ public class EnterpriseController extends BaseController {
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","城市代理商"));
-		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","入驻商家"));
+		types.add(new MapEntity("agent","代理商"));
+		types.add(new MapEntity("personal","合作商"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -199,6 +201,8 @@ public class EnterpriseController extends BaseController {
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(enterprise.getName());
+
+		entity.setTransfer(enterprise.getTransfer());
 
 		entity.setBrokerage(enterprise.getBrokerage());
 

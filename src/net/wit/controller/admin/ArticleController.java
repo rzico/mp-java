@@ -74,6 +74,9 @@ public class ArticleController extends BaseController {
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
 
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
 	@Resource(name = "occupationServiceImpl")
 	private OccupationService occupationService;
 
@@ -122,7 +125,7 @@ public class ArticleController extends BaseController {
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
 //
-//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
@@ -141,8 +144,6 @@ public class ArticleController extends BaseController {
 		Article entity = new Article();
 
 		entity.setAuthority(article.getAuthority());
-
-		entity.setIsPitch(false);
 
 		entity.setIsPublish(true);
 
@@ -178,7 +179,9 @@ public class ArticleController extends BaseController {
 
 		entity.setArea(areaService.find(areaId));
 
-		entity.setMember(memberService.find(1L));
+		messageService.GMInit(net.wit.entity.Message.Type.message);
+
+		entity.setMember(memberService.findByUsername("gm_10202"));
 
 		entity.setTemplate(templateService.find(templateId));
 
@@ -186,7 +189,13 @@ public class ArticleController extends BaseController {
 
 		entity.setThumbnail(article.getThumbnail());
 
+		entity.setIsPitch(article.getIsPitch());
+
 		entity.setVotes(null);
+
+		entity.setIsAudit(false);
+
+		entity.setShare(0L);
 
 		entity.setTags(tagService.findList(tagIds));
 
@@ -200,6 +209,7 @@ public class ArticleController extends BaseController {
             e.printStackTrace();
             return Message.error("admin.save.error");
         }
+
 	}
 
 
@@ -239,7 +249,7 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("video","视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
-//		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 //
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
@@ -289,8 +299,8 @@ public class ArticleController extends BaseController {
 
 		entity.setTags(tagService.findList(tagIds));
 
-		entity.setIsAudit(false);
-		
+		entity.setIsPitch(article.getIsPitch());
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -517,6 +527,7 @@ public class ArticleController extends BaseController {
 		if(topic==null){
 			return Message.error("该专栏无效");
 		}
+
 		//比较该专栏过期时间
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date overtime=topic.getExpire();
@@ -539,10 +550,10 @@ public class ArticleController extends BaseController {
 //			String appID=properties.getProperty("weixin.appid");
 //			String appsecret=properties.getProperty("weixin.secret");
 			weixinUpService.ArticleUpLoad(ids,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath);
-			return Message.success("admin.propaganda.success");
+			return Message.success("发布成功");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Message.error("admin.propaganda.error");
+			return Message.error("发布失败");
 		}
 	}
 

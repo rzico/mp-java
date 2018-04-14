@@ -87,11 +87,18 @@ public class CardController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Member owner = memberService.find(authorId);
-        if (owner==null) {
-            return Message.error("无效商家id");
+        Card card =  null;
+        if (authorId!=null) {
+            Member owner = memberService.find(authorId);
+            if (owner == null) {
+                return Message.error("无效商家id");
+            }
+            card = member.card(owner);
+        } else {
+            if (member.getCards().size()>0) {
+                card = member.getCards().get(0);
+            }
         }
-        Card card = member.card(owner);
         Map<String,Object> data = new HashMap<String,Object>();
         if (card==null) {
             data.put("status", "none");

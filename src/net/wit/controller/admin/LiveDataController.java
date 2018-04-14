@@ -118,8 +118,6 @@ public class LiveDataController extends BaseController {
 
 		entity.setPlayUrl(liveData.getPlayUrl());
 
-		entity.setStartTime(liveData.getStartTime());
-
 		entity.setTitle(liveData.getTitle());
 
 		entity.setLiveTape(liveTapeService.find(liveTapeId));
@@ -192,8 +190,6 @@ public class LiveDataController extends BaseController {
 		entity.setNickname(liveData.getNickname());
 
 		entity.setPlayUrl(liveData.getPlayUrl());
-
-		entity.setStartTime(liveData.getStartTime());
 
 		entity.setTitle(liveData.getTitle());
 

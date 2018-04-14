@@ -7,6 +7,10 @@ import java.io.Serializable;
 public class LiveTapeModel extends BaseModel implements Serializable {
 
     private Long id;
+
+    private Long liveId;
+
+    private Long liveMemberId;
     /**  标题  */
     private String title;
 
@@ -45,6 +49,9 @@ public class LiveTapeModel extends BaseModel implements Serializable {
 
     /** 礼物数 */
     private Long gift;
+
+    /** 是否关注 */
+    private Boolean isFollow;
 
     public Long getId() {
         return id;
@@ -158,8 +165,34 @@ public class LiveTapeModel extends BaseModel implements Serializable {
         this.gift = gift;
     }
 
+    public Boolean getFollow() {
+        return isFollow;
+    }
+
+    public void setFollow(Boolean follow) {
+        isFollow = follow;
+    }
+
+    public Long getLiveId() {
+        return liveId;
+    }
+
+    public void setLiveId(Long liveId) {
+        this.liveId = liveId;
+    }
+
+    public Long getLiveMemberId() {
+        return liveMemberId;
+    }
+
+    public void setLiveMemberId(Long liveMemberId) {
+        this.liveMemberId = liveMemberId;
+    }
+
     public void bind(LiveTape live) {
         this.id = live.getId();
+        this.liveId=live.getLive().getId();
+        this.liveMemberId = live.getLive().getMember().getId();
         this.nickname = live.getNickname();
         this.headpic = live.getHeadpic();
         this.frontcover = live.getFrontcover();

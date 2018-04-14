@@ -191,7 +191,7 @@ public class Message extends BaseEntity {
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
+			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
 		} else {
 			return null;
 		}
@@ -199,7 +199,7 @@ public class Message extends BaseEntity {
 
 	public MapEntity getMapReceiver() {
 		if (getReceiver() != null) {
-			return new MapEntity(getReceiver().getId().toString(), getReceiver().getNickName()+(getReceiver().getName()==null?"":"("+getReceiver().getName()+")") );
+			return new MapEntity(getReceiver().getId().toString(), getReceiver().displayName() );
 		} else {
 			return null;
 		}

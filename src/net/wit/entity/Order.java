@@ -74,17 +74,11 @@ public class Order extends BaseEntity {
 		/** 普通快递 */
 		shipping,
 
-		/** 线下提货 */
+		/** 到店提货 */
 		pickup,
 
 		/** 统仓统配 */
-		warehouse,
-
-		/** 存入卡包 */
-		ecard,
-
-		/** 虚拟货品 */
-		virtual
+		warehouse
 	}
 
 	/**

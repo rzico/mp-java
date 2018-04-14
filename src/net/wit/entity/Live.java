@@ -76,7 +76,7 @@ public class Live extends BaseEntity {
 	private String online;
 
 	/**  状态 */
-	@Column(columnDefinition="varchar(255) comment '状态'")
+	@Column(columnDefinition="int(11) comment '状态 { waiting:等待支付,success:开通成功,failure:支付失败}'")
 	private Status status;
 
 	/**  回放地址  */
