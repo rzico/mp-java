@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexLiveGiftController")
-@RequestMapping("/weex/live/gift")
+@Controller("appletLiveGiftController")
+@RequestMapping("/applet/live/gift")
 public class GiftController extends BaseController {
 
     @Resource(name = "memberServiceImpl")

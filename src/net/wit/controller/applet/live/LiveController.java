@@ -29,8 +29,8 @@ import java.util.*;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexLiveController")
-@RequestMapping("/weex/live")
+@Controller("appletLiveController")
+@RequestMapping("/applet/live")
 public class LiveController extends BaseController {
     private static final char[] DIGITS_LOWER =
             {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
