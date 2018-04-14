@@ -521,6 +521,7 @@ public class ArticleController extends BaseController {
 		if(topic==null){
 			return Message.error("该专栏无效");
 		}
+
 		//比较该专栏过期时间
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date overtime=topic.getExpire();
@@ -543,10 +544,10 @@ public class ArticleController extends BaseController {
 //			String appID=properties.getProperty("weixin.appid");
 //			String appsecret=properties.getProperty("weixin.secret");
 			weixinUpService.ArticleUpLoad(ids,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath);
-			return Message.success("admin.propaganda.success");
+			return Message.success("发布成功");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Message.error("admin.propaganda.error");
+			return Message.error("发布失败");
 		}
 	}
 
