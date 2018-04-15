@@ -202,8 +202,10 @@ public class LiveController extends BaseController {
             member.setNickName(title);
         }
         if (member.getLogo()==null) {
-            member.setNickName(frontcover);
+            member.setLogo(frontcover);
         }
+        memberService.update(member);
+
         Topic topic =  member.getTopic();
         if (topic==null) {
             topic = new Topic();
