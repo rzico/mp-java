@@ -64,7 +64,7 @@ public class GiftController extends BaseController {
     /**
      *   送礼物
      */
-    @RequestMapping(value = "/submit", method = RequestMethod.GET)
+    @RequestMapping(value = "/submit")
     @ResponseBody
     public Message submit(Long id,Long liveId,Pageable pageable,HttpServletRequest request) {
 
@@ -95,7 +95,7 @@ public class GiftController extends BaseController {
     /**
      *   点赞
      */
-    @RequestMapping(value = "/laud", method = RequestMethod.GET)
+    @RequestMapping(value = "/laud")
     @ResponseBody
     public Message laud(Long liveId,Pageable pageable,HttpServletRequest request) {
 
