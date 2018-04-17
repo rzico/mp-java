@@ -32,7 +32,8 @@ public class UserModel extends BaseModel implements Serializable {
     private Date birth;
     /** 余额 */
     private BigDecimal balance;
-
+    /** 是否关注 */
+    private Boolean isfollow;
     public Long getId() {
         return id;
     }
@@ -135,6 +136,14 @@ public class UserModel extends BaseModel implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Boolean getIsfollow() {
+        return isfollow;
+    }
+
+    public void setIsfollow(Boolean isfollow) {
+        this.isfollow = isfollow;
     }
 
     public void bind(Member member) {
