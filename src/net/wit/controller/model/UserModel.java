@@ -34,6 +34,7 @@ public class UserModel extends BaseModel implements Serializable {
     private BigDecimal balance;
     /** 是否关注 */
     private Boolean isfollow;
+
     public Long getId() {
         return id;
     }
@@ -162,6 +163,6 @@ public class UserModel extends BaseModel implements Serializable {
             this.occupation = member.getOccupation().getName();
         }
         this.balance = member.getBalance();
-     }
+    }
 
 }
