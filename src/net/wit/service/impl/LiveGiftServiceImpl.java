@@ -154,4 +154,30 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 		liveTapeDao.merge(liveTape);
 
 	}
+
+
+
+	public void barrage(Member member, Live live) throws Exception {
+
+		memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+		if (member.getBalance().compareTo(new BigDecimal("0.1"))<0) {
+			throw  new RuntimeException("余额不足");
+		}
+		member.setBalance(member.getBalance().subtract(new BigDecimal("0.1")));
+		memberDao.merge(member);
+		memberDao.flush();
+
+		Deposit deposit = new Deposit();
+		deposit.setBalance(member.getBalance());
+		deposit.setCredit(BigDecimal.ZERO);
+		deposit.setDebit(new BigDecimal("0.1"));
+		deposit.setMember(member);
+		deposit.setMemo("发送弹幕信息");
+		deposit.setDeleted(false);
+		deposit.setOperator("system");
+		deposit.setType(Deposit.Type.payment);
+		depositDao.persist(deposit);
+
+	}
+
 }

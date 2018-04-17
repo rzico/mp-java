@@ -251,7 +251,7 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/play")
     @ResponseBody
-    public Message  play(Long id,String location,Boolean record,HttpServletRequest request){
+    public Message  play(Long id,String title,String frontcover,String location,Boolean record,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -273,12 +273,22 @@ public class LiveController extends BaseController {
         Long txTime = tx.getTime()/1000+86400;
 
         String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
-        if(record==null){
+
+        if (record==null){
             record=false;
         }
+
         if (record) {
             pushUrl = pushUrl + "&record=mp4&record_interval=5400";
         }
+
+        if (title!=null) {
+            live.setTitle(title);
+        }
+        if (frontcover!=null) {
+            live.setFrontcover(frontcover);
+        }
+
         LiveTape liveTape = new LiveTape();
         liveTape.setLive(live);
         liveTape.setMember(member);
@@ -302,6 +312,7 @@ public class LiveController extends BaseController {
         LiveTapeModel model = new LiveTapeModel();
         model.bind(liveTape);
         return Message.success(model,"success");
+
     }
 
 
@@ -390,7 +401,6 @@ public class LiveController extends BaseController {
         }
         return Message.success(model,"success");
     }
-
 
 
     /**

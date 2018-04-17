@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -115,6 +116,33 @@ public class GiftController extends BaseController {
             return Message.success(e.getMessage());
         }
         return Message.success("送成功");
+
+    }
+
+
+    /**
+     *   发字幕
+     */
+    @RequestMapping(value = "/barrage")
+    @ResponseBody
+    public Message barrage(Long liveId,Pageable pageable,HttpServletRequest request) {
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Live live = liveService.find(liveId);
+        if (live==null) {
+            return Message.error("房间号 id");
+        }
+
+        try {
+            liveGiftService.barrage(member,live);
+        } catch (Exception e) {
+            return Message.error(e.getMessage());
+        }
+        return Message.success(new BigDecimal("0.1"),"送成功");
 
     }
 
