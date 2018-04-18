@@ -151,7 +151,7 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message  list(Pageable pageable,HttpServletRequest request){
+    public Message list(Pageable pageable,HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("online", Filter.Operator.eq,"1"));
 
