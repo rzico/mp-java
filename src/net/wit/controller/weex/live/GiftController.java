@@ -79,7 +79,7 @@ public class GiftController extends BaseController {
     /**
      *   送礼物
      */
-    @RequestMapping(value = "/submit")
+    @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
     public Message submit(Long id,Long liveId,Pageable pageable,HttpServletRequest request) {
 
@@ -110,7 +110,7 @@ public class GiftController extends BaseController {
     /**
      *   点赞
      */
-    @RequestMapping(value = "/laud")
+    @RequestMapping(value = "/laud", method = RequestMethod.POST)
     @ResponseBody
     public Message laud(Long liveId,Pageable pageable,HttpServletRequest request) {
 
@@ -137,7 +137,7 @@ public class GiftController extends BaseController {
     /**
      *   发字幕
      */
-    @RequestMapping(value = "/barrage")
+    @RequestMapping(value = "/barrage", method = RequestMethod.POST)
     @ResponseBody
     public Message barrage(Long liveId,Pageable pageable,HttpServletRequest request) {
 
