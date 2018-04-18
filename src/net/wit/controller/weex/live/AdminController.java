@@ -46,8 +46,13 @@ public class AdminController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message  view(Long liveId,Pageable pageable,HttpServletRequest request) {
-        Member member = memberService.getCurrent();
+    public Message  view(Long liveId,Long memberId,Pageable pageable,HttpServletRequest request) {
+        Member member = null;
+        if (memberId==null) {
+            member = memberService.getCurrent();
+        } else {
+            member = memberService.find(memberId);
+        }
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
