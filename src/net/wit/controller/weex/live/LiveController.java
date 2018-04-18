@@ -68,7 +68,7 @@ public class LiveController extends BaseController {
     @Resource(name = "templateServiceImpl")
     private TemplateService templateService;
 
-    /*
+                /*
 			     * KEY+ stream_id + txTime
 			     */
     private static String getSafeUrl(String key, String streamId, long txTime) {
@@ -96,6 +96,7 @@ public class LiveController extends BaseController {
                         append("txTime=").
                         append(Long.toHexString(txTime).toUpperCase()).
                         toString();
+
     }
 
     private static String byteArrayToHexString(byte[] data) {
@@ -113,13 +114,13 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/check", method = RequestMethod.GET)
     @ResponseBody
-    public Message  check(Long memberId,Pageable pageable,HttpServletRequest request) {
+    public Message check(Long memberId,Pageable pageable,HttpServletRequest request) {
         Member member = null;
         if (memberId!=null) {
             member = memberService.find(memberId);
         }
         if (member==null) {
-            memberService.getCurrent();
+            member = memberService.getCurrent();
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
@@ -161,6 +162,7 @@ public class LiveController extends BaseController {
         PageBlock model = PageBlock.bind(page);
         model.setData(LiveModel.bindList(page.getContent()));
         return Message.bind(model,request);
+
     }
 
     /**
@@ -243,6 +245,7 @@ public class LiveController extends BaseController {
         LiveModel model = new LiveModel();
         model.bind(live);
         return Message.success(model,"success");
+
    }
 
 
