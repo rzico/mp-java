@@ -1,14 +1,9 @@
 package net.wit.controller.weex.live;
 
+import net.wit.*;
 import net.wit.Message;
-import net.wit.Page;
-import net.wit.PageBlock;
-import net.wit.Pageable;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.GiftModel;
-import net.wit.controller.model.LiveListModel;
-import net.wit.controller.model.LiveModel;
-import net.wit.controller.model.LiveTapeModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -23,6 +18,7 @@ import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -47,6 +43,9 @@ public class GiftController extends BaseController {
     @Resource(name = "liveGiftServiceImpl")
     private LiveGiftService liveGiftService;
 
+    @Resource(name = "liveGiftDataServiceImpl")
+    private LiveGiftDataService liveGiftDataService;
+
     @Resource(name = "liveServiceImpl")
     private LiveService liveService;
 
@@ -59,6 +58,21 @@ public class GiftController extends BaseController {
         Page<LiveGift> page = liveGiftService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(GiftModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+    /**
+     *   获取得到的礼物
+     */
+    @RequestMapping(value = "/data", method = RequestMethod.GET)
+    @ResponseBody
+    public Message data(Long liveId,Pageable pageable,HttpServletRequest request) {
+        List<Filter> filters = pageable.getFilters();
+        Live live = liveService.find(liveId);
+        filters.add(new Filter("live", Filter.Operator.eq,live));
+        Page<LiveGiftData> page = liveGiftDataService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(GiftDataModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

@@ -3,6 +3,7 @@ package net.wit.entity;
 
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Resolution;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -48,6 +49,11 @@ public class LiveGiftData extends BaseEntity {
 	/**  礼物名  */
 	@Column(columnDefinition="varchar(255) comment '礼物名'")
 	private String giftName;
+
+	/** 缩略图 */
+	@Length(max = 200)
+	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
+	private String thumbnail;
 
 	/** 价格 */
 	@Min(0)
@@ -111,5 +117,11 @@ public class LiveGiftData extends BaseEntity {
 		this.price = price;
 	}
 
+	public String getThumbnail() {
+		return thumbnail;
+	}
 
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 }
