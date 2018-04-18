@@ -89,7 +89,7 @@ public class AdminController extends BaseController {
         if (rc==0) {
             LiveAdmin admin = new LiveAdmin();
             admin.setLive(live);
-            admin.setMember(member);
+            admin.setMember(adminMember);
             liveAdminService.save(admin);
         }
 
