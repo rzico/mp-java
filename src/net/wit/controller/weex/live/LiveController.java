@@ -314,6 +314,10 @@ public class LiveController extends BaseController {
 
         LiveTapeModel model = new LiveTapeModel();
         model.bind(liveTape);
+
+        model.setFans(new Long(member.getFans().size()));
+        model.setFollow(new Long(member.getFollows().size()));
+        model.setVip(member.getVip());
         return Message.success(model,"success");
 
     }
@@ -402,6 +406,11 @@ public class LiveController extends BaseController {
         }else {
             model.setFollow(true);
         }
+
+        model.setFans(new Long(live.getMember().getFans().size()));
+        model.setFollow(new Long(live.getMember().getFollows().size()));
+        model.setVip(live.getMember().getVip());
+
         return Message.success(model,"success");
     }
 
