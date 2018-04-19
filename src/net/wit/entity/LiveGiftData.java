@@ -28,6 +28,11 @@ public class LiveGiftData extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) not null comment '用户'")
 	private Member member;
 
+	/** 直播间 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '直播间'")
+	private Live live;
+
 	/** 直播场次 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '直播场次'")
@@ -123,5 +128,13 @@ public class LiveGiftData extends BaseEntity {
 
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+
+	public Live getLive() {
+		return live;
+	}
+
+	public void setLive(Live live) {
+		this.live = live;
 	}
 }

@@ -133,6 +133,7 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
        data.setNickname(member.displayName());
        data.setPrice(gift.getPrice());
        data.setThumbnail(gift.getThumbnail());
+       data.setLive(live);
 	   liveGiftDataDao.merge(data);
 
 	   live.setGift(live.getGift()+gift.getPrice());
