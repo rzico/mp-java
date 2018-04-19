@@ -163,6 +163,7 @@ public class UserModel extends BaseModel implements Serializable {
             this.occupation = member.getOccupation().getName();
         }
         this.balance = member.getBalance();
+        this.vip = member.getVip();
     }
 
 }
