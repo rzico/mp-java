@@ -1,4 +1,6 @@
 package net.wit.controller.model;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.entity.Article;
 import net.wit.entity.Member;
 import net.wit.util.JsonUtils;
@@ -207,18 +209,17 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         member.bind(article.getMember());
         this.member = member;
         List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
-        List<ArticleContentModel> _templates = new ArrayList<ArticleContentModel>();
-        if (article.getContent()!=null) {
-            _templates = JsonUtils.toObject(article.getContent(), List.class);
-        }
-        for (ArticleContentModel t:_templates) {
+        JSONArray jo = JSONArray.fromObject(article.getContent());
+
+        for (int i=0;i<jo.size();i++) {
+            JSONObject ob = jo.getJSONObject(i);
             ArticleContentViewModel m = new ArticleContentViewModel();
-            m.setContent(t.getContent());
-            m.setId(t.getId());
-            m.setMediaType(t.getMediaType());
-            m.setThumbnail(t.getThumbnail());
-            m.setOriginal(t.getOriginal());
-            m.setUrl(t.getUrl());
+            m.setContent(ob.get("content").toString());
+            m.setId(ob.getLong("id"));
+            m.setMediaType(Article.MediaType.valueOf(ob.getString("mediaType").toString()) );
+            m.setThumbnail(ob.get("thumbnail").toString());
+            m.setOriginal(ob.get("original").toString());
+            m.setUrl(ob.get("url").toString());
             templates.add(m);
         }
 
