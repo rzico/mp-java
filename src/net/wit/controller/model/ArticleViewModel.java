@@ -42,7 +42,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     /** 是否发布 */
     private Boolean isPublish;
     /** 内容 */
-    private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
+    private List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
     /** 投票 */
     private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
 
@@ -134,11 +134,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.laud = laud;
     }
 
-    public List<ArticleContentModel> getTemplates() {
+    public List<ArticleContentViewModel> getTemplates() {
         return templates;
     }
 
-    public void setTemplates(List<ArticleContentModel> templates) {
+    public void setTemplates(List<ArticleContentViewModel> templates) {
         this.templates = templates;
     }
 
@@ -206,9 +206,20 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;
-        List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
+        List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
+        List<ArticleContentModel> _templates = new ArrayList<ArticleContentModel>();
         if (article.getContent()!=null) {
-            templates = JsonUtils.toObject(article.getContent(), List.class);
+            _templates = JsonUtils.toObject(article.getContent(), List.class);
+        }
+        for (ArticleContentModel t:_templates) {
+            ArticleContentViewModel m = new ArticleContentViewModel();
+            m.setContent(t.getContent());
+            m.setId(t.getId());
+            m.setMediaType(t.getMediaType());
+            m.setThumbnail(t.getThumbnail());
+            m.setOriginal(t.getOriginal());
+            m.setUrl(t.getUrl());
+            templates.add(m);
         }
 
         List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();

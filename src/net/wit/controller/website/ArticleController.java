@@ -73,6 +73,23 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+
+
+        for (ArticleContentViewModel m:model.getTemplates()) {
+            if (m.getMediaType().equals(Article.MediaType.product)) {
+                Goods goods = goodsService.find(m.getId());
+                if (goods!=null) {
+                    Product product = goods.product();
+                    if (product!=null) {
+                        m.setName(product.getName());
+                        m.setPrice(product.getPrice());
+                        m.setThumbnail(product.getThumbnail());
+                        m.setMarketPrice(product.getMarketPrice());
+                    }
+                }
+            }
+        }
+
         Member share = null;
         if (xuid!=null) {
             share = memberService.find(xuid);
