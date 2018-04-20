@@ -131,8 +131,11 @@ public class CartController extends BaseController {
 	@RequestMapping(value = "/count", method = RequestMethod.GET)
 	public  @ResponseBody Message count(HttpServletRequest request) {
 		Cart cart = cartService.getCurrent();
-
-		return Message.bind(cart.getQuantity(),request);
+		if (cart!=null) {
+			return Message.bind(cart.getQuantity(), request);
+		} else {
+			return Message.bind(0, request);
+		}
 	}
 
 	/**
