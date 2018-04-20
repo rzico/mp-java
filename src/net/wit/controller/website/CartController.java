@@ -127,6 +127,17 @@ public class CartController extends BaseController {
 		return Message.bind(model,request);
 	}
 
+
+	/**
+	 * 统计
+	 */
+	@RequestMapping(value = "/count", method = RequestMethod.GET)
+	public  @ResponseBody Message count(HttpServletRequest request) {
+		Cart cart = cartService.getCurrent();
+
+		return Message.bind(cart.getQuantity(),request);
+	}
+
 	/**
 	 * 编辑
 	 */
