@@ -64,6 +64,9 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  商品合计 */
     private BigDecimal price;
 
+    /**   运费 */
+    private BigDecimal freight;
+
     /**  订单金额 */
     private BigDecimal amount;
 
@@ -263,6 +266,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.shippingStatus = shippingStatus;
     }
 
+    public BigDecimal getFreight() {
+        return freight;
+    }
+
+    public void setFreight(BigDecimal freight) {
+        this.freight = freight;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -310,6 +321,7 @@ public class OrderModel extends BaseModel implements Serializable {
                this.promoter = promoter.displayName();
            }
         }
+        this.freight = order.getFreight();
     }
 
 
@@ -328,9 +340,9 @@ public class OrderModel extends BaseModel implements Serializable {
             this.couponName = order.getCouponCode().getCoupon().getName();
         }
         this.couponDiscount = order.getCouponDiscount();
-        this.couponDiscount = order.getCouponDiscount();
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
+        this.freight = order.getFreight();
 
     }
 

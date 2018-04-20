@@ -86,21 +86,26 @@ public class OrderController extends BaseController {
 	 *  获取订单信息
 	 */
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
-	public @ResponseBody Message info() {
+	public @ResponseBody Message info(Long receiverId) {
 		Member member = memberService.getCurrent();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
 			return Message.error("购物车为空");
 		}
-		Order order = orderService.build(member,null,null, cart, null, null);
+		Receiver receiver = null;
+		if (receiverId!=null) {
+			receiver = receiverService.find(receiverId);
+		}
+		Order order = orderService.build(member,null,null, cart, receiver, null);
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		if (member!=null) {
-			Receiver receiver = null;
-			for (Receiver r:member.getReceivers()) {
-				if (r.getIsDefault()) {
-					receiver = r;
-					break;
+			if (receiver==null) {
+				for (Receiver r : member.getReceivers()) {
+					if (r.getIsDefault()) {
+						receiver = r;
+						break;
+					}
 				}
 			}
 			ReceiverModel m = new ReceiverModel();
@@ -117,7 +122,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/calculate")
 	public @ResponseBody
-	Message calculate(Long id,Integer quantity) {
+	Message calculate(Long id,Integer quantity,Long receiverId) {
 		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
@@ -125,18 +130,15 @@ public class OrderController extends BaseController {
 		if (id!=null) {
 			product = productService.find(id);
 		}
-		Order order = orderService.build(member,product,quantity,cart, null,null);
+		Receiver receiver = null;
+		if (receiverId!=null) {
+			receiver = receiverService.find(receiverId);
+		}
+		Order order = orderService.build(member,product,quantity,cart, receiver,null);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
 		if (member!=null) {
-			Receiver receiver = null;
-			for (Receiver r:member.getReceivers()) {
-				if (r.getIsDefault()) {
-					receiver = r;
-					break;
-				}
-			}
 			ReceiverModel m = new ReceiverModel();
 			if (receiver!=null) {
 				m.bind(receiver);
@@ -175,7 +177,9 @@ public class OrderController extends BaseController {
 			}
 		}
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
-
+		if (cart != null) {
+			cartService.delete(cart);
+		}
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
 		return Message.success(model,"success");
