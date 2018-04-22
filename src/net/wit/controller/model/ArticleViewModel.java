@@ -220,7 +220,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             m.setThumbnail(ob.get("thumbnail").toString());
             m.setOriginal(ob.get("original").toString());
             m.setUrl(ob.get("url").toString());
-            templates.add(m);
+            if (m.getMediaType().equals(Article.MediaType.video)) {
+                templates.add(0,m);
+            } else {
+                templates.add(m);
+            }
         }
 
         List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
