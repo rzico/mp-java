@@ -187,7 +187,7 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 
 			   int i = Math.round(orderItem.getSubtotal().divide(distribution.getDividend(),0,BigDecimal.ROUND_DOWN).floatValue());
 
-			   int point = Math.round(distribution.getDividend().multiply(distribution.getPercent1()).setScale(0,BigDecimal.ROUND_DOWN).floatValue());
+			   int point = Math.round(distribution.getDividend().multiply(distribution.getPercent1().multiply(new BigDecimal("0.01"))).setScale(0,BigDecimal.ROUND_DOWN).floatValue());
 			   BigDecimal amount = new BigDecimal(point);
 
 			   for (int r=0;r<i;r++) {
