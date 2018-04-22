@@ -172,13 +172,14 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 				  }
 
 				  orderRankingDao.remove(rk);
+				  orderRankingDao.flush();
 			  }
 
 		   }
 		}
 	}
 
-	public void add(Order order) throws Exception {
+	public synchronized void add(Order order) throws Exception {
 
 		for (OrderItem orderItem:order.getOrderItems()) {
 			Distribution distribution = orderItem.getProduct().getDistribution();
@@ -186,8 +187,8 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 
 			   int i = Math.round(orderItem.getSubtotal().divide(distribution.getDividend(),0,BigDecimal.ROUND_DOWN).floatValue());
 
-			   int point = Math.round(distribution.getDividend().multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_DOWN).floatValue());
-			   BigDecimal amount = distribution.getDividend().subtract(new BigDecimal(point));
+			   int point = Math.round(distribution.getDividend().multiply(distribution.getPercent1()).setScale(0,BigDecimal.ROUND_DOWN).floatValue());
+			   BigDecimal amount = new BigDecimal(point);
 
 			   for (int r=0;r<i;r++) {
 			   	   calc(order.getMember(),order.getSeller(),amount,new Long(point),orderItem);
