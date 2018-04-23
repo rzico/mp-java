@@ -193,6 +193,7 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
                   	 pointBill.setOrder(orderItem.getOrder());
                   	 pointBill.setOwner(seller);
                   	 pointBill.setShop(null);
+                  	 pointBill.setMember(rm);
                   	 pointBill.setOperator("system");
                   	 cardPointBillDao.persist(pointBill);
 				  }
