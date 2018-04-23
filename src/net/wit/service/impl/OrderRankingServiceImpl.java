@@ -135,7 +135,7 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 				  Member ow = rk.getOwner();
 				  memberDao.refresh(ow,LockModeType.PESSIMISTIC_WRITE);
 
-				  ow.setBalance(ow.getBalance().subtract(ow.getAmount()));
+				  ow.setBalance(ow.getBalance().subtract(rk.getAmount()));
 				  if (ow.getBalance().compareTo(BigDecimal.ZERO)<0) {
 				  	throw  new RuntimeException("商家余额不足");
 				  }
