@@ -223,7 +223,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             m.setMediaType(Article.MediaType.valueOf(ob.getString("mediaType")) );
             m.setThumbnail(ob.getString("thumbnail"));
             m.setOriginal(ob.getString("original"));
-            m.setUrl(ob.getString("url"));
+            if (ob.containsKey("url")) {
+                m.setUrl(ob.getString("url"));
+            } else {
+                m.setUrl("");
+            }
             if (m.getMediaType().equals(Article.MediaType.video)) {
                 templates.add(0,m);
             } else {
