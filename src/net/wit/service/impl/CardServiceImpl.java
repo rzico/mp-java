@@ -440,8 +440,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			CardPointBill bill = new CardPointBill();
 			bill.setBalance(card.getPoint());
 			bill.setCard(card);
-			bill.setCredit(point);
-			bill.setDebit(0L);
+			bill.setCredit(0L);
+			bill.setDebit(point);
 			bill.setDeleted(false);
 			bill.setMemo(memo);
 			bill.setOrder(order);
