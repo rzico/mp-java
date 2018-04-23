@@ -144,8 +144,8 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 
 				  Deposit owdeposit = new Deposit();
 				  owdeposit.setBalance(ow.getBalance());
-				  owdeposit.setType(Deposit.Type.rebate);
-				  owdeposit.setMemo("");
+				  owdeposit.setType(Deposit.Type.product);
+				  owdeposit.setMemo("利润分红(扣款)");
 				  owdeposit.setMember(ow);
 				  owdeposit.setCredit(BigDecimal.ZERO.subtract(rk.getAmount()));
 				  owdeposit.setDebit(BigDecimal.ZERO);
