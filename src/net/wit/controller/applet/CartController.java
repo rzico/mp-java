@@ -6,6 +6,7 @@
 package net.wit.controller.applet;
 
 import net.wit.Message;
+import net.wit.controller.model.CartItemModel;
 import net.wit.controller.model.CartModel;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.Cart;
@@ -24,10 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Controller - 购物车
@@ -121,8 +120,26 @@ public class CartController extends BaseController {
 		CartModel model = new CartModel();
 		if (cart!=null) {
 			model.bind(cart);
+		} else {
+			model.setQuantity(0);
+			model.setEffectivePrice(BigDecimal.ZERO);
+			model.setCartItems(new ArrayList<CartItemModel>());
+
 		}
 		return Message.bind(model,request);
+	}
+
+	/**
+	 * 统计
+	 */
+	@RequestMapping(value = "/count", method = RequestMethod.GET)
+	public  @ResponseBody Message count(HttpServletRequest request) {
+		Cart cart = cartService.getCurrent();
+		if (cart!=null) {
+			return Message.bind(cart.getQuantity(), request);
+		} else {
+			return Message.bind(0, request);
+		}
 	}
 
 	/**

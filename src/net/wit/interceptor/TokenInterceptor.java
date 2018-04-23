@@ -49,7 +49,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 		String xtsp = request.getHeader("x-tsp");
 		String xtkn = request.getHeader("x-tkn");
 
-		System.out.print("prehandle");
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		if (xtkn!=null && xtkn.equals(MD5Utils.getMD5Str(xuid+xapp+xtsp+bundle.getString("app.key")))) {
 			Member member = memberService.getCurrent();

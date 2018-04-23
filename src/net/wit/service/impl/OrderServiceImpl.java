@@ -371,9 +371,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				}
 			}
 		}
-		if (cart != null) {
-			cartDao.remove(cart);
-		}
 
 		messageService.orderMemberPushTo(orderLog);
 

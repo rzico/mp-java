@@ -4,10 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleListModel;
-import net.wit.controller.model.ArticlePreviewModel;
-import net.wit.controller.model.ArticleViewModel;
-import net.wit.controller.model.GoodsListModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -91,6 +88,22 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+
+        for (ArticleContentViewModel m:model.getTemplates()) {
+            if (m.getMediaType().equals(Article.MediaType.product)) {
+                Goods goods = goodsService.find(m.getId());
+                if (goods!=null) {
+                    Product product = goods.product();
+                    if (product!=null) {
+                        m.setName(product.getName());
+                        m.setPrice(product.getPrice());
+                        m.setThumbnail(product.getThumbnail());
+                        m.setMarketPrice(product.getMarketPrice());
+                    }
+                }
+            }
+        }
+
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("article",model);
 

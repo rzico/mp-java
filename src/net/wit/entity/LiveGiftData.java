@@ -3,6 +3,7 @@ package net.wit.entity;
 
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Resolution;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -27,6 +28,11 @@ public class LiveGiftData extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) not null comment '用户'")
 	private Member member;
 
+	/** 直播间 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '直播间'")
+	private Live live;
+
 	/** 直播场次 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '直播场次'")
@@ -48,6 +54,11 @@ public class LiveGiftData extends BaseEntity {
 	/**  礼物名  */
 	@Column(columnDefinition="varchar(255) comment '礼物名'")
 	private String giftName;
+
+	/** 缩略图 */
+	@Length(max = 200)
+	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
+	private String thumbnail;
 
 	/** 价格 */
 	@Min(0)
@@ -111,5 +122,19 @@ public class LiveGiftData extends BaseEntity {
 		this.price = price;
 	}
 
+	public String getThumbnail() {
+		return thumbnail;
+	}
 
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public Live getLive() {
+		return live;
+	}
+
+	public void setLive(Live live) {
+		this.live = live;
+	}
 }

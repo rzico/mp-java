@@ -72,6 +72,7 @@ public class ProductController extends BaseController {
 		Goods goods = goodsService.find(id);
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("goods", Filter.Operator.eq,goods));
+		filters.add(new Filter("deleted", Filter.Operator.eq,false));
 		List<Article> art = articleService.findList(null,null,filters,null);
 		if (art.size()==0) {
 			return Message.error("没有详情");

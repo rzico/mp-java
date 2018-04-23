@@ -189,7 +189,13 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 				Long no = topicCard.getIncrement() + 1L;
 				topicCard.setIncrement(no);
 				topicCardDao.merge(topicCard);
-				card.setCode("86" + String.valueOf(shop.getId() + 100000000L) + String.valueOf(no + 10200L));
+
+				if (shop==null) {
+					card.setCode("85" + String.valueOf(topicCard.getId() + 100000000L) + String.valueOf(no + 10200L));
+				} else {
+					card.setCode("86" + String.valueOf(shop.getId() + 100000000L) + String.valueOf(no + 10200L));
+				}
+
 			} else {
 				card.setCode(code);
 			}

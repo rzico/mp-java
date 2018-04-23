@@ -31,6 +31,8 @@ public class TopicIndexModel extends BaseModel implements Serializable {
     private Boolean useCoupon;
     /** 开通收银台 */
     private Boolean useCashier;
+    /** 开通直播间 */
+    private Boolean useLive;
     /** 模板id */
     private Long templateId;
     /** 模板名 */
@@ -122,6 +124,30 @@ public class TopicIndexModel extends BaseModel implements Serializable {
 
     public void setNoJob(Boolean noJob) {
         this.noJob = noJob;
+    }
+
+    public Boolean getUseLive() {
+        return useLive;
+    }
+
+    public void setUseLive(Boolean useLive) {
+        this.useLive = useLive;
+    }
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public void bind(Topic topic) {
