@@ -73,6 +73,12 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  优惠券折扣 */
     private BigDecimal couponDiscount;
 
+    /**  应付金额 */
+    private BigDecimal amountPayable;
+
+    /**  积分支付 */
+    private BigDecimal pointDiscount;
+
     /** 地址 */
     private ReceiverModel receiver;
 
@@ -274,6 +280,22 @@ public class OrderModel extends BaseModel implements Serializable {
         this.freight = freight;
     }
 
+    public BigDecimal getPointDiscount() {
+        return pointDiscount;
+    }
+
+    public void setPointDiscount(BigDecimal pointDiscount) {
+        this.pointDiscount = pointDiscount;
+    }
+
+    public BigDecimal getAmountPayable() {
+        return amountPayable;
+    }
+
+    public void setAmountPayable(BigDecimal amountPayable) {
+        this.amountPayable = amountPayable;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -297,11 +319,13 @@ public class OrderModel extends BaseModel implements Serializable {
         this.orderLogs = OrderLogModel.bindList(order.getOrderLogs());
 
         this.amount = order.getAmount();
+        this.amountPayable = order.getAmountPayable();
         this.price = order.getPrice();
         if (order.getCouponCode()!=null) {
             this.couponName = order.getCouponCode().getCoupon().getName();
         }
         this.couponDiscount = order.getCouponDiscount();
+        this.pointDiscount = order.getPointDiscount();
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
         this.paymentStatus = order.getPaymentStatus();
@@ -335,11 +359,13 @@ public class OrderModel extends BaseModel implements Serializable {
         this.statusDescr = order.getStatusDescr();
 
         this.amount = order.getAmount();
+        this.amountPayable = order.getAmountPayable();
         this.price = order.getPrice();
         if (order.getCouponCode()!=null) {
             this.couponName = order.getCouponCode().getCoupon().getName();
         }
         this.couponDiscount = order.getCouponDiscount();
+        this.pointDiscount = order.getPointDiscount();
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
         this.freight = order.getFreight();
