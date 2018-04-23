@@ -214,12 +214,16 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         for (int i=0;i<jo.size();i++) {
             JSONObject ob = jo.getJSONObject(i);
             ArticleContentViewModel m = new ArticleContentViewModel();
-            m.setContent(ob.get("content").toString());
-            m.setId(ob.getLong("id"));
-            m.setMediaType(Article.MediaType.valueOf(ob.getString("mediaType").toString()) );
-            m.setThumbnail(ob.get("thumbnail").toString());
-            m.setOriginal(ob.get("original").toString());
-            m.setUrl(ob.get("url").toString());
+            m.setContent(ob.getString("content"));
+            if (ob.containsKey("id") && !"".equals(ob.getString("id"))) {
+                m.setId(ob.getLong("id"));
+            } else {
+                m.setId(0L);
+            }
+            m.setMediaType(Article.MediaType.valueOf(ob.getString("mediaType")) );
+            m.setThumbnail(ob.getString("thumbnail"));
+            m.setOriginal(ob.getString("original"));
+            m.setUrl(ob.getString("url"));
             if (m.getMediaType().equals(Article.MediaType.video)) {
                 templates.add(0,m);
             } else {
