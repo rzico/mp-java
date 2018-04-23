@@ -26,7 +26,7 @@ public class GoodsListModel extends BaseModel implements Serializable {
     /** 库存 */
     private Integer stock;
     /** 好评 */
-    private Integer review;
+    private Long review;
     /** 可用库存 */
     private Integer availableStock;
 
@@ -86,13 +86,14 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.marketPrice = marketPrice;
     }
 
-    public Integer getReview() {
+    public Long getReview() {
         return review;
     }
 
-    public void setReview(Integer review) {
+    public void setReview(Long review) {
         this.review = review;
     }
+
 
     public void bind(Goods goods) {
 
@@ -113,7 +114,7 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.setThumbnail(product.getThumbnail());
         this.setPrice(product.getPrice());
         this.setMarketPrice(product.getMarketPrice());
-        this.review = 198;
+        this.review = goods.getReview();
     }
 
 
