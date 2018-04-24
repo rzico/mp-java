@@ -161,6 +161,22 @@ public class Evaluation extends BaseEntity {
     @JoinColumn(updatable = false)
     private Member promoter;
 
+
+    /** 推广员 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Enterprise personal;
+
+    /** 合作商 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Enterprise agent;
+
+    /** 代理商 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Enterprise operate;
+
     public String getSn() {
         return sn;
     }
@@ -335,5 +351,29 @@ public class Evaluation extends BaseEntity {
 
     public void setSeconds(Long seconds) {
         this.seconds = seconds;
+    }
+
+    public Enterprise getPersonal() {
+        return personal;
+    }
+
+    public void setPersonal(Enterprise personal) {
+        this.personal = personal;
+    }
+
+    public Enterprise getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Enterprise agent) {
+        this.agent = agent;
+    }
+
+    public Enterprise getOperate() {
+        return operate;
+    }
+
+    public void setOperate(Enterprise operate) {
+        this.operate = operate;
     }
 }
