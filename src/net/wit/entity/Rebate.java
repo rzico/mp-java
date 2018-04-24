@@ -1,22 +1,23 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * @ClassName: AgentRebate
+ * @ClassName: Rebate
  * @Description:  专题费用
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 
 @Entity
-@Table(name = "wx_agent_rebate")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_agent_rebate_sequence")
-public class AgentRebate extends BaseEntity {
+@Table(name = "wx_rebate")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_rebate_sequence")
+public class Rebate extends BaseEntity {
 
 	private static final long serialVersionUID = 59L;
 
@@ -32,7 +33,8 @@ public class AgentRebate extends BaseEntity {
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '订单'")
+	@JoinColumn(name = "orders",updatable = false)
+	@JsonIgnore
 	private Order order;
 
 	/** 消费金额 */

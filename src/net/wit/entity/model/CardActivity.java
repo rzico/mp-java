@@ -1,11 +1,11 @@
-package net.wit.entity.summary;
+package net.wit.entity.model;
 
 import net.wit.entity.Card;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class CardActivity extends BaseModel implements Serializable {
+public class CardActivity implements Serializable {
     private Long id;
     /**  充 */
     private BigDecimal amount;
