@@ -102,7 +102,7 @@ public class EnterpriseController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(String name,String logo,BigDecimal brokerage,BigDecimal transfer,Enterprise.Type type,Enterprise.Status status, Long areaId,Long memberId){
+	public Message save(String name,String logo,BigDecimal brokerage,BigDecimal transfer,String type,String status, Long areaId,Long memberId){
 		Member member = memberService.find(memberId);
 		if (member==null) {
 			return Message.error("请正确输入会员");
@@ -131,14 +131,14 @@ public class EnterpriseController extends BaseController {
 
 		entity.setTransfer(transfer);
 
-		entity.setType(type);
+		entity.setType(Enterprise.Type.operate);
 
-		entity.setStatus(status);
+		entity.setStatus(Enterprise.Status.success);
 
 		entity.setArea(areaService.find(areaId));
 
 		entity.setMember(member);
-		
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
