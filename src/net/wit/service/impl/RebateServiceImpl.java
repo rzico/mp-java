@@ -88,8 +88,8 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 		return rebateDao.findPage(beginDate,endDate,pageable);
 	}
 
-	public Page<RebateSummary> sumPage(Date beginDate, Date endDate, Pageable pageable) {
-		return rebateDao.sumPage(beginDate,endDate,pageable);
+	public Page<RebateSummary> sumPage(Date beginDate, Date endDate, Enterprise enterprise,Pageable pageable) {
+		return rebateDao.sumPage(beginDate,endDate,enterprise,pageable);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Enterprise;
 import net.wit.entity.Rebate;
 import net.wit.entity.summary.RebateSummary;
 
@@ -28,6 +29,6 @@ public interface RebateDao extends BaseDao<Rebate, Long> {
 	 * @return Page<Rebate>
 	 */
 	Page<Rebate> findPage(Date beginDate, Date endDate, Pageable pageable);
-	Page<RebateSummary> sumPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<RebateSummary> sumPage(Date beginDate, Date endDate, Enterprise enterprise, Pageable pageable);
 
 }
