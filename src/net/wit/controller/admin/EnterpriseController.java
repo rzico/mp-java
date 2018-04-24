@@ -102,7 +102,7 @@ public class EnterpriseController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Enterprise enterprise, Long areaId,Long memberId){
+	public Message save(String name,String logo,BigDecimal brokerage,BigDecimal transfer,Enterprise.Type type,Enterprise.Status status, Long areaId,Long memberId){
 		Member member = memberService.find(memberId);
 		if (member==null) {
 			return Message.error("请正确输入会员");
@@ -119,19 +119,21 @@ public class EnterpriseController extends BaseController {
 		Enterprise entity = new Enterprise();
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
-		entity.setName(enterprise.getName());
+		entity.setName(name);
 
-		entity.setLogo(enterprise.getLogo());
+		entity.setLogo(logo);
 
 		entity.setDeleted(false);
 
-		entity.setBrokerage(enterprise.getBrokerage());
+		entity.setCreditLine(BigDecimal.ZERO);
 
-		entity.setTransfer(enterprise.getTransfer());
+		entity.setBrokerage(brokerage);
 
-		entity.setType(enterprise.getType());
+		entity.setTransfer(transfer);
 
-		entity.setStatus(enterprise.getStatus());
+		entity.setType(type);
+
+		entity.setStatus(status);
 
 		entity.setArea(areaService.find(areaId));
 

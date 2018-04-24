@@ -43,6 +43,7 @@
     <form action="" method="post" class="form form-horizontal" id="form-add">
 
         <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
+        <input type="text" class="input-text" value="0" placeholder="" hidden="hidden" id="creditLine" name="creditLine">
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">LOGO：</label>
@@ -160,10 +161,16 @@
 
                 $("#form-add").validate({
                     rules:{
+                        memberId:{
+                            required:true,
+                        },
                         brokerage:{
                             required:true,
                         },
                         name:{
+                            required:true,
+                        },
+                        logo:{
                             required:true,
                         }
                     },
