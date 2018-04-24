@@ -132,6 +132,8 @@ public class GoodsListModel extends BaseModel implements Serializable {
 //        }
         this.setThumbnail(product.getThumbnail());
         this.setPrice(product.getPrice());
+        this.setMarketPrice(product.getMarketPrice());
+        this.review = product.getGoods().getReview();
     }
 
 

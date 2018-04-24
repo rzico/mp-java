@@ -3,6 +3,10 @@ package net.wit.controller.weex.agent;
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.NoticeModel;
+import net.wit.controller.weex.agent.model.AgentModel;
+import net.wit.entity.Admin;
+import net.wit.entity.Enterprise;
+import net.wit.entity.Member;
 import net.wit.entity.Notice;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -34,20 +38,65 @@ public class AgentController extends BaseController {
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
     /**
-     *   获取公告
+     *   获取代理汇总
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Pageable pageable,HttpServletRequest request) {
+    public Message view(Pageable pageable,HttpServletRequest request) {
+        Member member = memberService.getCurrent();
+
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("不是代理商");
+        }
+
+        Enterprise enterprise = admin.getEnterprise();
+        if (enterprise==null) {
+            return Message.error("不是代理商");
+        }
+
         List<Filter> filters = pageable.getFilters();
-        filters.add(new Filter("type", Filter.Operator.eq, Notice.Type.live));
-//
-//        Page<Notice> page = noticeService.findPage(null,null,pageable);
-//        PageBlock model = PageBlock.bind(page);
-//        model.setData(NoticeModel.bindList(page.getContent()));
-        return Message.bind(null,request);
+        Filter filter = null;
+        if (enterprise.getType().equals(Enterprise.Type.operate)) {
+            filter = new Filter("operate", Filter.Operator.eq, enterprise);
+        } else
+        if (enterprise.getType().equals(Enterprise.Type.agent)) {
+            filter = new Filter("agent", Filter.Operator.eq, enterprise);
+        } else
+        {
+            filter = new Filter("personal", Filter.Operator.eq, enterprise);
+        }
+
+        Long ms = memberService.count(filter);
+
+        AgentModel model = new AgentModel();
+        model.setMembers(ms);
+        model.setId(member.getId());
+        model.setNickName(member.displayName());
+        model.setLogo(member.getLogo());
+
+
+        return Message.bind(model,request);
     }
 
+    /**
+     *   获取代理汇总
+     */
+    @RequestMapping(value = "/create")
+    @ResponseBody
+    public Message create(Pageable pageable,HttpServletRequest request) {
+        return Message.error("");
+    }
 
 }

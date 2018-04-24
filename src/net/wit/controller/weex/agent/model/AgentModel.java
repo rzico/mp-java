@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AgentModel extends BaseModel implements Serializable {
 
-    private Long memberId;
+    private Long id;
 
     /** 昵称 */
     private String nickName;
@@ -27,6 +27,9 @@ public class AgentModel extends BaseModel implements Serializable {
 
     /** 渠道佣金 */
     private BigDecimal indirect;
+
+    /** 会员 */
+    private Long members;
 
 
     public String getNickName() {
@@ -45,12 +48,20 @@ public class AgentModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getId() {
+        return id;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getMembers() {
+        return members;
+    }
+
+    public void setMembers(Long members) {
+        this.members = members;
     }
 
     public BigDecimal getRebate() {
