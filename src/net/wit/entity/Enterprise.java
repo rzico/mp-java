@@ -35,14 +35,14 @@ public class Enterprise extends BaseEntity {
         success,
         /** 已关闭 */
         failure
-        };
+    };
 
     public enum Type{
-        /** 运营商 */
-        operate,
         /** 代理商 */
-        agent,
+        operate,
         /** 合作商 */
+        agent,
+        /** 推广员 */
         personal,
         /** 商户 */
         shop
