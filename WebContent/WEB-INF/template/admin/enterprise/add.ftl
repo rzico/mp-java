@@ -31,18 +31,18 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-add">
-
-        <div class="row cl">
+         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" placeholder="请输入手机号或邮箱" id="mobilemail" name="mobilemail" style="width:54%;">
-                <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
                 <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
                     <i class="Hui-iconfont">&#xe665;</i> 查询
                 </button>
             </div>
         </div>
+    <form action="" method="post" class="form form-horizontal" id="form-add">
+
+        <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">LOGO：</label>
@@ -207,7 +207,7 @@
 
             /* 搜索 */
             function search(){
-                var url = "/admin/recharge/getMemberInfo.jhtml?phone="+$("#mobilemail").val();
+                var url = "/admin/enterprise/getMemberInfo.jhtml?phone="+$("#mobilemail").val();
 
                 layer.confirm("请确认手机号？",function(index){
                     var load = layer.msg("查询中..",{

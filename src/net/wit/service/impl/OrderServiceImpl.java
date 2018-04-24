@@ -77,6 +77,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
+	@Resource(name = "rebateServiceImpl")
+	private RebateService rebateService;
+
 	@Resource(name = "cartDaoImpl")
 	private CartDao cartDao;
 
@@ -727,6 +730,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		//计算公球公排
 		orderRankingService.add(order);
+
+		//代理商佣金
+		rebateService.rebate(order.getFee(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
 
 		return;
 

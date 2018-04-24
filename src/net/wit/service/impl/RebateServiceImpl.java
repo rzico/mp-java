@@ -15,8 +15,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
-import net.wit.dao.DepositDao;
-import net.wit.dao.MemberDao;
+import net.wit.dao.*;
 import net.wit.entity.summary.RebateSummary;
 import net.wit.service.MessageService;
 import org.apache.shiro.SecurityUtils;
@@ -25,7 +24,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.RebateDao;
 import net.wit.entity.*;
 import net.wit.service.RebateService;
 
@@ -40,6 +38,12 @@ import net.wit.service.RebateService;
 public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements RebateService {
 	@Resource(name = "rebateDaoImpl")
 	private RebateDao rebateDao;
+
+	@Resource(name = "adminDaoImpl")
+	private AdminDao adminDao;
+
+	@Resource(name = "enterpriseDaoImpl")
+	private EnterpriseDao enterpriseDao;
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
@@ -168,6 +172,20 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 			d1.setSeller(order.getSeller());
 			depositDao.persist(d1);
 			messageService.depositPushTo(d1);
+		}
+	}
+
+
+	public void link(Order order) throws Exception {
+		Member promoter = order.getPromoter();
+		if (promoter!=null) {
+			Admin admin = adminDao.findByMember(promoter);
+			if (admin!=null && admin.getEnterprise()!=null) {
+				Enterprise enterprise = admin.getEnterprise();
+				if (enterprise.getStatus().equals(Enterprise.Status.success)) {
+//					if (enterprise.getType())
+				}
+			}
 		}
 	}
 
