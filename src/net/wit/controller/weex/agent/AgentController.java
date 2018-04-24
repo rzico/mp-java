@@ -114,7 +114,7 @@ public class AgentController extends BaseController {
         List<Filter> filters = pageable.getFilters();
         filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
 
-        Page<RebateSummary> page = rebateService.sumPage(null,null,pageable);
+        Page<RebateSummary> page = rebateService.sumPage(null,null,enterprise,pageable);
 
         return Message.bind(AgentModel.bindList(page.getContent()),request);
 
