@@ -112,23 +112,6 @@ public class EnterpriseController extends BaseController {
     }
 
     /**
-     *  申请代理
-     */
-    @RequestMapping(value = "/create_agent")
-    @ResponseBody
-    public Message create_enterprise(HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-        if (member.getName()==null) {
-            return Message.error("请先绑定银行卡");
-        }
-        enterpriseService.createAgent(member);
-        return Message.success("申请成功");
-    }
-
-    /**
      *  解除就业
      */
     @RequestMapping(value = "/delete")

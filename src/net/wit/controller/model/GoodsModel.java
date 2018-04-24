@@ -82,6 +82,30 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.distribution = distribution;
     }
 
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Long getReview() {
+        return review;
+    }
+
+    public void setReview(Long review) {
+        this.review = review;
+    }
+
+    public Integer getAvailableStock() {
+        return availableStock;
+    }
+
+    public void setAvailableStock(Integer availableStock) {
+        this.availableStock = availableStock;
+    }
+
     public void bind(Goods goods) {
         Product mProduct = goods.getProducts().get(0);
         this.id = goods.getId();

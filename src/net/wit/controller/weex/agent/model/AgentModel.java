@@ -1,7 +1,9 @@
 package net.wit.controller.weex.agent.model;
 import net.wit.controller.model.BaseModel;
+import net.wit.controller.model.RebateModel;
 import net.wit.entity.Member;
 import net.wit.entity.Message;
+import net.wit.entity.summary.RebateSummary;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -87,4 +89,26 @@ public class AgentModel extends BaseModel implements Serializable {
     public void setIndirect(BigDecimal indirect) {
         this.indirect = indirect;
     }
+
+
+    public void bind(RebateSummary rebateSummary) {
+        this.id = rebateSummary.getMember().getId();
+        this.nickName = rebateSummary.getMember().displayName();
+        this.logo = rebateSummary.getMember().getLogo();
+        this.direct = rebateSummary.getDirect();
+        this.indirect = rebateSummary.getIndirect();
+        this.rebate = rebateSummary.getRebate();
+    }
+
+
+    public static List<AgentModel> bindList(List<RebateSummary> rebateSummarys) {
+        List<AgentModel> ms = new ArrayList<AgentModel>();
+        for (RebateSummary rebateSummary:rebateSummarys) {
+            AgentModel m = new AgentModel();
+            m.bind(rebateSummary);
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }
