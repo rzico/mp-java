@@ -6,7 +6,7 @@ import net.wit.entity.Member;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class EvaluationSummary extends BaseModel implements Serializable {
+public class EvaluationSummary implements Serializable {
     private Member member;
     /**  单数 */
     private Long count;
