@@ -372,10 +372,10 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			CardBill bill = new CardBill();
 			bill.setBalance(card.getBalance());
 			bill.setCard(card);
-			bill.setCredit(BigDecimal.ZERO);
-			bill.setDebit(refunds.getAmount());
+			bill.setCredit(refunds.getAmount());
+			bill.setDebit(BigDecimal.ZERO);
 			bill.setDeleted(false);
-			bill.setType(CardBill.Type.consume);
+			bill.setType(CardBill.Type.refunds);
 			bill.setMember(refunds.getMember());
 			PayBill payBill = refunds.getPayBill();
 			if (payBill != null) {
@@ -440,8 +440,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			CardPointBill bill = new CardPointBill();
 			bill.setBalance(card.getPoint());
 			bill.setCard(card);
-			bill.setCredit(point);
-			bill.setDebit(0L);
+			bill.setCredit(0L);
+			bill.setDebit(point);
 			bill.setDeleted(false);
 			bill.setMemo(memo);
 			bill.setOrder(order);

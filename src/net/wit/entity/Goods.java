@@ -36,6 +36,12 @@ public class Goods extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '公排'")
 	private Long ranking;
 
+	/** 好评 */
+	@NotNull
+	@Min(0)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '好评'")
+	private Long review;
+
 	/**
 	 * 获取商品
 	 * 
@@ -73,5 +79,13 @@ public class Goods extends BaseEntity {
 
 	public void setRanking(Long ranking) {
 		this.ranking = ranking;
+	}
+
+	public Long getReview() {
+		return review;
+	}
+
+	public void setReview(Long review) {
+		this.review = review;
 	}
 }
