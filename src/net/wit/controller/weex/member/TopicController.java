@@ -1,5 +1,6 @@
 package net.wit.controller.weex.member;
 
+import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.TopicIndexModel;
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 
 /**
@@ -68,6 +67,9 @@ public class TopicController extends BaseController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
+    @Resource(name = "liveServiceImpl")
+    private LiveService liveService;
+
      /**
      *  开通专栏
      */
@@ -89,6 +91,7 @@ public class TopicController extends BaseController {
             topic = new Topic();
             topic.setName(member.getNickName());
             topic.setBrokerage(new BigDecimal("0.6"));
+            topic.setPaybill(new BigDecimal("0.4"));
             topic.setStatus(Topic.Status.waiting);
             topic.setHits(0L);
             topic.setMember(member);
@@ -326,6 +329,7 @@ public class TopicController extends BaseController {
             topic = new Topic();
             topic.setName(member.getNickName());
             topic.setBrokerage(new BigDecimal("0.6"));
+            topic.setPaybill(new BigDecimal("0.4"));
             topic.setStatus(Topic.Status.waiting);
             topic.setHits(0L);
             topic.setMember(member);
@@ -346,6 +350,9 @@ public class TopicController extends BaseController {
         }
 
 
+        Long lives = liveService.count(new Filter("member", Filter.Operator.eq,member));
+
+        model.setUseLive(lives>0L);
         return Message.bind(model,request);
 
     }

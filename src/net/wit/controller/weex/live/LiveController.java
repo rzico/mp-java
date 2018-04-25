@@ -2,6 +2,7 @@ package net.wit.controller.weex.live;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.*;
 import net.wit.entity.*;
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -54,7 +56,19 @@ public class LiveController extends BaseController {
     @Resource(name = "memberFollowServiceImpl")
     private MemberFollowService memberFollowService;
 
-    /*
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
+    @Resource(name = "topicServiceImpl")
+    private TopicService topicService;
+
+    @Resource(name = "topicCardServiceImpl")
+    private TopicCardService topicCardService;
+
+    @Resource(name = "templateServiceImpl")
+    private TemplateService templateService;
+
+                /*
 			     * KEY+ stream_id + txTime
 			     */
     private static String getSafeUrl(String key, String streamId, long txTime) {
@@ -82,6 +96,7 @@ public class LiveController extends BaseController {
                         append("txTime=").
                         append(Long.toHexString(txTime).toUpperCase()).
                         toString();
+
     }
 
     private static String byteArrayToHexString(byte[] data) {
@@ -95,7 +110,33 @@ public class LiveController extends BaseController {
     }
 
     /**
-     *   用户信息
+     *   检查是否开通直播
+     */
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    @ResponseBody
+    public Message check(Long memberId,Pageable pageable,HttpServletRequest request) {
+        Member member = null;
+        if (memberId!=null) {
+            member = memberService.find(memberId);
+        }
+        if (member==null) {
+            member = memberService.getCurrent();
+        }
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("member", Filter.Operator.eq,member));
+        List<Live> lives = liveService.findList(null,null,filters,null);
+        Live live = null;
+        if (lives.size()>0) {
+            live = lives.get(0);
+            LiveModel model = new LiveModel();
+            model.bind(live);
+            return Message.success(model,"已开通");
+        }
+        return Message.success("未开通");
+    }
+
+    /**
+     *   直播间信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
@@ -111,11 +152,17 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message  list(Pageable pageable,HttpServletRequest request) {
+    public Message list(Pageable pageable,HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("online", Filter.Operator.eq,"1"));
+
+        pageable.setFilters(filters);
+        pageable.setOrderDirection(Order.Direction.desc);
         Page<Live> page = liveService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-        model.setData(LiveListModel.bindList(page.getContent()));
+        model.setData(LiveModel.bindList(page.getContent()));
         return Message.bind(model,request);
+
     }
 
     /**
@@ -123,37 +170,91 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/create")
     @ResponseBody
-    public Message  create(String title,String frontcover,String location,HttpServletRequest request){
+    public Message create(String title,String frontcover,String location,HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Live live = new Live();
-        live.setMember(member);
+
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("member", Filter.Operator.eq,member));
+        List<Live> lives = liveService.findList(null,null,filters,null);
+
+        Live live = null;
+        if (lives.size()>0) {
+            live = lives.get(0);
+        } else {
+            live = new Live();
+            live.setMember(member);
+            live.setGift(0L);
+            live.setLikeCount(0L);
+            live.setViewerCount(0L);
+            live.setOnline("0");
+            live.setStatus(Live.Status.waiting);
+        }
         live.setTitle(title);
         live.setFrontcover(frontcover);
         live.setHeadpic(member.getLogo());
         live.setNickname(member.displayName());
-        live.setGift(0L);
-        live.setLikeCount(0L);
-        live.setViewerCount(0L);
-        live.setOnline("0");
-        live.setStatus(Live.Status.waiting);
         live.setLocation(location);
-
         liveService.save(live);
+
+        if (member.getNickName()==null) {
+            member.setNickName(title);
+        }
+        if (member.getLogo()==null) {
+            member.setLogo(frontcover);
+        }
+        memberService.update(member);
+
+        Topic topic =  member.getTopic();
+        if (topic==null) {
+            topic = new Topic();
+            topic.setName(member.getNickName());
+            topic.setBrokerage(new BigDecimal("0.6"));
+            topic.setPaybill(new BigDecimal("0.4"));
+            topic.setStatus(Topic.Status.waiting);
+            topic.setHits(0L);
+            topic.setMember(member);
+            topic.setFee(new BigDecimal("588"));
+            topic.setLogo(member.getLogo());
+            topic.setType(Topic.Type.personal);
+            TopicConfig config = topic.getConfig();
+            if (config==null) {
+                config = new TopicConfig();
+                config.setUseCard(false);
+                config.setUseCashier(false);
+                config.setUseCoupon(false);
+                config.setPromoterType(TopicConfig.PromoterType.any);
+                config.setPattern(TopicConfig.Pattern.pattern1);
+                config.setAmount(BigDecimal.ZERO);
+            }
+            topic.setConfig(config);
+            Calendar calendar   =   new GregorianCalendar();
+            calendar.setTime(new Date());
+            calendar.add(calendar.MONTH, 1);
+            topic.setExpire(calendar.getTime());
+            topic.setTemplate(templateService.findDefault(Template.Type.topic));
+            topicService.create(topic);
+            enterpriseService.create(topic);
+        } else {
+            enterpriseService.create(topic);
+        }
+
         LiveModel model = new LiveModel();
         model.bind(live);
         return Message.success(model,"success");
+
    }
 
 
     /**
      *   开始直播
      */
-    @RequestMapping(value = "/play", method = RequestMethod.POST)
+    @RequestMapping(value = "/play")
     @ResponseBody
-    public Message  play(Long id,String location,Boolean record,HttpServletRequest request){
+    public Message  play(Long id,String title,String frontcover,String location,Boolean record,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -163,16 +264,34 @@ public class LiveController extends BaseController {
             return Message.error("无效直播id");
         }
 
+//        String string = "2018-04-30 23:59:59";
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            sdf.parse(string);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
         Date tx = new Date();
-        Long txTime = tx.getTime()+86400L;
+        Long txTime = tx.getTime()/1000+86400;
 
         String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
-        if(record==null){
+
+        if (record==null){
             record=false;
         }
+
         if (record) {
             pushUrl = pushUrl + "&record=mp4&record_interval=5400";
         }
+
+        if (title!=null) {
+            live.setTitle(title);
+        }
+        if (frontcover!=null) {
+            live.setFrontcover(frontcover);
+        }
+
         LiveTape liveTape = new LiveTape();
         liveTape.setLive(live);
         liveTape.setMember(member);
@@ -195,7 +314,12 @@ public class LiveController extends BaseController {
 
         LiveTapeModel model = new LiveTapeModel();
         model.bind(liveTape);
+
+        model.setFans(new Long(member.getFans().size()));
+        model.setFollow(new Long(member.getFollows().size()));
+        model.setVip(member.getVip());
         return Message.success(model,"success");
+
     }
 
 
@@ -247,7 +371,8 @@ public class LiveController extends BaseController {
         Date tx = new Date();
         Long txTime = tx.getTime()+300L;
 
-        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550?"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
+        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201);
+//        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
 //        String hlsPlayUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550.m3u8";
 
         LiveData liveData = new LiveData();
@@ -264,24 +389,30 @@ public class LiveController extends BaseController {
         liveDataService.save(liveData);
 
         live.setViewerCount(live.getViewerCount()+1);
+        live.setPlayUrl(playUrl);
         liveService.update(live);
 
         LiveTape liveTape = live.getLiveTape();
+        liveTape.setPlayUrl(playUrl);
         liveTape.setViewerCount(liveTape.getViewerCount()+1);
         liveTapeService.update(liveTape);
 
         MemberFollow memberFollow=memberFollowService.find(member,live.getMember());
 
         LiveTapeModel model=new LiveTapeModel();
-       model.bind(liveTape);
+        model.bind(liveTape);
         if (memberFollow==null){
             model.setFollow(false);
         }else {
             model.setFollow(true);
         }
+
+        model.setFans(new Long(live.getMember().getFans().size()));
+        model.setFollow(new Long(live.getMember().getFollows().size()));
+        model.setVip(live.getMember().getVip());
+
         return Message.success(model,"success");
     }
-
 
 
     /**
@@ -307,6 +438,24 @@ public class LiveController extends BaseController {
         liveTapeService.update(liveTape);
 
         return Message.success("success");
+    }
+
+    /**
+     *  热点查询列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/slide", method = RequestMethod.GET)
+    @ResponseBody
+    public Message slide(Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("online", Filter.Operator.eq,"1"));
+
+        pageable.setFilters(filters);
+        pageable.setOrderDirection(Order.Direction.desc);
+        Page<Live> page = liveService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(LiveListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
     }
 
 }

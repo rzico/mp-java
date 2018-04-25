@@ -8,6 +8,7 @@ import net.wit.controller.model.UserModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleReview;
 import net.wit.entity.Member;
+import net.wit.entity.MemberFollow;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,9 @@ public class UserController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
     /**
      *  用户信息
      */
@@ -40,11 +44,18 @@ public class UserController extends BaseController {
     @ResponseBody
     public Message list(Long id, Pageable pageable, HttpServletRequest request){
         Member member = memberService.find(id);
+        Member that=memberService.getCurrent();
         if (member==null) {
             return Message.error("无效用户 id");
         }
         UserModel model = new UserModel();
         model.bind(member);
+        MemberFollow memberFollow = memberFollowService.find(that,member);
+        if(memberFollow==null){
+            model.setIsfollow(false);
+        }else {
+            model.setIsfollow(true);
+        }
         return Message.bind(model,request);
    }
 

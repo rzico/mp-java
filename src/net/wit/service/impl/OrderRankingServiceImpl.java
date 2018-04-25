@@ -130,6 +130,32 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
            if (ors.size()>0) {
            	  OrderRanking rk = ors.get(0);
            	  if (rk.getOrders()<goods.getRanking()) {
+
+				  //条件成立，出局一个,商家需有余额
+				  Member ow = rk.getOwner();
+				  memberDao.refresh(ow,LockModeType.PESSIMISTIC_WRITE);
+
+				  ow.setBalance(ow.getBalance().subtract(rk.getAmount()));
+				  if (ow.getBalance().compareTo(BigDecimal.ZERO)<0) {
+				  	throw  new RuntimeException("商家余额不足");
+				  }
+				  memberDao.merge(ow);
+				  memberDao.flush();
+
+				  Deposit owdeposit = new Deposit();
+				  owdeposit.setBalance(ow.getBalance());
+				  owdeposit.setType(Deposit.Type.product);
+				  owdeposit.setMemo("利润分红(扣款)");
+				  owdeposit.setMember(ow);
+				  owdeposit.setCredit(BigDecimal.ZERO.subtract(rk.getAmount()));
+				  owdeposit.setDebit(BigDecimal.ZERO);
+				  owdeposit.setDeleted(false);
+				  owdeposit.setOperator("system");
+				  owdeposit.setOrder(orderItem.getOrder());
+				  owdeposit.setSeller(seller);
+				  depositDao.persist(owdeposit);
+				  messageService.depositPushTo(owdeposit);
+
            	  	  //条件成立，出局一个
                   Member rm = rk.getMember();
                   memberDao.refresh(rm,LockModeType.PESSIMISTIC_WRITE);
@@ -140,7 +166,7 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 				  Deposit deposit = new Deposit();
 				  deposit.setBalance(rm.getBalance());
 				  deposit.setType(Deposit.Type.rebate);
-				  deposit.setMemo("消费返利");
+				  deposit.setMemo("消费分红");
 				  deposit.setMember(rm);
 				  deposit.setCredit(rk.getAmount());
 				  deposit.setDebit(BigDecimal.ZERO);
@@ -163,22 +189,24 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
                   	 pointBill.setCredit(rk.getPoint());
                   	 pointBill.setDebit(0L);
                   	 pointBill.setDeleted(false);
-                  	 pointBill.setMemo("消费返利");
+                  	 pointBill.setMemo("消费分红");
                   	 pointBill.setOrder(orderItem.getOrder());
                   	 pointBill.setOwner(seller);
                   	 pointBill.setShop(null);
+                  	 pointBill.setMember(rm);
                   	 pointBill.setOperator("system");
                   	 cardPointBillDao.persist(pointBill);
 				  }
 
 				  orderRankingDao.remove(rk);
+				  orderRankingDao.flush();
 			  }
 
 		   }
 		}
 	}
 
-	public void add(Order order) throws Exception {
+	public synchronized void add(Order order) throws Exception {
 
 		for (OrderItem orderItem:order.getOrderItems()) {
 			Distribution distribution = orderItem.getProduct().getDistribution();
@@ -186,8 +214,8 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 
 			   int i = Math.round(orderItem.getSubtotal().divide(distribution.getDividend(),0,BigDecimal.ROUND_DOWN).floatValue());
 
-			   int point = Math.round(distribution.getDividend().multiply(distribution.calePointRate()).setScale(0,BigDecimal.ROUND_DOWN).floatValue());
-			   BigDecimal amount = distribution.getDividend().subtract(new BigDecimal(point));
+			   int point = Math.round(distribution.getDividend().multiply(distribution.getPercent1().multiply(new BigDecimal("0.01"))).setScale(0,BigDecimal.ROUND_DOWN).floatValue());
+			   BigDecimal amount = new BigDecimal(point);
 
 			   for (int r=0;r<i;r++) {
 			   	   calc(order.getMember(),order.getSeller(),amount,new Long(point),orderItem);

@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
@@ -237,4 +238,14 @@ public class ProductCategory extends OrderEntity {
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().displayName());
+		} else {
+			return null;
+		}
+	}
+
 }

@@ -311,6 +311,22 @@ public class Order extends BaseEntity {
 	@JoinColumn(updatable = false)
 	private Member partner;
 
+
+	/** 推广员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise personal;
+
+	/** 合作商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise agent;
+
+	/** 代理商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise operate;
+
 	/** 是否已分配佣金 */
 	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
 	private Boolean isDistribution;
@@ -996,6 +1012,30 @@ public class Order extends BaseEntity {
 
 	public Member getPartner() {
 		return partner;
+	}
+
+	public Enterprise getPersonal() {
+		return personal;
+	}
+
+	public void setPersonal(Enterprise personal) {
+		this.personal = personal;
+	}
+
+	public Enterprise getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Enterprise agent) {
+		this.agent = agent;
+	}
+
+	public Enterprise getOperate() {
+		return operate;
+	}
+
+	public void setOperate(Enterprise operate) {
+		this.operate = operate;
 	}
 
 	/**

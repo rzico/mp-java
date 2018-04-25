@@ -18,6 +18,13 @@ public class GoodsModel extends BaseModel implements Serializable {
     /** 单位 */
     private String unit;
 
+    /** 库存 */
+    private Integer stock;
+    /** 好评 */
+    private Long review;
+    /** 可用库存 */
+    private Integer availableStock;
+
     /** 分类 */
     private ProductCategoryModel productCategory;
 
@@ -75,6 +82,30 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.distribution = distribution;
     }
 
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Long getReview() {
+        return review;
+    }
+
+    public void setReview(Long review) {
+        this.review = review;
+    }
+
+    public Integer getAvailableStock() {
+        return availableStock;
+    }
+
+    public void setAvailableStock(Integer availableStock) {
+        this.availableStock = availableStock;
+    }
+
     public void bind(Goods goods) {
         Product mProduct = goods.getProducts().get(0);
         this.id = goods.getId();
@@ -98,5 +129,8 @@ public class GoodsModel extends BaseModel implements Serializable {
             model.bind(product);
             this.products.add(model);
         }
+        this.stock = mProduct.getStock();
+        this.availableStock = mProduct.getAvailableStock();
+        this.review = goods.getReview();
     }
 }

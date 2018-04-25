@@ -1,6 +1,8 @@
 package net.wit.controller.model;
 import net.wit.entity.CouponCode;
 import net.wit.entity.Member;
+import net.wit.entity.Product;
+import net.wit.entity.summary.RebateSummary;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -47,4 +49,5 @@ public class RebateModel extends BaseModel implements Serializable {
     public void setInvalid(long invalid) {
         this.invalid = invalid;
     }
+
 }

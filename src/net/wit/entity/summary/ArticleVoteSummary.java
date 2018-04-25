@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ArticleVoteSummary extends BaseModel implements Serializable {
-    //问题
+public class ArticleVoteSummary implements Serializable {
+    // 问题
     private String title;
-    //答案
+    // 答案
     private String value;
     // 投票数
     private Long count;

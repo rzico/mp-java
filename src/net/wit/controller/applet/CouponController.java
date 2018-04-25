@@ -81,6 +81,7 @@ public class CouponController extends BaseController {
             List<Filter> filters = new ArrayList<Filter>();
             filters.add(new Filter("member", Filter.Operator.eq,member));
             filters.add(new Filter("coupon", Filter.Operator.eq,coupon));
+            filters.add(new Filter("isUsed", Filter.Operator.eq,false));
             List<CouponCode> couponCodes = couponCodeService.findList(1,filters,null);
             if (couponCodes.size()>0) {
                 data.put("activate",true);

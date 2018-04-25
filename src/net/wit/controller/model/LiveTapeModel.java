@@ -1,12 +1,17 @@
 package net.wit.controller.model;
 import net.wit.entity.Live;
 import net.wit.entity.LiveTape;
+import net.wit.entity.Member;
 
 import java.io.Serializable;
 
 public class LiveTapeModel extends BaseModel implements Serializable {
 
     private Long id;
+
+    private Long liveId;
+
+    private Long liveMemberId;
     /**  标题  */
     private String title;
 
@@ -48,6 +53,14 @@ public class LiveTapeModel extends BaseModel implements Serializable {
 
     /** 是否关注 */
     private Boolean isFollow;
+
+    /** 直播间主播的粉丝数 */
+    private Long fans;
+
+    /** 直播间主播关注别人的数量 */
+    private Long follow;
+
+    private Member.VIP vip;
 
     public Long getId() {
         return id;
@@ -169,8 +182,46 @@ public class LiveTapeModel extends BaseModel implements Serializable {
         isFollow = follow;
     }
 
+    public Long getLiveId() {
+        return liveId;
+    }
+
+    public void setLiveId(Long liveId) {
+        this.liveId = liveId;
+    }
+
+    public Long getLiveMemberId() {
+        return liveMemberId;
+    }
+
+    public void setLiveMemberId(Long liveMemberId) {
+        this.liveMemberId = liveMemberId;
+    }
+
+    public Long getFans() {
+        return fans;
+    }
+
+    public void setFans(Long fans) {
+        this.fans = fans;
+    }
+
+    public void setFollow(Long follow) {
+        this.follow = follow;
+    }
+
+    public Member.VIP getVip() {
+        return vip;
+    }
+
+    public void setVip(Member.VIP vip) {
+        this.vip = vip;
+    }
+
     public void bind(LiveTape live) {
         this.id = live.getId();
+        this.liveId=live.getLive().getId();
+        this.liveMemberId = live.getLive().getMember().getId();
         this.nickname = live.getNickname();
         this.headpic = live.getHeadpic();
         this.frontcover = live.getFrontcover();
@@ -182,5 +233,7 @@ public class LiveTapeModel extends BaseModel implements Serializable {
         this.viewerCount = live.getViewerCount();
         this.pushUrl = live.getPushUrl();
         this.playUrl = live.getPlayUrl();
+        this.fans = 0L;
+        this.follow = 0L;
     }
 }
