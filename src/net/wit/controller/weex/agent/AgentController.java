@@ -94,7 +94,7 @@ public class AgentController extends BaseController {
     }
 
     /**
-     *   获取代理明累
+     *   获取代理明细
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody

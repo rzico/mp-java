@@ -65,19 +65,21 @@ public class RebateDaoImpl extends BaseDaoImpl<Rebate, Long> implements RebateDa
 	}
 
 	public Page<RebateSummary> sumPage(Date beginDate, Date endDate, Enterprise enterprise, Pageable pageable) {
-		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
-		Date e = DateUtils.truncate(endDate,Calendar.DATE);
-		e = DateUtils.addDays(e,1);
+//		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+//		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+//		e = DateUtils.addDays(e,1);
 
 		String jpql =
 				"select rebate.member,sum(rebate.direct),sum(rebate.indirect) "+
-						"from Rebate rebate where rebate.createDate>=:b and rebate.createDate<:e and rebate.enterprise=:enterprise "+
+						"from Rebate rebate where "+
+//						"rebate.createDate>=:b and rebate.createDate<:e and "+
+						"rebate.enterprise=:enterprise "+
 						"group by rebate.member order by rebate.member.id ";
 
 		Query query = entityManager.createQuery(jpql).
-				setFlushMode(FlushModeType.COMMIT).
-				setParameter("b", b).
-				setParameter("e", e);
+				setFlushMode(FlushModeType.COMMIT);
+//				setParameter("b", b).
+//				setParameter("e", e);
 
 		query.setParameter("enterprise",enterprise);
 		query.setFirstResult(pageable.getPageStart());
