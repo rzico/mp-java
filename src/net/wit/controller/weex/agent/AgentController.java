@@ -119,9 +119,10 @@ public class AgentController extends BaseController {
         return Message.bind(AgentModel.bindList(page.getContent()),request);
 
     }
-        /**
-         *   获取代理汇总
-         */
+
+    /**
+     *   获取代理汇总
+     */
     @RequestMapping(value = "/create")
     @ResponseBody
     public Message create(Long xuid,HttpServletRequest request) {
@@ -146,20 +147,23 @@ public class AgentController extends BaseController {
             return Message.error("无效邀请人");
         }
 
-        Admin adminParent = adminService.findByMember(member);
+        Admin adminParent = adminService.findByMember(parent);
         if (adminParent==null) {
             return Message.error("无效邀请人");
         }
-        Enterprise enterpriseParent = admin.getEnterprise();
+
+        Enterprise enterpriseParent = adminParent.getEnterprise();
         if (enterpriseParent==null) {
             return Message.error("无效邀请人");
         }
 
+        if (!enterpriseParent.getType().equals(Enterprise.Type.operate) && !enterpriseParent.getType().equals(Enterprise.Type.agent)) {
+            return Message.error("无效邀请人");
+        }
 
         enterpriseService.createAgent(member,enterpriseParent);
 
-        return Message.error("");
-
+        return Message.success("邀请成功");
 
     }
 

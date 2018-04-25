@@ -121,6 +121,8 @@ public class EnterpriseController extends BaseController {
 		//entity.setModifyDate(enterprise.getModifyDate());
 		entity.setName(name);
 
+		entity.setPhone(member.getMobile());
+
 		entity.setLogo(logo);
 
 		entity.setDeleted(false);
@@ -202,13 +204,12 @@ public class EnterpriseController extends BaseController {
 		Enterprise entity = enterpriseService.find(enterprise.getId());
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
+		entity.setLogo(enterprise.getLogo());
 		entity.setName(enterprise.getName());
 
 		entity.setTransfer(enterprise.getTransfer());
 
 		entity.setBrokerage(enterprise.getBrokerage());
-
-		entity.setType(enterprise.getType());
 
 		entity.setStatus(enterprise.getStatus());
 
