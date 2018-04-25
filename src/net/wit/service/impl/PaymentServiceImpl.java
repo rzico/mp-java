@@ -82,6 +82,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "enterpriseServiceImpl")
 	private EnterpriseService enterpriseService;
 
+	@Resource(name = "rebateServiceImpl")
+	private RebateService rebateService;
+
 	@Resource(name = "articleRewardDaoImpl")
 	private ArticleRewardDao articleRewardDao;
 
@@ -394,6 +397,18 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
 				evaluationDao.merge(evaluation);
                 if (evaluation.getPromoter()!=null && evaluation.getRebate().compareTo(BigDecimal.ZERO)>0) {
+
+					Member buyer = evaluation.getMember();
+					if (buyer.getPromoter()==null) {
+						buyer.setPromoter(buyer);
+						rebateService.link(evaluation.getMember());
+					}
+
+					evaluation.setPersonal(buyer.getPersonal());
+					evaluation.setAgent(buyer.getAgent());
+					evaluation.setOperate(buyer.getOperate());
+					evaluationDao.merge(evaluation);
+
                 	Member member = evaluation.getPromoter();
 					member.setBalance(member.getBalance().add(evaluation.getRebate()));
 					memberDao.merge(member);
@@ -411,6 +426,8 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					deposit.setPayment(payment);
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
+
+					rebateService.rebate(evaluation.getPrice(),evaluation.getPersonal(),evaluation.getAgent(),evaluation.getOperate(),null);
 				}
 
 

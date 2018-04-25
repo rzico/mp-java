@@ -161,7 +161,6 @@ public class Evaluation extends BaseEntity {
     @JoinColumn(updatable = false)
     private Member promoter;
 
-
     /** 推广员 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

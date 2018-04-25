@@ -116,13 +116,13 @@ public class EvaluationController extends BaseController {
             Member promoter = memberService.find(xuid);
             if (promoter!=null) {
                 eval.setPromoter(promoter);
-                Admin admin = adminService.findByMember(promoter);
-                if (admin!=null && admin.getEnterprise().getStatus().equals(Enterprise.Status.success))
-                {
-                    eval.setRebate(eval.getPrice().multiply(gauge.getDistribution()).multiply(new BigDecimal("0.01")).setScale(3,BigDecimal.ROUND_HALF_DOWN));
-                } else {
-                    eval.setRebate(eval.getPrice().multiply(gauge.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(3,BigDecimal.ROUND_HALF_DOWN));
-                }
+//                Admin admin = adminService.findByMember(promoter);
+//                if (admin!=null && admin.getEnterprise().getStatus().equals(Enterprise.Status.success))
+//                {
+//                    eval.setRebate(eval.getPrice().multiply(gauge.getDistribution()).multiply(new BigDecimal("0.01")).setScale(3,BigDecimal.ROUND_HALF_DOWN));
+//                } else {
+                eval.setRebate(eval.getPrice().multiply(gauge.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(3,BigDecimal.ROUND_HALF_DOWN));
+//                }
             }
         }
         Payment payment = evaluationService.create(eval);
