@@ -176,6 +176,57 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 	}
 
 
+	public void link(Member member) throws Exception {
+		Member promoter = member.getPromoter();
+		if (promoter!=null) {
+			Admin admin = adminDao.findByMember(promoter);
+			if (admin!=null && admin.getEnterprise()!=null) {
+				Enterprise enterprise = admin.getEnterprise();
+				if (enterprise.getStatus().equals(Enterprise.Status.success)) {
+					if (enterprise.getType().equals(Enterprise.Type.operate)) {
+						member.setOperate(enterprise);
+					} else
+					if (enterprise.getType().equals(Enterprise.Type.agent)) {
+						member.setAgent(enterprise);
+					} else
+					if (enterprise.getType().equals(Enterprise.Type.personal)) {
+						member.setPersonal(enterprise);
+					}
+				}
+
+				//
+				Enterprise e1 = enterprise.getParent();
+				if (e1!=null && !enterprise.getType().equals(Enterprise.Type.operate)) {
+					if (e1.getStatus().equals(Enterprise.Status.success)) {
+						if (e1.getType().equals(Enterprise.Type.operate)) {
+							member.setOperate(e1);
+						} else if (e1.getType().equals(Enterprise.Type.agent)) {
+							member.setAgent(e1);
+						} else if (e1.getType().equals(Enterprise.Type.personal)) {
+							member.setPersonal(e1);
+						}
+					}
+
+					//
+					Enterprise e2 = e1.getParent();
+					if (e2!=null && e1.getType().equals(Enterprise.Type.operate)) {
+						if (e2.getStatus().equals(Enterprise.Status.success)) {
+							if (e2.getType().equals(Enterprise.Type.operate)) {
+								member.setOperate(e2);
+							} else if (e2.getType().equals(Enterprise.Type.agent)) {
+								member.setAgent(e2);
+							} else if (e2.getType().equals(Enterprise.Type.personal)) {
+								member.setPersonal(e2);
+							}
+						}
+					}
+				}
+
+
+			}
+		}
+	}
+
 	public void link(Order order) throws Exception {
 		Member promoter = order.getPromoter();
 		if (promoter!=null) {

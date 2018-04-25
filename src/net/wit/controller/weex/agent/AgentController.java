@@ -119,9 +119,10 @@ public class AgentController extends BaseController {
         return Message.bind(AgentModel.bindList(page.getContent()),request);
 
     }
-        /**
-         *   获取代理汇总
-         */
+
+    /**
+     *   获取代理汇总
+     */
     @RequestMapping(value = "/create")
     @ResponseBody
     public Message create(Long xuid,HttpServletRequest request) {

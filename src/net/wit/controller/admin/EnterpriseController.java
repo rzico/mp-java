@@ -211,8 +211,6 @@ public class EnterpriseController extends BaseController {
 
 		entity.setBrokerage(enterprise.getBrokerage());
 
-		entity.setType(enterprise.getType());
-
 		entity.setStatus(enterprise.getStatus());
 
 		entity.setArea(areaService.find(areaId));
