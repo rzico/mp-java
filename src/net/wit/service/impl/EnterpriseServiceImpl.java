@@ -123,7 +123,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise = new Enterprise();
 			enterprise.setName(topic.getName());
 			enterprise.setDeleted(false);
-			enterprise.setBrokerage(new BigDecimal("0.38"));
+			enterprise.setBrokerage(new BigDecimal("0"));
 			enterprise.setCreditLine(BigDecimal.ZERO);
 			enterprise.setTransfer(BigDecimal.ONE);
 			enterprise.setLogo(topic.getLogo());
@@ -174,7 +174,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise = new Enterprise();
 			enterprise.setName(member.getName());
 			enterprise.setDeleted(false);
-			enterprise.setBrokerage(new BigDecimal("0.38"));
+			enterprise.setBrokerage(new BigDecimal("0"));
 			enterprise.setCreditLine(BigDecimal.ZERO);
 			enterprise.setTransfer(BigDecimal.ONE);
 			enterprise.setLogo(member.getLogo());
