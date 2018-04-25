@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Enterprise;
+import net.wit.entity.Member;
 import net.wit.entity.Order;
 import net.wit.entity.Rebate;
 import net.wit.entity.summary.RebateSummary;
@@ -26,6 +27,9 @@ public interface RebateService extends BaseService<Rebate, Long> {
 	public void rebate(BigDecimal amount,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception;
 
 	public void link(Order order) throws Exception;
+
+
+	public void link(Member member) throws Exception;
 
 
 }

@@ -324,6 +324,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				order.setPointDiscount(new BigDecimal(card.getPoint()));
 			}
 		}
+
 		//股东自已消费，直接获取返利，不给再分配
 		if (card!=null && card.getType().equals(Card.Type.partner)) {
 			order.setPromoter(null);
@@ -524,6 +525,25 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		Card card = cardService.createAndActivate(order.getMember(), order.getSeller(), order.getPromoter(), order.getAmount(), order.getDistPrice());
 		if (card != null) {
 			memberService.create(order.getMember(), order.getPromoter());
+		}
+
+
+
+		try {
+
+			//分享人不为空时，关联代理商
+			if (order.getPromoter()!=null) {
+				rebateService.link(order.getMember());
+			}
+
+			order.setPersonal(order.getPromoter().getPersonal());
+
+			order.setAgent(order.getPromoter().getAgent());
+
+			order.setOperate(order.getPromoter().getOperate());
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 		//没有发货，或是退货等状态完成，是无效订单
