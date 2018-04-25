@@ -183,8 +183,46 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 			if (admin!=null && admin.getEnterprise()!=null) {
 				Enterprise enterprise = admin.getEnterprise();
 				if (enterprise.getStatus().equals(Enterprise.Status.success)) {
-//					if (enterprise.getType())
+					if (enterprise.getType().equals(Enterprise.Type.operate)) {
+						order.setOperate(enterprise);
+					} else
+					if (enterprise.getType().equals(Enterprise.Type.agent)) {
+						order.setAgent(enterprise);
+					} else
+					if (enterprise.getType().equals(Enterprise.Type.personal)) {
+						order.setPersonal(enterprise);
+					}
 				}
+
+				//
+				Enterprise e1 = enterprise.getParent();
+				if (e1!=null && !enterprise.getType().equals(Enterprise.Type.operate)) {
+					if (e1.getStatus().equals(Enterprise.Status.success)) {
+						if (e1.getType().equals(Enterprise.Type.operate)) {
+							order.setOperate(e1);
+						} else if (e1.getType().equals(Enterprise.Type.agent)) {
+							order.setAgent(e1);
+						} else if (e1.getType().equals(Enterprise.Type.personal)) {
+							order.setPersonal(e1);
+						}
+					}
+
+					//
+					Enterprise e2 = e1.getParent();
+					if (e2!=null && e1.getType().equals(Enterprise.Type.operate)) {
+						if (e2.getStatus().equals(Enterprise.Status.success)) {
+							if (e2.getType().equals(Enterprise.Type.operate)) {
+								order.setOperate(e2);
+							} else if (e2.getType().equals(Enterprise.Type.agent)) {
+								order.setAgent(e2);
+							} else if (e2.getType().equals(Enterprise.Type.personal)) {
+								order.setPersonal(e2);
+							}
+						}
+					}
+				}
+
+
 			}
 		}
 	}
