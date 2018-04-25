@@ -100,4 +100,30 @@ public class RebateDaoImpl extends BaseDaoImpl<Rebate, Long> implements RebateDa
 
 		return new Page<RebateSummary>(data,0,pageable);
 	}
+
+
+	public RebateSummary sum(Date beginDate, Date endDate, Enterprise enterprise, Member member) {
+		String jpql =
+				"select sum(rebate.direct),sum(rebate.indirect) "+
+						"from Rebate rebate where "+
+						"rebate.enterprise=:enterprise and rebate.member=:member ";
+
+		Query query = entityManager.createQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT);
+
+		query.setParameter("enterprise",enterprise);
+		query.setParameter("enterprise",enterprise);
+
+
+		List result = query.getResultList();
+		Object[] row = (Object[]) result.get(0);
+
+		RebateSummary summary = new RebateSummary();
+
+		summary.setDirect((BigDecimal) row[0]);
+		summary.setIndirect((BigDecimal) row[1]);
+		summary.setRebate(summary.getDirect().add(summary.getIndirect()));
+
+		return summary;
+	}
 }

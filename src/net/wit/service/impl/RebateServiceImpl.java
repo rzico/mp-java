@@ -108,6 +108,9 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 	public Page<RebateSummary> sumPage(Date beginDate, Date endDate, Enterprise enterprise,Pageable pageable) {
 		return rebateDao.sumPage(beginDate,endDate,enterprise,pageable);
 	}
+	public RebateSummary sum(Date beginDate, Date endDate, Enterprise enterprise, Member member) {
+		return rebateDao.sum(beginDate,endDate,enterprise,member);
+	}
 
 	public void rebate(BigDecimal amount,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception {
        if (personal!=null) {

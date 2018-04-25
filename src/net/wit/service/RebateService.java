@@ -22,6 +22,7 @@ import net.wit.entity.summary.RebateSummary;
 public interface RebateService extends BaseService<Rebate, Long> {
 	Page<Rebate> findPage(Date beginDate, Date endDate, Pageable pageable);
 	Page<RebateSummary> sumPage(Date beginDate, Date endDate, Enterprise enterprise, Pageable pageable);
+	RebateSummary sum(Date beginDate, Date endDate, Enterprise enterprise, Member member);
 
 
 	public void rebate(BigDecimal amount,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception;
