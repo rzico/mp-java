@@ -70,6 +70,16 @@ public class MemberController extends BaseController {
         }
         MemberModel model =new MemberModel();
         model.bind(member);
+
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            Enterprise ent = admin.getEnterprise();
+            if (!ent.getType().equals(Enterprise.Type.shop) && ent.getStatus().equals(Enterprise.Status.success)) {
+                model.setIsAgent(true);
+            }
+        }
+
         return Message.bind(model,request);
    }
 
