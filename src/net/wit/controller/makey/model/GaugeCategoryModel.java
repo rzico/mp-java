@@ -10,6 +10,8 @@ public class GaugeCategoryModel extends BaseModel implements Serializable {
 
     private Long id;
     private String name;
+    private String english;
+
     private int count;
 
     public Long getId() {
@@ -36,10 +38,19 @@ public class GaugeCategoryModel extends BaseModel implements Serializable {
         this.count = count;
     }
 
+    public String getEnglish() {
+        return english;
+    }
+
+    public void setEnglish(String english) {
+        this.english = english;
+    }
+
     public void bind(GaugeCategory gaugeCategory) {
         this.id = gaugeCategory.getId();
         this.name = gaugeCategory.getName();
         this.count = gaugeCategory.getGauges().size();
+        this.english = gaugeCategory.getEnglish();
     }
     public static List<GaugeCategoryModel> bindList(List<GaugeCategory> gaugeCategories) {
         List<GaugeCategoryModel> ms = new ArrayList<GaugeCategoryModel>();

@@ -41,6 +41,15 @@
                     <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
                 </div>
             </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>英文名：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.english}" placeholder="" id="english" name="english">
+                </div>
+            </div>
+
             <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">

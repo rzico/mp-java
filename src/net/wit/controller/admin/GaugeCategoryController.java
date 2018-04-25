@@ -93,6 +93,8 @@ public class GaugeCategoryController extends BaseController {
 
 		entity.setName(gaugeCategory.getName());
 
+		entity.setEnglish(gaugeCategory.getEnglish());
+
         try {
             gaugeCategoryService.save(entity);
             return Message.success(entity,"admin.save.success");
@@ -141,6 +143,8 @@ public class GaugeCategoryController extends BaseController {
 		entity.setOrders(gaugeCategory.getOrders() == null ? 0 : gaugeCategory.getOrders());
 
 		entity.setName(gaugeCategory.getName());
+
+		entity.setEnglish(gaugeCategory.getEnglish());
 
         try {
             gaugeCategoryService.update(entity);

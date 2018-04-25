@@ -33,6 +33,12 @@ public class GaugeCategory extends OrderEntity {
 	@Column(nullable = false,columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 英文称 */
+	@NotEmpty
+	@Length(max = 200)
+	@Column(nullable = false,columnDefinition="varchar(255) not null comment '英文称'")
+	private String english;
+
 	/** 树路径 */
 	@Column(nullable = false,columnDefinition="varchar(255) not null comment '树路径'")
 	@JsonIgnore
@@ -161,6 +167,14 @@ public class GaugeCategory extends OrderEntity {
 
 	public void setGauges(Set<Gauge> gauges) {
 		this.gauges = gauges;
+	}
+
+	public String getEnglish() {
+		return english;
+	}
+
+	public void setEnglish(String english) {
+		this.english = english;
 	}
 
 	/**
