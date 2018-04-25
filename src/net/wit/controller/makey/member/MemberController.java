@@ -75,8 +75,8 @@ public class MemberController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
             Enterprise ent = admin.getEnterprise();
-            if (!ent.getType().equals(Enterprise.Type.shop) && ent.getStatus().equals(Enterprise.Status.success)) {
-                model.setIsAgent(true);
+            if (!ent.getType().equals(Enterprise.Type.shop) && !ent.getType().equals(Enterprise.Type.personal) && ent.getStatus().equals(Enterprise.Status.success)) {
+                model.setAgentType(ent.getType().name());
             }
         }
 

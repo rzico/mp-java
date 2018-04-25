@@ -31,8 +31,8 @@ public class MemberModel extends BaseModel implements Serializable {
     /** 订单 */
     private int order;
 
-    /** 是否代理商 */
-    private Boolean isAgent;
+    /** 是否代理商 none  operate agent */
+    private String agentType;
 
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
@@ -133,12 +133,12 @@ public class MemberModel extends BaseModel implements Serializable {
         this.username = username;
     }
 
-    public Boolean getIsAgent() {
-        return isAgent;
+    public String getAgentType() {
+        return agentType;
     }
 
-    public void setIsAgent(Boolean agent) {
-        isAgent = agent;
+    public void setAgentType(String agentType) {
+        this.agentType = agentType;
     }
 
     public void bind(Member member) {
@@ -160,6 +160,6 @@ public class MemberModel extends BaseModel implements Serializable {
             }
         }
         this.coupon = c;
-        this.isAgent = true;
+        this.agentType = "none";
     }
 }
