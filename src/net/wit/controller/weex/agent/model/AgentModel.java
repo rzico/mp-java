@@ -33,6 +33,8 @@ public class AgentModel extends BaseModel implements Serializable {
     /** 会员 */
     private Long members;
 
+    /** 代理 */
+    private Long enterprises;
 
     public String getNickName() {
         return nickName;
@@ -90,6 +92,13 @@ public class AgentModel extends BaseModel implements Serializable {
         this.indirect = indirect;
     }
 
+    public Long getEnterprises() {
+        return enterprises;
+    }
+
+    public void setEnterprises(Long enterprises) {
+        this.enterprises = enterprises;
+    }
 
     public void bind(RebateSummary rebateSummary) {
         this.id = rebateSummary.getMember().getId();
@@ -98,6 +107,8 @@ public class AgentModel extends BaseModel implements Serializable {
         this.direct = rebateSummary.getDirect();
         this.indirect = rebateSummary.getIndirect();
         this.rebate = rebateSummary.getRebate();
+        this.members = 0L;
+        this.enterprises = 0L;
     }
 
 

@@ -65,19 +65,21 @@ public class RebateDaoImpl extends BaseDaoImpl<Rebate, Long> implements RebateDa
 	}
 
 	public Page<RebateSummary> sumPage(Date beginDate, Date endDate, Enterprise enterprise, Pageable pageable) {
-		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
-		Date e = DateUtils.truncate(endDate,Calendar.DATE);
-		e = DateUtils.addDays(e,1);
+//		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+//		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+//		e = DateUtils.addDays(e,1);
 
 		String jpql =
 				"select rebate.member,sum(rebate.direct),sum(rebate.indirect) "+
-						"from Rebate rebate where rebate.createDate>=:b and rebate.createDate<:e and rebate.enterprise=:enterprise "+
+						"from Rebate rebate where "+
+//						"rebate.createDate>=:b and rebate.createDate<:e and "+
+						"rebate.enterprise=:enterprise "+
 						"group by rebate.member order by rebate.member.id ";
 
 		Query query = entityManager.createQuery(jpql).
-				setFlushMode(FlushModeType.COMMIT).
-				setParameter("b", b).
-				setParameter("e", e);
+				setFlushMode(FlushModeType.COMMIT);
+//				setParameter("b", b).
+//				setParameter("e", e);
 
 		query.setParameter("enterprise",enterprise);
 		query.setFirstResult(pageable.getPageStart());
@@ -97,5 +99,31 @@ public class RebateDaoImpl extends BaseDaoImpl<Rebate, Long> implements RebateDa
 		}
 
 		return new Page<RebateSummary>(data,0,pageable);
+	}
+
+
+	public RebateSummary sum(Date beginDate, Date endDate, Enterprise enterprise, Member member) {
+		String jpql =
+				"select sum(rebate.direct),sum(rebate.indirect) "+
+						"from Rebate rebate where "+
+						"rebate.enterprise=:enterprise and rebate.member=:member ";
+
+		Query query = entityManager.createQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT);
+
+		query.setParameter("enterprise",enterprise);
+		query.setParameter("enterprise",enterprise);
+
+
+		List result = query.getResultList();
+		Object[] row = (Object[]) result.get(0);
+
+		RebateSummary summary = new RebateSummary();
+
+		summary.setDirect((BigDecimal) row[0]);
+		summary.setIndirect((BigDecimal) row[1]);
+		summary.setRebate(summary.getDirect().add(summary.getIndirect()));
+
+		return summary;
 	}
 }
