@@ -39,8 +39,11 @@ public class Gold extends BaseEntity {
 		/** 收益  收入 */
 		history,
 
-		/** 打赏  收入 */
-		reward
+		/** 打赏  支出 */
+		reward,
+
+		/** 弹幕  支出 */
+		barrage
 	}
 
 	/** 类型 */

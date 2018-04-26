@@ -124,7 +124,7 @@ public class EnterpriseController extends BaseController {
         if (member.getName()==null) {
             return Message.error("请先绑定银行卡");
         }
-        Enterprise enterprise = enterpriseService.createAgent(member);
+        Enterprise enterprise = enterpriseService.createAgent(member,null);
         enterprise.setPhone(mobile);
         enterprise.setLinkman(name);
         enterpriseService.update(enterprise);

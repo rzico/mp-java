@@ -50,9 +50,6 @@ public class ArticleShareController extends BaseController {
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
-    @Resource(name = "weixinUpServiceImpl")
-    private WeixinUpService weixinUpService;
-
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
@@ -132,17 +129,18 @@ public class ArticleShareController extends BaseController {
         if(articles==null){
             return Message.error("文章ID无效");
         }
+        return Message.error("没有配置公众号");
 
-        String rootPath = request.getSession().getServletContext().getRealPath("/");
-        if (topic.getConfig().getWxAppId()==null) {
-            return Message.error("没有配置公众号");
-        }
-        if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath).equals("success")){
-            return Message.success("分享成功");
-        }
-        else{
-            return Message.error("分享失败");
-        }
+//        String rootPath = request.getSession().getServletContext().getRealPath("/");
+//        if (topic.getConfig().getWxAppId()==null) {
+//            return Message.error("没有配置公众号");
+//        }
+//        if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath).equals("success")){
+//            return Message.success("分享成功");
+//        }
+//        else{
+//            return Message.error("分享失败");
+//        }
     }
 
 }

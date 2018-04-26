@@ -49,8 +49,8 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
 
-	@Resource(name = "depositDaoImpl")
-	private DepositDao depositDao;
+	@Resource(name = "goldDaoImpl")
+	private GoldDao goldDao;
 
 	@Resource(name = "liveGiftDaoImpl")
 	public void setBaseDao(LiveGiftDao liveGiftDao) {
@@ -106,23 +106,23 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 	public void add(LiveGift gift, Member member, Live live) throws Exception {
 
 	   memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-	   if (member.getBalance().compareTo(new BigDecimal(gift.getPrice()))<0) {
+	   if (member.getPoint().compareTo(gift.getPrice().longValue())<0) {
 	   	  throw  new RuntimeException("余额不足");
 	   }
-	   member.setBalance(member.getBalance().subtract(new BigDecimal(gift.getPrice())));
+	   member.setPoint(member.getPoint()-gift.getPrice().longValue());
 	   memberDao.merge(member);
 	   memberDao.flush();
 
-	   Deposit deposit = new Deposit();
-	   deposit.setBalance(member.getBalance());
-	   deposit.setCredit(BigDecimal.ZERO);
-	   deposit.setDebit(new BigDecimal(gift.getPrice()));
-	   deposit.setMember(member);
-	   deposit.setMemo("送礼物"+gift.getName());
-	   deposit.setDeleted(false);
-	   deposit.setOperator("system");
-	   deposit.setType(Deposit.Type.payment);
-	   depositDao.persist(deposit);
+	   Gold gold = new Gold();
+		gold.setBalance(member.getPoint());
+		gold.setCredit(0L);
+		gold.setDebit(gift.getPrice().longValue());
+		gold.setMember(member);
+		gold.setMemo("送礼物"+gift.getName());
+		gold.setDeleted(false);
+		gold.setOperator("system");
+		gold.setType(Gold.Type.reward);
+		goldDao.persist(gold);
 
        LiveGiftData data = new LiveGiftData();
        data.setGiftName(gift.getName());
@@ -160,25 +160,23 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 
 
 	public void barrage(Member member, Live live) throws Exception {
-
-		memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-		if (member.getBalance().compareTo(new BigDecimal("0.1"))<0) {
+		if (member.getPoint().compareTo(1L)<0) {
 			throw  new RuntimeException("余额不足");
 		}
-		member.setBalance(member.getBalance().subtract(new BigDecimal("0.1")));
+		member.setPoint(member.getPoint()-1L);
 		memberDao.merge(member);
 		memberDao.flush();
 
-		Deposit deposit = new Deposit();
-		deposit.setBalance(member.getBalance());
-		deposit.setCredit(BigDecimal.ZERO);
-		deposit.setDebit(new BigDecimal("0.1"));
-		deposit.setMember(member);
-		deposit.setMemo("发送弹幕信息");
-		deposit.setDeleted(false);
-		deposit.setOperator("system");
-		deposit.setType(Deposit.Type.payment);
-		depositDao.persist(deposit);
+		Gold gold = new Gold();
+		gold.setBalance(member.getPoint());
+		gold.setCredit(0L);
+		gold.setDebit(1L);
+		gold.setMember(member);
+		gold.setMemo("发送弹幕信息");
+		gold.setDeleted(false);
+		gold.setOperator("system");
+		gold.setType(Gold.Type.barrage);
+		goldDao.persist(gold);
 
 	}
 
