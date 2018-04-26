@@ -70,6 +70,16 @@
 				</select>
 			</span>
     [/#if]
+    [#if statuss??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="gaugeCategory" class="select" style="background-color: #FFFFFF;">
+					<option value="">分类</option>
+                    [#list gaugeCategorys as gaugeCategory]
+                        <option value="${gaugeCategory.id}">${gaugeCategory.name}</option>
+                    [/#list]
+				</select>
+			</span>
+    [/#if]
         <input type="text" class="input-text" style="width:150px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -347,6 +357,7 @@
                 var _type =  $('select[name="type"]').val();
                 var _userType =  $('select[name="userType"]').val();
                 var _status =  $('select[name="status"]').val();
+                var _gaugeCategory =  $('select[name="gaugeCategory"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -360,6 +371,7 @@
                         "type":_type,
                         "userType":_userType,
                         "status":_status,
+                        "gaugeCategoryId":_gaugeCategory,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

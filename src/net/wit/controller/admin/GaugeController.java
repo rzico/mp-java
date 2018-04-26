@@ -100,6 +100,8 @@ public class GaugeController extends BaseController {
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
+		model.addAttribute("gaugeCategorys",gaugeCategoryService.findAll());
+
 		return "/admin/gauge/list";
 	}
 
@@ -404,7 +406,7 @@ public class GaugeController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Gauge.Type type, Gauge.UserType userType, Gauge.Status status, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate,Long gaugeCategoryId, Gauge.Type type, Gauge.UserType userType, Gauge.Status status, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
@@ -417,6 +419,11 @@ public class GaugeController extends BaseController {
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
+		}
+
+		if (gaugeCategoryId!=null) {
+			Filter categoryFilter = new Filter("gaugeCategory", Filter.Operator.eq, gaugeCategoryService.find(gaugeCategoryId));
+			filters.add(categoryFilter);
 		}
 
 		Page<Gauge> page = gaugeService.findPage(beginDate,endDate,null,pageable);

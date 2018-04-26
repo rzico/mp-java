@@ -257,7 +257,7 @@ public class GeneCalculator implements Serializable {
             double result = Calculator.conversion(expr);
             s = new BigDecimal(result);
         } catch (Exception e) {
-            throw new RuntimeException("因子表达式错误:"+gene.getAttribute());
+            throw new RuntimeException("因子表达式错误:<"+gene.getId()+">"+gene.getAttribute());
         }
 
         this.genes.put(gene.getName(),s);
@@ -332,7 +332,7 @@ public class GeneCalculator implements Serializable {
             double ret = Calculator.conversion(" "+expr+" ");
             s = new BigDecimal(ret);
         } catch (Exception e) {
-            throw new RuntimeException("结果表达式错误:"+result.getAttribute());
+            throw new RuntimeException("结果表达式错误:<"+result.getId()+">"+result.getAttribute());
         }
 
         return s.compareTo(BigDecimal.ZERO)>0;
