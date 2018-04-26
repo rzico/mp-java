@@ -171,6 +171,7 @@ public abstract class BaseDaoImpl<T, ID extends Serializable> implements BaseDao
 				criteriaQuery.orderBy(criteriaBuilder.asc(root.get(OrderEntity.ORDER_PROPERTY_NAME)));
 			} else {
 				criteriaQuery.orderBy(criteriaBuilder.desc(root.get(OrderEntity.CREATE_DATE_PROPERTY_NAME)));
+				criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 			}
 		}
 		TypedQuery<T> query = entityManager.createQuery(criteriaQuery).setFlushMode(FlushModeType.COMMIT);
@@ -200,6 +201,7 @@ public abstract class BaseDaoImpl<T, ID extends Serializable> implements BaseDao
 				criteriaQuery.orderBy(criteriaBuilder.asc(root.get(OrderEntity.ORDER_PROPERTY_NAME)));
 			} else {
 				criteriaQuery.orderBy(criteriaBuilder.desc(root.get(OrderEntity.CREATE_DATE_PROPERTY_NAME)));
+				criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 			}
 		}
 		long total = count(criteriaQuery, null);
@@ -369,9 +371,9 @@ public abstract class BaseDaoImpl<T, ID extends Serializable> implements BaseDao
 		}
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		Predicate restrictions = criteriaQuery.getRestriction() != null ? criteriaQuery.getRestriction() : criteriaBuilder.conjunction();
-		if (StringUtils.isNotEmpty(pageable.getSearchProperty()) && StringUtils.isNotEmpty(pageable.getSearchValue())) {
-			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.like(root.<String> get(pageable.getSearchProperty()), "%" + pageable.getSearchValue() + "%"));
-		}
+//		if (StringUtils.isNotEmpty(pageable.getSearchProperty()) && StringUtils.isNotEmpty(pageable.getSearchValue())) {
+//			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.like(root.<String> get(pageable.getSearchProperty()), "%" + pageable.getSearchValue() + "%"));
+//		}
 		if (pageable.getFilters() != null) {
 			for (Filter filter : pageable.getFilters()) {
 				if (filter == null || StringUtils.isEmpty(filter.getProperty())) {

@@ -97,6 +97,9 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 	public Transfer findBySn(String sn) {
 		return transferDao.findBySn(sn);
 	}
+	public Transfer findByOrderSn(String sn) {
+		return transferDao.findByOrderSn(sn);
+	}
 
 	@Transactional
 	public synchronized Boolean submit(Transfer transfer) throws Exception {

@@ -28,4 +28,5 @@ public interface TransferDao extends BaseDao<Transfer, Long> {
 	 */
 	Page<Transfer> findPage(Date beginDate, Date endDate, Pageable pageable);
 	Transfer findBySn(String sn);
+	Transfer findByOrderSn(String sn);
 }

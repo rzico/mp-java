@@ -1,6 +1,8 @@
 package net.wit.controller.model;
 
+import net.wit.Setting;
 import net.wit.entity.Payment;
+import net.wit.util.SettingUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -86,8 +88,14 @@ public class PaymentModel extends BaseModel implements Serializable {
         this.amount = payment.getAmount();
         this.createDate = payment.getCreateDate();
         this.memo = payment.getMemo();
-        this.logo = payment.getPayee().getLogo();
-        this.nickName = payment.getPayee().displayName();
+        if (payment.getPayee()!=null) {
+            this.logo = payment.getPayee().getLogo();
+            this.nickName = payment.getPayee().displayName();
+        } else {
+            Setting setting = SettingUtils.get();
+            this.nickName = setting.getSiteName();
+            this.logo = setting.getLogo();
+        }
         this.paymentPluginId = payment.getPaymentPluginId();
     }
 }

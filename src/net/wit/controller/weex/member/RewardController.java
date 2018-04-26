@@ -67,6 +67,7 @@ public class RewardController extends BaseController {
         reward.setAmount(amount);
         reward.setAuthor(article.getMember());
         reward.setIp(request.getRemoteAddr());
+        reward.setType(ArticleReward.Type.article);
         reward.setStatus(ArticleReward.Status.waiting);
         reward.setMember(member);
         reward.setFee(amount.multiply(new BigDecimal("0.05")));

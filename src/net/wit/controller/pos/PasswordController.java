@@ -80,22 +80,12 @@ public class PasswordController extends BaseController {
 	@RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
 	@ResponseBody
 	public DataBlock sendMobile(String mobile,String key, HttpServletRequest request) {
-		ResourceBundle bundle=PropertyResourceBundle.getBundle("config");
-		String myKey = DigestUtils.md5Hex(mobile+bundle.getString("appKey"));
+		String myKey = DigestUtils.md5Hex(mobile+"myjsy2014$$");
 		if (!myKey.equals(key)) {
 			return DataBlock.error("通讯密码无效");
 		}
-		HttpSession session = request.getSession();
-		Setting setting = SettingUtils.get();
 		int challege = net.wit.util.StringUtils.Random6Code();
 		String securityCode = String.valueOf(challege);
-		SafeKey tmp = (SafeKey) session.getAttribute(CAPTCHA_SECURITYCODE_SESSION);
-		if (tmp!=null && !tmp.hasExpired()) {
-			securityCode = tmp.getValue();
-			if (!tmp.canReset()) {
-				return DataBlock.error("系统忙，稍等几秒重试");
-			}
-		}
         Member member = memberService.findByMobile(mobile);
         if (member==null) {
 			return DataBlock.error("当前用户名无效");
@@ -127,11 +117,6 @@ public class PasswordController extends BaseController {
 
 		String newPwd = newPass;
 
-		Member member = memberService.findByMobile(redis.getKey());
-		if (member==null) {
-			return DataBlock.error("无效用户名");
-		}
-
 		SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
 		if (safeKey.hasExpired()) {
 			return DataBlock.error("验证码过期了");
@@ -139,6 +124,11 @@ public class PasswordController extends BaseController {
 
 		if (!safeKey.getValue().equals(captcha)) {
 			return DataBlock.error("验证码不正确");
+		}
+
+		Member member = memberService.findByMobile(safeKey.getKey());
+		if (member==null) {
+			return DataBlock.error("无效用户名");
 		}
 
 		member.setPassword(newPwd);

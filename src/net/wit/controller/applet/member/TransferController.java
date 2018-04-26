@@ -52,6 +52,12 @@ public class TransferController extends BaseController {
     @Resource(name = "bankcardServiceImpl")
     private BankcardService bankcardService;
 
+    @Resource(name = "configServiceImpl")
+    private ConfigService configService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      *
      */
@@ -71,12 +77,22 @@ public class TransferController extends BaseController {
         return Message.bind(data,request);
     }
 
-    private BigDecimal calculate(BigDecimal amount) {
-//        if (amount.compareTo(new BigDecimal(5000))>=0) {
-//            return BigDecimal.ZERO;
-//        } else {
+
+    private BigDecimal calculate(Member member,BigDecimal amount) {
+        Config config = configService.find("transfer.fee.type");
+        if (config==null) {
+            if (member!=null) {
+                Admin admin = adminService.findByMember(member);
+                if (admin != null && admin.getEnterprise() != null) {
+                    return admin.getEnterprise().getTransfer();
+                }
+            }
             return BigDecimal.ONE;
-//        }
+        } else {
+            Config fee = configService.find("transfer.fee");
+            return amount.multiply(fee.getBigDecimal().multiply(new BigDecimal("0.01")))
+                    .setScale(2,BigDecimal.ROUND_HALF_DOWN);
+        }
     }
 
     /**
@@ -85,7 +101,8 @@ public class TransferController extends BaseController {
     @RequestMapping(value = "calculate", method = RequestMethod.POST)
     @ResponseBody
     public Message calculateFee(BigDecimal amount,HttpServletRequest request){
-        return Message.success(calculate(amount),"success");
+        Member member = memberService.getCurrent();
+        return Message.success(calculate(member,amount),"success");
     }
 
     /**
@@ -130,7 +147,7 @@ public class TransferController extends BaseController {
         transfer.setMember(member);
         transfer.setStatus(Transfer.Status.waiting);
         transfer.setAmount(amount);
-        transfer.setFee(calculate(amount));
+        transfer.setFee(calculate(member,amount));
         transfer.setType(type);
         transfer.setSn(snService.generate(Sn.Type.transfer));
         try {

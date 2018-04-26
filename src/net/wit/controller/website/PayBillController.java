@@ -87,12 +87,14 @@ public class PayBillController extends BaseController {
      * id shop id
      */
     private PayBill calculate(Member member,Shop shop,BigDecimal amount,BigDecimal noDiscount){
+
         if (amount==null) {
             amount = BigDecimal.ZERO;
         }
         if (noDiscount==null) {
             noDiscount = BigDecimal.ZERO;
         }
+
         PayBill payBill = new PayBill();
         CouponCode couponCode = null;
         List<CouponCode> couponCodes = member.getCouponCodes();
@@ -106,6 +108,7 @@ public class PayBillController extends BaseController {
                 }
             }
         }
+
         Member owner = shop.getOwner();
         Map<String,Object> data =new HashMap<String,Object>();
         payBill.setAmount(amount);
@@ -114,6 +117,8 @@ public class PayBillController extends BaseController {
         payBill.setCouponDiscount(discount);
         Card card = null;
         BigDecimal cardDiscount = BigDecimal.ZERO;
+
+        Topic topic = owner.getTopic();
 
         for (Card c:member.getCards()) {
             if (c.getOwner().equals(owner)) {
@@ -137,7 +142,7 @@ public class PayBillController extends BaseController {
         payBill.setCardDiscount(cardDiscount);
 
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(shop.getEnterprise().calcFee(effective));
+        payBill.setFee(topic.calcPaybill(effective));
         return payBill;
     }
 

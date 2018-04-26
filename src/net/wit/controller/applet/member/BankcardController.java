@@ -231,7 +231,7 @@ public class BankcardController extends BaseController {
             if (!safeKey.getKey().equals(data.get("mobile"))) {
                 return Message.error("手机验证不合法");
             }
-
+//            http(s)://aliyun-bankcard-verify.apistore.cn/bank
             String host = "https://aliyun-bankcard4-verify.apistore.cn";
             String path = "/bank4";
             String method = "GET";

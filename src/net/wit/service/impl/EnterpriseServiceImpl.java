@@ -123,8 +123,9 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise = new Enterprise();
 			enterprise.setName(topic.getName());
 			enterprise.setDeleted(false);
-			enterprise.setBrokerage(new BigDecimal("0.38"));
+			enterprise.setBrokerage(new BigDecimal("0"));
 			enterprise.setCreditLine(BigDecimal.ZERO);
+			enterprise.setTransfer(BigDecimal.ONE);
 			enterprise.setLogo(topic.getLogo());
 			enterprise.setMember(member);
 			enterprise.setLinkman(member.displayName());
@@ -167,26 +168,44 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 	}
 
 	@Transactional
-	public Enterprise createAgent(Member member) {
+	public Enterprise createAgent(Member member,Enterprise parent) {
 		Enterprise enterprise = enterpriseDao.find(member);
 		if (enterprise==null) {
 			enterprise = new Enterprise();
 			enterprise.setName(member.getName());
 			enterprise.setDeleted(false);
-			enterprise.setBrokerage(new BigDecimal("0.38"));
+			enterprise.setBrokerage(new BigDecimal("0"));
 			enterprise.setCreditLine(BigDecimal.ZERO);
+			enterprise.setTransfer(BigDecimal.ONE);
 			enterprise.setLogo(member.getLogo());
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.personal);
 			enterprise.setStatus(Enterprise.Status.waiting);
+			enterprise.setParent(parent);
+			if (parent!=null) {
+				if (parent.getType().equals(Enterprise.Type.operate)) {
+					enterprise.setType(Enterprise.Type.agent);
+				} else {
+					enterprise.setType(Enterprise.Type.personal);
+				}
+			}
 			enterpriseDao.persist(enterprise);
+		} else {
+			if (parent!=null) {
+				if (parent.getType().equals(Enterprise.Type.operate)) {
+					enterprise.setType(Enterprise.Type.agent);
+				} else {
+					enterprise.setType(Enterprise.Type.personal);
+				}
+			}
+			enterprise.setParent(parent);
+			enterpriseDao.merge(enterprise);
 		}
 		Admin admin = adminDao.findByMember(member);
 		if (admin == null) {
 			admin = new Admin();
 			admin.setUsername(member.userId());
 			admin.setName(member.getName());
-//			admin.setEmail(member.getEmail());
 			admin.setEnterprise(enterprise);
 			admin.setIsLocked(false);
 			admin.setIsEnabled(true);

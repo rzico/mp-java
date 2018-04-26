@@ -31,7 +31,7 @@ public class CardBill extends BaseEntity {
 		/** 消费  支出 */
 		consume,
 
-		/** 退款  支出 */
+		/** 退款  收入 */
 		refunds
 	}
 

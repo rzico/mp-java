@@ -62,6 +62,10 @@ public class Transfer extends BaseEntity {
 	@Column(columnDefinition="varchar(50) not null unique comment '编号'")
 	private String sn;
 
+	/** 原单号 */
+	@Column(columnDefinition="varchar(50) comment '原单号'")
+	private String orderSn;
+
 	/** 类型 */
 	@Column(columnDefinition="int(11) not null comment '类型 {weixin:微信钱包,alipay:支付宝,bankcard:银行卡}'")
 	private Type type;
@@ -256,6 +260,14 @@ public class Transfer extends BaseEntity {
 
 	public void setDeposits(List<Deposit> deposits) {
 		this.deposits = deposits;
+	}
+
+	public String getOrderSn() {
+		return orderSn;
+	}
+
+	public void setOrderSn(String orderSn) {
+		this.orderSn = orderSn;
 	}
 
 	public Member getPromoter() {

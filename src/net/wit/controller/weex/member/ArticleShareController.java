@@ -50,6 +50,9 @@ public class ArticleShareController extends BaseController {
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
+    @Resource(name = "weixinUpServiceImpl")
+    private WeixinUpService weixinUpService;
+
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
@@ -78,5 +81,68 @@ public class ArticleShareController extends BaseController {
         messageService.sharePushTo(share);
         return Message.success("分享成功");
    }
+
+
+    /**
+     *   分享公众号
+     */
+    @RequestMapping(value = "/platform",method = RequestMethod.POST)
+    @ResponseBody
+    public Message platform(Long[]  articleId, ArticleShare.ShareType shareType, Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        //找到该所绑定专栏的管理员
+        Admin admin=adminService.findByMember(member);
+
+        if(admin==null){
+            return Message.error("没有点亮专栏");
+        }
+
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+
+        Enterprise enterprise = admin.getEnterprise();
+
+        if(enterprise.getMember()==null){
+            return Message.error("该专栏商家尚未入驻");
+        }
+        member=enterprise.getMember();
+
+        Topic topic=member.getTopic();
+        if(topic==null){
+            return Message.error("该专栏无效");
+        }
+        //比较该专栏过期时间
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date overtime=topic.getExpire();
+        Date nowtime=new Date();
+        if(overtime.before(nowtime)){
+            return Message.error("该专栏已到期");
+        }
+
+        //专栏公众号设置
+        if(topic.getConfig()==null||topic.getConfig().getWxAppId().equals("")||topic.getConfig().getWxAppSerect().equals("")){
+            return Message.error("您未绑定公众号");
+        }
+
+        List<Article> articles=articleService.findList(articleId);
+        if(articles==null){
+            return Message.error("文章ID无效");
+        }
+
+        String rootPath = request.getSession().getServletContext().getRealPath("/");
+        if (topic.getConfig().getWxAppId()==null) {
+            return Message.error("没有配置公众号");
+        }
+        if(weixinUpService.ArticleUpLoad(articleId,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath).equals("success")){
+            return Message.success("分享成功");
+        }
+        else{
+            return Message.error("分享失败");
+        }
+    }
 
 }

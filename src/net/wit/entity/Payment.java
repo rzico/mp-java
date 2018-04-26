@@ -45,7 +45,7 @@ public class Payment extends BaseEntity {
 		cashier,
 		/** 专栏激活     */
 		topic,
-		/** 会员卡    */
+		/** 充会员卡    */
 		card
 	}
 
@@ -375,7 +375,7 @@ public class Payment extends BaseEntity {
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+(getMember().getName()==null?"":"("+getMember().getName()+")") );
+			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
 		} else {
 			return null;
 		}

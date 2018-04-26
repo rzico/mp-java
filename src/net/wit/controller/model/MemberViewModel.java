@@ -2,6 +2,7 @@ package net.wit.controller.model;
 import net.wit.entity.CouponCode;
 import net.wit.entity.Member;
 import net.wit.entity.Topic;
+import net.wit.entity.Vip;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -29,6 +30,10 @@ public class MemberViewModel extends BaseModel implements Serializable {
     private String url;
     /** 二维码 */
     private String qrcode;
+
+    /** 星级 */
+    private Member.VIP vip;
+
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
 
@@ -122,6 +127,7 @@ public class MemberViewModel extends BaseModel implements Serializable {
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
         this.qrcode = member.getQrcode();
+        this.vip = member.getVip();
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Topic topic = member.getTopic();
         if (topic!=null) {

@@ -106,6 +106,8 @@ public class ProductController extends BaseController {
 		Goods goods = null;
 		if (model.getId()==null) {
 			goods = new Goods();
+			goods.setRanking(0L);
+			goods.setReview(0L);
 		} else {
 			goods = goodsService.find(model.getId());
 		}

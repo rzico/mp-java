@@ -112,6 +112,7 @@ public class ProductController extends BaseController {
 		Goods goods = null;
 		if (model.getId()==null) {
 			goods = new Goods();
+			goods.setRanking(0L);
 		} else {
 			goods = goodsService.find(model.getId());
 		}
@@ -324,6 +325,7 @@ public class ProductController extends BaseController {
 		}
 		Page<Product> page = productService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
+
 	}
 	
 	

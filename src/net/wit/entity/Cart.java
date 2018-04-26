@@ -50,18 +50,18 @@ public class Cart extends BaseEntity {
 	private Member member;
 
 	/** 购物车项 */
-	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<CartItem> cartItems = new HashSet<CartItem>();
-
-
-	/**
-	 * 删除前处理
-	 */
-	@PreRemove
-	public void preRemove() {
-		getCartItems().clear();
-	}
+//
+//
+//	/**
+//	 * 删除前处理
+//	 */
+//	@PreRemove
+//	public void preRemove() {
+//		getCartItems().clear();
+//	}
 
 	/**
 	 * 获取密钥
