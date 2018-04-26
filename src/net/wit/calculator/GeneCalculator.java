@@ -251,14 +251,13 @@ public class GeneCalculator implements Serializable {
             model.addAttribute(key,this.genes.get(key));
         }
 
+        String expr = FreemarkerUtils.process(gene.getAttribute(),model);
         BigDecimal s = BigDecimal.ZERO;
         try {
-            String expr = FreemarkerUtils.process(gene.getAttribute(),model);
-
             double result = Calculator.conversion(expr);
             s = new BigDecimal(result);
         } catch (Exception e) {
-            throw new RuntimeException("表达式错误");
+            throw new RuntimeException("表达式错误:"+expr);
         }
 
         this.genes.put(gene.getName(),s);
@@ -325,15 +324,15 @@ public class GeneCalculator implements Serializable {
         for (String key : this.genes.keySet()) {
             model.addAttribute(key,this.genes.get(key));
         }
+        String expr = FreemarkerUtils.process(result.getAttribute(),model);
+
 
         BigDecimal s = BigDecimal.ZERO;
         try {
-            String expr = FreemarkerUtils.process(result.getAttribute(),model);
-
             double ret = Calculator.conversion(" "+expr+" ");
             s = new BigDecimal(ret);
         } catch (Exception e) {
-            throw new RuntimeException("表达式错误");
+            throw new RuntimeException("表达式错误:"+expr);
         }
 
         return s.compareTo(BigDecimal.ZERO)>0;
@@ -395,18 +394,16 @@ public class GeneCalculator implements Serializable {
         for (String key : this.genes.keySet()) {
             model.addAttribute(key,this.genes.get(key));
         }
+        String expr = FreemarkerUtils.process(correct, model);
 
         if (!"".equals(correct)) {
             try {
-                String expr = FreemarkerUtils.process(correct, model);
                 double ret = Calculator.conversion(expr);
                 if (ret<=0) {
                     throw new RuntimeException("无效答券");
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (TemplateException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException("表达式错误:"+expr);
             }
         }
     }
