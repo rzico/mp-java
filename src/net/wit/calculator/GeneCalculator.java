@@ -251,13 +251,13 @@ public class GeneCalculator implements Serializable {
             model.addAttribute(key,this.genes.get(key));
         }
 
-        String expr = FreemarkerUtils.process(gene.getAttribute(),model);
         BigDecimal s = BigDecimal.ZERO;
         try {
+            String expr = FreemarkerUtils.process(gene.getAttribute(),model);
             double result = Calculator.conversion(expr);
             s = new BigDecimal(result);
         } catch (Exception e) {
-            throw new RuntimeException("表达式错误:"+expr);
+            throw new RuntimeException("因子表达式错误:"+gene.getAttribute());
         }
 
         this.genes.put(gene.getName(),s);
@@ -324,15 +324,15 @@ public class GeneCalculator implements Serializable {
         for (String key : this.genes.keySet()) {
             model.addAttribute(key,this.genes.get(key));
         }
-        String expr = FreemarkerUtils.process(result.getAttribute(),model);
 
 
         BigDecimal s = BigDecimal.ZERO;
         try {
+            String expr = FreemarkerUtils.process(result.getAttribute(),model);
             double ret = Calculator.conversion(" "+expr+" ");
             s = new BigDecimal(ret);
         } catch (Exception e) {
-            throw new RuntimeException("表达式错误:"+expr);
+            throw new RuntimeException("结果表达式错误:"+result.getAttribute());
         }
 
         return s.compareTo(BigDecimal.ZERO)>0;
@@ -394,16 +394,16 @@ public class GeneCalculator implements Serializable {
         for (String key : this.genes.keySet()) {
             model.addAttribute(key,this.genes.get(key));
         }
-        String expr = FreemarkerUtils.process(correct, model);
 
         if (!"".equals(correct)) {
             try {
+                String expr = FreemarkerUtils.process(correct, model);
                 double ret = Calculator.conversion(expr);
                 if (ret<=0) {
                     throw new RuntimeException("无效答券");
                 }
             } catch (Exception e) {
-                throw new RuntimeException("表达式错误:"+expr);
+                throw new RuntimeException("测慌表达式错误:"+correct);
             }
         }
     }
