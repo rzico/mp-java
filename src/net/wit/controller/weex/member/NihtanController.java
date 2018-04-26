@@ -68,7 +68,7 @@ public class NihtanController extends BaseController {
     @ResponseBody
     public Message gameList() {
         String resp = Crypto.gameList();
-//        System.out.println("========="+resp);
+        System.out.println("========="+resp);
 
         JSONObject jsonObject = JSONObject.fromObject(resp);
 
