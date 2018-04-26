@@ -202,6 +202,7 @@ public class GaugeResultController extends BaseController {
 		entity.setOrders(gaugeResult.getOrders() == null ? 0 : gaugeResult.getOrders());
 
 		entity.setContent(gaugeResult.getContent());
+		entity.setTitle(gaugeResult.getTitle());
 		Gauge gauge = entity.getGauge();
 		entity.setGauge(gauge);
 

@@ -420,10 +420,8 @@ public class GeneCalculator implements Serializable {
                 String text = r.getContent();
                 String expr = FreemarkerUtils.process(text,model);
                 s = s+expr;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (TemplateException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException("结果页面出错:id="+r.getId());
             }
         }
         return s;
