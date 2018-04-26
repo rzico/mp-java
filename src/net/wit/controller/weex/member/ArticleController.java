@@ -276,7 +276,7 @@ public class ArticleController extends BaseController {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
         article.setIsDraft(false);
-        article.setIsPublish(true);
+//        article.setIsPublish(true);
         articleService.update(article);
 
         List<Filter> filters = new ArrayList<Filter>();
