@@ -21,6 +21,7 @@ import static com.tls.tls_sigature.tls_sigature.CheckTLSSignatureEx;
 import static com.tls.tls_sigature.tls_sigature.GenTLSSignatureEx;
 
 public class User {
+
     public static Logger logger = LogManager.getLogger(User.class);
     public static String im_attr="https://console.tim.qq.com/v4/openim/im_set_attr_name?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_attr="https://console.tim.qq.com/v4/im_open_login_svc/account_import?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
@@ -43,6 +44,8 @@ public class User {
         // generate signature
         tls_sigature.GenTLSSignatureResult result = null;
         try {
+            System.out.printf(bundle.getString("im.privateKey"));
+            System.out.printf(username);
             result = GenTLSSignatureEx(Long.parseLong(bundle.getString("x-tls-appId")), username,bundle.getString("im.privateKey"));
             return result.urlSig;
         } catch (IOException e) {
