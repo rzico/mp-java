@@ -417,7 +417,6 @@ public class GeneCalculator implements Serializable {
         String s="";
         for (GaugeResult r:this.results) {
             try {
-                System.out.printf(JsonUtils.toJson(model));
                 String text = r.getContent();
                 String expr = FreemarkerUtils.process(text,model);
                 s = s+expr;
