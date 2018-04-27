@@ -93,6 +93,7 @@ public class AgentController extends BaseController {
         model.setId(member.getId());
         model.setNickName(member.displayName());
         model.setLogo(member.getLogo());
+        model.setEnterprises(es);
 
         return Message.bind(model,request);
     }
