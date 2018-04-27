@@ -397,8 +397,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
 				evaluationDao.merge(evaluation);
                 if (evaluation.getPromoter()!=null && evaluation.getRebate().compareTo(BigDecimal.ZERO)>0) {
-
-                	System.out.printf("====!!!!====");
 					Member buyer = evaluation.getMember();
 					if (buyer.getPromoter()==null) {
 						buyer.setPromoter(evaluation.getPromoter());

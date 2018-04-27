@@ -114,67 +114,79 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 
 	public void rebate(BigDecimal amount,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception {
        if (personal!=null) {
-       	 Member member = personal.getMember();
-       	 memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
-       	 BigDecimal rebate = amount.multiply(personal.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN);
-       	 member.setBalance(member.getBalance().add(rebate));
-       	 memberDao.merge(member);
-       	 memberDao.flush();
-		   Deposit d1 = new Deposit();
-		   d1.setBalance(member.getBalance());
-		   d1.setType(Deposit.Type.rebate);
-		   d1.setMemo("代理奖励金");
-		   d1.setMember(member);
-		   d1.setCredit(amount);
-		   d1.setDebit(BigDecimal.ZERO);
-		   d1.setDeleted(false);
-		   d1.setOperator("system");
-		   d1.setOrder(order);
-		   d1.setSeller(order.getSeller());
-		   depositDao.persist(d1);
-		   messageService.depositPushTo(d1);
+		   Member member = personal.getMember();
+		   BigDecimal rebate = amount.multiply(personal.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+		   if (rebate.compareTo(BigDecimal.ZERO)>0) {
+			   memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+			   member.setBalance(member.getBalance().add(rebate));
+			   memberDao.merge(member);
+			   memberDao.flush();
+			   Deposit d1 = new Deposit();
+			   d1.setBalance(member.getBalance());
+			   d1.setType(Deposit.Type.rebate);
+			   d1.setMemo("代理奖励金");
+			   d1.setMember(member);
+			   d1.setCredit(amount);
+			   d1.setDebit(BigDecimal.ZERO);
+			   d1.setDeleted(false);
+			   d1.setOperator("system");
+			   d1.setOrder(order);
+			   if (order != null) {
+				   d1.setSeller(order.getSeller());
+			   }
+			   depositDao.persist(d1);
+			   messageService.depositPushTo(d1);
+		   }
 	   }
 		if (agent!=null) {
 			Member member = agent.getMember();
-			memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 			BigDecimal rebate = amount.multiply(agent.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			member.setBalance(member.getBalance().add(rebate));
-			memberDao.merge(member);
-			memberDao.flush();
-			Deposit d1 = new Deposit();
-			d1.setBalance(member.getBalance());
-			d1.setType(Deposit.Type.rebate);
-			d1.setMemo("代理奖励金");
-			d1.setMember(member);
-			d1.setCredit(amount);
-			d1.setDebit(BigDecimal.ZERO);
-			d1.setDeleted(false);
-			d1.setOperator("system");
-			d1.setOrder(order);
-			d1.setSeller(order.getSeller());
-			depositDao.persist(d1);
-			messageService.depositPushTo(d1);
+			if (rebate.compareTo(BigDecimal.ZERO)>0) {
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+				member.setBalance(member.getBalance().add(rebate));
+				memberDao.merge(member);
+				memberDao.flush();
+				Deposit d1 = new Deposit();
+				d1.setBalance(member.getBalance());
+				d1.setType(Deposit.Type.rebate);
+				d1.setMemo("代理奖励金");
+				d1.setMember(member);
+				d1.setCredit(amount);
+				d1.setDebit(BigDecimal.ZERO);
+				d1.setDeleted(false);
+				d1.setOperator("system");
+				d1.setOrder(order);
+				if (order != null) {
+					d1.setSeller(order.getSeller());
+				}
+				depositDao.persist(d1);
+				messageService.depositPushTo(d1);
+			}
 		}
 		if (operate!=null) {
 			Member member = operate.getMember();
-			memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 			BigDecimal rebate = amount.multiply(operate.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			member.setBalance(member.getBalance().add(rebate));
-			memberDao.merge(member);
-			memberDao.flush();
-			Deposit d1 = new Deposit();
-			d1.setBalance(member.getBalance());
-			d1.setType(Deposit.Type.rebate);
-			d1.setMemo("代理奖励金");
-			d1.setMember(member);
-			d1.setCredit(amount);
-			d1.setDebit(BigDecimal.ZERO);
-			d1.setDeleted(false);
-			d1.setOperator("system");
-			d1.setOrder(order);
-			d1.setSeller(order.getSeller());
-			depositDao.persist(d1);
-			messageService.depositPushTo(d1);
+			if (rebate.compareTo(BigDecimal.ZERO)>0) {
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+				member.setBalance(member.getBalance().add(rebate));
+				memberDao.merge(member);
+				memberDao.flush();
+				Deposit d1 = new Deposit();
+				d1.setBalance(member.getBalance());
+				d1.setType(Deposit.Type.rebate);
+				d1.setMemo("代理奖励金");
+				d1.setMember(member);
+				d1.setCredit(amount);
+				d1.setDebit(BigDecimal.ZERO);
+				d1.setDeleted(false);
+				d1.setOperator("system");
+				d1.setOrder(order);
+				if (order != null) {
+					d1.setSeller(order.getSeller());
+				}
+				depositDao.persist(d1);
+				messageService.depositPushTo(d1);
+			}
 		}
 	}
 
@@ -212,7 +224,7 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 
 					//
 					Enterprise e2 = e1.getParent();
-					if (e2!=null && e1.getType().equals(Enterprise.Type.operate)) {
+					if (!e1.getType().equals(Enterprise.Type.operate) && e2!=null) {
 						if (e2.getStatus().equals(Enterprise.Status.success)) {
 							if (e2.getType().equals(Enterprise.Type.operate)) {
 								member.setOperate(e2);

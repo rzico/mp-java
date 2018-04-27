@@ -269,7 +269,7 @@ public class PaymentController extends BaseController {
     /**
      * 查询支付状态
      */
-    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    @RequestMapping(value = "/query")
     @ResponseBody
     public Message query(String sn, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
