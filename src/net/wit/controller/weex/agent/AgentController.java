@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -83,18 +84,21 @@ public class AgentController extends BaseController {
 
         Long ms = memberService.count(filter);
 
+        Long es = enterpriseService.count(new Filter("parent", Filter.Operator.eq,enterprise),new Filter("status", Filter.Operator.eq,Enterprise.Status.success));
+
+
         AgentModel model = new AgentModel();
         model.setMembers(ms);
+        model.setEnterprises(es);
         model.setId(member.getId());
         model.setNickName(member.displayName());
         model.setLogo(member.getLogo());
-
 
         return Message.bind(model,request);
     }
 
     /**
-     *   获取代理明累
+     *   获取代理明细
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -112,11 +116,43 @@ public class AgentController extends BaseController {
         }
 
         List<Filter> filters = pageable.getFilters();
-        filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
+        filters.add(new Filter("parent", Filter.Operator.eq, enterprise));
 
-        Page<RebateSummary> page = rebateService.sumPage(null,null,enterprise,pageable);
+        Page<Enterprise> page = enterpriseService.findPage(null,null,pageable);
 
-        return Message.bind(AgentModel.bindList(page.getContent()),request);
+
+        List<AgentModel> models = new ArrayList<AgentModel>();
+        for (Enterprise en:page.getContent()) {
+            AgentModel m = new AgentModel();
+            m.setId(en.getMember().getId());
+            m.setLogo(en.getMember().getLogo());
+            m.setNickName(en.getMember().displayName());
+
+            RebateSummary summary = rebateService.sum(null,null,enterprise,en.getMember());
+
+            m.setRebate(summary.getRebate());
+            m.setDirect(summary.getDirect());
+            m.setIndirect(summary.getIndirect());
+            Filter filter = null;
+
+            if (en.getType().equals(Enterprise.Type.operate)) {
+                filter = new Filter("operate", Filter.Operator.eq, en);
+            } else
+            if (en.getType().equals(Enterprise.Type.agent)) {
+                filter = new Filter("agent", Filter.Operator.eq, en);
+            } else
+            {
+                filter = new Filter("personal", Filter.Operator.eq, en);
+            }
+
+            Long ms = memberService.count(filter);
+
+            m.setMembers(ms);
+            models.add(m);
+
+        }
+
+        return Message.bind(models,request);
 
     }
 
