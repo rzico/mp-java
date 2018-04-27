@@ -24,6 +24,9 @@ public class TransferListModel extends BaseModel implements Serializable {
 
     private BigDecimal amount;
 
+    private BigDecimal fee;
+
+
     public Long getId() {
         return id;
     }
@@ -80,15 +83,24 @@ public class TransferListModel extends BaseModel implements Serializable {
         this.amount = amount;
     }
 
+    public BigDecimal getFee() {
+        return fee;
+    }
+
+    public void setFee(BigDecimal fee) {
+        this.fee = fee;
+    }
+
     public void bind(Transfer transfer) {
         Member member = transfer.getMember();
         this.id = transfer.getId();
-        this.nickName = member.displayName()+"("+member.getMobile()+")";
+        this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.name = transfer.getName();
         this.bankname = transfer.getBankname();
         this.cardno = transfer.getCardno();
-        this.amount = transfer.effectiveAmount();
+        this.amount = transfer.getAmount();
+        this.fee = transfer.getFee();
     }
 
 
