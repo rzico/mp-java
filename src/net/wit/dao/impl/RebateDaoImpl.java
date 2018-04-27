@@ -106,14 +106,18 @@ public class RebateDaoImpl extends BaseDaoImpl<Rebate, Long> implements RebateDa
 		String jpql =
 				"select sum(rebate.direct),sum(rebate.indirect) "+
 						"from Rebate rebate where "+
-						"rebate.enterprise=:enterprise and rebate.member=:member ";
+						"rebate.enterprise=:enterprise";
+		if (member!=null) {
+			jpql = jpql + " and rebate.member=:member ";
+		}
 
 		Query query = entityManager.createQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT);
 
 		query.setParameter("enterprise",enterprise);
-		query.setParameter("member",member);
-
+		if (member!=null) {
+			query.setParameter("member", member);
+		}
 
 		List result = query.getResultList();
 		Object[] row = (Object[]) result.get(0);
