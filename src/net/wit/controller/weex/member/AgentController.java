@@ -96,7 +96,7 @@ public class AgentController extends BaseController {
             return Message.error("只能审核自已客户!");
         }
 
-        if (amount.compareTo(entity.getAmount()) != 0) {
+        if (amount.compareTo(entity.effectiveAmount()) != 0) {
             return Message.error("汇款金额不正确,请重新填写!");
         }
 
