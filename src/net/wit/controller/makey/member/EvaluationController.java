@@ -121,7 +121,7 @@ public class EvaluationController extends BaseController {
 //                {
 //                    eval.setRebate(eval.getPrice().multiply(gauge.getDistribution()).multiply(new BigDecimal("0.01")).setScale(3,BigDecimal.ROUND_HALF_DOWN));
 //                } else {
-                eval.setRebate(eval.getPrice().multiply(gauge.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(3,BigDecimal.ROUND_HALF_DOWN));
+                eval.setRebate(eval.getPrice().multiply(gauge.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN));
 //                }
             }
         }
