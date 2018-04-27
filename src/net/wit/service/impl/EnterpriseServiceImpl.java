@@ -181,6 +181,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.personal);
 			enterprise.setParent(parent);
+			enterprise.setStatus(Enterprise.Status.waiting);
 			if (parent!=null) {
 				if (parent.getType().equals(Enterprise.Type.operate)) {
 					enterprise.setType(Enterprise.Type.agent);
