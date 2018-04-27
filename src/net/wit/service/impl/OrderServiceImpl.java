@@ -752,7 +752,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderRankingService.add(order);
 
 		//代理商佣金
-		rebateService.rebate(order.getFee(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
+		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
 
 		return;
 

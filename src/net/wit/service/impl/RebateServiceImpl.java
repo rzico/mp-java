@@ -112,7 +112,7 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 		return rebateDao.sum(beginDate,endDate,enterprise,member);
 	}
 
-	public void rebate(BigDecimal amount,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception {
+	public void rebate(BigDecimal amount,Member buyer,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception {
        if (personal!=null) {
 		   Member member = personal.getMember();
 		   BigDecimal rebate = amount.multiply(personal.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN);
@@ -126,7 +126,7 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 			   d1.setType(Deposit.Type.rebate);
 			   d1.setMemo("代理奖励金");
 			   d1.setMember(member);
-			   d1.setCredit(amount);
+			   d1.setCredit(rebate);
 			   d1.setDebit(BigDecimal.ZERO);
 			   d1.setDeleted(false);
 			   d1.setOperator("system");
@@ -136,6 +136,19 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 			   }
 			   depositDao.persist(d1);
 			   messageService.depositPushTo(d1);
+
+			   Rebate rb = new Rebate();
+			   rb.setAmount(rebate);
+			   rb.setDirect(rebate);
+			   rb.setIndirect(BigDecimal.ZERO);
+			   if (order!=null) {
+			   	   rb.setAmount(order.getAmount());
+			   } else {
+				   rb.setAmount(BigDecimal.ZERO);
+			   }
+			   rb.setMember(buyer);
+			   rb.setEnterprise(personal);
+			   rebateDao.persist(rb);
 		   }
 	   }
 		if (agent!=null) {
@@ -151,7 +164,7 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 				d1.setType(Deposit.Type.rebate);
 				d1.setMemo("代理奖励金");
 				d1.setMember(member);
-				d1.setCredit(amount);
+				d1.setCredit(rebate);
 				d1.setDebit(BigDecimal.ZERO);
 				d1.setDeleted(false);
 				d1.setOperator("system");
@@ -161,6 +174,24 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 				}
 				depositDao.persist(d1);
 				messageService.depositPushTo(d1);
+
+				Rebate rb = new Rebate();
+				if (order!=null) {
+					rb.setAmount(order.getAmount());
+				} else {
+					rb.setAmount(BigDecimal.ZERO);
+				}
+				if (personal!=null) {
+					rb.setMember(personal.getMember());
+					rb.setDirect(BigDecimal.ZERO);
+					rb.setIndirect(rebate);
+				} else {
+					rb.setMember(buyer);
+					rb.setDirect(rebate);
+					rb.setIndirect(BigDecimal.ZERO);
+				}
+				rb.setEnterprise(agent);
+				rebateDao.persist(rb);
 			}
 		}
 		if (operate!=null) {
@@ -176,7 +207,7 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 				d1.setType(Deposit.Type.rebate);
 				d1.setMemo("代理奖励金");
 				d1.setMember(member);
-				d1.setCredit(amount);
+				d1.setCredit(rebate);
 				d1.setDebit(BigDecimal.ZERO);
 				d1.setDeleted(false);
 				d1.setOperator("system");
@@ -186,6 +217,26 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 				}
 				depositDao.persist(d1);
 				messageService.depositPushTo(d1);
+
+
+				Rebate rb = new Rebate();
+				if (order!=null) {
+					rb.setAmount(order.getAmount());
+				} else {
+					rb.setAmount(BigDecimal.ZERO);
+				}
+				if (agent!=null) {
+					rb.setMember(agent.getMember());
+					rb.setDirect(BigDecimal.ZERO);
+					rb.setIndirect(rebate);
+				} else {
+					rb.setMember(buyer);
+					rb.setDirect(rebate);
+					rb.setIndirect(BigDecimal.ZERO);
+				}
+				rb.setEnterprise(operate);
+				rebateDao.persist(rb);
+
 			}
 		}
 	}

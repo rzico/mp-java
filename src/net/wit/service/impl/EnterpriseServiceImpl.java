@@ -184,8 +184,10 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setStatus(Enterprise.Status.waiting);
 			if (parent!=null) {
 				if (parent.getType().equals(Enterprise.Type.operate)) {
+					enterprise.setBrokerage(new BigDecimal(20));
 					enterprise.setType(Enterprise.Type.agent);
 				} else {
+					enterprise.setBrokerage(BigDecimal.ZERO);
 					enterprise.setType(Enterprise.Type.personal);
 				}
 				enterprise.setStatus(Enterprise.Status.success);
