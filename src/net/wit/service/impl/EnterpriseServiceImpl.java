@@ -180,7 +180,6 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 			enterprise.setLogo(member.getLogo());
 			enterprise.setMember(member);
 			enterprise.setType(Enterprise.Type.personal);
-			enterprise.setStatus(Enterprise.Status.waiting);
 			enterprise.setParent(parent);
 			if (parent!=null) {
 				if (parent.getType().equals(Enterprise.Type.operate)) {
@@ -188,6 +187,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 				} else {
 					enterprise.setType(Enterprise.Type.personal);
 				}
+				enterprise.setStatus(Enterprise.Status.success);
 			}
 			enterpriseDao.persist(enterprise);
 		} else {
@@ -197,6 +197,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 				} else {
 					enterprise.setType(Enterprise.Type.personal);
 				}
+				enterprise.setStatus(Enterprise.Status.success);
 			}
 			enterprise.setParent(parent);
 			enterpriseDao.merge(enterprise);
