@@ -228,6 +228,7 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 
 			}
 		}
+		memberDao.merge(member);
 	}
 
 	public void link(Order order) throws Exception {
