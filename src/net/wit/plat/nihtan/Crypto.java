@@ -139,6 +139,9 @@ public class Crypto {
         String dataStr = JsonUtils.toJson(data);
         String hash = encrypt(bundle.getString("nihtan.key"),dataStr);
 
+        System.out.printf(dataStr);
+        System.out.printf(gameListURL.replace("{HOST}",
+                bundle.getString("nihtan.host"))+"?hash="+hash);
         String resp = post(
                 gameListURL.replace("{HOST}",
                 bundle.getString("nihtan.host"))+"?hash="+hash,
