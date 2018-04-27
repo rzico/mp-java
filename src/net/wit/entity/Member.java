@@ -300,10 +300,25 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private Topic topic;
 
-	/** 推广 */
+	/** 分享者 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Member promoter;
+
+	/** 推广员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise personal;
+
+	/** 合作商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise agent;
+
+	/** 代理商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise operate;
 
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -816,6 +831,30 @@ public class Member extends BaseEntity {
 
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
+	}
+
+	public Enterprise getPersonal() {
+		return personal;
+	}
+
+	public void setPersonal(Enterprise personal) {
+		this.personal = personal;
+	}
+
+	public Enterprise getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Enterprise agent) {
+		this.agent = agent;
+	}
+
+	public Enterprise getOperate() {
+		return operate;
+	}
+
+	public void setOperate(Enterprise operate) {
+		this.operate = operate;
 	}
 
 	/**

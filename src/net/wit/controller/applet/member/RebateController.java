@@ -117,6 +117,9 @@ public class RebateController extends BaseController {
         Member owner = memberService.find(authorId);
 
         BigDecimal sm = depositService.summary(Deposit.Type.rebate,member,owner);
+        if (sm==null) {
+            sm = BigDecimal.ZERO;
+        }
 
         RebateModel model = new RebateModel();
         model.setRebate(sm);

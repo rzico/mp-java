@@ -26,6 +26,8 @@ public class ProductModel extends BaseModel implements Serializable {
 //    private Integer weight;
     /** 销售价 */
     private BigDecimal price;
+    /** 市场价 */
+    private BigDecimal marketPrice;
 //    /** vip1 */
 //    private BigDecimal vip1Price;
 //    /** vip2 */
@@ -101,6 +103,7 @@ public class ProductModel extends BaseModel implements Serializable {
         this.spec1 = product.getSpec1();
         this.spec2 = product.getSpec2();
         this.price = product.getPrice();
+        this.marketPrice = product.getMarketPrice();
         this.stock = product.getStock();
         this.availableStock = product.getAvailableStock();
 //        this.weight = product.getWeight();

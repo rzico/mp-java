@@ -79,9 +79,9 @@ public class ManagerController extends BaseController {
             if (ent.getType().equals(Enterprise.Type.shop)) {
                 model.setIsShop(true);
             }
+            Long shops = shopService.count(new Filter("enterprise", Filter.Operator.eq,admin.getEnterprise()));
+            model.setHasShop(shops>0L);
         }
-        Long shops = shopService.count(new Filter("enterprise", Filter.Operator.eq,admin.getEnterprise()));
-        model.setHasShop(shops>0L);
 
         return Message.bind(model,request);
    }

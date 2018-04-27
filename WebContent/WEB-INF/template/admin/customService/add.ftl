@@ -31,13 +31,19 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">描述：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="description" name="description">
-            </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"></label>
+        <div class="formControls col-xs-8 col-sm-9">
+            <input type="text" class="input-text" value="" placeholder="请输入手机号或邮箱" id="mobilemail" name="mobilemail" style="width:54%;">
+            <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 查询
+            </button>
         </div>
+    </div>
+
+    <form action="" method="post" class="form form-horizontal" id="form-add">
+        <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
@@ -46,6 +52,18 @@
             </div>
         </div>
 
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList" class="uploader-list">
+                    </div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="hidden" value="" id="logo" name="logo">
+                </div>
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">QQ号：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -59,6 +77,14 @@
                 <input type="text" class="input-text" value="" placeholder="" id="wechat" name="wechat">
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">描述：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="description" name="description">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -66,75 +92,121 @@
             </div>
         </div>
 
+
+
     </form>
 </div>
-        <!--_footer 作为公共模版分离出去-->
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
-        <!--请在下方写此页面业务相关的脚本-->
-        <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
-        <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
-        <script type="text/javascript">
-            $(function(){
-                var $submit = $(":submit");
-                $('.skin-minimal input').iCheck({
-                    checkboxClass: 'icheckbox-blue',
-                    radioClass: 'iradio-blue',
-                    increaseArea: '20%'
+<script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+        var $submit = $(":submit");
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#form-add").validate({
+            rules:{
+                name:{
+                    required:true,
+                },
+
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            ignore:"",
+            submitHandler:function(form){
+                var load = layer.msg('加载中', {
+                    icon: 16
+                    ,shade: 0.01
                 });
-
-                $("#form-add").validate({
-                    rules:{
-                        name:{
-                            required:true,
-                        },
-
+                $(form).ajaxSubmit({
+                    type: 'post',
+                    url: "${base}/admin/customService/save.jhtml" ,
+                    beforeSend: function() {
+                        $submit.prop("disabled", true);
                     },
-                    onkeyup:false,
-                    focusCleanup:true,
-                    success:"valid",
-                    ignore:"",
-                    submitHandler:function(form){
-                        var load = layer.msg('加载中', {
-                            icon: 16
-                            ,shade: 0.01
-                        });
-                        $(form).ajaxSubmit({
-                            type: 'post',
-                            url: "${base}/admin/customService/save.jhtml" ,
-                            beforeSend: function() {
-                               $submit.prop("disabled", true);
-                            },
-                            success: function(message){
-                                layer.close(load);
-                                if(message.type ==  "success"){
+                    success: function(message){
+                        layer.close(load);
+                        if(message.type ==  "success"){
 //                                    关闭当前页面
-                                    var index = parent.layer.getFrameIndex(window.name);
-                                    parent.add_row(message.data);
-                                    parent.closeWindow(index, '添加成功');
-                                }else{
-                                    $submit.prop("disabled", false);
-                                    layer.msg('添加失败!',{icon:2,time:1000});
-                                }
-                            },
-                            error: function(XmlHttpRequest, textStatus, errorThrown){
-                                $submit.prop("disabled", false);
-                                layer.close(load);
-                                layer.msg('error!',{icon:2,time:1000});
-                            }
-                        });
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.add_row(message.data);
+                            parent.closeWindow(index, '添加成功');
+                        }else{
+                            $submit.prop("disabled", false);
+                            layer.msg('添加失败!',{icon:2,time:1000});
+                        }
+                    },
+                    error: function(XmlHttpRequest, textStatus, errorThrown){
+                        $submit.prop("disabled", false);
+                        layer.close(load);
+                        layer.msg('error!',{icon:2,time:1000});
                     }
                 });
+            }
+        });
+    });
+
+
+
+
+    /* 搜索 */
+    function search(){
+        var url = "/admin/enterprise/getMemberInfo.jhtml?phone="+$("#mobilemail").val();
+
+        layer.confirm("请确认手机号？",function(index){
+            var load = layer.msg("查询中..",{
+                icon:16,shade:0.01
             });
-        </script>
+            $.ajax({
+                type:'get',
+                url:url,
+                dataType:'json',
+                success:function(data){
+                    layer.close(load);
+                    if(data.type == "success"){
+                        $.each(data.data, function (infoIndex, info){
+                            if (info["id"] == "id"){
+                                $("#memberId").val(info["name"]);
+                            }
+                        })
+                        layer.msg('读取成功!',{icon:16,time:1000});
+                    }else{
+                        layer.msg('读取失败!',{icon:16,time:1000});
+                    }
+                },
+                error:function(data){
+                    layer.close(load);
+                    layer.msg('读取失败!',{icon:16,time:1000});
+                },
+            });
+        });
+    }
+
+</script>
 </body>
 </html>

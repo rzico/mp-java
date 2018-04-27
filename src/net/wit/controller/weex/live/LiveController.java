@@ -68,7 +68,7 @@ public class LiveController extends BaseController {
     @Resource(name = "templateServiceImpl")
     private TemplateService templateService;
 
-    /*
+                /*
 			     * KEY+ stream_id + txTime
 			     */
     private static String getSafeUrl(String key, String streamId, long txTime) {
@@ -96,6 +96,7 @@ public class LiveController extends BaseController {
                         append("txTime=").
                         append(Long.toHexString(txTime).toUpperCase()).
                         toString();
+
     }
 
     private static String byteArrayToHexString(byte[] data) {
@@ -113,13 +114,13 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/check", method = RequestMethod.GET)
     @ResponseBody
-    public Message  check(Long memberId,Pageable pageable,HttpServletRequest request) {
+    public Message check(Long memberId,Pageable pageable,HttpServletRequest request) {
         Member member = null;
         if (memberId!=null) {
             member = memberService.find(memberId);
         }
         if (member==null) {
-            memberService.getCurrent();
+            member = memberService.getCurrent();
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
@@ -151,7 +152,7 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message  list(Pageable pageable,HttpServletRequest request){
+    public Message list(Pageable pageable,HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("online", Filter.Operator.eq,"1"));
 
@@ -161,6 +162,7 @@ public class LiveController extends BaseController {
         PageBlock model = PageBlock.bind(page);
         model.setData(LiveModel.bindList(page.getContent()));
         return Message.bind(model,request);
+
     }
 
     /**
@@ -202,8 +204,10 @@ public class LiveController extends BaseController {
             member.setNickName(title);
         }
         if (member.getLogo()==null) {
-            member.setNickName(frontcover);
+            member.setLogo(frontcover);
         }
+        memberService.update(member);
+
         Topic topic =  member.getTopic();
         if (topic==null) {
             topic = new Topic();
@@ -241,6 +245,7 @@ public class LiveController extends BaseController {
         LiveModel model = new LiveModel();
         model.bind(live);
         return Message.success(model,"success");
+
    }
 
 
@@ -249,7 +254,7 @@ public class LiveController extends BaseController {
      */
     @RequestMapping(value = "/play")
     @ResponseBody
-    public Message  play(Long id,String location,Boolean record,HttpServletRequest request){
+    public Message  play(Long id,String title,String frontcover,String location,Boolean record,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -271,12 +276,22 @@ public class LiveController extends BaseController {
         Long txTime = tx.getTime()/1000+86400;
 
         String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
-        if(record==null){
+
+        if (record==null){
             record=false;
         }
+
         if (record) {
             pushUrl = pushUrl + "&record=mp4&record_interval=5400";
         }
+
+        if (title!=null) {
+            live.setTitle(title);
+        }
+        if (frontcover!=null) {
+            live.setFrontcover(frontcover);
+        }
+
         LiveTape liveTape = new LiveTape();
         liveTape.setLive(live);
         liveTape.setMember(member);
@@ -299,7 +314,12 @@ public class LiveController extends BaseController {
 
         LiveTapeModel model = new LiveTapeModel();
         model.bind(liveTape);
+
+        model.setFans(new Long(member.getFans().size()));
+        model.setFollow(new Long(member.getFollows().size()));
+        model.setVip(member.getVip());
         return Message.success(model,"success");
+
     }
 
 
@@ -386,9 +406,13 @@ public class LiveController extends BaseController {
         }else {
             model.setFollow(true);
         }
+
+        model.setFans(new Long(live.getMember().getFans().size()));
+        model.setFollow(new Long(live.getMember().getFollows().size()));
+        model.setVip(live.getMember().getVip());
+
         return Message.success(model,"success");
     }
-
 
 
     /**

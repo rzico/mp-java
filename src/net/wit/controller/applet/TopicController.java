@@ -56,6 +56,9 @@ public class TopicController extends BaseController {
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
 
+    @Resource(name = "shopServiceImpl")
+    private ShopService shopService;
+
     /**
      * 专栏信息
      * id 会员
@@ -84,6 +87,12 @@ public class TopicController extends BaseController {
             if (friends!=null) {
                 model.setFriendStatus(friends.getStatus());
             }
+        }
+        filters.clear();
+        filters.add(new Filter("owner", Filter.Operator.eq,member));
+        List<Shop> shop = shopService.findList(0,1,filters,null);
+        if (shop.size()>0) {
+            model.setThumbnail(shop.get(0).getScene());
         }
 
         return Message.bind(model,request);
