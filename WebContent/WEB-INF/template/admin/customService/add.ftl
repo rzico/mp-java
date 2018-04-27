@@ -43,12 +43,7 @@
 
     <form action="" method="post" class="form form-horizontal" id="form-add">
         <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">描述：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="description" name="description">
-            </div>
-        </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
@@ -57,6 +52,18 @@
             </div>
         </div>
 
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList" class="uploader-list">
+                    </div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="hidden" value="" id="logo" name="logo">
+                </div>
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">QQ号：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -70,12 +77,22 @@
                 <input type="text" class="input-text" value="" placeholder="" id="wechat" name="wechat">
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">描述：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="description" name="description">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
             </div>
         </div>
+
+
 
     </form>
 </div>
@@ -93,6 +110,13 @@
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
+
+<script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
 
         <script type="text/javascript">
             $(function(){

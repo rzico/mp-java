@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -51,6 +52,7 @@ public class CustomService extends BaseEntity {
 	private String description;
 
 	/** 会员 */
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
 	private Member member;
@@ -106,7 +108,7 @@ public class CustomService extends BaseEntity {
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+			return new MapEntity(getMember().getId().toString(), getMember().displayName());
 		} else {
 			return null;
 		}

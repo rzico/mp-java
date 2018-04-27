@@ -81,10 +81,6 @@ public class CustomServiceController extends BaseController {
 	public Message save(CustomService customService,Long memberId){
 		CustomService entity = new CustomService();	
 
-		entity.setCreateDate(customService.getCreateDate());
-
-		entity.setModifyDate(customService.getModifyDate());
-
 		entity.setDescription(customService.getDescription());
 
 		entity.setName(customService.getName());
@@ -147,10 +143,6 @@ public class CustomServiceController extends BaseController {
 	public Message update(CustomService customService,Long memberId){
 		CustomService entity = customServiceService.find(customService.getId());
 		
-		entity.setCreateDate(customService.getCreateDate());
-
-		entity.setModifyDate(customService.getModifyDate());
-
 		entity.setDescription(customService.getDescription());
 
 		entity.setLogo(customService.getLogo());
