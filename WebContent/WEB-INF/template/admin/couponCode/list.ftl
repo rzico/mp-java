@@ -229,7 +229,8 @@
                             return "";
                         }
                     }
-                }, 
+                },
+
                 {
                     "aTargets": [9],
                     "mRender": function (data, display, row) {
