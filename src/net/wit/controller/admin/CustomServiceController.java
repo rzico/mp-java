@@ -44,7 +44,9 @@ import net.wit.controller.admin.model.*;
 public class CustomServiceController extends BaseController {
 	@Resource(name = "customServiceServiceImpl")
 	private CustomServiceService customServiceService;
-	
+
+	@Resource(name = "memberServiceImpl")
+	private MemberService memberService;
 
 
 	/**
@@ -76,7 +78,7 @@ public class CustomServiceController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(CustomService customService){
+	public Message save(CustomService customService,Long memberId){
 		CustomService entity = new CustomService();	
 
 		entity.setCreateDate(customService.getCreateDate());
@@ -91,6 +93,8 @@ public class CustomServiceController extends BaseController {
 		entity.setQq(customService.getQq());
 
 		entity.setWechat(customService.getWechat());
+
+		entity.setMember(memberService.find(memberId));
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -140,7 +144,7 @@ public class CustomServiceController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(CustomService customService){
+	public Message update(CustomService customService,Long memberId){
 		CustomService entity = customServiceService.find(customService.getId());
 		
 		entity.setCreateDate(customService.getCreateDate());
@@ -156,7 +160,9 @@ public class CustomServiceController extends BaseController {
 		entity.setQq(customService.getQq());
 
 		entity.setWechat(customService.getWechat());
-		
+
+		entity.setMember(memberService.find(memberId));
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
