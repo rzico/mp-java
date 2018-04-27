@@ -132,5 +132,6 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.stock = mProduct.getStock();
         this.availableStock = mProduct.getAvailableStock();
         this.review = goods.getReview();
+
     }
 }

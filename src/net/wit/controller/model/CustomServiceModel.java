@@ -22,6 +22,8 @@ public class CustomServiceModel extends BaseModel implements Serializable {
     /**  qq */
     private String qq;
 
+    private String userId;
+
     public String getLogo() {
         return logo;
     }
@@ -54,11 +56,22 @@ public class CustomServiceModel extends BaseModel implements Serializable {
         this.qq = qq;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void bind(CustomService customService) {
         this.logo = customService.getLogo();
         this.name = customService.getName();
         this.wechat = customService.getWechat();
         this.qq = customService.getQq();
+        if (customService.getMember()!=null) {
+            this.userId = customService.getMember().userId();
+        }
     }
 
 

@@ -112,7 +112,7 @@ public class RebateDaoImpl extends BaseDaoImpl<Rebate, Long> implements RebateDa
 				setFlushMode(FlushModeType.COMMIT);
 
 		query.setParameter("enterprise",enterprise);
-		query.setParameter("enterprise",enterprise);
+		query.setParameter("member",member);
 
 
 		List result = query.getResultList();
@@ -120,10 +120,15 @@ public class RebateDaoImpl extends BaseDaoImpl<Rebate, Long> implements RebateDa
 
 		RebateSummary summary = new RebateSummary();
 
-		summary.setDirect((BigDecimal) row[0]);
-		summary.setIndirect((BigDecimal) row[1]);
-		summary.setRebate(summary.getDirect().add(summary.getIndirect()));
-
+		if (row[0]!=null) {
+			summary.setDirect((BigDecimal) row[0]);
+			summary.setIndirect((BigDecimal) row[1]);
+			summary.setRebate(summary.getDirect().add(summary.getIndirect()));
+		} else {
+			summary.setDirect(BigDecimal.ZERO);
+			summary.setIndirect(BigDecimal.ZERO);
+			summary.setRebate(BigDecimal.ZERO);
+		}
 		return summary;
 	}
 }

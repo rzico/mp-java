@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -49,6 +50,11 @@ public class CustomService extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '描述'")
 	private String description;
 
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
+	private Member member;
+
 	public String getName() {
 		return name;
 	}
@@ -88,4 +94,23 @@ public class CustomService extends BaseEntity {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");
+		} else {
+			return null;
+		}
+	}
+
+
 }
