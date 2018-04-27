@@ -400,7 +400,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 
 					Member buyer = evaluation.getMember();
 					if (buyer.getPromoter()==null) {
-						buyer.setPromoter(buyer);
+						buyer.setPromoter(evaluation.getPromoter());
 						rebateService.link(evaluation.getMember());
 					}
 
