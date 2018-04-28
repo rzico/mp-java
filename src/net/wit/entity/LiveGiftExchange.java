@@ -1,25 +1,23 @@
 
 package net.wit.entity;
 
-import org.hibernate.search.annotations.DateBridge;
-import org.hibernate.search.annotations.Resolution;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
-import java.util.Date;
+import java.math.BigDecimal;
 
 /**
- * Entity -  打赏数据
+ * Entity -  兑换数据
  *
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "wx_live_gift_data")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_live_gift_data_sequence")
-public class LiveGiftData extends BaseEntity {
+@Table(name = "wx_live_gift_exchange")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_live_gift_exchange_sequence")
+public class LiveGiftExchange extends BaseEntity {
 
 	private static final long serialVersionUID = 17L;
 
@@ -33,16 +31,6 @@ public class LiveGiftData extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) not null comment '直播间'")
 	private Live live;
 
-	/** 直播场次 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '直播场次'")
-	private LiveTape liveTape;
-
-	/** 礼物 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '礼物'")
-	private LiveGift liveGift;
-
 	/**  昵称  */
 	@Column(columnDefinition="varchar(255) comment '昵称'")
 	private String nickname;
@@ -51,20 +39,22 @@ public class LiveGiftData extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '头像'")
 	private String headpic;
 
-	/**  礼物名  */
-	@Column(columnDefinition="varchar(255) comment '礼物名'")
-	private String giftName;
-
 	/** 缩略图 */
 	@Length(max = 200)
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
 	private String thumbnail;
 
-	/** 价格 */
+	/** 印票数 */
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '价格'")
-	private Long price;
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '印票数'")
+	private Long gift;
+
+	/** 兑换金额 */
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '兑换金额'")
+	private BigDecimal amount;
 
 	public Member getMember() {
 		return member;
@@ -74,12 +64,12 @@ public class LiveGiftData extends BaseEntity {
 		this.member = member;
 	}
 
-	public LiveTape getLiveTape() {
-		return liveTape;
+	public Live getLive() {
+		return live;
 	}
 
-	public void setLiveTape(LiveTape liveTape) {
-		this.liveTape = liveTape;
+	public void setLive(Live live) {
+		this.live = live;
 	}
 
 	public String getNickname() {
@@ -98,30 +88,6 @@ public class LiveGiftData extends BaseEntity {
 		this.headpic = headpic;
 	}
 
-	public String getGiftName() {
-		return giftName;
-	}
-
-	public void setGiftName(String giftName) {
-		this.giftName = giftName;
-	}
-
-	public LiveGift getLiveGift() {
-		return liveGift;
-	}
-
-	public void setLiveGift(LiveGift liveGift) {
-		this.liveGift = liveGift;
-	}
-
-	public Long getPrice() {
-		return price;
-	}
-
-	public void setPrice(Long price) {
-		this.price = price;
-	}
-
 	public String getThumbnail() {
 		return thumbnail;
 	}
@@ -130,12 +96,19 @@ public class LiveGiftData extends BaseEntity {
 		this.thumbnail = thumbnail;
 	}
 
-	public Live getLive() {
-		return live;
+	public Long getGift() {
+		return gift;
 	}
 
-	public void setLive(Live live) {
-		this.live = live;
+	public void setGift(Long gift) {
+		this.gift = gift;
 	}
 
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
 }

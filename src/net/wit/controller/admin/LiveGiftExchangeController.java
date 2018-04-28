@@ -1,6 +1,5 @@
 package net.wit.controller.admin;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,8 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import net.wit.entity.BaseEntity.Save;
-import net.wit.entity.Live;
-import net.wit.service.LiveService;
+import net.wit.entity.LiveGiftExchange;
+import net.wit.service.LiveGiftExchangeService;
 
 import java.util.*;
 
@@ -35,22 +34,26 @@ import net.wit.controller.admin.model.*;
 
 
 /**
- * @ClassName: LiveController
+ * @ClassName: LiveGiftExchangeController
  * @author 降魔战队
- * @date 2018-4-5 18:22:45
+ * @date 2018-4-28 22:28:52
  */
  
-@Controller("adminLiveController")
-@RequestMapping("/admin/live")
-public class LiveController extends BaseController {
+@Controller("adminLiveGiftExchangeController")
+@RequestMapping("/admin/liveGiftExchange")
+public class LiveGiftExchangeController extends BaseController {
+
+	@Resource(name = "liveGiftExchangeServiceImpl")
+	private LiveGiftExchangeService liveGiftExchangeService;
+	
 	@Resource(name = "liveServiceImpl")
 	private LiveService liveService;
-	
-	@Resource(name = "liveTapeServiceImpl")
-	private LiveTapeService liveTapeService;
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
+
+	@Resource(name = "liveTapeServiceImpl")
+	private LiveTapeService liveTapeService;
 
 	@Resource(name = "liveGroupServiceImpl")
 	private LiveGroupService liveGroupService;
@@ -61,13 +64,14 @@ public class LiveController extends BaseController {
 	@Resource(name = "topicServiceImpl")
 	private TopicService topicService;
 
-	@Resource(name = "liveGiftExchangeServiceImpl")
-	private LiveGiftExchangeService liveGiftExchangeService;
+	@Resource(name = "occupationServiceImpl")
+	private OccupationService occupationService;
+
+	@Resource(name = "enterpriseServiceImpl")
+	private EnterpriseService enterpriseService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
-
-
 
 	/**
 	 * 主页
@@ -75,34 +79,16 @@ public class LiveController extends BaseController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
 
-		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("waiting","申请"));
-		statuss.add(new MapEntity("success","开通"));
-		statuss.add(new MapEntity("failure","关闭"));
-		model.addAttribute("statuss",statuss);
-
-		return "/admin/live/list";
+		return "/admin/liveGiftExchange/list";
 	}
-
 
 	/**
 	 * 添加
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String add(Long id, ModelMap model) {
+	public String add(ModelMap model) {
 
-
-		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("waiting","申请"));
-		statuss.add(new MapEntity("success","开通"));
-		statuss.add(new MapEntity("failure","关闭"));
-		model.addAttribute("statuss",statuss);
-
-
-		model.addAttribute("data",liveService.find(id));
-
-
-		return "/admin/live/add";
+		return "/admin/liveGiftExchange/add";
 	}
 
 
@@ -111,21 +97,33 @@ public class LiveController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Long id, Long gift, BigDecimal amount){
+	public Message save(LiveGiftExchange liveGiftExchange, Long liveId, Long memberId){
+		LiveGiftExchange entity = new LiveGiftExchange();	
 
-		Live live = liveService.find(id);
-        LiveGiftExchange liveGiftExchange = new LiveGiftExchange();
-        liveGiftExchange.setAmount(amount);
-        liveGiftExchange.setGift(gift);
-        liveGiftExchange.setHeadpic(live.getHeadpic());
-        liveGiftExchange.setLive(live);
-        liveGiftExchange.setMember(live.getMember());
-        liveGiftExchange.setThumbnail(live.getMember().getLogo());
-        liveGiftExchange.setNickname(live.getMember().displayName());
+		entity.setCreateDate(liveGiftExchange.getCreateDate());
 
+		entity.setModifyDate(liveGiftExchange.getModifyDate());
+
+		entity.setAmount(liveGiftExchange.getAmount());
+
+		entity.setGift(liveGiftExchange.getGift() == null ? 0 : liveGiftExchange.getGift());
+
+		entity.setHeadpic(liveGiftExchange.getHeadpic());
+
+		entity.setNickname(liveGiftExchange.getNickname());
+
+		entity.setThumbnail(liveGiftExchange.getThumbnail());
+
+		entity.setLive(liveService.find(liveId));
+
+		entity.setMember(memberService.find(memberId));
+		
+		if (!isValid(entity)) {
+            return Message.error("admin.data.valid");
+        }
         try {
-			liveGiftExchangeService.exchange(liveGiftExchange);
-            return Message.success(live,"admin.save.success");
+            liveGiftExchangeService.save(entity);
+            return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("admin.save.error");
@@ -140,7 +138,7 @@ public class LiveController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
-            liveService.delete(ids);
+            liveGiftExchangeService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,16 +153,10 @@ public class LiveController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
-		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("waiting","申请"));
-		statuss.add(new MapEntity("success","开通"));
-		statuss.add(new MapEntity("failure","关闭"));
-		model.addAttribute("statuss",statuss);
 
+		model.addAttribute("data",liveGiftExchangeService.find(id));
 
-		model.addAttribute("data",liveService.find(id));
-
-		return "/admin/live/edit";
+		return "/admin/liveGiftExchange/edit";
 	}
 
 	
@@ -173,53 +165,69 @@ public class LiveController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Live live){
-		Live entity = liveService.find(live.getId());
+	public Message update(LiveGiftExchange liveGiftExchange, Long liveId, Long memberId){
+		LiveGiftExchange entity = liveGiftExchangeService.find(liveGiftExchange.getId());
+		
+		entity.setCreateDate(liveGiftExchange.getCreateDate());
 
-		entity.setTitle(live.getTitle());
+		entity.setModifyDate(liveGiftExchange.getModifyDate());
 
-		entity.setStatus(live.getStatus());
+		entity.setAmount(liveGiftExchange.getAmount());
 
+		entity.setGift(liveGiftExchange.getGift() == null ? 0 : liveGiftExchange.getGift());
+
+		entity.setHeadpic(liveGiftExchange.getHeadpic());
+
+		entity.setNickname(liveGiftExchange.getNickname());
+
+		entity.setThumbnail(liveGiftExchange.getThumbnail());
+
+		entity.setLive(liveService.find(liveId));
+
+		entity.setMember(memberService.find(memberId));
+		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
         try {
-            liveService.update(entity);
+            liveGiftExchangeService.update(entity);
             return Message.success(entity,"admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("admin.update.error");
         }
 	}
-	
 
 	/**
      * 列表
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Live.Status status, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
 
-		if (status!=null) {
-			List<Filter> filters = pageable.getFilters();
-			filters.add(new Filter("status", Filter.Operator.eq,status));
-		}
-		Page<Live> page = liveService.findPage(beginDate,endDate,pageable);
+		Page<LiveGiftExchange> page = liveGiftExchangeService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
-	
-	
+
 	/**
-	 * LiveTape视图
+	 * Live视图
 	 */
-	@RequestMapping(value = "/liveTapeView", method = RequestMethod.GET)
-	public String liveTapeView(Long id, ModelMap model) {
+	@RequestMapping(value = "/liveView", method = RequestMethod.GET)
+	public String liveView(Long id, ModelMap model) {
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("waiting","等待支付"));
+		statuss.add(new MapEntity("success","开通成功"));
+		statuss.add(new MapEntity("failure","支付失败"));
+		model.addAttribute("statuss",statuss);
+
 		model.addAttribute("liveGroups",liveGroupService.findAll());
+
+		model.addAttribute("liveTapes",liveTapeService.findAll());
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("liveTape",liveTapeService.find(id));
-		return "/admin/live/view/liveTapeView";
+		model.addAttribute("live",liveService.find(id));
+		return "/admin/liveGiftExchange/view/liveView";
 	}
 
 
@@ -236,6 +244,8 @@ public class LiveController extends BaseController {
 
 		model.addAttribute("areas",areaService.findAll());
 
+		model.addAttribute("occupations",occupationService.findAll());
+
 		model.addAttribute("topics",topicService.findAll());
 
 		List<MapEntity> vips = new ArrayList<>();
@@ -244,24 +254,16 @@ public class LiveController extends BaseController {
 		vips.add(new MapEntity("vip3","vip3"));
 		model.addAttribute("vips",vips);
 
+		model.addAttribute("agents",enterpriseService.findAll());
+
+		model.addAttribute("operates",enterpriseService.findAll());
+
+		model.addAttribute("personals",enterpriseService.findAll());
+
 		model.addAttribute("tags",tagService.findAll());
 
 		model.addAttribute("member",memberService.find(id));
-		return "/admin/live/view/memberView";
-	}
-
-
-	/**
-	 * LiveGroup视图
-	 */
-	@RequestMapping(value = "/liveGroupView", method = RequestMethod.GET)
-	public String liveGroupView(Long id, ModelMap model) {
-		model.addAttribute("liveMembers",memberService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("liveGroup",liveGroupService.find(id));
-		return "/admin/live/view/liveGroupView";
+		return "/admin/liveGiftExchange/view/memberView";
 	}
 
 

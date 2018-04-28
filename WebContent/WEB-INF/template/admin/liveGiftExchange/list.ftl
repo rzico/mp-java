@@ -26,11 +26,11 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>直播管理</title>
+    <title>兑换记录</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 直播管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
-                                                                                                            href="javascript:location.replace(location.href);" title="刷新"><i
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 兑换记录 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                               href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class=""> 日期范围：
@@ -39,16 +39,6 @@
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
-    [#if statuss??]
-        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
-			<select name="status" class="select" style="background-color: #FFFFFF;">
-				<option value="">状态</option>
-                [#list statuss as status]
-                    <option value="${status.id}">${status.name}</option>
-                [/#list]
-			</select>
-         </span>
-    [/#if]
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
@@ -94,7 +84,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/live/list.jhtml",
+            "sAjaxSource": "${base}/admin/liveGiftExchange/list.jhtml",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -124,15 +114,9 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(5).attr('style', 'text-align: left;');
                 $(row).children('td').eq(7).attr('style', 'text-align: left;');
                 $(row).children('td').eq(8).attr('style', 'text-align: left;');
-                $(row).children('td').eq(10).attr('style', 'text-align: left;');
-                $(row).children('td').eq(11).attr('style', 'text-align: left;');
-                $(row).children('td').eq(12).attr('style', 'text-align: left;');
-                $(row).children('td').eq(13).attr('style', 'text-align: left;');
-                $(row).children('td').eq(14).attr('style', 'text-align: left;');
-                $(row).children('td').eq(15).attr('style', 'text-align: left;');
+                $(row).children('td').eq(9).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -157,8 +141,18 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "title",
-                    "sTitle": "标题",
+                    "mData": "amount",
+                    "sTitle": "兑换金额",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "gift",
+                    "sTitle": "印票数",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "headpic",
+                    "sTitle": "头像",
                     "sClass": "center"
                 },
                 {
@@ -167,28 +161,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "gift",
-                    "sTitle": "礼物数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "likeCount",
-                    "sTitle": "点赞数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "location",
-                    "sTitle": "位置",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "status",
-                    "sTitle": "状态",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "viewerCount",
-                    "sTitle": "在线数",
+                    "mData": "mapMember",
+                    "sTitle": "主播",
                     "sClass": "center"
                 },
                 {
@@ -207,7 +181,7 @@
                             return "";
                         }
                     }
-                },
+                }, 
                 {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
@@ -221,43 +195,35 @@
                     }
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                        [#if  statuss??]
-                            [#list statuss as status]
-                                if ("${status.id}" == data) {
-                                    return "${status.name}";
-                                }
-                            [/#list]
-                        [/#if]
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
                         }else{
                             return "";
                         }
                     }
-                },
-                {
-                    "aTargets": [11],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 直播管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>"+
-                                   "<a title='兑换' href='javascript:;' onclick=\"add('首页 &gt; 直播管理 &gt; 兑换','add.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>兑换</i></a>";
-
-                        }else{
-                            return "";
-                        }
-                    }
-
-                },
+                }, 
+//                {
+//                    "aTargets": [9],
+//                    "mRender": function (data, display, row) {
+//                        if(data != null){
+//                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; LiveGiftExchange &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+//                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+//                        }else{
+//                            return "";
+//                        }
+//                    }
+//
+//                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 11]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 8]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
-                var _status =  $('select[name="status"]').val();
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {
@@ -270,7 +236,6 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-                        "status":_status,
 
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
@@ -294,7 +259,7 @@
         });
         table = $('.table').DataTable();
     });
-    //   表格自适应屏幕
+//   表格自适应屏幕
     window.onresize = function(){
         $('.table').css('width','100%');
     }
@@ -305,7 +270,7 @@
 
     /*搜索*/
     function search(){
-        table.ajax.reload();
+     table.ajax.reload();
     }
     /*添加*/
     function add(title, url, w, h) {
@@ -340,7 +305,7 @@
     }
     /*删除全部*/
     function delAll(){
-        var url = "${base}/admin/live/delete.jhtml";
+        var url = "${base}/admin/liveGiftExchange/delete.jhtml";
         var i = 0;
         $('input[type="checkbox"][name="ids"]:checked').each(
                 function() {
@@ -394,7 +359,7 @@
                 data: {
                     ids: id
                 },
-                url: '${base}/admin/live/delete.jhtml',
+                url: '${base}/admin/liveGiftExchange/delete.jhtml',
                 dataType: 'json',
                 success: function (data) {
                     layer.close(load);
@@ -412,7 +377,7 @@
             });
         });
     }
-
+	
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);

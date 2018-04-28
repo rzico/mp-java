@@ -21,58 +21,83 @@
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
-
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
+
     <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-add">
+    <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
-
-
+        [#if data??]
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">主播：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>印票数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-               ${data.member.nickName}
+                <input type="text" class="input-text" value="${data.gift}" placeholder="" id="gift" name="gift" onInput="intInit(this)">
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">印票数：</label>
+            <label class="form-label col-xs-4 col-sm-2">头像：</label>
             <div class="formControls col-xs-8 col-sm-9">
-               ${data.gift}
+                <input type="text" class="input-text" value="${data.headpic}" placeholder="" id="headpic" name="headpic">
             </div>
         </div>
-
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>兑换数：</label>
+            <label class="form-label col-xs-4 col-sm-2">昵称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="gift" value="" placeholder="" id="gift" onInput="intInit(this)">
+                <input type="text" class="input-text" value="${data.nickname}" placeholder="" id="nickname" name="nickname">
             </div>
         </div>
-
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>兑换金额：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩略图：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="amount" value="" placeholder="" id="amount" onInput="floatInit(this)">
+                <input type="text" class="input-text" value="${data.thumbnail}" placeholder="" id="thumbnail" name="thumbnail">
             </div>
         </div>
 
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">Live：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                [#if lives??]
+				<select name="liveId" class="select" style="background-color: #FFFFFF">
+                    [#list lives as live]
+					<option[#if data.live?? && live.id == data.live.id] selected[/#if] value="${live.id}">${live.name}</option>
+                    [/#list]
+				</select>
+                [/#if]
+				</span>
+            </div>
+        </div>
 
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">Member：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                [#if members??]
+				<select name="memberId" class="select" style="background-color: #FFFFFF">
+                    [#list members as member]
+					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
+                    [/#list]
+				</select>
+                [/#if]
+				</span>
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
             </div>
         </div>
-
+            [#else]
+            查找失败
+        [/#if]
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
@@ -88,8 +113,6 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
-
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
@@ -99,15 +122,15 @@
                     increaseArea: '20%'
                 });
 
-                $("#form-add").validate({
+                $("#form-update").validate({
                     rules:{
+                        amount:{
+                            required:true,
+                        },
                         gift:{
                             required:true,
                         },
-                        likeCount:{
-                            required:true,
-                        },
-                        viewerCount:{
+                        thumbnail:{
                             required:true,
                         },
 
@@ -115,7 +138,6 @@
                     onkeyup:false,
                     focusCleanup:true,
                     success:"valid",
-                    ignore:"",
                     submitHandler:function(form){
                         var load = layer.msg('加载中', {
                             icon: 16
@@ -123,9 +145,9 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/live/save.jhtml" ,
+                            url: "${base}/admin/liveGiftExchange/update.jhtml" ,
                             beforeSend: function() {
-                               $submit.prop("disabled", true);
+                                $submit.prop("disabled", true);
                             },
                             success: function(message){
                                 layer.close(load);
@@ -133,16 +155,17 @@
 //                                    关闭当前页面
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
-                                    parent.closeWindow(index, '添加成功');
+                                    //关闭弹窗并提示
+                                    parent.closeWindow(index, '修改成功');
                                 }else{
                                     $submit.prop("disabled", false);
-                                    layer.msg('添加失败!',{icon:2,time:1000});
+                                    parent.toast('修改失败',2);
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
                                 $submit.prop("disabled", false);
                                 layer.close(load);
-                                layer.msg('error!',{icon:2,time:1000});
+                                parent.toast('修改失败',2);
                             }
                         });
                     }
