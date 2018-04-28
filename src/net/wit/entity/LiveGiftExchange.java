@@ -1,6 +1,8 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -24,11 +26,13 @@ public class LiveGiftExchange extends BaseEntity {
 	/** 用户 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '用户'")
+	@JsonIgnore
 	private Member member;
 
 	/** 直播间 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '直播间'")
+	@JsonIgnore
 	private Live live;
 
 	/**  昵称  */
@@ -111,4 +115,13 @@ public class LiveGiftExchange extends BaseEntity {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
+		} else {
+			return null;
+		}
+	}
+
 }
