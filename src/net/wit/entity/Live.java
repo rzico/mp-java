@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -36,11 +37,13 @@ public class Live extends BaseEntity {
 	/** 主播 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
+	@JsonIgnore
 	private Member member;
 
 	/** 最后一次直播 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '最后一次直播'")
+	@JsonIgnore
 	private LiveTape liveTape;
 
 	/**  标题  */
@@ -221,6 +224,14 @@ public class Live extends BaseEntity {
 		this.online = online;
 	}
 
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
+		} else {
+			return null;
+		}
+	}
 
 
 }

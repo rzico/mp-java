@@ -89,12 +89,11 @@ public class LiveController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
-
-		model.addAttribute("liveGroups",liveGroupService.findAll());
-
-		model.addAttribute("liveTapes",liveTapeService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("waiting","申请"));
+		statuss.add(new MapEntity("success","开通"));
+		statuss.add(new MapEntity("failure","关闭"));
+		model.addAttribute("statuss",statuss);
 
 		return "/admin/live/add";
 	}
