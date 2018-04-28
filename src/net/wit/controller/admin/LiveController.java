@@ -74,11 +74,11 @@ public class LiveController extends BaseController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
 
-		model.addAttribute("liveGroups",liveGroupService.findAll());
-
-		model.addAttribute("liveTapes",liveTapeService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("waiting","申请"));
+		statuss.add(new MapEntity("success","开通"));
+		statuss.add(new MapEntity("failure","关闭"));
+		model.addAttribute("statuss",statuss);
 
 		return "/admin/live/list";
 	}
@@ -175,11 +175,12 @@ public class LiveController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
-		model.addAttribute("liveGroups",liveGroupService.findAll());
+		List<MapEntity> statuss = new ArrayList<>();
+		statuss.add(new MapEntity("waiting","申请"));
+		statuss.add(new MapEntity("success","开通"));
+		statuss.add(new MapEntity("failure","关闭"));
+		model.addAttribute("statuss",statuss);
 
-		model.addAttribute("liveTapes",liveTapeService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("data",liveService.find(id));
 
@@ -192,41 +193,13 @@ public class LiveController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Live live, Long liveTapeId, Long memberId, Long liveGroupId){
+	public Message update(Live live){
 		Live entity = liveService.find(live.getId());
-		
-		entity.setCreateDate(live.getCreateDate());
-
-		entity.setModifyDate(live.getModifyDate());
-
-		entity.setFrontcover(live.getFrontcover());
-
-		entity.setGift(live.getGift() == null ? 0 : live.getGift());
-
-		entity.setHeadpic(live.getHeadpic());
-
-		entity.setHlsPlayUrl(live.getHlsPlayUrl());
-
-		entity.setLikeCount(live.getLikeCount() == null ? 0 : live.getLikeCount());
-
-		entity.setLocation(live.getLocation());
-
-		entity.setNickname(live.getNickname());
-
-		entity.setPlayUrl(live.getPlayUrl());
-
-		entity.setPushUrl(live.getPushUrl());
-
-		entity.setStatus(live.getStatus());
 
 		entity.setTitle(live.getTitle());
 
-		entity.setViewerCount(live.getViewerCount() == null ? 0 : live.getViewerCount());
+		entity.setStatus(live.getStatus());
 
-		entity.setLiveTape(liveTapeService.find(liveTapeId));
-
-		entity.setMember(memberService.find(memberId));
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -245,8 +218,12 @@ public class LiveController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Live.Status status, Pageable pageable, ModelMap model) {
 
+		if (status!=null) {
+			List<Filter> filters = pageable.getFilters();
+			filters.add(new Filter("status", Filter.Operator.eq,status));
+		}
 		Page<Live> page = liveService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
