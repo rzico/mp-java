@@ -15,8 +15,10 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.DepositDao;
 import net.wit.dao.LiveDao;
 import net.wit.dao.MemberDao;
+import net.wit.service.MessageService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -45,6 +47,12 @@ public class LiveGiftExchangeServiceImpl extends BaseServiceImpl<LiveGiftExchang
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
 
 	@Resource(name = "liveGiftExchangeDaoImpl")
 	public void setBaseDao(LiveGiftExchangeDao liveGiftExchangeDao) {
@@ -112,7 +120,23 @@ public class LiveGiftExchangeServiceImpl extends BaseServiceImpl<LiveGiftExchang
 		member.setBalance(member.getBalance().add(liveGiftExchange.getAmount()));
 		memberDao.merge(member);
 
+
+		Deposit deposit = new Deposit();
+		deposit.setBalance(member.getBalance());
+		deposit.setType(Deposit.Type.rebate);
+		deposit.setMemo("印票兑换");
+		deposit.setMember(member);
+		deposit.setCredit(liveGiftExchange.getAmount());
+		deposit.setDebit(BigDecimal.ZERO);
+		deposit.setDeleted(false);
+		deposit.setOperator("system");
+		deposit.setPayment(null);
+		deposit.setOrder(null);
+		deposit.setSeller(null);
+		depositDao.persist(deposit);
+
 		liveGiftExchangeDao.persist(liveGiftExchange);
+		messageService.depositPushTo(deposit);
 
 
 	}
