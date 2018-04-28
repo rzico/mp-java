@@ -73,6 +73,22 @@ public class ReceiverModel extends BaseModel implements Serializable {
         isDefault = aDefault;
     }
 
+    public Long getRoadId() {
+        return roadId;
+    }
+
+    public void setRoadId(Long roadId) {
+        this.roadId = roadId;
+    }
+
+    public String getRoadName() {
+        return roadName;
+    }
+
+    public void setRoadName(String roadName) {
+        this.roadName = roadName;
+    }
+
     public void bind(Receiver receiver) {
         this.id = receiver.getId();
         this.consignee = receiver.getConsignee();
