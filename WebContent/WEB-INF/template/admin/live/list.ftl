@@ -41,7 +41,7 @@
                class="input-text Wdate" style="width:120px;">
     [#if statuss??]
         <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
-			<select name="statuss" class="select" style="background-color: #FFFFFF;">
+			<select name="status" class="select" style="background-color: #FFFFFF;">
 				<option value="">状态</option>
                 [#list statuss as status]
                     <option value="${status.id}">${status.name}</option>
@@ -240,7 +240,9 @@
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 直播管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 直播管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>"+
+                                   "<a title='兑换' href='javascript:;' onclick=\"add('首页 &gt; 直播管理 &gt; 兑换','add.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>兑换</i></a>";
+
                         }else{
                             return "";
                         }
