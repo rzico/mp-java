@@ -29,8 +29,8 @@
     <title>直播管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> Live <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
-                                               href="javascript:location.replace(location.href);" title="刷新"><i
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 直播管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                                                                                            href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class=""> 日期范围：
@@ -207,7 +207,7 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
@@ -292,7 +292,7 @@
         });
         table = $('.table').DataTable();
     });
-//   表格自适应屏幕
+    //   表格自适应屏幕
     window.onresize = function(){
         $('.table').css('width','100%');
     }
@@ -303,7 +303,7 @@
 
     /*搜索*/
     function search(){
-     table.ajax.reload();
+        table.ajax.reload();
     }
     /*添加*/
     function add(title, url, w, h) {
@@ -410,7 +410,7 @@
             });
         });
     }
-	
+
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);
