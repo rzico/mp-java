@@ -25,7 +25,7 @@ public interface RebateService extends BaseService<Rebate, Long> {
 	RebateSummary sum(Date beginDate, Date endDate, Enterprise enterprise, Member member);
 
 
-	public void rebate(BigDecimal amount,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception;
+	public void rebate(BigDecimal amount, Member buyer,Enterprise personal,Enterprise agent,Enterprise operate,Order order) throws Exception;
 
 	public void link(Order order) throws Exception;
 

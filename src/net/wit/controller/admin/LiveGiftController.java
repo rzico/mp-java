@@ -79,19 +79,17 @@ public class LiveGiftController extends BaseController {
 	public Message save(LiveGift liveGift){
 		LiveGift entity = new LiveGift();	
 
-		entity.setCreateDate(liveGift.getCreateDate());
-
-		entity.setModifyDate(liveGift.getModifyDate());
-
 		entity.setOrders(liveGift.getOrders() == null ? 0 : liveGift.getOrders());
 
-		entity.setDeleted(liveGift.getDeleted());
+		entity.setDeleted(false);
 
 		entity.setName(liveGift.getName());
 
 		entity.setPrice(liveGift.getPrice() == null ? 0 : liveGift.getPrice());
 
 		entity.setThumbnail(liveGift.getThumbnail());
+
+		entity.setAnimation(liveGift.getAnimation());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -144,20 +142,16 @@ public class LiveGiftController extends BaseController {
 	public Message update(LiveGift liveGift){
 		LiveGift entity = liveGiftService.find(liveGift.getId());
 		
-		entity.setCreateDate(liveGift.getCreateDate());
-
-		entity.setModifyDate(liveGift.getModifyDate());
-
 		entity.setOrders(liveGift.getOrders() == null ? 0 : liveGift.getOrders());
-
-		entity.setDeleted(liveGift.getDeleted());
 
 		entity.setName(liveGift.getName());
 
 		entity.setPrice(liveGift.getPrice() == null ? 0 : liveGift.getPrice());
 
 		entity.setThumbnail(liveGift.getThumbnail());
-		
+
+		entity.setAnimation(liveGift.getAnimation());
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
