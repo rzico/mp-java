@@ -162,7 +162,7 @@ public class UserModel extends BaseModel implements Serializable {
         if (member.getOccupation()!=null) {
             this.occupation = member.getOccupation().getName();
         }
-        this.balance = member.getBalance();
+        this.balance = new BigDecimal(member.getPoint());
         this.vip = member.getVip();
     }
 
