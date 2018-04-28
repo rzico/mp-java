@@ -1013,7 +1013,7 @@ public class Member extends BaseEntity {
 
 	public String userId() {
 		String uid = getUsername();
-		if (uid!=null && "gm_".equals(uid.substring(0,3))) {
+		if (uid!=null && uid.length() > 3 && "gm_".equals(uid.substring(0,3))) {
 			return uid;
 		}
 		if (getId()!=null) {
