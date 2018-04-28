@@ -81,7 +81,7 @@ public class LiveGiftController extends BaseController {
 
 		entity.setOrders(liveGift.getOrders() == null ? 0 : liveGift.getOrders());
 
-		entity.setDeleted(liveGift.getDeleted());
+		entity.setDeleted(false);
 
 		entity.setName(liveGift.getName());
 
@@ -143,8 +143,6 @@ public class LiveGiftController extends BaseController {
 		LiveGift entity = liveGiftService.find(liveGift.getId());
 		
 		entity.setOrders(liveGift.getOrders() == null ? 0 : liveGift.getOrders());
-
-		entity.setDeleted(liveGift.getDeleted());
 
 		entity.setName(liveGift.getName());
 
