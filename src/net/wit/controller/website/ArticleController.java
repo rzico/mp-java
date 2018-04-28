@@ -54,13 +54,13 @@ public class ArticleController extends BaseController {
     /**
      * html 格式显示板版
      */
-    @RequestMapping(value = "/html", method = RequestMethod.GET)
-    public String view(Long id, ModelMap model, HttpServletRequest request){
+    @RequestMapping(value = "/webkit", method = RequestMethod.GET)
+    public String html(Long id, ModelMap model, HttpServletRequest request){
 
         Article article = articleService.find(id);
         model.addAttribute("data",article);
 
-        return "common/article";
+        return "/common/article";
     }
 
     /**
