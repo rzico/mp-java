@@ -86,6 +86,7 @@ public class AgentController extends BaseController {
 
         Long es = enterpriseService.count(new Filter("parent", Filter.Operator.eq,enterprise),new Filter("status", Filter.Operator.eq,Enterprise.Status.success));
 
+        RebateSummary summary = rebateService.sum(null,null,enterprise,null);
 
         AgentModel model = new AgentModel();
         model.setMembers(ms);
@@ -93,7 +94,7 @@ public class AgentController extends BaseController {
         model.setId(member.getId());
         model.setNickName(member.displayName());
         model.setLogo(member.getLogo());
-        model.setEnterprises(es);
+        model.setRebate(summary.getRebate());
 
         return Message.bind(model,request);
     }
