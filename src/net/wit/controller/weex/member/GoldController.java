@@ -151,13 +151,13 @@ public class GoldController extends BaseController {
         goldBuy.setDeleted(false);
         goldBuy.setMember(member);
         goldBuy.setStatus(GoldBuy.Status.none);
-        goldBuy.setMemo("金币充值");
+        goldBuy.setMemo("购买金币");
         try {
             goldBuyService.submit(goldBuy);
         } catch (Exception e) {
             return Message.error(e.getMessage());
         }
-        return Message.success("充值成功");
+        return Message.success("购买成功");
     }
 
 

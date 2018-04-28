@@ -152,7 +152,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			Deposit memberDeposit = new Deposit();
 			memberDeposit.setBalance(member.getBalance());
 			memberDeposit.setType(Deposit.Type.recharge);
-			memberDeposit.setMemo("充值");
+			memberDeposit.setMemo("充值<代>");
 			memberDeposit.setMember(member);
 			memberDeposit.setCredit(recharge.getAmount());
 			memberDeposit.setDebit(BigDecimal.ZERO);
