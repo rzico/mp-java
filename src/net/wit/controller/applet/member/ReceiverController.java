@@ -10,6 +10,7 @@ import net.wit.entity.Receiver;
 import net.wit.service.AreaService;
 import net.wit.service.MemberService;
 import net.wit.service.ReceiverService;
+import net.wit.service.RoadService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +37,9 @@ public class ReceiverController extends BaseController {
 
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
+
+    @Resource(name = "roadServiceImpl")
+    private RoadService roadService;
 
     @Resource(name = "receiverServiceImpl")
     private ReceiverService receiverService;
@@ -67,7 +71,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message add(Long areaId,Long roadId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -84,6 +88,9 @@ public class ReceiverController extends BaseController {
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
         receiver.setMember(member);
+        if (roadId!=null) {
+            receiver.setRoad(roadService.find(roadId));
+        }
 
         receiverService.save(receiver);
 
@@ -97,7 +104,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message update(Long id,Long areaId,Long roadId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -114,6 +121,10 @@ public class ReceiverController extends BaseController {
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
         receiver.setMember(member);
+        if (roadId!=null) {
+            receiver.setRoad(roadService.find(roadId));
+        }
+
         receiverService.update(receiver);
         ReceiverModel model = new ReceiverModel();
         model.bind(receiver);
