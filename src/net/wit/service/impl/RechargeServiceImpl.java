@@ -133,7 +133,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			Deposit deposit = new Deposit();
 			deposit.setBalance(agent.getBalance());
 			deposit.setType(Deposit.Type.payment);
-			deposit.setMemo("转账");
+			deposit.setMemo("代客充值<"+recharge.getMember().displayName()+">");
 			deposit.setMember(agent);
 			deposit.setCredit(BigDecimal.ZERO);
 			deposit.setDebit(recharge.getAmount());

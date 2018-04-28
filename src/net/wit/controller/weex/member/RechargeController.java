@@ -115,7 +115,7 @@ public class RechargeController extends BaseController {
         recharge.setMember(user);
         recharge.setAdmin(admin);
         recharge.setSn(snService.generate(Sn.Type.recharge));
-        recharge.setMemo("代理商代充," + admin.getName());
+        recharge.setMemo("代理商代充<" + member.displayName()+">");
         try {
             rechargeService.agentSubmit(recharge, member);
         } catch (Exception e) {
