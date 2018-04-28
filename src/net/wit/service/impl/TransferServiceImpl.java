@@ -9,15 +9,13 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
 
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.DepositDao;
 import net.wit.dao.MemberDao;
 import net.wit.plat.unspay.UnsPay;
+import net.wit.service.MessageService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,6 +41,9 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 	private MemberDao memberDao;
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
 
 	@Resource(name = "transferDaoImpl")
 	public void setBaseDao(TransferDao transferDao) {
@@ -126,6 +127,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setTransfer(transfer);
 			deposit.setSeller(member);
 			depositDao.persist(deposit);
+			messageService.depositPushTo(deposit);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			throw new RuntimeException("提交出错了");
@@ -202,6 +204,7 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			deposit.setTransfer(transfer);
 			deposit.setSeller(member);
 			depositDao.persist(deposit);
+			messageService.depositPushTo(deposit);
 			transfer.setTransferDate(new Date());
 			transfer.setStatus(Transfer.Status.failure);
 			transferDao.merge(transfer);
@@ -209,5 +212,39 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 			throw new RuntimeException("重复提交");
 		}
 	}
+
+	/**
+	 * 代理提现
+	 * @param transfer 转账单
+	 */
+	public synchronized void agentTransfer(Transfer transfer) throws Exception {
+		Member member = transfer.getMember().getPromoter();
+		//开始退款
+		memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+		member.setBalance(member.getBalance().add(transfer.effectiveAmount()));
+		memberDao.merge(member);
+		memberDao.flush();
+
+		Deposit deposit = new Deposit();
+		deposit.setBalance(member.getBalance());
+		deposit.setType(Deposit.Type.recharge);
+		deposit.setMemo("代客提现<"+transfer.getMember().displayName()+">");
+		deposit.setMember(member);
+		deposit.setCredit(transfer.effectiveAmount());
+		deposit.setDebit(BigDecimal.ZERO);
+		deposit.setDeleted(false);
+		deposit.setOperator("system");
+		deposit.setTransfer(transfer);
+		deposit.setSeller(member);
+		depositDao.persist(deposit);
+		messageService.depositPushTo(deposit);
+
+		transfer.setStatus(Transfer.Status.success);
+		transferDao.merge(transfer);
+
+
+
+	}
+
 
 }

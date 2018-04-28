@@ -50,4 +50,11 @@ public interface TransferService extends BaseService<Transfer, Long> {
 	 * @param transfer 转账单
 	 */
 	void refunds(Transfer transfer) throws Exception;
+
+	/**
+	 * 代理提现
+	 * @param transfer 转账单
+	 */
+	void agentTransfer(Transfer transfer) throws Exception;
+
 }
