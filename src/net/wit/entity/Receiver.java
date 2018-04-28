@@ -73,6 +73,12 @@ public class Receiver extends BaseEntity {
 	@JoinColumn(columnDefinition="bigint(20) not null comment '地区'")
 	private Area area;
 
+	/** 区域 */
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '区域'")
+	private Road road;
+
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
@@ -218,6 +224,14 @@ public class Receiver extends BaseEntity {
 	 */
 	public Member getMember() {
 		return member;
+	}
+
+	public Road getRoad() {
+		return road;
+	}
+
+	public void setRoad(Road road) {
+		this.road = road;
 	}
 
 	/**

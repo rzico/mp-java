@@ -14,6 +14,8 @@ public class ReceiverModel extends BaseModel implements Serializable {
     private String phone;
     private Long areaId;
     private Boolean isDefault;
+    private Long roadId;
+    private String roadName;
 
     public Long getId() {
         return id;
@@ -79,6 +81,10 @@ public class ReceiverModel extends BaseModel implements Serializable {
         this.areaName = receiver.getAreaName();
         this.phone = receiver.getPhone();
         this.isDefault = receiver.getIsDefault();
+        if (receiver.getRoad()!=null) {
+            this.roadId = receiver.getRoad().getId();
+            this.roadName = receiver.getRoad().getName();
+        }
     }
 
     public static List<ReceiverModel> bindList(List<Receiver> receivers) {
