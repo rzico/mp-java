@@ -274,8 +274,9 @@ public class LiveController extends BaseController {
 //
         Date tx = new Date();
         Long txTime = tx.getTime()/1000+86400;
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
-        String pushUrl = "rtmp://22303.livepush.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"?bizid=22303&"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201),txTime);
+        String pushUrl = "rtmp://"+bundle.getString("live.bizid")+".livepush.myqcloud.com/live/"+bundle.getString("live.bizid")+"_"+String.valueOf(live.getId()+10201)+"?bizid="+bundle.getString("live.bizid")+"&"+getSafeUrl(bundle.getString("live.key"), bundle.getString("live.bizid")+String.valueOf(live.getId()+10201),txTime);
 
         if (record==null){
             record=false;
@@ -371,7 +372,9 @@ public class LiveController extends BaseController {
         Date tx = new Date();
         Long txTime = tx.getTime()+300L;
 
-        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+        String playUrl = "rtmp://"+bundle.getString("live.bizid")+".liveplay.myqcloud.com/live/"+bundle.getString("live.bizid")+"_"+String.valueOf(live.getId()+10201);
 //        String playUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550"+getSafeUrl("429c000ffc0009387260daa9504003ba", "22303_"+String.valueOf(live.getId()+10201)+"_550",txTime);
 //        String hlsPlayUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550.m3u8";
 

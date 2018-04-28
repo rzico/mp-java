@@ -209,10 +209,6 @@ public class Live extends BaseEntity {
 		return online;
 	}
 
-	public void setOnline(String online) {
-		this.online = online;
-	}
-
 	public Status getStatus() {
 		return status;
 	}
@@ -220,4 +216,11 @@ public class Live extends BaseEntity {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+	public void setOnline(String online) {
+		this.online = online;
+	}
+
+
+
 }
