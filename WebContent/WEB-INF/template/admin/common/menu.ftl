@@ -35,6 +35,7 @@
                 <ul>
                     <li><a data-href="../live/index.jhtml" data-title="直播管理" href="javascript:;">直播管理</a></li>
                     <li><a data-href="../liveGift/index.jhtml" data-title="礼物管理" href="javascript:;">礼物管理</a></li>
+                    <li><a data-href="../liveGiftExchange/index.jhtml" data-title="印票兑换" href="javascript:;">印票兑换</a></li>
                 </ul>
             </dd>
             <dt><i class="Hui-iconfont">&#xe60d;</i> 文章管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
