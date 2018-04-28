@@ -276,7 +276,7 @@ public class LiveController extends BaseController {
         Long txTime = tx.getTime()/1000+86400;
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
-        String pushUrl = "rtmp://"+bundle.getString("live.bizid")+".livepush.myqcloud.com/live/"+bundle.getString("live.bizid")+"_"+String.valueOf(live.getId()+10201)+"?bizid="+bundle.getString("live.bizid")+"&"+getSafeUrl(bundle.getString("live.key"), bundle.getString("live.bizid")+String.valueOf(live.getId()+10201),txTime);
+        String pushUrl = "rtmp://"+bundle.getString("live.bizid")+".livepush.myqcloud.com/live/"+bundle.getString("live.bizid")+"_"+String.valueOf(live.getId()+10201)+"?bizid="+bundle.getString("live.bizid")+"&"+getSafeUrl(bundle.getString("live.key"), bundle.getString("live.bizid")+"_"+String.valueOf(live.getId()+10201),txTime);
 
         if (record==null){
             record=false;
