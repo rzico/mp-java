@@ -137,7 +137,7 @@ public class GiftController extends BaseController {
     /**
      *   发字幕
      */
-    @RequestMapping(value = "/barrage", method = RequestMethod.POST)
+    @RequestMapping(value = "/barrage")
     @ResponseBody
     public Message barrage(Long liveId,Pageable pageable,HttpServletRequest request) {
 
