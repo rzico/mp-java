@@ -61,11 +61,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">动画效果：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <div class="uploader-thum-container">
-                    <div id="animationfileList" class="uploader-list"></div>
-                    <div id="animationfilePicker">选择图片</div>
-                    <input type="hidden" value="" id="animation" name="animation">
-                </div>
+                <input type="text" class="input-text" name="animation" value="" placeholder="" id="animation">
             </div>
         </div>
 

@@ -165,7 +165,6 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 	}
 
 
-
 	public void barrage(Member member, Live live) throws Exception {
 		if (member.getPoint().compareTo(1L)<0) {
 			throw  new RuntimeException("余额不足");

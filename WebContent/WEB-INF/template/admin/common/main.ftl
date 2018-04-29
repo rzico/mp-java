@@ -23,7 +23,7 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>mopian</title>
+    <title>${setting.siteName} </title>
     <meta name="keywords" content="">
     <meta name="description" content="">
 </head>
