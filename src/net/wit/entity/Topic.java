@@ -129,6 +129,12 @@ public class Topic extends BaseEntity {
     @Embedded
     private TopicConfig config;
 
+    /** 公排 */
+    @NotNull
+    @Min(0)
+    @Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '公排'")
+    private Long ranking;
+
     /** 模板标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_topic_tag")
@@ -338,5 +344,11 @@ public class Topic extends BaseEntity {
         return amount.multiply(rate).setScale(4,BigDecimal.ROUND_HALF_DOWN);
     }
 
+    public Long getRanking() {
+        return ranking;
+    }
 
+    public void setRanking(Long ranking) {
+        this.ranking = ranking;
+    }
 }

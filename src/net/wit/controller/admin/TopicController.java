@@ -152,6 +152,8 @@ public class TopicController extends BaseController {
 
 		entity.setType(topic.getType());
 
+		entity.setRanking(0L);
+
 		entity.setArea(areaService.find(areaId));
 
 		entity.setCategory(categoryService.find(categoryId));

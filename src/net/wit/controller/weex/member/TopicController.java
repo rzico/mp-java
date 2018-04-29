@@ -98,6 +98,7 @@ public class TopicController extends BaseController {
             topic.setFee(new BigDecimal("588"));
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.personal);
+            topic.setRanking(0L);
             TopicConfig config = topic.getConfig();
             if (config==null) {
                 config = new TopicConfig();
@@ -336,6 +337,7 @@ public class TopicController extends BaseController {
             topic.setFee(new BigDecimal("388"));
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.individual);
+            topic.setRanking(0L);
         }
         TopicIndexModel model = new TopicIndexModel();
         model.bind(topic);
