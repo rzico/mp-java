@@ -126,6 +126,8 @@ public class RebateController extends BaseController {
         }
 
         RebateModel model = new RebateModel();
+        model.setLogo(member.getLogo());
+        model.setNickName(member.getNickName());
         model.setRebate(sm);
         long cont = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member) );
         model.setContacts(cont);
