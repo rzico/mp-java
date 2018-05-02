@@ -24,6 +24,18 @@ public class OrderRanking extends OrderEntity{
     @NotNull
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) not null comment '名称'")
+    private String thumbnail ;
+
+    /*品名*/
+    @NotNull
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) not null comment '名称'")
+    private String sn ;
+
+    /*品名*/
+    @NotNull
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) not null comment '名称'")
     private String name ;
 
     /*规格*/
@@ -112,5 +124,19 @@ public class OrderRanking extends OrderEntity{
         this.member = member;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
 
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
 }
