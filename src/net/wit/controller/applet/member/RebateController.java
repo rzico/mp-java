@@ -108,7 +108,6 @@ public class RebateController extends BaseController {
         return Message.bind(sm,request);
     }
 
-
     /**
      *  总览
      */
