@@ -73,7 +73,7 @@ public class TopicController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (type!=null && type.equals("applet")) {
-            String url = "pages/shop/index/index?id=" + member.getId();
+            String url = "pages/shop/index?id=" + member.getId();
             return Message.success((Object) url,"复制成功");
         } else {
             String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+member.getId();

@@ -26,11 +26,11 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>Live</title>
+    <title>直播管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> Live <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
-                                               href="javascript:location.replace(location.href);" title="刷新"><i
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 直播管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                                                                                            href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class=""> 日期范围：
@@ -39,18 +39,21 @@
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
+    [#if statuss??]
+        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="status" class="select" style="background-color: #FFFFFF;">
+				<option value="">状态</option>
+                [#list statuss as status]
+                    <option value="${status.id}">${status.name}</option>
+                [/#list]
+			</select>
+         </span>
+    [/#if]
 
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
-    </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20">
-        <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; Live &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增Live</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-        </span>
     </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -154,23 +157,18 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "frontcover",
-                    "sTitle": "封面",
+                    "mData": "title",
+                    "sTitle": "标题",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "nickname",
+                    "sTitle": "昵称",
                     "sClass": "center"
                 },
                 {
                     "mData": "gift",
                     "sTitle": "礼物数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "headpic",
-                    "sTitle": "头像",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "hlsPlayUrl",
-                    "sTitle": "回放地址",
                     "sClass": "center"
                 },
                 {
@@ -184,48 +182,13 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "nickname",
-                    "sTitle": "昵称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "playUrl",
-                    "sTitle": "观看地址",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "pushUrl",
-                    "sTitle": "推流地址",
-                    "sClass": "center"
-                },
-                {
                     "mData": "status",
                     "sTitle": "状态",
                     "sClass": "center"
                 },
                 {
-                    "mData": "title",
-                    "sTitle": "标题",
-                    "sClass": "center"
-                },
-                {
                     "mData": "viewerCount",
                     "sTitle": "在线数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapLiveGroup",
-                    "sTitle": "LiveGroup",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapLiveTape",
-                    "sTitle": "LiveTape",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
                     "sClass": "center"
                 },
                 {
@@ -244,7 +207,7 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
@@ -258,41 +221,28 @@
                     }
                 },
                 {
-                    "aTargets": [16],
+                    "aTargets": [9],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','liveGroupView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                        [#if  statuss??]
+                            [#list statuss as status]
+                                if ("${status.id}" == data) {
+                                    return "${status.name}";
+                                }
+                            [/#list]
+                        [/#if]
                         }else{
                             return "";
                         }
                     }
-                }, 
+                },
                 {
-                    "aTargets": [17],
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','liveTapeView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [18],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [19],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; Live &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 直播管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>"+
+                                   "<a title='兑换' href='javascript:;' onclick=\"add('首页 &gt; 直播管理 &gt; 兑换','add.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>兑换</i></a>";
+
                         }else{
                             return "";
                         }
@@ -300,13 +250,14 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 16, 17, 18, 19]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 11]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
+                var _status =  $('select[name="status"]').val();
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {
@@ -319,6 +270,7 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
+                        "status":_status,
 
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
@@ -342,7 +294,7 @@
         });
         table = $('.table').DataTable();
     });
-//   表格自适应屏幕
+    //   表格自适应屏幕
     window.onresize = function(){
         $('.table').css('width','100%');
     }
@@ -353,7 +305,7 @@
 
     /*搜索*/
     function search(){
-     table.ajax.reload();
+        table.ajax.reload();
     }
     /*添加*/
     function add(title, url, w, h) {
@@ -460,7 +412,7 @@
             });
         });
     }
-	
+
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);

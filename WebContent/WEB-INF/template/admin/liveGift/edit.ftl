@@ -34,23 +34,6 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
-            </div>
-        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
@@ -66,13 +49,49 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩略图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thumbnail}" placeholder="" id="thumbnail" name="thumbnail">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                        <div id="fileList" class="uploader-list">
+                            [#if data.thumbnail??]
+                                <div class="file-item thumbnail">
+                                    <img width="100px" height="100px" src="${data.thumbnail}"/>
+                                    <div class="info"></div>
+                                </div>'
+                            [/#if]
+                        </div>
+                        <div id="filePicker">选择图片</div>
+                        <input type="hidden" value="${data.thumbnail}" id="thumbnail" name="thumbnail">
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row cl">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">动画效果：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                        <div id="animationfileList" class="uploader-list">
+                            [#if data.animation??]
+                                <div class="file-item thumbnail">
+                                    <img width="100px" height="100px" src="${data.animation}"/>
+                                    <div class="info"></div>
+                                </div>'
+                            [/#if]
+                        </div>
+                        <div id="animationfilePicker">选择图片</div>
+                        <input type="hidden" value="${data.animation}" id="animation" name="animation">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">排序：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
+                </div>
+            </div>
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
@@ -96,6 +115,15 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+
+
+<script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
@@ -104,6 +132,7 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+                new $uploadpicture("animationfileList","animationfilePicker");
 
                 $("#form-update").validate({
                     rules:{

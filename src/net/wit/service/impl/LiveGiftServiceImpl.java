@@ -82,21 +82,28 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		LiveGift gift = liveGiftDao.find(id);
+		gift.setDeleted(true);
+		super.update(gift);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			LiveGift gift = liveGiftDao.find(id);
+			gift.setDeleted(true);
+			super.update(gift);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(LiveGift liveGift) {
-		super.delete(liveGift);
+		liveGift.setDeleted(true);
+		super.update(liveGift);
 	}
 
 	public Page<LiveGift> findPage(Date beginDate,Date endDate, Pageable pageable) {
