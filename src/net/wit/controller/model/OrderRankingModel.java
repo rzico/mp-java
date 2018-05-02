@@ -81,6 +81,22 @@ public class OrderRankingModel extends BaseModel implements Serializable {
         this.orders = orders;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
     public void bind(OrderRanking orderRanking) {
         this.id = orderRanking.getId();
         this.name = orderRanking.getName();
