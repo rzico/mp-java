@@ -20,16 +20,14 @@ public class OrderRanking extends OrderEntity{
 
     private static final long serialVersionUID = 56L;
 
-    /*品名*/
-    @NotNull
+    /*缩例图*/
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) not null comment '名称'")
+    @Column(columnDefinition="varchar(255) comment '缩例图'")
     private String thumbnail ;
 
-    /*品名*/
-    @NotNull
+    /*单号*/
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) not null comment '名称'")
+    @Column(columnDefinition="varchar(255) comment '单号'")
     private String sn ;
 
     /*品名*/
