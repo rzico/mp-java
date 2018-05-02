@@ -26,6 +26,11 @@ public class RebateModel extends BaseModel implements Serializable {
      */
     private long invalid;
 
+    /**
+     * 当前号数
+     */
+    private long ranking;
+
     public BigDecimal getRebate() {
         return rebate;
     }
@@ -50,4 +55,11 @@ public class RebateModel extends BaseModel implements Serializable {
         this.invalid = invalid;
     }
 
+    public long getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(long ranking) {
+        this.ranking = ranking;
+    }
 }
