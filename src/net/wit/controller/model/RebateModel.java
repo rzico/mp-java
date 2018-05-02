@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RebateModel extends BaseModel implements Serializable {
+    /** 昵称 */
+    private String nickName;
+
+    /** 头像 */
+    private String logo;
 
     /**
      * 奖励金
@@ -61,5 +66,21 @@ public class RebateModel extends BaseModel implements Serializable {
 
     public void setRanking(long ranking) {
         this.ranking = ranking;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }
