@@ -92,8 +92,6 @@ public class OrderRankingModel extends BaseModel implements Serializable {
         this.thumbnail = orderRanking.getThumbnail();
     }
 
-
-
     public static List<OrderRankingModel> bindList(List<OrderRanking> orderRankings) {
         List<OrderRankingModel> ms = new ArrayList<OrderRankingModel>();
         for (OrderRanking orderRanking:orderRankings) {
