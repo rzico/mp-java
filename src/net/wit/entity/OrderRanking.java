@@ -20,6 +20,16 @@ public class OrderRanking extends OrderEntity{
 
     private static final long serialVersionUID = 56L;
 
+    /*缩例图*/
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '缩例图'")
+    private String thumbnail ;
+
+    /*单号*/
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '单号'")
+    private String sn ;
+
     /*品名*/
     @NotNull
     @Length(max = 200)
@@ -112,5 +122,19 @@ public class OrderRanking extends OrderEntity{
         this.member = member;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
 
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
 }

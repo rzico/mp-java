@@ -133,6 +133,8 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
         orderRanking.setName(orderItem.getName());
         orderRanking.setSpec(orderItem.getSpec());
         orderRanking.setOrders(topic.getRanking().intValue());
+        orderRanking.setSn(orderItem.getOrder().getSn());
+        orderRanking.setThumbnail(orderItem.getThumbnail());
         orderRankingDao.persist(orderRanking);
 
         if (topic.getRanking()>2 && ((topic.getRanking()-1) % 2 ==0)) {
