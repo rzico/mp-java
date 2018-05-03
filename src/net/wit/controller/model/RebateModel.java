@@ -36,6 +36,10 @@ public class RebateModel extends BaseModel implements Serializable {
      */
     private long ranking;
 
+
+    /** 是否代理商 none  operate agent */
+    private String agentType;
+
     public BigDecimal getRebate() {
         return rebate;
     }
@@ -82,5 +86,13 @@ public class RebateModel extends BaseModel implements Serializable {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getAgentType() {
+        return agentType;
+    }
+
+    public void setAgentType(String agentType) {
+        this.agentType = agentType;
     }
 }
