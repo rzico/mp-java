@@ -30,6 +30,11 @@ public class OrderItemModel extends BaseModel implements Serializable {
     /** 数量 */
     private Integer quantity;
 
+    /** 是否赠品 */
+    private Boolean isGift;
+
+    private PromotionModel promotion;
+
     public Long getId() {
         return id;
     }
@@ -78,6 +83,22 @@ public class OrderItemModel extends BaseModel implements Serializable {
         this.quantity = quantity;
     }
 
+    public Boolean getIsGift() {
+        return isGift;
+    }
+
+    public void setIsGift(Boolean gift) {
+        isGift = gift;
+    }
+
+    public PromotionModel getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(PromotionModel promotion) {
+        this.promotion = promotion;
+    }
+
     public void bind(OrderItem orderItem) {
         this.id = orderItem.getId();
         this.thumbnail = orderItem.getThumbnail();
@@ -85,6 +106,13 @@ public class OrderItemModel extends BaseModel implements Serializable {
         this.name = orderItem.getName();
         this.price = orderItem.getPrice();
         this.quantity = orderItem.getQuantity();
+
+        this.isGift = orderItem.getIsGift();
+        this.promotion = new PromotionModel();
+        if (orderItem.getPromotion()!=null) {
+            this.promotion.bind(orderItem.getPromotion());
+        }
+
     }
 
 
