@@ -17,6 +17,8 @@ public class PromotionListModel extends BaseModel implements Serializable {
     private Promotion.Type type;
     /** 名称 */
     private String title;
+    /** 购买数量 */
+    private Integer quantity;
 
     public Long getId() {
         return id;
@@ -42,6 +44,14 @@ public class PromotionListModel extends BaseModel implements Serializable {
         this.title = title;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public void bind(Promotion promotion) {
 
         this.id = promotion.getId();
@@ -51,6 +61,8 @@ public class PromotionListModel extends BaseModel implements Serializable {
         } else {
             this.title = "满"+promotion.getQuantity()+"赠"+promotion.getGift().getName();
         }
+
+        this.quantity = promotion.getQuantity();
 
     }
 

@@ -66,21 +66,28 @@ public class PromotionServiceImpl extends BaseServiceImpl<Promotion, Long> imple
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Promotion promotion = promotionDao.find(id);
+		promotion.setDeleted(true);
+		super.update(promotion);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			Promotion promotion = promotionDao.find(id);
+			promotion.setDeleted(true);
+			super.update(promotion);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Promotion promotion) {
-		super.delete(promotion);
+		promotion.setDeleted(true);
+		super.update(promotion);
 	}
 
 	public Page<Promotion> findPage(Date beginDate,Date endDate, Pageable pageable) {
