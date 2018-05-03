@@ -25,6 +25,7 @@ public class CartItemModel extends BaseModel implements Serializable {
     /** 销售价 */
     private BigDecimal price;
 
+    private PromotionModel promotion;
 
     public Long getId() {
         return id;
@@ -74,6 +75,14 @@ public class CartItemModel extends BaseModel implements Serializable {
         this.name = name;
     }
 
+    public PromotionModel getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(PromotionModel promotion) {
+        this.promotion = promotion;
+    }
+
     public void bind(CartItem cartItem) {
         this.id = cartItem.getId();
         this.quantity = cartItem.getQuantity();
@@ -82,5 +91,11 @@ public class CartItemModel extends BaseModel implements Serializable {
         this.name = product.getName();
         this.spec = product.getSpec();
         this.thumbnail = product.getThumbnail();
+
+        this.promotion = new PromotionModel();
+        if (cartItem.getPromotion()!=null) {
+            this.promotion.bind(cartItem.getPromotion());
+        }
     }
+
 }

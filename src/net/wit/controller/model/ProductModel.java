@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 
+import net.wit.entity.Coupon;
 import net.wit.entity.Product;
 import net.wit.entity.ProductStock;
 import net.wit.entity.Shop;
@@ -129,4 +130,5 @@ public class ProductModel extends BaseModel implements Serializable {
         }
         return ms;
     }
+
 }

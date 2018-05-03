@@ -9,10 +9,7 @@ import net.wit.Message;
 import net.wit.controller.model.CartItemModel;
 import net.wit.controller.model.CartModel;
 import net.wit.controller.website.BaseController;
-import net.wit.entity.Cart;
-import net.wit.entity.CartItem;
-import net.wit.entity.Member;
-import net.wit.entity.Product;
+import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -48,6 +45,8 @@ public class CartController extends BaseController {
 	private CartItemService cartItemService;
 	@Resource(name = "redisServiceImpl")
 	private RedisService redisService;
+	@Resource(name = "promotionServiceImpl")
+	private PromotionService promotionService;
 
 	/**
 	 * 添加
@@ -80,12 +79,20 @@ public class CartController extends BaseController {
 			return Message.error("不能大于100种商品", Cart.MAX_PRODUCT_COUNT);
 		}
 
+		Promotion promotion = null;
+		if (promotionId!=null) {
+			promotion = promotionService.find(promotionId);
+		}
+
 		if (cart.contains(product)) {
 			CartItem cartItem = cart.getCartItem(product);
 			if (cartItem.getQuantity() + quantity > product.getAvailableStock()) {
 				return Message.warn("库存不足,稍等试试");
 			}
 			cartItem.add(quantity);
+			if (promotion!=null) {
+				cartItem.setPromotion(promotion);
+			}
 			cartItemService.update(cartItem);
 		} else {
 			if (quantity > product.getAvailableStock()) {
@@ -96,6 +103,9 @@ public class CartController extends BaseController {
 			cartItem.setProduct(product);
 			cartItem.setCart(cart);
 			cartItem.setSeller(product.getMember());
+			if (promotion!=null) {
+				cartItem.setPromotion(promotion);
+			}
 			cartItemService.save(cartItem);
 			cart.getCartItems().add(cartItem);
 		}
@@ -160,6 +170,14 @@ public class CartController extends BaseController {
 		Set<CartItem> cartItems = cart.getCartItems();
 		if (cartItem == null || cartItems == null || !cartItems.contains(cartItem)) {
 			return Message.error("商品没找到");
+		}
+
+		Promotion promotion = null;
+		if (promotionId!=null) {
+			promotion = promotionService.find(promotionId);
+		}
+		if (promotion!=null) {
+			cartItem.setPromotion(promotion);
 		}
 
 		Product product = cartItem.getProduct();
