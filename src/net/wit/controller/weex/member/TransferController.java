@@ -1,7 +1,10 @@
 package net.wit.controller.weex.member;
 
+import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.ShopModel;
+import net.wit.controller.model.TransferModel;
 import net.wit.controller.model.WalletModel;
 import net.wit.entity.*;
 import net.wit.service.*;
@@ -13,10 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -106,6 +106,27 @@ public class TransferController extends BaseController {
     }
 
     /**
+     * 查询列表
+     */
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    @ResponseBody
+    public Message list(Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("member", Filter.Operator.eq,member));
+        pageable.setFilters(filters);
+        Page<Transfer> page = transferService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(TransferModel.bindList(page.getContent()));
+
+        return Message.bind(model,request);
+
+    }
+
+    /**
      * 获取可提现金额
      */
     @RequestMapping(value = "effectiveBalance", method = RequestMethod.POST)
@@ -191,5 +212,7 @@ public class TransferController extends BaseController {
             return Message.error(e.getMessage());
         }
     }
+
+
 
 }
