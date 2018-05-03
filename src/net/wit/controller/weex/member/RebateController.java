@@ -46,6 +46,9 @@ public class RebateController extends BaseController {
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      * 我的奖励金
      * id 会员
@@ -126,6 +129,16 @@ public class RebateController extends BaseController {
 
         long inv = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member),new Filter("type", Filter.Operator.eq, Card.Type.team) );
         model.setInvalid(inv);
+
+        model.setAgentType("none");
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            Enterprise ent = admin.getEnterprise();
+            if (!ent.getType().equals(Enterprise.Type.shop) && !ent.getType().equals(Enterprise.Type.personal) && ent.getStatus().equals(Enterprise.Status.success)) {
+                model.setAgentType(ent.getType().name());
+            }
+        }
 
         return Message.bind(model,request);
     }
