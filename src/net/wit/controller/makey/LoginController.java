@@ -106,7 +106,9 @@ public class LoginController extends BaseController {
             }
 
             BindUser bindUser = null;
-            nickName = filterEmoji(nickName);
+            if (nickName!=null) {
+                nickName = filterEmoji(nickName);
+            }
             if (unionId!=null && !"#".equals(unionId)) {
                 bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
             } else {
