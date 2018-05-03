@@ -32,7 +32,6 @@ public class Friends extends BaseEntity {
 	 * 状态
 	 */
 	public enum Status {
-
 		/** 申请 */
 		ask,
 

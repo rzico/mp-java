@@ -107,6 +107,11 @@ public class AgentController extends BaseController {
     public Message list(Pageable pageable,HttpServletRequest request) {
         Member member = memberService.getCurrent();
 
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("不是代理商");
@@ -125,6 +130,7 @@ public class AgentController extends BaseController {
 
         List<AgentModel> models = new ArrayList<AgentModel>();
         for (Enterprise en:page.getContent()) {
+
             AgentModel m = new AgentModel();
             m.setId(en.getMember().getId());
             m.setLogo(en.getMember().getLogo());
@@ -183,6 +189,10 @@ public class AgentController extends BaseController {
         Member parent = memberService.find(xuid);
         if (parent==null) {
             return Message.error("无效邀请人");
+        }
+
+        if (parent.equals(member)) {
+            return Message.error("不能邀请自已");
         }
 
         Admin adminParent = adminService.findByMember(parent);

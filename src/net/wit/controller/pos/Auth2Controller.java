@@ -345,6 +345,7 @@ public class Auth2Controller extends BaseController {
             topic.setFee(new BigDecimal("588"));
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.personal);
+            topic.setRanking(0L);
             TopicConfig config = topic.getConfig();
             if (config==null) {
                 config = new TopicConfig();

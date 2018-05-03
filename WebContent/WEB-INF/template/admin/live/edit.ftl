@@ -34,131 +34,81 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
+                </div>
+            </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">昵称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                ${data.nickname}
+                </div>
+            </div>
+
+
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">封面：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.frontcover}" placeholder="" id="frontcover" name="frontcover">
+                <image src="${data.frontcover}" style="width:300px;height:200px"></image>
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>礼物数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.gift}" placeholder="" id="gift" name="gift" onInput="intInit(this)">
+                ${data.gift}
             </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">头像：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.headpic}" placeholder="" id="headpic" name="headpic">
+                <image src="${data.headpic}" style="width:200px;height:200px"></image>
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">回放地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.hlsPlayUrl}" placeholder="" id="hlsPlayUrl" name="hlsPlayUrl">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.likeCount}" placeholder="" id="likeCount" name="likeCount" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
+         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">位置：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.location}" placeholder="" id="location" name="location">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">昵称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.nickname}" placeholder="" id="nickname" name="nickname">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">状态：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if statuss??]
+                        [#list statuss as status]
+                            <div class="radio-box">
+                                <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
+                                <label for="status-${status_index}">${status.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">观看地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.playUrl}" placeholder="" id="playUrl" name="playUrl">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.likeCount}" placeholder="" id="likeCount" name="likeCount" onInput="intInit(this)">
+                </div>
             </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">推流地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.pushUrl}" placeholder="" id="pushUrl" name="pushUrl">
-            </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">状态：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.status}" placeholder="" id="status" name="status">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
-            </div>
-        </div>
-
-        <div class="row cl">
+            <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>在线数：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.viewerCount}" placeholder="" id="viewerCount" name="viewerCount" onInput="intInit(this)">
+                ${data.viewerCount}
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">LiveGroup：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if liveGroups??]
-				<select name="liveGroupId" class="select" style="background-color: #FFFFFF">
-                    [#list liveGroups as liveGroup]
-					<option[#if data.liveGroup?? && liveGroup.id == data.liveGroup.id] selected[/#if] value="${liveGroup.id}">${liveGroup.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">LiveTape：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if liveTapes??]
-				<select name="liveTapeId" class="select" style="background-color: #FFFFFF">
-                    [#list liveTapes as liveTape]
-					<option[#if data.liveTape?? && liveTape.id == data.liveTape.id] selected[/#if] value="${liveTape.id}">${liveTape.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Member：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option[#if data.member?? && member.id == data.member.id] selected[/#if] value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">

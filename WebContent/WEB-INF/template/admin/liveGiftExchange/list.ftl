@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>礼物管理</title>
+    <title>兑换记录</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 礼物管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 兑换记录 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -44,13 +44,6 @@
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
-    </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20">
-        <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 礼物管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增礼物</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-        </span>
     </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -91,7 +84,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/liveGift/list.jhtml",
+            "sAjaxSource": "${base}/admin/liveGiftExchange/list.jhtml",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -122,6 +115,7 @@
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
                 $(row).children('td').eq(7).attr('style', 'text-align: left;');
+                $(row).children('td').eq(8).attr('style', 'text-align: left;');
                 $(row).children('td').eq(9).attr('style', 'text-align: left;');
 
             },
@@ -147,18 +141,28 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "name",
-                    "sTitle": "名称",
+                    "mData": "amount",
+                    "sTitle": "兑换金额",
                     "sClass": "center"
                 },
                 {
-                    "mData": "price",
-                    "sTitle": "价值",
+                    "mData": "gift",
+                    "sTitle": "印票数",
                     "sClass": "center"
                 },
                 {
-                    "mData": "orders",
-                    "sTitle": "排序",
+                    "mData": "headpic",
+                    "sTitle": "头像",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "nickname",
+                    "sTitle": "昵称",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapMember",
+                    "sTitle": "主播",
                     "sClass": "center"
                 },
                 {
@@ -190,21 +194,30 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
-
                 {
-                    "aTargets": [7],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 礼物管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
                         }else{
                             return "";
                         }
                     }
-
-                },
+                }, 
+//                {
+//                    "aTargets": [9],
+//                    "mRender": function (data, display, row) {
+//                        if(data != null){
+//                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; LiveGiftExchange &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+//                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+//                        }else{
+//                            return "";
+//                        }
+//                    }
+//
+//                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 8]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
@@ -292,7 +305,7 @@
     }
     /*删除全部*/
     function delAll(){
-        var url = "${base}/admin/liveGift/delete.jhtml";
+        var url = "${base}/admin/liveGiftExchange/delete.jhtml";
         var i = 0;
         $('input[type="checkbox"][name="ids"]:checked').each(
                 function() {
@@ -346,7 +359,7 @@
                 data: {
                     ids: id
                 },
-                url: '${base}/admin/liveGift/delete.jhtml',
+                url: '${base}/admin/liveGiftExchange/delete.jhtml',
                 dataType: 'json',
                 success: function (data) {
                     layer.close(load);

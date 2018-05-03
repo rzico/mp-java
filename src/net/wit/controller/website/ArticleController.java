@@ -8,6 +8,7 @@ import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +50,18 @@ public class ArticleController extends BaseController {
 
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;
+
+    /**
+     * html 格式显示板版
+     */
+    @RequestMapping(value = "/webkit", method = RequestMethod.GET)
+    public String html(Long id, ModelMap model, HttpServletRequest request){
+
+        Article article = articleService.find(id);
+        model.addAttribute("data",article);
+
+        return "/common/article";
+    }
 
     /**
      * 文章预览信息
