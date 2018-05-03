@@ -72,6 +72,14 @@ public class TransferModel extends BaseModel implements Serializable {
         this.fee = fee;
     }
 
+    public Transfer.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Transfer.Status status) {
+        this.status = status;
+    }
+
     public void bind(Transfer transfer) {
         this.id = transfer.getId();
         this.status = transfer.getStatus();
