@@ -61,17 +61,19 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
 	Message list(Long authorId,Long productCategoryId,Pageable pageable,HttpServletRequest request) {
-		Member member = memberService.find(authorId);
-		if (member==null) {
-			return Message.error("作者id无效");
-		}
 		ProductCategory productCategory = productCategoryService.find(productCategoryId);
 		List<Filter> filters = new ArrayList<Filter>();
 		if (productCategory!=null) {
 			filters.add(new Filter("productCategory", Filter.Operator.eq,productCategory));
 		}
-		filters.add(new Filter("member", Filter.Operator.eq,member));
+		if (authorId!=null) {
+			Member member = memberService.find(authorId);
+			if (member != null) {
+				filters.add(new Filter("member", Filter.Operator.eq, member));
+			}
+		}
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
+		filters.add(new Filter("type", Filter.Operator.eq, Product.Type.dummy));
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");

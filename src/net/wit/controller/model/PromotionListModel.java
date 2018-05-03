@@ -26,6 +26,22 @@ public class PromotionListModel extends BaseModel implements Serializable {
         this.id = id;
     }
 
+    public Promotion.Type getType() {
+        return type;
+    }
+
+    public void setType(Promotion.Type type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void bind(Promotion promotion) {
 
         this.id = promotion.getId();
