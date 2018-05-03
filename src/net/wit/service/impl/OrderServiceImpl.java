@@ -234,7 +234,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						OrderItem giftItem = new OrderItem();
 						giftItem.setName(gift.getName());
 						giftItem.setSpec(gift.getSpec());
-						giftItem.setPrice(gift.getPrice());
+						giftItem.setPrice(BigDecimal.ZERO);
 						giftItem.setWeight(gift.getWeight());
 						giftItem.setThumbnail(gift.getThumbnail());
 						giftItem.setIsGift(true);
@@ -275,7 +275,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							OrderItem giftItem = new OrderItem();
 							giftItem.setName(gift.getName());
 							giftItem.setSpec(gift.getSpec());
-							giftItem.setPrice(gift.getPrice());
+							giftItem.setPrice(BigDecimal.ZERO);
 							giftItem.setWeight(gift.getWeight());
 							giftItem.setThumbnail(gift.getThumbnail());
 							giftItem.setIsGift(true);
