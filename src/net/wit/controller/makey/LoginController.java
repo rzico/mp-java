@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -66,6 +68,21 @@ public class LoginController extends BaseController {
     @Resource(name = "roleServiceImpl")
     private RoleService roleService;
 
+    public  String filterEmoji(String source) {
+        if(source != null)
+        {
+            Pattern emoji = Pattern.compile ("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",Pattern.UNICODE_CASE | Pattern . CASE_INSENSITIVE ) ;
+            Matcher emojiMatcher = emoji.matcher(source);
+            if ( emojiMatcher.find())
+            {
+                source = emojiMatcher.replaceAll("*");
+                return source ;
+            }
+            return source;
+        }
+        return source;
+    }
+
     @RequestMapping(value = "")
     public
     @ResponseBody
@@ -89,6 +106,7 @@ public class LoginController extends BaseController {
             }
 
             BindUser bindUser = null;
+            nickName = filterEmoji(nickName);
             if (unionId!=null && !"#".equals(unionId)) {
                 bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
             } else {

@@ -9,7 +9,10 @@ import java.util.List;
 public class GaugeCategoryModel extends BaseModel implements Serializable {
 
     private Long id;
+    /** 分类名 */
+
     private String name;
+    /** 英文名 */
     private String english;
 
     private int count;
