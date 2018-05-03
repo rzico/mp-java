@@ -78,7 +78,10 @@ public class Order extends BaseEntity {
 		pickup,
 
 		/** 统仓统配 */
-		warehouse
+		warehouse,
+
+		/** 存入卡包 */
+		cardbkg
 	}
 
 	/**

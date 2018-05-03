@@ -40,6 +40,10 @@ public class CartItem extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Product product;
 
+	/** 活动 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Promotion promotion;
+
 	/** 购物车 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
@@ -113,6 +117,14 @@ public class CartItem extends BaseEntity {
 	 */
 	public void setCart(Cart cart) {
 		this.cart = cart;
+	}
+
+	public Promotion getPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(Promotion promotion) {
+		this.promotion = promotion;
 	}
 
 	/**

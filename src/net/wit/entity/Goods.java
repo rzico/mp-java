@@ -30,6 +30,11 @@ public class Goods extends BaseEntity {
 	@OrderBy("orders asc")
 	private List<Product> products = new ArrayList<Product>();
 
+	/** 活动 */
+	@OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@Where(clause="deleted=0")
+	private List<Promotion> promotions = new ArrayList<Promotion>();
+
 	/** 公排 */
 	@NotNull
 	@Min(0)
@@ -87,5 +92,13 @@ public class Goods extends BaseEntity {
 
 	public void setReview(Long review) {
 		this.review = review;
+	}
+
+	public List<Promotion> getPromotions() {
+		return promotions;
+	}
+
+	public void setPromotions(List<Promotion> promotions) {
+		this.promotions = promotions;
 	}
 }

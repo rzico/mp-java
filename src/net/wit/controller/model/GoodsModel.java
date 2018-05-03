@@ -32,6 +32,9 @@ public class GoodsModel extends BaseModel implements Serializable {
     private DistributionViewModel distribution;
 
     /** 商品 */
+    private List<PromotionListModel> promotions;
+
+    /** 商品 */
     private List<ProductModel> products;
 
     public Long getId() {
@@ -106,6 +109,14 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.availableStock = availableStock;
     }
 
+    public List<PromotionListModel> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(List<PromotionListModel> promotions) {
+        this.promotions = promotions;
+    }
+
     public void bind(Goods goods) {
         Product mProduct = goods.getProducts().get(0);
         this.id = goods.getId();
@@ -132,6 +143,9 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.stock = mProduct.getStock();
         this.availableStock = mProduct.getAvailableStock();
         this.review = goods.getReview();
+
+        this.promotions = PromotionListModel.bindList(goods.getPromotions());
+
 
     }
 }

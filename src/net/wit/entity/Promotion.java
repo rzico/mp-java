@@ -77,6 +77,7 @@ public class Promotion extends OrderEntity{
     /*删除前处理*/
     @PreRemove
     public void preRemove(){
+
     }
 
     public Type getType() {
@@ -141,5 +142,20 @@ public class Promotion extends OrderEntity{
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer calc(BigDecimal price,Integer quantity) {
+//       if (getMinimumPrice().compareTo(BigDecimal.ZERO)>0 && getMinimumPrice().compareTo(price)>0) {
+//           return 0;
+//       }
+       if (getQuantity()>0 && getQuantity()>quantity) {
+           return 0;
+       }
+       if (getType().equals(Type.give)) {
+           Integer q = quantity / getQuantity();
+           return getGiftQuantity()*q;
+       } else {
+           return getGiftQuantity();
+       }
     }
 }

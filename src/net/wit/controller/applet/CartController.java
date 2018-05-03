@@ -54,7 +54,7 @@ public class CartController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public @ResponseBody
-	Message add(Long id, Integer quantity, HttpServletRequest request, HttpServletResponse response) {
+	Message add(Long id, Integer quantity,Long promotionId, HttpServletRequest request, HttpServletResponse response) {
 		if (quantity == null || quantity < 1) {
 			return Message.error("请输入购买数量");
 		}
@@ -147,7 +147,7 @@ public class CartController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public @ResponseBody
-	Message edit(Long id, Integer quantity) {
+	Message edit(Long id, Integer quantity,Long promotionId) {
 		Map<String, Object> data = new HashMap<String, Object>();
 		if (quantity == null || quantity < 1) {
 			return Message.error("数据不能为零");

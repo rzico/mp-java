@@ -76,6 +76,10 @@ public class OrderItem extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Product product;
 
+	/** 活动 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Promotion promotion;
+
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orders", nullable = false, updatable = false)
@@ -278,6 +282,14 @@ public class OrderItem extends BaseEntity {
 	 */
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public Promotion getPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(Promotion promotion) {
+		this.promotion = promotion;
 	}
 
 	/**

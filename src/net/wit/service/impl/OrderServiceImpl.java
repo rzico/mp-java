@@ -74,6 +74,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "orderRankingServiceImpl")
 	private OrderRankingService orderRankingService;
 
+	@Resource(name = "promotionDaoImpl")
+	private PromotionDao promotionDao;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
@@ -166,7 +169,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            附言
 	 * @return 订单
 	 */
-	public Order build(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo) {
+	public Order build(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long promotionId, Order.ShippingMethod shippingMethod) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -184,12 +187,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setMemo(memo);
 		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);
-		order.setShippingMethod(Order.ShippingMethod.shipping);
 		order.setIsAllocatedStock(false);
 		order.setIsDistribution(false);
 		order.setRebateAmount(BigDecimal.ZERO);
 		order.setIsPartner(false);
 		order.setPartnerAmount(BigDecimal.ZERO);
+
+		if (shippingMethod==null) {
+			shippingMethod = Order.ShippingMethod.shipping;
+		}
+
+		order.setShippingMethod(shippingMethod);
 
 		if (receiver != null) {
 			order.setConsignee(receiver.getConsignee());
@@ -214,8 +222,32 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderItem.setReturnQuantity(0);
 			orderItem.setProduct(product);
 			orderItem.setOrder(order);
+
 			orderItems.add(orderItem);
 			order.setSeller(product.getMember());
+			if (promotionId!=null) {
+				Promotion promotion = promotionDao.find(promotionId);
+				if (promotion!=null) {
+					Integer qt = promotion.calc(orderItem.getSubtotal(),orderItem.getQuantity());
+					if (qt>0) {
+						Product gift = promotion.getGift();
+						OrderItem giftItem = new OrderItem();
+						giftItem.setName(gift.getName());
+						giftItem.setSpec(gift.getSpec());
+						giftItem.setPrice(gift.getPrice());
+						giftItem.setWeight(gift.getWeight());
+						giftItem.setThumbnail(gift.getThumbnail());
+						giftItem.setIsGift(true);
+						giftItem.setQuantity(qt);
+						giftItem.setShippedQuantity(0);
+						giftItem.setReturnQuantity(0);
+						giftItem.setProduct(gift);
+						giftItem.setPromotion(promotion);
+						giftItem.setOrder(order);
+						orderItems.add(giftItem);
+					}
+				}
+			}
 		} else {
 			for (CartItem cartItem : cart.getCartItems()) {
 				if (cartItem != null && cartItem.getProduct() != null) {
@@ -234,6 +266,29 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					orderItem.setOrder(order);
 					orderItems.add(orderItem);
 					order.setSeller(cartItem.getSeller());
+
+					Promotion promotion = cartItem.getPromotion();
+					if (promotion!=null) {
+						Integer qt = promotion.calc(orderItem.getSubtotal(),orderItem.getQuantity());
+						if (qt>0) {
+							Product gift = promotion.getGift();
+							OrderItem giftItem = new OrderItem();
+							giftItem.setName(gift.getName());
+							giftItem.setSpec(gift.getSpec());
+							giftItem.setPrice(gift.getPrice());
+							giftItem.setWeight(gift.getWeight());
+							giftItem.setThumbnail(gift.getThumbnail());
+							giftItem.setIsGift(true);
+							giftItem.setQuantity(qt);
+							giftItem.setShippedQuantity(0);
+							giftItem.setReturnQuantity(0);
+							giftItem.setProduct(gift);
+							giftItem.setPromotion(promotion);
+							giftItem.setOrder(order);
+							orderItems.add(giftItem);
+						}
+					}
+
 				}
 			}
 		}
@@ -288,7 +343,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 * @return 订单
 	 */
-	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator) {
+	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -296,7 +351,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		Assert.notNull(receiver);
 
-		Order order = build(member, product, quantity, cart, receiver, memo);
+		Order order = build(member, product, quantity, cart, receiver, memo,promotionId,shippingMethod);
 
 		order.setSn(snDao.generate(Sn.Type.order));
 

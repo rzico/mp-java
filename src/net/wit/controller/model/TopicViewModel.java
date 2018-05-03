@@ -178,19 +178,19 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.fans = member.getFans().size();
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();
+        this.logo = member.getLogo();
         Template template = null;
         Topic topic = member.getTopic();
         if (topic!=null) {
             this.name = topic.getName();
-            this.logo = topic.getLogo();
+            this.thumbnail = topic.getLogo();
             this.hits = topic.getHits().intValue();
             template = topic.getTemplate();
         } else {
             this.name = member.displayName();
-            this.logo = member.getLogo();
+            this.thumbnail = member.getLogo();
             this.hits = 0;
         }
-        this.thumbnail = this.logo;
         this.tags = TagModel.bindList(member.getTags());
         this.followed = false;
         this.setCatalogs(new ArrayList<ArticleCatalogModel>());

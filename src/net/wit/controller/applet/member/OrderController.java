@@ -86,7 +86,7 @@ public class OrderController extends BaseController {
 	 *  获取订单信息
 	 */
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
-	public @ResponseBody Message info(Long receiverId) {
+	public @ResponseBody Message info(Long receiverId,Order.ShippingMethod shippingMethod) {
 		Member member = memberService.getCurrent();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
@@ -96,7 +96,7 @@ public class OrderController extends BaseController {
 		if (receiverId!=null) {
 			receiver = receiverService.find(receiverId);
 		}
-		Order order = orderService.build(member,null,null, cart, receiver, null);
+		Order order = orderService.build(member,null,null, cart, receiver, null,null,shippingMethod);
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		if (member!=null) {
@@ -122,7 +122,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/calculate")
 	public @ResponseBody
-	Message calculate(Long id,Integer quantity,Long receiverId) {
+	Message calculate(Long id,Integer quantity,Long receiverId,Long promotionId,Order.ShippingMethod shippingMethod) {
 		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
@@ -134,7 +134,7 @@ public class OrderController extends BaseController {
 		if (receiverId!=null) {
 			receiver = receiverService.find(receiverId);
 		}
-		Order order = orderService.build(member,product,quantity,cart, receiver,null);
+		Order order = orderService.build(member,product,quantity,cart, receiver,null,promotionId,shippingMethod);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -161,7 +161,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,Long xuid,String memo) {
+	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Order.ShippingMethod shippingMethod) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -184,7 +184,8 @@ public class OrderController extends BaseController {
 				return Message.error("库存不足");
 			}
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod);
+
 		if (cart != null) {
 			cartService.delete(cart);
 		}
@@ -382,7 +383,6 @@ public class OrderController extends BaseController {
 			}
 		}
 
-
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
@@ -390,12 +390,13 @@ public class OrderController extends BaseController {
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
+
 	}
 
 
 	@RequestMapping(value = "/promoter", method = RequestMethod.GET)
 	public @ResponseBody
-	Message promoter(Long authorId,Pageable pageable, HttpServletRequest request) {
+	Message promoter(Long authorId, Pageable pageable, HttpServletRequest request) {
 
 		Member member = memberService.getCurrent();
 		if (member==null) {
@@ -411,6 +412,7 @@ public class OrderController extends BaseController {
 				filters.add(new Filter("seller", Filter.Operator.eq,owner));
 			}
 		}
+
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(net.wit.Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
@@ -418,6 +420,7 @@ public class OrderController extends BaseController {
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindAndRebate(page.getContent()));
 		return Message.bind(model,request);
+
 	}
 
 
