@@ -1,18 +1,13 @@
 package net.wit.controller.applet.member;
 
 import net.wit.*;
+import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.DepositModel;
 import net.wit.controller.model.RebateModel;
-import net.wit.entity.Card;
-import net.wit.entity.Deposit;
-import net.wit.entity.Member;
-import net.wit.entity.OrderRanking;
+import net.wit.entity.*;
 import net.wit.plat.weixin.main.MenuManager;
-import net.wit.service.CardService;
-import net.wit.service.DepositService;
-import net.wit.service.MemberService;
-import net.wit.service.OrderRankingService;
+import net.wit.service.*;
 import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +47,9 @@ public class RebateController extends BaseController {
 
     @Resource(name = "orderRankingServiceImpl")
     private OrderRankingService orderRankingService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
 
     /**
      * 我的奖励金
@@ -144,6 +142,16 @@ public class RebateController extends BaseController {
             model.setRanking(0L);
         } else {
             model.setRanking(ors.get(0).getOrders());
+        }
+
+        model.setAgentType("none");
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            Enterprise ent = admin.getEnterprise();
+            if (!ent.getType().equals(Enterprise.Type.shop) && !ent.getType().equals(Enterprise.Type.personal) && ent.getStatus().equals(Enterprise.Status.success)) {
+                model.setAgentType(ent.getType().name());
+            }
         }
 
         return Message.bind(model,request);
