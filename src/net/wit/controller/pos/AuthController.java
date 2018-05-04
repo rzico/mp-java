@@ -345,6 +345,7 @@ public class AuthController extends BaseController {
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.personal);
             topic.setRanking(0L);
+            topic.setPaybill(new BigDecimal("0.5"));
             TopicConfig config = topic.getConfig();
             if (config==null) {
                 config = new TopicConfig();
