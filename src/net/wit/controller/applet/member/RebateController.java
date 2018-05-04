@@ -38,7 +38,6 @@ public class RebateController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
-
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
