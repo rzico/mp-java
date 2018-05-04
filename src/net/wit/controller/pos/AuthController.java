@@ -367,7 +367,6 @@ public class AuthController extends BaseController {
         } else {
             enterpriseService.create(topic);
         }
-
         Smssend smsSend = new Smssend();
         smsSend.setMobile(mobile);
         smsSend.setContent("注册店铺成功");
