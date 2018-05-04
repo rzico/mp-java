@@ -106,7 +106,7 @@ public class CardController extends BaseController {
 
         Smssend smsSend = new Smssend();
         smsSend.setMobile(m);
-        smsSend.setContent("验证码 :" + securityCode + ",只用于激活会员卡。");
+        smsSend.setContent("验证码:" + securityCode + ",只用于激活会员卡。");
         smssendService.smsSend(smsSend);
         return Message.success("发送成功");
 
