@@ -3,8 +3,11 @@ package net.wit.entity;
 
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Resolution;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 /**
@@ -24,6 +27,11 @@ public class LiveGiftData extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '用户'")
 	private Member member;
+
+	/** 直播间 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(columnDefinition="bigint(20) not null comment '直播间'")
+	private Live live;
 
 	/** 直播场次 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -47,9 +55,16 @@ public class LiveGiftData extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '礼物名'")
 	private String giftName;
 
-	/**  礼物价值  */
-	@Column(columnDefinition="varchar(255) comment '礼物价值'")
-	private String price;
+	/** 缩略图 */
+	@Length(max = 200)
+	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
+	private String thumbnail;
+
+	/** 价格 */
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '价格'")
+	private Long price;
 
 	public Member getMember() {
 		return member;
@@ -91,14 +106,6 @@ public class LiveGiftData extends BaseEntity {
 		this.giftName = giftName;
 	}
 
-	public String getPrice() {
-		return price;
-	}
-
-	public void setPrice(String price) {
-		this.price = price;
-	}
-
 	public LiveGift getLiveGift() {
 		return liveGift;
 	}
@@ -106,4 +113,29 @@ public class LiveGiftData extends BaseEntity {
 	public void setLiveGift(LiveGift liveGift) {
 		this.liveGift = liveGift;
 	}
+
+	public Long getPrice() {
+		return price;
+	}
+
+	public void setPrice(Long price) {
+		this.price = price;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public Live getLive() {
+		return live;
+	}
+
+	public void setLive(Live live) {
+		this.live = live;
+	}
+
 }

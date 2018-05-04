@@ -2,11 +2,9 @@ package net.wit.controller.applet;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleListModel;
-import net.wit.controller.model.ArticlePreviewModel;
-import net.wit.controller.model.ArticleViewModel;
-import net.wit.controller.model.GoodsListModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -90,6 +88,22 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+
+        for (ArticleContentViewModel m:model.getTemplates()) {
+            if (m.getMediaType().equals(Article.MediaType.product)) {
+                Goods goods = goodsService.find(m.getId());
+                if (goods!=null) {
+                    Product product = goods.product();
+                    if (product!=null) {
+                        m.setName(product.getName());
+                        m.setPrice(product.getPrice());
+                        m.setThumbnail(product.getThumbnail());
+                        m.setMarketPrice(product.getMarketPrice());
+                    }
+                }
+            }
+        }
+
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("article",model);
 
@@ -174,6 +188,55 @@ public class ArticleController extends BaseController {
         return Message.bind(model,request);
     }
 
+
+    /**
+     *  热点查询列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/hot", method = RequestMethod.GET)
+    @ResponseBody
+    public Message hot(Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("isPitch", Filter.Operator.eq, true));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+
+        List<Tag> tags = null;
+//        tags = tagService.findList(4L);
+        pageable.setFilters(filters);
+        pageable.setOrderProperty("hits");
+        pageable.setOrderDirection(Order.Direction.desc);
+        Page<Article> page = articleService.findPage(null,null,tags,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
+    /**
+     *  圈子查询列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/circle", method = RequestMethod.GET)
+    @ResponseBody
+    public Message circle(Long id,Pageable pageable, HttpServletRequest request){
+        List<Tag> tags = null;
+        Member member = null;
+        List<Filter> filters = new ArrayList<Filter>();
+        if (id!=null) {
+            member = memberService.find(id);
+        } else {
+            filters.add(new Filter("isAudit", Filter.Operator.eq,true));
+            tags = tagService.findList(4L,5L);
+        }
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        pageable.setFilters(filters);
+        Page<Article> page = articleService.findCircle(member,tags,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
 
     /**
      *  文章搜索

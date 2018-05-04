@@ -22,28 +22,6 @@ import static com.tls.tls_sigature.tls_sigature.GenTLSSignatureEx;
 
 public class User {
     public static Logger logger = LogManager.getLogger(User.class);
-//    public static String privateKey=
-//            "-----BEGIN PRIVATE KEY-----\n"+
-//            "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgilzRLbmHzOJTqgpaM5Ln\n"+
-//            "yyGZLYxr7Q0HGkm8YCz95f+hRANCAAQaFa7sPGBQbxMRrrce87loEfMH5v3+L5Rx\n"+
-//            "60tHHM/kXD1hh7TTv+dAwyQsfR7dAkoy3KVKxNcHP+OGHK/M1OS0\n"+
-//            "-----END PRIVATE KEY-----";
-//    public static String publicKey=
-//            "-----BEGIN PUBLIC KEY-----\n"+
-//            "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEGhWu7DxgUG8TEa63HvO5aBHzB+b9/i+U\n"+
-//            "cetLRxzP5Fw9YYe007/nQMMkLH0e3QJKMtylSsTXBz/jhhyvzNTktA==\n"+
-//            "-----END PUBLIC KEY-----";
-    public static String privateKey=
-              "-----BEGIN PRIVATE KEY-----\n"+
-              "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgpPaVbL3nDotp6NYu\n"+
-              "rRE2t6b0NbqmashEAgP3MF9rxYKhRANCAASoCYP3tz5TOlc1M56Wy505G0CQkZyl\n"+
-              "GkQu5XGhhXEprSlbgQ90afpA/L9TVwoeuWxGlzjE/wrhtn2/0QdVy3DA\n"+
-              "-----END PRIVATE KEY-----";
-    public static String publicKey=
-              "-----BEGIN PUBLIC KEY-----\n"+
-              "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqAmD97c+UzpXNTOelsudORtAkJGc\n"+
-              "pRpELuVxoYVxKa0pW4EPdGn6QPy/U1cKHrlsRpc4xP8K4bZ9v9EHVctwwA==\n"+
-              "-----END PUBLIC KEY-----";
     public static String im_attr="https://console.tim.qq.com/v4/openim/im_set_attr_name?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_attr="https://console.tim.qq.com/v4/im_open_login_svc/account_import?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_state="https://console.tim.qq.com/v4/openim/querystate?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
@@ -53,7 +31,7 @@ public class User {
         // check signature
         tls_sigature.CheckTLSSignatureResult checkResult = null;
         try {
-            checkResult = CheckTLSSignatureEx(urlSig,Long.parseLong(bundle.getString("x-tls-appId")), username, User.publicKey);
+            checkResult = CheckTLSSignatureEx(urlSig,Long.parseLong(bundle.getString("x-tls-appId")), username,bundle.getString("im.publicKey"));
             return checkResult.verifyResult == true;
         } catch (DataFormatException e) {
             e.printStackTrace();
@@ -65,7 +43,7 @@ public class User {
         // generate signature
         tls_sigature.GenTLSSignatureResult result = null;
         try {
-            result = GenTLSSignatureEx(Long.parseLong(bundle.getString("x-tls-appId")), username, User.privateKey);
+            result = GenTLSSignatureEx(Long.parseLong(bundle.getString("x-tls-appId")), username,bundle.getString("im.privateKey"));
             return result.urlSig;
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,10 +52,10 @@ public class User {
     }
     public static boolean imAttr() {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig("zhangsr");
+        String userSig=User.createUserSig(bundle.getString("im.admin"));
         int random=StringUtils.Random6Code();
 
-        String url = im_attr.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+        String url = im_attr.replace("USERSIG",userSig).replace("ADMIN",bundle.getString("im.admin")).replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
         String data ="{ \"AttrNames\": { \"0\": \"userId\", \"1\": \"logo\", \"2\": \"nickName\"}}";
 
@@ -110,10 +88,10 @@ public class User {
             return true;
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig("zhangsr");
+        String userSig=User.createUserSig(bundle.getString("im.admin"));
         int random=StringUtils.Random6Code();
 
-        String url = user_attr.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+        String url = user_attr.replace("USERSIG",userSig).replace("ADMIN",bundle.getString("im.admin")).replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
         Map<String,String> attrs = new HashMap<String,String>();
         attrs.put("Identifier",member.userId());
@@ -126,6 +104,7 @@ public class User {
             HttpResponse response = httpClient.execute(httpPost);
             String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             Map resp = JsonUtils.toObject(jsonStr,Map.class);
+            System.out.printf(jsonStr);
             if ("OK".equals(resp.get("ActionStatus"))) {
                 return true;
             } else {
@@ -142,10 +121,10 @@ public class User {
     }
     public static boolean userState(List<Member> members) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig("zhangsr");
+        String userSig=User.createUserSig(bundle.getString("im.admin"));
         int random=StringUtils.Random6Code();
 
-        String url = user_state.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+        String url = user_state.replace("USERSIG",userSig).replace("ADMIN",bundle.getString("im.admin")).replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
 
         Map<String,Object> data = new HashMap<String,Object>();
         List<String> users = new ArrayList<String>();

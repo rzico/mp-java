@@ -74,17 +74,11 @@ public class Order extends BaseEntity {
 		/** 普通快递 */
 		shipping,
 
-		/** 线下提货 */
+		/** 到店提货 */
 		pickup,
 
 		/** 统仓统配 */
-		warehouse,
-
-		/** 存入卡包 */
-		ecard,
-
-		/** 虚拟货品 */
-		virtual
+		warehouse
 	}
 
 	/**
@@ -316,6 +310,22 @@ public class Order extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private Member partner;
+
+
+	/** 推广员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise personal;
+
+	/** 合作商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise agent;
+
+	/** 代理商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Enterprise operate;
 
 	/** 是否已分配佣金 */
 	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
@@ -1002,6 +1012,30 @@ public class Order extends BaseEntity {
 
 	public Member getPartner() {
 		return partner;
+	}
+
+	public Enterprise getPersonal() {
+		return personal;
+	}
+
+	public void setPersonal(Enterprise personal) {
+		this.personal = personal;
+	}
+
+	public Enterprise getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Enterprise agent) {
+		this.agent = agent;
+	}
+
+	public Enterprise getOperate() {
+		return operate;
+	}
+
+	public void setOperate(Enterprise operate) {
+		this.operate = operate;
 	}
 
 	/**

@@ -33,6 +33,8 @@ public class TopicViewModel extends BaseModel implements Serializable {
     private String autograph;
     /** 头像 */
     private String logo;
+    /** 场景图 */
+    private String thumbnail;
     /** 地址 */
     private String url;
     /** 状态 */
@@ -162,7 +164,15 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.url = url;
     }
 
-    public void bind(Member member,Member shareUser) {
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public void bind(Member member, Member shareUser) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
         this.fans = member.getFans().size();
@@ -180,6 +190,7 @@ public class TopicViewModel extends BaseModel implements Serializable {
             this.logo = member.getLogo();
             this.hits = 0;
         }
+        this.thumbnail = this.logo;
         this.tags = TagModel.bindList(member.getTags());
         this.followed = false;
         this.setCatalogs(new ArrayList<ArticleCatalogModel>());

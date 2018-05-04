@@ -121,8 +121,6 @@ public class LiveTapeController extends BaseController {
 
 		entity.setPlayUrl(liveTape.getPlayUrl());
 
-		entity.setStartTime(liveTape.getStartTime());
-
 		entity.setTitle(liveTape.getTitle());
 
 		entity.setViewerCount(liveTape.getViewerCount() == null ? 0 : liveTape.getViewerCount());
@@ -201,8 +199,6 @@ public class LiveTapeController extends BaseController {
 		entity.setNickname(liveTape.getNickname());
 
 		entity.setPlayUrl(liveTape.getPlayUrl());
-
-		entity.setStartTime(liveTape.getStartTime());
 
 		entity.setTitle(liveTape.getTitle());
 

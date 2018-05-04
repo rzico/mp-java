@@ -45,6 +45,11 @@ public class Road extends OrderEntity {
 	@JsonIgnore
 	private Area area;
 
+	/** 定位 */
+	@Embedded
+	@JsonIgnore
+	private Location location;
+
 	/**
 	 * 获取名称
 	 * 

@@ -5,10 +5,8 @@
  */
 package net.wit.controller.website;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.wit.Message;
 import net.wit.controller.model.CardModel;
+import net.wit.controller.model.CartItemModel;
 import net.wit.controller.model.CartModel;
 import net.wit.entity.Cart;
 import net.wit.entity.CartItem;
@@ -123,8 +122,26 @@ public class CartController extends BaseController {
 		CartModel model = new CartModel();
 		if (cart!=null) {
 			model.bind(cart);
-		}
+		} else {
+		    model.setQuantity(0);
+		    model.setEffectivePrice(BigDecimal.ZERO);
+		    model.setCartItems(new ArrayList<CartItemModel>());
+	    }
 		return Message.bind(model,request);
+	}
+
+
+	/**
+	 * 统计
+	 */
+	@RequestMapping(value = "/count", method = RequestMethod.GET)
+	public  @ResponseBody Message count(HttpServletRequest request) {
+		Cart cart = cartService.getCurrent();
+		if (cart!=null) {
+			return Message.bind(cart.getQuantity(), request);
+		} else {
+			return Message.bind(0, request);
+		}
 	}
 
 	/**

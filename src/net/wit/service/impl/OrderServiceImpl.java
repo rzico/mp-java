@@ -77,6 +77,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
+	@Resource(name = "rebateServiceImpl")
+	private RebateService rebateService;
+
 	@Resource(name = "cartDaoImpl")
 	private CartDao cartDao;
 
@@ -321,6 +324,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				order.setPointDiscount(new BigDecimal(card.getPoint()));
 			}
 		}
+
 		//股东自已消费，直接获取返利，不给再分配
 		if (card!=null && card.getType().equals(Card.Type.partner)) {
 			order.setPromoter(null);
@@ -371,9 +375,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				}
 			}
 		}
-		if (cart != null) {
-			cartDao.remove(cart);
-		}
 
 		messageService.orderMemberPushTo(orderLog);
 
@@ -405,6 +406,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
+		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+			throw new RuntimeException("不能确定");
+		}
+
 		order.setOrderStatus(Order.OrderStatus.confirmed);
 		order.setExpire(null);
 		orderDao.merge(order);
@@ -432,6 +437,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		Assert.notNull(order);
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
+			throw new RuntimeException("不能完成");
+		}
 
 		Member member = order.getMember();
 		memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
@@ -516,6 +525,25 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		Card card = cardService.createAndActivate(order.getMember(), order.getSeller(), order.getPromoter(), order.getAmount(), order.getDistPrice());
 		if (card != null) {
 			memberService.create(order.getMember(), order.getPromoter());
+		}
+
+
+
+		try {
+
+			//分享人不为空时，关联代理商
+			if (order.getPromoter()!=null) {
+				rebateService.link(order.getMember());
+			}
+
+			order.setPersonal(order.getPromoter().getPersonal());
+
+			order.setAgent(order.getPromoter().getAgent());
+
+			order.setOperate(order.getPromoter().getOperate());
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 		//没有发货，或是退货等状态完成，是无效订单
@@ -723,6 +751,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		//计算公球公排
 		orderRankingService.add(order);
 
+		//代理商佣金
+		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
+
 		return;
 
 	}
@@ -739,6 +770,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public void cancel(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+			throw new RuntimeException("不能关闭");
+		}
 
 		CouponCode couponCode = order.getCouponCode();
 		if (couponCode != null) {
@@ -799,6 +834,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 
+		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
+			throw new RuntimeException("不能支付");
+		}
+
+
 		Card card = order.getMember().card(order.getSeller());
 		Payment payment = new Payment();
 
@@ -851,6 +891,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		Assert.notNull(order);
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
+
+		if (!order.getShippingStatus().equals(Order.ShippingStatus.unshipped)) {
+			throw new RuntimeException("不能发货");
+		}
 
 		for (OrderItem orderItem : order.getOrderItems()) {
 			orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);

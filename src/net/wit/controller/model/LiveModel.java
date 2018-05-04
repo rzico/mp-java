@@ -1,16 +1,24 @@
 package net.wit.controller.model;
 import net.wit.entity.Live;
 import net.wit.entity.Member;
+import net.wit.entity.Order;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LiveModel extends BaseModel implements Serializable {
 
     private Long id;
+
+
+    private Long liveId;
+
+    private Long liveMemberId;
     /**  标题  */
     private String title;
 
@@ -56,6 +64,14 @@ public class LiveModel extends BaseModel implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getLiveId() {
+        return liveId;
+    }
+
+    public void setLiveId(Long liveId) {
+        this.liveId = liveId;
     }
 
     public String getTitle() {
@@ -162,8 +178,18 @@ public class LiveModel extends BaseModel implements Serializable {
         this.gift = gift;
     }
 
+    public Long getLiveMemberId() {
+        return liveMemberId;
+    }
+
+    public void setLiveMemberId(Long liveMemberId) {
+        this.liveMemberId = liveMemberId;
+    }
+
     public void bind(Live live) {
         this.id = live.getId();
+        this.liveId=live.getId();
+        this.liveMemberId=live.getMember().getId();
         this.nickname = live.getNickname();
         this.headpic = live.getHeadpic();
         this.frontcover = live.getFrontcover();
@@ -176,5 +202,19 @@ public class LiveModel extends BaseModel implements Serializable {
         this.viewerCount = live.getViewerCount();
         this.pushUrl = live.getPushUrl();
         this.playUrl = live.getPlayUrl();
+        this.status = live.getStatus();
     }
+
+
+
+    public static List<LiveModel> bindList(List<Live> lives) {
+        List<LiveModel> ms = new ArrayList<LiveModel>();
+        for (Live live:lives) {
+            LiveModel m = new LiveModel();
+            m.bind(live);
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }

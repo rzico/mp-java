@@ -78,9 +78,9 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
 		<a href="javascript:;" onclick="add('首页 &gt; 文章管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
                 class="Hui-iconfont">&#xe600;</i> 新增文章</a>
-        <a href="javascript:;" onclick="Propaganda()" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 文章推广</a>
         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+        <a href="javascript:;" onclick="Propaganda()" class="btn btn-primary radius"><i
+                class="Hui-iconfont">&#xe600;</i> 发送公众号</a>
     </span></div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">

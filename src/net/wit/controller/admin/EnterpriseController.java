@@ -62,10 +62,10 @@ public class EnterpriseController extends BaseController {
 	public String index(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","城市代理商"));
-		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","合作商家"));
+		types.add(new MapEntity("operate","代理商"));
+		types.add(new MapEntity("agent","合作商"));
+		types.add(new MapEntity("personal","推广员"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 //		model.addAttribute("areas",areaService.findAll());
@@ -81,10 +81,10 @@ public class EnterpriseController extends BaseController {
 	public String add(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","城市代理商"));
-		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","合作商家"));
+		types.add(new MapEntity("operate","代理商"));
+		types.add(new MapEntity("agent","合作商"));
+		types.add(new MapEntity("personal","推广员"));
+		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -102,7 +102,7 @@ public class EnterpriseController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Enterprise enterprise, Long areaId,Long memberId){
+	public Message save(String name,String logo,BigDecimal brokerage,BigDecimal transfer,String type,String status, Long areaId,Long memberId){
 		Member member = memberService.find(memberId);
 		if (member==null) {
 			return Message.error("请正确输入会员");
@@ -119,22 +119,28 @@ public class EnterpriseController extends BaseController {
 		Enterprise entity = new Enterprise();
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
-		entity.setName(enterprise.getName());
+		entity.setName(name);
 
-		entity.setLogo(enterprise.getLogo());
+		entity.setPhone(member.getMobile());
+
+		entity.setLogo(logo);
 
 		entity.setDeleted(false);
 
-		entity.setBrokerage(enterprise.getBrokerage());
+		entity.setCreditLine(BigDecimal.ZERO);
 
-		entity.setType(enterprise.getType());
+		entity.setBrokerage(brokerage);
 
-		entity.setStatus(enterprise.getStatus());
+		entity.setTransfer(transfer);
+
+		entity.setType(Enterprise.Type.operate);
+
+		entity.setStatus(Enterprise.Status.success);
 
 		entity.setArea(areaService.find(areaId));
 
 		entity.setMember(member);
-		
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -171,10 +177,10 @@ public class EnterpriseController extends BaseController {
 	public String edit(Long id, ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","城市代理商"));
-		types.add(new MapEntity("personal","个人代理商"));
-		types.add(new MapEntity("shop","入驻商家"));
+		types.add(new MapEntity("operate","代理商"));
+		types.add(new MapEntity("agent","合作商"));
+		types.add(new MapEntity("personal","推广员"));
+ 		types.add(new MapEntity("shop","商户"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> statuss = new ArrayList<>();
@@ -198,11 +204,12 @@ public class EnterpriseController extends BaseController {
 		Enterprise entity = enterpriseService.find(enterprise.getId());
 		//entity.setCreateDate(enterprise.getCreateDate());
 		//entity.setModifyDate(enterprise.getModifyDate());
+		entity.setLogo(enterprise.getLogo());
 		entity.setName(enterprise.getName());
 
-		entity.setBrokerage(enterprise.getBrokerage());
+		entity.setTransfer(enterprise.getTransfer());
 
-		entity.setType(enterprise.getType());
+		entity.setBrokerage(enterprise.getBrokerage());
 
 		entity.setStatus(enterprise.getStatus());
 

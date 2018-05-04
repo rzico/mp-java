@@ -20,6 +20,16 @@ public class ManagerModel extends BaseModel implements Serializable {
     private Boolean useCashier;
     /** 是否开通专栏 */
     private Boolean hasTopic;
+
+    /** 是否代理商 */
+    private Boolean isAgent;
+
+    /** 是否商家 */
+    private Boolean isShop;
+
+    /** 是否完善店铺资料 */
+    private Boolean hasShop;
+
     /** 专栏 */
     private String topic;
     /** 标签 */
@@ -89,6 +99,30 @@ public class ManagerModel extends BaseModel implements Serializable {
         this.hasTopic = hasTopic;
     }
 
+    public Boolean getIsShop() {
+        return isShop;
+    }
+
+    public void setIsShop(Boolean shop) {
+        isShop = shop;
+    }
+
+    public Boolean getIsAgent() {
+        return isAgent;
+    }
+
+    public void setIsAgent(Boolean agent) {
+        isAgent = agent;
+    }
+
+    public Boolean getHasShop() {
+        return hasShop;
+    }
+
+    public void setHasShop(Boolean hasShop) {
+        this.hasShop = hasShop;
+    }
+
     public void bind(Member member) {
 
         this.id = member.getId();
@@ -98,7 +132,9 @@ public class ManagerModel extends BaseModel implements Serializable {
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
         this.hasTopic = (member.getTopic()!=null);
-
+        this.isAgent = false;
+        this.isShop = false;
+        this.hasShop = false;
         Topic topic = member.getTopic();
 
         this.useCashier = false;

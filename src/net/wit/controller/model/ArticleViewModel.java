@@ -1,4 +1,6 @@
 package net.wit.controller.model;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.entity.Article;
 import net.wit.entity.Member;
 import net.wit.util.JsonUtils;
@@ -42,7 +44,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     /** 是否发布 */
     private Boolean isPublish;
     /** 内容 */
-    private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
+    private List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
     /** 投票 */
     private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
 
@@ -134,11 +136,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.laud = laud;
     }
 
-    public List<ArticleContentModel> getTemplates() {
+    public List<ArticleContentViewModel> getTemplates() {
         return templates;
     }
 
-    public void setTemplates(List<ArticleContentModel> templates) {
+    public void setTemplates(List<ArticleContentViewModel> templates) {
         this.templates = templates;
     }
 
@@ -206,9 +208,31 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;
-        List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
-        if (article.getContent()!=null) {
-            templates = JsonUtils.toObject(article.getContent(), List.class);
+        List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
+        JSONArray jo = JSONArray.fromObject(article.getContent());
+
+        for (int i=0;i<jo.size();i++) {
+            JSONObject ob = jo.getJSONObject(i);
+            ArticleContentViewModel m = new ArticleContentViewModel();
+            m.setContent(ob.getString("content"));
+            if (ob.containsKey("id") && !"".equals(ob.getString("id"))) {
+                m.setId(ob.getLong("id"));
+            } else {
+                m.setId(0L);
+            }
+            m.setMediaType(Article.MediaType.valueOf(ob.getString("mediaType")) );
+            m.setThumbnail(ob.getString("thumbnail"));
+            m.setOriginal(ob.getString("original"));
+            if (ob.containsKey("url")) {
+                m.setUrl(ob.getString("url"));
+            } else {
+                m.setUrl("");
+            }
+            if (m.getMediaType().equals(Article.MediaType.video)) {
+                templates.add(0,m);
+            } else {
+                templates.add(m);
+            }
         }
 
         List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();

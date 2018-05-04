@@ -2,6 +2,8 @@ package net.wit.controller.model;
 
 import net.wit.entity.Cart;
 import net.wit.entity.CartItem;
+import net.wit.entity.Notice;
+import net.wit.entity.Occupation;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -39,4 +41,20 @@ public class NoticeModel extends BaseModel implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public void bind(Notice notice) {
+        this.type = notice.getType().name();
+        this.title = notice.getContent();
+    }
+
+    public static List<NoticeModel> bindList(List<Notice> notices) {
+        List<NoticeModel> ms = new ArrayList<NoticeModel>();
+        for (Notice notice:notices) {
+            NoticeModel m = new NoticeModel();
+            m.bind(notice);
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }

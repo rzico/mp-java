@@ -8,6 +8,7 @@ import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,6 +52,18 @@ public class ArticleController extends BaseController {
     private ArticleCategoryService articleCategoryService;
 
     /**
+     * html 格式显示板版
+     */
+    @RequestMapping(value = "/webkit", method = RequestMethod.GET)
+    public String html(Long id, ModelMap model, HttpServletRequest request){
+
+        Article article = articleService.find(id);
+        model.addAttribute("data",article);
+
+        return "/common/article";
+    }
+
+    /**
      * 文章预览信息
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
@@ -73,6 +86,23 @@ public class ArticleController extends BaseController {
         }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
+
+
+        for (ArticleContentViewModel m:model.getTemplates()) {
+            if (m.getMediaType().equals(Article.MediaType.product)) {
+                Goods goods = goodsService.find(m.getId());
+                if (goods!=null) {
+                    Product product = goods.product();
+                    if (product!=null) {
+                        m.setName(product.getName());
+                        m.setPrice(product.getPrice());
+                        m.setThumbnail(product.getThumbnail());
+                        m.setMarketPrice(product.getMarketPrice());
+                    }
+                }
+            }
+        }
+
         Member share = null;
         if (xuid!=null) {
             share = memberService.find(xuid);

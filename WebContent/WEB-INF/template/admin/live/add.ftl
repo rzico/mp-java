@@ -32,131 +32,40 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
+        <input type="number" value="${data.id}" style="display:none" name="id">
+
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">封面：</label>
+            <label class="form-label col-xs-4 col-sm-2">主播：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="frontcover" name="frontcover">
+               ${data.member.nickName}
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>礼物数：</label>
+            <label class="form-label col-xs-4 col-sm-2">印票数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+               ${data.gift}
+            </div>
+        </div>
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>兑换数：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" name="gift" value="" placeholder="" id="gift" onInput="intInit(this)">
             </div>
         </div>
 
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">头像：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>兑换金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="headpic" name="headpic">
+                <input type="text" class="input-text" name="amount" value="" placeholder="" id="amount" onInput="floatInit(this)">
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">回放地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="hlsPlayUrl" name="hlsPlayUrl">
-            </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="likeCount" value="" placeholder="" id="likeCount" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">位置：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="location" name="location">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">昵称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="nickname" name="nickname">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">观看地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="playUrl" name="playUrl">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">推流地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="pushUrl" name="pushUrl">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">状态：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="status" name="status">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="title" name="title">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>在线数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="viewerCount" value="" placeholder="" id="viewerCount" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">LiveGroup：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if liveGroups??]
-				<select name="liveGroupId" class="select" style="background-color: #FFFFFF">
-                    [#list liveGroups as liveGroup]
-					<option value="${liveGroup.id}">${liveGroup.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">LiveTape：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if liveTapes??]
-				<select name="liveTapeId" class="select" style="background-color: #FFFFFF">
-                    [#list liveTapes as liveTape]
-					<option value="${liveTape.id}">${liveTape.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Member：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if members??]
-				<select name="memberId" class="select" style="background-color: #FFFFFF">
-                    [#list members as member]
-					<option value="${member.id}">${member.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">

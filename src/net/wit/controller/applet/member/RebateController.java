@@ -7,10 +7,12 @@ import net.wit.controller.model.RebateModel;
 import net.wit.entity.Card;
 import net.wit.entity.Deposit;
 import net.wit.entity.Member;
+import net.wit.entity.OrderRanking;
 import net.wit.plat.weixin.main.MenuManager;
 import net.wit.service.CardService;
 import net.wit.service.DepositService;
 import net.wit.service.MemberService;
+import net.wit.service.OrderRankingService;
 import net.wit.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,9 @@ public class RebateController extends BaseController {
 
     @Resource(name = "depositServiceImpl")
     private DepositService depositService;
+
+    @Resource(name = "orderRankingServiceImpl")
+    private OrderRankingService orderRankingService;
 
     /**
      * 我的奖励金
@@ -103,7 +108,6 @@ public class RebateController extends BaseController {
         return Message.bind(sm,request);
     }
 
-
     /**
      *  总览
      */
@@ -117,8 +121,13 @@ public class RebateController extends BaseController {
         Member owner = memberService.find(authorId);
 
         BigDecimal sm = depositService.summary(Deposit.Type.rebate,member,owner);
+        if (sm==null) {
+            sm = BigDecimal.ZERO;
+        }
 
         RebateModel model = new RebateModel();
+        model.setLogo(member.getLogo());
+        model.setNickName(member.getNickName());
         model.setRebate(sm);
         long cont = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member) );
         model.setContacts(cont);
@@ -126,7 +135,19 @@ public class RebateController extends BaseController {
         long inv = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member),new Filter("type", Filter.Operator.eq, Card.Type.team) );
         model.setInvalid(inv);
 
+
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("owner", Filter.Operator.eq,owner));
+        List<OrderRanking> ors = orderRankingService.findList(null,1,filters,null);
+
+        if (ors.size()==0) {
+            model.setRanking(0L);
+        } else {
+            model.setRanking(ors.get(0).getOrders());
+        }
+
         return Message.bind(model,request);
+
     }
 
 }
