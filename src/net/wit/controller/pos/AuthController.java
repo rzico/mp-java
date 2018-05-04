@@ -323,7 +323,7 @@ public class AuthController extends BaseController {
                     password = Base64Util.decode(request.getParameter("enPassword"));
                 }
                 if (!StringUtils.isEmpty(password)) {
-                    member.setPassword(password);
+                    member.setPassword(MD5Utils.getMD5Str(password));
                     memberService.update(member);
                 }
 
