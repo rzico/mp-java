@@ -93,6 +93,9 @@ public class TopicListModel extends BaseModel implements Serializable {
         Member member = topic.getMember();
         this.id = member.getId();
         this.autograph = member.getAutograph();
+        if (this.autograph==null) {
+            this.autograph = "TA好像忘记签名了";
+        }
         this.follow = false;
         this.followed = false;
         this.name = topic.getName();

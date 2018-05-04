@@ -133,6 +133,9 @@ public class MemberModel extends BaseModel implements Serializable {
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
+        if (this.autograph==null) {
+            this.autograph = "TA好像忘记签名了";
+        }
         this.fans = member.getFans().size();
         this.favorite = member.getFavorites().size();
         this.follow = member.getFollows().size();

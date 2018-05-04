@@ -153,6 +153,9 @@ public class TopicIndexModel extends BaseModel implements Serializable {
     public void bind(Topic topic) {
         this.id = topic.getId();
         this.autograph = topic.getMember().getAutograph();
+        if (this.autograph==null) {
+            this.autograph = "TA好像忘记签名了";
+        }
         this.name = topic.getName();
         this.logo = topic.getLogo();
         this.fee = topic.getFee();
