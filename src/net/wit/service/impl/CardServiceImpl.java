@@ -310,6 +310,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			}
 		}
 		cardDao.merge(card);
+
 		return card;
 
 	}

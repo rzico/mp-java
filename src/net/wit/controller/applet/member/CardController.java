@@ -12,8 +12,10 @@ import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
 import net.wit.util.Sha1Util;
 import net.wit.util.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -66,23 +70,46 @@ public class CardController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     @Resource(name = "cardBillServiceImpl")
     private CardBillService cardBillService;
 
     @Resource(name = "cardPointBillServiceImpl")
     private CardPointBillService cardPointBillService;
 
-     /**
-     *  我的会员卡
+    /**
+     * 发送验证码
+     * mobile 手机号
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/send_mobile", method = RequestMethod.POST)
     @ResponseBody
-    public Message list(HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
+    public Message sendMobile(String mobile,HttpServletRequest request) {
+        String m = null;
+        if (mobile!=null) {
+            try {
+                m = new String(org.apache.commons.codec.binary.Base64.decodeBase64(mobile), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
-        return Message.bind(CardModel.bindList(member.getCards()),request);
+
+        int challege = StringUtils.Random6Code();
+        String securityCode = String.valueOf(challege);
+
+        SafeKey safeKey = new SafeKey();
+        safeKey.setKey(m);
+        safeKey.setValue(securityCode);
+        safeKey.setExpire( DateUtils.addMinutes(new Date(),120));
+        redisService.put(Member.MOBILE_BIND_CAPTCHA, JsonUtils.toJson(safeKey));
+
+        Smssend smsSend = new Smssend();
+        smsSend.setMobile(m);
+        smsSend.setContent("验证码 :" + securityCode + ",只用于激活会员卡。");
+        smssendService.smsSend(smsSend);
+        return Message.success("发送成功");
+
     }
 
     /**
@@ -127,21 +154,73 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(String mobile,String name,Long cardId,Long xuid,HttpServletRequest request){
+    public Message submit(String mobile,String captcha,Long authorId,Long xuid,HttpServletRequest request){
+
+        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
+        if (redis==null) {
+            return Message.error("验证码已过期");
+        }
+
+        redisService.remove(Member.MOBILE_BIND_CAPTCHA);
+        SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
+
+        try {
+            captcha = new String(org.apache.commons.codec.binary.Base64.decodeBase64(captcha),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (captcha==null) {
+            return Message.error("无效验证码");
+        }
+        if (safeKey.hasExpired()) {
+            return Message.error("验证码已过期");
+        }
+        if (!captcha.equals(safeKey.getValue())) {
+            return Message.error("无效验证码");
+        }
+
+        if (!mobile.equals(safeKey.getKey())) {
+            return Message.error("手机验证无效");
+        }
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Card card = cardService.find(cardId);
-        if (card==null) {
-            return Message.error("无效卡号");
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+        Member promoter = null;
+        if (xuid==null) {
+            promoter = memberService.find(xuid);
         }
 
-        if (mobile==null) {
-            return Message.error("请填写手机号");
+        Card card = null;
+        Member owner = null;
+
+        if ("3".equals(bundle.getString("weex"))) {
+            if (member.getCards().size()>0) {
+               card = member.getCards().get(0);
+            } else {
+               Admin admin = adminService.findByMember(promoter);
+               if (admin!=null && admin.getEnterprise()!=null) {
+                   owner = admin.getEnterprise().getMember();
+               } else {
+                   return Message.error("暂不支持");
+               }
+            }
+        } else {
+            owner = memberService.find(authorId);
+            card = member.card(owner);
         }
+
+        if (card==null) {
+            card = cardService.createAndActivate(member, owner, promoter, BigDecimal.ZERO, BigDecimal.ZERO);
+        }
+
+        String name = member.getName();
         if (name==null) {
-            return Message.error("请填写真实姓名");
+            name = member.displayName();
         }
         if (mobile!=null) {
             card.setMobile(mobile);
@@ -154,40 +233,30 @@ public class CardController extends BaseController {
             card.setName(member.getName());
         }
         card.setName(name);
-        Member promoter = null;
-        if (xuid!=null) {
-            promoter = memberService.find(xuid);
-        }
-        cardService.activate(card,member,promoter);
-        CardModel model = new CardModel();
-        model.bind(card);
+        cardService.update(card);
 
         Map<String,Object> data = new HashMap<String,Object>();
-        data.put("card",model);
-        if (member.getMobile()==null) {
-            data.put("mobile","");
-        } else {
-            data.put("mobile",member.getMobile());
-        }
-        if (member.getName()==null) {
-            data.put("name", "");
-        } else {
-            data.put("name", member.getName());
-        }
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+        data.put("status", card.getStatus());
+        CardModel model = new CardModel();
+        model.bind(card);
+        data.put("card", model);
+
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        data.put("payCode", "http://" + bundle.getString("weixin.url") + "/q/818802" + card.getCode() + String.valueOf(challege) + ".jhtml");
+
         return Message.success(data,"激活成功");
+
     }
 
     /**
      *   获取会员卡
      */
-    @RequestMapping(value = "check")
+    @RequestMapping(value = "view")
     @ResponseBody
-    public Message check(Long authorId,HttpServletRequest request){
+    public Message view(Long authorId,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -200,7 +269,8 @@ public class CardController extends BaseController {
             }
             card = member.card(owner);
         } else {
-            if (member.getCards().size()>0) {
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            if ("3".equals(bundle.getString("weex")) && member.getCards().size()>0) {
                 card = member.getCards().get(0);
             }
         }
@@ -223,100 +293,6 @@ public class CardController extends BaseController {
     }
 
     /**
-     *   获取会员卡
-     */
-    @RequestMapping(value = "/view")
-    @ResponseBody
-    public Message view(Long id,String code,HttpServletRequest request){
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-        Card card = null;
-        if (id!=null) {
-            card = cardService.find(id);
-        } else {
-            if (code != null) {
-               Long shopId = null;
-               Long topicId = null;
-               if (code.substring(0,2).equals("85")) {
-                   topicId = Long.parseLong(code.substring(2))-100000000;
-                   code = null;
-               } else
-               if (code.substring(0,2).equals("86")) {
-                   shopId = Long.parseLong(code.substring(2,11))-100000000;
-                   code = null;
-               } else
-               if (code.substring(0,2).equals("88")) {
-                   shopId = Long.parseLong(code.substring(2,11))-100000000;
-                   card = cardService.find(code);
-                   if (card!=null && !card.getStatus().equals(Card.Status.none) && !card.getMembers().contains(member)) {
-                       return Message.error("不是空卡,不能领取");
-                   }
-               } else {
-                   return Message.error("无效code");
-               }
-               Shop shop = null;
-               Member owner = null;
-                TopicCard topicCard = null;
-               if (shopId!=null) {
-                   shop = shopService.find(shopId);
-                   if (shop == null) {
-                       return Message.error("无效店铺 id");
-                   }
-                   owner = shop.getOwner();
-                   if (owner.getTopic() == null) {
-                       return Message.error("没有开通专栏");
-                   }
-                   topicCard = owner.getTopic().getTopicCard();
-                   if (topicCard==null) {
-                       return Message.error("没有开通会员卡");
-                   }
-               } else {
-                   topicCard = topicCardService.find(topicId);
-                   if (topicCard==null) {
-                       return Message.error("没有开通会员卡");
-                   }
-                   owner = topicCard.getTopic().getMember();
-               }
-               if (card==null) {
-                   card = cardService.create(owner.getTopic().getTopicCard(),shop, code, member);
-               }
-            } else {
-                return Message.error("无效code");
-            }
-        }
-        if (card==null) {
-            return Message.error("无效卡号");
-        }
-        if (card.getStatus().equals(Card.Status.activate)) {
-            if (!card.getMembers().contains(member)) {
-                return Message.error("不是本人不能打开");
-            }
-        }
-        CardModel model = new CardModel();
-        model.bind(card);
-        Map<String,Object> data = new HashMap<String,Object>();
-        data.put("card",model);
-        if (member.getMobile()==null) {
-            data.put("mobile","");
-        } else {
-            data.put("mobile",member.getMobile());
-        }
-        if (member.getName()==null) {
-            data.put("name", "");
-        } else {
-            data.put("name", member.getName());
-        }
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        int challege = StringUtils.Random6Code();
-        card.setSign(String.valueOf(challege));
-        cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
-        return Message.bind(data,request);
-    }
-
-    /**
      *  账单记录
      */
     @RequestMapping(value = "/bill", method = RequestMethod.GET)
@@ -331,8 +307,6 @@ public class CardController extends BaseController {
         model.setData(CardBillModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
-
-
 
     /**
      *  账单记录
