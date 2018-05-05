@@ -117,7 +117,11 @@ public class LoginController extends BaseController {
             } else {
                 if (nickName!=null) {
                     member.setNickName(nickName);
-                    member.setLogo(logo);
+                    if (member.getLogo()!=null && member.getLogo().startsWith("http://cdn")) {
+
+                    } else {
+                        member.setLogo(logo);
+                    }
                     memberService.update(member);
                 }
             }
