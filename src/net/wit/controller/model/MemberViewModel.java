@@ -30,9 +30,10 @@ public class MemberViewModel extends BaseModel implements Serializable {
     private String url;
     /** 二维码 */
     private String qrcode;
-
     /** 星级 */
     private Member.VIP vip;
+    /** 是否关注  */
+    private Boolean hasFollow;
 
     /** 标签 */
     private List<TagModel> tags = new ArrayList<TagModel>();
@@ -117,6 +118,22 @@ public class MemberViewModel extends BaseModel implements Serializable {
         this.qrcode = qrcode;
     }
 
+    public Boolean getHasFollow() {
+        return hasFollow;
+    }
+
+    public void setHasFollow(Boolean hasFollow) {
+        this.hasFollow = hasFollow;
+    }
+
+    public Member.VIP getVip() {
+        return vip;
+    }
+
+    public void setVip(Member.VIP vip) {
+        this.vip = vip;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -138,5 +155,6 @@ public class MemberViewModel extends BaseModel implements Serializable {
         } else {
             this.url = "http://"+bundle.getString("weixin.url")+"/#/c1001?id="+member.getId();
         }
+        this.hasFollow = false;
     }
 }

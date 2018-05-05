@@ -27,6 +27,9 @@ public class GoodsViewModel extends BaseModel implements Serializable {
     /** 可用库存 */
     private Integer availableStock;
 
+    /** 可用库存 */
+    private Boolean hasFavorite;
+
     /** 分类 */
     private ProductCategoryModel productCategory;
 
@@ -135,10 +138,20 @@ public class GoodsViewModel extends BaseModel implements Serializable {
         this.member = member;
     }
 
+    public Boolean getHasFavorite() {
+        return hasFavorite;
+    }
+
+    public void setHasFavorite(Boolean hasFavorite) {
+        this.hasFavorite = hasFavorite;
+    }
+
     public void bind(Goods goods) {
+
         Product mProduct = goods.getProducts().get(0);
         this.id = goods.getId();
         this.name = mProduct.getName();
+
         ProductCategoryModel productCategoryModel = new ProductCategoryModel();
         if (mProduct.getProductCategory()!=null) {
             productCategoryModel.bind(mProduct.getProductCategory());
@@ -158,6 +171,7 @@ public class GoodsViewModel extends BaseModel implements Serializable {
             model.bind(product);
             this.products.add(model);
         }
+
         this.stock = mProduct.getStock();
         this.availableStock = mProduct.getAvailableStock();
         this.review = goods.getReview();
@@ -167,6 +181,8 @@ public class GoodsViewModel extends BaseModel implements Serializable {
         MemberViewModel member = new MemberViewModel();
         member.bind(mProduct.getMember());
         this.member = member;
+
+        this.hasFavorite = true;
 
     }
 }
