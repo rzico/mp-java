@@ -78,6 +78,7 @@ public class ProductController extends BaseController {
 			model.getMember().setHasFollow(memberFollow != null);
 
 			if (article!=null) {
+				model.setArticleId(article.getId());
 				List<Filter> arfilters = new ArrayList<Filter>();
 				arfilters.add(new Filter("member", Filter.Operator.eq, member));
 				arfilters.add(new Filter("article", Filter.Operator.eq, article));

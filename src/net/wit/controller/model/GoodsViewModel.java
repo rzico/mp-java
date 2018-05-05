@@ -24,6 +24,8 @@ public class GoodsViewModel extends BaseModel implements Serializable {
     private Long review;
     /** 人气 */
     private Long hits;
+    /** 文章 id */
+    private Long articleId;
     /** 可用库存 */
     private Integer availableStock;
 
@@ -146,6 +148,14 @@ public class GoodsViewModel extends BaseModel implements Serializable {
         this.hasFavorite = hasFavorite;
     }
 
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
     public void bind(Goods goods) {
 
         Product mProduct = goods.getProducts().get(0);
@@ -183,6 +193,8 @@ public class GoodsViewModel extends BaseModel implements Serializable {
         this.member = member;
 
         this.hasFavorite = true;
+
+        this.articleId = 0L;
 
     }
 }
