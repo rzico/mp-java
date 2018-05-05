@@ -1088,6 +1088,14 @@ public class Member extends BaseEntity {
 	}
 
 
+	public String topicName() {
+		if (getTopic()!=null) {
+			return getTopic().getName();
+		} else {
+			return this.displayName();
+		}
+	}
+
 	public static Long decodeUserId(String userId) {
 		if (userId!=null) {
 			String uid = userId.substring(2);

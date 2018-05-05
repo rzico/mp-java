@@ -4,6 +4,7 @@ package net.wit.controller;
 import net.wit.Message;
 import net.wit.entity.Card;
 import net.wit.entity.Payment;
+import net.wit.entity.Shop;
 import net.wit.entity.Topic;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
@@ -35,6 +36,9 @@ public class QrcodeController extends BaseController {
 
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
+
+    @Resource(name = "shopServiceImpl")
+    private ShopService shopService;
 
      /**
       * 生成二维码
@@ -79,4 +83,52 @@ public class QrcodeController extends BaseController {
      }
 
 
+    /**
+     * 二维码分解
+     */
+    @RequestMapping(value = "/scan", method = RequestMethod.GET)
+    @ResponseBody
+    public  Message scan(String code,HttpServletRequest request,HttpServletResponse response) {
+
+        Map<String, String> data = ScanUtil.scanParser(code);
+//
+//        名片：865380  + (10200 + 会员 id）
+//        领卡:  818801  + 会员卡号
+//        付款码:  818802  + 会员卡号+验证码
+//        优惠券:  818803  + 代码
+//        收钱码:  818804  + 编码
+//        钱包付款码:  818805  + 会员号+验证码
+//
+        String c = data.get("code");
+        if (data.get("type").toString().equals("865380")) {
+            data.put("id", String.valueOf(Long.parseLong(c.substring(6)) - 10200));
+        } else if (data.get("type").toString().equals("818801")) {
+            String no = c.substring(6);
+            if (no.substring(0, 2).equals("86")) {
+                Long shopId = Long.parseLong(no.substring(2)) - 100000000;
+                Shop shop = shopService.find(shopId);
+                if (shop != null) {
+                    data.put("tuid", String.valueOf(shop.getOwner().getId()));
+                } else {
+                    return Message.error("不能识别的二维码");
+                }
+            } else {
+                return Message.error("不能识别的二维码");
+            }
+        } else if (data.get("type").toString().equals("818802")) {
+            String no = c.substring(0, c.length() - 6);
+            String sign = c.substring(c.length() - 6, c.length());
+            Card card = cardService.find(no);
+            if (card == null) {
+                return Message.error("不能识别的二维码");
+            }
+            if (!sign.equals(card.getSign())) {
+                return Message.error("不能识别的二维码");
+            }
+            data.put("tuid", String.valueOf(card.getOwner().getId()));
+            data.put("xuid", String.valueOf(card.getMembers().get(0).getId()));
+        }
+
+        return Message.success(data, "有效二维码");
+    }
 }

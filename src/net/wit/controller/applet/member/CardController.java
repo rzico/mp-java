@@ -191,7 +191,7 @@ public class CardController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
         Member promoter = null;
-        if (xuid==null) {
+        if (xuid!=null) {
             promoter = memberService.find(xuid);
         }
 
@@ -262,8 +262,9 @@ public class CardController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         Card card =  null;
+        Member owner = null;
         if (authorId!=null) {
-            Member owner = memberService.find(authorId);
+            owner = memberService.find(authorId);
             if (owner == null) {
                 return Message.error("无效商家id");
             }
@@ -277,6 +278,10 @@ public class CardController extends BaseController {
         Map<String,Object> data = new HashMap<String,Object>();
         if (card==null) {
             data.put("status", "none");
+            if (owner!=null) {
+                data.put("name", owner.topicName());
+                data.put("logo", owner.getLogo());
+            }
         } else {
             data.put("status", card.getStatus());
             CardModel model = new CardModel();
