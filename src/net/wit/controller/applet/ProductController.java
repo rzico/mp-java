@@ -8,6 +8,7 @@ package net.wit.controller.applet;
 import net.wit.*;
 import net.wit.controller.model.GoodsListModel;
 import net.wit.controller.model.GoodsModel;
+import net.wit.controller.model.GoodsViewModel;
 import net.wit.controller.weex.BaseController;
 import net.wit.entity.Article;
 import net.wit.entity.Goods;
@@ -53,7 +54,7 @@ public class ProductController extends BaseController {
 	public @ResponseBody
 	Message view(Long id,HttpServletRequest request) {
 		Goods goods = goodsService.find(id);
-		GoodsModel model =new GoodsModel();
+		GoodsViewModel model =new GoodsViewModel();
 		model.bind(goods);
 		return Message.bind(model,request);
 	}
