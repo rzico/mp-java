@@ -256,13 +256,16 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "view")
     @ResponseBody
-    public Message view(Long authorId,HttpServletRequest request){
+    public Message view(Long authorId,Long id,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
         Card card =  null;
         Member owner = null;
+        if (id!=null) {
+            card = cardService.find(id);
+        } else
         if (authorId!=null) {
             owner = memberService.find(authorId);
             if (owner == null) {

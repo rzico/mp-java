@@ -69,16 +69,18 @@ public class ProductController extends BaseController {
 		filters.add(new Filter("goods", Filter.Operator.eq,goods));
 		filters.add(new Filter("deleted", Filter.Operator.eq,false));
 		List<Article> art = articleService.findList(null,null,filters,null);
-		if (art.size()==0) {
+		if (art.size()>0) {
 			article = art.get(0);
 		}
-
+		if (article!=null) {
+			model.setArticleId(article.getId());
+		}
 		if (member!=null) {
+
 			MemberFollow memberFollow = memberFollowService.find(member, goods.product().getMember());
 			model.getMember().setHasFollow(memberFollow != null);
 
 			if (article!=null) {
-				model.setArticleId(article.getId());
 				List<Filter> arfilters = new ArrayList<Filter>();
 				arfilters.add(new Filter("member", Filter.Operator.eq, member));
 				arfilters.add(new Filter("article", Filter.Operator.eq, article));
