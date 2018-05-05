@@ -127,6 +127,8 @@ public class QrcodeController extends BaseController {
             }
             data.put("tuid", String.valueOf(card.getOwner().getId()));
             data.put("xuid", String.valueOf(card.getMembers().get(0).getId()));
+        } else {
+            return Message.error("不能识别的二维码");
         }
 
         return Message.success(data, "有效二维码");

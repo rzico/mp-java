@@ -2,16 +2,17 @@ package net.wit.controller.model;
 
 import net.wit.entity.Goods;
 import net.wit.entity.Product;
-import net.wit.entity.ProductStock;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GoodsModel extends BaseModel implements Serializable {
+public class GoodsViewModel extends BaseModel implements Serializable {
 
     private Long id;
+    /** 会员 */
+    private MemberViewModel member;
+
     /** 名称 */
     private String name;
     /** 单位 */
@@ -19,6 +20,8 @@ public class GoodsModel extends BaseModel implements Serializable {
 
     /** 库存 */
     private Integer stock;
+    /** 好评 */
+    private Long review;
     /** 可用库存 */
     private Integer availableStock;
 
@@ -27,6 +30,9 @@ public class GoodsModel extends BaseModel implements Serializable {
 
     /** 分销策略 */
     private DistributionViewModel distribution;
+
+    /** 商品 */
+    private List<PromotionListModel> promotions;
 
     /** 商品 */
     private List<ProductModel> products;
@@ -87,12 +93,36 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.stock = stock;
     }
 
+    public Long getReview() {
+        return review;
+    }
+
+    public void setReview(Long review) {
+        this.review = review;
+    }
+
     public Integer getAvailableStock() {
         return availableStock;
     }
 
     public void setAvailableStock(Integer availableStock) {
         this.availableStock = availableStock;
+    }
+
+    public List<PromotionListModel> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(List<PromotionListModel> promotions) {
+        this.promotions = promotions;
+    }
+
+    public MemberViewModel getMember() {
+        return member;
+    }
+
+    public void setMember(MemberViewModel member) {
+        this.member = member;
     }
 
     public void bind(Goods goods) {
@@ -120,7 +150,13 @@ public class GoodsModel extends BaseModel implements Serializable {
         }
         this.stock = mProduct.getStock();
         this.availableStock = mProduct.getAvailableStock();
+        this.review = goods.getReview();
 
+        this.promotions = PromotionListModel.bindList(goods.getPromotions());
+
+        MemberViewModel member = new MemberViewModel();
+        member.bind(mProduct.getMember());
+        this.member = member;
 
     }
 }
