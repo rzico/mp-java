@@ -191,6 +191,10 @@ public class AgentController extends BaseController {
             return Message.error("无效邀请人");
         }
 
+        if (parent.equals(member)) {
+            return Message.error("不能邀请自已");
+        }
+
         Admin adminParent = adminService.findByMember(parent);
         if (adminParent==null) {
             return Message.error("无效邀请人");

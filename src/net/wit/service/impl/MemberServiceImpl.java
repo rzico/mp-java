@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
@@ -66,11 +68,30 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	public void setBaseDao(MemberDao memberDao) {
 		super.setBaseDao(memberDao);
 	}
-	
+
+
+	public  String filterEmoji(String source) {
+		if(source != null)
+		{
+			Pattern emoji = Pattern.compile ("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",Pattern.UNICODE_CASE | Pattern . CASE_INSENSITIVE ) ;
+			Matcher emojiMatcher = emoji.matcher(source);
+			if ( emojiMatcher.find())
+			{
+				source = emojiMatcher.replaceAll("*");
+				return source ;
+			}
+			return source;
+		}
+		return source;
+	}
+
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(Member member) {
+		if (member.getNickName()!=null) {
+			member.setNickName(filterEmoji(member.getNickName()));
+		}
 		super.save(member);
 	}
 
@@ -78,6 +99,9 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public Member update(Member member) {
+		if (member.getNickName()!=null) {
+			member.setNickName(filterEmoji(member.getNickName()));
+		}
 		return super.update(member);
 	}
 
@@ -85,6 +109,9 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public Member update(Member member, String... ignoreProperties) {
+		if (member.getNickName()!=null) {
+			member.setNickName(filterEmoji(member.getNickName()));
+		}
 		return super.update(member, ignoreProperties);
 	}
 
