@@ -112,6 +112,7 @@ public class ProductController extends BaseController {
 			goods = new Goods();
 			goods.setRanking(0L);
 			goods.setReview(0L);
+			goods.setHits(0L);
 		} else {
 			goods = goodsService.find(model.getId());
 		}

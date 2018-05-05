@@ -47,6 +47,12 @@ public class Goods extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '好评'")
 	private Long review;
 
+	/** 人气 */
+	@NotNull
+	@Min(0)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '人气'")
+	private Long hits;
+
 	/**
 	 * 获取商品
 	 * 
@@ -94,6 +100,14 @@ public class Goods extends BaseEntity {
 		this.review = review;
 	}
 
+	public Long getHits() {
+		return hits;
+	}
+
+	public void setHits(Long hits) {
+		this.hits = hits;
+	}
+
 	public List<Promotion> getPromotions() {
 		return promotions;
 	}
@@ -101,4 +115,6 @@ public class Goods extends BaseEntity {
 	public void setPromotions(List<Promotion> promotions) {
 		this.promotions = promotions;
 	}
+
+
 }

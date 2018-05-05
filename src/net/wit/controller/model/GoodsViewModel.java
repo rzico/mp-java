@@ -22,6 +22,8 @@ public class GoodsViewModel extends BaseModel implements Serializable {
     private Integer stock;
     /** 好评 */
     private Long review;
+    /** 人气 */
+    private Long hits;
     /** 可用库存 */
     private Integer availableStock;
 
@@ -59,6 +61,14 @@ public class GoodsViewModel extends BaseModel implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public Long getHits() {
+        return hits;
+    }
+
+    public void setHits(Long hits) {
+        this.hits = hits;
     }
 
     public ProductCategoryModel getProductCategory() {
