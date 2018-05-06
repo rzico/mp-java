@@ -307,9 +307,8 @@ public class NihtanController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Message list(HttpServletRequest request,ModelMap model){
-        gameList();
-        List<Filter> filters = new ArrayList<Filter>();
 
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("status", Filter.Operator.eq, GameList.Status.enabled));
         filters.add(new Filter("type", Filter.Operator.eq, GameList.Type.nihtan));
         List<GameList> gl = gameListService.findList(null,null,filters,null);
