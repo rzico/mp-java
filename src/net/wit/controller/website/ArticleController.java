@@ -137,6 +137,7 @@ public class ArticleController extends BaseController {
         }
         if (authorId!=null) {
             Member member = memberService.find(authorId);
+            filters.add(new Filter("member", Filter.Operator.eq, member));
         } else {
             filters.add(new Filter("isAudit", Filter.Operator.eq, true));
         }
