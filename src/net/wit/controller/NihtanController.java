@@ -209,6 +209,23 @@ public class NihtanController extends BaseController {
             Member member = memberService.findByUsername(user_id);
             if (member!=null) {
                 Game gameData = gameService.find(member,game,table,round_no);
+                if (gameData==null) {
+                    gameData.setGame(game);
+                    gameData.setTableNo(table);
+                    gameData.setRoundNo(round_no);
+                    gameData.setDebit(0L);
+                    gameData.setCredit(0L);
+                    gameData.setMember(member);
+                    gameData.setStatus(Game.Status.transaction);
+                    gameData.setMemo(game+"奖励");
+                    try {
+                        gameService.sumbit(gameData);
+                    } catch (Exception e) {
+                        data.put("code", "500");
+                        data.put("status", e.getMessage());
+                        data.put("credits", "0");
+                    }
+                }
                 if (gameData!=null) {
                     gameData.setCredit(win_money);
                     try {
