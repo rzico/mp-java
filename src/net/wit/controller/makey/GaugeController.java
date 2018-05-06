@@ -92,7 +92,7 @@ public class GaugeController extends BaseController {
         Member member = memberService.getCurrent();
         if (member==null) {
             Enterprise enterprise = enterpriseService.find(agent);
-            if (!MD5Utils.getMD5Str(String.valueOf(id)+ String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString())).equals(sign)) {
+            if (!MD5Utils.getMD5Str(String.valueOf(id)+ String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString()+"rzico.com")).equals(sign)) {
                 return Message.error("无效签名");
             }
             member = enterprise.getMember();
