@@ -11,6 +11,7 @@ import net.wit.entity.*;
 import net.wit.entity.summary.EvaluationSummary;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
+import net.wit.util.MD5Utils;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -55,6 +56,9 @@ public class EvaluationController extends BaseController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
+    @Resource(name = "paymentServiceImpl")
+    private PaymentService paymentService;
+
     @Resource(name = "gaugeQuestionServiceImpl")
     private GaugeQuestionService gaugeQuestionService;
 
@@ -67,9 +71,13 @@ public class EvaluationController extends BaseController {
     @Resource(name = "evaluationAttributeServiceImpl")
     private EvaluationAttributeService evaluationAttributeService;
 
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
     /**
      * 判断量表是否存在
      */
+
     @RequestMapping(value = "/exists")
     @ResponseBody
     public Message exists(Long id,HttpServletRequest request) {
@@ -92,12 +100,19 @@ public class EvaluationController extends BaseController {
      */
     @RequestMapping(value = "/create")
     @ResponseBody
-    public Message create(Long id,Long xuid,HttpServletRequest request){
+    public Message create(Long id,Long xuid,Long agent,Long timeStamp,String sign,HttpServletRequest request){
         Gauge gauge = gaugeService.find(id);
         if (gauge==null) {
             return Message.error("无效量表编号");
         }
         Member member = memberService.getCurrent();
+        if (member==null) {
+            Enterprise enterprise = enterpriseService.find(agent);
+            if (!MD5Utils.getMD5Str(String.valueOf(id) +String.valueOf(xuid) + String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString())).equals(sign)) {
+                return Message.error("无效签名");
+            }
+            member = enterprise.getMember();
+        }
         Evaluation  eval =  new Evaluation();
         eval.setDeleted(false);
         eval.setEval(0L);
@@ -116,13 +131,7 @@ public class EvaluationController extends BaseController {
             Member promoter = memberService.find(xuid);
             if (promoter!=null) {
                 eval.setPromoter(promoter);
-//                Admin admin = adminService.findByMember(promoter);
-//                if (admin!=null && admin.getEnterprise().getStatus().equals(Enterprise.Status.success))
-//                {
-//                    eval.setRebate(eval.getPrice().multiply(gauge.getDistribution()).multiply(new BigDecimal("0.01")).setScale(3,BigDecimal.ROUND_HALF_DOWN));
-//                } else {
                 eval.setRebate(eval.getPrice().multiply(gauge.getBrokerage()).multiply(new BigDecimal("0.01")).setScale(2,BigDecimal.ROUND_HALF_DOWN));
-//                }
             }
         }
         Payment payment = evaluationService.create(eval);
@@ -197,7 +206,7 @@ public class EvaluationController extends BaseController {
      */
     @RequestMapping(value = "/answer")
     @ResponseBody
-    public Message answer(Long id,String body,Long seconds, HttpServletRequest request){
+    public Message answer(Long id,String body,Long seconds,Long agent,Long timeStamp,String sign, HttpServletRequest request){
 //
 //        id = 491L;
 //        body = "W3sicXVlc3Rpb25JZCI6MTkxNSwib3B0aW9uSWQiOjIsInNjb3JlIjoyLCJzZWNvbmRzIjoyfSx7InF1ZXN0aW9uSWQiOjE4OTcsIm9wdGlvbklkIjozLCJzY29yZSI6Miwic2Vjb25kcyI6M30seyJxdWVzdGlvbklkIjoxODk4LCJvcHRpb25JZCI6Miwic2NvcmUiOjIsInNlY29uZHMiOjR9LHsicXVlc3Rpb25JZCI6MTg5OSwib3B0aW9uSWQiOjMsInNjb3JlIjozLCJzZWNvbmRzIjo1fSx7InF1ZXN0aW9uSWQiOjE5MDAsIm9wdGlvbklkIjoyLCJzY29yZSI6Mywic2Vjb25kcyI6Nn0seyJxdWVzdGlvbklkIjoxOTAxLCJvcHRpb25JZCI6Miwic2NvcmUiOjMsInNlY29uZHMiOjd9LHsicXVlc3Rpb25JZCI6MTkwMiwib3B0aW9uSWQiOjMsInNjb3JlIjozLCJzZWNvbmRzIjo4fSx7InF1ZXN0aW9uSWQiOjE5MDMsIm9wdGlvbklkIjoyLCJzY29yZSI6Miwic2Vjb25kcyI6OX0seyJxdWVzdGlvbklkIjoxOTE2LCJvcHRpb25JZCI6Mywic2NvcmUiOm51bGwsInNlY29uZHMiOjEwfSx7InF1ZXN0aW9uSWQiOjE5MDQsIm9wdGlvbklkIjoyLCJzY29yZSI6Miwic2Vjb25kcyI6MTF9LHsicXVlc3Rpb25JZCI6MTkwNSwib3B0aW9uSWQiOjMsInNjb3JlIjoyLCJzZWNvbmRzIjoxMn0seyJxdWVzdGlvbklkIjoxOTA2LCJvcHRpb25JZCI6Miwic2NvcmUiOjMsInNlY29uZHMiOjE3fSx7InF1ZXN0aW9uSWQiOjE5MDcsIm9wdGlvbklkIjozLCJzY29yZSI6Mywic2Vjb25kcyI6MTl9LHsicXVlc3Rpb25JZCI6MTkwOCwib3B0aW9uSWQiOjIsInNjb3JlIjozLCJzZWNvbmRzIjoyNH0seyJxdWVzdGlvbklkIjoxOTA5LCJvcHRpb25JZCI6Mywic2NvcmUiOjMsInNlY29uZHMiOjI2fSx7InF1ZXN0aW9uSWQiOjE5MTAsIm9wdGlvbklkIjoyLCJzY29yZSI6Mywic2Vjb25kcyI6Mjd9LHsicXVlc3Rpb25JZCI6MTkxMSwib3B0aW9uSWQiOjIsInNjb3JlIjozLCJzZWNvbmRzIjoyOH0seyJxdWVzdGlvbklkIjoxOTEyLCJvcHRpb25JZCI6Mywic2NvcmUiOjIsInNlY29uZHMiOjI5fSx7InF1ZXN0aW9uSWQiOjE5MTMsIm9wdGlvbklkIjoyLCJzY29yZSI6Miwic2Vjb25kcyI6MzF9LHsicXVlc3Rpb25JZCI6MTkxNCwib3B0aW9uSWQiOjMsInNjb3JlIjoyLCJzZWNvbmRzIjozMn1dprehandleprehandleprehandleprehandleprehandleprehandleprehandleprehandleprehandleprehandleprehandleprehandleprehandleprehandleW3sicXVlc3Rpb25JZCI6MTkxNSwib3B0aW9uSWQiOjIsInNjb3JlIjoyLCJzZWNvbmRzIjoyfSx7InF1ZXN0aW9uSWQiOjE4OTcsIm9wdGlvbklkIjozLCJzY29yZSI6Miwic2Vjb25kcyI6M30seyJxdWVzdGlvbklkIjoxODk4LCJvcHRpb25JZCI6Miwic2NvcmUiOjIsInNlY29uZHMiOjR9LHsicXVlc3Rpb25JZCI6MTg5OSwib3B0aW9uSWQiOjMsInNjb3JlIjozLCJzZWNvbmRzIjo1fSx7InF1ZXN0aW9uSWQiOjE5MDAsIm9wdGlvbklkIjoyLCJzY29yZSI6Mywic2Vjb25kcyI6Nn0seyJxdWVzdGlvbklkIjoxOTAxLCJvcHRpb25JZCI6Miwic2NvcmUiOjMsInNlY29uZHMiOjd9LHsicXVlc3Rpb25JZCI6MTkwMiwib3B0aW9uSWQiOjMsInNjb3JlIjozLCJzZWNvbmRzIjo4fSx7InF1ZXN0aW9uSWQiOjE5MDMsIm9wdGlvbklkIjoyLCJzY29yZSI6Miwic2Vjb25kcyI6OX0seyJxdWVzdGlvbklkIjoxOTE2LCJvcHRpb25JZCI6Mywic2NvcmUiOm51bGwsInNlY29uZHMiOjEwfSx7InF1ZXN0aW9uSWQiOjE5MDQsIm9wdGlvbklkIjoyLCJzY29yZSI6Miwic2Vjb25kcyI6MTF9LHsicXVlc3Rpb25JZCI6MTkwNSwib3B0aW9uSWQiOjMsInNjb3JlIjoyLCJzZWNvbmRzIjoxMn0seyJxdWVzdGlvbklkIjoxOTA2LCJvcHRpb25JZCI6Miwic2NvcmUiOjMsInNlY29uZHMiOjE3fSx7InF1ZXN0aW9uSWQiOjE5MDcsIm9wdGlvbklkIjozLCJzY29yZSI6Mywic2Vjb25kcyI6MTl9LHsicXVlc3Rpb25JZCI6MTkwOCwib3B0aW9uSWQiOjIsInNjb3JlIjozLCJzZWNvbmRzIjoyNH0seyJxdWVzdGlvbklkIjoxOTA5LCJvcHRpb25JZCI6Mywic2NvcmUiOjMsInNlY29uZHMiOjI2fSx7InF1ZXN0aW9uSWQiOjE5MTAsIm9wdGlvbklkIjoyLCJzY29yZSI6Mywic2Vjb25kcyI6Mjd9LHsicXVlc3Rpb25JZCI6MTkxMSwib3B0aW9uSWQiOjIsInNjb3JlIjozLCJzZWNvbmRzIjoyOH0seyJxdWVzdGlvbklkIjoxOTEyLCJvcHRpb25JZCI6Mywic2NvcmUiOjIsInNlY29uZHMiOjI5fSx7InF1ZXN0aW9uSWQiOjE5MTMsIm9wdGlvbklkIjoyLCJzY29yZSI6Miwic2Vjb25kcyI6MzF9LHsicXVlc3Rpb25JZCI6MTkxNCwib3B0aW9uSWQiOjMsInNjb3JlIjoyLCJzZWNvbmRzIjozM31d";
@@ -206,6 +215,17 @@ public class EvaluationController extends BaseController {
             return Message.error("无效测评编号");
         }
         Member member = memberService.getCurrent();
+        if (member==null) {
+            Enterprise enterprise = enterpriseService.find(agent);
+            if (!MD5Utils.getMD5Str(String.valueOf(id)+body+String.valueOf(seconds) + String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString())).equals(sign)) {
+                return Message.error("无效签名");
+            }
+            member = enterprise.getMember();
+        }
+
+        if (evaluation.getEvalStatus().equals(Evaluation.EvalStatus.waiting)) {
+            return Message.error("没有付款的订单");
+        }
 
         String mBody = new String(Base64.decode(body));
 //
@@ -301,15 +321,53 @@ public class EvaluationController extends BaseController {
     }
 
     /**
+     * 付款
+     */
+    @RequestMapping(value = "/payment", method = RequestMethod.POST)
+    @ResponseBody
+    public Message payment(String sn,Long agent,Long timeStamp,String sign,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            Enterprise enterprise = enterpriseService.find(agent);
+            if (!MD5Utils.getMD5Str(sn+ String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString())).equals(sign)) {
+                return Message.error("无效签名");
+            }
+            member = enterprise.getMember();
+        }
+
+        Payment payment = paymentService.findBySn(sn);
+        if (payment==null) {
+            return Message.error("无效付款单号");
+        }
+
+        try {
+            paymentService.handle(payment);
+        } catch (Exception e) {
+            return Message.error("付款失败");
+        }
+        return Message.success("success");
+    }
+
+    /**
      * 详情
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(Long id,HttpServletRequest request){
+    public Message view(Long id,Long agent,Long timeStamp,String sign,HttpServletRequest request){
         Evaluation evaluation = evaluationService.find(id);
         if (evaluation==null) {
             return Message.error("无效测评编号");
         }
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            Enterprise enterprise = enterpriseService.find(agent);
+            if (!MD5Utils.getMD5Str(String.valueOf(id)+ String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString())).equals(sign)) {
+                return Message.error("无效签名");
+            }
+            member = enterprise.getMember();
+        }
+
         EvaluationModel model =new EvaluationModel();
         model.bind(evaluation);
         return Message.bind(model,request);

@@ -10,9 +10,8 @@ import net.wit.controller.makey.model.*;
 import net.wit.controller.model.ArticleListModel;
 import net.wit.controller.model.ArticleViewModel;
 import net.wit.entity.*;
-import net.wit.service.GaugeCategoryService;
-import net.wit.service.GaugeService;
-import net.wit.service.TagService;
+import net.wit.service.*;
+import net.wit.util.MD5Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +43,12 @@ public class GaugeController extends BaseController {
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
 
+    @Resource(name = "memberServiceImpl")
+    private MemberService memberService;
+
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
     /**
      *  详情
      */
@@ -72,17 +77,27 @@ public class GaugeController extends BaseController {
         return Message.bind(GaugeAttributeModel.bindList(gauge.getAttributes()),request);
     }
 
-
     /**
      *  获取题目
      */
     @RequestMapping(value = "/question", method = RequestMethod.GET)
     @ResponseBody
-    public Message question(Long id,HttpServletRequest request){
+    public Message question(Long id,Long agent,Long timeStamp,String sign,HttpServletRequest request){
         Gauge gauge = gaugeService.find(id);
         if (gauge==null) {
             return Message.error("无效量表编号");
         }
+
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            Enterprise enterprise = enterpriseService.find(agent);
+            if (!MD5Utils.getMD5Str(String.valueOf(id)+ String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString())).equals(sign)) {
+                return Message.error("无效签名");
+            }
+            member = enterprise.getMember();
+        }
+
         return Message.bind(GaugeQuestionModel.bindList(gauge.getGaugeQuestions()),request);
     }
 
