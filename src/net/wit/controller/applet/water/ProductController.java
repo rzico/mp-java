@@ -8,6 +8,7 @@ package net.wit.controller.applet.water;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.model.CouponModel;
+import net.wit.controller.model.GoodsListModel;
 import net.wit.controller.model.GoodsModel;
 import net.wit.controller.model.ProductModel;
 import net.wit.controller.weex.BaseController;
@@ -83,9 +84,9 @@ public class ProductController extends BaseController {
 			}
 		}
 		if ((pageable.getPageStart()+pageable.getPageSize())>(products.size()-1)) {
-			return Message.bind(ProductModel.bindList(products.subList(pageable.getPageStart(),products.size()-1)),request);
+			return Message.bind(GoodsListModel.bindList(products.subList(pageable.getPageStart(),products.size()-1)),request);
 		} else {
-			return Message.bind(ProductModel.bindList(products.subList(pageable.getPageStart(),pageable.getPageStart()+pageable.getPageSize())),request);
+			return Message.bind(GoodsListModel.bindList(products.subList(pageable.getPageStart(),pageable.getPageStart()+pageable.getPageSize())),request);
 		}
 	}
 
