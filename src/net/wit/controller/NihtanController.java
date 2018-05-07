@@ -210,6 +210,9 @@ public class NihtanController extends BaseController {
             if (member!=null) {
                 Game gameData = gameService.find(member,game,table,round_no);
                 if (gameData==null) {
+                    System.out.printf("zero======");
+                    System.out.printf(json);
+                    gameData = new Game();
                     gameData.setGame(game);
                     gameData.setTableNo(table);
                     gameData.setRoundNo(round_no);
