@@ -115,7 +115,7 @@ public class LoginController extends BaseController {
                 member.setRegisterIp(request.getRemoteAddr());
                 memberService.save(member);
             } else {
-                if (nickName!=null) {
+                if (nickName!=null && member.getUuid()==null) {
                     member.setNickName(nickName);
                     if (member.getLogo()!=null && member.getLogo().startsWith("http://cdn")) {
 

@@ -179,13 +179,17 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/activity",method = RequestMethod.GET)
     @ResponseBody
-    public Message activity(HttpServletRequest request){
+    public Message activity(Long id,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+        Card card = cardService.find(id);
+        if (card==null) {
+            return Message.error("无效卡号");
+        }
 
-        Topic topic = member.getTopic();
+        Topic topic = card.getOwner().getTopic();
         if (topic==null) {
             return Message.error("没有开通专栏");
         }
