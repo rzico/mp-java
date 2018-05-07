@@ -135,10 +135,9 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 	}
 
 
-	public synchronized void history(Game game) throws Exception {
+	public synchronized void history(Game game,Long amount) throws Exception {
 		Member member = game.getMember();
 		try {
-			Long amount = game.getCredit();
 			gameDao.lock(game,LockModeType.PESSIMISTIC_WRITE);
 			if (amount>0L && game.getStatus().equals(Game.Status.transaction)) {
 				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
@@ -149,6 +148,7 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 
 				memberDao.merge(member);
 				memberDao.flush();
+				game.setCredit(amount);
 				Gold deposit = new Gold();
 				deposit.setBalance(member.getPoint());
 				deposit.setType(Gold.Type.history);
@@ -160,6 +160,28 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 				deposit.setOperator("system");
 				deposit.setGame(game);
 				goldDao.persist(deposit);
+			} else
+			if (amount>0L){
+				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
+				member.setPoint(member.getPoint()+game.getCredit());
+
+				Long r = Math.round(game.getDebit()*0.6666);
+				member.setFreezePoint(member.getFreezePoint()+r);
+
+				memberDao.merge(member);
+				memberDao.flush();
+				Gold deposit = new Gold();
+				deposit.setBalance(member.getPoint());
+				deposit.setType(Gold.Type.history);
+				deposit.setMemo(game.getMemo()+"-奖励");
+				deposit.setMember(member);
+				deposit.setCredit(game.getCredit());
+				deposit.setDebit(0L);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				deposit.setGame(game);
+				goldDao.persist(deposit);
+				game.setCredit(game.getCredit()+amount);
 			}
 			game.setStatus(Game.Status.history);
 			gameDao.persist(game);

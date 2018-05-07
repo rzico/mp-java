@@ -21,7 +21,7 @@ public interface GameService extends BaseService<Game, Long> {
 
 	public void sumbit(Game game) throws Exception;
 
-	public void history(Game game) throws Exception;
+	public void history(Game game,Long amount) throws Exception;
 
 	public Game find(Member member, String game, String tableNo, String roundNo);
 }

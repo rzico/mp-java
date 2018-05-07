@@ -232,7 +232,7 @@ public class NihtanController extends BaseController {
                 if (gameData!=null) {
                     gameData.setCredit(win_money);
                     try {
-                        gameService.history(gameData);
+                        gameService.history(gameData,win_money);
                         data.put("code", "200");
                         data.put("status", "ok");
                         data.put("credits", String.valueOf(win_money));
