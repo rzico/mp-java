@@ -74,8 +74,12 @@ public class ProductController extends BaseController {
 		List<Product> products = new ArrayList<>();
 		for (Coupon coupon:page) {
 			Product product = coupon.getGoods().product();
-			if (product.getProductCategory()!=null && product.getProductCategory().equals(productCategory)) {
+			if (productCategory==null) {
 				products.add(product);
+			} else {
+				if (product.getProductCategory()!=null && product.getProductCategory().equals(productCategory)) {
+					products.add(product);
+				}
 			}
 		}
 		return Message.bind(ProductModel.bindList(products.subList(pageable.getPageStart(),pageable.getPageStart()+pageable.getPageSize())),request);
