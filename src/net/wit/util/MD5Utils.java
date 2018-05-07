@@ -81,5 +81,10 @@ public class MD5Utils {
      }  
 
      return md5StrBuff.toString();  
- } 
+ }
+
+    public static void main(String[] args) throws Exception {
+
+     System.out.printf(MD5Utils.getMD5Str("61rzico.com"));
+    }
 }
