@@ -227,6 +227,15 @@ public class Order extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null comment '赠送积分'")
 	private Long point;
 
+	/** 来源编码 */
+	@Column(columnDefinition="varchar(50) comment '来源编码'")
+	private String groupNo;
+
+	/** 来源文章 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Article article;
+
 	/** 收货人 */
 	@NotEmpty
 	@Length(max = 200)
@@ -381,6 +390,22 @@ public class Order extends BaseEntity {
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Deposit> deposits = new HashSet<Deposit>();
+
+	public String getGroupNo() {
+		return groupNo;
+	}
+
+	public void setGroupNo(String groupNo) {
+		this.groupNo = groupNo;
+	}
+
+	public Article getArticle() {
+		return article;
+	}
+
+	public void setArticle(Article article) {
+		this.article = article;
+	}
 
 	/**
 	 * 获取订单编号
