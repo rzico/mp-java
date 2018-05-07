@@ -82,7 +82,11 @@ public class ProductController extends BaseController {
 				}
 			}
 		}
-		return Message.bind(ProductModel.bindList(products.subList(pageable.getPageStart(),pageable.getPageStart()+pageable.getPageSize())),request);
+		if ((pageable.getPageStart()+pageable.getPageSize())>(products.size()-1)) {
+			return Message.bind(ProductModel.bindList(products.subList(pageable.getPageStart(),products.size()-1)),request);
+		} else {
+			return Message.bind(ProductModel.bindList(products.subList(pageable.getPageStart(),pageable.getPageStart()+pageable.getPageSize())),request);
+		}
 	}
 
 }
