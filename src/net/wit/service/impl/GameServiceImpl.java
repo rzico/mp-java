@@ -141,7 +141,7 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 			gameDao.lock(game,LockModeType.PESSIMISTIC_WRITE);
 			if (amount>0L && game.getStatus().equals(Game.Status.transaction)) {
 				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
-				member.setPoint(member.getPoint()+game.getCredit());
+				member.setPoint(member.getPoint()+amount);
 
 				Long r = Math.round(game.getDebit()*0.6666);
 				member.setFreezePoint(member.getFreezePoint()+r);
@@ -154,7 +154,7 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 				deposit.setType(Gold.Type.history);
 				deposit.setMemo(game.getMemo());
 				deposit.setMember(member);
-				deposit.setCredit(game.getCredit());
+				deposit.setCredit(amount);
 				deposit.setDebit(0L);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
@@ -163,10 +163,7 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 			} else
 			if (amount>0L){
 				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
-				member.setPoint(member.getPoint()+game.getCredit());
-
-				Long r = Math.round(game.getDebit()*0.6666);
-				member.setFreezePoint(member.getFreezePoint()+r);
+				member.setPoint(member.getPoint()+amount);
 
 				memberDao.merge(member);
 				memberDao.flush();
@@ -175,7 +172,7 @@ public class GameServiceImpl extends BaseServiceImpl<Game, Long> implements Game
 				deposit.setType(Gold.Type.history);
 				deposit.setMemo(game.getMemo()+"-奖励");
 				deposit.setMember(member);
-				deposit.setCredit(game.getCredit());
+				deposit.setCredit(amount);
 				deposit.setDebit(0L);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
