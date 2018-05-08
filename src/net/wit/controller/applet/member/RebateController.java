@@ -73,13 +73,16 @@ public class RebateController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,member));
+        if (authorId!=null) {
+            filters.add(new Filter("seller", Filter.Operator.eq,memberService.find(authorId)));
+        }
         filters.add(new Filter("type", Filter.Operator.eq, Deposit.Type.rebate));
         pageable.setFilters(filters);
         Page<Deposit> page = depositService.findPage(null,null,pageable);
@@ -115,32 +118,50 @@ public class RebateController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Member owner = memberService.find(authorId);
+        Member owner = null;
+        if (authorId!=null) {
+            owner = memberService.find(authorId);
+        }
 
-        BigDecimal sm = depositService.summary(Deposit.Type.rebate,member,owner);
+        BigDecimal sm = BigDecimal.ZERO;
+        if (owner==null) {
+            sm = depositService.summary(Deposit.Type.rebate,member);
+        } else {
+            sm = depositService.summary(Deposit.Type.rebate, member, owner);
+        }
         if (sm==null) {
             sm = BigDecimal.ZERO;
         }
+
 
         RebateModel model = new RebateModel();
         model.setLogo(member.getLogo());
         model.setNickName(member.getNickName());
         model.setRebate(sm);
-        long cont = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member) );
-        model.setContacts(cont);
+        if (owner!=null) {
+            long cont = cardService.count(new Filter("owner", Filter.Operator.eq, owner), new Filter("promoter", Filter.Operator.eq, member));
+            model.setContacts(cont);
 
-        long inv = cardService.count(new Filter("owner", Filter.Operator.eq,owner) ,new Filter("promoter", Filter.Operator.eq,member),new Filter("type", Filter.Operator.eq, Card.Type.team) );
-        model.setInvalid(inv);
+            long inv = cardService.count(new Filter("owner", Filter.Operator.eq, owner), new Filter("promoter", Filter.Operator.eq, member), new Filter("type", Filter.Operator.eq, Card.Type.team));
+            model.setInvalid(inv);
 
 
-        List<Filter> filters = new ArrayList<>();
-        filters.add(new Filter("owner", Filter.Operator.eq,owner));
-        List<OrderRanking> ors = orderRankingService.findList(null,1,filters,null);
+            List<Filter> filters = new ArrayList<>();
+            filters.add(new Filter("owner", Filter.Operator.eq, owner));
+            List<OrderRanking> ors = orderRankingService.findList(null, 1, filters, null);
 
-        if (ors.size()==0) {
-            model.setRanking(0L);
+            if (ors.size() == 0) {
+                model.setRanking(0L);
+            } else {
+                model.setRanking(ors.get(0).getOrders());
+            }
+
         } else {
-            model.setRanking(ors.get(0).getOrders());
+
+            model.setRanking(0L);
+            model.setContacts(0L);
+            model.setInvalid(0L);
+
         }
 
         model.setAgentType("none");
