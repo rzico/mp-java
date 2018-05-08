@@ -72,6 +72,7 @@ public class Tag extends OrderEntity{
     /*模板列表*/
     @JsonIgnore
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
+    @OrderBy("orders asc")
     private List<Template> templates = new ArrayList<Template>();
 
     /*模板列表*/
