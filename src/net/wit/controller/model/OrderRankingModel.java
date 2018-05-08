@@ -15,6 +15,10 @@ public class OrderRankingModel extends BaseModel implements Serializable {
 
     private Long id;
 
+    private String thumbnail ;
+
+    private String sn ;
+
     private String name ;
 
     /*规格*/
@@ -77,6 +81,22 @@ public class OrderRankingModel extends BaseModel implements Serializable {
         this.orders = orders;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
     public void bind(OrderRanking orderRanking) {
         this.id = orderRanking.getId();
         this.name = orderRanking.getName();
@@ -84,9 +104,9 @@ public class OrderRankingModel extends BaseModel implements Serializable {
         this.amount = orderRanking.getAmount();
         this.point = orderRanking.getPoint();
         this.orders = orderRanking.getOrders();
+        this.sn = orderRanking.getSn();
+        this.thumbnail = orderRanking.getThumbnail();
     }
-
-
 
     public static List<OrderRankingModel> bindList(List<OrderRanking> orderRankings) {
         List<OrderRankingModel> ms = new ArrayList<OrderRankingModel>();

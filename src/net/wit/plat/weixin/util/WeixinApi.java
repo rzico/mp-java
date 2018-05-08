@@ -6,10 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,12 +14,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import net.wit.entity.VerifyTicket;
+import net.wit.plat.weixin.pojo.*;
 import net.wit.util.DateUtil;
-import net.wit.plat.weixin.pojo.AccessToken;
-import net.wit.plat.weixin.pojo.Menu;
-import net.wit.plat.weixin.pojo.Ticket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +34,17 @@ public class WeixinApi {
 
 	private static AccessToken accessToken = null;
 
+//	private static HashMap<String, ComponentAccessToken> componentAccessTokenHashMap = new HashMap<>();
+	private static HashMap<String, AuthAccessToken> authAccessTokenHashMap = new HashMap<>();
+
+	private static ComponentAccessToken componentAccessToken = null;
+//	private static AuthAccessToken authAccessToken = null;
+
 	private static Ticket jsapi_ticket = null;
 
 	private static Ticket wxcard_ticket = null;
+
+	public static VerifyTicket verify_ticket = null;
 
 	// 获取access_token的接口地址（GET） 限200（次/天） 
 	private static String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
@@ -86,7 +91,32 @@ public class WeixinApi {
 	private static String GETWXCARDTICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=wx_card";
 
 	private static String send_message = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
-	
+
+	//提交小程序代码
+	private static final String COMMITCODE = "https://api.weixin.qq.com/wxa/commit?access_token=COMPONENT_TOKEN";
+
+	//提交审核
+	private static final String PUSHCODE = "https://api.weixin.qq.com/wxa/submit_audit?access_token=COMPONENT_TOKEN";
+
+	//发布已通过审核的小程序
+	private static final String RELEASECODE = "https://api.weixin.qq.com/wxa/release?access_token=COMPONENT_TOKEN";
+
+	//版本回退
+	private static final String REVERTCODE = "https://api.weixin.qq.com/wxa/revertcoderelease?access_token=COMPONENT_TOKEN";
+
+	//获取第三方平台component_access_token
+	private static final String COMPONENTTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_component_token";
+
+	//获取预授权码
+	private static final String PREAUTHCODE="https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=COMPONENT_TOKEN";
+
+	//授权码换取调用接口调用凭据 authaccesstoken
+	private static final String CODEANDTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=COMPONENT_TOKEN";
+
+//	//通过刷新token 获取 authaccesstoken
+//	private static final String AUTHTOKEN = "https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
+
+
 	/**
 	 * 发起https请求并获取结果
 	 * @param requestUrl 请求地址
@@ -148,6 +178,297 @@ public class WeixinApi {
 			log.error("https request error:{}", e);
 		}
 		return jsonObject;
+	}
+
+	/**
+	 * 发布已经通过审核的 小程序
+	 */
+	public static boolean releaseAppletCode(String componentToken){
+		String params = "{}";
+		JSONObject jsonObject=WeixinApi.httpRequest(RELEASECODE.replace("COMPONENT_TOKEN",componentToken),"POST",params);
+		if(jsonObject!=null){
+			/**
+			 -1	系统繁忙
+			 85019	没有审核版本
+			 85020	审核状态未满足发布
+			 */
+			String errcode = jsonObject.getString("errcode");
+			String errmsg = jsonObject.getString("errmsg");
+			if(errmsg.equals("ok")){
+				return true;
+			}else{
+				return false;
+			}
+		}else {
+			return false;
+		}
+	}
+
+	/**
+	 * 小程序版本回退
+	 * REVERTCODE
+	 */
+	public static boolean revertAppletCode(String componentToken){
+		JSONObject jsonObject=WeixinApi.httpRequest(REVERTCODE.replace("COMPONENT_TOKEN",componentToken),"GET",null);
+		if(jsonObject!=null){
+			/**
+			 0	成功
+			 -1	系统错误
+			 87011	现网已经在灰度发布，不能进行版本回退
+			 87012	该版本不能回退，可能的原因：1:无上一个线上版用于回退 2:此版本为已回退版本，不能回退 3:此版本为回退功能上线之前的版本，不能回退
+			 */
+			String errcode = jsonObject.getString("errcode");
+			String errmsg = jsonObject.getString("errmsg");
+			if(errmsg.equals("ok")){
+				return true;
+			}else{
+				return false;
+			}
+		}else {
+			return false;
+		}
+	}
+
+
+	/**
+	 * 提交审核小程序代码
+	 * @param componentToken 第三方token通过接口获取
+	 * @return
+	 */
+	public static boolean pushAppletCode(String componentToken){
+
+		/*
+		* access_token	请使用第三方平台获取到的该小程序授权的authorizer_access_token
+item_list	提交审核项的一个列表（至少填写1项，至多填写5项）
+address	小程序的页面，可通过“获取小程序的第三方提交代码的页面配置”接口获得
+tag	小程序的标签，多个标签用空格分隔，标签不能多于10个，标签长度不超过20
+first_class	一级类目名称，可通过“获取授权小程序帐号的可选类目”接口获得
+second_class	二级类目(同上)
+third_class	三级类目(同上)
+first_id	一级类目的ID，可通过“获取授权小程序帐号的可选类目”接口获得
+second_id	二级类目的ID(同上)
+third_id	三级类目的ID(同上)
+title	小程序页面的标题,标题长度不超过32*/
+		String params = "{" +
+				"    \"item_list\": [" +
+				"    {" +
+				"        \"address\":\"index\"," +
+				"        \"tag\":\"学习 生活\"," +
+				"        \"first_class\": \"文娱\"," +
+				"        \"second_class\": \"资讯\"," +
+				"        \"first_id\":1," +
+				"        \"second_id\":2," +
+				"        \"title\": \"首页\"" +
+				"    }" +
+				"    {" +
+				"        \"address\":\"page/logs/logs\"," +
+				"        \"tag\":\"学习 工作\"," +
+				"        \"first_class\": \"教育\"," +
+				"        \"second_class\": \"学历教育\"," +
+				"        \"third_class\": \"高等\"," +
+				"        \"first_id\":3," +
+				"        \"second_id\":4," +
+				"        \"third_id\":5," +
+				"        \"title\": \"日志\"" +
+				"    }" +
+				"  ]" +
+				"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(PUSHCODE.replace("COMPONENT_TOKEN",componentToken),"POST",params);
+		if(jsonObject!=null){
+			/**
+			 -1	系统繁忙
+			 86000	不是由第三方代小程序进行调用
+			 86001	不存在第三方的已经提交的代码
+			 85006	标签格式错误
+			 85007	页面路径错误
+			 85008	类目填写错误
+			 85009	已经有正在审核的版本
+			 85010	item_list有项目为空
+			 85011	标题填写错误
+			 85023	审核列表填写的项目数不在1-5以内
+			 85077	小程序类目信息失效（类目中含有官方下架的类目，请重新选择类目）
+			 86002	小程序还未设置昵称、头像、简介。请先设置完后再重新提交。
+			 85085	近7天提交审核的小程序数量过多，请耐心等待审核完毕后再次提交
+			 */
+			String errcode = jsonObject.getString("errcode");
+			String errmsg = jsonObject.getString("errmsg");
+			String auditid = jsonObject.getString("auditid");
+			if(errmsg.equals("ok")){
+				return true;
+			}else{
+				return false;
+			}
+		}else {
+			return false;
+		}
+
+	}
+	/**
+	 * 上传小程序代码
+	 * @param componentToken 第三方token通过接口获取
+	 * @param templateId 小程序的模版id
+	 * @param userVersion 用户的版本
+	 * @param userDesc 用户的备注
+	 * @return
+	 */
+	public static boolean commitAppletCode(String componentToken, String templateId, String userVersion,String userDesc){
+
+		String appjson = "{" +
+				"    extAppid:\"\"," +
+				"    ext:{" +
+				"        \"attr1\":\"value1\"," +
+				"        \"attr2\":\"value2\"," +
+				"    }," +
+				"    extPages:{" +
+				"        \"index\":{" +
+				"        }," +
+				"        \"search/index\":{" +
+				"        }," +
+				"    }," +
+				"    pages:[\"index\",\"search/index\"]," +
+				"    \"window\":{" +
+				"    }," +
+				"    \"networkTimeout\":{" +
+				"    }," +
+				"    \"tabBar\":{" +
+				"    }," +
+				"}";
+
+		String params = "{" +
+				"\"template_id\":"+ templateId +"," +
+				"\"ext_json\":\" " + appjson + " \", " +
+				"\"user_version\":\""+ userVersion +"\"," +
+				"\"user_desc\":\"" + userDesc + "\"," +
+				"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(COMMITCODE.replace("COMPONENT_TOKEN",componentToken),"POST",params);
+		if(jsonObject!=null){
+			/**
+			 * -1	系统繁忙
+			 85013	无效的自定义配置
+			 85014	无效的模版编号
+			 85043	模版错误
+			 85044	代码包超过大小限制
+			 85045	ext_json有不存在的路径
+			 85046	tabBar中缺少path
+			 85047	pages字段为空
+			 85048	ext_json解析失败
+			 */
+			String errcode = jsonObject.getString("errcode");
+			String errmsg = jsonObject.getString("errmsg");
+			if(errmsg.equals("ok")){
+				return true;
+			}else{
+				return false;
+			}
+		}else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * 获取第三方平台预授权码pre_auth_code
+	 *
+	 * @param appId 第三方平台appId
+	 * @param componentToken 第三方平台access_token
+	 * @return  component_access_token
+	 * 其他类型的素材消息，则响应的直接为素材的内容，开发者可以自行保存为文件
+	 */
+	public static String getPreAuthCode(String componentToken,String appId){
+		String string="{\"component_appid\":\""+appId+"\"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(PREAUTHCODE.replace("COMPONENT_TOKEN",componentToken),"POST",string);
+		System.out.println("获取的第三方平台的预授权码:"+jsonObject);
+		return jsonObject.get("pre_auth_code").toString();
+	}
+
+
+	//刷新token接口
+//	public static AuthAccessToken getRefreshAuthorizationCode(String componentToken, String appId, String efresh_token){
+//
+//		return  null;
+//	}
+	//获取授权 accesstoken
+	public static AuthAccessToken getAuthorizationCode(String componentToken, String appId){
+
+		try {
+			if (authAccessTokenHashMap != null && authAccessTokenHashMap.get(appId)!= null && authAccessTokenHashMap.get(appId).getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return authAccessTokenHashMap.get(appId);
+			}
+		} catch (Exception e) {
+
+		}
+//		String authorizer_refresh_token = "";
+//		if(authAccessToken != null){
+//			authorizer_refresh_token = authAccessToken.getAuthorizer_refresh_token();
+//			if(authorizer_refresh_token.equals("")){
+//				//如果刷新token字段不是空的就调用刷新接口否者点用其他的
+//				return getRefreshAuthorizationCode(componentToken, appId, authorizer_refresh_token);
+//			}
+//		}
+		String string="{\"component_appid\":\""+appId+"\" ,\"authorization_code\": \""+getPreAuthCode(componentToken, appId)+"\"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(CODEANDTOKEN.replace("COMPONENT_TOKEN",componentToken),"POST",string);
+		System.out.println("换取的令牌:"+jsonObject);
+		if(jsonObject != null){
+			JSONObject info = jsonObject.getJSONObject("authorization_info");
+			AuthAccessToken authAccessToken = null;
+			if(info != null){
+				authAccessToken = new AuthAccessToken();
+				authAccessToken.setAuthorizer_appid(info.getString("authorizer_appid"));
+				authAccessToken.setAuthorizer_access_token(info.getString("authorizer_access_token"));
+				authAccessToken.setAuthorizer_refresh_token(info.getString("authorizer_refresh_token"));
+				authAccessToken.setExpires_in(info.getInt("expires_in"));
+				authAccessToken.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(info.getInt("expires_in"))));
+				List<FuncInfo> funcInfos = new ArrayList<>();
+				JSONArray funcInfoJsonArray = info.getJSONArray("func_info");
+				int len = funcInfoJsonArray.size();
+				for(int i = 0; i<len ;i++ ){
+					if(funcInfoJsonArray.getJSONObject(i) != null){
+					FuncInfo.Category category = new FuncInfo.Category();
+					category.setId(funcInfoJsonArray.getJSONObject(i).getLong("id"));
+					FuncInfo funcInfo = new FuncInfo();
+					funcInfo.setFuncscope_category(category);
+					funcInfos.add(funcInfo);
+					}
+				}
+				authAccessTokenHashMap.put(appId, authAccessToken);
+			}
+		}
+		return authAccessTokenHashMap.get(appId);
+	}
+	/**
+	 * 获取第三方平台component_access_token
+	 *
+	 * @param appId 第三方平台appid
+	 * @param appSecret 第三方平台appsecret
+	 * @return  component_access_token
+	 * 其他类型的素材消息，则响应的直接为素材的内容，开发者可以自行保存为文件
+	 */
+	public static ComponentAccessToken getComponentToken(String appId, String appSecret){
+		try {
+			if (componentAccessToken != null && componentAccessToken.getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return componentAccessToken;
+			}
+		} catch (Exception e) {
+			componentAccessToken = null;
+		}
+		if(verify_ticket == null) return null;
+
+		String string ="{\"component_appid\":\""+appId+"\" ,\"component_appsecret\": \""+appSecret+"\",\"component_verify_ticket\": \""+verify_ticket.getComponentVerifyTicket()+"\"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(COMPONENTTOKEN,"POST", string);
+		System.out.println("获取的第三方平台的Token:"+jsonObject);
+		if(jsonObject != null){
+			try {
+				componentAccessToken = new ComponentAccessToken();
+				componentAccessToken.setComponent_access_token(jsonObject.getString("component_access_token"));
+				componentAccessToken.setExpires_in(jsonObject.getInt("expires_in"));
+				componentAccessToken.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
+			} catch (JSONException e) {
+				componentAccessToken = null;
+				// 获取token失败
+				log.error("获取token失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
+			}
+		}
+		return componentAccessToken;
 	}
 
 	/**

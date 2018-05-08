@@ -389,7 +389,7 @@ public class LoginController extends BaseController {
         } else {
             return Message.error("获取用户信息失败");
         }
-
+        //与第三方平台账号绑定
         BindUser bindUser = null;
         if (unionId!=null) {
             bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);

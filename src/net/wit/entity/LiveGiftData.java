@@ -137,4 +137,5 @@ public class LiveGiftData extends BaseEntity {
 	public void setLive(Live live) {
 		this.live = live;
 	}
+
 }

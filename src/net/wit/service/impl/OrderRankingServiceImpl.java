@@ -53,6 +53,9 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
 
+	@Resource(name = "topicDaoImpl")
+	private TopicDao topicDao;
+
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
@@ -108,11 +111,19 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 	}
 
 	private void calc(Member member,Member seller,BigDecimal amount,Long point,OrderItem orderItem) {
-		Goods goods = orderItem.getProduct().getGoods();
-		goodsDao.refresh(goods, LockModeType.PESSIMISTIC_WRITE);
-		goods.setRanking(goods.getRanking()+1);
-		goodsDao.merge(goods);
-		goodsDao.flush();
+
+		Topic topic = seller.getTopic();
+		topicDao.refresh(topic, LockModeType.PESSIMISTIC_WRITE);
+		topic.setRanking(topic.getRanking()+1);
+		topicDao.merge(topic);
+		topicDao.flush();
+
+
+//		Goods goods = orderItem.getProduct().getGoods();
+//		goodsDao.refresh(goods, LockModeType.PESSIMISTIC_WRITE);
+//		goods.setRanking(goods.getRanking()+1);
+//		goodsDao.merge(goods);
+//		goodsDao.flush();
         OrderRanking orderRanking = new OrderRanking();
         orderRanking.setAmount(amount);
         orderRanking.setPoint(point);
@@ -121,15 +132,18 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
         orderRanking.setGoods(orderItem.getProduct().getGoods());
         orderRanking.setName(orderItem.getName());
         orderRanking.setSpec(orderItem.getSpec());
-        orderRanking.setOrders(goods.getRanking().intValue());
+        orderRanking.setOrders(topic.getRanking().intValue());
+        orderRanking.setSn(orderItem.getOrder().getSn());
+        orderRanking.setThumbnail(orderItem.getThumbnail());
         orderRankingDao.persist(orderRanking);
-        if (goods.getRanking()>2 && ((goods.getRanking()-1) % 2 ==0)) {
+
+        if (topic.getRanking()>2 && ((topic.getRanking()-1) % 2 ==0)) {
            List<Filter> filters = new ArrayList<>();
-           filters.add(new Filter("goods",Operator.eq,goods));
+           filters.add(new Filter("owner",Operator.eq,seller));
            List<OrderRanking> ors = orderRankingDao.findList(null,1,filters,null);
            if (ors.size()>0) {
            	  OrderRanking rk = ors.get(0);
-           	  if (rk.getOrders()<goods.getRanking()) {
+           	  if (rk.getOrders()<topic.getRanking()) {
 
 				  //条件成立，出局一个,商家需有余额
 				  Member ow = rk.getOwner();

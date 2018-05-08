@@ -17,31 +17,31 @@ import org.springframework.util.StringUtils;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.dao.LiveGiftDao;
-import net.wit.entity.LiveGift;
+import net.wit.dao.LiveGiftExchangeDao;
+import net.wit.entity.LiveGiftExchange;
 
 
 /**
- * @ClassName: LiveGiftDaoImpl
+ * @ClassName: LiveGiftExchangeDaoImpl
  * @author 降魔战队
- * @date 2018-4-5 18:22:28
+ * @date 2018-4-28 22:28:34
  */
  
 
-@Repository("liveGiftDaoImpl")
-public class LiveGiftDaoImpl extends BaseDaoImpl<LiveGift, Long> implements LiveGiftDao {
+@Repository("liveGiftExchangeDaoImpl")
+public class LiveGiftExchangeDaoImpl extends BaseDaoImpl<LiveGiftExchange, Long> implements LiveGiftExchangeDao {
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
 	 * @param beginDate
 	 * @param endDate
 	 * @param pageable
-	 * @return Page<LiveGift>
+	 * @return Page<LiveGiftExchange>
 	 */
-	public Page<LiveGift> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<LiveGiftExchange> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<LiveGift> criteriaQuery = criteriaBuilder.createQuery(LiveGift.class);
-		Root<LiveGift> root = criteriaQuery.from(LiveGift.class);
+		CriteriaQuery<LiveGiftExchange> criteriaQuery = criteriaBuilder.createQuery(LiveGiftExchange.class);
+		Root<LiveGiftExchange> root = criteriaQuery.from(LiveGiftExchange.class);
 		criteriaQuery.select(root);
 		Predicate restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.conjunction();
@@ -54,7 +54,6 @@ public class LiveGiftDaoImpl extends BaseDaoImpl<LiveGift, Long> implements Live
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
-		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
