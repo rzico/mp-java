@@ -1,10 +1,7 @@
-package net.wit.controller.auth;
+package net.wit.controller.component;
 
 import net.wit.DateEditor;
-import net.wit.Message;
 import net.wit.entity.Log;
-import net.wit.interceptor.WeexInterceptor;
-import net.wit.template.directive.FlashMessageDirective;
 import net.wit.util.SpringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;

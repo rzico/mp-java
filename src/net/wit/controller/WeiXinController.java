@@ -85,8 +85,6 @@ public class WeiXinController extends BaseController {
     //消息校验TOKEN
     private static final String COMPONENT_TOKEN="witpay";
 
-
-
     //消息加解密KEY
     private static final String COMPONENT_ENCODINGAESKEY="DDHsgFE7U5AoNPgPlkG0uO8Wmhc8cu9pOuXDWtIA57w";
 
