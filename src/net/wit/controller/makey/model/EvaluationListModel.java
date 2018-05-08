@@ -40,6 +40,8 @@ public class EvaluationListModel extends BaseModel implements Serializable {
     private Long eval;
     /** 题目 */
     private Long total;
+    /** 秒数 */
+    private Long seconds;
 
     public Long getId() {
         return id;
@@ -145,6 +147,14 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.nickName = nickName;
     }
 
+    public Long getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(Long seconds) {
+        this.seconds = seconds;
+    }
+
     public void bind(Evaluation evaluation) {
         this.id = evaluation.getId();
         this.logo = evaluation.getMember().getLogo();
@@ -161,6 +171,7 @@ public class EvaluationListModel extends BaseModel implements Serializable {
 
         this.sn = evaluation.getSn();
         this.createDate = evaluation.getCreateDate();
+        this.seconds = evaluation.getSeconds();
     }
 
     public static List<EvaluationListModel> bindList(List<Evaluation> evaluations) {

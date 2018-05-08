@@ -156,14 +156,14 @@
 <body ontouchstart="">
 <div >
     <div data-v-25ce5c3e="" class="slideIn">
-        <div data-v-25ce5c3e="" id="download_bar" class="download_bar">
-            <div class="title"><img src="/resources/images/logo.png" alt="美心说" class="logo">
-                <p><span class="name">美心说</span> <span class="desc" style="line-height: 38px;">分享赚红包</span></p> <span
-                        href="javascript:;" id="download_btn" class="download_btn" style="top: 1px;"><img style="width:24px;height:24px" src="/resources/images/finger.png">马上分享</span></div>
-            <span class="close_btn" style="top: 10px;"><span
-                    class="close_icon iconfont icon-arrow-dropright"></span>
-            </span>
-        </div>
+        <#--<div data-v-25ce5c3e="" id="download_bar" class="download_bar">-->
+            <#--<div class="title"><img src="/resources/images/logo.png" alt="美心说" class="logo">-->
+                <#--<p><span class="name">美心说</span> <span class="desc" style="line-height: 38px;">分享赚红包</span></p> <span-->
+                        <#--href="javascript:;" id="download_btn" class="download_btn" style="top: 1px;"><img style="width:24px;height:24px" src="/resources/images/finger.png">马上分享</span></div>-->
+            <#--<span class="close_btn" style="top: 10px;"><span-->
+                    <#--class="close_icon iconfont icon-arrow-dropright"></span>-->
+            <#--</span>-->
+        <#--</div>-->
         <div data-v-25ce5c3e="" class="article">
             <div data-v-25ce5c3e="" class="main">
                 <div data-v-25ce5c3e="" class="article_meta"><h1 class="meta_title">${data.title}</h1>
