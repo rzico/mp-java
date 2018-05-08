@@ -10,8 +10,6 @@ import net.wit.plat.im.User;
 import net.wit.plat.weixin.aes.AesException;
 import net.wit.plat.weixin.aes.WXBizMsgCrypt;
 import net.wit.plat.weixin.main.MenuManager;
-import net.wit.plat.weixin.message.resp.TextMessage;
-import net.wit.plat.weixin.pojo.AccessToken;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.propa.ArticlePropa;
 import net.wit.plat.weixin.util.SignUtil;
@@ -93,10 +91,10 @@ public class WeiXinController extends BaseController {
     private static final String COMPONENT_ENCODINGAESKEY="DDHsgFE7U5AoNPgPlkG0uO8Wmhc8cu9pOuXDWtIA57w";
 
     //第三方公众平台APPID
-    private static final String COMPONENT_APPID="wx484383a1d294632f";
+    private static final String COMPONENT_APPID="wxfae4ebf43607d851";
 
     //第三方公众平台Secret
-    private static final String COMPONENT_SECRET="3bac4596d56f15a19dc9373011aa782c";
+    private static final String COMPONENT_SECRET="58a0a681beee1bf5e9f7cd49f7658736";
 
     /**
      * 付款页
@@ -668,10 +666,15 @@ public class WeiXinController extends BaseController {
             System.out.println("推送component_verify_ticket协议-----------AuthorizationCode = "+AuthorizationCode);
             System.out.println("推送component_verify_ticket协议-----------PreAuthCode = "+PreAuthCode);
             if(ticket!=null&&!ticket.equals("")){
-                System.out.println("8、推送component_verify_ticket协议-----------ticket = "+ticket);
-                net.wit.entity.Article article=articleService.find(476l);
-                article.setContent(ticket);
-                articleService.save(article);
+//                System.out.println("8、推送component_verify_ticket协议-----------ticket = "+ticket);
+//                net.wit.entity.Article article=articleService.find(476l);
+//                article.setContent(ticket);
+//                articleService.save(article);
+                VerifyTicket verifyTicket = new VerifyTicket();
+                verifyTicket.setAppid(appId);
+                verifyTicket.setComponentVerifyTicket(ticket);
+                verifyTicket.setCreateTime(Long.valueOf(createTime));
+                WeixinApi.verify_ticket = verifyTicket;
             }
         } catch (DocumentException e) {
             e.printStackTrace();

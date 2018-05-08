@@ -1,5 +1,6 @@
 package net.wit.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.Order;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,8 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.dao.TagDao;
 import net.wit.entity.Tag;
+
+import static net.wit.Order.Direction.asc;
 
 
 /**
@@ -67,7 +71,10 @@ public class TagDaoImpl extends BaseDaoImpl<Tag, Long> implements TagDao {
 		restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Date> get("type"), type));
 		criteriaQuery.where(restrictions);
-		return super.findList(criteriaQuery,null,null,null,null);
+		Order order = new Order("orders",asc);
+		List<Order> orders = new ArrayList<>();
+		orders.add(order);
+		return super.findList(criteriaQuery,null,null,null,orders);
 	}
 
 }

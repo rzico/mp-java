@@ -6,10 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,12 +14,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import net.wit.entity.VerifyTicket;
+import net.wit.plat.weixin.pojo.*;
 import net.wit.util.DateUtil;
-import net.wit.plat.weixin.pojo.AccessToken;
-import net.wit.plat.weixin.pojo.Menu;
-import net.wit.plat.weixin.pojo.Ticket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +33,14 @@ public class WeixinApi {
 	private static Logger log = LoggerFactory.getLogger(WeixinApi.class);
 
 	private static AccessToken accessToken = null;
+	private static ComponentAccessToken componentAccessToken = null;
+	private static AuthAccessToken authAccessToken = null;
 
 	private static Ticket jsapi_ticket = null;
 
 	private static Ticket wxcard_ticket = null;
+
+	public static VerifyTicket verify_ticket = null;
 
 	// 获取access_token的接口地址（GET） 限200（次/天） 
 	private static String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
@@ -86,7 +87,18 @@ public class WeixinApi {
 	private static String GETWXCARDTICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=wx_card";
 
 	private static String send_message = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
-	
+
+	//获取第三方平台component_access_token
+	private static final String COMPONENTTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_component_token";
+
+	//获取预授权码
+	private static final String PREAUTHCODE="https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=COMPONENT_TOKEN";
+
+	//授权码换取调用接口调用凭据
+	private static final String CODEANDTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=COMPONENT_TOKEN";
+
+	//通过刷新token 获取 authaccesstoken
+	private static final String AUTHTOKEN = "https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
 	/**
 	 * 发起https请求并获取结果
 	 * @param requestUrl 请求地址
@@ -148,6 +160,112 @@ public class WeixinApi {
 			log.error("https request error:{}", e);
 		}
 		return jsonObject;
+	}
+
+
+
+
+	/**
+	 * 获取第三方平台预授权码pre_auth_code
+	 *
+	 * @param appId 第三方平台appId
+	 * @param ComponentToken 第三方平台access_token
+	 * @return  component_access_token
+	 * 其他类型的素材消息，则响应的直接为素材的内容，开发者可以自行保存为文件
+	 */
+	public static String getPreAuthCode(String ComponentToken,String appId){
+		String string="{\"component_appid\":\""+appId+"\"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(PREAUTHCODE.replace("COMPONENT_TOKEN",ComponentToken),"POST",string);
+		System.out.println("获取的第三方平台的预授权码:"+jsonObject);
+		return jsonObject.get("pre_auth_code").toString();
+	}
+
+
+	//刷新token接口
+//	public static AuthAccessToken getRefreshAuthorizationCode(String ComponentToken, String appId, String efresh_token){
+//
+//		return  null;
+//	}
+	//获取授权 accesstoken
+	public static AuthAccessToken getAuthorizationCode(String ComponentToken, String appId, String authCode){
+
+		try {
+			if (authAccessToken != null && authAccessToken.getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return authAccessToken;
+			}
+		} catch (Exception e) {
+			authAccessToken = null;
+		}
+//		String authorizer_refresh_token = "";
+//		if(authAccessToken != null){
+//			authorizer_refresh_token = authAccessToken.getAuthorizer_refresh_token();
+//			if(authorizer_refresh_token.equals("")){
+//				//如果刷新token字段不是空的就调用刷新接口否者点用其他的
+//				return getRefreshAuthorizationCode(ComponentToken, appId, authorizer_refresh_token);
+//			}
+//		}
+		String string="{\"component_appid\":\""+appId+"\" ,\"authorization_code\": \""+authCode+"\"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(CODEANDTOKEN.replace("COMPONENT_TOKEN",ComponentToken),"POST",string);
+		System.out.println("换取的令牌:"+jsonObject);
+		if(jsonObject != null){
+			JSONObject info = jsonObject.getJSONObject("authorization_info");
+			if(info != null){
+				authAccessToken = new AuthAccessToken();
+				authAccessToken.setAuthorizer_appid(info.getString("authorizer_appid"));
+				authAccessToken.setAuthorizer_access_token(info.getString("authorizer_access_token"));
+				authAccessToken.setAuthorizer_refresh_token(info.getString("authorizer_refresh_token"));
+				authAccessToken.setExpires_in(info.getInt("expires_in"));
+				authAccessToken.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(info.getInt("expires_in"))));
+				List<FuncInfo> funcInfos = new ArrayList<>();
+				JSONArray funcInfoJsonArray = info.getJSONArray("func_info");
+				int len = funcInfoJsonArray.size();
+				for(int i = 0; i<len ;i++ ){
+					if(funcInfoJsonArray.getJSONObject(i) != null){
+					FuncInfo.Category category = new FuncInfo.Category();
+					category.setId(funcInfoJsonArray.getJSONObject(i).getLong("id"));
+					FuncInfo funcInfo = new FuncInfo();
+					funcInfo.setFuncscope_category(category);
+					funcInfos.add(funcInfo);
+					}
+				}
+			}
+		}
+		return authAccessToken;
+	}
+	/**
+	 * 获取第三方平台component_access_token
+	 *
+	 * @param appId 第三方平台appid
+	 * @param appSecret 第三方平台appsecret
+	 * @return  component_access_token
+	 * 其他类型的素材消息，则响应的直接为素材的内容，开发者可以自行保存为文件
+	 */
+	public static ComponentAccessToken getComponentToken(String appId, String appSecret){
+		try {
+			if (componentAccessToken != null && componentAccessToken.getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return componentAccessToken;
+			}
+		} catch (Exception e) {
+			componentAccessToken = null;
+		}
+		if(verify_ticket == null) return null;
+
+		String string ="{\"component_appid\":\""+appId+"\" ,\"component_appsecret\": \""+appSecret+"\",\"component_verify_ticket\": \""+verify_ticket.getComponentVerifyTicket()+"\"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(COMPONENTTOKEN,"POST", string);
+		System.out.println("获取的第三方平台的Token:"+jsonObject);
+		if(jsonObject != null){
+			try {
+				componentAccessToken = new ComponentAccessToken();
+				componentAccessToken.setComponent_access_token(jsonObject.getString("component_access_token"));
+				componentAccessToken.setExpires_in(jsonObject.getInt("expires_in"));
+				componentAccessToken.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
+			} catch (JSONException e) {
+				componentAccessToken = null;
+				// 获取token失败
+				log.error("获取token失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
+			}
+		}
+		return componentAccessToken;
 	}
 
 	/**
