@@ -25,8 +25,6 @@ public class GoodsViewModel extends BaseModel implements Serializable {
     private Long review;
     /** 人气 */
     private Long hits;
-    /** 红包 */
-    private BigDecimal rebate;
     /** 文章 id */
     private Long articleId;
     /** 可用库存 */
@@ -159,15 +157,6 @@ public class GoodsViewModel extends BaseModel implements Serializable {
         this.articleId = articleId;
     }
 
-
-    public BigDecimal getRebate() {
-        return rebate;
-    }
-
-    public void setRebate(BigDecimal rebate) {
-        this.rebate = rebate;
-    }
-
     public void bind(Goods goods) {
 
         Product mProduct = goods.getProducts().get(0);
@@ -207,8 +196,5 @@ public class GoodsViewModel extends BaseModel implements Serializable {
         this.hasFavorite = true;
 
         this.articleId = 0L;
-
-        this.rebate = BigDecimal.ZERO;
-
     }
 }

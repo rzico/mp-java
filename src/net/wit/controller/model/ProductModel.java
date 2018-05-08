@@ -29,6 +29,9 @@ public class ProductModel extends BaseModel implements Serializable {
     private BigDecimal price;
     /** 市场价 */
     private BigDecimal marketPrice;
+    /** 红包 */
+    private BigDecimal rebate;
+
 //    /** vip1 */
 //    private BigDecimal vip1Price;
 //    /** vip2 */
@@ -98,6 +101,22 @@ public class ProductModel extends BaseModel implements Serializable {
         this.price = price;
     }
 
+    public BigDecimal getMarketPrice() {
+        return marketPrice;
+    }
+
+    public void setMarketPrice(BigDecimal marketPrice) {
+        this.marketPrice = marketPrice;
+    }
+
+    public BigDecimal getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(BigDecimal rebate) {
+        this.rebate = rebate;
+    }
+
     public void bind(Product product) {
         this.productId = product.getId();
         this.thumbnail = product.getThumbnail();
@@ -107,6 +126,7 @@ public class ProductModel extends BaseModel implements Serializable {
         this.marketPrice = product.getMarketPrice();
         this.stock = product.getStock();
         this.availableStock = product.getAvailableStock();
+        this.rebate = BigDecimal.ZERO;
 //        this.weight = product.getWeight();
 //        this.vip1Price = product.getVip1Price();
 //        this.vip2Price = product.getVip2Price();
