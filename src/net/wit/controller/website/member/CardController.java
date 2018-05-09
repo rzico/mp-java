@@ -117,7 +117,7 @@ public class CardController extends BaseController {
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
         }
 
-        return "redirect:/#/member?id="+id+"&card_id="+card_id;
+        return "redirect:/#/memberIndex?id="+id+"&type=payment&card_id="+card_id;
     }
 
     /**

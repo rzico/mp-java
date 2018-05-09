@@ -87,13 +87,13 @@ public class TopicController extends BaseController {
             }
         }
 
-        String template="1001";
-        Topic topic = topicService.find(member);
-        if (topic!=null) {
-            template = topic.getTemplate().getSn();
-        }
+//        String template="1001";
+//        Topic topic = topicService.find(member);
+//        if (topic!=null) {
+//            template = topic.getTemplate().getSn();
+//        }
 
-        return "redirect:"+"http://"+bundle.getString("weixin.url")+"/#/c"+template+"?id="+id;
+        return "redirect:"+"http://"+bundle.getString("weixin.url")+"/#/c1001?id="+id;
      }
 
     /**

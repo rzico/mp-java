@@ -74,9 +74,8 @@ public class Receiver extends BaseEntity {
 	private Area area;
 
 	/** 区域 */
-	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '区域'")
+	@JoinColumn(columnDefinition="bigint(20) comment '区域'")
 	private Road road;
 
 	/** 会员 */
