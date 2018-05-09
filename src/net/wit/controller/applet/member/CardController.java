@@ -261,6 +261,7 @@ public class CardController extends BaseController {
     @RequestMapping(value = "view")
     @ResponseBody
     public Message view(Long authorId,Long id,HttpServletRequest request){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -277,7 +278,10 @@ public class CardController extends BaseController {
             }
             card = member.card(owner);
         } else {
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            if (authorId==null) {
+                authorId = Long.parseLong(bundle.getString("platform"));
+            }
+            owner = memberService.find(authorId);
             if ("3".equals(bundle.getString("weex")) && member.getCards().size()>0) {
                 card = member.getCards().get(0);
             }
@@ -295,7 +299,6 @@ public class CardController extends BaseController {
             model.bind(card);
             data.put("card", model);
 
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             int challege = StringUtils.Random6Code();
             card.setSign(String.valueOf(challege));
             cardService.update(card);
