@@ -25,8 +25,8 @@ import java.util.*;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("weexWaterCardController")
-@RequestMapping("/weex/water/card")
+@Controller("appletWaterCardController")
+@RequestMapping("/applet/water/card")
 public class CardController extends BaseController {
 
     @Resource(name = "memberServiceImpl")

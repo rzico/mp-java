@@ -294,11 +294,7 @@ public class LoginController extends BaseController {
                 member.setNickName(nickName);
             }
             if (headImg!=null && member.getUuid()==null) {
-                if (member.getLogo()!=null && member.getLogo().startsWith("http://cdn")) {
-
-                } else {
-                    member.setLogo(headImg);
-                }
+                member.setLogo(headImg);
             }
             memberService.update(member);
         }
