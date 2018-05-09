@@ -7,6 +7,7 @@ import net.wit.controller.model.ManagerModel;
 import net.wit.entity.Admin;
 import net.wit.entity.Enterprise;
 import net.wit.entity.Member;
+import net.wit.entity.Topic;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,14 +71,15 @@ public class ManagerController extends BaseController {
         ManagerModel model =new ManagerModel();
         model.bind(member);
 
+        if (member.getTopic()!=null && member.getTopic().getStatus().equals(Topic.Status.success)) {
+            model.setIsShop(true);
+        }
+
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
             Enterprise ent = admin.getEnterprise();
             if (!ent.getType().equals(Enterprise.Type.shop) && ent.getStatus().equals(Enterprise.Status.success)) {
                 model.setIsAgent(true);
-            }
-            if (ent.getType().equals(Enterprise.Type.shop)) {
-                model.setIsShop(true);
             }
             Long shops = shopService.count(new Filter("enterprise", Filter.Operator.eq,admin.getEnterprise()));
             model.setHasShop(shops>0L);
