@@ -83,16 +83,16 @@ public class WeiXinController extends BaseController {
 
 
     //消息校验TOKEN
-    private static final String COMPONENT_TOKEN="witpay";
-
-    //消息加解密KEY
-    private static final String COMPONENT_ENCODINGAESKEY="DDHsgFE7U5AoNPgPlkG0uO8Wmhc8cu9pOuXDWtIA57w";
-
-    //第三方公众平台APPID
-    private static final String COMPONENT_APPID="wxfae4ebf43607d851";
-
-    //第三方公众平台Secret
-    private static final String COMPONENT_SECRET="58a0a681beee1bf5e9f7cd49f7658736";
+//    private static final String COMPONENT_TOKEN="witpay";
+//
+//    //消息加解密KEY
+//    private static final String COMPONENT_ENCODINGAESKEY="DDHsgFE7U5AoNPgPlkG0uO8Wmhc8cu9pOuXDWtIA57w";
+//
+//    //第三方公众平台APPID
+//    private static final String COMPONENT_APPID="wxfae4ebf43607d851";
+//
+//    //第三方公众平台Secret
+//    private static final String COMPONENT_SECRET="58a0a681beee1bf5e9f7cd49f7658736";
 
     /**
      * 付款页
@@ -493,7 +493,9 @@ public class WeiXinController extends BaseController {
         System.out.println("微信推送的原生："+xml);
         System.out.println("--------------------------我是尾分界线------------------------------");
 
-        WXBizMsgCrypt pc = new WXBizMsgCrypt(COMPONENT_TOKEN, COMPONENT_ENCODINGAESKEY, COMPONENT_APPID);
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        WXBizMsgCrypt pc = new WXBizMsgCrypt(bundle.getString("weixin.component.token"), bundle.getString("weixin.component.encodingaeskey"), bundle.getString("weixin.component.appid"));
         xml = pc.decryptMsg(msgSignature, timestamp, nonce, xml);
 
         System.out.println("--------------------------我是头分界线------------------------------");
@@ -553,10 +555,12 @@ public class WeiXinController extends BaseController {
             System.out.println("------step.2----获取第三方TOKEN----逻辑开始-------------------------auth_code: "+auth_code);
             net.wit.entity.Article article=articleService.find(476l);
             System.out.println(article.getContent());
-            String conToken = ArticlePropa.getComponentToken(COMPONENT_APPID,COMPONENT_SECRET,article.getContent());
+
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            String conToken = ArticlePropa.getComponentToken(bundle.getString("weixin.component.appid"),bundle.getString("weixin.component.secret"),article.getContent());
             System.out.println("------step.2.5----获取第三方TOKEN----逻辑开始-------------------------token:"+conToken);
 //            String authcode=ArticlePropa.getAuthCode(conToken,COMPONENT_APPID);
-            String authCode=ArticlePropa.getAuthorizationCode(conToken,COMPONENT_APPID,auth_code);
+            String authCode=ArticlePropa.getAuthorizationCode(conToken,bundle.getString("weixin.component.appid"),auth_code);
             System.out.println("------step.3----使用客服消息接口回复粉丝----逻辑开始---------------------authCode:"+auth_code);
 
             System.out.println("------step.4----使用客服消息接口回复粉丝----逻辑开始---------------------jsonRes.authorization_info:"+authCode);
@@ -596,7 +600,9 @@ public class WeiXinController extends BaseController {
         System.out.println("--------------组装好的XML-------------------------------");
         System.out.println(replyMsg);
         //加密
-        WXBizMsgCrypt pc = new WXBizMsgCrypt(COMPONENT_TOKEN, COMPONENT_ENCODINGAESKEY, COMPONENT_APPID);
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        WXBizMsgCrypt pc = new WXBizMsgCrypt(bundle.getString("weixin.component.token"), bundle.getString("weixin.component.encodingaeskey"), bundle.getString("weixin.component.appid"));
         String returnvaleue = pc.encryptMsg(replyMsg, creatTime.toString(), request.getParameter("nonce"));
         System.out.println("------------------加密后的返回内容 returnvaleue----------------------");
         System.out.println(returnvaleue);
@@ -632,7 +638,8 @@ public class WeiXinController extends BaseController {
         System.out.println("第三方平台全网发布-----------------------原始 Xml=" + xml);
 //        xml=xml.replace("<AppId>","<ToUserName>").replace("</AppId>","</ToUserName>");
 //        System.out.println("第三方平台全网发布-----------------------替换后 Xml=" + xml);
-        WXBizMsgCrypt pc = new WXBizMsgCrypt(COMPONENT_TOKEN, COMPONENT_ENCODINGAESKEY, COMPONENT_APPID);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        WXBizMsgCrypt pc = new WXBizMsgCrypt(bundle.getString("weixin.component.token"), bundle.getString("weixin.component.encodingaeskey"), bundle.getString("weixin.component.appid"));
         xml = pc.decryptMsg(msgSignature, timestamp, nonce, xml.replace("<AppId>","<ToUserName>").replace("</AppId>","</ToUserName>"));
         System.out.println("第三方平台全网发布-----------------------解密后 Xml=" + xml);
         xml=xml.replace("<ToUserName>","<AppId>").replace("</ToUserName>","</AppId>");

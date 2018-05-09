@@ -7,6 +7,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.entity.*;
 import net.wit.plat.im.User;
 import net.wit.plat.weixin.pojo.AccessToken;
+import net.wit.plat.weixin.pojo.ComponentAccessToken;
 import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
@@ -74,11 +75,24 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "")
     public
     @ResponseBody
-    Message login(String code,String nickName,String logo, HttpServletRequest request, HttpServletResponse response) {
+    Message login(Long memberId, String code,String nickName,String logo, HttpServletRequest request, HttpServletResponse response) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +bundle.getString("applet.appid") + "&secret=" + bundle.getString("applet.secret") + "&js_code=" + code + "&grant_type=authorization_code";
+        if(memberId != null){
+            //如果该参数不为空 则是第三放平台登录
+            Member member = memberService.find(memberId);
+            ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(bundle.getString("weixin.component.appid"), bundle.getString("weixin.component.secret"));
+            if( componentAccessToken != null && member != null){
+                url = "https://api.weixin.qq.com/sns/component/jscode2session?appid="+ member.getTopic().getConfig().getAppetAppId() +"&js_code=" + code +
+                        "&grant_type=authorization_code&component_appid=" +
+                        bundle.getString("weixin.component.appid") + "&component_access_token=" +
+                        componentAccessToken.getComponent_access_token();
+            }else{
+                return Message.error("登录失败");
+            }
+        }
         JSONObject result = WeixinApi.httpRequest(url, "GET", null);
+
         if (result.containsKey("session_key")) {
             HttpSession session = request.getSession();
             String sessionId = session.getId();
