@@ -142,7 +142,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			taskExecutor.execute(new Runnable() {
 				public void run() {
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					NumberFormat nf = NumberFormat.getCurrencyInstance();
+					NumberFormat nf=NumberFormat.getNumberInstance();
+					nf.setMaximumFractionDigits(2);
 					String data = MessageManager.createDepositTempelete(openId,title,"",
 							formatter.format(timeStamp),nf.format(amount),nf.format(balance),content);
 					MessageManager.sendMsg(data);
