@@ -189,11 +189,6 @@ public class CardController extends BaseController {
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
-        if (authorId==null) {
-            authorId = Long.parseLong(bundle.getString("platform"));
-        }
-
-
         Member promoter = null;
         if (xuid!=null) {
             promoter = memberService.find(xuid);
@@ -203,6 +198,12 @@ public class CardController extends BaseController {
         Member owner = null;
 
         if ("3".equals(bundle.getString("weex"))) {
+
+            if (authorId==null) {
+                authorId = Long.parseLong(bundle.getString("platform"));
+            }
+            owner = memberService.find(authorId);
+
             if (member.getCards().size()>0) {
                card = member.getCards().get(0);
             } else {
@@ -214,6 +215,9 @@ public class CardController extends BaseController {
                }
             }
         } else {
+            if (authorId==null) {
+                return Message.error("商家id不能为空");
+            }
             owner = memberService.find(authorId);
             card = member.card(owner);
         }
@@ -278,12 +282,14 @@ public class CardController extends BaseController {
             }
             card = member.card(owner);
         } else {
-            if (authorId==null) {
-                authorId = Long.parseLong(bundle.getString("platform"));
-            }
-            owner = memberService.find(authorId);
-            if ("3".equals(bundle.getString("weex")) && member.getCards().size()>0) {
-                card = member.getCards().get(0);
+            if ("3".equals(bundle.getString("weex")) ) {
+                if (authorId==null) {
+                    authorId = Long.parseLong(bundle.getString("platform"));
+                }
+                owner = memberService.find(authorId);
+                if (member.getCards().size()>0) {
+                    card = member.getCards().get(0);
+                }
             }
         }
         Map<String,Object> data = new HashMap<String,Object>();
