@@ -187,8 +187,12 @@ public class CardController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+        if (authorId==null) {
+            authorId = Long.parseLong(bundle.getString("platform"));
+        }
+
 
         Member promoter = null;
         if (xuid!=null) {
