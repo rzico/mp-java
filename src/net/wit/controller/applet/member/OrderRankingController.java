@@ -75,5 +75,4 @@ public class OrderRankingController extends BaseController {
         model.setData(OrderRankingModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
-
 }
