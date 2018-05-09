@@ -106,12 +106,15 @@ public class EvaluationController extends BaseController {
             return Message.error("无效量表编号");
         }
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member==null && agent!=null) {
             Enterprise enterprise = enterpriseService.find(agent);
             if (!MD5Utils.getMD5Str(String.valueOf(id) +String.valueOf(xuid) + String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString()+"rzico.com")).equals(sign)) {
                 return Message.error("无效签名");
             }
             member = enterprise.getMember();
+        }
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
         }
         Evaluation  eval =  new Evaluation();
         eval.setDeleted(false);
@@ -215,12 +218,15 @@ public class EvaluationController extends BaseController {
             return Message.error("无效测评编号");
         }
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member==null && agent!=null) {
             Enterprise enterprise = enterpriseService.find(agent);
             if (!MD5Utils.getMD5Str(String.valueOf(id)+body+String.valueOf(seconds) + String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString()+"rzico.com")).equals(sign)) {
                 return Message.error("无效签名");
             }
             member = enterprise.getMember();
+        }
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
         }
 
         if (evaluation.getEvalStatus().equals(Evaluation.EvalStatus.waiting)) {
@@ -327,12 +333,15 @@ public class EvaluationController extends BaseController {
     @ResponseBody
     public Message payment(String sn,Long agent,Long timeStamp,String sign,HttpServletRequest request){
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member==null&&agent!=null) {
             Enterprise enterprise = enterpriseService.find(agent);
             if (!MD5Utils.getMD5Str(sn+ String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString()+"rzico.com")).equals(sign)) {
                 return Message.error("无效签名");
             }
             member = enterprise.getMember();
+        }
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
         }
 
         Payment payment = paymentService.findBySn(sn);
@@ -360,12 +369,15 @@ public class EvaluationController extends BaseController {
         }
 
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member==null&&agent!=null) {
             Enterprise enterprise = enterpriseService.find(agent);
             if (!MD5Utils.getMD5Str(String.valueOf(id)+ String.valueOf(agent) + String.valueOf(timeStamp)+MD5Utils.getMD5Str(enterprise.getId().toString()+"rzico.com")).equals(sign)) {
                 return Message.error("无效签名");
             }
             member = enterprise.getMember();
+        }
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
         }
 
         EvaluationModel model =new EvaluationModel();
