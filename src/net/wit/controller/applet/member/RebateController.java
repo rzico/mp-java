@@ -133,7 +133,6 @@ public class RebateController extends BaseController {
             sm = BigDecimal.ZERO;
         }
 
-
         RebateModel model = new RebateModel();
         model.setLogo(member.getLogo());
         model.setNickName(member.getNickName());
