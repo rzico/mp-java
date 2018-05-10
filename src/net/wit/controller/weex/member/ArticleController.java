@@ -334,7 +334,7 @@ public class ArticleController extends BaseController {
     /**
      * 获取显示模版
      */
-    @RequestMapping(value = "/template", method = RequestMethod.POST)
+    @RequestMapping(value = "/template")
     @ResponseBody
     public Message template(Long id,HttpServletRequest request){
         Article article = articleService.find(id);
