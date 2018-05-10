@@ -198,21 +198,20 @@ public class CardController extends BaseController {
         Member owner = null;
 
         if ("3".equals(bundle.getString("weex"))) {
-
-            if (authorId==null) {
-                authorId = Long.parseLong(bundle.getString("platform"));
-            }
-            owner = memberService.find(authorId);
-
             if (member.getCards().size()>0) {
                card = member.getCards().get(0);
             } else {
-               Admin admin = adminService.findByMember(promoter);
-               if (admin!=null && admin.getEnterprise()!=null) {
-                   owner = admin.getEnterprise().getMember();
-               } else {
-                   return Message.error("暂不支持");
-               }
+                if (promoter!=null) {
+                    if (promoter.getCards().size()>0) {
+                        owner = promoter.getCards().get(0).getOwner();
+                    }
+                }
+                if (owner==null) {
+                    if (authorId==null) {
+                        authorId = Long.parseLong(bundle.getString("platform"));
+                    }
+                    owner = memberService.find(authorId);
+                }
             }
         } else {
             if (authorId==null) {
