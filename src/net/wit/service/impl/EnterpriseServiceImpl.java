@@ -169,6 +169,12 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<Enterprise, Long> imp
 
 	@Transactional
 	public Enterprise createAgent(Member member,Enterprise parent) {
+		if (member.getNickName()==null) {
+			member.setNickName(member.userId());
+		}
+		if (member.getLogo()==null) {
+			member.setLogo("*");
+		}
 		Enterprise enterprise = enterpriseDao.find(member);
 		if (enterprise==null) {
 			enterprise = new Enterprise();
