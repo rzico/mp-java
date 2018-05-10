@@ -38,6 +38,8 @@ public class ArticleListModel extends BaseModel implements Serializable {
     private Long laud;
     /** 链接 */
     private String url;
+    /** 是否显示 */
+    private Boolean showAuthor;
     /** 标签名 */
     private List<TagModel> tags = new ArrayList<TagModel>();
 
@@ -162,6 +164,14 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.marketPrice = marketPrice;
     }
 
+    public Boolean getShowAuthor() {
+        return showAuthor;
+    }
+
+    public void setShowAuthor(Boolean showAuthor) {
+        this.showAuthor = showAuthor;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.authorId = article.getMember().getId();
@@ -175,6 +185,7 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.laud = article.getLaud();
         this.htmlTag = article.delHTMLTag();
         this.tags = TagModel.bindList(article.getTags());
+        this.showAuthor = false;
         if (article.getGoods()!=null) {
             Product product = article.getGoods().product();
             if (product!=null) {
