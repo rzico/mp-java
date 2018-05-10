@@ -51,73 +51,76 @@ public class User {
         }
     }
     public static boolean imAttr() {
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig(bundle.getString("im.admin"));
-        int random=StringUtils.Random6Code();
-
-        String url = im_attr.replace("USERSIG",userSig).replace("ADMIN",bundle.getString("im.admin")).replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
-
-        String data ="{ \"AttrNames\": { \"0\": \"userId\", \"1\": \"logo\", \"2\": \"nickName\"}}";
-
-        HttpClient httpClient = new DefaultHttpClient();
-        try {
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.setEntity(new StringEntity(data, "UTF-8"));
-            HttpResponse response = httpClient.execute(httpPost);
-            String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
-            Map resp = JsonUtils.toObject(jsonStr,Map.class);
-            if ("OK".equals(resp.get("ActionStatus"))) {
-                return true;
-            } else {
-                logger.error(resp.get("ErrorInfo"));
-                return false;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return false;
-        } finally {
-            httpClient.getConnectionManager().shutdown();
-        }
+        return true;
+//        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//        String userSig=User.createUserSig(bundle.getString("im.admin"));
+//        int random=StringUtils.Random6Code();
+//
+//        String url = im_attr.replace("USERSIG",userSig).replace("ADMIN",bundle.getString("im.admin")).replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+//
+//        String data ="{ \"AttrNames\": { \"0\": \"userId\", \"1\": \"logo\", \"2\": \"nickName\"}}";
+//
+//        HttpClient httpClient = new DefaultHttpClient();
+//        try {
+//            HttpPost httpPost = new HttpPost(url);
+//            httpPost.setEntity(new StringEntity(data, "UTF-8"));
+//            HttpResponse response = httpClient.execute(httpPost);
+//            String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+//            Map resp = JsonUtils.toObject(jsonStr,Map.class);
+//            if ("OK".equals(resp.get("ActionStatus"))) {
+//                return true;
+//            } else {
+//                logger.error(resp.get("ErrorInfo"));
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            logger.error(e.getMessage());
+//            return false;
+//        } finally {
+//            httpClient.getConnectionManager().shutdown();
+//        }
 
     }
     public static boolean userAttr(Member member) {
-        if (member.getLogo()==null) {
-            return true ;
-        }
-        if (member.getNickName()==null) {
-            return true;
-        }
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig=User.createUserSig(bundle.getString("im.admin"));
-        int random=StringUtils.Random6Code();
 
-        String url = user_attr.replace("USERSIG",userSig).replace("ADMIN",bundle.getString("im.admin")).replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
-
-        Map<String,String> attrs = new HashMap<String,String>();
-        attrs.put("Identifier",member.userId());
-        attrs.put("FaceUrl",member.getLogo());
-        attrs.put("Nick",member.getNickName());
-        HttpClient httpClient = new DefaultHttpClient();
-        try {
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.setEntity(new StringEntity(JsonUtils.toJson(attrs), "UTF-8"));
-            HttpResponse response = httpClient.execute(httpPost);
-            String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
-            Map resp = JsonUtils.toObject(jsonStr,Map.class);
-            System.out.printf(jsonStr);
-            if ("OK".equals(resp.get("ActionStatus"))) {
-                return true;
-            } else {
-                logger.error(resp.get("ErrorInfo"));
-                return false;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return false;
-        } finally {
-            httpClient.getConnectionManager().shutdown();
-        }
-
+        return true;
+//        if (member.getLogo()==null) {
+//            return true ;
+//        }
+//        if (member.getNickName()==null) {
+//            return true;
+//        }
+//        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//        String userSig=User.createUserSig(bundle.getString("im.admin"));
+//        int random=StringUtils.Random6Code();
+//
+//        String url = user_attr.replace("USERSIG",userSig).replace("ADMIN",bundle.getString("im.admin")).replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random) );
+//
+//        Map<String,String> attrs = new HashMap<String,String>();
+//        attrs.put("Identifier",member.userId());
+//        attrs.put("FaceUrl",member.getLogo());
+//        attrs.put("Nick",member.getNickName());
+//        HttpClient httpClient = new DefaultHttpClient();
+//        try {
+//            HttpPost httpPost = new HttpPost(url);
+//            httpPost.setEntity(new StringEntity(JsonUtils.toJson(attrs), "UTF-8"));
+//            HttpResponse response = httpClient.execute(httpPost);
+//            String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+//            Map resp = JsonUtils.toObject(jsonStr,Map.class);
+//            System.out.printf(jsonStr);
+//            if ("OK".equals(resp.get("ActionStatus"))) {
+//                return true;
+//            } else {
+//                logger.error(resp.get("ErrorInfo"));
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            logger.error(e.getMessage());
+//            return false;
+//        } finally {
+//            httpClient.getConnectionManager().shutdown();
+//        }
+//
     }
     public static boolean userState(List<Member> members) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
