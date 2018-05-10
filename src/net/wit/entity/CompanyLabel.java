@@ -24,6 +24,8 @@ public class CompanyLabel extends BaseEntity{
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnore
+    @JoinTable(name = "wx_enterprise_label")
+    @OrderBy("modifyDate desc")
     private List<Enterprise> enterprise;
 
     public String getName() {

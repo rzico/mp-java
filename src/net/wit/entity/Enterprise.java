@@ -127,7 +127,7 @@ public class Enterprise extends BaseEntity {
     private Host host;
 
     /** 企业标签 */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "enterprise",fetch = FetchType.LAZY)
     @JsonIgnore
     private List<CompanyLabel> label;
 
