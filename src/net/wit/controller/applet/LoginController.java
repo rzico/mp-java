@@ -150,7 +150,6 @@ public class LoginController extends BaseController {
                 }
                 bindUserService.save(bindUser);
 
-
                 Cart cart = cartService.getCurrent();
                 if (cart != null) {
                     if (cart.getMember() == null) {
