@@ -183,7 +183,7 @@ public class MemberAttributeModel extends BaseModel implements Serializable {
         this.occupation = occupation;
         this.logo = member.getLogo();
         this.hasPassword = (member.getPassword()!=null);
-        this.bindMobile = (member.getMobile()!=null);
+        this.bindMobile = (member.getMobile()!=null && !member.getMobile().equals("") && member.getMobile().length() == 13);
         if (this.bindMobile) {
             this.mobile = member.getMobile().substring(member.getMobile().length()-4,member.getMobile().length());
         }
