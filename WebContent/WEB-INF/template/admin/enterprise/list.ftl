@@ -183,8 +183,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapArea",
-                    "sTitle": "区域",
+                    "mData": "mapMember",
+                    "sTitle": "会员",
                     "sClass": "center"
                 },
                 {
@@ -246,7 +246,7 @@
                     "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return data.name;
+                            return "("+data.id+")"+data.name;
                         }else{
                             return "";
                         }
