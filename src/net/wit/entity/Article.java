@@ -2,6 +2,7 @@ package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -244,6 +245,12 @@ public class Article extends BaseEntity{
 //    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 //    @JsonIgnore
 //    private Set<ArticleProduct> products = new HashSet<ArticleProduct>();
+
+    /** 接龙*/
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    @Where(clause="status=0")
+    private List<Dragon> dragons = new ArrayList<>();
 
     /** 投票项 */
     private String votes;
@@ -521,6 +528,14 @@ public class Article extends BaseEntity{
 
     public void setGoods(Goods goods) {
         this.goods = goods;
+    }
+
+    public List<Dragon> getDragons() {
+        return dragons;
+    }
+
+    public void setDragons(List<Dragon> dragons) {
+        this.dragons = dragons;
     }
 
     public MapEntity getMapTemplate() {

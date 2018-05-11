@@ -26,6 +26,13 @@ public class Dragon extends BaseEntity {
 		enroll
 	};
 
+	public static enum  Status{
+		/** 正常 */
+		normal,
+		/** 关闭 */
+		closed
+	};
+
 	/** 是否删除 */
 	@NotNull
 	@Column(nullable = false,columnDefinition="bit not null comment '是否删除'")
@@ -42,6 +49,11 @@ public class Dragon extends BaseEntity {
 	@Column(columnDefinition="int(11) comment '类型 {buying:团购,enroll:报名}'")
 	private Type type;
 
+
+	/** 状态 */
+	@NotNull
+	@Column(columnDefinition="int(11) comment '状态 {normal:正常,closed:关闭}'")
+	private Status status;
 
 	/** 发起人 */
 	@JsonIgnore
@@ -79,5 +91,13 @@ public class Dragon extends BaseEntity {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 }

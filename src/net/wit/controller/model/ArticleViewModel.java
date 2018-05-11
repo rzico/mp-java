@@ -226,7 +226,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.review = article.getReview();
         this.isPublish = article.getIsPublish();
         this.showAuthor = false;
-        this.dragon = 1L;
+        if (article.getDragons().size()>0) {
+            this.dragon = article.getDragons().get(0).getId();
+        } else {
+            this.dragon = 0L;
+        }
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;
