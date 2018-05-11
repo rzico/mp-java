@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -125,6 +126,51 @@ public class Enterprise extends BaseEntity {
     @JsonIgnore
     private Host host;
 
+    /** 企业标签 */
+    @ManyToMany(mappedBy = "enterprise",fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<CompanyLabel> label;
+
+    /** 企业地址 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业地址'")
+    private String address;
+
+    /** 企业营业时间 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业营业时间'")
+    private String time;
+
+    /** 企业介绍图1 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业介绍图1'")
+    private String image1;
+
+    /** 企业介绍图2 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业介绍图2'")
+    private String image2;
+
+    /** 企业介绍图3 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业介绍图3'")
+    private String image3;
+
+    /** 企业介绍图4 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业介绍图4'")
+    private String image4;
+
+    /** 企业介绍图5 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业介绍图5'")
+    private String image5;
+
+    /** 企业介绍图6 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业介绍图6'")
+    private String image6;
+
     public Type getType() {
         return type;
     }
@@ -235,6 +281,78 @@ public class Enterprise extends BaseEntity {
 
     public void setParent(Enterprise parent) {
         this.parent = parent;
+    }
+
+    public List<CompanyLabel> getLabel() {
+        return label;
+    }
+
+    public void setLabel(List<CompanyLabel> label) {
+        this.label = label;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getImage1() {
+        return image1;
+    }
+
+    public void setImage1(String image1) {
+        this.image1 = image1;
+    }
+
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2;
+    }
+
+    public String getImage3() {
+        return image3;
+    }
+
+    public void setImage3(String image3) {
+        this.image3 = image3;
+    }
+
+    public String getImage4() {
+        return image4;
+    }
+
+    public void setImage4(String image4) {
+        this.image4 = image4;
+    }
+
+    public String getImage5() {
+        return image5;
+    }
+
+    public void setImage5(String image5) {
+        this.image5 = image5;
+    }
+
+    public String getImage6() {
+        return image6;
+    }
+
+    public void setImage6(String image6) {
+        this.image6 = image6;
     }
 
     public MapEntity getMapArea() {

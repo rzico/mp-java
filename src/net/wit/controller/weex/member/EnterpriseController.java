@@ -7,12 +7,16 @@ import net.wit.controller.model.AdminModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +65,9 @@ public class EnterpriseController extends BaseController {
 
     @Resource(name = "enterpriseServiceImpl")
     private EnterpriseService enterpriseService;
+
+    @Resource(name = "companyLabelServiceImpl")
+    private CompanyLabelService companyLabelService;
     
 
     /**
@@ -137,4 +144,77 @@ public class EnterpriseController extends BaseController {
         return Message.success("解除就业成功");
     }
 
+    /**
+     *   添加企业信息
+     */
+    @RequestMapping(value = "/add")
+    @ResponseBody
+    public Message add(
+            String name,
+            String logo,
+            String phone,
+            String address,
+            String time,
+            Long[] label,
+            String[] img,
+            HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Admin admin = adminService.findByMember(member);
+
+        if(admin==null){
+            return Message.error("该用户没有企业");
+        }
+
+        Enterprise enterprise = admin.getEnterprise();
+
+        if(enterprise==null||enterprise.getDeleted()){
+            return Message.error("该企业不存在");
+        }
+
+        if(admin.getIsLocked()){
+            return Message.error("该管理员已锁定,暂无权限");
+        }
+
+        if(!admin.getIsEnabled()){
+            return Message.error("该管理员已停用");
+        }
+
+        if(!(admin.isRole("店长/主管")||admin.isRole("管理员"))){
+            return Message.error("权限不足");
+        }
+
+        enterprise.setAddress(address);
+        enterprise.setName(name);
+        enterprise.setLogo(logo);
+        enterprise.setTime(time);
+        enterprise.setPhone(phone);
+        List<CompanyLabel> list=companyLabelService.findList(label);
+        enterprise.setLabel(list);
+        enterprise.setImage1(img[0]);
+        enterprise.setImage2(img[1]);
+        enterprise.setImage3(img[2]);
+        enterprise.setImage4(img[3]);
+        enterprise.setImage5(img[4]);
+        enterprise.setImage6(img[5]);
+        return Message.success("添加成功");
+    }
+
+    /**
+     *   获取企业标签
+     */
+    @RequestMapping(value = "/getLabel")
+    @ResponseBody
+    public Message getLabel(ModelMap model,HttpServletRequest request, HttpServletResponse response){
+        List<MapEntity> list=new ArrayList<>();
+        List<CompanyLabel> companyLabelList= companyLabelService.findAll();
+        for(CompanyLabel companyLabel:companyLabelList){
+            list.add(new MapEntity(companyLabel.getId().toString(),companyLabel.getName()));
+        }
+       return Message.success(list,"success");
+    }
 }

@@ -30,7 +30,7 @@ public class TopicConfig implements Serializable {
 		team,
 		/** 分红股东 */
 		partner
-	};
+	}
 
 	public static enum Pattern{
 		/** 无门槛，领卡，即成为团队成员 */
@@ -44,7 +44,20 @@ public class TopicConfig implements Serializable {
 		/** 累计消费满3000(设置)，即成为团队成员 */
 		pattern5
 
-	};
+	}
+
+	public enum Condition{
+		/** 暂停服务 */
+		outOfService,
+		/** 未上传 */
+		notUploaded,
+		/** 待审核 */
+		audit,
+		/** 已上线 */
+		online,
+		/** 已通过 */
+		passed
+	}
 
 	/**  团队类型 */
 	@NotNull
@@ -88,6 +101,14 @@ public class TopicConfig implements Serializable {
 	/** 小程序 appSerect */
 	@Column(columnDefinition="varchar(255) comment '小程序appSerect'")
 	private String appetAppSerect;
+
+	/** 小程序 version */
+	@Column(columnDefinition="varchar(255) comment '小程序 version'")
+	private String version;
+
+	/** 小程序 condition */
+	@Column(columnDefinition="int(11) comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
+	private Condition condition;
 
 	public PromoterType getPromoterType() {
 		return promoterType;
@@ -169,4 +190,19 @@ public class TopicConfig implements Serializable {
 		this.amount = amount;
 	}
 
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public Condition getCondition() {
+		return condition;
+	}
+
+	public void setCondition(Condition condition) {
+		this.condition = condition;
+	}
 }
