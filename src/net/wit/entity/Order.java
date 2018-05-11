@@ -231,10 +231,10 @@ public class Order extends BaseEntity {
 	@Column(columnDefinition="varchar(50) comment '来源编码'")
 	private String groupNo;
 
-	/** 来源文章 */
+	/** 接龙 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Article article;
+	private Dragon dragon;
 
 	/** 收货人 */
 	@NotEmpty
@@ -399,12 +399,12 @@ public class Order extends BaseEntity {
 		this.groupNo = groupNo;
 	}
 
-	public Article getArticle() {
-		return article;
+	public Dragon getDragon() {
+		return dragon;
 	}
 
-	public void setArticle(Article article) {
-		this.article = article;
+	public void setDragon(Dragon dragon) {
+		this.dragon = dragon;
 	}
 
 	/**
