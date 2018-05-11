@@ -408,6 +408,37 @@ public class OrderController extends BaseController {
 
 	}
 
+	/**
+	 *  接龙订单
+	 */
+
+	@RequestMapping(value = "/dragon", method = RequestMethod.GET)
+	public @ResponseBody
+	Message  dragon(Long dragonId,Pageable pageable, HttpServletRequest request) {
+
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("member", Filter.Operator.eq,member));
+		if (dragonId!=null) {
+			Dragon dragon = dragonService.find(dragonId);
+			if (dragon!=null) {
+				filters.add(new Filter("dragon", Filter.Operator.eq,dragon));
+			}
+		}
+
+		pageable.setFilters(filters);
+		pageable.setOrderDirection(net.wit.Order.Direction.desc);
+		pageable.setOrderProperty("modifyDate");
+		Page<Order> page = orderService.findPage(null,null,null,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(OrderListModel.bindList(page.getContent()));
+		return Message.bind(model,request);
+
+	}
 
 	@RequestMapping(value = "/promoter", method = RequestMethod.GET)
 	public @ResponseBody

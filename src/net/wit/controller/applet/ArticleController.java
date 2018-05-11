@@ -66,6 +66,12 @@ public class ArticleController extends BaseController {
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
 
+    @Resource(name = "dragonServiceImpl")
+    private DragonService dragonService;
+
+    @Resource(name = "orderServiceImpl")
+    private OrderService orderService;
+
     /**
      * 文章预览详情
      */
@@ -147,6 +153,37 @@ public class ArticleController extends BaseController {
             sn = article.getTemplate().getSn();
         }
         return Message.success((Object)sn,"发布成功");
+    }
+
+    /**
+     *  接龙订单
+     */
+
+    @RequestMapping(value = "/dragon", method = RequestMethod.GET)
+    public @ResponseBody
+    Message  dragon(Long dragonId,Pageable pageable, HttpServletRequest request) {
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        List<Filter> filters = new ArrayList<Filter>();
+        if (dragonId!=null) {
+            Dragon dragon = dragonService.find(dragonId);
+            if (dragon!=null) {
+                filters.add(new Filter("dragon", Filter.Operator.eq,dragon));
+            }
+        }
+
+        pageable.setFilters(filters);
+        pageable.setOrderDirection(net.wit.Order.Direction.desc);
+        pageable.setOrderProperty("modifyDate");
+        Page<net.wit.entity.Order> page = orderService.findPage(null,null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(OrderListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+
     }
 
     /**
