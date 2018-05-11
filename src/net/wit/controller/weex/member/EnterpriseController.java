@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.AdminModel;
+import net.wit.controller.model.CompanyViewsModel;
 import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -153,8 +154,10 @@ public class EnterpriseController extends BaseController {
             String name,
             String logo,
             String phone,
+            Long area,
             String address,
-            String time,
+            String startime,
+            String endtime,
             Long[] label,
             String[] img,
             HttpServletRequest request){
@@ -191,8 +194,10 @@ public class EnterpriseController extends BaseController {
         enterprise.setAddress(address);
         enterprise.setName(name);
         enterprise.setLogo(logo);
-        enterprise.setTime(time);
+        enterprise.setStarTime(startime);
+        enterprise.setEndTime(endtime);
         enterprise.setPhone(phone);
+        enterprise.setArea(areaService.find(area));
         List<CompanyLabel> list=companyLabelService.findList(label);
         enterprise.setLabel(list);
         enterprise.setImage1(img[0]);
@@ -216,5 +221,47 @@ public class EnterpriseController extends BaseController {
             list.add(new MapEntity(companyLabel.getId().toString(),companyLabel.getName()));
         }
        return Message.success(list,"success");
+    }
+
+    /**
+     *   获取当前企业信息
+     */
+    @RequestMapping(value = "/views")
+    @ResponseBody
+    public Message views(
+            HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Admin admin = adminService.findByMember(member);
+
+        if(admin==null){
+            return Message.error("该用户没有企业");
+        }
+
+        Enterprise enterprise = admin.getEnterprise();
+
+        if(enterprise==null||enterprise.getDeleted()){
+            return Message.error("该企业不存在");
+        }
+
+        if(admin.getIsLocked()){
+            return Message.error("该管理员已锁定,暂无权限");
+        }
+
+        if(!admin.getIsEnabled()){
+            return Message.error("该管理员已停用");
+        }
+
+        if(!(admin.isRole("店长/主管")||admin.isRole("管理员"))){
+            return Message.error("权限不足");
+        }
+        CompanyViewsModel model=new CompanyViewsModel();
+
+        model.bind(enterprise);
+        return Message.success(model,"打开成功");
     }
 }

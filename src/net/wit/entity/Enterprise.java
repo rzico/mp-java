@@ -138,8 +138,13 @@ public class Enterprise extends BaseEntity {
 
     /** 企业营业时间 */
     @Length(max = 200)
-    @Column(columnDefinition="varchar(255) comment '企业营业时间'")
-    private String time;
+    @Column(columnDefinition="varchar(255) comment '企业营业开始时间'")
+    private String starTime;
+
+    /** 企业营业时间 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业营业结束时间'")
+    private String endTime;
 
     /** 企业介绍图1 */
     @Length(max = 200)
@@ -299,12 +304,20 @@ public class Enterprise extends BaseEntity {
         this.address = address;
     }
 
-    public String getTime() {
-        return time;
+    public String getStarTime() {
+        return starTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setStarTime(String starTime) {
+        this.starTime = starTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getImage1() {

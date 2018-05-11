@@ -1,16 +1,19 @@
 package net.wit.controller.model;
 
+import net.wit.MapEntity;
+import net.wit.entity.Area;
 import net.wit.entity.CompanyLabel;
 import net.wit.entity.Enterprise;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by Eric-Yang on 2018/5/9.
+ * Created by Eric-Yang on 2018/5/11.
  */
-public class CompanyDetailsModel extends BaseModel implements Serializable {
+public class CompanyViewsModel extends BaseModel implements Serializable {
 
     /**
      * 企业
@@ -28,19 +31,29 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
     private String phone;
 
     /**
+     * 区域地址
+     */
+    private MapEntity area;
+
+    /**
      * 企业地址
      */
     private String address;
 
     /**
-     * 企业营业时间
+     * 企业营业开始时间
      */
-    private String time;
+    private String starTime;
+
+    /**
+     * 企业营业开始时间
+     */
+    private String endTime;
 
     /**
      * 企业标签
      */
-    private String label;
+    private List<MapEntity> label;
 
     /**
      * 企业介绍图1
@@ -71,6 +84,14 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
         this.phone = phone;
     }
 
+    public MapEntity getArea() {
+        return area;
+    }
+
+    public void setArea(MapEntity area) {
+        this.area = area;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -79,19 +100,27 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
         this.address = address;
     }
 
-    public String getTime() {
-        return time;
+    public String getStarTime() {
+        return starTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setStarTime(String starTime) {
+        this.starTime = starTime;
     }
 
-    public String getLabel() {
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public List<MapEntity> getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(List<MapEntity> label) {
         this.label = label;
     }
 
@@ -105,7 +134,7 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
 
     public void bind(Enterprise enterprise) {
         this.name = enterprise.getName();
-        this.address=enterprise.getArea().getFullName()+enterprise.getAddress();
+        this.address=enterprise.getAddress();
         this.logo=enterprise.getLogo();
         this.phone=enterprise.getPhone();
         List<String> images=new ArrayList<>();
@@ -116,12 +145,13 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
         images.add(enterprise.getImage5());
         images.add(enterprise.getImage6());
         this.image=images;
-        String s=" ";
-        List<CompanyLabel> list =enterprise.getLabel();
-        for(CompanyLabel c: list){
-            s=s+c.getName()+"·";
+        this.starTime=enterprise.getStarTime();
+        this.endTime=enterprise.getEndTime();
+        this.area=new MapEntity(enterprise.getArea().getId().toString(),enterprise.getArea().getFullName());
+        List<MapEntity> list= new ArrayList<>();
+        for(CompanyLabel label: enterprise.getLabel()){
+            list.add(new MapEntity(label.getId().toString(),label.getName()));
         }
-        this.label=s.substring(0,s.length()-1);
-        this.time=enterprise.getStarTime()+"-"+enterprise.getEndTime();
+        this.label=list;
     }
 }
