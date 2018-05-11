@@ -135,6 +135,14 @@ public class ArticleController extends BaseController {
         }
         data.put("option",option);
 
+        if (model.getDragonId()>0L) {
+            Dragon dragon = dragonService.find(model.getDragonId());
+            if (dragon!=null) {
+                Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq,dragon));
+                model.setDragon(dg);
+            }
+        }
+
         return Message.bind(data,request);
    }
 
