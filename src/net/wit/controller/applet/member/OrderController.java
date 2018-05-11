@@ -7,10 +7,7 @@ package net.wit.controller.applet.member;
 
 import net.wit.*;
 import net.wit.Message;
-import net.wit.controller.model.OrderListModel;
-import net.wit.controller.model.OrderModel;
-import net.wit.controller.model.PaymentModel;
-import net.wit.controller.model.ReceiverModel;
+import net.wit.controller.model.*;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.entity.Order;
@@ -250,6 +247,15 @@ public class OrderController extends BaseController {
 
 		OrderModel model = new OrderModel();
 		model.bind(order);
+
+		ShippingTrackModel track = new ShippingTrackModel();
+		track.setLng(118.08);
+		track.setLat(24.48);
+		track.setName("张大大");
+		track.setMethod("送货到户");
+		track.setStatus("订单正在送货中");
+
+		model.setTrack(track);
 		return Message.success(model,"success");
 	}
 

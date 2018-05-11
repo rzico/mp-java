@@ -82,6 +82,8 @@ public class OrderModel extends BaseModel implements Serializable {
     /** 地址 */
     private ReceiverModel receiver;
 
+    private ShippingTrackModel track;
+
     /** 商品 */
     private List<OrderItemModel> orderItems;
 
@@ -294,6 +296,14 @@ public class OrderModel extends BaseModel implements Serializable {
 
     public void setAmountPayable(BigDecimal amountPayable) {
         this.amountPayable = amountPayable;
+    }
+
+    public ShippingTrackModel getTrack() {
+        return track;
+    }
+
+    public void setTrack(ShippingTrackModel track) {
+        this.track = track;
     }
 
     public void bind(Order order) {
