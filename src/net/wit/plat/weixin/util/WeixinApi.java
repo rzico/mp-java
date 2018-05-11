@@ -18,6 +18,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.wit.entity.VerifyTicket;
+import net.wit.entity.weixin.Domain;
+import net.wit.entity.weixin.WeiXinCallBack;
 import net.wit.plat.weixin.pojo.*;
 import net.wit.util.DateUtil;
 
@@ -92,17 +94,6 @@ public class WeixinApi {
 
 	private static String send_message = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 
-	//提交小程序代码
-	private static final String COMMITCODE = "https://api.weixin.qq.com/wxa/commit?access_token=COMPONENT_TOKEN";
-
-	//提交审核
-	private static final String PUSHCODE = "https://api.weixin.qq.com/wxa/submit_audit?access_token=COMPONENT_TOKEN";
-
-	//发布已通过审核的小程序
-	private static final String RELEASECODE = "https://api.weixin.qq.com/wxa/release?access_token=COMPONENT_TOKEN";
-
-	//版本回退
-	private static final String REVERTCODE = "https://api.weixin.qq.com/wxa/revertcoderelease?access_token=COMPONENT_TOKEN";
 
 	//获取第三方平台component_access_token
 	private static final String COMPONENTTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_component_token";
@@ -113,6 +104,29 @@ public class WeixinApi {
 	//授权码换取调用接口调用凭据 authaccesstoken
 	private static final String CODEANDTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=COMPONENT_TOKEN";
 
+	//提交小程序代码
+	private static final String COMMITCODE = "https://api.weixin.qq.com/wxa/commit?access_token=AUTH_TOKEN";
+
+	//提交审核
+	private static final String PUSHCODE = "https://api.weixin.qq.com/wxa/submit_audit?access_token=AUTH_TOKEN";
+
+	//发布已通过审核的小程序
+	private static final String RELEASECODE = "https://api.weixin.qq.com/wxa/release?access_token=AUTH_TOKEN";
+
+	//版本回退
+	private static final String REVERTCODE = "https://api.weixin.qq.com/wxa/revertcoderelease?access_token=AUTH_TOKEN";
+
+	//设置小程序服务器域名
+	public static final String SETDOMAIN1 = "https://api.weixin.qq.com/wxa/modify_domain?access_token=AUTH_TOKEN";
+
+	//设置小程序业务域名（仅供第三方代小程序调用）
+	public static final String SETDOMAIN2 = "https://api.weixin.qq.com/wxa/setwebviewdomain?access_token=AUTH_TOKEN";
+
+	//设置小程序隐私设置（是否可被搜索）
+	public static final String SETAPPLETSTATUS = "https://api.weixin.qq.com/wxa/changewxasearchstatus?access_token=AUTH_TOKEN";
+
+	// 查询小程序当前隐私设置（是否可被搜索）
+	public static final String GETAPPLETSTATUS = "https://api.weixin.qq.com/wxa/getwxasearchstatus?access_token=AUTH_TOKEN";
 //	//通过刷新token 获取 authaccesstoken
 //	private static final String AUTHTOKEN = "https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
 
@@ -181,11 +195,135 @@ public class WeixinApi {
 	}
 
 	/**
+	 * add添加, delete删除, set覆盖, get获取
+	 */
+	public enum ACTION{
+		ADD,
+		DELETE,
+		SET,
+		GET
+	}
+	/**
+	 * 设置小程序服务器域名
+	 */
+
+	public static Domain setDomain1(String authToken, ACTION action){
+
+		String actionStr = action.name().toLowerCase();
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		String serverUrl = "https://" + bundle.getString("weixin.component.url");
+		String mapUrl = "https://apis.map.qq.com";
+		String params = "{" +
+				"\"action\":\""+ actionStr +"\"";
+		if(action == ACTION.GET){
+			params = params + "}";
+		}else{
+			//目前标准的 是这样 先写死
+			params = params +
+					"\"requestdomain\":[\"" +serverUrl+ "\",\"" +mapUrl+ "\"]," +
+					"\"wsrequestdomain\":[\"" +serverUrl+ "\"]," +
+					"\"uploaddomain\":[\"" +serverUrl+ "\"]," +
+					"\"downloaddomain\":[\"" +serverUrl+ "\"]" +
+					"}";
+		}
+		JSONObject jsonObject=WeixinApi.httpRequest(RELEASECODE.replace("AUTH_TOKEN",authToken),"POST",params);
+		Domain domain = null;
+		if(jsonObject != null){
+			domain = new Domain();
+			domain.setErrmsg(jsonObject.getString("errmsg"));
+			domain.setErrcode(jsonObject.getString("errcode"));
+			if(action == ACTION.GET){
+				JSONArray array1 = jsonObject.getJSONArray("downloaddomain");
+				JSONArray array2 = jsonObject.getJSONArray("uploaddomain");
+				JSONArray array3 = jsonObject.getJSONArray("wsrequestdomain");
+				JSONArray array4 = jsonObject.getJSONArray("requestdomain");
+				int len1 = array1.size();
+				int len2 = array2.size();
+				int len3 = array3.size();
+				int len4 = array4.size();
+				String[] strings1 = new String[len1];
+				String[] strings2 = new String[len2];
+				String[] strings3 = new String[len3];
+				String[] strings4 = new String[len4];
+				for (int i = 0 ; i < len1; i++){
+					strings1[i] = array1.getString(i);
+					domain.setDownloaddomain(strings1);
+				}
+				for (int i = 0 ; i < len2; i++){
+					strings2[i] = array2.getString(i);
+					domain.setUploaddomain(strings2);
+				}
+				for (int i = 0 ; i < len3; i++){
+					strings3[i] = array3.getString(i);
+					domain.setWsrequestdomain(strings3);
+				}
+				for (int i = 0 ; i < len4; i++){
+					strings4[i] = array4.getString(i);
+					domain.setRequestdomain(strings4);
+				}
+			}
+		}
+		return domain;
+	}
+	/**
+	 * 设置小程序业务域名（仅供第三方代小程序调用）
+	 */
+	public static WeiXinCallBack setDomain2(String authToken){
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		String serverUrl = "https://" + bundle.getString("weixin.component.url");
+		String mapUrl = "https://apis.map.qq.com";
+		String params = "{" +
+				"\"action\":\"add\"," +
+				"\"webviewdomain\":[\"" + serverUrl + "\",\"" + mapUrl + "\"]" +
+				"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(SETDOMAIN2.replace("AUTH_TOKEN",authToken),"POST",params);
+
+		WeiXinCallBack weiXinCallBack = null;
+		if(jsonObject != null) {
+			weiXinCallBack = new WeiXinCallBack();
+			weiXinCallBack.setErrmsg(jsonObject.getString("errmsg"));
+			weiXinCallBack.setErrcode(jsonObject.getString("errcode"));
+		}
+		return weiXinCallBack;
+	}
+	/**
+	 * 设置小程序隐私设置（是否可被搜索）
+	 * status 1表示不可搜索，0表示可搜索
+	 */
+	public static WeiXinCallBack setAppletStatus(String authToken, int status){
+		String params = "{" +
+				"\"status\":" + status + "" +
+				"}";
+		JSONObject jsonObject=WeixinApi.httpRequest(SETAPPLETSTATUS.replace("AUTH_TOKEN",authToken),"POST",params);
+
+		WeiXinCallBack weiXinCallBack = null;
+		if(jsonObject != null) {
+			weiXinCallBack = new WeiXinCallBack();
+			weiXinCallBack.setErrmsg(jsonObject.getString("errmsg"));
+			weiXinCallBack.setErrcode(jsonObject.getString("errcode"));
+		}
+		return weiXinCallBack;
+	}
+	/**
+	 * 查询小程序当前隐私设置（是否可被搜索）
+	 * status 1表示不可搜索，0表示可搜索
+	 */
+
+	public static int getAppletStatus(String authToken){
+
+		JSONObject jsonObject=WeixinApi.httpRequest(GETAPPLETSTATUS.replace("AUTH_TOKEN",authToken),"GET", null);
+		int status = 0;
+		if(jsonObject != null) {
+			status = jsonObject.getInt("status");
+		}
+		return status;
+	}
+	/**
 	 * 发布已经通过审核的 小程序
 	 */
-	public static boolean releaseAppletCode(String componentToken){
+	public static boolean releaseAppletCode(String authToken){
 		String params = "{}";
-		JSONObject jsonObject=WeixinApi.httpRequest(RELEASECODE.replace("COMPONENT_TOKEN",componentToken),"POST",params);
+		JSONObject jsonObject=WeixinApi.httpRequest(RELEASECODE.replace("AUTH_TOKEN",authToken),"POST",params);
 		if(jsonObject!=null){
 			/**
 			 -1	系统繁忙
@@ -208,8 +346,8 @@ public class WeixinApi {
 	 * 小程序版本回退
 	 * REVERTCODE
 	 */
-	public static boolean revertAppletCode(String componentToken){
-		JSONObject jsonObject=WeixinApi.httpRequest(REVERTCODE.replace("COMPONENT_TOKEN",componentToken),"GET",null);
+	public static boolean revertAppletCode(String authToken){
+		JSONObject jsonObject=WeixinApi.httpRequest(REVERTCODE.replace("AUTH_TOKEN",authToken),"GET",null);
 		if(jsonObject!=null){
 			/**
 			 0	成功
@@ -232,10 +370,10 @@ public class WeixinApi {
 
 	/**
 	 * 提交审核小程序代码
-	 * @param componentToken 第三方token通过接口获取
+	 * @param authToken 第三方token通过接口获取
 	 * @return
 	 */
-	public static boolean pushAppletCode(String componentToken){
+	public static boolean pushAppletCode(String authToken){
 
 		/*
 		* access_token	请使用第三方平台获取到的该小程序授权的authorizer_access_token
@@ -273,7 +411,7 @@ title	小程序页面的标题,标题长度不超过32*/
 				"    }" +
 				"  ]" +
 				"}";
-		JSONObject jsonObject=WeixinApi.httpRequest(PUSHCODE.replace("COMPONENT_TOKEN",componentToken),"POST",params);
+		JSONObject jsonObject=WeixinApi.httpRequest(PUSHCODE.replace("AUTH_TOKEN",authToken),"POST",params);
 		if(jsonObject!=null){
 			/**
 			 -1	系统繁忙
@@ -305,13 +443,13 @@ title	小程序页面的标题,标题长度不超过32*/
 	}
 	/**
 	 * 上传小程序代码
-	 * @param componentToken 第三方token通过接口获取
+	 * @param authToken 第三方token通过接口获取
 	 * @param templateId 小程序的模版id
 	 * @param userVersion 用户的版本
 	 * @param userDesc 用户的备注
 	 * @return
 	 */
-	public static boolean commitAppletCode(String componentToken, String templateId, String userVersion,String userDesc){
+	public static boolean commitAppletCode(String authToken, String templateId, String userVersion,String userDesc){
 
 		String appjson = "{" +
 				"    extAppid:\"\"," +
@@ -340,7 +478,7 @@ title	小程序页面的标题,标题长度不超过32*/
 				"\"user_version\":\""+ userVersion +"\"," +
 				"\"user_desc\":\"" + userDesc + "\"," +
 				"}";
-		JSONObject jsonObject=WeixinApi.httpRequest(COMMITCODE.replace("COMPONENT_TOKEN",componentToken),"POST",params);
+		JSONObject jsonObject=WeixinApi.httpRequest(COMMITCODE.replace("AUTH_TOKEN",authToken),"POST",params);
 		if(jsonObject!=null){
 			/**
 			 * -1	系统繁忙
