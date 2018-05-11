@@ -125,7 +125,9 @@ public class LoginController extends BaseController {
                     memberService.update(member);
                 }
             }
+
             try {
+
                 bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
                 if (bindUser==null) {
                     bindUser = new BindUser();
@@ -139,7 +141,6 @@ public class LoginController extends BaseController {
                     bindUser.setUnionId(unionId);
                 }
                 bindUserService.save(bindUser);
-
 
                 Cart cart = cartService.getCurrent();
                 if (cart != null) {
@@ -166,9 +167,11 @@ public class LoginController extends BaseController {
                 }
                 member.setLoginDate(new Date());
                 memberService.save(member);
+
                 Map<String,String> data = new HashMap<>();
                 data.put("jsessionId",sessionId);
                 data.put("session_key",sessionKey);
+
                 if (!User.userAttr(member)) {
                     return Message.success(data,Message.LOGIN_SUCCESS);
                 };
