@@ -62,6 +62,9 @@ public class OrderController extends BaseController {
 	@Resource(name = "pluginServiceImpl")
 	private PluginService pluginService;
 
+	@Resource(name = "dragonServiceImpl")
+	private DragonService dragonService;
+
 	/**
 	 * 订单锁定
 	 */
@@ -86,7 +89,7 @@ public class OrderController extends BaseController {
 	 *  获取订单信息
 	 */
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
-	public @ResponseBody Message info(Long receiverId,Order.ShippingMethod shippingMethod) {
+	public @ResponseBody Message info(Long receiverId,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
@@ -96,7 +99,11 @@ public class OrderController extends BaseController {
 		if (receiverId!=null) {
 			receiver = receiverService.find(receiverId);
 		}
-		Order order = orderService.build(member,null,null, cart, receiver, null,null,shippingMethod);
+		Dragon dragon = null;
+		if (dragonId!=null) {
+			dragon = dragonService.find(dragonId);
+		}
+		Order order = orderService.build(member,null,null, cart, receiver, null,null,shippingMethod,dragon);
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		if (member!=null) {
@@ -122,7 +129,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/calculate")
 	public @ResponseBody
-	Message calculate(Long id,Integer quantity,Long receiverId,Long promotionId,Order.ShippingMethod shippingMethod) {
+	Message calculate(Long id,Integer quantity,Long receiverId,Long promotionId,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
@@ -134,7 +141,11 @@ public class OrderController extends BaseController {
 		if (receiverId!=null) {
 			receiver = receiverService.find(receiverId);
 		}
-		Order order = orderService.build(member,product,quantity,cart, receiver,null,promotionId,shippingMethod);
+		Dragon dragon = null;
+		if (dragonId!=null) {
+			dragon = dragonService.find(dragonId);
+		}
+		Order order = orderService.build(member,product,quantity,cart, receiver,null,promotionId,shippingMethod,dragon);
 
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
@@ -161,7 +172,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Order.ShippingMethod shippingMethod) {
+	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -184,7 +195,11 @@ public class OrderController extends BaseController {
 				return Message.error("库存不足");
 			}
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod);
+		Dragon dragon = null;
+		if (dragonId!=null) {
+			dragon = dragonService.find(dragonId);
+		}
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon);
 		if (cart != null) {
 			cartService.delete(cart);
 		}

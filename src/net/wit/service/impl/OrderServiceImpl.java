@@ -169,7 +169,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            附言
 	 * @return 订单
 	 */
-	public Order build(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long promotionId, Order.ShippingMethod shippingMethod) {
+	public Order build(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -343,7 +343,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 * @return 订单
 	 */
-	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod) {
+	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -351,9 +351,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		Assert.notNull(receiver);
 
-		Order order = build(member, product, quantity, cart, receiver, memo,promotionId,shippingMethod);
+		Order order = build(member, product, quantity, cart, receiver, memo,promotionId,shippingMethod,dragon);
 
 		order.setSn(snDao.generate(Sn.Type.order));
+
+		order.setDragon(dragon);
 
 		order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
 		order.setOperator(member.userId());
