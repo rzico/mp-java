@@ -76,6 +76,7 @@ public class DragonController extends BaseController {
         dragon.setStatus(Dragon.Status.normal);
         dragon.setTitle(title);
         dragon.setType(type);
+        dragon.setDeleted(false);
         dragonService.save(dragon);
 //        messageService.reviewPushTo(review);
         DragonModel model = new DragonModel();
