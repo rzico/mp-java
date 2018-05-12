@@ -51,8 +51,8 @@ public class ProductCategoryController extends BaseController {
     @Resource(name = "productCategoryServiceImpl")
     private ProductCategoryService productCategoryService;
 
-    @Resource(name = "couponServiceImpl")
-    private CouponService couponService;
+    @Resource(name = "productServiceImpl")
+    private ProductService productService;
 
     /**
      *  列表
@@ -61,12 +61,11 @@ public class ProductCategoryController extends BaseController {
     @ResponseBody
     public Message list(Long authorId,HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("type", Filter.Operator.eq,Coupon.Type.exchange));
-        filters.add(new Filter("deleted", Filter.Operator.eq,false));
-        List<Coupon> page = couponService.findList(null,null,filters,null);
+        filters.add(new Filter("type", Filter.Operator.eq,Product.Type.warehouse));
+        filters.add(new Filter("isList", Filter.Operator.eq,true));
+        List<Product> page = productService.findList(null,null,filters,null);
         List<ProductCategory> productCategories = new ArrayList<>();
-        for (Coupon coupon:page) {
-            Product product = coupon.getGoods().product();
+        for (Product product:page) {
             if (product.getProductCategory()!=null) {
                 if (!productCategories.contains(product.getProductCategory())) {
                     productCategories.add(product.getProductCategory());

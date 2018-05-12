@@ -7,6 +7,7 @@ package net.wit.controller.applet.water;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.model.CouponModel;
 import net.wit.controller.model.GoodsListModel;
 import net.wit.controller.model.GoodsModel;
@@ -67,27 +68,20 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
 	Message list(Long productCategoryId,Pageable pageable,HttpServletRequest request) {
-		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(new Filter("type", Filter.Operator.eq,Coupon.Type.exchange));
-		filters.add(new Filter("deleted", Filter.Operator.eq,false));
 		ProductCategory productCategory = productCategoryService.find(productCategoryId);
-		List<Coupon> page = couponService.findList(null,null,filters,null);
-		List<Product> products = new ArrayList<>();
-		for (Coupon coupon:page) {
-			Product product = coupon.getGoods().product();
-			if (productCategory==null) {
-				products.add(product);
-			} else {
-				if (product.getProductCategory()!=null && product.getProductCategory().equals(productCategory)) {
-					products.add(product);
-				}
-			}
+		List<Filter> filters = new ArrayList<Filter>();
+		if (productCategory!=null) {
+			filters.add(new Filter("productCategory", Filter.Operator.eq,productCategory));
 		}
-		if ((pageable.getPageStart()+pageable.getPageSize())>(products.size()-1)) {
-			return Message.bind(GoodsListModel.bindList(products.subList(pageable.getPageStart(),products.size()-1)),request);
-		} else {
-			return Message.bind(GoodsListModel.bindList(products.subList(pageable.getPageStart(),pageable.getPageStart()+pageable.getPageSize())),request);
-		}
+		filters.add(new Filter("type", Filter.Operator.eq,Product.Type.warehouse));
+		filters.add(new Filter("isList", Filter.Operator.eq,true));
+		pageable.setFilters(filters);
+		pageable.setOrderDirection(Order.Direction.desc);
+		pageable.setOrderProperty("modifyDate");
+		Page<Product> page = productService.findPage(null,null,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(GoodsListModel.bindList(page.getContent()));
+		return Message.bind(model,request);
 	}
 
 }
