@@ -13,9 +13,11 @@ public class ReceiverModel extends BaseModel implements Serializable {
     private String address;
     private String phone;
     private Long areaId;
+    private double lat;
+    private double lng;
     private Boolean isDefault;
-    private Long roadId;
-    private String roadName;
+//    private Long roadId;
+//    private String roadName;
 
     public Long getId() {
         return id;
@@ -72,22 +74,22 @@ public class ReceiverModel extends BaseModel implements Serializable {
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
     }
-
-    public Long getRoadId() {
-        return roadId;
-    }
-
-    public void setRoadId(Long roadId) {
-        this.roadId = roadId;
-    }
-
-    public String getRoadName() {
-        return roadName;
-    }
-
-    public void setRoadName(String roadName) {
-        this.roadName = roadName;
-    }
+//
+//    public Long getRoadId() {
+//        return roadId;
+//    }
+//
+//    public void setRoadId(Long roadId) {
+//        this.roadId = roadId;
+//    }
+//
+//    public String getRoadName() {
+//        return roadName;
+//    }
+//
+//    public void setRoadName(String roadName) {
+//        this.roadName = roadName;
+//    }
 
     public void bind(Receiver receiver) {
         this.id = receiver.getId();
@@ -97,10 +99,16 @@ public class ReceiverModel extends BaseModel implements Serializable {
         this.areaName = receiver.getAreaName();
         this.phone = receiver.getPhone();
         this.isDefault = receiver.getIsDefault();
-        if (receiver.getRoad()!=null) {
-            this.roadId = receiver.getRoad().getId();
-            this.roadName = receiver.getRoad().getName();
+        this.lat = 0;
+        this.lng = 0;
+        if (receiver.getLocation()!=null) {
+            this.lng = receiver.getLocation().getLng();
+            this.lat = receiver.getLocation().getLat();
         }
+//        if (receiver.getRoad()!=null) {
+//            this.roadId = receiver.getRoad().getId();
+//            this.roadName = receiver.getRoad().getName();
+//        }
     }
 
     public static List<ReceiverModel> bindList(List<Receiver> receivers) {
