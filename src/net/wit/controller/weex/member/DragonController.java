@@ -112,7 +112,6 @@ public class DragonController extends BaseController {
         dragon.setStatus(Dragon.Status.closed);
         dragonService.update(dragon);
         return Message.success("关闭接龙");
-
     }
 
     /**
