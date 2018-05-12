@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ShippingTrackModel extends BaseModel implements Serializable {
 
+    /*送货员id*/
+    private Long memberId ;
     /*送货员姓名*/
     private String name ;
     /*送货员手机*/
@@ -67,5 +69,13 @@ public class ShippingTrackModel extends BaseModel implements Serializable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 }

@@ -57,7 +57,7 @@ public class DragonController extends BaseController {
      /**
      *   创建接龙
      */
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/create")
     @ResponseBody
     public Message submit(Long articleId,String title,Dragon.Type type,HttpServletRequest request){
         Article article = articleService.find(articleId);

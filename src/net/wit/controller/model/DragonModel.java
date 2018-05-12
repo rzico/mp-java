@@ -9,11 +9,15 @@ import java.util.List;
 
 public class DragonModel extends BaseModel implements Serializable {
 
+    private Long id;
+    private Long articleId;
     private Dragon.Type type;
     private Dragon.Status status;
     private String title;
     private Date createDate;
     private Integer orderCount;
+    private String nickName;
+    private String logo;
 
     public Dragon.Type getType() {
         return type;
@@ -47,6 +51,22 @@ public class DragonModel extends BaseModel implements Serializable {
         this.createDate = createDate;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
     public Integer getOrderCount() {
         return orderCount;
     }
@@ -55,12 +75,33 @@ public class DragonModel extends BaseModel implements Serializable {
         this.orderCount = orderCount;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
     public void bind(Dragon dragon) {
         this.type = dragon.getType();
         this.title = dragon.getTitle();
         this.createDate = dragon.getCreateDate();
         this.status = dragon.getStatus();
         this.orderCount = dragon.getOrders().size();
+        this.logo = dragon.getMember().getLogo();
+        this.nickName = dragon.getMember().getNickName();
+
+        this.id = dragon.getId();
+        this.articleId = dragon.getArticle().getId();
     }
 
     public static List<DragonModel> bindList(List<Dragon> dragons) {
