@@ -77,7 +77,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(Long id,HttpServletRequest request){
+    public Message view(Long id,Long dragonId,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
@@ -92,12 +92,17 @@ public class ArticleController extends BaseController {
             article.setHits(article.getHits()+1);
             articleService.update(article);
         }
+        Goods goods = article.getGoods();
+        if (goods!=null) {
+            goods.setHits(goods.getHits()+1);
+            goodsService.update(goods);
+        }
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
 
         for (ArticleContentViewModel m:model.getTemplates()) {
             if (m.getMediaType().equals(Article.MediaType.product)) {
-                Goods goods = goodsService.find(m.getId());
+                goods = goodsService.find(m.getId());
                 if (goods!=null) {
                     Product product = goods.product();
                     if (product!=null) {
@@ -112,6 +117,22 @@ public class ArticleController extends BaseController {
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("article",model);
+
+        Dragon dragon = null;
+        if (dragonId!=null) {
+            dragon = dragonService.find(dragonId);
+        }
+
+        if (dragon==null) {
+            if (article.getDragons().size() > 0) {
+                for (Dragon d : article.getDragons()) {
+                    if (d.getMember().equals(article.getMember())) {
+                        dragon = d;
+                        break;
+                    }
+                }
+            }
+        }
 
         ArticlePreviewModel option =new ArticlePreviewModel();
         option.bind(article);
@@ -135,13 +156,15 @@ public class ArticleController extends BaseController {
         }
         data.put("option",option);
 
-        if (model.getDragonId()>0L) {
-            Dragon dragon = dragonService.find(model.getDragonId());
-            if (dragon!=null) {
-                Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq,dragon));
-                model.setDragon(dg);
-            }
-        }
+
+        if (dragon!=null && dragon.getStatus().equals(Dragon.Status.normal)) {
+            model.setDragonId(dragon.getId());
+
+                if (dragon!=null) {
+                    Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq, dragon));
+                    option.setDragon(dg);
+                }
+         }
 
         return Message.bind(data,request);
    }

@@ -87,13 +87,20 @@ public class ArticleController extends BaseController {
             article.setHits(article.getHits()+1);
             articleService.update(article);
         }
+
+        Goods goods = article.getGoods();
+        if (goods!=null) {
+            goods.setHits(goods.getHits()+1);
+            goodsService.update(goods);
+        }
+
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
 
 
         for (ArticleContentViewModel m:model.getTemplates()) {
             if (m.getMediaType().equals(Article.MediaType.product)) {
-                Goods goods = goodsService.find(m.getId());
+                goods = goodsService.find(m.getId());
                 if (goods!=null) {
                     Product product = goods.product();
                     if (product!=null) {

@@ -39,8 +39,6 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Long laud;
     /** 接龙号 */
     private Long dragonId;
-    /** 接龙数 */
-    private Long dragon;
     /** 是否评论 */
     private Boolean isReview;
     /** 是否赞赏 */
@@ -214,14 +212,6 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.dragonId = dragonId;
     }
 
-    public Long getDragon() {
-        return dragon;
-    }
-
-    public void setDragon(Long dragon) {
-        this.dragon = dragon;
-    }
-
     public void bind(Article article, Member shareUser) {
         this.id = article.getId();
         this.title = article.getTitle();
@@ -236,12 +226,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.review = article.getReview();
         this.isPublish = article.getIsPublish();
         this.showAuthor = false;
-        if (article.getDragons().size()>0) {
-            this.dragonId = article.getDragons().get(0).getId();
-        } else {
-            this.dragonId = 0L;
-        }
-        this.dragon = 0L;
+        this.dragonId = 0L;
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;

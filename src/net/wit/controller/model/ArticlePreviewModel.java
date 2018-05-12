@@ -27,6 +27,8 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
     private Long laud;
     /** 分享数 */
     private Long share;
+    /** 接龙数 */
+    private Long dragon;
     /** 是否点赞 */
     private Boolean hasLaud;
     /** 是否收藏 */
@@ -130,6 +132,15 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.hasFollow = hasFollow;
     }
 
+
+    public Long getDragon() {
+        return dragon;
+    }
+
+    public void setDragon(Long dragon) {
+        this.dragon = dragon;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.hits = article.getHits();
@@ -142,6 +153,7 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.hasFavorite = false;
         this.hasLaud = false;
         this.hasFollow = false;
+        this.dragon = 0L;
         if (article.getTemplate()!=null) {
             this.template = article.getTemplate().getSn();
         } else {
