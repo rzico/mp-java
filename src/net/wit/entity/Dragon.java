@@ -1,10 +1,13 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity - 接龙
@@ -62,12 +65,22 @@ public class Dragon extends BaseEntity {
 	private Member member;
 
 
+	/** 店主 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private Member owner;
+
 	/** 发起文章 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Article article;
 
+
+	/**  订单 */
+	@OneToMany(mappedBy = "dragon", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Order> orders = new ArrayList<Order>();
 
 	public Boolean getDeleted() {
 		return deleted;
@@ -115,5 +128,21 @@ public class Dragon extends BaseEntity {
 
 	public void setArticle(Article article) {
 		this.article = article;
+	}
+
+	public Member getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Member owner) {
+		this.owner = owner;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 }

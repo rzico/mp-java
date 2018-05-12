@@ -1,15 +1,7 @@
 
 package net.wit.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import net.wit.MapEntity;
@@ -82,6 +74,10 @@ public class Receiver extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '会员'")
 	private Member member;
+
+	/** 定位 */
+	@Embedded
+	private Location location;
 
 	/**
 	 * 获取收货人
@@ -231,6 +227,14 @@ public class Receiver extends BaseEntity {
 
 	public void setRoad(Road road) {
 		this.road = road;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
 	/**

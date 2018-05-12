@@ -3,6 +3,7 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleReviewModel;
+import net.wit.controller.model.DragonModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleReview;
 import net.wit.entity.Dragon;
@@ -63,23 +64,25 @@ public class DragonController extends BaseController {
         if (article==null) {
             return Message.error("无效文章编号");
         }
-
         Member member = memberService.getCurrent();
+        Long rc = dragonService.count(new Filter("article", Filter.Operator.eq, article),new Filter("member", Filter.Operator.eq, member),new Filter("status", Filter.Operator.eq, Dragon.Status.normal));
+        if (rc>0) {
+            return Message.error("你还有没完成的接龙");
+        }
         Dragon dragon = new Dragon();
         dragon.setArticle(article);
         dragon.setMember(member);
+        dragon.setOwner(article.getMember());
         dragon.setStatus(Dragon.Status.normal);
         dragon.setTitle(title);
         dragon.setType(type);
         dragonService.save(dragon);
 //        messageService.reviewPushTo(review);
-        ArticleReviewModel model = new ArticleReviewModel();
-//        model.bind(review);
+        DragonModel model = new DragonModel();
+        model.bind(dragon);
         return Message.success(model,"发布成功");
 
     }
-
-
 
     /**
      *  删除评论
@@ -96,9 +99,24 @@ public class DragonController extends BaseController {
 
     }
 
+    /**
+     *  关闭接龙
+     */
+    @RequestMapping(value = "/ended")
+    @ResponseBody
+    public Message ended(Long id,HttpServletRequest request){
+        Dragon dragon = dragonService.find(id);
+        if (dragon==null) {
+            return Message.error("无效评论编号");
+        }
+        dragon.setStatus(Dragon.Status.closed);
+        dragonService.update(dragon);
+        return Message.success("关闭接龙");
+
+    }
 
     /**
-     *  我的评论
+     *  我的接龙
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -112,7 +130,7 @@ public class DragonController extends BaseController {
         pageable.setFilters(filters);
         Page<Dragon> page = dragonService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
-//        model.setData(ArticleReviewModel.bindList(page.getContent()));
+        model.setData(DragonModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
 

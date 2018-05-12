@@ -25,16 +25,15 @@ import net.wit.Pageable;
 import net.wit.dao.OrderDao;
 import net.wit.entity.Order;
 
-
 /**
  * @ClassName: OrderDaoImpl
  * @author 降魔战队
  * @date 2017-9-14 19:42:5
  */
- 
 
 @Repository("orderDaoImpl")
 public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
+
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码

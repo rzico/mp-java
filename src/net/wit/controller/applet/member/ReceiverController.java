@@ -5,6 +5,7 @@ import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ReceiverModel;
+import net.wit.entity.Location;
 import net.wit.entity.Member;
 import net.wit.entity.Receiver;
 import net.wit.service.AreaService;
@@ -71,7 +72,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,Double lat,Double lng,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -91,6 +92,12 @@ public class ReceiverController extends BaseController {
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));
 //        }
+        if (lat!=null && lng!=null) {
+            Location location = new Location();
+            location.setLat(lat);
+            location.setLng(lng);
+            receiver.setLocation(location);
+        }
 
         receiverService.save(receiver);
 
@@ -104,7 +111,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,Double lat,Double lng,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -124,6 +131,12 @@ public class ReceiverController extends BaseController {
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));
 //        }
+        if (lat!=null && lng!=null) {
+            Location location = new Location();
+            location.setLat(lat);
+            location.setLng(lng);
+            receiver.setLocation(location);
+        }
 
         receiverService.update(receiver);
         ReceiverModel model = new ReceiverModel();

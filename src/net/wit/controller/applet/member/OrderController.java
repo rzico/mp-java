@@ -255,6 +255,7 @@ public class OrderController extends BaseController {
 		track.setName("张大大");
 		track.setMethod("送货到户");
 		track.setStatus("订单正在送货中");
+		track.setMobile("13860431130");
 
 		model.setTrack(track);
 		return Message.success(model,"success");

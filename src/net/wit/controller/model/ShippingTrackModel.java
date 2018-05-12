@@ -10,6 +10,8 @@ public class ShippingTrackModel extends BaseModel implements Serializable {
 
     /*送货员姓名*/
     private String name ;
+    /*送货员手机*/
+    private String mobile ;
     /*送货方式*/
     private String method ;
     /*送货状态*/
@@ -57,5 +59,13 @@ public class ShippingTrackModel extends BaseModel implements Serializable {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

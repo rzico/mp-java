@@ -109,19 +109,31 @@ public class LBSController extends BaseController {
         }
 
         if (adcode!=null) {
+            Map<String, Object> data = new HashMap<>();
             Area area = areaService.find(adcode);
             if (area!=null) {
-                Map<String, Object> data = new HashMap<>();
-                data.put("id", area.getId());
+                data.put("areaId", area.getId());
                 data.put("name", area.getName());
-                return Message.success(data, "执行成功");
-            } else {
-                return Message.error("定位失败");
             }
+            data.put("address",jsonObject.getJSONObject("result").getJSONObject("addressComponent"));
+            return Message.success(data, "执行成功");
         } else {
             return Message.error("定位失败");
         }
 
+    }
+
+    /**
+     * 获取位置信息
+     */
+    @RequestMapping(value = "get", method = RequestMethod.POST)
+    @ResponseBody
+    public Message position(Long memberId,HttpServletRequest request){
+        Member member = memberService.find(memberId);
+        Map<String,Double> data = new HashMap<String,Double>();
+        data.put("lat",member.getLocation().getLat());
+        data.put("lng",member.getLocation().getLng());
+        return Message.success(data,"success");
     }
 
 }
