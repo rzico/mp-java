@@ -53,21 +53,26 @@ public class DragonServiceImpl extends BaseServiceImpl<Dragon, Long> implements 
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long id) {
-		super.delete(id);
+		Dragon dragon = dragonDao.find(id);
+		dragon.setDeleted(true);
+		super.update(dragon);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Long... ids) {
-		super.delete(ids);
+		for (Long id:ids) {
+			this.delete(id);
+		}
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Dragon dragon) {
-		super.delete(dragon);
+		dragon.setDeleted(true);
+		super.update(dragon);
 	}
 
 	public Page<Dragon> findPage(Date beginDate,Date endDate, Pageable pageable) {
