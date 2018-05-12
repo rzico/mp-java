@@ -100,4 +100,20 @@ public class Dragon extends BaseEntity {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Article getArticle() {
+		return article;
+	}
+
+	public void setArticle(Article article) {
+		this.article = article;
+	}
 }

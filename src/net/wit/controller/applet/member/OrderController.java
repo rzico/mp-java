@@ -251,6 +251,7 @@ public class OrderController extends BaseController {
 		ShippingTrackModel track = new ShippingTrackModel();
 		track.setLng(118.08);
 		track.setLat(24.48);
+
 		track.setName("张大大");
 		track.setMethod("送货到户");
 		track.setStatus("订单正在送货中");
