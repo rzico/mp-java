@@ -241,7 +241,8 @@
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 直播管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>"+
-                                   "<a title='兑换' href='javascript:;' onclick=\"add('首页 &gt; 直播管理 &gt; 兑换','add.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>兑换</i></a>";
+                                   "<a title='兑换' href='javascript:;' onclick=\"add('首页 &gt; 直播管理 &gt; 兑换','add.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>兑换</i></a>"+
+                                   "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"offline(this,'"+data.id+"');\" name=\"\">离线</button>";
 
                         }else{
                             return "";
@@ -412,6 +413,37 @@
             });
         });
     }
+
+
+    /* 离线*/
+    function offline(obj, id) {
+        layer.confirm('确认吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    articleId: id
+                },
+                url: '${base}/admin/live/offline.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        layer.msg(data.content, {icon: 1, time: 1000});
+                    } else {
+                        layer.msg(data.content, {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
 
     function DateFormat(timestamp, format) {
         var newDate = new Date();

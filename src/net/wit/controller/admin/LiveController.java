@@ -191,7 +191,27 @@ public class LiveController extends BaseController {
             return Message.error("admin.update.error");
         }
 	}
-	
+
+
+
+	/**
+	 * 更新
+	 */
+	@RequestMapping(value = "/offline", method = RequestMethod.POST)
+	@ResponseBody
+	public Message offlin(Long id){
+		Live entity = liveService.find(id);
+
+		entity.setOnline("1");
+
+		try {
+			liveService.update(entity);
+			return Message.success(entity,"离线成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("操作失败");
+		}
+	}
 
 	/**
      * 列表

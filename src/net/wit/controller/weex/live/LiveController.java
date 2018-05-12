@@ -264,6 +264,14 @@ public class LiveController extends BaseController {
             return Message.error("无效直播id");
         }
 
+        if (live.getStatus().equals(Live.Status.waiting)) {
+            return Message.error("正在审核中");
+        }
+
+        if (live.getStatus().equals(Live.Status.failure)) {
+            return Message.error("直播间已关闭");
+        }
+
 //        String string = "2018-04-30 23:59:59";
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        try {
