@@ -168,7 +168,7 @@ public class PaymentController extends BaseController {
             parameters = paymentPlugin.submit(payment,safeKey,request);
         }
         if ("SUCCESS".equals(parameters.get("return_code"))) {
-            if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
+            if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId) || "monthPayPlugin".equals(paymentPluginId)) {
                 try {
                     paymentService.handle(payment);
                 } catch (Exception e) {

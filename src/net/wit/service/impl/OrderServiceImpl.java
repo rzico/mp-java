@@ -481,7 +481,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		return;
 	}
 
-
 	/**
 	 * 订单完成
 	 *
@@ -551,14 +550,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		//计算货款
 		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
 			if (order.getPaymentMethod().equals(Order.PaymentMethod.online) || order.getPaymentMethod().equals(Order.PaymentMethod.deposit)) {
+
 				//扣除商家分配佣金
 				Member seller = order.getSeller();
 				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
+
 				//扣除平台手续费
 				BigDecimal samt = order.getAmountPaid().subtract(order.getFee());
 				seller.setBalance(seller.getBalance().add(samt));
 				memberDao.merge(seller);
+
 				memberDao.flush();
+
 				Deposit deposit = new Deposit();
 				deposit.setBalance(seller.getBalance());
 				deposit.setType(Deposit.Type.product);
@@ -574,6 +577,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setSeller(order.getSeller());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
+
 			}
 		}
 
@@ -809,7 +813,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderRankingService.add(order);
 
 		//代理商佣金
-		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
+//		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
 
 		return;
 
