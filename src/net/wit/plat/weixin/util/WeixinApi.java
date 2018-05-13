@@ -226,7 +226,7 @@ public class WeixinApi {
 					"\"downloaddomain\":[\"" +serverUrl+ "\"]" +
 					"}";
 		}
-		JSONObject jsonObject=WeixinApi.httpRequest(RELEASECODE.replace("AUTH_TOKEN",authToken),"POST",params);
+		JSONObject jsonObject=WeixinApi.httpRequest(SETDOMAIN1.replace("AUTH_TOKEN",authToken),"POST",params);
 		Domain domain = null;
 		if(jsonObject != null){
 			domain = new Domain();
@@ -543,6 +543,7 @@ title	小程序页面的标题,标题长度不超过32*/
 //				return getRefreshAuthorizationCode(componentToken, appId, authorizer_refresh_token);
 //			}
 //		}
+		///这里 不是预授权 code 是用户返回的uri
 		String string="{\"component_appid\":\""+appId+"\" ,\"authorization_code\": \""+getPreAuthCode(componentToken, appId)+"\"}";
 		JSONObject jsonObject=WeixinApi.httpRequest(CODEANDTOKEN.replace("COMPONENT_TOKEN",componentToken),"POST",string);
 		System.out.println("换取的令牌:"+jsonObject);
@@ -852,7 +853,7 @@ title	小程序页面的标题,标题长度不超过32*/
 	}
 
 	/**
-	 *  * 根据OpenID列表群发 
+	 *  * 根据 OpenID 列表群发 
 	 */
 	public static int massSend(String appid, String appsecret, String message) {
 		int result = 0;
