@@ -56,6 +56,7 @@
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
                             <li><a href="javascript:;" onClick="login()">切换账户</a></li>
+                            <li><a href="javascript:;" onClick="updatePassword()">修改密码</a></li>
                             <li><a href="javascript:;" onClick="logout()">退出</a></li>
                         </ul>
                     </li>
@@ -126,6 +127,7 @@
             }
         });*/
     });
+
     /*个人信息*/
     function myselfinfo(){
         layer.open({
@@ -135,13 +137,25 @@
             maxmin: true,
             shade:0.4,
             title: '查看信息',
-            content: '<ul><li>登录账号:${admin.username}</li><li>姓名:${admin.name}</li><li>邮箱:${admin.email}</li></ul>'
+            content: '<ul style="padding:20px;"><li>登录账号:${admin.username}</li><li>姓名:${admin.name}</li><li>邮箱:${admin.email}</li></ul>'
         });
     }
+
+    /*个人信息*/
+    function updatePassword(){
+        layer.open({
+            type: 2,
+            area: ['400px','300px'],
+            title: '查看信息',
+            content: "/admin/password/index.jhtml"
+        });
+    }
+
     /*切换账号*/
     function login(){
         location.href = "/admin/login/index.jhtml";
     }
+
     /*退出账户*/
     function logout(){
         $.ajax({
@@ -158,38 +172,11 @@
         });
     }
 
-    /*资讯-添加*/
-    function article_add(title,url){
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
+    /*关闭页面*/
+    function closeWindow(index, msg) {
+        layer.close(index);
+        layer.msg(msg, {icon: 1, time: 1000});
     }
-    /*图片-添加*/
-    function picture_add(title,url){
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*产品-添加*/
-    function product_add(title,url){
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*用户-添加*/
-    function member_add(title,url,w,h){
-        layer_show(title,url,w,h);
-    }
-
 
 </script>
 

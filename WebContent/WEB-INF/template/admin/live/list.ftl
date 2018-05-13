@@ -193,6 +193,11 @@
                 },
                 {
                     "mData": "id",
+                    "sTitle": "",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
                 }
@@ -240,9 +245,20 @@
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
+                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"offline(this,'"+data+"');\" name=\"\">离线</button>";
+
+                        }else{
+                            return "";
+                        }
+                    }
+
+                },
+                {
+                    "aTargets": [12],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 直播管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>"+
-                                   "<a title='兑换' href='javascript:;' onclick=\"add('首页 &gt; 直播管理 &gt; 兑换','add.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>兑换</i></a>"+
-                                   "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"offline(this,'"+data.id+"');\" name=\"\">离线</button>";
+                                   "<a title='兑换' href='javascript:;' onclick=\"add('首页 &gt; 直播管理 &gt; 兑换','add.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>兑换</i></a>";
 
                         }else{
                             return "";
@@ -251,7 +267,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 11]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 11,12]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
@@ -416,21 +432,17 @@
 
 
     /* 离线*/
-    function offline(obj, id) {
-        layer.confirm('确认吗？', function (index) {
-            var load = layer.msg('加载中', {
-                icon: 16
-                ,shade: 0.01
-            });
+    function offline(obj, sid) {
+        alert(sid);
+        layer.confirm('设置为离线吗？', function (index) {
             $.ajax({
                 type: 'POST',
                 data: {
-                    articleId: id
+                   id:sid
                 },
                 url: '${base}/admin/live/offline.jhtml',
                 dataType: 'json',
                 success: function (data) {
-                    layer.close(load);
                     if (data.type == "success") {
                         layer.msg(data.content, {icon: 1, time: 1000});
                     } else {

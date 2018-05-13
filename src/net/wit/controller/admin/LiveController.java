@@ -199,7 +199,7 @@ public class LiveController extends BaseController {
 	 */
 	@RequestMapping(value = "/offline", method = RequestMethod.POST)
 	@ResponseBody
-	public Message offlin(Long id){
+	public Message offline(Long id){
 		Live entity = liveService.find(id);
 
 		entity.setOnline("1");
