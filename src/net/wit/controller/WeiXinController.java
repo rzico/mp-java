@@ -60,8 +60,8 @@ public class WeiXinController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
-    @Resource(name = "pluginServiceImpl")
-    private PluginService pluginService;
+    @Resource(name = "pluginConfigServiceImpl")
+    private PluginConfigService pluginConfigService;
 
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
@@ -680,6 +680,9 @@ public class WeiXinController extends BaseController {
                 verifyTicket.setComponentVerifyTicket(ticket);
                 verifyTicket.setCreateTime(Long.valueOf(createTime));
                 WeixinApi.verify_ticket = verifyTicket;
+                net.wit.entity.PluginConfig pluginConfig=pluginConfigService.findByPluginId("verifyTicket");
+                pluginConfig.setAttribute("verify_ticket",ticket);
+                pluginConfigService.update(pluginConfig);
             }
         } catch (DocumentException e) {
             e.printStackTrace();

@@ -43,7 +43,7 @@ public class CompanyViewsModel extends BaseModel implements Serializable {
     /**
      * 企业营业开始时间
      */
-    private String starTime;
+    private String startTime;
 
     /**
      * 企业营业开始时间
@@ -59,6 +59,11 @@ public class CompanyViewsModel extends BaseModel implements Serializable {
      * 企业介绍图1
      */
     private List<String> image;
+
+    /**
+     * 企业签名
+     */
+    private String autograph;
 
     public String getName() {
         return name;
@@ -100,12 +105,12 @@ public class CompanyViewsModel extends BaseModel implements Serializable {
         this.address = address;
     }
 
-    public String getStarTime() {
-        return starTime;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStarTime(String starTime) {
-        this.starTime = starTime;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     public String getEndTime() {
@@ -132,26 +137,47 @@ public class CompanyViewsModel extends BaseModel implements Serializable {
         this.image = image;
     }
 
+    public String getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(String autograph) {
+        this.autograph = autograph;
+    }
+
     public void bind(Enterprise enterprise) {
         this.name = enterprise.getName();
         this.address=enterprise.getAddress();
         this.logo=enterprise.getLogo();
         this.phone=enterprise.getPhone();
         List<String> images=new ArrayList<>();
-        images.add(enterprise.getImage1());
-        images.add(enterprise.getImage2());
-        images.add(enterprise.getImage3());
-        images.add(enterprise.getImage4());
-        images.add(enterprise.getImage5());
-        images.add(enterprise.getImage6());
+        if(enterprise.getImage1()!=null){
+            images.add(enterprise.getImage1());
+        }
+        if(enterprise.getImage2()!=null){
+            images.add(enterprise.getImage2());
+        }
+        if(enterprise.getImage3()!=null){
+            images.add(enterprise.getImage3());
+        }
+        if(enterprise.getImage4()!=null){
+            images.add(enterprise.getImage4());
+        }
+        if(enterprise.getImage5()!=null){
+            images.add(enterprise.getImage5());
+        }
+        if(enterprise.getImage6()!=null){
+            images.add(enterprise.getImage6());
+        }
         this.image=images;
-        this.starTime=enterprise.getStarTime();
+        this.startTime=enterprise.getStartTime();
         this.endTime=enterprise.getEndTime();
         this.area=new MapEntity(enterprise.getArea().getId().toString(),enterprise.getArea().getFullName());
         List<MapEntity> list= new ArrayList<>();
         for(CompanyLabel label: enterprise.getLabel()){
             list.add(new MapEntity(label.getId().toString(),label.getName()));
         }
+        this.autograph=enterprise.getAutograph();
         this.label=list;
     }
 }

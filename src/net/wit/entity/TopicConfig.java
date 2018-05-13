@@ -107,7 +107,8 @@ public class TopicConfig implements Serializable {
 	private String version;
 
 	/** 小程序 condition */
-	@Column(columnDefinition="int(11) comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
+	@NotNull
+	@Column(columnDefinition="int(11) default '0' comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
 	private Condition condition;
 
 	public PromoterType getPromoterType() {

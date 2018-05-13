@@ -139,7 +139,7 @@ public class Enterprise extends BaseEntity {
     /** 企业营业时间 */
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) comment '企业营业开始时间'")
-    private String starTime;
+    private String startTime;
 
     /** 企业营业时间 */
     @Length(max = 200)
@@ -175,6 +175,11 @@ public class Enterprise extends BaseEntity {
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) comment '企业介绍图6'")
     private String image6;
+
+    /** 企业签名 */
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255) comment '企业签名'")
+    private String autograph;
 
     public Type getType() {
         return type;
@@ -304,12 +309,12 @@ public class Enterprise extends BaseEntity {
         this.address = address;
     }
 
-    public String getStarTime() {
-        return starTime;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStarTime(String starTime) {
-        this.starTime = starTime;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     public String getEndTime() {
@@ -366,6 +371,14 @@ public class Enterprise extends BaseEntity {
 
     public void setImage6(String image6) {
         this.image6 = image6;
+    }
+
+    public String getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(String autograph) {
+        this.autograph = autograph;
     }
 
     public MapEntity getMapArea() {

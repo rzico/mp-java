@@ -43,6 +43,11 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
     private String label;
 
     /**
+     * 企业签名
+     */
+    private String autograph;
+
+    /**
      * 企业介绍图1
      */
     private List<String> image;
@@ -103,18 +108,38 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
         this.image = image;
     }
 
+    public String getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(String autograph) {
+        this.autograph = autograph;
+    }
+
     public void bind(Enterprise enterprise) {
         this.name = enterprise.getName();
         this.address=enterprise.getArea().getFullName()+enterprise.getAddress();
         this.logo=enterprise.getLogo();
         this.phone=enterprise.getPhone();
         List<String> images=new ArrayList<>();
-        images.add(enterprise.getImage1());
-        images.add(enterprise.getImage2());
-        images.add(enterprise.getImage3());
-        images.add(enterprise.getImage4());
-        images.add(enterprise.getImage5());
-        images.add(enterprise.getImage6());
+        if(enterprise.getImage1()!=null){
+            images.add(enterprise.getImage1());
+        }
+        if(enterprise.getImage2()!=null){
+            images.add(enterprise.getImage2());
+        }
+        if(enterprise.getImage3()!=null){
+            images.add(enterprise.getImage3());
+        }
+        if(enterprise.getImage4()!=null){
+            images.add(enterprise.getImage4());
+        }
+        if(enterprise.getImage5()!=null){
+            images.add(enterprise.getImage5());
+        }
+        if(enterprise.getImage6()!=null){
+            images.add(enterprise.getImage6());
+        }
         this.image=images;
         String s=" ";
         List<CompanyLabel> list =enterprise.getLabel();
@@ -122,6 +147,7 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
             s=s+c.getName()+"·";
         }
         this.label=s.substring(0,s.length()-1);
-        this.time=enterprise.getStarTime()+"-"+enterprise.getEndTime();
+        this.time=enterprise.getStartTime()+"-"+enterprise.getEndTime();
+        this.autograph=enterprise.getAutograph();
     }
 }

@@ -156,10 +156,11 @@ public class EnterpriseController extends BaseController {
             String phone,
             Long area,
             String address,
-            String startime,
-            String endtime,
+            String startTime,
+            String endTime,
             Long[] label,
             String[] img,
+            String autogragh,
             HttpServletRequest request){
 
         Member member = memberService.getCurrent();
@@ -191,21 +192,65 @@ public class EnterpriseController extends BaseController {
             return Message.error("权限不足");
         }
 
+//        System.out.println(address);
+//        System.out.println(name);
+//        System.out.println(logo);
+//        System.out.println(startTime);
+//        System.out.println(endTime);
+//        System.out.println(phone);
+//        System.out.println(area);
+//        System.out.println(label);
+//        System.out.println(img);
+//        System.out.println(autogragh);
+
         enterprise.setAddress(address);
         enterprise.setName(name);
         enterprise.setLogo(logo);
-        enterprise.setStarTime(startime);
-        enterprise.setEndTime(endtime);
+        enterprise.setStartTime(startTime);
+        enterprise.setEndTime(endTime);
         enterprise.setPhone(phone);
         enterprise.setArea(areaService.find(area));
         List<CompanyLabel> list=companyLabelService.findList(label);
         enterprise.setLabel(list);
-        enterprise.setImage1(img[0]);
-        enterprise.setImage2(img[1]);
-        enterprise.setImage3(img[2]);
-        enterprise.setImage4(img[3]);
-        enterprise.setImage5(img[4]);
-        enterprise.setImage6(img[5]);
+        int size=img.length;
+        int i=0;
+        if(i<size){
+            enterprise.setImage1(img[i]);
+            i++;
+        }else{
+            enterprise.setImage1(null);
+        }
+        if(i<size){
+            enterprise.setImage2(img[i]);
+            i++;
+        }else{
+            enterprise.setImage1(null);
+        }
+        if(i<size){
+            enterprise.setImage3(img[i]);
+            i++;
+        }else{
+            enterprise.setImage1(null);
+        }
+        if(i<size){
+            enterprise.setImage4(img[i]);
+            i++;
+        }else{
+            enterprise.setImage1(null);
+        }
+        if(i<size){
+            enterprise.setImage5(img[i]);
+            i++;
+        }else{
+            enterprise.setImage1(null);
+        }
+        if(i<size){
+            enterprise.setImage6(img[i]);
+        }else{
+            enterprise.setImage1(null);
+        }
+        enterprise.setAutograph(autogragh);
+        enterpriseService.update(enterprise);
         return Message.success("添加成功");
     }
 
