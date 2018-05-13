@@ -95,7 +95,7 @@ public class TopicController extends BaseController {
             topic.setStatus(Topic.Status.waiting);
             topic.setHits(0L);
             topic.setMember(member);
-            topic.setFee(new BigDecimal("1999"));
+            topic.setFee(new BigDecimal("588"));
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.personal);
             topic.setRanking(0L);
@@ -112,7 +112,7 @@ public class TopicController extends BaseController {
             topic.setConfig(config);
             Calendar calendar   =   new GregorianCalendar();
             calendar.setTime(new Date());
-            calendar.add(calendar.YEAR, 1);
+            calendar.add(calendar.MONTH, 1);
             topic.setExpire(calendar.getTime());
             topic.setTemplate(templateService.findDefault(Template.Type.topic));
             topicService.create(topic);
