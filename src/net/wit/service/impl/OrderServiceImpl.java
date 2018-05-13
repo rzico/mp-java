@@ -10,6 +10,7 @@ import javax.persistence.LockModeType;
 import net.wit.*;
 import net.wit.Filter.Operator;
 
+import net.wit.Message;
 import net.wit.dao.*;
 import net.wit.entity.Order;
 import net.wit.plugin.PaymentPlugin;
@@ -82,6 +83,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 	@Resource(name = "rebateServiceImpl")
 	private RebateService rebateService;
+
+	@Resource(name = "couponServiceImpl")
+	private CouponService couponService;
+
+	@Resource(name = "couponCodeServiceImpl")
+	private CouponCodeService couponCodeService;
 
 	@Resource(name = "cartDaoImpl")
 	private CartDao cartDao;
@@ -814,6 +821,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		//代理商佣金
 //		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
+
+		//放入卡包
+		if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+			for (OrderItem orderItem:order.getOrderItems()) {
+				Coupon coupon = couponService.create(orderItem.getProduct());
+				couponCodeService.build(coupon,order.getMember(),orderItem.getQuantity().longValue());
+			}
+		}
 
 		return;
 

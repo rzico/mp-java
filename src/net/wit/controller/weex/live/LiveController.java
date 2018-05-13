@@ -155,6 +155,7 @@ public class LiveController extends BaseController {
     public Message list(Pageable pageable,HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("online", Filter.Operator.eq,"1"));
+        filters.add(new Filter("status", Filter.Operator.eq,Live.Status.success));
 
         pageable.setFilters(filters);
         pageable.setOrderDirection(Order.Direction.desc);

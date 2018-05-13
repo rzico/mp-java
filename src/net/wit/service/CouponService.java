@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Coupon;
+import net.wit.entity.Product;
 
 /**
  * @ClassName: CouponService
@@ -17,4 +18,6 @@ import net.wit.entity.Coupon;
 
 public interface CouponService extends BaseService<Coupon, Long> {
 	Page<Coupon> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+	Coupon create(Product product);
 }

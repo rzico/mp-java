@@ -52,6 +52,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "cardServiceImpl")
 	private CardService cardService;
 
+	@Resource(name = "orderServiceImpl")
+	private OrderService orderService;
+
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
 
@@ -192,6 +195,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					deposit.setOrder(order);
 					deposit.setSeller(order.getSeller());
 					depositDao.persist(deposit);
+				}
+
+				if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+					orderService.shipping(order,null);
+					orderService.complete(order,null);
 				}
 
 				messageService.orderMemberPushTo(orderLog);
