@@ -2,6 +2,7 @@ package net.wit.controller.applet.member;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.DepositModel;
 import net.wit.controller.model.RebateModel;
@@ -147,7 +148,12 @@ public class RebateController extends BaseController {
 
             List<Filter> filters = new ArrayList<>();
             filters.add(new Filter("owner", Filter.Operator.eq, owner));
-            List<OrderRanking> ors = orderRankingService.findList(null, 1, filters, null);
+            List<Order> orders = new ArrayList<>();
+            Order o = new Order();
+            o.setProperty("orders");
+            o.setDirection(Order.Direction.desc);
+            orders.add(o);
+            List<OrderRanking> ors = orderRankingService.findList(null, 1, filters, orders);
 
             if (ors.size() == 0) {
                 model.setRanking(0L);
