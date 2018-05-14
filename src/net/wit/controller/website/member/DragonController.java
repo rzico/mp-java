@@ -67,6 +67,7 @@ public class DragonController extends BaseController {
         Dragon dragon = dragonService.find(article,member);
         if (dragon==null) {
             dragon = new Dragon();
+            dragon.setParent(dg);
         }
         dragon.setArticle(article);
         dragon.setMember(member);

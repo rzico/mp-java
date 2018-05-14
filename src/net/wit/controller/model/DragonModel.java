@@ -10,6 +10,7 @@ import java.util.List;
 public class DragonModel extends BaseModel implements Serializable {
 
     private Long id;
+    private Long mainId;
     private Long articleId;
     private Dragon.Type type;
     private Dragon.Status status;
@@ -102,6 +103,9 @@ public class DragonModel extends BaseModel implements Serializable {
 
         this.id = dragon.getId();
         this.articleId = dragon.getArticle().getId();
+        if (dragon.getParent()==null) {
+            this.mainId = dragon.getId();
+        }
     }
 
     public static List<DragonModel> bindList(List<Dragon> dragons) {

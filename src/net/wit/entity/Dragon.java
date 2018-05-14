@@ -78,6 +78,12 @@ public class Dragon extends BaseEntity {
 	private Article article;
 
 
+	/** 父级接龙 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	private Dragon parent;
+
 	/**  订单 */
 	@OneToMany(mappedBy = "dragon", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Order> orders = new ArrayList<Order>();
@@ -144,5 +150,13 @@ public class Dragon extends BaseEntity {
 
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
+	}
+
+	public Dragon getParent() {
+		return parent;
+	}
+
+	public void setParent(Dragon parent) {
+		this.parent = parent;
 	}
 }
