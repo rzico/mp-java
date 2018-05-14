@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -45,11 +43,27 @@ public class ArticleController extends BaseController {
     @Resource(name = "goodsServiceImpl")
     private GoodsService goodsService;
 
+    @Resource(name = "articleLaudServiceImpl")
+    private ArticleLaudService articleLaudService;
+
+    @Resource(name = "articleFavoriteServiceImpl")
+    private ArticleFavoriteService articleFavoriteService;
+
+    @Resource(name = "memberFollowServiceImpl")
+    private MemberFollowService memberFollowService;
+
     @Resource(name = "articleCatalogServiceImpl")
     private ArticleCatalogService articleCatalogService;
 
     @Resource(name = "articleCategoryServiceImpl")
     private ArticleCategoryService articleCategoryService;
+
+    @Resource(name = "dragonServiceImpl")
+    private DragonService dragonService;
+
+    @Resource(name = "orderServiceImpl")
+    private OrderService orderService;
+
 
     /**
      * html 格式显示板版
@@ -68,8 +82,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(Long id,Long xuid,HttpServletRequest request){
-
+    public Message view(Long id,Long dragonId,HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
@@ -84,16 +97,13 @@ public class ArticleController extends BaseController {
             article.setHits(article.getHits()+1);
             articleService.update(article);
         }
-
         Goods goods = article.getGoods();
         if (goods!=null) {
             goods.setHits(goods.getHits()+1);
             goodsService.update(goods);
         }
-
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
-
 
         for (ArticleContentViewModel m:model.getTemplates()) {
             if (m.getMediaType().equals(Article.MediaType.product)) {
@@ -110,14 +120,43 @@ public class ArticleController extends BaseController {
             }
         }
 
-        Member share = null;
-        if (xuid!=null) {
-            share = memberService.find(xuid);
+        Dragon dragon = dragonService.find(article,member);
+
+        if (dragon==null) {
+            if (dragonId != null) {
+                dragon = dragonService.find(dragonId);
+            }
         }
-        if (share!=null) {
-            model.setShareNickName(share.getNickName());
-        } else {
-            model.setShareNickName(article.getMember().getNickName());
+
+        if (dragon==null) {
+            dragon = dragonService.find(article,article.getMember());
+        }
+
+        if (member!=null) {
+
+            List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+            filters.add(new Filter("article", Filter.Operator.eq,article));
+            List<ArticleFavorite> favorites = articleFavoriteService.findList(null,null,filters,null);
+            model.setHasFavorite(favorites.size()>0);
+
+            List<Filter> laudfilters = new ArrayList<Filter>();
+            laudfilters.add(new Filter("member", Filter.Operator.eq,member));
+            laudfilters.add(new Filter("article", Filter.Operator.eq,article));
+            List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
+            model.setHasLaud(lauds.size()>0);
+
+            MemberFollow memberFollow = memberFollowService.find(member, article.getMember());
+            model.setHasFollow(memberFollow!=null);
+
+        }
+
+        if (dragon!=null && dragon.getStatus().equals(Dragon.Status.normal)) {
+            model.setDragonId(dragon.getId());
+            if (dragon!=null) {
+                Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq, dragon));
+                model.setDragon(dg);
+            }
         }
 
         return Message.bind(model,request);

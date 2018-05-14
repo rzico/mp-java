@@ -82,6 +82,7 @@ public class ArticleController extends BaseController {
         if (article==null) {
             return Message.error("无效文章编号");
         }
+
         Member member = memberService.getCurrent();
         if (member!=null) {
             if (!article.getMember().equals(member)) {
@@ -92,11 +93,13 @@ public class ArticleController extends BaseController {
             article.setHits(article.getHits()+1);
             articleService.update(article);
         }
+
         Goods goods = article.getGoods();
         if (goods!=null) {
             goods.setHits(goods.getHits()+1);
             goodsService.update(goods);
         }
+
         ArticleViewModel model =new ArticleViewModel();
         model.bind(article,member);
 
@@ -115,58 +118,45 @@ public class ArticleController extends BaseController {
             }
         }
 
-        Map<String,Object> data = new HashMap<String,Object>();
-        data.put("article",model);
-
-        Dragon dragon = null;
-        if (dragonId!=null) {
-            dragon = dragonService.find(dragonId);
-        }
+        Dragon dragon = dragonService.find(article,member);
 
         if (dragon==null) {
-            if (article.getDragons().size() > 0) {
-                for (Dragon d : article.getDragons()) {
-                    if (d.getMember().equals(article.getMember())) {
-                        dragon = d;
-                        break;
-                    }
-                }
+            if (dragonId != null) {
+                dragon = dragonService.find(dragonId);
             }
         }
 
-        ArticlePreviewModel option =new ArticlePreviewModel();
-        option.bind(article);
-        if (member!=null) {
+        if (dragon==null) {
+            dragon = dragonService.find(article,article.getMember());
+        }
 
+        if (member!=null) {
             List<Filter> filters = new ArrayList<Filter>();
             filters.add(new Filter("member", Filter.Operator.eq,member));
             filters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleFavorite> favorites = articleFavoriteService.findList(null,null,filters,null);
-            option.setHasFavorite(favorites.size()>0);
+            model.setHasFavorite(favorites.size()>0);
 
             List<Filter> laudfilters = new ArrayList<Filter>();
             laudfilters.add(new Filter("member", Filter.Operator.eq,member));
             laudfilters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
-            option.setHasLaud(lauds.size()>0);
+            model.setHasLaud(lauds.size()>0);
 
             MemberFollow memberFollow = memberFollowService.find(member, article.getMember());
-            option.setHasFollow(memberFollow!=null);
+            model.setHasFollow(memberFollow!=null);
 
         }
-        data.put("option",option);
-
 
         if (dragon!=null && dragon.getStatus().equals(Dragon.Status.normal)) {
             model.setDragonId(dragon.getId());
-
-                if (dragon!=null) {
-                    Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq, dragon));
-                    option.setDragon(dg);
-                }
+            if (dragon!=null) {
+                Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq, dragon));
+                model.setDragon(dg);
+            }
          }
 
-        return Message.bind(data,request);
+        return Message.bind(model,request);
    }
 
      /**

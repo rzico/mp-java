@@ -3,7 +3,9 @@ package net.wit.service.impl;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.dao.DragonDao;
+import net.wit.entity.Article;
 import net.wit.entity.Dragon;
+import net.wit.entity.Member;
 import net.wit.service.DragonService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,4 +80,9 @@ public class DragonServiceImpl extends BaseServiceImpl<Dragon, Long> implements 
 	public Page<Dragon> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return dragonDao.findPage(beginDate,endDate,pageable);
 	}
+
+	public Dragon find(Article article, Member member) {
+		return dragonDao.find(article,member);
+	}
+
 }

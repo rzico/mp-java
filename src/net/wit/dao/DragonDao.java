@@ -2,7 +2,9 @@ package net.wit.dao;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Article;
 import net.wit.entity.Dragon;
+import net.wit.entity.Member;
 
 import java.util.Date;
 
@@ -24,4 +26,8 @@ public interface DragonDao extends BaseDao<Dragon, Long> {
 	 * @return Page<Vip>
 	 */
 	Page<Dragon> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+
+	Dragon find(Article article, Member member);
+
 }

@@ -15,8 +15,8 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Long id;
     /** 会员 */
     private MemberViewModel member;
-    /** 分享 */
-    private String shareNickName;
+    /** 接龙 */
+    private String dragonName;
     /** 作者 */
     private String author;
     /** 标题 */
@@ -47,6 +47,18 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Boolean isPublish;
     /** 是否显示 */
     private Boolean showAuthor;
+
+    /** 分享数 */
+    private Long share;
+    /** 接龙数 */
+    private Long dragon;
+    /** 是否点赞 */
+    private Boolean hasLaud;
+    /** 是否收藏 */
+    private Boolean hasFavorite;
+    /** 是否关注 */
+    private Boolean hasFollow;
+
     /** 内容 */
     private List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
     /** 投票 */
@@ -172,12 +184,12 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.htmlTag = htmlTag;
     }
 
-    public String getShareNickName() {
-        return shareNickName;
+    public String getDragonName() {
+        return dragonName;
     }
 
-    public void setShareNickName(String shareNickName) {
-        this.shareNickName = shareNickName;
+    public void setDragonName(String dragonName) {
+        this.dragonName = dragonName;
     }
 
     public Boolean getIsReview() {
@@ -212,6 +224,46 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.dragonId = dragonId;
     }
 
+    public Long getShare() {
+        return share;
+    }
+
+    public void setShare(Long share) {
+        this.share = share;
+    }
+
+    public Long getDragon() {
+        return dragon;
+    }
+
+    public void setDragon(Long dragon) {
+        this.dragon = dragon;
+    }
+
+    public Boolean getHasLaud() {
+        return hasLaud;
+    }
+
+    public void setHasLaud(Boolean hasLaud) {
+        this.hasLaud = hasLaud;
+    }
+
+    public Boolean getHasFavorite() {
+        return hasFavorite;
+    }
+
+    public void setHasFavorite(Boolean hasFavorite) {
+        this.hasFavorite = hasFavorite;
+    }
+
+    public Boolean getHasFollow() {
+        return hasFollow;
+    }
+
+    public void setHasFollow(Boolean hasFollow) {
+        this.hasFollow = hasFollow;
+    }
+
     public void bind(Article article, Member shareUser) {
         this.id = article.getId();
         this.title = article.getTitle();
@@ -227,6 +279,13 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.isPublish = article.getIsPublish();
         this.showAuthor = false;
         this.dragonId = 0L;
+
+        this.share = article.getShare();
+        this.hasFavorite = false;
+        this.hasLaud = false;
+        this.hasFollow = false;
+        this.dragon = 0L;
+
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;
@@ -270,7 +329,6 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         if (shareUser==null) {
             shareUser = article.getMember();
         }
-        this.shareNickName = shareUser.displayName();
 
         if (article.getTemplate()==null) {
             this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId()+"&xuid="+shareUser.getId().toString();

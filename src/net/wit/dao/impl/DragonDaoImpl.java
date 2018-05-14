@@ -3,10 +3,15 @@ package net.wit.dao.impl;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.dao.DragonDao;
+import net.wit.entity.Article;
 import net.wit.entity.Dragon;
+import net.wit.entity.Member;
+import net.wit.entity.Product;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.FlushModeType;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -52,4 +57,16 @@ public class DragonDaoImpl extends BaseDaoImpl<Dragon, Long> implements DragonDa
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	public Dragon find(Article article, Member member) {
+		String jpql = "select dragon from Dragon dragon where dragon.member = :member and dragon.article = :article";
+		try {
+			return entityManager.createQuery(jpql, Dragon.class).setFlushMode(FlushModeType.COMMIT)
+					.setParameter("member",member)
+					.setParameter("article", article).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 }
