@@ -1,6 +1,6 @@
-package net.wit.controller.applet.member;
+package net.wit.controller.website.member;
 
-import net.wit.*;
+import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.DragonModel;
 import net.wit.entity.Article;
@@ -9,13 +9,10 @@ import net.wit.entity.Member;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -24,8 +21,8 @@ import java.util.List;
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("appletMemberDragonController")
-@RequestMapping("/applet/member/dragon")
+@Controller("websiteMemberDragonController")
+@RequestMapping("/website/member/dragon")
 public class DragonController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
