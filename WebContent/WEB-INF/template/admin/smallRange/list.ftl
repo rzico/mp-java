@@ -197,7 +197,7 @@
                 {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
-                        return ""+data.condition;
+                        return ""+data.estate;
                     }
                 },
                 {

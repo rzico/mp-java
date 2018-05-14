@@ -89,7 +89,7 @@ public class SmallRangeController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Topic topic, String appetAppId, String appetAppSerect, String version, TopicConfig.Condition condition){
+    public Message update(Topic topic, String appetAppId, String appetAppSerect, String version, TopicConfig.Estate estate){
         Topic entity = topicService.find(topic.getId());
 
         entity.setCreateDate(topic.getCreateDate());
@@ -106,7 +106,7 @@ public class SmallRangeController extends BaseController {
 
         topicConfig.setVersion(version);
 
-        topicConfig.setCondition(condition);
+        topicConfig.setEstate(estate);
 
         entity.setConfig(topicConfig);
 
