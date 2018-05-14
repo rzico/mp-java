@@ -92,6 +92,14 @@ public class DragonModel extends BaseModel implements Serializable {
         this.articleId = articleId;
     }
 
+    public Long getMainId() {
+        return mainId;
+    }
+
+    public void setMainId(Long mainId) {
+        this.mainId = mainId;
+    }
+
     public void bind(Dragon dragon) {
         this.type = dragon.getType();
         this.title = dragon.getTitle();
@@ -103,7 +111,7 @@ public class DragonModel extends BaseModel implements Serializable {
 
         this.id = dragon.getId();
         this.articleId = dragon.getArticle().getId();
-        if (dragon.getParent()==null) {
+        if (dragon.getParent()!=null) {
             this.mainId = dragon.getId();
         }
     }
