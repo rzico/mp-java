@@ -139,6 +139,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		if (!card.getMembers().contains(member)) {
 			card.getMembers().add(member);
 		}
+
 		card.setName(name);
 		card.setMobile(mobile);
 		card.setStatus(Card.Status.activate);
@@ -146,13 +147,11 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		card.setType(Card.Type.member);
 		card.setBonus(BigDecimal.ZERO);
 		card.setAmount(BigDecimal.ZERO);
+		card.setPromoter(promoter);
 
 		TopicConfig config = card.getOwner().getTopic().getConfig();
 		if (config.getPattern().equals(TopicConfig.Pattern.pattern1)) {
 			card.setType(Card.Type.team);
-			if (card.getPromoter() == null) {
-				card.setPromoter(promoter);
-			}
 		}
 
 		cardDao.merge(card);
@@ -277,35 +276,35 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		if (config.getPattern().equals(TopicConfig.Pattern.pattern1)) {
 			card.setType(Card.Type.team);
 
-			if (card.getPromoter() == null && promoter!=null) {
+			if (promoter!=null) {
 				card.setPromoter(promoter);
 			}
 		} else
 		if (config.getPattern().equals(TopicConfig.Pattern.pattern2)) {
 			card.setType(Card.Type.team);
 
-			if (card.getPromoter() == null && promoter!=null) {
+			if (promoter!=null) {
 				card.setPromoter(promoter);
 			}
 		} else
 		if (config.getPattern().equals(TopicConfig.Pattern.pattern3) && (distAmount.compareTo(BigDecimal.ZERO)>0)) {
 			card.setType(Card.Type.team);
 
-			if (card.getPromoter() == null && promoter!=null) {
+			if (promoter!=null) {
 				card.setPromoter(promoter);
 			}
 		} else
 		if (config.getPattern().equals(TopicConfig.Pattern.pattern4) && (amount.compareTo(config.getAmount())>=0)) {
 			card.setType(Card.Type.team);
 
-			if (card.getPromoter() == null && promoter!=null) {
+			if (promoter!=null) {
 				card.setPromoter(promoter);
 			}
 		} else
 		if (config.getPattern().equals(TopicConfig.Pattern.pattern5) && (card.getAmount().compareTo(config.getAmount())>=0)) {
 			card.setType(Card.Type.team);
 
-			if (card.getPromoter() == null && promoter!=null) {
+			if (promoter!=null) {
 				card.setPromoter(promoter);
 			}
 		}

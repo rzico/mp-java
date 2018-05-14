@@ -389,8 +389,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 
+
+		//接龙订单,业绩归接龙人
+		if (dragon!=null && !dragon.getMember().equals(order.getSeller())) {
+            order.setPromoter(dragon.getMember());
+		} else
 		//股东自已消费，直接获取返利，不给再分配
-		if (card!=null && card.getType().equals(Card.Type.partner)) {
+		if (dragon==null && card!=null && card.getType().equals(Card.Type.partner)) {
 			order.setPromoter(null);
 			order.setPartner(member);
 		} else {
@@ -596,12 +601,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 
-
 		try {
 
-			//分享人不为空时，关联代理商
+			//分享人不为空时，关联代理商和生成平台发展人关系
 			if (order.getPromoter()!=null) {
-				rebateService.link(order.getMember());
+				rebateService.link(order.getMember(),order.getPromoter());
 			}
 
 			order.setPersonal(order.getPromoter().getPersonal());
@@ -798,7 +802,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				Deposit deposit_partner = new Deposit();
 				deposit_partner.setBalance(seller.getBalance());
 				deposit_partner.setType(Deposit.Type.rebate);
-				deposit_partner.setMemo("股东分红");
+				deposit_partner.setMemo("分红佣金");
 				deposit_partner.setMember(partner);
 				deposit_partner.setCredit(pte);
 				deposit_partner.setDebit(BigDecimal.ZERO);
