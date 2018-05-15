@@ -55,7 +55,7 @@ public class Dragon extends BaseEntity {
 
 	/** 主接龙 */
 	@NotNull
-	@Column(columnDefinition="bigint not null default 0 comment '主接龙")
+	@Column(columnDefinition="bigint not null default 0 comment '主接龙'")
 	private Long mainId;
 
 	/** 状态 */
