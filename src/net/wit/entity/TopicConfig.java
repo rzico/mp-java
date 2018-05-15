@@ -111,6 +111,10 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="int(11) default '0'comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
 	private Estate estate;
 
+	/** 小程序 状态备注 */
+	@Column(columnDefinition="varchar(255) comment '小程序 version'")
+	private String stateRemark;
+
 	public PromoterType getPromoterType() {
 		return promoterType;
 	}
@@ -205,5 +209,13 @@ public class TopicConfig implements Serializable {
 
 	public void setEstate(Estate estate) {
 		this.estate = estate;
+	}
+
+	public String getStateRemark() {
+		return stateRemark;
+	}
+
+	public void setStateRemark(String stateRemark) {
+		this.stateRemark = stateRemark;
 	}
 }
