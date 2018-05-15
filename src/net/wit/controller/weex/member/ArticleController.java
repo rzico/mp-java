@@ -82,6 +82,12 @@ public class ArticleController extends BaseController {
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
 
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     @Resource(name = "weixinUpServiceImpl")
     private WeixinUpService weixinUpService;
 
@@ -91,10 +97,20 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isDraft,Pageable pageable, HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            Role role = roleService.find(1L);
+            if (admin.getRoles().contains(role)) {
+                member = admin.getEnterprise().getMember();
+            }
+        }
+
         ArticleCatalog  articleCatalog = articleCatalogService.find(articleCatalogId);
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCatalog!=null) {
@@ -156,14 +172,25 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
     public Message submit(String body,Long goodsId, HttpServletRequest request) {
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            Role role = roleService.find(1L);
+            if (admin.getRoles().contains(role)) {
+                member = admin.getEnterprise().getMember();
+            }
+        }
+
         ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
         if (model==null) {
             return Message.error("无效数据包");
         }
+
         Long id = model.getId();
         String title = model.getTitle();
         String author = member.getNickName();
@@ -212,6 +239,7 @@ public class ArticleController extends BaseController {
             article.setIsTop(false);
             article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
+            article.setMember(member);
         }
         article.setIsDraft(isDraft);
         article.setIsAudit(false);
@@ -221,7 +249,6 @@ public class ArticleController extends BaseController {
         article.setMusic(music);
         article.setContent(content);
         article.setVotes(votes);
-        article.setMember(member);
         article.setMediaType(Article.MediaType.image);
 
         if (isNew) {

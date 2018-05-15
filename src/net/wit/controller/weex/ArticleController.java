@@ -114,6 +114,7 @@ public class ArticleController extends BaseController {
         }
 
         return Message.bind(model,request);
+
    }
 
     /**

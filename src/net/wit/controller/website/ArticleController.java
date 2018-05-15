@@ -152,11 +152,12 @@ public class ArticleController extends BaseController {
         }
 
         if (dragon!=null && dragon.getStatus().equals(Dragon.Status.normal)) {
+            model.setDragonName(dragon.getMember().displayName());
             model.setDragonId(dragon.getId());
-            if (dragon!=null) {
-                Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq, dragon));
-                model.setDragon(dg);
-            }
+
+            Long dg = orderService.count(new Filter("dragon", Filter.Operator.eq, dragon));
+            model.setDragon(dg);
+
         }
 
         return Message.bind(model,request);
