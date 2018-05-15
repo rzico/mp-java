@@ -213,6 +213,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setZipCode(receiver.getZipCode());
 			order.setPhone(receiver.getPhone());
 			order.setArea(receiver.getArea());
+			order.setLocation(receiver.getLocation());
 		}
 
 		List<OrderItem> orderItems = order.getOrderItems();

@@ -133,8 +133,13 @@ public class LBSController extends BaseController {
     public Message position(Long memberId,HttpServletRequest request){
         Member member = memberService.find(memberId);
         Map<String,Double> data = new HashMap<String,Double>();
-        data.put("lat",member.getLocation().getLat());
-        data.put("lng",member.getLocation().getLng());
+        if (member.getLocation()!=null) {
+            data.put("lat", member.getLocation().getLat());
+            data.put("lng", member.getLocation().getLng());
+        } else {
+            data.put("lat",Double.parseDouble("0"));
+            data.put("lng",Double.parseDouble("0"));
+        }
         return Message.success(data,"success");
     }
 
