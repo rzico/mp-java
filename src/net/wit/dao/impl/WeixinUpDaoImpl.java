@@ -350,9 +350,19 @@ public class WeixinUpDaoImpl implements WeixinUpDao{
                 }
             }
             else{
+                //添加算法，更改文章格式
+                String[] str=s.split("<|>");
+                String content="<h3>";
+                for (int i = 0; i < str.length; i++) {
+                    if(str[i].contains("style=")||str[i].contains("/p")||str[i].contains("/strong")||str[i].contains("/span")||str[i].length()==1||str[i].equals("strong")||str[i].equals("span")){
+                        continue;
+                    }
+                    content+=str[i];
+                }
+                content+="</h3>";
                 articleContent.setThumbnail("");
                 articleContent.setOriginal("");
-                articleContent.setContent(s);
+                articleContent.setContent(content);
             }
             articleContents.add(articleContent);
         }

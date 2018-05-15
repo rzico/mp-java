@@ -46,7 +46,7 @@ public class TopicConfig implements Serializable {
 
 	}
 
-	public static enum Condition{
+	public static enum Estate{
 		/** 暂停服务 */
 		outOfService,
 		/** 未上传 */
@@ -108,8 +108,8 @@ public class TopicConfig implements Serializable {
 
 	/** 小程序 condition */
 	@NotNull
-	@Column(columnDefinition="int(11) default '0' comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
-	private Condition condition;
+	@Column(columnDefinition="int(11) default '0'comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
+	private Estate estate;
 
 	public PromoterType getPromoterType() {
 		return promoterType;
@@ -199,11 +199,11 @@ public class TopicConfig implements Serializable {
 		this.version = version;
 	}
 
-	public Condition getCondition() {
-		return condition;
+	public Estate getEstate() {
+		return estate;
 	}
 
-	public void setCondition(Condition condition) {
-		this.condition = condition;
+	public void setEstate(Estate estate) {
+		this.estate = estate;
 	}
 }
