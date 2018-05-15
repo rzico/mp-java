@@ -53,6 +53,11 @@ public class Dragon extends BaseEntity {
 	private Type type;
 
 
+	/** 主接龙 */
+	@NotNull
+	@Column(columnDefinition="bigint not null default 0 comment '主接龙")
+	private Long mainId;
+
 	/** 状态 */
 	@NotNull
 	@Column(columnDefinition="int(11) comment '状态 {normal:正常,closed:关闭}'")
@@ -77,12 +82,13 @@ public class Dragon extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Article article;
 
-
 	/** 父级接龙 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false)
 	private Dragon parent;
+
+
 
 	/**  订单 */
 	@OneToMany(mappedBy = "dragon", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -158,5 +164,13 @@ public class Dragon extends BaseEntity {
 
 	public void setParent(Dragon parent) {
 		this.parent = parent;
+	}
+
+	public Long getMainId() {
+		return mainId;
+	}
+
+	public void setMainId(Long mainId) {
+		this.mainId = mainId;
 	}
 }

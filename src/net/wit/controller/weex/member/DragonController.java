@@ -77,7 +77,10 @@ public class DragonController extends BaseController {
         dragon.setTitle(title);
         dragon.setType(type);
         dragon.setDeleted(false);
+        dragon.setMainId(0L);
         dragonService.save(dragon);
+        dragon.setMainId(dragon.getId());
+        dragonService.update(dragon);
 //        messageService.reviewPushTo(review);
         DragonModel model = new DragonModel();
         model.bind(dragon);
@@ -126,8 +129,18 @@ public class DragonController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("member", Filter.Operator.eq,member));
+        filters.add(new Filter("owner", Filter.Operator.eq,member));
         pageable.setFilters(filters);
+        List<Order> orders = new ArrayList<>();
+        Order o = new Order();
+        o.setDirection(Order.Direction.desc);
+        o.setProperty("mainId");
+        orders.add(o);
+        Order d = new Order();
+        d.setDirection(Order.Direction.asc);
+        d.setProperty("id");
+        orders.add(d);
+        pageable.setOrders(orders);
         Page<Dragon> page = dragonService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(DragonModel.bindList(page.getContent()));
