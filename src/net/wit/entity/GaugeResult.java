@@ -27,6 +27,21 @@ public class GaugeResult extends OrderEntity {
 
     private static final long serialVersionUID = 24L;
 
+    public enum Type{
+        /**   富文本 */
+        html,
+        /**   纯文本 */
+        text,
+        /**   图表 */
+        echart
+
+    };
+
+    /** 类型 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '结果类型 {html:富文本,text:纯文本,echart:图表}'")
+    private Type type;
+
     /** 量表 */
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -95,5 +110,11 @@ public class GaugeResult extends OrderEntity {
         this.scompare = scompare;
     }
 
+    public Type getType() {
+        return type;
+    }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
 }

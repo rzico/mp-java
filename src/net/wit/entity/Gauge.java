@@ -108,25 +108,25 @@ public class Gauge extends BaseEntity {
 
     /** 测评简介 */
     @Lob
-    @Column(columnDefinition="longtext comment '测评简介'")
+    @Column(columnDefinition="longtext comment '测评目的'")
     @JsonIgnore
     private String notice1;
 
     /** 适用对象 */
     @Lob
-    @Column(columnDefinition="longtext comment '适用对象'")
+    @Column(columnDefinition="longtext comment '测评介绍'")
     @JsonIgnore
     private String notice2;
 
     /** 测评简介 */
     @Lob
-    @Column(columnDefinition="longtext comment '测评简介'")
+    @Column(columnDefinition="longtext comment '专业支持'")
     @JsonIgnore
     private String notice3;
 
     /** 测评简介 */
     @Lob
-    @Column(columnDefinition="longtext comment '测评简介'")
+    @Column(columnDefinition="longtext comment '测评预知'")
     @JsonIgnore
     private String notice4;
 
@@ -458,5 +458,37 @@ public class Gauge extends BaseEntity {
 
     public void setDevi(BigDecimal devi) {
         this.devi = devi;
+    }
+
+    public String getNotice1() {
+        return notice1;
+    }
+
+    public void setNotice1(String notice1) {
+        this.notice1 = notice1;
+    }
+
+    public String getNotice2() {
+        return notice2;
+    }
+
+    public void setNotice2(String notice2) {
+        this.notice2 = notice2;
+    }
+
+    public String getNotice3() {
+        return notice3;
+    }
+
+    public void setNotice3(String notice3) {
+        this.notice3 = notice3;
+    }
+
+    public String getNotice4() {
+        return notice4;
+    }
+
+    public void setNotice4(String notice4) {
+        this.notice4 = notice4;
     }
 }
