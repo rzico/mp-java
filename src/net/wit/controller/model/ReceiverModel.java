@@ -74,11 +74,30 @@ public class ReceiverModel extends BaseModel implements Serializable {
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
     }
-//
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+
+
+    //
 //    public Long getRoadId() {
 //        return roadId;
 //    }
 //
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
 //    public void setRoadId(Long roadId) {
 //        this.roadId = roadId;
 //    }
