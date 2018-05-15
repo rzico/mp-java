@@ -149,6 +149,12 @@ public class Evaluation extends BaseEntity {
     @JsonIgnore
     private String result;
 
+    /** 测评结果*/
+    @Lob
+    @Column(columnDefinition="longtext comment '测评结果'")
+    @JsonIgnore
+    private String jsonResult;
+
     /** 测评变量*/
     @Lob
     @Column(columnDefinition="longtext comment '测评变量'")
@@ -375,4 +381,13 @@ public class Evaluation extends BaseEntity {
     public void setOperate(Enterprise operate) {
         this.operate = operate;
     }
+
+    public String getJsonResult() {
+        return jsonResult;
+    }
+
+    public void setJsonResult(String jsonResult) {
+        this.jsonResult = jsonResult;
+    }
+
 }
