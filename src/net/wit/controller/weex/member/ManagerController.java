@@ -79,6 +79,24 @@ public class ManagerController extends BaseController {
         if (admin!=null && admin.getEnterprise()!=null) {
             Enterprise ent = admin.getEnterprise();
 
+            model.setHasTopic(ent.getMember().getTopic()!=null);
+            Topic topic = ent.getMember().getTopic();
+            if (topic!=null) {
+                if (topic == null) {
+                    model.setTopic("未开通");
+                } else {
+                    if (topic.getStatus().equals(Topic.Status.waiting)) {
+                        model.setTopic("待点亮");
+                    }
+                    if (topic.getStatus().equals(Topic.Status.success)) {
+                        model.setTopic("已认证");
+                    }
+                    if (topic.getStatus().equals(Topic.Status.failure)) {
+                        model.setTopic("已过期");
+                    }
+                }
+            }
+
             if (ent.getMember().getTopic()!=null && ent.getMember().getTopic().getStatus().equals(Topic.Status.success)) {
                 model.setIsShop(true);
             }

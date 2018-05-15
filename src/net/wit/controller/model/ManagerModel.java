@@ -131,13 +131,13 @@ public class ManagerModel extends BaseModel implements Serializable {
         this.nickName = member.displayName();
         this.logo = member.getLogo();
         this.tags = TagModel.bindList(member.getTags());
-        this.hasTopic = (member.getTopic()!=null);
         this.isAgent = false;
         this.isShop = false;
         this.hasShop = false;
         Topic topic = member.getTopic();
 
         this.useCashier = false;
+        this.hasTopic = (member.getTopic()!=null);
         if (topic==null) {
             this.topic = "未开通";
         } else {

@@ -89,6 +89,8 @@ public class LBSController extends BaseController {
         gd.setLat(lat);
         gd.setLng(lng);
         Location bd = bd_encrypt(gd);
+        bd.setLat(lat);
+        bd.setLng(lng);
         @SuppressWarnings("resource")
         HttpClient httpClient = new DefaultHttpClient();
         try {

@@ -136,9 +136,19 @@ public class TopicController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Member loginMember = member;
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
         Topic topic = member.getTopic();
         if (topic==null) {
             return Message.error("请先开通专栏");
+        }
+        if (!loginMember.equals(topic.getMember())) {
+            return Message.error("你没有专栏权限");
         }
         if (topic.getLogo()==null) {
             return Message.error("请设置专栏头像");
@@ -160,10 +170,23 @@ public class TopicController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+
+        Member loginMember = member;
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
         Topic topic = member.getTopic();
+
         if (topic==null) {
             return Message.error("请先开通专栏");
         }
+        if (!loginMember.equals(topic.getMember())) {
+            return Message.error("你没有专栏权限");
+        }
+
         if (topic.getFee().compareTo(BigDecimal.ZERO)==0)  {
             topic.setStatus(Topic.Status.success);
             topicService.update(topic);
@@ -195,14 +218,21 @@ public class TopicController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Member loginMember = member;
+
         Admin admin = adminService.findByMember(member);
-        if (admin!=null && !admin.isOwner()) {
-            return Message.error("员工账号不能操作");
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
         }
         Topic topic = member.getTopic();
         if (topic==null) {
             return Message.error("请先开通专栏");
         }
+        if (!loginMember.equals(topic.getMember())) {
+            return Message.error("你没有专栏权限");
+        }
+
         if (name!=null) {
             topic.setName(name);
             if (admin!=null) {
@@ -325,6 +355,12 @@ public class TopicController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
+
         Topic topic = member.getTopic();
         if (topic==null) {
             topic = new Topic();
@@ -342,7 +378,6 @@ public class TopicController extends BaseController {
         TopicIndexModel model = new TopicIndexModel();
         model.bind(topic);
 
-        Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
             model.setIsOwner(admin.isOwner());
             model.setNoJob(false);
@@ -350,7 +385,6 @@ public class TopicController extends BaseController {
             model.setNoJob(true);
             model.setIsOwner(false);
         }
-
 
         Long lives = liveService.count(new Filter("member", Filter.Operator.eq,member));
 
