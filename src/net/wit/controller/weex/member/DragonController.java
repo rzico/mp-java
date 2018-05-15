@@ -84,7 +84,7 @@ public class DragonController extends BaseController {
 //        messageService.reviewPushTo(review);
         DragonModel model = new DragonModel();
         model.bind(dragon);
-        return Message.success(model,"发布成功");
+        return Message.success(model,"创建接龙成功，请分享至群。");
 
     }
 

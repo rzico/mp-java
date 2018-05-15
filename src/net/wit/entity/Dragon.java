@@ -52,7 +52,6 @@ public class Dragon extends BaseEntity {
 	@Column(columnDefinition="int(11) comment '类型 {buying:团购,enroll:报名}'")
 	private Type type;
 
-
 	/** 主接龙 */
 	@NotNull
 	@Column(columnDefinition="bigint not null default 0 comment '主接龙'")
