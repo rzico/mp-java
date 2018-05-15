@@ -612,24 +612,24 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	}
 
 	public void login(Member member,HttpServletRequest request) {
-		if (DateUtils.truncate(member.getCreateDate(), Calendar.DATE).equals(DateUtils.truncate(new Date(), Calendar.DATE))) {
-			Article article = articleDao.find(1L);
-			ArticleShare share = new ArticleShare();
-			share.setIp(request.getRemoteAddr());
-			share.setMember(member);
-			share.setArticle(article);
-			share.setIsShow(true);
-			share.setShareType(ArticleShare.ShareType.appWeex);
-			share.setAuthor(article.getMember());
-			sharePushTo(share);
-		}
+//		if (DateUtils.truncate(member.getCreateDate(), Calendar.DATE).equals(DateUtils.truncate(new Date(), Calendar.DATE))) {
+//			Article article = articleDao.find(1L);
+//			ArticleShare share = new ArticleShare();
+//			share.setIp(request.getRemoteAddr());
+//			share.setMember(member);
+//			share.setArticle(article);
+//			share.setIsShow(true);
+//			share.setShareType(ArticleShare.ShareType.appWeex);
+//			share.setAuthor(article.getMember());
+//			sharePushTo(share);
+//		}
 		if (member.getMobile()==null) {
 			Message msg = new Message();
 			msg.setMember(member);
 			msg.setReceiver(member);
 			msg.setType(Message.Type.message);
 			msg.setTitle("绑定手机号");
-			msg.setContent("接工信部要求，发布文章都必须绑定手机。");
+			msg.setContent("接工信部要求，分发内容都必须绑定手机。");
 			Map<String,String> ext = new HashMap<String,String>();
 			ext.put("type","mobile");
 			msg.setExt(JsonUtils.toJson(ext));
