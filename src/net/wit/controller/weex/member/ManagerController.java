@@ -78,6 +78,11 @@ public class ManagerController extends BaseController {
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
             Enterprise ent = admin.getEnterprise();
+
+            if (ent.getMember().getTopic()!=null && ent.getMember().getTopic().getStatus().equals(Topic.Status.success)) {
+                model.setIsShop(true);
+            }
+
             if (!ent.getType().equals(Enterprise.Type.shop) && ent.getStatus().equals(Enterprise.Status.success)) {
                 model.setIsAgent(true);
             }
