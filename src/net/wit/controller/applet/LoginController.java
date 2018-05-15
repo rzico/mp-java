@@ -72,6 +72,8 @@ public class LoginController extends BaseController {
     @Resource(name = "roleServiceImpl")
     private RoleService roleService;
 
+    @Resource(name = "pluginConfigServiceImpl")
+    private PluginConfigService pluginConfigService;
     @RequestMapping(value = "")
     public
     @ResponseBody
@@ -81,7 +83,9 @@ public class LoginController extends BaseController {
         if(memberId != null){
             //如果该参数不为空 则是第三放平台登录
             Member member = memberService.find(memberId);
-            ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(bundle.getString("weixin.component.appid"), bundle.getString("weixin.component.secret"));
+            PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
+            String verifyTicket = pluginConfig.getAttribute("verify_ticket");
+            ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, bundle.getString("weixin.component.appid"), bundle.getString("weixin.component.secret"));
             if( componentAccessToken != null && member != null){
                 url = "https://api.weixin.qq.com/sns/component/jscode2session?appid="+ member.getTopic().getConfig().getAppetAppId() +"&js_code=" + code +
                         "&grant_type=authorization_code&component_appid=" +

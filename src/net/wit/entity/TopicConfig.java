@@ -46,7 +46,7 @@ public class TopicConfig implements Serializable {
 
 	}
 
-	public enum Condition{
+	public static enum Condition{
 		/** 暂停服务 */
 		outOfService,
 		/** 未上传 */

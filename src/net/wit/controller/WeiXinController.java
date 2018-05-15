@@ -10,6 +10,7 @@ import net.wit.plat.im.User;
 import net.wit.plat.weixin.aes.AesException;
 import net.wit.plat.weixin.aes.WXBizMsgCrypt;
 import net.wit.plat.weixin.main.MenuManager;
+import net.wit.plat.weixin.pojo.AuthAccessToken;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.propa.ArticlePropa;
 import net.wit.plat.weixin.util.SignUtil;
@@ -81,6 +82,9 @@ public class WeiXinController extends BaseController {
     @Resource(name = "paymentServiceImpl")
     private PaymentService paymentService;
 
+
+    @Resource(name = "topicServiceImpl")
+    private TopicService topicService;
 
     //消息校验TOKEN
 //    private static final String COMPONENT_TOKEN="witpay";
@@ -553,19 +557,33 @@ public class WeiXinController extends BaseController {
         System.out.println("------step.1----使用客服消息接口回复粉丝----逻辑开始-------------------------");
         try {
             System.out.println("------step.2----获取第三方TOKEN----逻辑开始-------------------------auth_code: "+auth_code);
-            net.wit.entity.Article article=articleService.find(476l);
-            System.out.println(article.getContent());
+//            net.wit.entity.Article article=articleService.find(476l);
+//            System.out.println(article.getContent());
 
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-            String conToken = ArticlePropa.getComponentToken(bundle.getString("weixin.component.appid"),bundle.getString("weixin.component.secret"),article.getContent());
-            System.out.println("------step.2.5----获取第三方TOKEN----逻辑开始-------------------------token:"+conToken);
+//            String conToken = ArticlePropa.getComponentToken(bundle.getString("weixin.component.appid"),bundle.getString("weixin.component.secret"),article.getContent());
+            PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
+            String verifyTicket = pluginConfig.getAttribute("verify_ticket");
+            String conToken = WeixinApi.getComponentToken(verifyTicket, bundle.getString("weixin.component.appid"),bundle.getString("weixin.component.secret")).getComponent_access_token();
+                    System.out.println("------step.2.5----获取第三方TOKEN----逻辑开始-------------------------token:"+conToken);
 //            String authcode=ArticlePropa.getAuthCode(conToken,COMPONENT_APPID);
-            String authCode=ArticlePropa.getAuthorizationCode(conToken,bundle.getString("weixin.component.appid"),auth_code);
+//            String authCode=ArticlePropa.getAuthorizationCode(conToken,bundle.getString("weixin.component.appid"),auth_code);
+            AuthAccessToken authAccessToken = WeixinApi.getAuthorizationCode(conToken, bundle.getString("weixin.component.appid"), auth_code);
             System.out.println("------step.3----使用客服消息接口回复粉丝----逻辑开始---------------------authCode:"+auth_code);
-
-            System.out.println("------step.4----使用客服消息接口回复粉丝----逻辑开始---------------------jsonRes.authorization_info:"+authCode);
-            JSONObject jsonObject1=JSONObject.fromObject(authCode);
-            String authToken=jsonObject1.get("authorizer_access_token").toString();
+            String authToken = authAccessToken.getAuthorizer_access_token();
+            Member current = memberService.getCurrent();
+            if(current!=null){
+                System.out.println("------step.3.1----保存topic---------------------appid:"+authAccessToken.getAuthorizer_appid());
+                TopicConfig topicConfig = current.getTopic().getConfig();
+                topicConfig.setAppetAppId(authAccessToken.getAuthorizer_appid());
+                Topic topic = current.getTopic();
+                topic.setConfig(topicConfig);
+                topicService.save(topic);
+                System.out.println("------step.3.2----id:" + current.getId() + "---------------------==========>>>>>>>>>:");
+            }
+//            System.out.println("------step.4----使用客服消息接口回复粉丝----逻辑开始---------------------jsonRes.authorization_info:"+authCode);
+//            JSONObject jsonObject1=JSONObject.fromObject(authCode);
+//            String authToken=jsonObject1.get("authorizer_access_token").toString();
             System.out.println("------step.4.5----使用客服消息接口回复粉丝----逻辑开始---------------------代理TOKEN:"+authToken);
             String msg = auth_code + "_from_api";
             JSONObject jsonObject = new JSONObject();
@@ -671,15 +689,6 @@ public class WeiXinController extends BaseController {
             System.out.println("推送component_verify_ticket协议-----------AuthorizationCode = "+AuthorizationCode);
             System.out.println("推送component_verify_ticket协议-----------PreAuthCode = "+PreAuthCode);
             if(ticket!=null&&!ticket.equals("")){
-//                System.out.println("8、推送component_verify_ticket协议-----------ticket = "+ticket);
-//                net.wit.entity.Article article=articleService.find(476l);
-//                article.setContent(ticket);
-//                articleService.save(article);
-                VerifyTicket verifyTicket = new VerifyTicket();
-                verifyTicket.setAppid(appId);
-                verifyTicket.setComponentVerifyTicket(ticket);
-                verifyTicket.setCreateTime(Long.valueOf(createTime));
-                WeixinApi.verify_ticket = verifyTicket;
                 net.wit.entity.PluginConfig pluginConfig=pluginConfigService.findByPluginId("verifyTicket");
                 pluginConfig.setAttribute("verify_ticket",ticket);
                 pluginConfigService.update(pluginConfig);
