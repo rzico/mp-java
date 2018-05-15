@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 
+import net.wit.entity.Location;
 import net.wit.entity.Member;
 import net.wit.entity.Order;
 import net.wit.entity.Payment;
@@ -346,6 +347,10 @@ public class OrderModel extends BaseModel implements Serializable {
         this.receiver.setAreaName(order.getAreaName());
         this.receiver.setConsignee(order.getConsignee());
         this.receiver.setPhone(order.getPhone());
+        if (order.getLocation()!=null) {
+            this.receiver.setLat(order.getLocation().getLat());
+            this.receiver.setLng(order.getLocation().getLng());
+        }
         this.promoter = "";
         if (order.getPromoter()!=null) {
            Member promoter = order.getPromoter();
