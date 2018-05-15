@@ -242,9 +242,11 @@ public class RebateServiceImpl extends BaseServiceImpl<Rebate, Long> implements 
 	}
 
 
-	public void link(Member member) throws Exception {
-		Member promoter = member.getPromoter();
+	public void link(Member member,Member promoter) throws Exception {
 		if (promoter!=null) {
+			if (member.getPromoter()==null) {
+				member.setPromoter(promoter);
+			}
 			Admin admin = adminDao.findByMember(promoter);
 			if (admin!=null && admin.getEnterprise()!=null) {
 				Enterprise enterprise = admin.getEnterprise();

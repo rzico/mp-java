@@ -398,10 +398,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				evaluationDao.merge(evaluation);
                 if (evaluation.getPromoter()!=null && evaluation.getRebate().compareTo(BigDecimal.ZERO)>0) {
 					Member buyer = evaluation.getMember();
-					if (buyer.getPromoter()==null) {
-						buyer.setPromoter(evaluation.getPromoter());
-						rebateService.link(buyer);
-					}
+					rebateService.link(buyer,evaluation.getPromoter());
 
 					evaluation.setPersonal(buyer.getPersonal());
 					evaluation.setAgent(buyer.getAgent());

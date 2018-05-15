@@ -30,7 +30,7 @@ public interface RebateService extends BaseService<Rebate, Long> {
 	public void link(Order order) throws Exception;
 
 
-	public void link(Member member) throws Exception;
+	public void link(Member member,Member promoter) throws Exception;
 
 
 }

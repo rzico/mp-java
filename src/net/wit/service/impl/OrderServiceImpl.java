@@ -527,13 +527,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			memberService.create(order.getMember(), order.getPromoter());
 		}
 
-
-
 		try {
 
 			//分享人不为空时，关联代理商
 			if (order.getPromoter()!=null) {
-				rebateService.link(order.getMember());
+				rebateService.link(order.getMember(),order.getPromoter());
 			}
 
 			order.setPersonal(order.getPromoter().getPersonal());

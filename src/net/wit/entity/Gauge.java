@@ -106,6 +106,30 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     private String notice;
 
+    /** 测评简介 */
+    @Lob
+    @Column(columnDefinition="longtext comment '测评简介'")
+    @JsonIgnore
+    private String notice1;
+
+    /** 适用对象 */
+    @Lob
+    @Column(columnDefinition="longtext comment '适用对象'")
+    @JsonIgnore
+    private String notice2;
+
+    /** 测评简介 */
+    @Lob
+    @Column(columnDefinition="longtext comment '测评简介'")
+    @JsonIgnore
+    private String notice3;
+
+    /** 测评简介 */
+    @Lob
+    @Column(columnDefinition="longtext comment '测评简介'")
+    @JsonIgnore
+    private String notice4;
+
     /** 修订收集*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ky_gauge_attribute")
