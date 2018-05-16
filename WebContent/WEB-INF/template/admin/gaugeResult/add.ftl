@@ -99,10 +99,48 @@
             </div>
 
         [/#if]
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">结果类型：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="type" class="select" style="background-color: #FFFFFF">
+					<option value="">结果类型</option>
+                [#list types as type]
+                    <option value="${type.id}">${type.name}</option>
+                [/#list]
+				</select>
+			</span>
+            </div>
+        </div>
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">图表类型：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="chartType" class="select" style="background-color: #FFFFFF">
+					<option value="">图表类型</option>
+                [#list  chartTypes as chartType]
+                    <option value="${chartType.id}">${chartType.name}</option>
+                [/#list]
+				</select>
+			</span>
+            </div>
+        </div>
+
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
+                <script id="htmlContent"  name="htmlContent" type="text/plain" style="width:100%;height:400px;"></script>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content" id="content" style="height:400px;width:100%;"></textarea>
             </div>
         </div>
 
@@ -205,6 +243,18 @@
                     }
                 });
             });
+
+            $('select[name="type"]').on('ifChanged', function(e) {
+                var r = $(this).val();//人员类别PK
+                if (r=='html') {
+                    $("#content").removeClass("hidden");
+                    $("#htmlContent").addClass("hidden");
+                } else {
+                    $("#content").removeClass("hidden");
+                    $("#htmlContent").addClass("hidden");
+                }
+            });
+
         </script>
 </body>
 </html>
