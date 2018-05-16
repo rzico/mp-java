@@ -134,6 +134,8 @@ public class WeixinApi {
 	// 查询小程序当前隐私设置（是否可被搜索）
 	public static final String GETAPPLETSTATUS = "https://api.weixin.qq.com/wxa/getwxasearchstatus?access_token=AUTH_TOKEN";
 
+    //查询最新一次提交的审核状态（仅供第三方代小程序调用）
+    public static final String GETSTATUS = "https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token=TOKEN";
 
 	/**
 	 * 发起https请求并获取结果
@@ -209,11 +211,41 @@ public class WeixinApi {
     }
 
     /**
+     * 获取小程序审核状态
+     *
+     * @param authToken 第三方平台获取到的该小程序授权的authorizer_access_token
+     * @return 返回小程序最新提交结果 0 审核通过 2 审核中 1审核失败，当审核失败时返回失败具体原因
+     */
+    public static String getStatus(String authToken) {
+        JSONObject jsonObject = httpRequest(GETSTATUS.replace("TOKEN", authToken), "GET", "");
+        if (jsonObject != null) {
+            /**
+             *  -1	系统繁忙
+             86000	不是由第三方代小程序进行调用
+             86001	不存在第三方的已经提交的代码
+             85012	无效的审核id
+             */
+            if (jsonObject.get("status") != null) {
+               Long i=jsonObject.getLong("status");
+                if(i==1){
+                    if(jsonObject.get("reason")!=null){
+                        return jsonObject.getString("reason");
+                    }
+                    return "审核失败";
+                }
+                return i.toString();
+            }
+        }
+        return null;
+    }
+
+    /**
      * 获取小程序信息
      *
      * @param token           component_access_token
      * @param authorizerAppid 授权方appid
      * @param componentAppid  第三方平台appid
+     * @return 返回小程序的基本信息
      */
     public static SmallInformation getSmallInformation(String token, String componentAppid, String authorizerAppid) {
         String string = "{\"component_appid\":\"" + componentAppid + "\" ,\"authorizer_appid\": \"" + authorizerAppid + "\"}";
@@ -242,15 +274,15 @@ public class WeixinApi {
             authorizerInfo.setPrincipalName("principal_name");
             authorizerInfo.setQrcodeUrl("qrcode_url");
             authorizerInfo.setSignature("signature");
-            if(object.getJSONObject("verify_type_info")!=null){
+            if (object.getJSONObject("verify_type_info") != null) {
                 AuthorizerInfo.VerifyTypeInfo verifyTypeInfo = new AuthorizerInfo.VerifyTypeInfo();
                 verifyTypeInfo.setId(object.getJSONObject("verify_type_info").getLong("id"));
             }
-            if(object.getJSONArray("categories")!=null&&object.getJSONArray("categories").size()>0){
-                List<AuthorizerInfo.Categories> list =new ArrayList<>();
-                JSONArray array=object.getJSONArray("categories");
-                for(int i=0;i<array.size();i++){
-                    if(array.getJSONObject(i)!=null){
+            if (object.getJSONArray("categories") != null && object.getJSONArray("categories").size() > 0) {
+                List<AuthorizerInfo.Categories> list = new ArrayList<>();
+                JSONArray array = object.getJSONArray("categories");
+                for (int i = 0; i < array.size(); i++) {
+                    if (array.getJSONObject(i) != null) {
                         AuthorizerInfo.Categories categories = new AuthorizerInfo.Categories();
                         categories.setFirst(array.getJSONObject(i).getString("first"));
                         categories.setSecond(array.getJSONObject(i).getString("second"));

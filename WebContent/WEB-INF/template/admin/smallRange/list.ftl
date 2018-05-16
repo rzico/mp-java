@@ -11,13 +11,13 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/lib/Hui-iconfont/1.0.8/iconfont.css"/>
 
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css"/>
     <style>
         .center {
             text-align: center;
@@ -29,8 +29,9 @@
     <title>Shop</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> SmallRange <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
-                                                                                                            href="javascript:location.replace(location.href);" title="刷新"><i
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> SmallRange <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class=""> 日期范围：
@@ -45,13 +46,13 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20">
-        <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; Shop &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                    <i class="Hui-iconfont">&#xe600;</i> 新增Shop</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-        </span>
-    </div>
+<#--<div class="cl pd-5 bg-1 bk-gray mt-20">-->
+<#--<span class="l">-->
+<#--<a href="javascript:;" onclick="add('首页 &gt; Shop &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">-->
+<#--<i class="Hui-iconfont">&#xe600;</i> 新增Shop</a>-->
+<#--<a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>-->
+<#--</span>-->
+<#--</div>-->
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -77,10 +78,10 @@
 <script type="text/javascript">
     var table;
     var isSelectAll = false;
-    var idTitleChange = function(){
-        if(!isSelectAll){
+    var idTitleChange = function () {
+        if (!isSelectAll) {
             $('tbody').find("input[name='ids']:checkbox").prop('checked', true);
-        }else{
+        } else {
             $('tbody').find("input[name='ids']:checkbox").removeProp('checked');
         }
         isSelectAll = !isSelectAll;
@@ -161,6 +162,26 @@
                 },
                 {
                     "mData": "id",
+                    "sTitle": "上传/更新",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
+                    "sTitle": "审核",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
+                    "sTitle": "发布",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
+                    "sTitle": "版本回退",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
                 }
@@ -169,9 +190,9 @@
                 {
                     "aTargets": [0],
                     "mRender": function (data, display, row) {
-                        if(data != null){
+                        if (data != null) {
                             return "<input style='text-align: center;' type='checkbox' value='" + data + "' name='ids'>";
-                        }else{
+                        } else {
                             return "";
                         }
                     }
@@ -185,54 +206,95 @@
                 {
                     "aTargets": [4],
                     "mRender": function (data, display, row) {
-                        return ""+data.appetAppId;
+                        return "" + data.appetAppId;
                     }
                 },
                 {
                     "aTargets": [5],
                     "mRender": function (data, display, row) {
-                        return ""+data.version;
+                        return "" + data.version;
                     }
                 },
                 {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
-                        return ""+data.estate;
+                        return "" + data.estate;
+                    }
+                },
+                {
+                    "aTargets": [11],
+                    "mRender": function (data, display, row) {
+                        if (data != null) {
+                            return "<a title='查询' href='javascript:;' onclick=\"show('" + data + "','searchView.jhtml?id=" + data + "','1000" + data + "','360','400')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe665;</i></a>";
+                            /*"<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; smallRange &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +*/
+//                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                        } else {
+                            return "";
+                        }
                     }
                 },
                 {
                     "aTargets": [7],
                     "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; smallRange &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
-                        }else{
+                        if (data != null) {
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show(this,'" + data + "');\" name=\"\">上传程序</button>"
+                        } else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [8],
+                    "mRender": function (data, display, row) {
+                        if (data != null) {
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"commit(this,'" + data + "');\" name=\"\">提交审核</button>"
+                        } else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [9],
+                    "mRender": function (data, display, row) {
+                        if (data != null) {
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"publish(this,'" + data + "');\" name=\"\">点我发布</button>"
+                        } else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [10],
+                    "mRender": function (data, display, row) {
+                        if (data != null) {
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"comeBack(this,'" + data + "');\" name=\"\">版本回退</button>"
+                        } else {
                             return "";
                         }
                     }
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 7, 8, 9, 10, 11]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
-                var _endDate   = $("#datemax").val();
+                var _endDate = $("#datemax").val();
                 var _searchValue = $("#searchValue").val();
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {
                     icon: 16
-                    ,shade: 0.01
+                    , shade: 0.01
                 });
                 $.ajax({
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
                         "aoData": JSON.stringify(aoData),
-                        "beginDate":_beginDate,
-                        "endDate":_endDate,
+                        "beginDate": _beginDate,
+                        "endDate": _endDate,
 
-                        "searchValue":_searchValue
+                        "searchValue": _searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
                     dataType: 'json',
@@ -255,8 +317,8 @@
         table = $('.table').DataTable();
     });
     //   表格自适应屏幕
-    window.onresize = function(){
-        $('.table').css('width','100%');
+    window.onresize = function () {
+        $('.table').css('width', '100%');
     }
     /*添加单行*/
     function add_row(data) {
@@ -264,15 +326,15 @@
     }
 
     /*搜索*/
-    function search(){
+    function search() {
         table.ajax.reload();
     }
     /*添加*/
     function add(title, url, w, h) {
         var index = layer.open({
-            type:2,
-            title:title,
-            content:url
+            type: 2,
+            title: title,
+            content: url
         });
         layer.full(index);
     }
@@ -283,9 +345,9 @@
     /*编辑*/
     function edit(title, url, id, w, h) {
         var index = layer.open({
-            type:2,
-            title:title,
-            content:url
+            type: 2,
+            title: title,
+            content: url
         });
         layer.full(index);
     }
@@ -299,37 +361,37 @@
         layer.msg(msg, {icon: 1, time: 1000});
     }
     /*删除全部*/
-    function delAll(){
+    function delAll() {
         var url = "${base}/admin/shop/delete.jhtml";
         var i = 0;
         $('input[type="checkbox"][name="ids"]:checked').each(
-                function() {
+                function () {
                     $(this).parents("tr").addClass("selected");
-                    if(i == 0){
-                        url += "?ids="+$(this).val();
-                    }else{
-                        url += "&ids="+$(this).val();
+                    if (i == 0) {
+                        url += "?ids=" + $(this).val();
+                    } else {
+                        url += "&ids=" + $(this).val();
                     }
                     i++;
                 }
         );
-        if(i < 1) {
+        if (i < 1) {
             layer.msg('请选择要删除的数据!', {icon: 0, time: 1000});
             return;
         }
         layer.confirm('确认要删除吗？', function (index) {
             var load = layer.msg('加载中', {
                 icon: 16
-                ,shade: 0.01
+                , shade: 0.01
             });
             $.ajax({
                 type: 'POST',
-                url: url ,
-                dataType: 'json' ,
+                url: url,
+                dataType: 'json',
                 success: function (data) {
                     layer.close(load);
                     if (data.type == "success") {
-                        table.rows('.selected').remove().draw( false );
+                        table.rows('.selected').remove().draw(false);
                         layer.msg('已删除!', {icon: 1, time: 1000});
                     } else {
                         layer.msg('删除失败!', {icon: 2, time: 1000});
@@ -347,7 +409,7 @@
         layer.confirm('确认要删除吗？', function (index) {
             var load = layer.msg('加载中', {
                 icon: 16
-                ,shade: 0.01
+                , shade: 0.01
             });
             $.ajax({
                 type: 'POST',
@@ -360,7 +422,7 @@
                     layer.close(load);
                     if (data.type == "success") {
                         $(obj).parents("tr").addClass("del");
-                        table.row('.del').remove().draw( false );
+                        table.row('.del').remove().draw(false);
                         layer.msg('已删除!', {icon: 1, time: 1000});
                     } else {
                         layer.msg('删除失败!', {icon: 2, time: 1000});
@@ -372,6 +434,94 @@
             });
         });
     }
+
+    /*提交*/
+    function commit(obj, id) {
+        layer.confirm('确认吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                , shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                url: '${base}/admin/smallRange/commit.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        layer.msg(data.content, {icon: 1, time: 1000});
+                    } else {
+                        layer.msg(data.content, {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
+    /*发布*/
+    function publish(obj, id) {
+        layer.confirm('确认吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                , shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                url: '${base}/admin/smallRange/publish.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        layer.msg(data.content, {icon: 1, time: 1000});
+                    } else {
+                        layer.msg(data.content, {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
+    /*回退*/
+    function comeBack(obj, id) {
+        layer.confirm('确认吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                , shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                url: '${base}/admin/smallRange/comeBack.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        layer.msg(data.content, {icon: 1, time: 1000});
+                    } else {
+                        layer.msg(data.content, {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
 
     function DateFormat(timestamp, format) {
         var newDate = new Date();
