@@ -126,7 +126,7 @@ public class Gauge extends BaseEntity {
 
     /** 测评简介 */
     @Lob
-    @Column(columnDefinition="longtext comment '测评预知'")
+    @Column(columnDefinition="longtext comment '测评须知'")
     @JsonIgnore
     private String notice4;
 

@@ -37,10 +37,20 @@ public class GaugeResult extends OrderEntity {
 
     };
 
+    public enum ChartType{
+        /**  基础线 */
+        line
+    };
+
     /** 类型 */
     @NotNull
     @Column(columnDefinition="int(11) not null default 0 comment '结果类型 {html:富文本,text:纯文本,echart:图表}'")
     private Type type;
+
+    /** 图表类型 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '图表类型 {html:富文本,text:纯文本,echart:图表}'")
+    private ChartType chartType;
 
     /** 量表 */
     @NotNull
@@ -116,5 +126,13 @@ public class GaugeResult extends OrderEntity {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public ChartType getChartType() {
+        return chartType;
+    }
+
+    public void setChartType(ChartType chartType) {
+        this.chartType = chartType;
     }
 }

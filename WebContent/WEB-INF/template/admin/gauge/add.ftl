@@ -114,14 +114,34 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评简介：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评目的：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <div class="uploader-thum-container">
-                    <div id="contentFileList" class="uploader-list"></div>
-                    <div id="contentFilePicker">选择图片</div>
-                    <input type="hidden" value="" id="content" name="content">
-                </div>
+               <textarea class="input-text" name="notice1" id="notice1" style="height:200px;width:500px;"></textarea>
             </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评介绍：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="notice2" id="notice2" style="height:200px;width:500px;"></textarea>
+            </div>
+
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>专业支持：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="notice3" id="notice3" style="height:200px;width:500px;"></textarea>
+            </div>
+
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="notice4" id="notice4" style="height:200px;width:500px;"></textarea>
+            </div>
+
         </div>
 
         <div class="row cl">
@@ -139,12 +159,12 @@
             </div>
         </div>
 
-       <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="notice" id="notice" style="height:100px;width:300px;"></textarea>
-            </div>
-        </div>
+       [#--<div class="row cl">--]
+            [#--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>--]
+            [#--<div class="formControls col-xs-8 col-sm-9">--]
+                [#--<textarea class="input-text" name="notice" id="notice" style="height:100px;width:300px;"></textarea>--]
+            [#--</div>--]
+        [#--</div>--]
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模修订说明：</label>
