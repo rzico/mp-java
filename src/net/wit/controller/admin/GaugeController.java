@@ -241,7 +241,13 @@ public class GaugeController extends BaseController {
 
 		entity.setMarketPrice(gauge.getMarketPrice());
 
-		entity.setNotice(gauge.getNotice());
+		entity.setNotice1(gauge.getNotice1());
+
+		entity.setNotice2(gauge.getNotice2());
+
+		entity.setNotice3(gauge.getNotice3());
+
+		entity.setNotice4(gauge.getNotice4());
 
 		entity.setPrice(gauge.getPrice());
 
@@ -359,7 +365,13 @@ public class GaugeController extends BaseController {
 
 		entity.setMarketPrice(gauge.getMarketPrice());
 
-		entity.setNotice(gauge.getNotice());
+		entity.setNotice1(gauge.getNotice1());
+
+		entity.setNotice2(gauge.getNotice2());
+
+		entity.setNotice3(gauge.getNotice3());
+
+		entity.setNotice4(gauge.getNotice4());
 
 		entity.setPrice(gauge.getPrice());
 
