@@ -29,4 +29,6 @@ public interface TopicDao extends BaseDao<Topic, Long> {
 	 */
 	Page<Topic> findPage(Date beginDate,Date endDate, Pageable pageable);
 	Topic find(Member member);
+
+    Topic findByAppId(String appid);
 }

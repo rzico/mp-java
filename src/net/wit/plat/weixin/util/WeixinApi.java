@@ -250,6 +250,7 @@ public class WeixinApi {
     public static SmallInformation getSmallInformation(String token, String componentAppid, String authorizerAppid) {
         String string = "{\"component_appid\":\"" + componentAppid + "\" ,\"authorizer_appid\": \"" + authorizerAppid + "\"}";
         JSONObject jsonObject = WeixinApi.httpRequest(WeixinApi.SMALLINFORMATION.replace("COMPONENT_ACCESS_TOKEN", token), "POST", string);
+        System.out.println("=========["+ jsonObject.toString() +"]=========");
         SmallInformation smallInformation = new SmallInformation();
         if (jsonObject.get("authorization_info") != null) {
             List<FuncInfo> list = new ArrayList<>();
@@ -258,7 +259,7 @@ public class WeixinApi {
                 if (jsonArray.get(i) != null) {
                     FuncInfo funcInfo = new FuncInfo();
                     FuncInfo.Category category = new FuncInfo.Category();
-                    category.setId(jsonArray.getJSONObject(i).getLong("id"));
+                    category.setId(jsonArray.getJSONObject(i).getJSONObject("funcscope_category").getLong("id"));
                     funcInfo.setFuncscope_category(category);
                     list.add(funcInfo);
                 }
@@ -270,28 +271,28 @@ public class WeixinApi {
             JSONObject object = jsonObject.getJSONObject("authorizer_info");
             authorizerInfo.setNickName(object.getString("nick_name"));
             authorizerInfo.setHeadImg(object.getString("head_img"));
-            authorizerInfo.setUserName("user_name");
-            authorizerInfo.setPrincipalName("principal_name");
-            authorizerInfo.setQrcodeUrl("qrcode_url");
-            authorizerInfo.setSignature("signature");
+            authorizerInfo.setUserName(object.getString("user_name"));
+            authorizerInfo.setPrincipalName(object.getString("principal_name"));
+            authorizerInfo.setQrcodeUrl(object.getString("qrcode_url"));
+            authorizerInfo.setSignature(object.getString("signature"));
             if (object.getJSONObject("verify_type_info") != null) {
                 AuthorizerInfo.VerifyTypeInfo verifyTypeInfo = new AuthorizerInfo.VerifyTypeInfo();
                 verifyTypeInfo.setId(object.getJSONObject("verify_type_info").getLong("id"));
             }
-            if (object.getJSONArray("categories") != null && object.getJSONArray("categories").size() > 0) {
-                List<AuthorizerInfo.Categories> list = new ArrayList<>();
-                JSONArray array = object.getJSONArray("categories");
-                for (int i = 0; i < array.size(); i++) {
-                    if (array.getJSONObject(i) != null) {
-                        AuthorizerInfo.Categories categories = new AuthorizerInfo.Categories();
-                        categories.setFirst(array.getJSONObject(i).getString("first"));
-                        categories.setSecond(array.getJSONObject(i).getString("second"));
-                        list.add(categories);
-                    }
-                }
-                authorizerInfo.setCategories(list);
-                smallInformation.setAuthorizerInfo(authorizerInfo);
-            }
+//            if (object.get("categories") != null && object.getJSONArray("categories").size() > 0) {
+//                List<AuthorizerInfo.Categories> list = new ArrayList<>();
+//                JSONArray array = object.getJSONArray("categories");
+//                for (int i = 0; i < array.size(); i++) {
+//                    if (array.getJSONObject(i) != null) {
+//                        AuthorizerInfo.Categories categories = new AuthorizerInfo.Categories();
+//                        categories.setFirst(array.getJSONObject(i).getString("first"));
+//                        categories.setSecond(array.getJSONObject(i).getString("second"));
+//                        list.add(categories);
+//                    }
+//                }
+//                authorizerInfo.setCategories(list);
+//            }
+            smallInformation.setAuthorizerInfo(authorizerInfo);
         }
         return smallInformation;
     }
@@ -681,7 +682,7 @@ title	小程序页面的标题,标题长度不超过32*/
 				for(int i = 0; i<len ;i++ ){
 					if(funcInfoJsonArray.getJSONObject(i) != null){
 					FuncInfo.Category category = new FuncInfo.Category();
-					category.setId(funcInfoJsonArray.getJSONObject(i).getLong("id"));
+					category.setId(funcInfoJsonArray.getJSONObject(i).getJSONObject("funcscope_category").getLong("id"));
 					FuncInfo funcInfo = new FuncInfo();
 					funcInfo.setFuncscope_category(category);
 					funcInfos.add(funcInfo);

@@ -108,6 +108,10 @@ public class TopicController extends BaseController {
                 config.setPromoterType(TopicConfig.PromoterType.any);
                 config.setPattern(TopicConfig.Pattern.pattern1);
                 config.setAmount(BigDecimal.ZERO);
+                Calendar calendar   =   new GregorianCalendar();
+                calendar.setTime(new Date());
+                calendar.add(calendar.SECOND, 1);
+                config.setTokenExpire(calendar.getTime());
             }
             topic.setConfig(config);
             Calendar calendar   =   new GregorianCalendar();

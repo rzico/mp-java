@@ -3,13 +3,11 @@ package net.wit.controller.component;
 import net.wit.Message;
 import net.wit.entity.*;
 import net.wit.plat.weixin.pojo.AuthAccessToken;
+import net.wit.plat.weixin.pojo.AuthorizerInfo;
 import net.wit.plat.weixin.pojo.ComponentAccessToken;
 import net.wit.plat.weixin.pojo.SmallInformation;
 import net.wit.plat.weixin.util.WeixinApi;
-import net.wit.service.AdminService;
-import net.wit.service.MemberService;
-import net.wit.service.PluginConfigService;
-import net.wit.service.TopicService;
+import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +39,9 @@ public class CommonController extends BaseController {
 
     @Resource(name = "pluginConfigServiceImpl")
     private PluginConfigService pluginConfigService;
+
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
 
     @RequestMapping(value = "/getAuthUrl", method = RequestMethod.GET)
     public String getAuthUrl(HttpServletRequest request) {
@@ -98,19 +99,45 @@ public class CommonController extends BaseController {
             AuthAccessToken authAccessToken = WeixinApi.getAuthorizationCode(componentAccessToken.getComponent_access_token(), appId, auth_code);
 
             Topic topic =  member.getTopic();
-            if((topic.getConfig().getAppetAppId() == null || topic.getConfig().getAppetAppId().equalsIgnoreCase("")) && authAccessToken!=null){
+            if(authAccessToken!=null){
                 //设置小程序
                 System.out.println("TopicAppetAppid == null ===============================");
                 TopicConfig topicConfig = topic.getConfig();
                 topicConfig.setAppetAppId(authAccessToken.getAuthorizer_appid());
                 topicConfig.setRefreshToken(authAccessToken.getAuthorizer_refresh_token());
                 topicConfig.setTokenExpire(authAccessToken.getExpire());
-                topic.setConfig(topicConfig);
-                topicService.update(topic);
                 System.out.println("TopicUpdateSuccess===============================");
 
                 SmallInformation smallInformation = WeixinApi.getSmallInformation(componentAccessToken.getComponent_access_token(), appId, member.getTopic().getConfig().getAppetAppId());
-                System.out.println("smallInformation=====================" + smallInformation.getAuthorizerInfo().toString());
+                Topic topic1 = topicService.findByAppId(topicConfig.getAppetAppId());
+                System.out.println("smallInformation====================="+ topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
+                if(smallInformation.getAuthorizerInfo()!=null){
+                    AuthorizerInfo authorizerInfo = smallInformation.getAuthorizerInfo();
+                    //为了防止重复设置
+//                    if(authorizerInfo.getUserName()!=null && !authorizerInfo.getUserName().equalsIgnoreCase("") && !authorizerInfo.getUserName().equalsIgnoreCase("user_name")){
+                        topicConfig.setUserName(authorizerInfo.getUserName());//原始id
+//                    }
+//                    if(authorizerInfo.getPrincipalName() != null && !authorizerInfo.getPrincipalName().equalsIgnoreCase("") && !authorizerInfo.getPrincipalName().equalsIgnoreCase("principal_name")){
+                        topic.setName(authorizerInfo.getPrincipalName());//这里用专栏信息
+//                    }
+                    topic.setConfig(topicConfig);
+
+                    topic.setName(authorizerInfo.getNickName());//这个是专栏名称 这里设置成小程序的名称了
+                    topicService.update(topic);
+                    if(admin==null){
+                        return "redirect:http://" + serverUrl + "/#/agreeError";
+                    }
+
+                    Enterprise enterprise = admin.getEnterprise();
+                    enterprise.setName(authorizerInfo.getPrincipalName());//公司名称
+                    //更新企业信息
+                    enterpriseService.update(enterprise);
+
+                    //接下来 设置小程序的 域名===================
+
+
+
+                }
             }else {
                 return "redirect:http://" + serverUrl + "/#/agreeError";
             }

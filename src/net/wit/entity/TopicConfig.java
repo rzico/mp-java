@@ -113,7 +113,7 @@ public class TopicConfig implements Serializable {
 	private Estate estate;
 
 	/** 小程序 刷新token */
-	@Column(columnDefinition="varchar(255) comment '小程序 version'")
+	@Column(columnDefinition="varchar(255) comment '刷新Token version'")
 	private String refreshToken;
 
 	/** 小程序 token到期时间 */
@@ -121,8 +121,12 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="datetime not null comment '到期日'")
 	private Date tokenExpire;
 
+	/** 小程序原始id */
+	@Column(columnDefinition="varchar(255) comment '原始ID version'")
+	private String userName;
+
 	/** 小程序 状态备注 */
-	@Column(columnDefinition="varchar(255) comment '小程序 version'")
+	@Column(columnDefinition="varchar(255) comment '备注 version'")
 	private String stateRemark;
 
 	public PromoterType getPromoterType() {
@@ -243,5 +247,13 @@ public class TopicConfig implements Serializable {
 
 	public void setTokenExpire(Date tokenExpire) {
 		this.tokenExpire = tokenExpire;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }
