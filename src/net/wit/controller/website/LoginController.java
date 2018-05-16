@@ -237,6 +237,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/weixin", method = RequestMethod.GET)
     public String weixin(String code,String redirectURL,Long xuid,HttpServletRequest request){
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        System.out.println("==================code：" + code +" | "+ redirectURL +" | "+ xuid);
         AccessToken token = WeixinApi.getOauth2AccessToken(bundle.getString("weixin.appid"), bundle.getString("weixin.secret"), code);
         String openId = null;
         String mState = null;

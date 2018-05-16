@@ -108,4 +108,18 @@ public class AuthorizerInfo {
             this.id = id;
         }
     }
+
+    @Override
+    public String toString() {
+        return "AuthorizerInfo{" +
+                "nickName='" + nickName + '\'' +
+                ", headImg='" + headImg + '\'' +
+                ", verifyTypeInfo=" + verifyTypeInfo +
+                ", userName='" + userName + '\'' +
+                ", principalName='" + principalName + '\'' +
+                ", qrcodeUrl='" + qrcodeUrl + '\'' +
+                ", signature='" + signature + '\'' +
+                ", categories=" + categories +
+                '}';
+    }
 }

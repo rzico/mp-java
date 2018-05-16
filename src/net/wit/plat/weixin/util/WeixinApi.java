@@ -103,8 +103,12 @@ public class WeixinApi {
 	//获取预授权码
 	private static final String PREAUTHCODE="https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=COMPONENT_TOKEN";
 
-	//授权码换取调用接口调用凭据 authaccesstoken
+	//授权码code（不是预授权码）换取调用接口调用凭据 authaccesstoken
 	private static final String CODEANDTOKEN="https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=COMPONENT_TOKEN";
+
+
+    //	//通过刷新token 获取 authaccesstoken
+    private static final String REFRESHAUTHTOKEN = "https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
 
 	//提交小程序代码
 	private static final String COMMITCODE = "https://api.weixin.qq.com/wxa/commit?access_token=AUTH_TOKEN";
@@ -129,8 +133,6 @@ public class WeixinApi {
 
 	// 查询小程序当前隐私设置（是否可被搜索）
 	public static final String GETAPPLETSTATUS = "https://api.weixin.qq.com/wxa/getwxasearchstatus?access_token=AUTH_TOKEN";
-//	//通过刷新token 获取 authaccesstoken
-//	private static final String AUTHTOKEN = "https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
 
 
 	/**
@@ -579,22 +581,56 @@ title	小程序页面的标题,标题长度不超过32*/
 
 
 	//刷新token接口
-//	public static AuthAccessToken getRefreshAuthorizationCode(String componentToken, String appId, String efresh_token){
-//
-//		return  null;
-//	}
-	//获取授权 accesstoken
-	public static AuthAccessToken getAuthorizationCode(String componentToken, String appId, String authToken){
+	public static AuthAccessToken getRefreshAuthorizationCode(String componentToken, String authAppId, String rfresh_token){
+        try {
+            if (authAccessTokenHashMap != null && authAccessTokenHashMap.get(authAppId)!= null && authAccessTokenHashMap.get(authAppId).getExpire().getTime() > (new Date()).getTime() - 2000) {
+                return authAccessTokenHashMap.get(authAppId);
+            }
+        } catch (Exception e) {
+
+        }
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String params = "{" +
+                "\"component_appid\":\"" + bundle.getString("weixin.component.appid") + "\"," +
+                "\"authorizer_appid\":\"" + authAppId + "\"," +
+                "\"authorizer_refresh_token\":\"" + rfresh_token + "\"," +
+                "}";
+        JSONObject jsonObject=WeixinApi.httpRequest(REFRESHAUTHTOKEN.replace("COMPONENT_TOKEN",componentToken),"POST", params);
+        AuthAccessToken authAccessToken = null;
+        if(jsonObject != null){
+            authAccessToken = new AuthAccessToken();
+            authAccessToken.setAuthorizer_access_token(jsonObject.getString("authorizer_access_token"));
+            authAccessToken.setAuthorizer_appid(jsonObject.getString("authorizer_appid"));
+            authAccessToken.setAuthorizer_refresh_token(jsonObject.getString("authorizer_refresh_token"));
+            authAccessToken.setExpires_in(jsonObject.getInt("expires_in"));
+            authAccessToken.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));
+            authAccessTokenHashMap.put(authAppId, authAccessToken);
+        }
+        return authAccessTokenHashMap.get(authAppId);
+	}
+
+
+    /**
+     * 获取授权 accesstoken 这个接口一般在授权成功后调用
+     * @param componentToken
+     * @param authAppId 授权方的appid
+     * @param authCode
+     * @return
+     */
+	public static AuthAccessToken getAuthorizationCode(String componentToken, String authAppId, String authCode){
 
 		try {
-			if (authAccessTokenHashMap != null && authAccessTokenHashMap.get(appId)!= null && authAccessTokenHashMap.get(appId).getExpire().getTime() > (new Date()).getTime() - 2000) {
-				return authAccessTokenHashMap.get(appId);
-			}
+			if (authAccessTokenHashMap != null && authAccessTokenHashMap.get(authAppId)!= null && authAccessTokenHashMap.get(authAppId).getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return authAccessTokenHashMap.get(authAppId);
+			}else{
+			    return getRefreshAuthorizationCode(componentToken, authAppId, authAccessTokenHashMap.get(authAppId).getAuthorizer_refresh_token());
+            }
 		} catch (Exception e) {
 
 		}
 
-		String string="{\"component_appid\":\""+appId+"\" ,\"authorization_code\": \""+ authToken +"\"}";
+		String string="{\"component_appid\":\""+authAppId+"\" ,\"authorization_code\": \""+ authCode +"\"}";
 		JSONObject jsonObject=WeixinApi.httpRequest(CODEANDTOKEN.replace("COMPONENT_TOKEN",componentToken),"POST",string);
 		System.out.println("换取的令牌:"+jsonObject);
 		if(jsonObject != null){
@@ -619,10 +655,10 @@ title	小程序页面的标题,标题长度不超过32*/
 					funcInfos.add(funcInfo);
 					}
 				}
-				authAccessTokenHashMap.put(appId, authAccessToken);
+				authAccessTokenHashMap.put(authAppId, authAccessToken);
 			}
 		}
-		return authAccessTokenHashMap.get(appId);
+		return authAccessTokenHashMap.get(authAppId);
 	}
 	/**
 	 * 获取第三方平台component_access_token

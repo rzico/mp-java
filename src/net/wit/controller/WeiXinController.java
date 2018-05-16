@@ -494,16 +494,16 @@ public class WeiXinController extends BaseController {
             }
             if (infoType.equalsIgnoreCase("authorized")) {
                 System.out.println("=================================：authorized");
-                Member current = memberService.getCurrent();
-                if (current != null) {
-                    System.out.println("------authorized----保存topic---------------------appid:" + AuthorizerAppid);
-                    TopicConfig topicConfig = current.getTopic().getConfig();
-                    topicConfig.setAppetAppId(AuthorizerAppid);
-                    Topic topic = current.getTopic();
-                    topic.setConfig(topicConfig);
-                    topicService.save(topic);
-                    System.out.println("------authorized----id:" + current.getId() + "---------------------==========>>>>>>>>>:");
-                }
+//                Member current = memberService.getCurrent();
+//                if (current != null) {
+//                    System.out.println("------authorized----保存topic---------------------appid:" + AuthorizerAppid);
+//                    TopicConfig topicConfig = current.getTopic().getConfig();
+//                    topicConfig.setAppetAppId(AuthorizerAppid);
+//                    Topic topic = current.getTopic();
+//                    topic.setConfig(topicConfig);
+//                    topicService.save(topic);
+//                    System.out.println("------authorized----id:" + current.getId() + "---------------------==========>>>>>>>>>:");
+//                }
 
             } else if (infoType.equalsIgnoreCase("updateauthorized")) {
                 System.out.println("=================================：updateauthorized");

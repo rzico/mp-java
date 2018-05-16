@@ -75,12 +75,14 @@ public class GuideController extends BaseController {
 
         model.setSteped2(card!=null);
 
-        List<Shop> shops = shopService.findList(null,null,filters,null);
-        model.setSteped3(shops.size()>0);
+        //去掉第3部店铺信息
+//        List<Shop> shops = shopService.findList(null,null,filters,null);
+//        model.setSteped3(shops.size()>0);
 
         Topic topic = member.getTopic();
-        model.setSteped4(topic!=null && topic.getStatus().equals(Topic.Status.success));
+        model.setSteped3(topic!=null && topic.getStatus().equals(Topic.Status.success));
 
+        model.setSteped4(topic!=null && topic.getConfig() !=null && topic.getConfig().getAppetAppId()!=null);
         return Message.bind(model,request);
     }
 

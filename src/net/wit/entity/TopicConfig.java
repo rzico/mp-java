@@ -9,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @ClassName: SafeKey
@@ -106,10 +107,19 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '小程序 version'")
 	private String version;
 
-	/** 小程序 condition */
+	/** 小程序 estate */
 	@NotNull
 	@Column(columnDefinition="int(11) default '0'comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
 	private Estate estate;
+
+	/** 小程序 刷新token */
+	@Column(columnDefinition="varchar(255) comment '小程序 version'")
+	private String refreshToken;
+
+	/** 小程序 token到期时间 */
+	@NotNull
+	@Column(columnDefinition="datetime not null comment '到期日'")
+	private Date tokenExpire;
 
 	/** 小程序 状态备注 */
 	@Column(columnDefinition="varchar(255) comment '小程序 version'")
@@ -217,5 +227,21 @@ public class TopicConfig implements Serializable {
 
 	public void setStateRemark(String stateRemark) {
 		this.stateRemark = stateRemark;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public Date getTokenExpire() {
+		return tokenExpire;
+	}
+
+	public void setTokenExpire(Date tokenExpire) {
+		this.tokenExpire = tokenExpire;
 	}
 }
