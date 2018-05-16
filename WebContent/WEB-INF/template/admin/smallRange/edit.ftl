@@ -66,7 +66,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>小程序状态：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
                 [#if types??]
-                    <select name="condition" class="select" style="background-color: #FFFFFF">
+                    <select name="estate" class="select" style="background-color: #FFFFFF">
                         [#list types as type]
                             <option[#if data.config.condition?? && type.id == data.config.condition] selected[/#if] value="${type.id}">${type.name}</option>
                         [/#list]
