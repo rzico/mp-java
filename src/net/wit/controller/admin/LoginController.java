@@ -79,6 +79,10 @@ public class LoginController extends BaseController {
         try {
 
             Admin admin = adminService.findByUsername(username);
+            if (admin==null) {
+                return Message.error("无效用户名");
+            }
+
             if (admin.getEnterprise()!=null && !admin.getEnterprise().getId().equals(1L)) {
                 return Message.error("不是管理员，不能登录");
             }
