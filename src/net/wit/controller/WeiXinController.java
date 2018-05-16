@@ -21,7 +21,9 @@ import net.wit.plat.weixin.message.resp.Article;
 import net.wit.plat.weixin.message.resp.NewsMessage;
 import net.wit.plat.weixin.util.MessageUtil;
 import net.wit.util.*;
+
 import java.util.*;
+
 import org.apache.commons.lang.*;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
@@ -101,27 +103,26 @@ public class WeiXinController extends BaseController {
     /**
      * 付款页
      *
-     * @param sn              支付单号
-     *
+     * @param sn 支付单号
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(String sn,HttpServletRequest request) {
+    public String index(String sn, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
         String userAgent = request.getHeader("user-agent");
-        String type="weixin";
+        String type = "weixin";
         if (BrowseUtil.isAlipay(userAgent)) {
-            type="alipay";
+            type = "alipay";
         } else {
-            type="weixin";
+            type = "weixin";
         }
-        if (payment.getPaymentPluginId()!=null) {
+        if (payment.getPaymentPluginId() != null) {
             if ("cardPayPlugin".equals(payment.getPaymentPluginId())) {
                 type = "cardPayPlugin";
             } else if ("balancePayPlugin".equals(payment.getPaymentPluginId())) {
                 type = "balancePayPlugin";
             }
         }
-        return "forward:/weixin/payment/view.html?psn="+sn+"&amount="+payment.getAmount()+"&type="+type;
+        return "forward:/weixin/payment/view.html?psn=" + sn + "&amount=" + payment.getAmount() + "&type=" + type;
     }
 
     public String getSha1Sign(HashMap<String, Object> params) {
@@ -142,7 +143,7 @@ public class WeiXinController extends BaseController {
      */
     @RequestMapping(value = "/get_config")
     @ResponseBody
-    public Message getConfig(String url,HttpServletRequest request) {
+    public Message getConfig(String url, HttpServletRequest request) {
         String noncestr = WeiXinUtils.CreateNoncestr();
         String timeStamp = WeiXinUtils.getTimeStamp();
         HashMap<String, Object> map = new HashMap<>();
@@ -164,133 +165,6 @@ public class WeiXinController extends BaseController {
         return Message.success(config, "执行成功");
     }
 
-    /**
-     * 确认请求来自微信服务器
-     */
-//    @RequestMapping(value = "/notify",method = RequestMethod.GET)
-//    public Boolean notify_get(HttpServletRequest request, HttpServletResponse response, ModelMap model)  throws Exception {
-//        // 微信加密签名
-//        String signature = request.getParameter("signature");
-//        // 时间戳
-//        String timestamp = request.getParameter("timestamp");
-//        // 随机数
-//        String nonce = request.getParameter("nonce");
-//        // 随机字符串
-//        String echostr = request.getParameter("echostr");
-//
-//        response.setContentType("application/json");
-//        PrintWriter out = response.getWriter();
-//        out.print("echostr");
-//        out.flush();
-//        return true;
-//
-//    }
-
-    /**
-     * 处理微信服务器发来的消息
-     */
-
-//    @RequestMapping(value = "/notify",method = RequestMethod.POST)
-//    public Boolean notify_post(HttpServletRequest request, HttpServletResponse response, ModelMap model) {		// 调用核心业务类接收消息、处理消息
-//        try {
-////            System.out.println("weixin.notify");
-//            Map<String, String> requestMap = MessageUtil.parseXml(request);
-//            // 发送方帐号（open_id）
-//            String fromUserName = requestMap.get("FromUserName");
-//            // 公众帐号
-//            String toUserName = requestMap.get("ToUserName");
-//            // 消息类型
-//            String msgType = requestMap.get("MsgType");
-//
-//            // 事件推送
-//            if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
-//                NewsMessage newsMessage = new NewsMessage();
-//                newsMessage.setToUserName(fromUserName);
-//                newsMessage.setFromUserName(toUserName);
-//                newsMessage.setCreateTime(new Date().getTime());
-//                newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
-//                newsMessage.setFuncFlag(0);
-//                // 事件类型
-//                String eventType = requestMap.get("Event").toLowerCase();
-//                // 关注订阅
-//                if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-////                    try {
-////                        List<Tag> tags = new ArrayList<Tag>();
-////                        tags.add(tagService.find(1L));
-////                        Page<net.wit.entity.Article> arts = articleService.findPage(null,null,tags,null);
-////
-////                        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-////                        String eventKey = requestMap.get("EventKey");
-////                        List<Article> articles = new ArrayList<Article>();
-////                        for (net.wit.entity.Article art:arts.getContent()) {
-////                            Article article = new Article();
-////                            article.setDescription(art.delHTMLTag());
-////                            article.setPicUrl(art.getThumbnail());
-////                            article.setTitle(art.getTitle());
-////                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
-////                            articles.add(article);
-////                        }
-////                        newsMessage.setArticles(articles);
-////                        newsMessage.setArticleCount(articles.size());
-////                        response.setContentType("application/octet-stream");
-////                        PrintWriter out = response.getWriter();
-////                        out.print(MessageUtil.newsMessageToXml(newsMessage));
-////                        out.flush();
-////                    } catch (Exception e) {
-////                        logger.error(e.getMessage());
-////                    }
-////
-//                }
-//                // 取消订阅
-//                else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
-//
-//                }
-//                // 自定义菜单点击事件
-//                else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) {
-//
-//                }
-//                // 扫描二维码
-//                else if (eventType.equals(MessageUtil.SCAN)) {
-//
-//                }
-//            }
-//
-//            return true;
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            return false;
-//        }
-//    }
-
-    /**
-     * 确认请求来自微信服务器
-     */
-//    @RequestMapping(value = "/{appId}/notify",method = RequestMethod.GET)
-//    public Boolean notify_appid_get(@PathVariable String appId,HttpServletRequest request, HttpServletResponse response, ModelMap model)  throws Exception {
-////        // 微信加密签名
-////        String signature = request.getParameter("signature");
-////        // 时间戳
-////        String timestamp = request.getParameter("timestamp");
-////        // 随机数
-////        String nonce = request.getParameter("nonce");
-////        // 随机字符串
-////        String echostr = request.getParameter("echostr");
-////
-////        response.setContentType("application/json");
-////        PrintWriter out = response.getWriter();
-////        out.print("echostr");
-////        out.flush();
-////        return true;
-//
-//        try {
-//            System.out.println(appId+"进入/{appId}/notify GET+++++++++++++++++++++++++++++++++");
-//            coreService.Core(request,response,appId);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return true;
-//    }
-
     @RequestMapping(value = "/notify")
     public void acceptAuthorizeEvent(HttpServletRequest request, HttpServletResponse response) throws IOException, AesException, DocumentException {
         System.out.println("微信第三方平台---------微信推送Ticket消息10分钟一次-----------");
@@ -304,79 +178,11 @@ public class WeiXinController extends BaseController {
      */
 
     @RequestMapping(value = "/{appId}/notify")
-    public void notify_appid_post(@PathVariable String appId,HttpServletRequest request, HttpServletResponse response, ModelMap model) {		// 调用核心业务类接收消息、处理消息
-//        String respContent = null;
-//        try {
-//            respContent="服务器暂时异常,请稍候再试";
-//            request.setCharacterEncoding("UTF-8");
-//            response.setCharacterEncoding("UTF-8");
-//            Map<String, String> requestMap = MessageUtil.parseXml(request);
-//            // 发送方帐号（open_id）
-//            String fromUserName = requestMap.get("FromUserName");
-//            // 公众帐号
-//            String toUserName = requestMap.get("ToUserName");
-//            // 消息类型
-//            String msgType = requestMap.get("MsgType");
-//
-//            // 回复文本消息
-//            TextMessage textMessage = new TextMessage();
-//            textMessage.setToUserName(fromUserName);
-//            textMessage.setFromUserName(toUserName);
-//            textMessage.setCreateTime(new Date().getTime());
-//            textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
-//            textMessage.setFuncFlag(0);
-//
-//            // 文本消息
-//            if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-//                respContent = "TESTCOMPONENT_MSG_TYPE_TEXT_callback";
-//            }
-//            // 图片消息
-//            else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
-//                respContent = "您发送的是图片消息！";
-//            }
-//            // 地理位置消息
-//            else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
-//                respContent = "您发送的是地理位置消息！";
-//            }
-//            // 链接消息
-//            else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
-//                respContent = "您发送的是链接消息！";
-//            }
-//            // 音频消息
-//            else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
-//                respContent = "您发送的是音频消息！";
-//            }
-//
-//            // 事件推送
-//            else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
-//
-//                String eventType = requestMap.get("Event").toLowerCase();
-//                // 关注订阅
-//                if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-//
-//                }
-//                // 取消订阅
-//                else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
-//
-//                }
-//                // 自定义菜单点击事件
-//                else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) {
-//
-//                }
-//                // 扫描二维码
-//                else if (eventType.equals(MessageUtil.SCAN)) {
-//
-//                }
-//            }
-//
-//            return true;
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            return false;
-//        }
+    public void notify_appid_post(@PathVariable String appId, HttpServletRequest request, HttpServletResponse response, ModelMap model) {        // 调用核心业务类接收消息、处理消息
+
         try {
-            System.out.println(appId+"进入/{appId}/notify  POST+++++++++++++++++++++++++++++++++"+System.currentTimeMillis());
-            Core(request,response,appId);
+            System.out.println(appId + "进入/{appId}/notify  POST+++++++++++++++++++++++++++++++++" + System.currentTimeMillis());
+            Core(request, response, appId);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -386,10 +192,10 @@ public class WeiXinController extends BaseController {
 
     //老版本
     @RequestMapping(value = "/qrcode/go", method = RequestMethod.GET)
-    public String go(String type, String no,HttpServletRequest request) {        // 调用核心业务类接收消息、处理消息
+    public String go(String type, String no, HttpServletRequest request) {        // 调用核心业务类接收消息、处理消息
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member == null) {
             String userAgent = request.getHeader("user-agent");
             if (BrowseUtil.isWeixin(userAgent)) {
                 String url = "http://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
@@ -401,19 +207,18 @@ public class WeiXinController extends BaseController {
                 String url = "http://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
                 String redirectUrl = "http://" + bundle.getString("weixin.url") + "/website/login/alipay.jhtml?redirectURL=" + net.wit.util.StringUtils.base64Encode(url.getBytes());
                 redirectUrl = URLEncoder.encode(redirectUrl);
-                String alipay = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=" + bundle.getString("alipay.appid")+"&scope=auth_base&state=state&redirect_uri=" + redirectUrl;
+                String alipay = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=" + bundle.getString("alipay.appid") + "&scope=auth_base&state=state&redirect_uri=" + redirectUrl;
                 return "redirect:" + alipay;
             }
         }
         if ("paybill".equals(type)) {
             Shop shop = shopService.find(no);
-            if (shop!=null) {
-                return "redirect:/paybill/#/?code="+shop.getCode();
+            if (shop != null) {
+                return "redirect:/paybill/#/?code=" + shop.getCode();
             } else {
                 return "redirect:/#/";
             }
-        } else
-        if ("card_active".equals(type)) {
+        } else if ("card_active".equals(type)) {
             return "redirect:/#/card?code=" + no;
         }
         return "redirect:/#/";
@@ -440,16 +245,17 @@ public class WeiXinController extends BaseController {
 
     /**
      * 回复微信服务器"文本消息"
+     *
      * @param response
      * @param returnvaleue
      */
-    public void output(HttpServletResponse response,String returnvaleue){
+    public void output(HttpServletResponse response, String returnvaleue) {
         try {
-            System.out.println("--------------------response开始返回数据给微信端-----------------"+System.currentTimeMillis());
+            System.out.println("--------------------response开始返回数据给微信端-----------------" + System.currentTimeMillis());
             PrintWriter pw = response.getWriter();
             pw.write(returnvaleue);
             pw.flush();
-            System.out.println("--------------------response返回数据完成,真~~~~~结束-----------------"+System.currentTimeMillis());
+            System.out.println("--------------------response返回数据完成,真~~~~~结束-----------------" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -457,30 +263,31 @@ public class WeiXinController extends BaseController {
 
     /**
      * 核心
+     *
      * @param request
      * @param response
      */
-    public void Core(HttpServletRequest request,HttpServletResponse response,String appid) throws Exception {
+    public void Core(HttpServletRequest request, HttpServletResponse response, String appid) throws Exception {
 
         System.out.println("--------------------------我是头分界线------------------------------");
         System.out.println("--------------------------确认请求来自微信--------------------------");
         System.out.println("--------------------------我是尾分界线------------------------------");
-        doGet(request,response);
+        doGet(request, response);
 
         String nonce = request.getParameter("nonce");
         String timestamp = request.getParameter("timestamp");
         String msgSignature = request.getParameter("msg_signature");
-        String encrypt_type=request.getParameter("encrypt_type");
+        String encrypt_type = request.getParameter("encrypt_type");
 
-        if(!org.apache.commons.lang.StringUtils.isNotBlank(msgSignature)){
+        if (!org.apache.commons.lang.StringUtils.isNotBlank(msgSignature)) {
             return;
         }
 
         System.out.println("--------------------------我是头分界线------------------------------");
-        System.out.println("timestamp:"+timestamp);
-        System.out.println("encrypt_type:"+encrypt_type);
-        System.out.println("nonce:"+nonce);
-        System.out.println("msg_signature:"+msgSignature);
+        System.out.println("timestamp:" + timestamp);
+        System.out.println("encrypt_type:" + encrypt_type);
+        System.out.println("nonce:" + nonce);
+        System.out.println("msg_signature:" + msgSignature);
         System.out.println("--------------------------我是尾分界线------------------------------");
 
         StringBuilder sb = new StringBuilder();
@@ -494,7 +301,7 @@ public class WeiXinController extends BaseController {
         String xml = sb.toString();
 
         System.out.println("--------------------------我是头分界线------------------------------");
-        System.out.println("微信推送的原生："+xml);
+        System.out.println("微信推送的原生：" + xml);
         System.out.println("--------------------------我是尾分界线------------------------------");
 
 
@@ -503,7 +310,7 @@ public class WeiXinController extends BaseController {
         xml = pc.decryptMsg(msgSignature, timestamp, nonce, xml);
 
         System.out.println("--------------------------我是头分界线------------------------------");
-        System.out.println("解密后的XML："+xml);
+        System.out.println("解密后的XML：" + xml);
         System.out.println("--------------------------我是尾分界线------------------------------");
 
         Document doc = DocumentHelper.parseText(xml);
@@ -513,42 +320,42 @@ public class WeiXinController extends BaseController {
         String fromUserName = rootElt.elementText("FromUserName");
 
         System.out.println("--------------------------我是头分界线------------------------------");
-        System.out.println("msgType:"+msgType);
-        System.out.println("toUserName:"+toUserName);
-        System.out.println("fromUserName:"+fromUserName);
+        System.out.println("msgType:" + msgType);
+        System.out.println("toUserName:" + toUserName);
+        System.out.println("fromUserName:" + fromUserName);
         System.out.println("--------------------------我是尾分界线------------------------------");
 
-        if("event".equals(msgType)){
+        if ("event".equals(msgType)) {
             System.out.println("--------------------------我是EVENT事件消息分界线------------------------------");
             System.out.println("--------------------------开始(START)------------------------------");
             String event = rootElt.elementText("Event");
-            replyEventMessage(request,response,event,toUserName,fromUserName,appid);
-        }else if("text".equals(msgType)){
+            replyEventMessage(request, response, event, toUserName, fromUserName, appid);
+        } else if ("text".equals(msgType)) {
             System.out.println("--------------------------我是文本类事件消息分界线------------------------------");
             System.out.println("--------------------------开始(START)------------------------------");
             String content = rootElt.elementText("Content");
-            processTextMessage(request,response,content,toUserName,fromUserName,appid);
+            processTextMessage(request, response, content, toUserName, fromUserName, appid);
         }
 
     }
 
-    public void replyEventMessage(HttpServletRequest request, HttpServletResponse response, String event, String toUserName, String fromUserName,String appId) throws AesException {
+    public void replyEventMessage(HttpServletRequest request, HttpServletResponse response, String event, String toUserName, String fromUserName, String appId) throws AesException {
         String content = event + "from_callback";
-        System.out.println("--------------EVENT事件回复消息  content="+content + "   toUserName="+toUserName+"   fromUserName="+fromUserName +"     appid="+appId);
-        replyTextMessage(request,response,content,toUserName,fromUserName,appId);
+        System.out.println("--------------EVENT事件回复消息  content=" + content + "   toUserName=" + toUserName + "   fromUserName=" + fromUserName + "     appid=" + appId);
+        replyTextMessage(request, response, content, toUserName, fromUserName, appId);
     }
 
-    public void processTextMessage(HttpServletRequest request, HttpServletResponse response, String content, String toUserName, String fromUserName,String appid) throws AesException {
-        if("TESTCOMPONENT_MSG_TYPE_TEXT".equals(content)){
-            System.out.println("--------------文本事件回复消息  content="+content + "   toUserName="+toUserName+"   fromUserName="+fromUserName);
-            String returnContent = content+"_callback";
-            replyTextMessage(request,response,returnContent,toUserName,fromUserName,appid);
-        }else if(org.apache.commons.lang.StringUtils.startsWithIgnoreCase(content, "QUERY_AUTH_CODE")){
+    public void processTextMessage(HttpServletRequest request, HttpServletResponse response, String content, String toUserName, String fromUserName, String appid) throws AesException {
+        if ("TESTCOMPONENT_MSG_TYPE_TEXT".equals(content)) {
+            System.out.println("--------------文本事件回复消息  content=" + content + "   toUserName=" + toUserName + "   fromUserName=" + fromUserName);
+            String returnContent = content + "_callback";
+            replyTextMessage(request, response, returnContent, toUserName, fromUserName, appid);
+        } else if (org.apache.commons.lang.StringUtils.startsWithIgnoreCase(content, "QUERY_AUTH_CODE")) {
             System.out.println("--------------文本事件回复消息:空字符串-------------------------------");
             output(response, "");
-            System.out.println("--------------API文本事件回复消息  content="+content + "   toUserName="+toUserName+"   fromUserName="+fromUserName);
+            System.out.println("--------------API文本事件回复消息  content=" + content + "   toUserName=" + toUserName + "   fromUserName=" + fromUserName);
             //接下来客服API再回复一次消息
-            replyApiTextMessage(request,response,content.split(":")[1],fromUserName,appid);
+            replyApiTextMessage(request, response, content.split(":")[1], fromUserName, appid);
         }
     }
 
@@ -556,7 +363,7 @@ public class WeiXinController extends BaseController {
         // 得到微信授权成功的消息后，应该立刻进行处理！！相关信息只会在首次授权的时候推送过来
         System.out.println("------step.1----使用客服消息接口回复粉丝----逻辑开始-------------------------");
         try {
-            System.out.println("------step.2----获取第三方TOKEN----逻辑开始-------------------------auth_code: "+auth_code);
+            System.out.println("------step.2----获取第三方TOKEN----逻辑开始-------------------------auth_code: " + auth_code);
 //            net.wit.entity.Article article=articleService.find(476l);
 //            System.out.println(article.getContent());
 
@@ -564,27 +371,18 @@ public class WeiXinController extends BaseController {
 //            String conToken = ArticlePropa.getComponentToken(bundle.getString("weixin.component.appid"),bundle.getString("weixin.component.secret"),article.getContent());
             PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
             String verifyTicket = pluginConfig.getAttribute("verify_ticket");
-            String conToken = WeixinApi.getComponentToken(verifyTicket, bundle.getString("weixin.component.appid"),bundle.getString("weixin.component.secret")).getComponent_access_token();
-                    System.out.println("------step.2.5----获取第三方TOKEN----逻辑开始-------------------------token:"+conToken);
+            String conToken = WeixinApi.getComponentToken(verifyTicket, bundle.getString("weixin.component.appid"), bundle.getString("weixin.component.secret")).getComponent_access_token();
+            System.out.println("------step.2.5----获取第三方TOKEN----逻辑开始-------------------------token:" + conToken);
 //            String authcode=ArticlePropa.getAuthCode(conToken,COMPONENT_APPID);
 //            String authCode=ArticlePropa.getAuthorizationCode(conToken,bundle.getString("weixin.component.appid"),auth_code);
             AuthAccessToken authAccessToken = WeixinApi.getAuthorizationCode(conToken, bundle.getString("weixin.component.appid"), auth_code);
-            System.out.println("------step.3----使用客服消息接口回复粉丝----逻辑开始---------------------authCode:"+auth_code);
+            System.out.println("------step.3----使用客服消息接口回复粉丝----逻辑开始---------------------authCode:" + auth_code);
             String authToken = authAccessToken.getAuthorizer_access_token();
-            Member current = memberService.getCurrent();
-            if(current!=null){
-                System.out.println("------step.3.1----保存topic---------------------appid:"+authAccessToken.getAuthorizer_appid());
-                TopicConfig topicConfig = current.getTopic().getConfig();
-                topicConfig.setAppetAppId(authAccessToken.getAuthorizer_appid());
-                Topic topic = current.getTopic();
-                topic.setConfig(topicConfig);
-                topicService.save(topic);
-                System.out.println("------step.3.2----id:" + current.getId() + "---------------------==========>>>>>>>>>:");
-            }
+
 //            System.out.println("------step.4----使用客服消息接口回复粉丝----逻辑开始---------------------jsonRes.authorization_info:"+authCode);
 //            JSONObject jsonObject1=JSONObject.fromObject(authCode);
 //            String authToken=jsonObject1.get("authorizer_access_token").toString();
-            System.out.println("------step.4.5----使用客服消息接口回复粉丝----逻辑开始---------------------代理TOKEN:"+authToken);
+            System.out.println("------step.4.5----使用客服消息接口回复粉丝----逻辑开始---------------------代理TOKEN:" + authToken);
             String msg = auth_code + "_from_api";
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("touser", fromUserName);
@@ -592,8 +390,8 @@ public class WeiXinController extends BaseController {
             JSONObject text = new JSONObject();
             text.put("content", msg);
             jsonObject.put("text", text);
-            System.out.println("------step.5----使用客服消息接口回复粉丝----逻辑开始---------------------jsonRes.authorization_info:"+jsonObject.toString());
-            WeixinApi.httpRequest("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token="+authToken,"POST",jsonObject.toString());
+            System.out.println("------step.5----使用客服消息接口回复粉丝----逻辑开始---------------------jsonRes.authorization_info:" + jsonObject.toString());
+            WeixinApi.httpRequest("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + authToken, "POST", jsonObject.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -601,18 +399,18 @@ public class WeiXinController extends BaseController {
     }
 
 
-    public void replyTextMessage(HttpServletRequest request, HttpServletResponse response, String content, String toUserName, String fromUserName,String appId) throws AesException {
+    public void replyTextMessage(HttpServletRequest request, HttpServletResponse response, String content, String toUserName, String fromUserName, String appId) throws AesException {
 
         System.out.println("--------------开始回复文本消息-------------------------------");
         // 回复文本消息
-        Long creatTime=System.currentTimeMillis()/1000;
+        Long creatTime = System.currentTimeMillis() / 1000;
         StringBuffer sb = new StringBuffer();
         sb.append("<xml>");
-        sb.append("<ToUserName><![CDATA["+fromUserName+"]]></ToUserName>");
-        sb.append("<FromUserName><![CDATA["+toUserName+"]]></FromUserName>");
-        sb.append("<CreateTime>"+creatTime+"</CreateTime>");
+        sb.append("<ToUserName><![CDATA[" + fromUserName + "]]></ToUserName>");
+        sb.append("<FromUserName><![CDATA[" + toUserName + "]]></FromUserName>");
+        sb.append("<CreateTime>" + creatTime + "</CreateTime>");
         sb.append("<MsgType><![CDATA[text]]></MsgType>");
-        sb.append("<Content><![CDATA["+content+"]]></Content>");
+        sb.append("<Content><![CDATA[" + content + "]]></Content>");
         sb.append("</xml>");
         String replyMsg = sb.toString();
         System.out.println("--------------组装好的XML-------------------------------");
@@ -658,40 +456,61 @@ public class WeiXinController extends BaseController {
 //        System.out.println("第三方平台全网发布-----------------------替换后 Xml=" + xml);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         WXBizMsgCrypt pc = new WXBizMsgCrypt(bundle.getString("weixin.component.token"), bundle.getString("weixin.component.encodingaeskey"), bundle.getString("weixin.component.appid"));
-        xml = pc.decryptMsg(msgSignature, timestamp, nonce, xml.replace("<AppId>","<ToUserName>").replace("</AppId>","</ToUserName>"));
+        xml = pc.decryptMsg(msgSignature, timestamp, nonce, xml.replace("<AppId>", "<ToUserName>").replace("</AppId>", "</ToUserName>"));
         System.out.println("第三方平台全网发布-----------------------解密后 Xml=" + xml);
-        xml=xml.replace("<ToUserName>","<AppId>").replace("</ToUserName>","</AppId>");
+        xml = xml.replace("<ToUserName>", "<AppId>").replace("</ToUserName>", "</AppId>");
         System.out.println("第三方平台全网发布-----------------------替换回来解密后 Xml=" + xml);
         processAuthorizationEvent(xml);
     }
 
     /**
      * 保存Ticket
+     *
      * @param xml
      */
-    void processAuthorizationEvent(String xml){
+    void processAuthorizationEvent(String xml) {
         Document doc;
         try {
             doc = DocumentHelper.parseText(xml);
             Element rootElt = doc.getRootElement();
             String ticket = rootElt.elementText("ComponentVerifyTicket");
-            String createTime=rootElt.elementText("CreateTime");
-            String appId=rootElt.elementText("AppId");
-            String infoType=rootElt.elementText("InfoType");
-            String AuthorizerAppid=rootElt.elementText("AuthorizerAppid");
-            String AuthorizationCode=rootElt.elementText("AuthorizationCode");
-            String PreAuthCode=rootElt.elementText("PreAuthCode");
-            System.out.println("7、推送component_verify_ticket协议-----------ComponentVerifyTicket = "+ticket);
-            System.out.println("推送component_verify_ticket协议-----------CreateTime = "+createTime);
-            System.out.println("推送component_verify_ticket协议-----------AppId = "+appId);
-            System.out.println("推送component_verify_ticket协议-----------InfoType = "+infoType);
-            System.out.println("推送component_verify_ticket协议-----------AuthorizerAppid = "+AuthorizerAppid);
-            System.out.println("推送component_verify_ticket协议-----------AuthorizationCode = "+AuthorizationCode);
-            System.out.println("推送component_verify_ticket协议-----------PreAuthCode = "+PreAuthCode);
-            if(ticket!=null&&!ticket.equals("")){
-                net.wit.entity.PluginConfig pluginConfig=pluginConfigService.findByPluginId("verifyTicket");
-                pluginConfig.setAttribute("verify_ticket",ticket);
+            String createTime = rootElt.elementText("CreateTime");
+            String appId = rootElt.elementText("AppId");
+            String infoType = rootElt.elementText("InfoType");
+            String AuthorizerAppid = rootElt.elementText("AuthorizerAppid");
+            String AuthorizationCode = rootElt.elementText("AuthorizationCode");
+            String PreAuthCode = rootElt.elementText("PreAuthCode");
+            System.out.println("7、推送component_verify_ticket协议-----------ComponentVerifyTicket = " + ticket);
+            System.out.println("推送component_verify_ticket协议-----------CreateTime = " + createTime);
+            System.out.println("推送component_verify_ticket协议-----------AppId = " + appId);
+            System.out.println("推送component_verify_ticket协议-----------InfoType = " + infoType);
+            System.out.println("推送component_verify_ticket协议-----------AuthorizerAppid = " + AuthorizerAppid);
+            System.out.println("推送component_verify_ticket协议-----------AuthorizationCode = " + AuthorizationCode);
+            System.out.println("推送component_verify_ticket协议-----------PreAuthCode = " + PreAuthCode);
+            if (ticket != null && !ticket.equals("")) {
+                net.wit.entity.PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
+                pluginConfig.setAttribute("verify_ticket", ticket);
                 pluginConfigService.update(pluginConfig);
+            }
+            if (infoType.equalsIgnoreCase("authorized")) {
+                System.out.println("=================================：authorized");
+                Member current = memberService.getCurrent();
+                if (current != null) {
+                    System.out.println("------authorized----保存topic---------------------appid:" + AuthorizerAppid);
+                    TopicConfig topicConfig = current.getTopic().getConfig();
+                    topicConfig.setAppetAppId(AuthorizerAppid);
+                    Topic topic = current.getTopic();
+                    topic.setConfig(topicConfig);
+                    topicService.save(topic);
+                    System.out.println("------authorized----id:" + current.getId() + "---------------------==========>>>>>>>>>:");
+                }
+
+            } else if (infoType.equalsIgnoreCase("updateauthorized")) {
+                System.out.println("=================================：updateauthorized");
+
+            } else if (infoType.equalsIgnoreCase("unauthorized")) {
+                System.out.println("=================================：unauthorized");
+
             }
         } catch (DocumentException e) {
             e.printStackTrace();
