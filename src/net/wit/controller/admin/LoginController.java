@@ -77,6 +77,12 @@ public class LoginController extends BaseController {
     public
     Message submit(String captchaId, String captcha,Boolean rememberMe, String username, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         try {
+
+            Admin admin = adminService.findByUsername(username);
+            if (admin.getEnterprise()!=null && !admin.getEnterprise().getId().equals(1L)) {
+                return Message.error("不是管理员，不能登录");
+            }
+
             String password = rsaService.decryptParameter("enPassword", request);
             rsaService.removePrivateKey(request);
             //登出
