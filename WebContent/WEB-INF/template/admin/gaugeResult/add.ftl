@@ -12,7 +12,6 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
-
     <![endif]-->
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
@@ -113,7 +112,6 @@
 			</span>
             </div>
         </div>
-
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">图表类型：</label>

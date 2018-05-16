@@ -38,7 +38,7 @@ public class GaugeResult extends OrderEntity {
     };
 
     public enum ChartType{
-        /**  基础线 */
+        /**  折线图 */
         line
     };
 
