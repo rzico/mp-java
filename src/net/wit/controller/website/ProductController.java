@@ -96,7 +96,7 @@ public class ProductController extends BaseController {
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
-		Page<Product> page = productService.findPage(null,null,pageable);
+		Page<Product> page = productService.findPage(null,null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);

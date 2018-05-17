@@ -107,7 +107,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, Long> implement
 		super.delete(product);
 	}
 
-	public Page<Product> findPage(Date beginDate,Date endDate, Pageable pageable) {
-		return productDao.findPage(beginDate,endDate,pageable);
+	public Page<Product> findPage(Date beginDate,Date endDate,Tag tag, Pageable pageable) {
+		return productDao.findPage(beginDate,endDate,tag,pageable);
 	}
 }

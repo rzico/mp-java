@@ -47,6 +47,8 @@ public class ProductController extends BaseController {
 	private GoodsService goodsService;
 	@Resource(name = "productCategoryServiceImpl")
 	private ProductCategoryService productCategoryService;
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
 
 	/**
 	 * 详情
@@ -65,7 +67,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(Long authorId,Long productCategoryId,Pageable pageable,HttpServletRequest request) {
+	Message list(Long authorId,Long productCategoryId,Long tagId ,Pageable pageable,HttpServletRequest request) {
 		Member member = memberService.find(authorId);
 		if (member==null) {
 			return Message.error("作者id无效");
@@ -80,7 +82,12 @@ public class ProductController extends BaseController {
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
-		Page<Product> page = productService.findPage(null,null,pageable);
+
+		Tag tag = null;
+		if (tagId!=null) {
+			tag = tagService.find(tagId);
+		}
+		Page<Product> page = productService.findPage(null,null,tag,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
@@ -109,7 +116,7 @@ public class ProductController extends BaseController {
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
-		Page<Product> page = productService.findPage(null,null,pageable);
+		Page<Product> page = productService.findPage(null,null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);

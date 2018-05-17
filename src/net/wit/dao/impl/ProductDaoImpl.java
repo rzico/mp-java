@@ -5,12 +5,11 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
+import net.wit.entity.Article;
 import net.wit.entity.Member;
+import net.wit.entity.Tag;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -61,7 +60,7 @@ public class ProductDaoImpl extends BaseDaoImpl<Product, Long> implements Produc
 	 * @param pageable
 	 * @return Page<Product>
 	 */
-	public Page<Product> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<Product> findPage(Date beginDate, Date endDate, Tag tag, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
 		Root<Product> root = criteriaQuery.from(Product.class);
@@ -77,6 +76,15 @@ public class ProductDaoImpl extends BaseDaoImpl<Product, Long> implements Produc
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
+
+		if (tag != null) {
+			Subquery<Product> subquery = criteriaQuery.subquery(Product.class);
+			Root<Product> subqueryRoot = subquery.from(Product.class);
+			subquery.select(subqueryRoot);
+			subquery.where(criteriaBuilder.equal(subqueryRoot, root), subqueryRoot.join("tags").in(tag));
+			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.exists(subquery));
+		}
+
 		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);

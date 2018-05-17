@@ -9,6 +9,7 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Member;
 import net.wit.entity.Product;
+import net.wit.entity.Tag;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -47,5 +48,5 @@ public interface ProductService extends BaseService<Product, Long> {
 	 * @return 商品编号是否唯一
 	 */
 	boolean snUnique(Member member ,String previousSn, String currentSn);
-	Page<Product> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Page<Product> findPage(Date beginDate, Date endDate, Tag tag, Pageable pageable);
 }

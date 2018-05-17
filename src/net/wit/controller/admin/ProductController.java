@@ -323,7 +323,7 @@ public class ProductController extends BaseController {
 			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
 			filters.add(mediaTypeFilter);
 		}
-		Page<Product> page = productService.findPage(beginDate,endDate,pageable);
+		Page<Product> page = productService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 
 	}

@@ -9,6 +9,7 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Member;
 import net.wit.entity.Product;
+import net.wit.entity.Tag;
 
 
 /**
@@ -44,5 +45,5 @@ public interface ProductDao extends BaseDao<Product, Long> {
 	 * @param pageable
 	 * @return Page<Product>
 	 */
-	Page<Product> findPage(Date beginDate,Date endDate, Pageable pageable);
+	Page<Product> findPage(Date beginDate, Date endDate, Tag tag, Pageable pageable);
 }
