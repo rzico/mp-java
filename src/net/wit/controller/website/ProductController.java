@@ -50,7 +50,6 @@ public class ProductController extends BaseController {
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
 
-
 	/**
 	 * 详情
 	 */
