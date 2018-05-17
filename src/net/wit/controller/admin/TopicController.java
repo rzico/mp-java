@@ -282,6 +282,8 @@ public class TopicController extends BaseController {
         }
         try {
             topicService.update(entity);
+
+
             return Message.success(entity,"admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();
