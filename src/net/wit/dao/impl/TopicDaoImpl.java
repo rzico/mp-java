@@ -72,13 +72,13 @@ public class TopicDaoImpl extends BaseDaoImpl<Topic, Long> implements TopicDao {
 		}
 	}
 	@Override
-	public Topic findByAppId(String appid) {
+	public Topic findByUserName(String appid) {
 		if(appid == null || appid.equalsIgnoreCase("")){
 			return null;
 		}
 		try{
-			String jpql = "select topic from Topic topic where topic.config.appetAppId = :appetAppId";
-			return entityManager.createQuery(jpql, Topic.class).setFlushMode(FlushModeType.COMMIT).setParameter("appetAppId", appid).getSingleResult();
+			String jpql = "select topic from Topic topic where topic.config.userName = :userName";
+			return entityManager.createQuery(jpql, Topic.class).setFlushMode(FlushModeType.COMMIT).setParameter("userName", appid).getSingleResult();
 		}catch (NoResultException e){
 			return null;
 		}

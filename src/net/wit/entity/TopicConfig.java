@@ -61,6 +61,7 @@ public class TopicConfig implements Serializable {
 		AUDITING,//正在审核
 
 		ISAUDITING,//通过审核（待发布）
+		UNAUDITING,//审核不通过
 		PASS//已发布
 
 	}

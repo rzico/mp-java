@@ -329,7 +329,7 @@ public class WeiXinController extends BaseController {
             System.out.println("--------------------------我是EVENT事件消息分界线------------------------------");
             System.out.println("--------------------------开始(START)------------------------------");
             String event = rootElt.elementText("Event");
-            replyEventMessage(request, response, event, toUserName, fromUserName, appid);
+            replyEventMessage(request, response, event, toUserName, fromUserName, appid, rootElt);
         } else if ("text".equals(msgType)) {
             System.out.println("--------------------------我是文本类事件消息分界线------------------------------");
             System.out.println("--------------------------开始(START)------------------------------");
@@ -339,9 +339,35 @@ public class WeiXinController extends BaseController {
 
     }
 
-    public void replyEventMessage(HttpServletRequest request, HttpServletResponse response, String event, String toUserName, String fromUserName, String appId) throws AesException {
+    public void replyEventMessage(HttpServletRequest request, HttpServletResponse response, String event, String toUserName, String fromUserName, String appId, Element rootElt) throws AesException {
         String content = event + "from_callback";
         System.out.println("--------------EVENT事件回复消息  content=" + content + "   toUserName=" + toUserName + "   fromUserName=" + fromUserName + "     appid=" + appId);
+
+        Topic topic = topicService.findByUserName(toUserName);
+        if(event.equalsIgnoreCase("weapp_audit_success")){//审核通过
+            if(topic != null){
+                TopicConfig topicConfig = topic.getConfig();
+                topicConfig.setEstate(TopicConfig.Estate.ISAUDITING);
+                topic.setConfig(topicConfig);
+                topicService.update(topic);
+                //这里需要购买刷新发布正是包
+//                Member member = topic.getMember();
+//                WeixinApi.getRefreshAuthorizationCode()
+//                WeixinApi.releaseAppletCode();
+            }
+        }
+        if(event.equalsIgnoreCase("weapp_audit_fail")){//审核不通过
+            String reason = rootElt.elementText("Reason");
+
+            if(topic != null){
+                TopicConfig topicConfig = topic.getConfig();
+                topicConfig.setEstate(TopicConfig.Estate.UNAUDITING);
+                topicConfig.setStateRemark(reason);
+                topic.setConfig(topicConfig);
+                topicService.update(topic);
+            }
+
+        }
         replyTextMessage(request, response, content, toUserName, fromUserName, appId);
     }
 

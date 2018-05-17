@@ -114,7 +114,7 @@ public class CommonController extends BaseController {
                 System.out.println("TopicUpdateSuccess===============================");
 
                 SmallInformation smallInformation = WeixinApi.getSmallInformation(componentAccessToken.getComponent_access_token(), appId, member.getTopic().getConfig().getAppetAppId());
-//                Topic topic1 = topicService.findByAppId(topicConfig.getAppetAppId());
+//                Topic topic1 = topicService.findByUserName(topicConfig.getAppetAppId());
 //                System.out.println("smallInformation=====================" + topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
                 if (smallInformation.getAuthorizerInfo() != null) {
                     AuthorizerInfo authorizerInfo = smallInformation.getAuthorizerInfo();
