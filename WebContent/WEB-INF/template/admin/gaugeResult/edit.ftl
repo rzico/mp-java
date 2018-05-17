@@ -135,21 +135,26 @@
 
         <div id="html" class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
-        <div class="formControls col-xs-8 col-sm-9">
+           <div class="formControls col-xs-8 col-sm-9">
             <script id="htmlContent"  name="htmlContent" type="text/plain" style="width:100%;height:400px;"></script>
-        </div>
+           </div>
         </div>
 
         <div id="json" class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content" id="content" value="${data.content}" style="height:300px;width:100%;"></textarea>
-                </div> </div>
+                <textarea class="input-text" name="content" id="content" style="height:300px;width:100%;">
+                ${data.content}
+                </textarea>
+                </div>
+         </div>
+
 
                 <div id="image" class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
         <div class="formControls col-xs-8 col-sm-9">
-                <div class="uploader-thum-container"<div id="fileList" class="uploader-list">
+                <div class="uploader-thum-container">
+                <div id="fileList" class="uploader-list">
             [#if data.content??]
             <div class="file-item thumbnail">
                     <img width="100px" height="100px" src="${data.content}"/>
@@ -163,15 +168,14 @@
                 </div>
                 </div>
 
-
                 <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">排序：</label>
-        <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
                 </div>
                 </div>
 
-                <div class="row cl">
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
@@ -222,7 +226,6 @@
                 });
 
                 var r = '${data.type}';
-                alert(r);
                 if (r=='html') {
                     $("#json").addClass("hidden");
                     $("#image").addClass("hidden");

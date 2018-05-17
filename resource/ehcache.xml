@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ehcache [
+		<!ELEMENT ehcache (diskStore|cache)*>
+		<!ATTLIST ehcache
+				xmlns:xsi CDATA #REQUIRED
+				xsi:noNamespaceSchemaLocation CDATA #REQUIRED>
+		<!ELEMENT diskStore (#PCDATA)>
+		<!ATTLIST diskStore
+				path CDATA #REQUIRED>
+		<!ELEMENT cache (#PCDATA)>
+		<!ATTLIST cache
+				eternal CDATA #REQUIRED
+				maxElementsInMemory CDATA #REQUIRED
+				name CDATA #REQUIRED
+				overflowToDisk CDATA #REQUIRED
+				timeToIdleSeconds CDATA #IMPLIED
+				timeToLiveSeconds CDATA #IMPLIED>
+		]>
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
 
 	<diskStore path="${java.io.tmpdir}/${system.project_name}/cache" />
