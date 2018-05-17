@@ -15,6 +15,8 @@ import javax.net.ssl.TrustManager;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import net.wit.controller.model.AppletCodeConfig;
+import net.wit.entity.TopicConfig;
 import net.wit.entity.VerifyTicket;
 import net.wit.entity.weixin.Domain;
 import net.wit.entity.weixin.WeiXinCallBack;
@@ -621,27 +623,47 @@ title	小程序页面的标题,标题长度不超过32*/
 	 * @param userDesc 用户的备注
 	 * @return
 	 */
-	public static boolean commitAppletCode(String authToken, String templateId, String userVersion,String userDesc){
+	public static boolean commitAppletCode(String authToken, String templateId, String userVersion, String userDesc,AppletCodeConfig appletCodeConfig){
 
 		String appjson = "{" +
-				"    extAppid:\"\"," +
-				"    ext:{" +
-				"        \"attr1\":\"value1\"," +
-				"        \"attr2\":\"value2\"," +
-				"    }," +
-				"    extPages:{" +
-				"        \"index\":{" +
-				"        }," +
-				"        \"search/index\":{" +
-				"        }," +
-				"    }," +
-				"    pages:[\"index\",\"search/index\"]," +
-				"    \"window\":{" +
-				"    }," +
-				"    \"networkTimeout\":{" +
-				"    }," +
-				"    \"tabBar\":{" +
-				"    }," +
+				"  \"extEnable\": true," +
+				"  \"extAppid\": \"" + appletCodeConfig.getAppid() + "\"," +
+				"  \"directCommit\": false," +
+				"  \"ext\": {" +
+				"    \"memberId\":" + appletCodeConfig.getMemberId() + "" +
+				"  }," +
+				"  \"extPages\": {" +
+				"    " +
+				"  }," +
+				"  \"window\": {" +
+				"    \"navigationBarBackgroundColor\": \"#99ccff\"," +
+				"    \"navigationBarTitleText\": \"" + appletCodeConfig.getName() + "\"," +
+				"    \"navigationBarTextStyle\": \"white\"," +
+				"    \"backgroundTextStyle\": \"dark\"" +
+				"  }," +
+				"  \"tabBar\": {" +
+				"    \"color\": \"#333333\"," +
+				"    \"selectedColor\": \"#99ccff\"," +
+				"    \"borderStyle\": \"#ccc\"," +
+				"    \"list\": [" +
+				"      {" +
+				"        \"selectedIconPath\": \"images/home-fill.png\"," +
+				"        \"iconPath\": \"images/home.png\"," +
+				"        \"pagePath\": \"pages/index/index\"," +
+				"        \"text\": \"首页\"" +
+				"      }," +
+				"      {" +
+				"        \"selectedIconPath\": \"images/call-fill.png\"," +
+				"        \"iconPath\": \"images/call.png\"," +
+				"        \"pagePath\": \"pages/contact/contact\"," +
+				"        \"text\": \"联系我们\"" +
+				"      }" +
+				"    ]" +
+				"  }," +
+				"  \"networkTimeout\": {" +
+				"    \"request\": 10000," +
+				"    \"downloadFile\": 10000" +
+				"  }" +
 				"}";
 
 		String params = "{" +

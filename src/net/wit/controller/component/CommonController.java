@@ -1,6 +1,7 @@
 package net.wit.controller.component;
 
 import net.wit.Message;
+import net.wit.controller.model.AppletCodeConfig;
 import net.wit.entity.*;
 import net.wit.entity.weixin.Domain;
 import net.wit.entity.weixin.WeiXinCallBack;
@@ -106,14 +107,15 @@ public class CommonController extends BaseController {
                 //设置小程序
                 System.out.println("TopicAppetAppid == null ===============================");
                 TopicConfig topicConfig = topic.getConfig();
+                topicConfig.setEstate(TopicConfig.Estate.AUTHORIZED);
                 topicConfig.setAppetAppId(authAccessToken.getAuthorizer_appid());
                 topicConfig.setRefreshToken(authAccessToken.getAuthorizer_refresh_token());
                 topicConfig.setTokenExpire(authAccessToken.getExpire());
                 System.out.println("TopicUpdateSuccess===============================");
 
                 SmallInformation smallInformation = WeixinApi.getSmallInformation(componentAccessToken.getComponent_access_token(), appId, member.getTopic().getConfig().getAppetAppId());
-                Topic topic1 = topicService.findByAppId(topicConfig.getAppetAppId());
-                System.out.println("smallInformation=====================" + topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
+//                Topic topic1 = topicService.findByAppId(topicConfig.getAppetAppId());
+//                System.out.println("smallInformation=====================" + topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
                 if (smallInformation.getAuthorizerInfo() != null) {
                     AuthorizerInfo authorizerInfo = smallInformation.getAuthorizerInfo();
                     //为了防止重复设置
@@ -148,7 +150,22 @@ public class CommonController extends BaseController {
                     }
                     //设置小程序可搜索
                     WeixinApi.setAppletStatus(authToken, 0);
-
+                    AppletCodeConfig appletCodeConfig = new AppletCodeConfig();
+                    appletCodeConfig.setMemberId(memberId);
+                    appletCodeConfig.setAppid(topicConfig.getAppetAppId());
+                    appletCodeConfig.setName(topic.getName());
+                    //上传代码
+                    boolean commit = WeixinApi.commitAppletCode(authToken, "1", "v1.0.0", enterprise.getAutograph(), appletCodeConfig);
+                    System.out.println("commitAppletCode===============================" + commit);
+                    if(commit){
+                        boolean push = WeixinApi.pushAppletCode(authToken);
+                        System.out.println("pushAppletCode===============================" + push);
+                        if(push){
+                            topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+                            topic.setConfig(topicConfig);
+                            topicService.update(topic);
+                        }
+                    }
                 }
             } else {
                 return "redirect:http://" + serverUrl + "/#/agreeError";

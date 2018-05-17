@@ -105,6 +105,7 @@ public class TopicController extends BaseController {
                 config.setUseCard(false);
                 config.setUseCashier(false);
                 config.setUseCoupon(false);
+                config.setEstate(TopicConfig.Estate.UNAUTHORIZED);
                 config.setPromoterType(TopicConfig.PromoterType.any);
                 config.setPattern(TopicConfig.Pattern.pattern1);
                 config.setAmount(BigDecimal.ZERO);

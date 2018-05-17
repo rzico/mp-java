@@ -47,17 +47,22 @@ public class TopicConfig implements Serializable {
 
 	}
 
+	/**
+	 * 1、未授权
+	 * 2、已授权
+	 * 3、待审核
+	 * 4、正在审核
+	 * 5、通过审核（待发布）
+	 * 6、已发布
+	 */
 	public static enum Estate{
-		/** 暂停服务 */
-		outOfService,
-		/** 未上传 */
-		notUploaded,
-		/** 待审核 */
-		audit,
-		/** 已上线 */
-		online,
-		/** 已通过 */
-		passed
+		UNAUTHORIZED,//未授权
+		AUTHORIZED,//已授权
+		AUDITING,//正在审核
+
+		ISAUDITING,//通过审核（待发布）
+		PASS//已发布
+
 	}
 
 	/**  团队类型 */
@@ -109,7 +114,7 @@ public class TopicConfig implements Serializable {
 
 	/** 小程序 estate */
 	@NotNull
-	@Column(columnDefinition="int(11) default '0'comment '状态 { 暂停服务:outOfService,未上传:notUploaded,待审核:audit,已上线:online,已通过:passed}'")
+	@Column(columnDefinition="int(11) default '0'comment '状态 { 未授权:UNAUTHORIZED, 已授权:AUTHORIZED, 正在审核:AUDITING, 通过审核:ISAUDITING, 已发布:PASS}'")
 	private Estate estate;
 
 	/** 小程序 刷新token */
