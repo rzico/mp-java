@@ -105,13 +105,13 @@
 
 
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">结果类型：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果类型：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
 				<select id="type" name="type" class="select" style="background-color: #FFFFFF">
 					<option value="">结果类型</option>
                     [#list types as type]
-                        <option value="${type.id}">${type.name}</option>
+                        <option value="${type.id}" [#if type.id == data.type] selected[/#if]>${type.name}</option>
                     [/#list]
 				</select>
 			</span>
@@ -119,13 +119,13 @@
             </div>
 
             <div id="chart" class="row cl hidden">
-                <label class="form-label col-xs-4 col-sm-2">图表类型：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图表类型：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
 				<select name="chartType" class="select" style="background-color: #FFFFFF">
 					<option value="">图表类型</option>
                     [#list  chartTypes as chartType]
-                        <option value="${chartType.id}">${chartType.name}</option>
+                        <option value="${chartType.id}" [#if chartType.id == data.chartType] selected[/#if]>${chartType.name}</option>
                     [/#list]
 				</select>
 			</span>
@@ -134,19 +134,17 @@
 
 
         <div id="html" class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
         <div class="formControls col-xs-8 col-sm-9">
             <script id="htmlContent"  name="htmlContent" type="text/plain" style="width:100%;height:400px;"></script>
         </div>
         </div>
 
         <div id="json" class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
-        <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content" id="content" value="${data.content}" style="height:400px;width:100%;"></textarea>
-                </div>
-                </div>
-
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content" id="content" value="${data.content}" style="height:300px;width:100%;"></textarea>
+                </div> </div>
 
                 <div id="image" class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
@@ -223,7 +221,8 @@
                     ue.setContent('${data.content}');
                 });
 
-                var r = ${data.type};
+                var r = '${data.type}';
+                alert(r);
                 if (r=='html') {
                     $("#json").addClass("hidden");
                     $("#image").addClass("hidden");
@@ -253,6 +252,9 @@
                             required:true,
                         },
                         minscore:{
+                            required:true,
+                        },
+                        type:{
                             required:true,
                         },
 

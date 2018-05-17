@@ -136,6 +136,9 @@ public class GaugeResultController extends BaseController {
 		} else {
 			entity.setContent(gaugeResult.getContent());
 		}
+		if (entity.getChartType()==null) {
+			entity.setChartType(GaugeResult.ChartType.line);
+		}
         Gauge gauge = gaugeService.find(gaugeId);
 		entity.setGauge(gauge);
 
@@ -197,6 +200,24 @@ public class GaugeResultController extends BaseController {
 		model.addAttribute("data",gaugeResult);
 		model.addAttribute("gaugeGenes",gauge.getGaugeGenes());
 
+
+		List<MapEntity> types = new ArrayList<>();
+		types.add(new MapEntity("html","富文本"));
+		types.add(new MapEntity("text","纯文本"));
+		types.add(new MapEntity("echart","图表"));
+		types.add(new MapEntity("image","图片"));
+		model.addAttribute("types",types);
+
+		List<MapEntity> chartTypes = new ArrayList<>();
+		chartTypes.add(new MapEntity("line","折线图"));
+		chartTypes.add(new MapEntity("bar","柱状图"));
+		chartTypes.add(new MapEntity("pie","饼图"));
+		chartTypes.add(new MapEntity("scatter","散点图"));
+		chartTypes.add(new MapEntity("radar","雷达图"));
+		chartTypes.add(new MapEntity("gauge","仪表盘"));
+		model.addAttribute("chartTypes",chartTypes);
+
+
 		model.addAttribute("expr_txt",
 				"1.总分  = total\n" +
 						"2.总均分 = tavg\n" +
@@ -238,6 +259,10 @@ public class GaugeResultController extends BaseController {
 		} else {
 			entity.setContent(gaugeResult.getContent());
 		}
+		if (entity.getChartType()==null) {
+			entity.setChartType(GaugeResult.ChartType.line);
+		}
+
 		entity.setTitle(gaugeResult.getTitle());
 		Gauge gauge = entity.getGauge();
 		entity.setGauge(gauge);

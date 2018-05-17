@@ -100,7 +100,7 @@
         [/#if]
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">结果类型：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果类型：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
 				<select id="type" name="type" class="select" style="background-color: #FFFFFF">
@@ -114,7 +114,7 @@
         </div>
 
         <div id="chart" class="row cl hidden">
-            <label class="form-label col-xs-4 col-sm-2">图表类型：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图表类型：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
 				<select name="chartType" class="select" style="background-color: #FFFFFF">
@@ -129,16 +129,16 @@
 
 
         <div id="html" class="row cl hidden">
-            <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <script id="htmlContent"  name="htmlContent" type="text/plain" style="width:100%;height:400px;"></script>
             </div>
         </div>
 
         <div id="json" class="row cl hidden">
-            <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content" id="content" style="height:400px;width:100%;"></textarea>
+                <textarea class="input-text" name="content" id="content" style="height:300px;width:100%;"></textarea>
             </div>
         </div>
 
@@ -193,10 +193,6 @@
                 <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
                 <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/xiumi-ue-dialog-v5.js"></script>
 
-
-                <script type="text/javascript" src="${base}/resources/admin/lib/hcharts/Highcharts/5.0.6/js/highcharts-more.js"></script>
-
-
                 <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
 
                 <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
@@ -217,6 +213,9 @@
                             required:true,
                         },
                         minscore:{
+                            required:true,
+                        },
+                        type:{
                             required:true,
                         },
 
