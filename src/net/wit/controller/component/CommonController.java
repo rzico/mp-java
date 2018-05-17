@@ -2,6 +2,8 @@ package net.wit.controller.component;
 
 import net.wit.Message;
 import net.wit.entity.*;
+import net.wit.entity.weixin.Domain;
+import net.wit.entity.weixin.WeiXinCallBack;
 import net.wit.plat.weixin.pojo.AuthAccessToken;
 import net.wit.plat.weixin.pojo.AuthorizerInfo;
 import net.wit.plat.weixin.pojo.ComponentAccessToken;
@@ -93,13 +95,14 @@ public class CommonController extends BaseController {
 
             String verifyTicket = pluginConfig.getAttribute("verify_ticket");
             ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, appId, secret);
-            if(componentAccessToken == null){
+            if (componentAccessToken == null) {
                 return "redirect:http://" + serverUrl + "/#/agreeError";
             }
             AuthAccessToken authAccessToken = WeixinApi.getAuthorizationCode(componentAccessToken.getComponent_access_token(), appId, auth_code);
 
-            Topic topic =  member.getTopic();
-            if(authAccessToken!=null){
+            Topic topic = member.getTopic();
+            if (authAccessToken != null) {
+                String authToken = authAccessToken.getAuthorizer_access_token();
                 //设置小程序
                 System.out.println("TopicAppetAppid == null ===============================");
                 TopicConfig topicConfig = topic.getConfig();
@@ -110,35 +113,44 @@ public class CommonController extends BaseController {
 
                 SmallInformation smallInformation = WeixinApi.getSmallInformation(componentAccessToken.getComponent_access_token(), appId, member.getTopic().getConfig().getAppetAppId());
                 Topic topic1 = topicService.findByAppId(topicConfig.getAppetAppId());
-                System.out.println("smallInformation====================="+ topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
-                if(smallInformation.getAuthorizerInfo()!=null){
+                System.out.println("smallInformation=====================" + topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
+                if (smallInformation.getAuthorizerInfo() != null) {
                     AuthorizerInfo authorizerInfo = smallInformation.getAuthorizerInfo();
                     //为了防止重复设置
-//                    if(authorizerInfo.getUserName()!=null && !authorizerInfo.getUserName().equalsIgnoreCase("") && !authorizerInfo.getUserName().equalsIgnoreCase("user_name")){
-                        topicConfig.setUserName(authorizerInfo.getUserName());//原始id
-//                    }
-//                    if(authorizerInfo.getPrincipalName() != null && !authorizerInfo.getPrincipalName().equalsIgnoreCase("") && !authorizerInfo.getPrincipalName().equalsIgnoreCase("principal_name")){
-                        topic.setName(authorizerInfo.getPrincipalName());//这里用专栏信息
-//                    }
+                    topicConfig.setUserName(authorizerInfo.getUserName());//原始id
+                    topicConfig.setQrcodePath(authorizerInfo.getQrcodeUrl());//二维码地址
+                    topic.setName(authorizerInfo.getPrincipalName());//这里用专栏信息
                     topic.setConfig(topicConfig);
 
                     topic.setName(authorizerInfo.getNickName());//这个是专栏名称 这里设置成小程序的名称了
                     topicService.update(topic);
-                    if(admin==null){
+                    if (admin == null) {
                         return "redirect:http://" + serverUrl + "/#/agreeError";
                     }
 
+                    //更新企业信息
                     Enterprise enterprise = admin.getEnterprise();
                     enterprise.setName(authorizerInfo.getPrincipalName());//公司名称
-                    //更新企业信息
+                    enterprise.setAutograph(authorizerInfo.getSignature());//小程序签名
                     enterpriseService.update(enterprise);
-
                     //接下来 设置小程序的 域名===================
-
-
+                    Domain domain = WeixinApi.setDomain1(authToken, WeixinApi.ACTION.SET);
+                    if(domain!=null){
+                        System.out.println("setDomain1===============================" + domain.getErrmsg() + "|" + domain.getErrcode());
+                    }else{
+                        System.out.println("setDomain1===============================null");
+                    }
+                    WeiXinCallBack weiXinCallBack = WeixinApi.setDomain2(authToken);
+                    if(weiXinCallBack!=null){
+                        System.out.println("setDomain2===============================" + weiXinCallBack.getErrmsg() + "|" + weiXinCallBack.getErrcode());
+                    }else{
+                        System.out.println("setDomain2===============================null");
+                    }
+                    //设置小程序可搜索
+                    WeixinApi.setAppletStatus(authToken, 0);
 
                 }
-            }else {
+            } else {
                 return "redirect:http://" + serverUrl + "/#/agreeError";
             }
 

@@ -125,6 +125,10 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '原始ID version'")
 	private String userName;
 
+	/** 小程序 二维码地址 */
+	@Column(columnDefinition="varchar(255) comment '二维码地址 version'")
+	private String qrcodePath;
+
 	/** 小程序 状态备注 */
 	@Column(columnDefinition="varchar(255) comment '备注 version'")
 	private String stateRemark;
@@ -255,5 +259,13 @@ public class TopicConfig implements Serializable {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getQrcodePath() {
+		return qrcodePath;
+	}
+
+	public void setQrcodePath(String qrcodePath) {
+		this.qrcodePath = qrcodePath;
 	}
 }

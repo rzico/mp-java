@@ -106,10 +106,12 @@ public class LoginController extends BaseController {
             String unionId = null;
             if (result.containsKey("unionid")) {
                 unionId = result.get("unionid").toString();
+            }else{
+                unionId = "#";
             }
 
             BindUser bindUser = null;
-            if (unionId!=null) {
+            if (unionId!=null && !unionId.equalsIgnoreCase("#")) {
                 bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
             } else {
                 bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);

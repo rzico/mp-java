@@ -342,7 +342,7 @@ public class Auth2Controller extends BaseController {
             topic.setStatus(Topic.Status.waiting);
             topic.setHits(0L);
             topic.setMember(member);
-            topic.setFee(new BigDecimal("588"));
+            topic.setFee(new BigDecimal("1999"));
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.personal);
             topic.setRanking(0L);

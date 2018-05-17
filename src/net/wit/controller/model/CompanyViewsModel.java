@@ -7,6 +7,7 @@ import net.wit.entity.Enterprise;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -172,7 +173,11 @@ public class CompanyViewsModel extends BaseModel implements Serializable {
         this.image=images;
         this.startTime=enterprise.getStartTime();
         this.endTime=enterprise.getEndTime();
-        this.area=new MapEntity(enterprise.getArea().getId().toString(),enterprise.getArea().getFullName());
+        if(enterprise.getArea() == null || enterprise.getArea().getId() == null || enterprise.getArea().getFullName() == null){
+            this.area = new MapEntity(null, null);
+        }else{
+            this.area=new MapEntity(enterprise.getArea().getId().toString(),enterprise.getArea().getFullName());
+        }
         List<MapEntity> list= new ArrayList<>();
         for(CompanyLabel label: enterprise.getLabel()){
             list.add(new MapEntity(label.getId().toString(),label.getName()));

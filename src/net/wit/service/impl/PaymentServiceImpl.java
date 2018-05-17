@@ -522,6 +522,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
+			if(resultCode == null) return;
 			switch (resultCode) {
 				case "0000":
 					try {

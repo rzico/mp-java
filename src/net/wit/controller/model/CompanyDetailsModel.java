@@ -118,7 +118,11 @@ public class CompanyDetailsModel extends BaseModel implements Serializable {
 
     public void bind(Enterprise enterprise) {
         this.name = enterprise.getName();
-        this.address=enterprise.getArea().getFullName()+enterprise.getAddress();
+        if(enterprise.getArea() == null || enterprise.getArea().getFullName() == null || enterprise.getAddress() == null){
+            this.address = "";
+        }else {
+            this.address=enterprise.getArea().getFullName()+enterprise.getAddress();
+        }
         this.logo=enterprise.getLogo();
         this.phone=enterprise.getPhone();
         List<String> images=new ArrayList<>();
