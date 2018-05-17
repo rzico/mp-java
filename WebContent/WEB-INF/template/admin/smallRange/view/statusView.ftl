@@ -31,17 +31,20 @@
             <th class="text-r" width="120">名称：</th>
             <td>${name}</td>
         </tr>
-        [#elseif appid??]
+        [/#if]
+        [#if appid??]
         <tr>
             <th class="text-r" width="120">appid：</th>
             <td>${appid}</td>
         </tr>
-        [#elseif version??]
+        [/#if]
+        [#if version??]
         <tr>
             <th class="text-r" width="120">版本：</th>
             <td>${version}</td>
         </tr>
-        [#elseif status??]
+        [/#if]
+        [#if status??]
         <tr>
             <th class="text-r" width="120">审核结果：</th>
             [#if status==0]
@@ -53,7 +56,10 @@
             [/#if]
         </tr>
         [#else]
-        没有查找到数据
+        <tr>
+            <th class="text-r" width="120">审核结果：</th>
+            <td>暂无审核结果</td>
+        </tr>
         [/#if]
         </tbody>
     </table>

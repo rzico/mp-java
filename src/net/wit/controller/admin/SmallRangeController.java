@@ -34,7 +34,7 @@ public class SmallRangeController extends BaseController {
     @Resource(name = "topicServiceImpl")
     private TopicService topicService;
 
-    @Resource(name="pluginConfigServiceImpl")
+    @Resource(name = "pluginConfigServiceImpl")
     private PluginConfigService pluginConfigService;
 
     /**
@@ -80,12 +80,12 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String edit(Long id, ModelMap model) {
         List<MapEntity> types = new ArrayList<>();
-        types.add(new MapEntity("outOfService","暂停服务"));
-        types.add(new MapEntity("notUploaded","未上传"));
-        types.add(new MapEntity("audit","待审核"));
-        types.add(new MapEntity("online","已上线"));
-        types.add(new MapEntity("passed","已通过"));
-        model.addAttribute("types",types);
+        types.add(new MapEntity("outOfService", "暂停服务"));
+        types.add(new MapEntity("notUploaded", "未上传"));
+        types.add(new MapEntity("audit", "待审核"));
+        types.add(new MapEntity("online", "已上线"));
+        types.add(new MapEntity("passed", "已通过"));
+        model.addAttribute("types", types);
         model.addAttribute("data", topicService.find(id));
         return "/admin/smallRange/edit";
     }
@@ -96,7 +96,7 @@ public class SmallRangeController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Topic topic, String appetAppId, String appetAppSerect, String version, TopicConfig.Estate estate){
+    public Message update(Topic topic, String appetAppId, String appetAppSerect, String version, TopicConfig.Estate estate) {
         Topic entity = topicService.find(topic.getId());
 
         entity.setCreateDate(topic.getCreateDate());
@@ -105,7 +105,7 @@ public class SmallRangeController extends BaseController {
 
         entity.setName(topic.getName());
 
-        TopicConfig topicConfig=entity.getConfig();
+        TopicConfig topicConfig = entity.getConfig();
 
         topicConfig.setAppetAppId(appetAppId);
 
@@ -122,7 +122,7 @@ public class SmallRangeController extends BaseController {
         }
         try {
             topicService.update(entity);
-            return Message.success(entity,"admin.update.success");
+            return Message.success(entity, "admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("admin.update.error");
@@ -134,139 +134,179 @@ public class SmallRangeController extends BaseController {
      */
     @RequestMapping(value = "/searchView", method = RequestMethod.GET)
     public String searchView(Long id, ModelMap model) {
-        Topic topic=topicService.find(id);
-        model.addAttribute("name",topic.getName());
-        model.addAttribute("appid",topic.getConfig().getAppetAppId());
-        model.addAttribute("version",topic.getConfig().getVersion());
-        String result=WeixinApi.getStatus(authToken(id));
-        model.addAttribute("status",result);
-        if(result.equals("0")){
-            TopicConfig topicConfig=topic.getConfig();
-            topicConfig.setEstate(TopicConfig.Estate.ISAUDITING);
-            topic.setConfig(topicConfig);
-            topicService.update(topic);
+        Topic topic = topicService.find(id);
+        model.addAttribute("name", topic.getName());
+        model.addAttribute("appid", topic.getConfig().getAppetAppId());
+        model.addAttribute("version", topic.getConfig().getVersion());
+        String token;
+        if ((token = getAuthToken(id)) != null) {
+            String result = WeixinApi.getStatus(token);
+            model.addAttribute("status", result);
+            if (result.equals("0")) {
+                TopicConfig topicConfig = topic.getConfig();
+                topicConfig.setEstate(TopicConfig.Estate.ISAUDITING);
+                topic.setConfig(topicConfig);
+                topicService.update(topic);
+            }
         }
         return "/admin/smallRange/view/statusView";
     }
 
     /**
      * 上传小程序
-     * */
+     */
     @RequestMapping(value = "/upLoadView")
-    public String upLoadView(Long id,ModelMap modelMap){
-        modelMap.addAttribute("topic",topicService.find(id));
+    public String upLoadView(Long id, ModelMap modelMap) {
+        modelMap.addAttribute("topic", topicService.find(id));
         return "/admin/smallRange/view/upLoad";
     }
+
     /**
      * 上传小程序
-     * */
-    @RequestMapping(value = "/upLoad",method = RequestMethod.POST)
-    public Message upLoad(Long id,String version,String templateId,String userDesc){
-        Topic topic=topicService.find(id);
-        AppletCodeConfig appletCodeConfig=new AppletCodeConfig();
+     */
+    @RequestMapping(value = "/upLoad", method = RequestMethod.POST)
+    @ResponseBody
+    public Message upLoad(Long id, String version, String templateId, String userDesc) {
+        Topic topic = topicService.find(id);
+        AppletCodeConfig appletCodeConfig = new AppletCodeConfig();
         appletCodeConfig.setAppid(topic.getConfig().getAppetAppId());
         appletCodeConfig.setName(topic.getName());
         appletCodeConfig.setMemberId(topic.getMember().getId());
-        if(WeixinApi.commitAppletCode(authToken(id),templateId,version,userDesc,appletCodeConfig)){
-            TopicConfig topicConfig=topic.getConfig();
-            topicConfig.setVersion(version);
-            topicConfig.setEstate(TopicConfig.Estate.AUDITING);
-            topicConfig.setStateRemark(userDesc);
-            topic.setConfig(topicConfig);
-            topicService.update(topic);
-            return Message.success("上传成功");
-        }else {
+        String token;
+        if ((token = getAuthToken(id)) != null) {
+            if (WeixinApi.commitAppletCode(token, templateId, version, userDesc, appletCodeConfig)) {
+                TopicConfig topicConfig = topic.getConfig();
+                topicConfig.setVersion(version);
+                topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+                topicConfig.setStateRemark(userDesc);
+                topic.setConfig(topicConfig);
+                topicService.update(topic);
+                return Message.success("上传成功");
+            } else {
+                return Message.error("上传失败");
+            }
+        } else {
             return Message.error("未知异常,请稍后重试");
         }
     }
 
     /**
      * 提交审核小程序
-     * */
-    @RequestMapping(value = "/commit",method = RequestMethod.POST)
-    public Message commit(Long id){
-        if(WeixinApi.pushAppletCode(authToken(id))){
-            Topic topic=topicService.find(id);
-            TopicConfig topicConfig=topic.getConfig();
-            topicConfig.setEstate(TopicConfig.Estate.AUDITING);
-            topic.setConfig(topicConfig);
-            topicService.update(topic);
-            return Message.success("提交成功");
-        }else {
+     */
+    @RequestMapping(value = "/commit", method = RequestMethod.POST)
+    @ResponseBody
+    public Message commit(Long id) {
+        String token;
+        if ((token = getAuthToken(id)) != null) {
+            if (WeixinApi.pushAppletCode(token)) {
+                Topic topic = topicService.find(id);
+                TopicConfig topicConfig = topic.getConfig();
+                topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+                topic.setConfig(topicConfig);
+                topicService.update(topic);
+                return Message.success("提交成功");
+            } else {
+                return Message.error("提交失败");
+            }
+        } else {
             return Message.error("未知异常,请稍后重试");
         }
     }
 
     /**
      * 发布小程序
-     * */
-    @RequestMapping(value = "/publish",method = RequestMethod.POST)
-    public Message publish(Long id){
-        if(WeixinApi.releaseAppletCode(authToken(id))){
-            Topic topic=topicService.find(id);
-            TopicConfig topicConfig=topic.getConfig();
-            topicConfig.setEstate(TopicConfig.Estate.PASS);
-            topic.setConfig(topicConfig);
-            topicService.update(topic);
-            return Message.success("提交成功");
-        }else {
+     */
+    @RequestMapping(value = "/publish", method = RequestMethod.POST)
+    @ResponseBody
+    public Message publish(Long id) {
+        String token;
+        if ((token = getAuthToken(id)) != null) {
+            if (WeixinApi.releaseAppletCode(token)) {
+                Topic topic = topicService.find(id);
+                TopicConfig topicConfig = topic.getConfig();
+                topicConfig.setEstate(TopicConfig.Estate.PASS);
+                topic.setConfig(topicConfig);
+                topicService.update(topic);
+                return Message.success("发布成功");
+            } else {
+                return Message.error("发布失败");
+            }
+        } else {
             return Message.error("未知异常,请稍后重试");
         }
     }
 
     /**
      * 小程序版本回退
-     * */
-    @RequestMapping(value = "/comeBack",method = RequestMethod.POST)
-    public Message comeBack(Long id){
-        if(WeixinApi.revertAppletCode(authToken(id))){
-            return Message.success("回退成功");
-        }else {
+     */
+    @RequestMapping(value = "/comeBack", method = RequestMethod.POST)
+    @ResponseBody
+    public Message comeBack(Long id) {
+        String token;
+        if ((token = getAuthToken(id)) != null) {
+            if (WeixinApi.revertAppletCode(token)) {
+                return Message.success("回退成功");
+            } else {
+                return Message.error("回退失败");
+            }
+        } else {
             return Message.error("未知异常,请稍后重试");
         }
     }
 
     /**
      * 设置是否可被搜索
-     * */
-    public boolean setAppletState(Long id,int status){
-        if(WeixinApi.setAppletStatus(authToken(id),status).getErrcode().equals("0")){
-            return true;
-        }else{
+     */
+    public boolean setAppletState(Long id, int status) {
+        String token;
+        if ((token = getAuthToken(id)) != null) {
+            if (WeixinApi.setAppletStatus(token, status).getErrcode().equals("0")) {
+                return true;
+            }else{
+                return false;
+            }
+        } else {
             return false;
         }
     }
 
     /**
      * 获取authorizerToken
-     * */
-    public String authToken(Long id){
+     */
+    public AuthAccessToken authToken(String refresh, String threeAppID) {
         //拿ticket
         PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
         String verifyTicket = pluginConfig.getAttribute("verify_ticket");
 
         //拿第三方平台APPID SECRET
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String appid=bundle.getString("weixin.component.appid");
-        String secret=bundle.getString("weixin.component.secret");
+        String appid = bundle.getString("weixin.component.appid");
+        String secret = bundle.getString("weixin.component.secret");
 
         //拿comtonken
-        String componentToken=WeixinApi.getComponentToken(verifyTicket,appid,secret).getComponent_access_token();
+        String componentToken = WeixinApi.getComponentToken(verifyTicket, appid, secret).getComponent_access_token();
 
+        return WeixinApi.getRefreshAuthorizationCode(componentToken, threeAppID, refresh);
+    }
+
+    /**
+     * 拿refresh_token和APPID
+     */
+    public String getAuthToken(Long id) {
         //拿refresh_token
-        Topic topic=topicService.find(id);
-        String refresh=topic.getConfig().getRefreshToken();
-        String threeAppID=topic.getConfig().getAppetAppId();
+        Topic topic = topicService.find(id);
+        String refresh = topic.getConfig().getRefreshToken();
+        String threeAppID = topic.getConfig().getAppetAppId();
 
+        if (refresh == null || threeAppID == null) {
+            return null;
+        }
 
-        //拿authorizer_appid
-//        String authorizerToken=WeixinApi.getAuthorizationCode(componentToken,appid,"关键字(code)").getAuthorizer_access_token();
-        AuthAccessToken authorizer=WeixinApi.getRefreshAuthorizationCode(componentToken,threeAppID,refresh);
+        AuthAccessToken authorizer = authToken(refresh, threeAppID);
 
         topic.getConfig().setRefreshToken(authorizer.getAuthorizer_refresh_token());
         topic.getConfig().setTokenExpire(authorizer.getExpire());
         topicService.update(topic);
-
         return authorizer.getAuthorizer_access_token();
     }
 }
