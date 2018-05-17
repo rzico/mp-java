@@ -103,7 +103,7 @@
             <label class="form-label col-xs-4 col-sm-2">结果类型：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
-				<select name="type" class="select" style="background-color: #FFFFFF">
+				<select id="type" name="type" class="select" style="background-color: #FFFFFF">
 					<option value="">结果类型</option>
                 [#list types as type]
                     <option value="${type.id}">${type.name}</option>
@@ -113,7 +113,7 @@
             </div>
         </div>
 
-        <div class="row cl">
+        <div id="chart" class="row cl hidden">
             <label class="form-label col-xs-4 col-sm-2">图表类型：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
@@ -128,21 +128,33 @@
         </div>
 
 
-        <div class="row cl">
+        <div id="html" class="row cl hidden">
             <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <script id="htmlContent"  name="htmlContent" type="text/plain" style="width:100%;height:400px;"></script>
             </div>
         </div>
 
-        <div class="row cl">
+        <div id="json" class="row cl hidden">
             <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <textarea class="input-text" name="content" id="content" style="height:400px;width:100%;"></textarea>
             </div>
         </div>
 
-            <div class="row cl">
+
+                    <div id="image" class="row cl hidden">
+                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="hidden" value="" id="imageContent" name="imageContent">
+                    </div>
+                    </div>
+                    </div>
+
+                    <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
@@ -185,6 +197,10 @@
                 <script type="text/javascript" src="${base}/resources/admin/lib/hcharts/Highcharts/5.0.6/js/highcharts-more.js"></script>
 
 
+                <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+
+                <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
                 <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
@@ -193,7 +209,7 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
-                var ue = UE.getEditor('content');
+                var ue = UE.getEditor('htmlContent');
 
                 $("#form-add").validate({
                     rules:{
@@ -242,14 +258,29 @@
                 });
             });
 
-            $('select[name="type"]').on('ifChanged', function(e) {
+            $('#type').on('change', function(e) {
                 var r = $(this).val();//人员类别PK
                 if (r=='html') {
-                    $("#content").removeClass("hidden");
-                    $("#htmlContent").addClass("hidden");
+                    $("#json").addClass("hidden");
+                    $("#image").addClass("hidden");
+                    $("#chart").addClass("hidden");
+                    $("#html").removeClass("hidden");
+                } else
+                if (r=='image'){
+                    $("#chart").addClass("hidden");
+                    $("#json").addClass("hidden");
+                    $("#html").addClass("hidden");
+                    $("#image").removeClass("hidden");
+                    new $uploadpicture("fileList","filePicker");
                 } else {
-                    $("#content").removeClass("hidden");
-                    $("#htmlContent").addClass("hidden");
+                    $("#chart").addClass("hidden");
+                    $("#json").removeClass("hidden");
+                    $("#html").addClass("hidden");
+                    $("#image").addClass("hidden");
+                }
+
+                if (r=='echart') {
+                    $("#chart").removeClass("hidden");
                 }
             });
 

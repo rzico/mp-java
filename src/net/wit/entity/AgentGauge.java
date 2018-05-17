@@ -19,8 +19,8 @@ import java.util.Set;
 
  */
 @Entity
-@Table(name = "ky_agent_category")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "ky_agent_category_sequence")
+@Table(name = "ky_agent_gauge")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "ky_agent_gauge_sequence")
 public class AgentGauge extends OrderEntity {
 
 	private static final long serialVersionUID = 42L;
@@ -93,5 +93,27 @@ public class AgentGauge extends OrderEntity {
 		this.enterprise = enterprise;
 	}
 
+	public String getTitle() {
+		return title;
+	}
 
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 }
