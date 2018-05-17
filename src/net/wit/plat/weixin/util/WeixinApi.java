@@ -1,11 +1,9 @@
 package net.wit.plat.weixin.util;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -21,10 +19,24 @@ import net.wit.entity.VerifyTicket;
 import net.wit.entity.weixin.Domain;
 import net.wit.entity.weixin.WeiXinCallBack;
 import net.wit.plat.weixin.pojo.*;
+import net.wit.plugin.StoragePlugin;
+import net.wit.service.PluginService;
+import net.wit.service.impl.PluginServiceImpl;
 import net.wit.util.DateUtil;
 
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 微信公众平台通用接口工具类
@@ -137,6 +149,9 @@ public class WeixinApi {
     //查询最新一次提交的审核状态（仅供第三方代小程序调用）
     public static final String GETSTATUS = "https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token=TOKEN";
 
+    //获取小程序体验二维码
+    public static final String GETQRCODE="https://api.weixin.qq.com/wxa/ get_qrcode?access_token=TOKEN";
+
 	/**
 	 * 发起https请求并获取结果
 	 * @param requestUrl 请求地址
@@ -208,6 +223,70 @@ public class WeixinApi {
         DELETE,
         SET,
         GET
+    }
+
+    /**
+     * 获取小程序体验二维码
+     *
+     * @param authToken 第三方平台获取到的该小程序授权的authorizer_access_token
+     * @param testpath  临时文件存放位置
+     * @return 返回  404,500二维码获取失败，成功返回图片地址
+     */
+    public static String getQccode(String authToken, String testpath) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(GETQRCODE.replace("TOKEN", authToken));
+        RequestConfig config = RequestConfig.custom().setConnectTimeout(1000)
+                .setConnectionRequestTimeout(500)
+                .setSocketTimeout(10 * 1000)
+                .setStaleConnectionCheckEnabled(true)
+                .build();
+        httpGet.setConfig(config);
+        CloseableHttpResponse response = null;
+        try {
+            response = httpClient.execute(httpGet);
+            HttpEntity entity = null;
+            if (response.getStatusLine().getStatusCode() == 200) {
+                entity = response.getEntity();
+            }
+            if (entity == null) {
+                return "404";
+            }
+            Header contentHeader = response.getFirstHeader("Content-Disposition");
+            String filename = null;
+            if (contentHeader != null) {
+                HeaderElement[] values = contentHeader.getElements();
+                if (values.length == 1) {
+                    NameValuePair param = values[0].getParameterByName("filename");
+                    if (param != null) {
+                        try {
+                            filename = param.getValue();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+//            File file = new File(testpath + filename);
+//            OutputStream out = new FileOutputStream(file);
+//            entity.writeTo(out);
+//            FileInputStream fileInputStream=(FileInputStream) entity.getContent();
+            MultipartFile multi = new MockMultipartFile(filename, entity.getContent());
+            PluginService pluginService=new PluginServiceImpl();
+            StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            String folder1 = sdf.format(System.currentTimeMillis());
+            String name = String.valueOf(System.currentTimeMillis() * 1000000 + (int) ((Math.random() * 9 + 1) * 100000));
+            String uppath = "/upload/image/" + folder1 + "/" + name + ".jpg";
+            ossPlugin.upload(uppath, multi, ossPlugin.getMineType(".jpg"));
+            String string=ossPlugin.getUrl(uppath);
+            return string;
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("文件上传失败", e);
+        } finally {
+            response.close();
+        }
+        return "500";
     }
 
     /**
