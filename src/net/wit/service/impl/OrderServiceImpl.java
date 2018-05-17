@@ -551,6 +551,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setOrderStatus(Order.OrderStatus.completed);
 		order.setExpire(null);
 		orderDao.merge(order);
+		orderDao.flush();
 
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.complete);
