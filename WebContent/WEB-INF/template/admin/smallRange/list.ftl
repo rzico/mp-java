@@ -136,8 +136,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "createDate",
-                    "sTitle": "创建日期",
+                    "mData": "expire",
+                    "sTitle": "到期时间",
                     "sClass": "center"
                 },
                 {
@@ -218,7 +218,22 @@
                 {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
-                        return "" + data.estate;
+                        if(data.estate=="UNAUTHORIZED"){
+                            return "未授权";
+                        }
+                        if(data.estate=="AUTHORIZED"){
+                            return "已授权";
+                        }
+                        if(data.estate=="AUDITING"){
+                            return "正在审核";
+                        }
+                        if(data.estate=="ISAUDITING"){
+                            return "审核通过";
+                        }
+                        if(data.estate=="PASS"){
+                            return "已发布";
+                        }
+                        return "";
                     }
                 },
                 {
@@ -237,7 +252,7 @@
                     "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if (data != null) {
-                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show(this,'" + data + "');\" name=\"\">上传程序</button>"
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show('程序上传','upLoadView.jhtml?id="+data+"','400','600');\" name=\"\">上传程序</button>"
                         } else {
                             return "";
                         }

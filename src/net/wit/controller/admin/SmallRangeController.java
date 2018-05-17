@@ -2,7 +2,9 @@ package net.wit.controller.admin;
 
 import net.wit.*;
 import net.wit.Message;
+import net.wit.controller.model.AppletCodeConfig;
 import net.wit.entity.*;
+import net.wit.plat.weixin.pojo.AuthAccessToken;
 import net.wit.plat.weixin.pojo.ComponentAccessToken;
 import net.wit.plat.weixin.util.WeixinApi;
 import net.wit.service.AdminService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.applet.Applet;
 import java.util.*;
 
 /**
@@ -132,29 +135,45 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/searchView", method = RequestMethod.GET)
     public String searchView(Long id, ModelMap model) {
         Topic topic=topicService.find(id);
-        //状态获取接口调用逻辑以后再写
         model.addAttribute("name",topic.getName());
         model.addAttribute("appid",topic.getConfig().getAppetAppId());
         model.addAttribute("version",topic.getConfig().getVersion());
-        model.addAttribute("status",WeixinApi.getStatus(authToken()));
+        String result=WeixinApi.getStatus(authToken(id));
+        model.addAttribute("status",result);
+        if(result.equals("0")){
+            TopicConfig topicConfig=topic.getConfig();
+            topicConfig.setEstate(TopicConfig.Estate.ISAUDITING);
+            topic.setConfig(topicConfig);
+            topicService.update(topic);
+        }
         return "/admin/smallRange/view/statusView";
     }
 
     /**
      * 上传小程序
      * */
-    @RequestMapping(value = "/upLoad",method = RequestMethod.GET)
+    @RequestMapping(value = "/upLoadView")
+    public String upLoadView(Long id,ModelMap modelMap){
+        modelMap.addAttribute("topic",topicService.find(id));
+        return "/admin/smallRange/view/upLoad";
+    }
+    /**
+     * 上传小程序
+     * */
+    @RequestMapping(value = "/upLoad",method = RequestMethod.POST)
     public Message upLoad(Long id,String version,String templateId,String userDesc){
         Topic topic=topicService.find(id);
-
-        TopicConfig topicConfig=topic.getConfig();
-        topicConfig.setVersion(version);
-        topicConfig.setEstate(TopicConfig.Estate.audit);
-        topicConfig.setStateRemark(userDesc);
-        topic.setConfig(topicConfig);
-        topicService.update(topic);
-
-        if(WeixinApi.commitAppletCode(authToken(),templateId,version,userDesc)){
+        AppletCodeConfig appletCodeConfig=new AppletCodeConfig();
+        appletCodeConfig.setAppid(topic.getConfig().getAppetAppId());
+        appletCodeConfig.setName(topic.getName());
+        appletCodeConfig.setMemberId(topic.getMember().getId());
+        if(WeixinApi.commitAppletCode(authToken(id),templateId,version,userDesc,appletCodeConfig)){
+            TopicConfig topicConfig=topic.getConfig();
+            topicConfig.setVersion(version);
+            topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+            topicConfig.setStateRemark(userDesc);
+            topic.setConfig(topicConfig);
+            topicService.update(topic);
             return Message.success("上传成功");
         }else {
             return Message.error("未知异常,请稍后重试");
@@ -164,9 +183,14 @@ public class SmallRangeController extends BaseController {
     /**
      * 提交审核小程序
      * */
-    @RequestMapping(value = "/commit",method = RequestMethod.GET)
+    @RequestMapping(value = "/commit",method = RequestMethod.POST)
     public Message commit(Long id){
-        if(WeixinApi.pushAppletCode(authToken())){
+        if(WeixinApi.pushAppletCode(authToken(id))){
+            Topic topic=topicService.find(id);
+            TopicConfig topicConfig=topic.getConfig();
+            topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+            topic.setConfig(topicConfig);
+            topicService.update(topic);
             return Message.success("提交成功");
         }else {
             return Message.error("未知异常,请稍后重试");
@@ -176,9 +200,14 @@ public class SmallRangeController extends BaseController {
     /**
      * 发布小程序
      * */
-    @RequestMapping(value = "/publish",method = RequestMethod.GET)
+    @RequestMapping(value = "/publish",method = RequestMethod.POST)
     public Message publish(Long id){
-        if(WeixinApi.releaseAppletCode(authToken())){
+        if(WeixinApi.releaseAppletCode(authToken(id))){
+            Topic topic=topicService.find(id);
+            TopicConfig topicConfig=topic.getConfig();
+            topicConfig.setEstate(TopicConfig.Estate.PASS);
+            topic.setConfig(topicConfig);
+            topicService.update(topic);
             return Message.success("提交成功");
         }else {
             return Message.error("未知异常,请稍后重试");
@@ -188,9 +217,9 @@ public class SmallRangeController extends BaseController {
     /**
      * 小程序版本回退
      * */
-    @RequestMapping(value = "/comeBack",method = RequestMethod.GET)
+    @RequestMapping(value = "/comeBack",method = RequestMethod.POST)
     public Message comeBack(Long id){
-        if(WeixinApi.revertAppletCode(authToken())){
+        if(WeixinApi.revertAppletCode(authToken(id))){
             return Message.success("回退成功");
         }else {
             return Message.error("未知异常,请稍后重试");
@@ -200,8 +229,8 @@ public class SmallRangeController extends BaseController {
     /**
      * 设置是否可被搜索
      * */
-    public boolean setAppletState(int status){
-        if(WeixinApi.setAppletStatus(authToken(),status).getErrcode().equals("0")){
+    public boolean setAppletState(Long id,int status){
+        if(WeixinApi.setAppletStatus(authToken(id),status).getErrcode().equals("0")){
             return true;
         }else{
             return false;
@@ -211,7 +240,7 @@ public class SmallRangeController extends BaseController {
     /**
      * 获取authorizerToken
      * */
-    public String authToken(){
+    public String authToken(Long id){
         //拿ticket
         PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
         String verifyTicket = pluginConfig.getAttribute("verify_ticket");
@@ -224,9 +253,20 @@ public class SmallRangeController extends BaseController {
         //拿comtonken
         String componentToken=WeixinApi.getComponentToken(verifyTicket,appid,secret).getComponent_access_token();
 
-        //拿authorizer_appid
-        String authorizerToken=WeixinApi.getAuthorizationCode(componentToken,appid,"关键字(code)").getAuthorizer_access_token();
+        //拿refresh_token
+        Topic topic=topicService.find(id);
+        String refresh=topic.getConfig().getRefreshToken();
+        String threeAppID=topic.getConfig().getAppetAppId();
 
-        return authorizerToken;
+
+        //拿authorizer_appid
+//        String authorizerToken=WeixinApi.getAuthorizationCode(componentToken,appid,"关键字(code)").getAuthorizer_access_token();
+        AuthAccessToken authorizer=WeixinApi.getRefreshAuthorizationCode(componentToken,threeAppID,refresh);
+
+        topic.getConfig().setRefreshToken(authorizer.getAuthorizer_refresh_token());
+        topic.getConfig().setTokenExpire(authorizer.getExpire());
+        topicService.update(topic);
+
+        return authorizer.getAuthorizer_access_token();
     }
 }
