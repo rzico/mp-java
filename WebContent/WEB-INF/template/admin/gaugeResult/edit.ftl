@@ -103,14 +103,70 @@
 
         [/#if]
 
-        <div class="row cl">
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">结果类型：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select id="type" name="type" class="select" style="background-color: #FFFFFF">
+					<option value="">结果类型</option>
+                    [#list types as type]
+                        <option value="${type.id}">${type.name}</option>
+                    [/#list]
+				</select>
+			</span>
+                </div>
+            </div>
+
+            <div id="chart" class="row cl hidden">
+                <label class="form-label col-xs-4 col-sm-2">图表类型：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="chartType" class="select" style="background-color: #FFFFFF">
+					<option value="">图表类型</option>
+                    [#list  chartTypes as chartType]
+                        <option value="${chartType.id}">${chartType.name}</option>
+                    [/#list]
+				</select>
+			</span>
+                </div>
+            </div>
+
+
+        <div id="html" class="row cl">
             <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
         <div class="formControls col-xs-8 col-sm-9">
-            <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
+            <script id="htmlContent"  name="htmlContent" type="text/plain" style="width:100%;height:400px;"></script>
         </div>
         </div>
 
-        <div class="row cl">
+        <div id="json" class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">结果展示：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content" id="content" value="${data.content}" style="height:400px;width:100%;"></textarea>
+                </div>
+                </div>
+
+
+                <div id="image" class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结果展示：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container"<div id="fileList" class="uploader-list">
+            [#if data.content??]
+            <div class="file-item thumbnail">
+                    <img width="100px" height="100px" src="${data.content}"/>
+                    <div class="info"></div>
+            </div>
+            [/#if]
+        </div>
+        <div id="filePicker">选择图片</div>
+                <input type="hidden" value="${data.content}" id="imageContent" name="imageContent">
+                </div>
+                </div>
+                </div>
+
+
+                <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">排序：</label>
         <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
@@ -161,11 +217,35 @@
                     increaseArea: '20%'
                 });
 
-                var ue = UE.getEditor('content');-
+                var ue = UE.getEditor('htmlContent');
 
                 ue.ready(function() {//编辑器初始化完成再赋值
                     ue.setContent('${data.content}');
                 });
+
+                var r = ${data.type};
+                if (r=='html') {
+                    $("#json").addClass("hidden");
+                    $("#image").addClass("hidden");
+                    $("#chart").addClass("hidden");
+                    $("#html").removeClass("hidden");
+                } else
+                if (r=='image'){
+                    $("#chart").addClass("hidden");
+                    $("#json").addClass("hidden");
+                    $("#html").addClass("hidden");
+                    $("#image").removeClass("hidden");
+                    new $uploadpicture("fileList","filePicker");
+                } else {
+                    $("#chart").addClass("hidden");
+                    $("#json").removeClass("hidden");
+                    $("#html").addClass("hidden");
+                    $("#image").addClass("hidden");
+                }
+
+                if (r=='echart') {
+                    $("#chart").removeClass("hidden");
+                }
 
                 $("#form-update").validate({
                     rules:{
@@ -213,6 +293,35 @@
                     }
                 });
             });
+
+
+            $('#type').on('change', function(e) {
+                var r = $(this).val();//人员类别PK
+                if (r=='html') {
+                    $("#json").addClass("hidden");
+                    $("#image").addClass("hidden");
+                    $("#chart").addClass("hidden");
+                    $("#html").removeClass("hidden");
+                } else
+                if (r=='image'){
+                    $("#chart").addClass("hidden");
+                    $("#json").addClass("hidden");
+                    $("#html").addClass("hidden");
+                    $("#image").removeClass("hidden");
+                    new $uploadpicture("fileList","filePicker");
+                } else {
+                    $("#chart").addClass("hidden");
+                    $("#json").removeClass("hidden");
+                    $("#html").addClass("hidden");
+                    $("#image").addClass("hidden");
+                }
+
+                if (r=='echart') {
+                    $("#chart").removeClass("hidden");
+                }
+            });
+
+
         </script>
 </body>
 </html>

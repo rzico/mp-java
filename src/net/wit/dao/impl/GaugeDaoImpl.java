@@ -61,6 +61,7 @@ public class GaugeDaoImpl extends BaseDaoImpl<Gauge, Long> implements GaugeDao {
 			subquery.where(criteriaBuilder.equal(subqueryRoot, root), subqueryRoot.join("tags").in(tags));
 			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.exists(subquery));
 		}
+
 		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);

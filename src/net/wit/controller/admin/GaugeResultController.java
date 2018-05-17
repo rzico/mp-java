@@ -121,12 +121,21 @@ public class GaugeResultController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(GaugeResult gaugeResult,String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
+	public Message save(GaugeResult gaugeResult,String htmlContent,String imageContent,String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
 		GaugeResult entity = new GaugeResult();	
 
 		entity.setOrders(gaugeResult.getOrders() == null ? 0 : gaugeResult.getOrders());
 		entity.setTitle(gaugeResult.getTitle());
-		entity.setContent(gaugeResult.getContent());
+		entity.setType(gaugeResult.getType());
+		entity.setChartType(gaugeResult.getChartType());
+		if (entity.getType().equals(GaugeResult.Type.html)) {
+			entity.setContent(htmlContent);
+		} else
+		if (entity.getType().equals(GaugeResult.Type.image)) {
+			entity.setContent(imageContent);
+		} else {
+			entity.setContent(gaugeResult.getContent());
+		}
         Gauge gauge = gaugeService.find(gaugeId);
 		entity.setGauge(gauge);
 
@@ -211,7 +220,7 @@ public class GaugeResultController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(GaugeResult gaugeResult, String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
+	public Message update(GaugeResult gaugeResult,String htmlContent,String imageContent, String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
 		GaugeResult entity = gaugeResultService.find(gaugeResult.getId());
 		
 		entity.setCreateDate(gaugeResult.getCreateDate());
@@ -219,8 +228,16 @@ public class GaugeResultController extends BaseController {
 		entity.setModifyDate(gaugeResult.getModifyDate());
 
 		entity.setOrders(gaugeResult.getOrders() == null ? 0 : gaugeResult.getOrders());
-
-		entity.setContent(gaugeResult.getContent());
+		entity.setType(gaugeResult.getType());
+		entity.setChartType(gaugeResult.getChartType());
+		if (entity.getType().equals(GaugeResult.Type.html)) {
+			entity.setContent(htmlContent);
+		} else
+		if (entity.getType().equals(GaugeResult.Type.image)) {
+			entity.setContent(imageContent);
+		} else {
+			entity.setContent(gaugeResult.getContent());
+		}
 		entity.setTitle(gaugeResult.getTitle());
 		Gauge gauge = entity.getGauge();
 		entity.setGauge(gauge);
@@ -303,7 +320,6 @@ public class GaugeResultController extends BaseController {
 		model.addAttribute("gaugeGene",gaugeGeneService.find(id));
 		return "/admin/gaugeResult/view/gaugeGeneView";
 	}
-
 
 
 }
