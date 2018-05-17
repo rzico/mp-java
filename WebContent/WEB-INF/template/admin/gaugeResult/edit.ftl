@@ -161,7 +161,7 @@
                     <div class="info"></div>
             </div>
             [/#if]
-        </div>
+        </div>g
         <div id="filePicker">选择图片</div>
                 <input type="hidden" value="${data.content}" id="imageContent" name="imageContent">
                 </div>

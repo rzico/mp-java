@@ -242,6 +242,7 @@ public class GaugeResultController extends BaseController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
 	public Message update(GaugeResult gaugeResult,String htmlContent,String imageContent, String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
+
 		GaugeResult entity = gaugeResultService.find(gaugeResult.getId());
 		
 		entity.setCreateDate(gaugeResult.getCreateDate());
@@ -251,6 +252,7 @@ public class GaugeResultController extends BaseController {
 		entity.setOrders(gaugeResult.getOrders() == null ? 0 : gaugeResult.getOrders());
 		entity.setType(gaugeResult.getType());
 		entity.setChartType(gaugeResult.getChartType());
+
 		if (entity.getType().equals(GaugeResult.Type.html)) {
 			entity.setContent(htmlContent);
 		} else
