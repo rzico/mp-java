@@ -185,7 +185,7 @@ public class SmallRangeController extends BaseController {
      * */
     @RequestMapping(value = "/commit",method = RequestMethod.POST)
     public Message commit(Long id){
-        if(WeixinApi.pushAppletCode(authToken(id))){
+        if(!WeixinApi.pushAppletCode(authToken(id)).equals("")){
             Topic topic=topicService.find(id);
             TopicConfig topicConfig=topic.getConfig();
             topicConfig.setEstate(TopicConfig.Estate.AUDITING);

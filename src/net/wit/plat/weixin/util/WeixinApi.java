@@ -18,6 +18,7 @@ import net.sf.json.JSONObject;
 import net.wit.controller.model.AppletCodeConfig;
 import net.wit.entity.TopicConfig;
 import net.wit.entity.VerifyTicket;
+import net.wit.entity.weixin.Category;
 import net.wit.entity.weixin.Domain;
 import net.wit.entity.weixin.WeiXinCallBack;
 import net.wit.plat.weixin.pojo.*;
@@ -122,7 +123,7 @@ public class WeixinApi {
 
 
     //	//通过刷新token 获取 authaccesstoken
-    private static final String REFRESHAUTHTOKEN = "https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
+    private static final String REFRESHAUTHTOKEN = "https:// api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
 
 	//提交小程序代码
 	private static final String COMMITCODE = "https://api.weixin.qq.com/wxa/commit?access_token=AUTH_TOKEN";
@@ -149,11 +150,17 @@ public class WeixinApi {
 	public static final String GETAPPLETSTATUS = "https://api.weixin.qq.com/wxa/getwxasearchstatus?access_token=AUTH_TOKEN";
 
     //查询最新一次提交的审核状态（仅供第三方代小程序调用）
-    public static final String GETSTATUS = "https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token=TOKEN";
+    public static final String GETSTATUS = "https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token=AUTH_TOKEN";
 
     //获取小程序体验二维码
-    public static final String GETQRCODE="https://api.weixin.qq.com/wxa/ get_qrcode?access_token=TOKEN";
+    public static final String GETQRCODE="https://api.weixin.qq.com/wxa/ get_qrcode?access_token=AUTH_TOKEN";
 
+
+    //获取小程序的第三方提交代码的页面配置（仅供第三方开发者代小程序调用）
+	public static final String GETPAGE="https://api.weixin.qq.com/wxa/get_page?access_token=AUTH_TOKEN";
+
+	//获取授权小程序帐号的可选类目
+	public static final String GETCATEGORY = "https://api.weixin.qq.com/wxa/get_category?access_token=AUTH_TOKEN";
 	/**
 	 * 发起https请求并获取结果
 	 * @param requestUrl 请求地址
@@ -236,7 +243,7 @@ public class WeixinApi {
      */
     public static String getQccode(String authToken, String testpath) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(GETQRCODE.replace("TOKEN", authToken));
+        HttpGet httpGet = new HttpGet(GETQRCODE.replace("AUTH_TOKEN", authToken));
         RequestConfig config = RequestConfig.custom().setConnectTimeout(1000)
                 .setConnectionRequestTimeout(500)
                 .setSocketTimeout(10 * 1000)
@@ -298,7 +305,7 @@ public class WeixinApi {
      * @return 返回小程序最新提交结果 0 审核通过 2 审核中 1审核失败，当审核失败时返回失败具体原因
      */
     public static String getStatus(String authToken) {
-        JSONObject jsonObject = httpRequest(GETSTATUS.replace("TOKEN", authToken), "GET", "");
+        JSONObject jsonObject = httpRequest(GETSTATUS.replace("AUTH_TOKEN", authToken), "GET", null);
         if (jsonObject != null) {
             /**
              *  -1	系统繁忙
@@ -319,8 +326,61 @@ public class WeixinApi {
         }
         return null;
     }
+	/**
+	 * 获取小程序的第三方提交代码的页面配置（仅供第三方开发者代小程序调用）
+	 */
+	public static String[] getPage(String authToken){
+		JSONObject jsonObject = httpRequest(GETPAGE.replace("AUTH_TOKEN", authToken), "GET", null);
+		if(jsonObject != null){
+			System.out.println("getPage" + jsonObject.toString());
+			if(jsonObject.containsKey("page_list")){
+				JSONArray data = jsonObject.getJSONArray("page_list");
+				String[] re = new String[data.size()];
+				for (int i = 0; i < data.size(); i++) {
+					//提取出family中的所有
+					String s1 = (String) data.get(i);
+					re[i] = s1;
+				}
+				return re;
+			}
+		}
+		return null;
+	}
 
-    /**
+	public static List<Category> getCategory(String authToken){
+		JSONObject jsonObject = httpRequest(GETCATEGORY.replace("AUTH_TOKEN", authToken), "GET", null);
+		if(jsonObject != null && jsonObject.containsKey("category_list")){
+			JSONArray data = jsonObject.getJSONArray("category_list");
+			List<Category> categories = new ArrayList<>();
+			for (int i = 0; i < data.size(); i++) {
+				Category category = new Category();
+				JSONObject item = data.getJSONObject(i);
+				if(item.containsKey("first_class")){
+					category.setFirst_class(item.getString("first_class"));
+				}
+				if(item.containsKey("second_class")){
+					category.setSecond_class(item.getString("second_class"));
+				}
+				if(item.containsKey("third_class")){
+					category.setThird_class(item.getString("third_class"));
+				}
+				if(item.containsKey("first_id")){
+					category.setFirst_id(item.getLong("first_id"));
+				}
+				if(item.containsKey("second_id")){
+					category.setSecond_id(item.getLong("second_id"));
+				}
+				if(item.containsKey("third_id")){
+					category.setThird_id(item.getLong("third_id"));
+				}
+				categories.add(category);
+			}
+			return categories;
+		}
+		return null;
+	}
+
+	/**
      * 获取小程序信息
      *
      * @param token           component_access_token
@@ -393,11 +453,11 @@ public class WeixinApi {
 			params = params + "}";
 		}else{
 			//目前标准的 是这样 先写死
-			params = params +
-					"\"requestdomain\":[\"" +serverUrl+ "\",\"" +mapUrl+ "\"]," +
-					"\"wsrequestdomain\":[\"" +serverUrl+ "\"]," +
-					"\"uploaddomain\":[\"" +serverUrl+ "\"]," +
-					"\"downloaddomain\":[\"" +serverUrl+ "\"]" +
+			params = params + "," +
+					"\"requestdomain\":[\"" +serverUrl+ "\",\"" +mapUrl+ "\"]" +
+//					"\"wsrequestdomain\":[\"" +serverUrl+ "\"]," +
+//					"\"uploaddomain\":[\"" +serverUrl+ "\"]," +
+//					"\"downloaddomain\":[\"" +serverUrl+ "\"]" +
 					"}";
 		}
 		JSONObject jsonObject=WeixinApi.httpRequest(SETDOMAIN1.replace("AUTH_TOKEN",authToken),"POST",params);
@@ -545,9 +605,9 @@ public class WeixinApi {
 	/**
 	 * 提交审核小程序代码
 	 * @param authToken 第三方token通过接口获取
-	 * @return
+	 * @return 审核id
 	 */
-	public static boolean pushAppletCode(String authToken){
+	public static String pushAppletCode(String authToken){
 
 		/*
 		* access_token	请使用第三方平台获取到的该小程序授权的authorizer_access_token
@@ -561,28 +621,42 @@ first_id	一级类目的ID，可通过“获取授权小程序帐号的可选类
 second_id	二级类目的ID(同上)
 third_id	三级类目的ID(同上)
 title	小程序页面的标题,标题长度不超过32*/
+
+		String[] pages = getPage(authToken);
+		List<Category> categories = getCategory(authToken);
+		if(pages == null || categories == null || pages.length < 1 || categories.size() < 1)return "";
+//		System.out.println("pagepagepage");
+//		for (String p : page){
+//			System.out.println(p);
+//		}
+//		System.out.println("pagepagepage");
+//		System.out.println("categoriescategoriescategories");
+//		for (Category c : categories){
+//			System.out.println(c.toString());
+//		}
+//		System.out.println("categoriescategoriescategories");
 		String params = "{" +
 				"    \"item_list\": [" +
 				"    {" +
-				"        \"address\":\"index\"," +
-				"        \"tag\":\"学习 生活\"," +
-				"        \"first_class\": \"文娱\"," +
-				"        \"second_class\": \"资讯\"," +
-				"        \"first_id\":1," +
-				"        \"second_id\":2," +
+				"        \"address\":\"" + pages[0] + "\"," +
+				"        \"tag\":\"智能建站 账号管理 图文消息 互动营销\"," +
+				"        \"first_class\": \"" + categories.get(0).getFirst_class() + "\"," +
+				"        \"second_class\": \"" + categories.get(0).getSecond_class() +  "\"," +
+				"        \"first_id\":" + categories.get(0).getFirst_id() + "," +
+				"        \"second_id\":" + categories.get(0).getSecond_id() + "," +
 				"        \"title\": \"首页\"" +
 				"    }" +
-				"    {" +
-				"        \"address\":\"page/logs/logs\"," +
-				"        \"tag\":\"学习 工作\"," +
-				"        \"first_class\": \"教育\"," +
-				"        \"second_class\": \"学历教育\"," +
-				"        \"third_class\": \"高等\"," +
-				"        \"first_id\":3," +
-				"        \"second_id\":4," +
-				"        \"third_id\":5," +
-				"        \"title\": \"日志\"" +
-				"    }" +
+//				"    {" +
+//				"        \"address\":\"page/logs/logs\"," +
+//				"        \"tag\":\"学习 工作\"," +
+//				"        \"first_class\": \"教育\"," +
+//				"        \"second_class\": \"学历教育\"," +
+//				"        \"third_class\": \"高等\"," +
+//				"        \"first_id\":3," +
+//				"        \"second_id\":4," +
+//				"        \"third_id\":5," +
+//				"        \"title\": \"日志\"" +
+//				"    }" +
 				"  ]" +
 				"}";
 		JSONObject jsonObject=WeixinApi.httpRequest(PUSHCODE.replace("AUTH_TOKEN",authToken),"POST",params);
@@ -604,14 +678,19 @@ title	小程序页面的标题,标题长度不超过32*/
 			 */
 			String errcode = jsonObject.getString("errcode");
 			String errmsg = jsonObject.getString("errmsg");
-			String auditid = jsonObject.getString("auditid");
+			String auditid = "";
+			if(jsonObject.containsKey("auditid")){
+				auditid = jsonObject.getString("auditid");
+			}
+
+			System.out.println("pushAppletCode::::::" + "errorCode:" + errcode + "errmsg:" + errmsg);
 			if(errmsg.equals("ok")){
-				return true;
+				return auditid;
 			}else{
-				return false;
+				return "";
 			}
 		}else {
-			return false;
+			return "";
 		}
 
 	}
@@ -625,52 +704,49 @@ title	小程序页面的标题,标题长度不超过32*/
 	 */
 	public static boolean commitAppletCode(String authToken, String templateId, String userVersion, String userDesc,AppletCodeConfig appletCodeConfig){
 
-		String appjson = "{" +
-				"  \"extEnable\": true," +
-				"  \"extAppid\": \"" + appletCodeConfig.getAppid() + "\"," +
-				"  \"directCommit\": false," +
-				"  \"ext\": {" +
-				"    \"memberId\":" + appletCodeConfig.getMemberId() + "" +
-				"  }," +
-				"  \"extPages\": {" +
-				"    " +
-				"  }," +
-				"  \"window\": {" +
-				"    \"navigationBarBackgroundColor\": \"#99ccff\"," +
-				"    \"navigationBarTitleText\": \"" + appletCodeConfig.getName() + "\"," +
-				"    \"navigationBarTextStyle\": \"white\"," +
-				"    \"backgroundTextStyle\": \"dark\"" +
-				"  }," +
-				"  \"tabBar\": {" +
-				"    \"color\": \"#333333\"," +
-				"    \"selectedColor\": \"#99ccff\"," +
-				"    \"borderStyle\": \"#ccc\"," +
-				"    \"list\": [" +
-				"      {" +
-				"        \"selectedIconPath\": \"images/home-fill.png\"," +
-				"        \"iconPath\": \"images/home.png\"," +
-				"        \"pagePath\": \"pages/index/index\"," +
-				"        \"text\": \"首页\"" +
-				"      }," +
-				"      {" +
-				"        \"selectedIconPath\": \"images/call-fill.png\"," +
-				"        \"iconPath\": \"images/call.png\"," +
-				"        \"pagePath\": \"pages/contact/contact\"," +
-				"        \"text\": \"联系我们\"" +
-				"      }" +
-				"    ]" +
-				"  }," +
-				"  \"networkTimeout\": {" +
-				"    \"request\": 10000," +
-				"    \"downloadFile\": 10000" +
-				"  }" +
+		String appjson ="{\\\"extEnable\\\": true," +
+				"\\\"extAppid\\\": \\\"" + appletCodeConfig.getAppid() + "\\\"," +
+				"\\\"directCommit\\\": false," +
+				"\\\"ext\\\": {" +
+				"\\\"memberId\\\":" + appletCodeConfig.getMemberId() + "" +
+				"}," +
+				"\\\"extPages\\\": {}," +
+				"\\\"window\\\": {" +
+				"\\\"navigationBarBackgroundColor\\\": \\\"#99ccff\\\"," +
+				"\\\"navigationBarTitleText\\\": \\\"" + appletCodeConfig.getName() + "\\\"," +
+				"\\\"navigationBarTextStyle\\\": \\\"white\\\"," +
+				"\\\"backgroundTextStyle\\\": \\\"dark\\\"" +
+				"}," +
+				"\\\"tabBar\\\": {" +
+				"\\\"color\\\": \\\"#333333\\\"," +
+				"\\\"selectedColor\\\": \\\"#99ccff\\\"," +
+				"\\\"borderStyle\\\": \\\"#ccc\\\"," +
+				"\\\"list\\\": [" +
+				"{" +
+				"\\\"selectedIconPath\\\": \\\"images/home-fill.png\\\"," +
+				"\\\"iconPath\\\": \\\"images/home.png\\\"," +
+				"\\\"pagePath\\\": \\\"pages/index/index\\\"," +
+				"\\\"text\\\": \\\"首页\\\"" +
+				"}," +
+				"{" +
+				"\\\"selectedIconPath\\\": \\\"images/call-fill.png\\\"," +
+				"\\\"iconPath\\\": \\\"images/call.png\\\"," +
+				"\\\"pagePath\\\": \\\"pages/contact/contact\\\"," +
+				"\\\"text\\\": \\\"联系我们\\\"" +
+				"}" +
+				"]" +
+				"}," +
+				"\\\"networkTimeout\\\": {" +
+				"\\\"request\\\": 10000," +
+				"\\\"downloadFile\\\": 10000" +
+				"}" +
 				"}";
 
 		String params = "{" +
 				"\"template_id\":"+ templateId +"," +
-				"\"ext_json\":\" " + appjson + " \", " +
+				"\"ext_json\": \"" + appjson + "\" , " +
 				"\"user_version\":\""+ userVersion +"\"," +
-				"\"user_desc\":\"" + userDesc + "\"," +
+				"\"user_desc\":\"" + userDesc + "\"" +
 				"}";
 		JSONObject jsonObject=WeixinApi.httpRequest(COMMITCODE.replace("AUTH_TOKEN",authToken),"POST",params);
 		if(jsonObject!=null){
@@ -690,6 +766,7 @@ title	小程序页面的标题,标题长度不超过32*/
 			if(errmsg.equals("ok")){
 				return true;
 			}else{
+
 				return false;
 			}
 		}else {
@@ -758,7 +835,7 @@ title	小程序页面的标题,标题长度不超过32*/
 			if (authAccessTokenHashMap != null && authAccessTokenHashMap.get(authAppId)!= null && authAccessTokenHashMap.get(authAppId).getExpire().getTime() > (new Date()).getTime() - 2000) {
 				return authAccessTokenHashMap.get(authAppId);
 			}else{
-			    return getRefreshAuthorizationCode(componentToken, authAppId, authAccessTokenHashMap.get(authAppId).getAuthorizer_refresh_token());
+//			    return getRefreshAuthorizationCode(componentToken, authAppId, authAccessTokenHashMap.get(authAppId).getAuthorizer_refresh_token());
             }
 		} catch (Exception e) {
 
