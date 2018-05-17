@@ -33,7 +33,9 @@ public class GaugeResult extends OrderEntity {
         /**   纯文本 */
         text,
         /**   图表 */
-        echart
+        echart,
+        /**   图片 */
+        image
 
     };
 
@@ -135,4 +137,5 @@ public class GaugeResult extends OrderEntity {
     public void setChartType(ChartType chartType) {
         this.chartType = chartType;
     }
+
 }
