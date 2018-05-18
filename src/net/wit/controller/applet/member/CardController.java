@@ -156,36 +156,36 @@ public class CardController extends BaseController {
      /**
      *  激活会员卡
      */
-    @RequestMapping(value = "/activate", method = RequestMethod.POST)
+    @RequestMapping(value = "/activate")
     @ResponseBody
     public Message submit(String mobile,String captcha,Long authorId,Long xuid,HttpServletRequest request){
-
-        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
-        if (redis==null) {
-            return Message.error("验证码已过期");
-        }
-
-        redisService.remove(Member.MOBILE_BIND_CAPTCHA);
-        SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
-
-        try {
-            captcha = new String(org.apache.commons.codec.binary.Base64.decodeBase64(captcha),"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        if (captcha==null) {
-            return Message.error("无效验证码");
-        }
-        if (safeKey.hasExpired()) {
-            return Message.error("验证码已过期");
-        }
-        if (!captcha.equals(safeKey.getValue())) {
-            return Message.error("无效验证码");
-        }
-
-        if (!mobile.equals(safeKey.getKey())) {
-            return Message.error("手机验证无效");
-        }
+//
+//        Redis redis = redisService.findKey(Member.MOBILE_BIND_CAPTCHA);
+//        if (redis==null) {
+//            return Message.error("验证码已过期");
+//        }
+//
+//        redisService.remove(Member.MOBILE_BIND_CAPTCHA);
+//        SafeKey safeKey = JsonUtils.toObject(redis.getValue(),SafeKey.class);
+//
+//        try {
+//            captcha = new String(org.apache.commons.codec.binary.Base64.decodeBase64(captcha),"utf-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        if (captcha==null) {
+//            return Message.error("无效验证码");
+//        }
+//        if (safeKey.hasExpired()) {
+//            return Message.error("验证码已过期");
+//        }
+//        if (!captcha.equals(safeKey.getValue())) {
+//            return Message.error("无效验证码");
+//        }
+//
+//        if (!mobile.equals(safeKey.getKey())) {
+//            return Message.error("手机验证无效");
+//        }
 
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -226,6 +226,17 @@ public class CardController extends BaseController {
         }
 
         if (card==null) {
+
+            if (owner==null) {
+                return Message.error("无效店主");
+            }
+            if (owner.getTopic()==null) {
+                return Message.error("没有开通专栏");
+            }
+            if (owner.getTopic().getTopicCard()==null) {
+                return Message.error("没有开通电子会员卡");
+            }
+
             card = cardService.createAndActivate(member, owner, promoter, BigDecimal.ZERO, BigDecimal.ZERO);
         }
 

@@ -61,6 +61,9 @@ public class ProductController extends BaseController {
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
 
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
+
 	/**
 	 * 检查编号是否唯一
 	 */
@@ -189,6 +192,23 @@ public class ProductController extends BaseController {
 	Message delete(Long[] ids) {
 		goodsService.delete(ids);
 		return Message.success("删除成功");
+	}
+
+
+	/**
+	 * 标签
+	 */
+	@RequestMapping(value = "/tag", method = RequestMethod.POST)
+	public @ResponseBody
+	Message view(Long id,Long [] tagIds,HttpServletRequest request) {
+		Goods goods = goodsService.find(id);
+
+		Product product = goods.product();
+		product.setTags(tagService.findList(tagIds));
+
+		productService.update(product);
+
+		return Message.success("success");
 	}
 
 

@@ -29,6 +29,8 @@ public class GoodsListModel extends BaseModel implements Serializable {
     private Long review;
     /** 可用库存 */
     private Integer availableStock;
+    /** 标签名 */
+    private List<TagModel> tags = new ArrayList<TagModel>();
 
     public Long getId() {
         return id;
@@ -95,6 +97,14 @@ public class GoodsListModel extends BaseModel implements Serializable {
     }
 
 
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     public void bind(Goods goods) {
 
         this.id = goods.getId();
@@ -115,6 +125,8 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.setPrice(product.getPrice());
         this.setMarketPrice(product.getMarketPrice());
         this.review = goods.getReview();
+
+        this.tags = TagModel.bindList(product.getTags());
     }
 
 
@@ -134,6 +146,8 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.setPrice(product.getPrice());
         this.setMarketPrice(product.getMarketPrice());
         this.review = product.getGoods().getReview();
+
+        this.tags = TagModel.bindList(product.getTags());
     }
 
 
