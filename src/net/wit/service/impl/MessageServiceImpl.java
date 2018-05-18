@@ -221,7 +221,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			{
 				title = "系统消息";
 			}
-			sender.setNickName( title);
+			sender.setNickName(title);
 			sender.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
 			sender.setPoint(0L);
 			sender.setBalance(BigDecimal.ZERO);
@@ -273,8 +273,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setMember(reward.getMember());
 		msg.setType(Message.Type.reward);
 		msg.setThumbnial(reward.getMember().getLogo());
-		msg.setTitle("【"+reward.getMember().getNickName()+"】赞赏了你");
-		msg.setContent(""+reward.getMember().getNickName()+"赞赏你:"+reward.getAmount()+"元,文章:"+reward.getArticle().getTitle());
+		msg.setTitle("【"+reward.getMember().displayName()+"】赞赏了你");
+		msg.setContent(""+reward.getMember().displayName()+"赞赏你:"+reward.getAmount()+"元,文章:"+reward.getArticle().getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(reward.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
@@ -379,8 +379,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(favorite.getArticle().getMember());
 		msg.setType(Message.Type.favorite);
 		msg.setThumbnial(favorite.getMember().getLogo());
-		msg.setTitle("【"+favorite.getMember().getNickName()+"】收藏了您的文章");
-		msg.setContent("【"+favorite.getMember().getNickName()+"】收藏了您的文章:"+favorite.getArticle().getTitle());
+		msg.setTitle("【"+favorite.getMember().displayName()+"】收藏了您的文章");
+		msg.setContent("【"+favorite.getMember().displayName()+"】收藏了您的文章:"+favorite.getArticle().getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(favorite.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
@@ -422,8 +422,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		} else {
 			shareDescr = setting.getSiteName()+"好友";
 		}
-		msg.setTitle("【"+share.getMember().getNickName()+"】分享你的文章至"+shareDescr);
-		msg.setContent("【"+share.getMember().getNickName()+"】分享你的文章:"+share.getArticle().getTitle());
+		msg.setTitle("【"+share.getMember().displayName()+"】分享你的文章至"+shareDescr);
+		msg.setContent("【"+share.getMember().displayName()+"】分享你的文章:"+share.getArticle().getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(share.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
@@ -438,8 +438,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(receiver);
 		msg.setType(Message.Type.share);
 		msg.setThumbnial(article.getMember().getLogo());
-		msg.setTitle("【"+article.getMember().getNickName()+"】刚发布了一篇新文章");
-		msg.setContent("【"+article.getMember().getNickName()+"】刚发布了一篇新文章:"+article.getTitle());
+		msg.setTitle("【"+article.getMember().displayName()+"】刚发布了一篇新文章");
+		msg.setContent("【"+article.getMember().displayName()+"】刚发布了一篇新文章:"+article.getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(article);
 		msg.setExt(JsonUtils.toJson(ext));
@@ -453,8 +453,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(follow.getFollow());
 		msg.setType(Message.Type.follow);
 		msg.setThumbnial(follow.getMember().getLogo());
-		msg.setTitle(follow.getMember().getNickName());
-		msg.setContent("【"+follow.getMember().getNickName()+"】关注了您，将订阅您的动态");
+		msg.setTitle(follow.getMember().displayName());
+		msg.setContent("【"+follow.getMember().displayName()+"】关注了您，将订阅您的动态");
 		return pushTo(msg);
 	}
 
@@ -465,8 +465,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(laud.getArticle().getMember());
 		msg.setType(Message.Type.laud);
 		msg.setThumbnial(laud.getMember().getLogo());
-		msg.setTitle("【"+laud.getMember().getNickName()+"】点赞了您的文章");
-		msg.setContent("【"+laud.getMember().getNickName()+"】点赞了您的文章:"+laud.getArticle().getTitle());
+		msg.setTitle("【"+laud.getMember().displayName()+"】点赞了您的文章");
+		msg.setContent("【"+laud.getMember().displayName()+"】点赞了您的文章:"+laud.getArticle().getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(laud.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
@@ -480,8 +480,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(review.getArticle().getMember());
 		msg.setType(Message.Type.review);
 		msg.setThumbnial(review.getMember().getLogo());
-		msg.setTitle("【"+review.getMember().getNickName()+"】评论了您的文章");
-		msg.setContent("【"+review.getMember().getNickName()+"】评论了您的文章:"+review.getContent());
+		msg.setTitle("【"+review.getMember().displayName()+"】评论了您的文章");
+		msg.setContent("【"+review.getMember().displayName()+"】评论了您的文章:"+review.getContent());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(review.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
@@ -495,8 +495,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(friend);
 		msg.setType(Message.Type.addfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle("【"+member.getNickName()+"】申请成为你的好友。");
-		msg.setContent("【"+member.getNickName()+"】申请成为你的好友。");
+		msg.setTitle("【"+member.displayName()+"】申请成为你的好友。");
+		msg.setContent("【"+member.displayName()+"】申请成为你的好友。");
 		return pushTo(msg);
 	}
 
@@ -507,8 +507,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(friend);
 		msg.setType(Message.Type.adoptfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle("【"+member.getNickName()+"】同意成为你的好友。");
-		msg.setContent("【"+member.getNickName()+"】同意成为你的好友。");
+		msg.setTitle("【"+member.displayName()+"】同意成为你的好友。");
+		msg.setContent("【"+member.displayName()+"】同意成为你的好友。");
 		return pushTo(msg);
 	}
 
@@ -519,16 +519,16 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(promoter);
 		msg.setType(Message.Type.adoptfriend);
 		msg.setThumbnial(member.getLogo());
-		msg.setTitle("您的新成员【"+member.getNickName()+"】添加你为好友。");
-		msg.setContent("您的新成员【"+member.getNickName()+"】添加你为好友。");
+		msg.setTitle("您的新成员【"+member.displayName()+"】添加你为好友。");
+		msg.setContent("您的新成员【"+member.displayName()+"】添加你为好友。");
 		pushTo(msg);
 		Message adt = new Message();
 		adt.setMember(promoter);
 		adt.setReceiver(member);
 		adt.setType(Message.Type.adoptfriend);
 		adt.setThumbnial(promoter.getLogo());
-		adt.setTitle("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
-		adt.setContent("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
+		adt.setTitle("【"+promoter.displayName()+"】欢迎您，有问题快去咨询他/她。");
+		adt.setContent("【"+promoter.displayName()+"】欢迎您，有问题快去咨询他/她。");
 		pushTo(adt);
 		return true;
 	}
@@ -540,7 +540,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setReceiver(topic.getMember());
 		msg.setType(Message.Type.message);
 		msg.setTitle("活动专栏");
-		msg.setContent("【"+topic.getMember().getNickName()+"】感谢您点亮专栏，您已拥有VIP特权。");
+		msg.setContent("【"+topic.getMember().displayName()+"】感谢您点亮专栏，您已拥有VIP特权。");
 		Map<String,String> ext = new HashMap<String,String>();
 		ext.put("type","topic");
 		msg.setExt(JsonUtils.toJson(ext));

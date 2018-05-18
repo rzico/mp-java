@@ -127,11 +127,11 @@ public class MessageModel extends BaseModel implements Serializable {
         }
         this.createDate = message.getCreateDate();
         this.type = message.getType();
-        if (message.getExt()==null) {
-            this.ext = "{}";
-        } else {
-            this.ext = message.getExt();
-        }
+//        if (message.getExt()==null) {
+            this.ext = "";
+//        } else {
+//            this.ext = message.getExt();
+//        }
      }
 
     public static List<MessageModel> bindList(List<net.wit.entity.Message> messages) {
