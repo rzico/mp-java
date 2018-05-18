@@ -190,6 +190,7 @@ public class ArticleController extends BaseController {
         }
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        filters.add(new Filter("articleType", Filter.Operator.eq, Article.ArticleType.article));
         List<Tag> tags = null;
         if (tagId!=null) {
             tags = tagService.findList(tagId);

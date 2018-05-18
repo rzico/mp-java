@@ -4,17 +4,7 @@ package net.wit.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import net.wit.MapEntity;
@@ -40,6 +30,11 @@ public class  ArticleReview extends BaseEntity {
 	@Length(max = 200)
 	@Column(columnDefinition=" varchar(255) comment '内容'")
 	private String content;
+
+	/** 晒图 */
+	@Lob
+	@Column(columnDefinition="longtext comment '晒图'")
+	private String images;
 
 	/** 是否删除 */
 	@NotNull

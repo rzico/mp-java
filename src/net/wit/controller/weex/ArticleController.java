@@ -123,9 +123,6 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/preview", method = RequestMethod.GET)
     @ResponseBody
     public Message preview(Long id,HttpServletRequest request){
-        System.out.print("preview");
-        System.out.print(id);
-
         Member member = memberService.getCurrent();
         Article article = articleService.find(id);
         if (article==null) {
@@ -201,6 +198,7 @@ public class ArticleController extends BaseController {
             tags = tagService.findList(tagId);
         }
 
+        filters.add(new Filter("articleType", Filter.Operator.eq, Article.ArticleType.article));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         pageable.setFilters(filters);
@@ -224,6 +222,7 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("isPitch", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        filters.add(new Filter("articleType", Filter.Operator.eq, Article.ArticleType.article));
 
         List<Tag> tags = null;
 //        tags = tagService.findList(4L);
@@ -254,6 +253,7 @@ public class ArticleController extends BaseController {
         }
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        filters.add(new Filter("articleType", Filter.Operator.eq, Article.ArticleType.article));
         pageable.setFilters(filters);
         Page<Article> page = articleService.findCircle(member,tags,pageable);
         PageBlock model = PageBlock.bind(page);
@@ -273,6 +273,7 @@ public class ArticleController extends BaseController {
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(Filter.like("title","%"+keyword+"%"));
+        filters.add(new Filter("articleType", Filter.Operator.eq, Article.ArticleType.article));
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);

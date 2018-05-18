@@ -59,21 +59,18 @@ public class Article extends BaseEntity{
         href
     };
 
-
     public static enum ArticleType{
         /** 系统公告  */
         html,
         /** 用户图文 */
         article,
         /** 商品详情 */
-        product,
-        /** 圈子论评 */
-        circle
+        product
     };
 
     /** 类型 */
     @NotNull
-    @Column(columnDefinition="int(11) comment '类型 {html:系统公告,article:用户图文,product:商品详情,circle:圈子论评}'")
+    @Column(columnDefinition="int(11) comment '类型 {html:系统公告,article:用户图文,product:商品详情}'")
     private ArticleType mediaType;
 
     /** 作者 */

@@ -35,6 +35,11 @@ public class Goods extends BaseEntity {
 	@Where(clause="deleted=0")
 	private List<Promotion> promotions = new ArrayList<Promotion>();
 
+	/** 详情 */
+	@OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@Where(clause="articleType=2")
+	private List<Article> articles = new ArrayList<Article>();
+
 	/** 公排 */
 	@NotNull
 	@Min(0)
@@ -72,6 +77,13 @@ public class Goods extends BaseEntity {
 		this.products = products;
 	}
 
+	public List<Article> getArticles() {
+		return articles;
+	}
+
+	public void setArticles(List<Article> articles) {
+		this.articles = articles;
+	}
 
 	public Product product() {
 		Product product = null;
@@ -116,5 +128,12 @@ public class Goods extends BaseEntity {
 		this.promotions = promotions;
 	}
 
+	public Article article() {
+		if (getArticles().size()>0) {
+			return getArticles().get(0);
+		} else {
+			return null;
+		}
+	}
 
 }

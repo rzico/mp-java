@@ -70,14 +70,11 @@ public class ProductController extends BaseController {
 	public @ResponseBody
 	Message article(Long id,HttpServletRequest request) {
 		Goods goods = goodsService.find(id);
-		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(new Filter("goods", Filter.Operator.eq,goods));
-		filters.add(new Filter("deleted", Filter.Operator.eq,false));
-		List<Article> art = articleService.findList(null,null,filters,null);
-		if (art.size()==0) {
+		Article article = goods.article();
+		if (article==null) {
 			return Message.error("没有详情");
 		}
-		return Message.success((Object) art.get(0).getId(),"获取成功");
+		return Message.success((Object) article.getId(),"获取成功");
 	}
 
 	/**

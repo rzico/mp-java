@@ -57,6 +57,8 @@ public class ProductController extends BaseController {
 	public @ResponseBody
 	Message view(Long id,HttpServletRequest request) {
 		Goods goods = goodsService.find(id);
+		goods.setHits(goods.getHits()+1);
+		goodsService.update(goods);
 		GoodsViewModel model =new GoodsViewModel();
 		model.bind(goods);
 		return Message.bind(model,request);
