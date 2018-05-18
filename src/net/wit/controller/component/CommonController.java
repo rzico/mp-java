@@ -155,13 +155,15 @@ public class CommonController extends BaseController {
                     appletCodeConfig.setAppid(topicConfig.getAppetAppId());
                     appletCodeConfig.setName(topic.getName());
                     //上传代码
-                    boolean commit = WeixinApi.commitAppletCode(authToken, "2", "v1.0.0", enterprise.getAutograph(), appletCodeConfig);
+                    String codeVersion = "v1.0.0";
+                    boolean commit = WeixinApi.commitAppletCode(authToken, "2", codeVersion, enterprise.getAutograph(), appletCodeConfig);
                     System.out.println("commitAppletCode===============================" + commit);
                     if(commit){
                         String shenheID = WeixinApi.pushAppletCode(authToken);
                         System.out.println("pushAppletCode===============================" + shenheID);
                         if(!shenheID.equalsIgnoreCase("")){
                             topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+                            topicConfig.setVersion(codeVersion);
                             topic.setConfig(topicConfig);
                             topicService.update(topic);
                         }

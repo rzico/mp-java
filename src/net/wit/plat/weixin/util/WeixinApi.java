@@ -123,7 +123,7 @@ public class WeixinApi {
 
 
     //	//通过刷新token 获取 authaccesstoken
-    private static final String REFRESHAUTHTOKEN = "https:// api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
+    private static final String REFRESHAUTHTOKEN = "https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=COMPONENT_TOKEN";
 
 	//提交小程序代码
 	private static final String COMMITCODE = "https://api.weixin.qq.com/wxa/commit?access_token=AUTH_TOKEN";
