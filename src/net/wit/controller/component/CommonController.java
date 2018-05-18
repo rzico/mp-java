@@ -79,107 +79,113 @@ public class CommonController extends BaseController {
 
     @RequestMapping(value = "/weixinCallback", method = RequestMethod.GET)
     public String weixinCallback(HttpServletRequest request, String auth_code, Long expires_in, Long memberId) {
-        System.out.println("weixinCallback===============================" + auth_code + "|" + expires_in + "|" + memberId);
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String serverUrl = bundle.getString("weixin.component.url");
-        String appId = bundle.getString("weixin.component.appid");
-        String secret = bundle.getString("weixin.component.secret");
-        PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
-        Member member = memberService.find(memberId);//授权的用户
-        if (member != null && pluginConfig != null) {
-            //weex/member/topic/submit.jhtml
+            System.out.println("weixinCallback===============================" + auth_code + "|" + expires_in + "|" + memberId);
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            String serverUrl = bundle.getString("weixin.component.url");
+            String appId = bundle.getString("weixin.component.appid");
+            String secret = bundle.getString("weixin.component.secret");
+        try{
+            PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
+            Member member = memberService.find(memberId);//授权的用户
+            if (member != null && pluginConfig != null) {
+                //weex/member/topic/submit.jhtml
 //            if(member.getTopic() == null)
-            Admin admin = adminService.findByMember(member);
-            if (admin == null || admin.getEnterprise() == null) {//这里是没开通专栏, 则开通成功
-                WeixinApi.httpRequest("http://" + serverUrl + "/weex/member/topic/submit.jhtml", "POST", null);
-            }
+                Admin admin = adminService.findByMember(member);
+                if (admin == null || admin.getEnterprise() == null) {//这里是没开通专栏, 则开通成功
+                    WeixinApi.httpRequest("http://" + serverUrl + "/weex/member/topic/submit.jhtml", "POST", null);
+                }
 
-            String verifyTicket = pluginConfig.getAttribute("verify_ticket");
-            ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, appId, secret);
-            if (componentAccessToken == null) {
-                return "redirect:http://" + serverUrl + "/#/agreeError";
-            }
-            AuthAccessToken authAccessToken = WeixinApi.getAuthorizationCode(componentAccessToken.getComponent_access_token(), appId, auth_code);
+                String verifyTicket = pluginConfig.getAttribute("verify_ticket");
+                ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, appId, secret);
+                if (componentAccessToken == null) {
+                    return "redirect:http://" + serverUrl + "/#/agreeError";
+                }
+                AuthAccessToken authAccessToken = WeixinApi.getAuthorizationCode(componentAccessToken.getComponent_access_token(), appId, auth_code);
 
-            Topic topic = member.getTopic();
-            if (authAccessToken != null) {
-                String authToken = authAccessToken.getAuthorizer_access_token();
-                //设置小程序
-                System.out.println("TopicAppetAppid == null ===============================");
-                TopicConfig topicConfig = topic.getConfig();
-                topicConfig.setEstate(TopicConfig.Estate.AUTHORIZED);
-                topicConfig.setAppetAppId(authAccessToken.getAuthorizer_appid());
-                topicConfig.setRefreshToken(authAccessToken.getAuthorizer_refresh_token());
-                topicConfig.setTokenExpire(authAccessToken.getExpire());
-                System.out.println("TopicUpdateSuccess===============================");
-
-                SmallInformation smallInformation = WeixinApi.getSmallInformation(componentAccessToken.getComponent_access_token(), appId, member.getTopic().getConfig().getAppetAppId());
-//                Topic topic1 = topicService.findByUserName(topicConfig.getAppetAppId());
-//                System.out.println("smallInformation=====================" + topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
-                if (smallInformation.getAuthorizerInfo() != null) {
-                    AuthorizerInfo authorizerInfo = smallInformation.getAuthorizerInfo();
-                    //为了防止重复设置
-                    topicConfig.setUserName(authorizerInfo.getUserName());//原始id
-                    topicConfig.setQrcodePath(authorizerInfo.getQrcodeUrl());//二维码地址
-                    topic.setName(authorizerInfo.getPrincipalName());//这里用专栏信息
-                    topic.setConfig(topicConfig);
-
-                    topic.setName(authorizerInfo.getNickName());//这个是专栏名称 这里设置成小程序的名称了
-                    topicService.update(topic);
-                    if (admin == null) {
+                Topic topic = member.getTopic();
+                if (authAccessToken != null) {
+                    String authToken = authAccessToken.getAuthorizer_access_token();
+                    //设置小程序
+                    System.out.println("TopicAppetAppid == null ===============================");
+                    TopicConfig topicConfig = topic.getConfig();
+                    if(topicConfig.getAppetAppId() != null || !topicConfig.getAppetAppId().equalsIgnoreCase("")){
                         return "redirect:http://" + serverUrl + "/#/agreeError";
                     }
 
-                    //更新企业信息
-                    Enterprise enterprise = admin.getEnterprise();
-                    enterprise.setName(authorizerInfo.getPrincipalName());//公司名称
-                    enterprise.setAutograph(authorizerInfo.getSignature());//小程序签名
-                    enterpriseService.update(enterprise);
-                    //接下来 设置小程序的 域名===================
-                    Domain domain = WeixinApi.setDomain1(authToken, WeixinApi.ACTION.SET);
-                    if(domain!=null){
-                        System.out.println("setDomain1===============================" + domain.getErrmsg() + "|" + domain.getErrcode());
-                    }else{
-                        System.out.println("setDomain1===============================null");
-                    }
-                    WeiXinCallBack weiXinCallBack = WeixinApi.setDomain2(authToken);
-                    if(weiXinCallBack!=null){
-                        System.out.println("setDomain2===============================" + weiXinCallBack.getErrmsg() + "|" + weiXinCallBack.getErrcode());
-                    }else{
-                        System.out.println("setDomain2===============================null");
-                    }
-                    //设置小程序可搜索
-                    WeixinApi.setAppletStatus(authToken, 0);
-                    AppletCodeConfig appletCodeConfig = new AppletCodeConfig();
-                    appletCodeConfig.setMemberId(memberId);
-                    appletCodeConfig.setAppid(topicConfig.getAppetAppId());
-                    appletCodeConfig.setName(topic.getName());
-                    //上传代码
-                    String codeVersion = "v1.0.0";
-                    boolean commit = WeixinApi.commitAppletCode(authToken, "2", codeVersion, enterprise.getAutograph(), appletCodeConfig);
-                    System.out.println("commitAppletCode===============================" + commit);
-                    if(commit){
-                        String shenheID = WeixinApi.pushAppletCode(authToken);
-                        System.out.println("pushAppletCode===============================" + shenheID);
-                        if(!shenheID.equalsIgnoreCase("")){
-                            topicConfig.setEstate(TopicConfig.Estate.AUDITING);
-                            topicConfig.setVersion(codeVersion);
-                            topic.setConfig(topicConfig);
-                            topicService.update(topic);
+                    topicConfig.setEstate(TopicConfig.Estate.AUTHORIZED);
+                    topicConfig.setAppetAppId(authAccessToken.getAuthorizer_appid());
+                    topicConfig.setRefreshToken(authAccessToken.getAuthorizer_refresh_token());
+                    topicConfig.setTokenExpire(authAccessToken.getExpire());
+                    System.out.println("TopicUpdateSuccess===============================");
+
+                    SmallInformation smallInformation = WeixinApi.getSmallInformation(componentAccessToken.getComponent_access_token(), appId, member.getTopic().getConfig().getAppetAppId());
+//                Topic topic1 = topicService.findByUserName(topicConfig.getAppetAppId());
+//                System.out.println("smallInformation=====================" + topic1.getName() + "|" + smallInformation.getAuthorizerInfo().toString());
+                    if (smallInformation.getAuthorizerInfo() != null) {
+                        AuthorizerInfo authorizerInfo = smallInformation.getAuthorizerInfo();
+                        //为了防止重复设置
+                        topicConfig.setUserName(authorizerInfo.getUserName());//原始id
+                        topicConfig.setQrcodePath(authorizerInfo.getQrcodeUrl());//二维码地址
+                        topic.setName(authorizerInfo.getPrincipalName());//这里用专栏信息
+                        topic.setConfig(topicConfig);
+
+                        topic.setName(authorizerInfo.getNickName());//这个是专栏名称 这里设置成小程序的名称了
+                        topicService.update(topic);
+                        if (admin == null) {
+                            return "redirect:http://" + serverUrl + "/#/agreeError";
+                        }
+
+                        //更新企业信息
+                        Enterprise enterprise = admin.getEnterprise();
+                        enterprise.setName(authorizerInfo.getPrincipalName());//公司名称
+                        enterprise.setAutograph(authorizerInfo.getSignature());//小程序签名
+                        enterpriseService.update(enterprise);
+                        //接下来 设置小程序的 域名===================
+                        Domain domain = WeixinApi.setDomain1(authToken, WeixinApi.ACTION.SET);
+                        if(domain!=null){
+                            System.out.println("setDomain1===============================" + domain.getErrmsg() + "|" + domain.getErrcode());
+                        }else{
+                            System.out.println("setDomain1===============================null");
+                        }
+                        WeiXinCallBack weiXinCallBack = WeixinApi.setDomain2(authToken);
+                        if(weiXinCallBack!=null){
+                            System.out.println("setDomain2===============================" + weiXinCallBack.getErrmsg() + "|" + weiXinCallBack.getErrcode());
+                        }else{
+                            System.out.println("setDomain2===============================null");
+                        }
+                        //设置小程序可搜索
+                        WeixinApi.setAppletStatus(authToken, 0);
+                        AppletCodeConfig appletCodeConfig = new AppletCodeConfig();
+                        appletCodeConfig.setMemberId(memberId);
+                        appletCodeConfig.setAppid(topicConfig.getAppetAppId());
+                        appletCodeConfig.setName(topic.getName());
+                        //上传代码
+                        String codeVersion = "v1.0.0";
+                        String templateId = "2";
+                        boolean commit = WeixinApi.commitAppletCode(authToken, templateId, codeVersion, enterprise.getAutograph(), appletCodeConfig);
+                        System.out.println("commitAppletCode===============================" + commit);
+                        if(commit){
+                            String shenheID = WeixinApi.pushAppletCode(authToken);
+                            System.out.println("pushAppletCode===============================" + shenheID);
+                            if(!shenheID.equalsIgnoreCase("")){
+                                topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+                                topicConfig.setVersion(codeVersion);
+                                topic.setConfig(topicConfig);
+                                topicService.update(topic);
+                            }
                         }
                     }
+                } else {
+                    return "redirect:http://" + serverUrl + "/#/agreeError";
                 }
+
             } else {
                 return "redirect:http://" + serverUrl + "/#/agreeError";
             }
-
-//            member.getTopic().getConfig().setAppetAppId();
-
-
-        } else {
+            return "redirect:http://" + serverUrl + "/#/agreeSuccess";
+        }catch (Exception e){
             return "redirect:http://" + serverUrl + "/#/agreeError";
         }
-        return "redirect:http://" + serverUrl + "/#/agreeSuccess";
     }
 
 }

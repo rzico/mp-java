@@ -153,7 +153,7 @@ public class WeixinApi {
     public static final String GETSTATUS = "https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token=AUTH_TOKEN";
 
     //获取小程序体验二维码
-    public static final String GETQRCODE="https://api.weixin.qq.com/wxa/ get_qrcode?access_token=AUTH_TOKEN";
+    public static final String GETQRCODE="https://api.weixin.qq.com/wxa/get_qrcode?access_token=AUTH_TOKEN";
 
 
     //获取小程序的第三方提交代码的页面配置（仅供第三方开发者代小程序调用）
