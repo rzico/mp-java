@@ -170,6 +170,8 @@ public class CommonController extends BaseController {
                             if(!shenheID.equalsIgnoreCase("")){
                                 topicConfig.setEstate(TopicConfig.Estate.AUDITING);
                                 topicConfig.setVersion(codeVersion);
+                                topicConfig.setRefreshToken("");
+                                topicConfig.setQrcodePath("");
                                 topic.setConfig(topicConfig);
                                 topicService.update(topic);
                             }

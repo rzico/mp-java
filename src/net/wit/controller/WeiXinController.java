@@ -534,8 +534,20 @@ public class WeiXinController extends BaseController {
             } else if (infoType.equalsIgnoreCase("updateauthorized")) {
                 System.out.println("=================================：updateauthorized");
 
-            } else if (infoType.equalsIgnoreCase("unauthorized")) {
+            } else if (infoType.equalsIgnoreCase("unauthorized")) {//取消授权通知
                 System.out.println("=================================：unauthorized");
+                Topic topic = topicService.findByAppid(AuthorizerAppid);
+                if(topic!=null){
+                    TopicConfig topicConfig = topic.getConfig();
+                    if(topicConfig!=null){
+                        topicConfig.setAppetAppId("");
+                        topicConfig.setVersion("");
+                        topicConfig.setStateRemark("");
+                        topicConfig.setEstate(TopicConfig.Estate.UNAUTHORIZED);
+                        topic.setConfig(topicConfig);
+                        topicService.update(topic);
+                    }
+                }
 
             }
         } catch (DocumentException e) {

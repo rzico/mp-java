@@ -93,8 +93,11 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements To
 		return topicDao.find(member);
 	}
 
-	public Topic findByUserName(String appid){
-		return topicDao.findByUserName(appid);
+	public Topic findByUserName(String userName){
+		return topicDao.findByUserName(userName);
+	}
+	public Topic findByAppid(String appid){
+		return topicDao.findByAppid(appid);
 	}
 
 	public Topic create(Topic topic) {
