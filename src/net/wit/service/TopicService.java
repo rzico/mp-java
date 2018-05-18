@@ -18,7 +18,8 @@ import net.wit.entity.Topic;
 
 public interface TopicService extends BaseService<Topic, Long> {
 	Topic find(Member member);
-	Topic findByUserName(String appid);
+	Topic findByUserName(String userName);
+	Topic findByAppid(String appid);
 	Page<Topic> findPage(Date beginDate,Date endDate, Pageable pageable);
 	public Topic create(Topic topic);
 }
