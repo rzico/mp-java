@@ -706,6 +706,9 @@ public class Member extends BaseEntity {
 	}
 
 	public String getLogo() {
+		if (logo==null) {
+			logo = "http://cdn.rzico.com/weex/resources/images/headimg.png";
+		}
 		return logo;
 	}
 

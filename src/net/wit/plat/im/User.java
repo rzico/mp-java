@@ -81,12 +81,6 @@ public class User {
 
     }
     public static boolean userAttr(Member member) {
-        if (member.getLogo()==null) {
-            return true ;
-        }
-        if (member.getNickName()==null) {
-            return true;
-        }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String userSig=User.createUserSig(bundle.getString("im.admin"));
         int random=StringUtils.Random6Code();
@@ -96,7 +90,7 @@ public class User {
         Map<String,String> attrs = new HashMap<String,String>();
         attrs.put("Identifier",member.userId());
         attrs.put("FaceUrl",member.getLogo());
-        attrs.put("Nick",member.getNickName());
+        attrs.put("Nick",member.displayName());
         HttpClient httpClient = new DefaultHttpClient();
         try {
             HttpPost httpPost = new HttpPost(url);
