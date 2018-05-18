@@ -236,7 +236,6 @@ public class WeixinApi {
      * 获取小程序体验二维码
      *
      * @param authToken 第三方平台获取到的该小程序授权的authorizer_access_token
-     * @param testpath  临时文件存放位置
      * @return 返回  null二维码获取失败，成功返回图片MultipartFile
      */
     public static MultipartFile getQccode(String authToken) throws IOException {
@@ -308,6 +307,7 @@ public class WeixinApi {
 		JSONObject jsonObject = httpRequest(UNPUSHCODE.replace("AUTH_TOKEN", authToken), "GET", null);
 			WeiXinCallBack weiXinCallBack = null;
 			if(jsonObject != null) {
+				System.out.println("unpushCode=======" + jsonObject.toString());
 				weiXinCallBack = new WeiXinCallBack();
 				weiXinCallBack.setErrmsg(jsonObject.getString("errmsg"));
 				weiXinCallBack.setErrcode(jsonObject.getString("errcode"));
@@ -323,6 +323,7 @@ public class WeixinApi {
      */
     public static String getStatus(String authToken) {
         JSONObject jsonObject = httpRequest(GETSTATUS.replace("AUTH_TOKEN", authToken), "GET", null);
+		System.out.println("getStatus=======" + jsonObject.toString());
         if (jsonObject != null) {
             /**
              *  -1	系统繁忙

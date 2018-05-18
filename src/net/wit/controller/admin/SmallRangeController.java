@@ -150,7 +150,7 @@ public class SmallRangeController extends BaseController {
         if ((token = getAuthToken(topic)) != null) {
             String result = WeixinApi.getStatus(token);
             model.addAttribute("status", result);
-            if (result.equals("0")) {
+            if (result != null && result.equals("0")) {
                 TopicConfig topicConfig = topic.getConfig();
                 topicConfig.setEstate(TopicConfig.Estate.ISAUDITING);
                 topic.setConfig(topicConfig);
@@ -222,7 +222,7 @@ public class SmallRangeController extends BaseController {
             if (WeixinApi.commitAppletCode(token, templateId, version, userDesc, appletCodeConfig)) {
                 TopicConfig topicConfig = topic.getConfig();
                 topicConfig.setVersion(version);
-                topicConfig.setEstate(TopicConfig.Estate.AUDITING);
+                topicConfig.setEstate(TopicConfig.Estate.ISCOMMIT);
                 topicConfig.setStateRemark(userDesc);
                 topic.setConfig(topicConfig);
                 topicService.update(topic);
@@ -243,7 +243,7 @@ public class SmallRangeController extends BaseController {
     public Message commit(Long id) {
         Topic topic = topicService.find(id);
         String token;
-        if (!validate(topic, TopicConfig.Estate.AUTHORIZED)) {
+        if (!validate(topic, TopicConfig.Estate.ISCOMMIT)) {
             return Message.error("该小程序未上传");
         }
         if ((token = getAuthToken(topic)) != null) {
@@ -318,13 +318,16 @@ public class SmallRangeController extends BaseController {
         Topic topic = topicService.find(id);
         String token;
         if ((token = getAuthToken(topic)) != null) {
-            boolean b=WeixinApi.unpushCode(token)==null ? false: (WeixinApi.unpushCode(token).getErrcode()==null ? false : WeixinApi.unpushCode(token).getErrcode().equals("0"));
-            if(b){
+            WeiXinCallBack weiXinCallBack = WeixinApi.unpushCode(token);
+            boolean b;
+            if (weiXinCallBack == null || WeixinApi.unpushCode(token).getErrcode() == null) b = false;
+            b = WeixinApi.unpushCode(token).getErrcode().equals("0");
+            if (b) {
                 return Message.success("撤回成功");
-            }else{
+            } else {
                 return Message.error("撤回失败");
             }
-        }else{
+        } else {
             return Message.error("未知异常.请稍后重试");
         }
     }

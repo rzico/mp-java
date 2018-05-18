@@ -58,6 +58,7 @@ public class TopicConfig implements Serializable {
 	public static enum Estate{
 		UNAUTHORIZED,//未授权
 		AUTHORIZED,//已授权
+		ISCOMMIT,//已提交代码
 		AUDITING,//正在审核
 
 		ISAUDITING,//通过审核（待发布）
@@ -115,7 +116,7 @@ public class TopicConfig implements Serializable {
 
 	/** 小程序 estate */
 	@NotNull
-	@Column(columnDefinition="int(11) default '0'comment '状态 { 未授权:UNAUTHORIZED, 已授权:AUTHORIZED, 正在审核:AUDITING, 通过审核:ISAUDITING, 已发布:PASS}'")
+	@Column(columnDefinition="int(11) default '0'comment '状态 { 未授权:UNAUTHORIZED, 已授权:AUTHORIZED,已提交代码:ISCOMMIT, 正在审核:AUDITING, 通过审核:ISAUDITING, 已发布:PASS}'")
 	private Estate estate;
 
 	/** 小程序 刷新token */

@@ -164,6 +164,9 @@ public class CommonController extends BaseController {
                         String codeVersion = threePlugin.getAttribute("codeVersion");
                         String templateId = threePlugin.getAttribute("templateId");
                         boolean commit = WeixinApi.commitAppletCode(authToken, templateId, codeVersion, enterprise.getAutograph(), appletCodeConfig);
+                        topicConfig.setEstate(TopicConfig.Estate.ISCOMMIT);
+                        topic.setConfig(topicConfig);
+                        topicService.update(topic);
                         System.out.println("commitAppletCode===============================" + commit);
                         if(commit){
                             String shenheID = WeixinApi.pushAppletCode(authToken);
