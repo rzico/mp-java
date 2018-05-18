@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.applet.Applet;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -135,11 +136,14 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/searchView", method = RequestMethod.GET)
     public String searchView(Long id, ModelMap model) {
         Topic topic = topicService.find(id);
+        if(!validate(topic, TopicConfig.Estate.AUDITING)){
+            model.addAttribute("remark","未提交审核");
+        }
         model.addAttribute("name", topic.getName());
         model.addAttribute("appid", topic.getConfig().getAppetAppId());
         model.addAttribute("version", topic.getConfig().getVersion());
         String token;
-        if ((token = getAuthToken(id)) != null) {
+        if ((token = getAuthToken(topic)) != null) {
             String result = WeixinApi.getStatus(token);
             model.addAttribute("status", result);
             if (result.equals("0")) {
@@ -150,6 +154,36 @@ public class SmallRangeController extends BaseController {
             }
         }
         return "/admin/smallRange/view/statusView";
+    }
+
+    /**
+     * 获取体验二维码
+     */
+    @RequestMapping(value = "/qcCodeView", method = RequestMethod.GET)
+    public String getView(Long id, ModelMap model) {
+        Topic topic = topicService.find(id);
+        model.addAttribute("name",topic.getName());
+        model.addAttribute("id",topic.getId());
+        model.addAttribute("appID",topic.getConfig().getAppetAppId());
+        model.addAttribute("version",topic.getConfig().getVersion());
+        if(!validate(topic, TopicConfig.Estate.AUDITING)){
+            return "/admin/smallRange/view/qcCodeView";
+        }
+        String token;
+        String url=null;
+        if ((token = getAuthToken(topic)) != null) {
+            try {
+                url=WeixinApi.getQccode(token);
+                if(url.equals("404")||url.equals("500")){
+                    return "/admin/smallRange/view/qcCodeView";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        model.addAttribute("url", url);
+        return "/admin/smallRange/view/qcCodeView";
     }
 
     /**
@@ -168,12 +202,15 @@ public class SmallRangeController extends BaseController {
     @ResponseBody
     public Message upLoad(Long id, String version, String templateId, String userDesc) {
         Topic topic = topicService.find(id);
+        if(validate(topic, TopicConfig.Estate.UNAUTHORIZED)){
+            return Message.error("未授权");
+        }
         AppletCodeConfig appletCodeConfig = new AppletCodeConfig();
         appletCodeConfig.setAppid(topic.getConfig().getAppetAppId());
         appletCodeConfig.setName(topic.getName());
         appletCodeConfig.setMemberId(topic.getMember().getId());
         String token;
-        if ((token = getAuthToken(id)) != null) {
+        if ((token = getAuthToken(topic)) != null) {
             if (WeixinApi.commitAppletCode(token, templateId, version, userDesc, appletCodeConfig)) {
                 TopicConfig topicConfig = topic.getConfig();
                 topicConfig.setVersion(version);
@@ -196,10 +233,13 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/commit", method = RequestMethod.POST)
     @ResponseBody
     public Message commit(Long id) {
+        Topic topic=topicService.find(id);
         String token;
-        if ((token = getAuthToken(id)) != null) {
-            if (!WeixinApi.pushAppletCode(getAuthToken(id)).equals("")) {
-                Topic topic = topicService.find(id);
+        if(!validate(topic, TopicConfig.Estate.AUTHORIZED)){
+            return Message.error("该小程序未上传");
+        }
+        if ((token = getAuthToken(topic)) != null) {
+            if (!WeixinApi.pushAppletCode(token).equals("")) {
                 TopicConfig topicConfig = topic.getConfig();
                 topicConfig.setEstate(TopicConfig.Estate.AUDITING);
                 topic.setConfig(topicConfig);
@@ -219,10 +259,13 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
     public Message publish(Long id) {
+        Topic topic=topicService.find(id);
         String token;
-        if ((token = getAuthToken(id)) != null) {
+        if(!validate(topic, TopicConfig.Estate.ISAUDITING)){
+            return Message.error("该小程序未通过审核");
+        }
+        if ((token = getAuthToken(topic)) != null) {
             if (WeixinApi.releaseAppletCode(token)) {
-                Topic topic = topicService.find(id);
                 TopicConfig topicConfig = topic.getConfig();
                 topicConfig.setEstate(TopicConfig.Estate.PASS);
                 topic.setConfig(topicConfig);
@@ -242,8 +285,12 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/comeBack", method = RequestMethod.POST)
     @ResponseBody
     public Message comeBack(Long id) {
+        Topic topic=topicService.find(id);
         String token;
-        if ((token = getAuthToken(id)) != null) {
+        if(!validate(topic, TopicConfig.Estate.PASS)){
+            return Message.error("该小程序未发布");
+        }
+        if ((token = getAuthToken(topic)) != null) {
             if (WeixinApi.revertAppletCode(token)) {
                 return Message.success("回退成功");
             } else {
@@ -258,8 +305,9 @@ public class SmallRangeController extends BaseController {
      * 设置是否可被搜索
      */
     public boolean setAppletState(Long id, int status) {
+        Topic topic=topicService.find(id);
         String token;
-        if ((token = getAuthToken(id)) != null) {
+        if ((token = getAuthToken(topic)) != null) {
             if (WeixinApi.setAppletStatus(token, status).getErrcode().equals("0")) {
                 return true;
             }else{
@@ -292,9 +340,8 @@ public class SmallRangeController extends BaseController {
     /**
      * 拿refresh_token和APPID
      */
-    public String getAuthToken(Long id) {
+    public String getAuthToken(Topic topic) {
         //拿refresh_token
-        Topic topic = topicService.find(id);
         String refresh = topic.getConfig().getRefreshToken();
         String threeAppID = topic.getConfig().getAppetAppId();
 
@@ -309,5 +356,13 @@ public class SmallRangeController extends BaseController {
         topicService.update(topic);
 
         return authorizer.getAuthorizer_access_token();
+    }
+
+    public boolean validate(Topic topic, TopicConfig.Estate status){
+        if(topic.getConfig().getEstate()==status){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

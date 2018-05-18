@@ -26,10 +26,10 @@
 <div class="pd-20">
     <table class="table">
         <tbody>
-        [#if remark??]
+        [#if id??]
         <tr>
-            <th class="text-r" width="120">备注：</th>
-            <td>${remark}</td>
+            <th class="text-r" width="120">ID：</th>
+            <td>${id}</td>
         </tr>
         [/#if]
         [#if name??]
@@ -50,21 +50,13 @@
             <td>${version}</td>
         </tr>
         [/#if]
-        [#if status??]
-        <tr>
-            <th class="text-r" width="120">审核结果：</th>
-            [#if status==0]
-                <td>审核成功</td>
-            [#elseif status==2]
-                <td>正在审核</td>
-            [#else]
-                <td>${status}</td>
-            [/#if]
-        </tr>
+        [#if url??]
+        <th class="text-r" width="120">二维码:</th>
+        <td><img src="${url}"/></td>
         [#else]
         <tr>
-            <th class="text-r" width="120">审核结果：</th>
-            <td>暂无审核结果</td>
+            <th class="text-r" width="120">错误:</th>
+            <td>该小程序暂无体验版</td>
         </tr>
         [/#if]
         </tbody>

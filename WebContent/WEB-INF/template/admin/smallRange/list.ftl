@@ -182,6 +182,11 @@
                 },
                 {
                     "mData": "id",
+                    "sTitle": "获取体验二维码",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
                 }
@@ -237,7 +242,7 @@
                     }
                 },
                 {
-                    "aTargets": [11],
+                    "aTargets": [12],
                     "mRender": function (data, display, row) {
                         if (data != null) {
                             return "<a title='查询' href='javascript:;' onclick=\"show('" + data + "','searchView.jhtml?id=" + data + "','1000" + data + "','360','400')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe665;</i></a>";
@@ -288,8 +293,18 @@
                         }
                     }
                 },
+                {
+                    "aTargets": [11],
+                    "mRender": function (data, display, row) {
+                        if (data != null) {
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show('体验二维码','qcCodeView.jhtml?id="+data+"','400','600');\" name=\"\">获取二维码</button>";
+                        } else {
+                            return "";
+                        }
+                    }
+                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7, 8, 9, 10, 11]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 7, 8, 9, 10, 11, 12]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
