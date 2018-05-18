@@ -812,7 +812,7 @@ title	小程序页面的标题,标题长度不超过32*/
         if(jsonObject != null){
             authAccessToken = new AuthAccessToken();
             authAccessToken.setAuthorizer_access_token(jsonObject.getString("authorizer_access_token"));
-            authAccessToken.setAuthorizer_appid(jsonObject.getString("authorizer_appid"));
+//            authAccessToken.setAuthorizer_appid(jsonObject.getString("authorizer_appid"));
             authAccessToken.setAuthorizer_refresh_token(jsonObject.getString("authorizer_refresh_token"));
             authAccessToken.setExpires_in(jsonObject.getInt("expires_in"));
             authAccessToken.setExpire(DateUtil.transpositionDate(new Date(), Calendar.SECOND, new Integer(jsonObject.getInt("expires_in"))));

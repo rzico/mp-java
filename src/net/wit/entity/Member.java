@@ -34,6 +34,10 @@ public class Member extends BaseEntity {
 
 	private static final long serialVersionUID = 29L;
 
+	public static enum MemberType{
+		SELF,//属于本平台自己的类型
+		COMPONENT//属于第三方小程序 的用户类型
+	}
 	/**
 	 * 性别
 	 */
@@ -215,6 +219,14 @@ public class Member extends BaseEntity {
 	@Column(columnDefinition="int(11) comment '星级 { vip1:vip1,vip2:vip2,vip3:vip3}'")
 	private VIP vip;
 
+	@NotNull
+	@Column(columnDefinition="int(11) default '0'comment '状态 { 自己平台:SELF, 第三方平台:COMPONENT}'")
+	private MemberType memberType;
+
+
+	/** 所属第三方平台的appid */
+	@Column(columnDefinition="varchar(255) comment '所属第三方平台的appid'")
+	private String componentAppid;
 //	/** 会员注册项值0 */
 //	@Length(max = 200)
 //	@Column(columnDefinition="varchar(255) comment '会员注册项值0'")
@@ -569,7 +581,23 @@ public class Member extends BaseEntity {
 		this.mobile = mobile;
 	}
 
-//	public String getAttributeValue0() {
+	public MemberType getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(MemberType memberType) {
+		this.memberType = memberType;
+	}
+
+	public String getComponentAppid() {
+		return componentAppid;
+	}
+
+	public void setComponentAppid(String componentAppid) {
+		this.componentAppid = componentAppid;
+	}
+
+	//	public String getAttributeValue0() {
 //		return attributeValue0;
 //	}
 //

@@ -79,10 +79,14 @@ public class LoginController extends BaseController {
     @ResponseBody
     Message login(Long memberId, String code,String nickName,String logo, HttpServletRequest request, HttpServletResponse response) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String appletAppid = bundle.getString("applet.appid");//默认是取这个appid
+        Member.MemberType memberType = Member.MemberType.SELF;//默认
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +bundle.getString("applet.appid") + "&secret=" + bundle.getString("applet.secret") + "&js_code=" + code + "&grant_type=authorization_code";
         if(memberId != null){
             //如果该参数不为空 则是第三放平台登录
             Member member = memberService.find(memberId);
+            memberType = Member.MemberType.COMPONENT;
+            appletAppid = member.getTopic().getConfig().getAppetAppId();//获取该会员的appid
             PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
             String verifyTicket = pluginConfig.getAttribute("verify_ticket");
             ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, bundle.getString("weixin.component.appid"), bundle.getString("weixin.component.secret"));
@@ -114,15 +118,20 @@ public class LoginController extends BaseController {
             if (unionId!=null && !unionId.equalsIgnoreCase("#")) {
                 bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
             } else {
-                bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
+                bindUser = bindUserService.findOpenId(openId,appletAppid,BindUser.Type.weixin);
             }
             Member member = null;
             if (bindUser!=null) {
                 member = bindUser.getMember();
             }
             if (member==null) {
+
                 member = new Member();
                 member.setNickName(nickName);
+                member.setMemberType(memberType);
+                if(memberType == Member.MemberType.COMPONENT){//第三方平台才用这个
+                    member.setComponentAppid(appletAppid);
+                }
                 member.setLogo(logo);
                 member.setPoint(0L);
                 member.setAmount(BigDecimal.ZERO);
@@ -142,10 +151,10 @@ public class LoginController extends BaseController {
                 }
             }
             try {
-                bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
+                bindUser = bindUserService.findOpenId(openId,appletAppid,BindUser.Type.weixin);
                 if (bindUser==null) {
                     bindUser = new BindUser();
-                    bindUser.setAppId(bundle.getString("applet.appid"));
+                    bindUser.setAppId(appletAppid);
                     bindUser.setType(BindUser.Type.weixin);
                     bindUser.setMember(member);
                     bindUser.setUnionId(unionId);
