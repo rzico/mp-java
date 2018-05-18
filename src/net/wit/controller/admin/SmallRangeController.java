@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.model.AppletCodeConfig;
 import net.wit.entity.*;
+import net.wit.entity.weixin.WeiXinCallBack;
 import net.wit.plat.weixin.pojo.AuthAccessToken;
 import net.wit.plat.weixin.pojo.ComponentAccessToken;
 import net.wit.plat.weixin.util.WeixinApi;
@@ -305,6 +306,26 @@ public class SmallRangeController extends BaseController {
             }
         } else {
             return Message.error("未知异常,请稍后重试");
+        }
+    }
+
+    /**
+     * 小程序版本回退
+     */
+    @RequestMapping(value = "/revoke", method = RequestMethod.POST)
+    @ResponseBody
+    public Message revoke(Long id) {
+        Topic topic = topicService.find(id);
+        String token;
+        if ((token = getAuthToken(topic)) != null) {
+            boolean b=WeixinApi.unpushCode(token)==null ? false: (WeixinApi.unpushCode(token).getErrcode()==null ? false : WeixinApi.unpushCode(token).getErrcode().equals("0"));
+            if(b){
+                return Message.success("撤回成功");
+            }else{
+                return Message.error("撤回失败");
+            }
+        }else{
+            return Message.error("未知异常.请稍后重试");
         }
     }
 

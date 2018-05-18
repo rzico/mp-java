@@ -187,6 +187,11 @@
                 },
                 {
                     "mData": "id",
+                    "sTitle": "审核撤回",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
                 }
@@ -242,7 +247,7 @@
                     }
                 },
                 {
-                    "aTargets": [12],
+                    "aTargets": [13],
                     "mRender": function (data, display, row) {
                         if (data != null) {
                             return "<a title='查询' href='javascript:;' onclick=\"show('" + data + "','searchView.jhtml?id=" + data + "','1000" + data + "','360','400')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe665;</i></a>";
@@ -303,8 +308,18 @@
                         }
                     }
                 },
+                {
+                    "aTargets": [12],
+                    "mRender": function (data, display, row) {
+                        if (data != null) {
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"revoke(this,'" + data + "');\" name=\"\">审核撤回</button>"
+                        } else {
+                            return "";
+                        }
+                    }
+                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7, 8, 9, 10, 11, 12]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 7, 8, 9, 10, 11, 12, 13]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
@@ -536,6 +551,35 @@
                     id: id
                 },
                 url: '${base}/admin/smallRange/comeBack.jhtml',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(load);
+                    if (data.type == "success") {
+                        layer.msg(data.content, {icon: 1, time: 1000});
+                    } else {
+                        layer.msg(data.content, {icon: 2, time: 1000});
+                    }
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
+    /*回退*/
+    function revoke(obj, id) {
+        layer.confirm('确认吗？', function (index) {
+            var load = layer.msg('加载中', {
+                icon: 16
+                , shade: 0.01
+            });
+            $.ajax({
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                url: '${base}/admin/smallRange/revoke.jhtml',
                 dataType: 'json',
                 success: function (data) {
                     layer.close(load);
