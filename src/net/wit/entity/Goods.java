@@ -37,7 +37,7 @@ public class Goods extends BaseEntity {
 
 	/** 详情 */
 	@OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@Where(clause="articleType=2")
+	@Where(clause="article_type=2")
 	private List<Article> articles = new ArrayList<Article>();
 
 	/** 公排 */
