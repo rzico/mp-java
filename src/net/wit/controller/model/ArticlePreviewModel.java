@@ -39,6 +39,9 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
     private Boolean isReward;
     /** 是否发布 */
     private Boolean isPublish;
+    /** 赞赏数*/
+    private Long reward;
+
 
     public Long getId() {
         return id;
@@ -159,6 +162,15 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
     public void setIsPublish(Boolean publish) {
         isPublish = publish;
     }
+
+    public Long getReward() {
+        return reward;
+    }
+
+    public void setReward(Long reward) {
+        this.reward = reward;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.hits = article.getHits();
@@ -174,6 +186,7 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.isReview = article.getIsReview();
         this.isReward = article.getIsReward();
         this.isPublish = article.getIsPublish();
+        this.reward=article.getLaud();
         if (article.getTemplate()!=null) {
             this.template = article.getTemplate().getSn();
         } else {

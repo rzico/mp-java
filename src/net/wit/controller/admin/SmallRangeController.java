@@ -7,19 +7,19 @@ import net.wit.entity.*;
 import net.wit.plat.weixin.pojo.AuthAccessToken;
 import net.wit.plat.weixin.pojo.ComponentAccessToken;
 import net.wit.plat.weixin.util.WeixinApi;
-import net.wit.service.AdminService;
-import net.wit.service.MemberService;
-import net.wit.service.PluginConfigService;
-import net.wit.service.TopicService;
+import net.wit.plugin.StoragePlugin;
+import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.applet.Applet;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -37,6 +37,9 @@ public class SmallRangeController extends BaseController {
 
     @Resource(name = "pluginConfigServiceImpl")
     private PluginConfigService pluginConfigService;
+
+    @Resource(name = "pluginServiceImpl")
+    private PluginService pluginService;
 
     /**
      * 主页
@@ -136,8 +139,8 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/searchView", method = RequestMethod.GET)
     public String searchView(Long id, ModelMap model) {
         Topic topic = topicService.find(id);
-        if(!validate(topic, TopicConfig.Estate.AUDITING)){
-            model.addAttribute("remark","未提交审核");
+        if (!validate(topic, TopicConfig.Estate.AUDITING)) {
+            model.addAttribute("remark", "未提交审核");
         }
         model.addAttribute("name", topic.getName());
         model.addAttribute("appid", topic.getConfig().getAppetAppId());
@@ -162,21 +165,25 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/qcCodeView", method = RequestMethod.GET)
     public String getView(Long id, ModelMap model) {
         Topic topic = topicService.find(id);
-        model.addAttribute("name",topic.getName());
-        model.addAttribute("id",topic.getId());
-        model.addAttribute("appID",topic.getConfig().getAppetAppId());
-        model.addAttribute("version",topic.getConfig().getVersion());
-        if(!validate(topic, TopicConfig.Estate.AUDITING)){
+        model.addAttribute("name", topic.getName());
+        model.addAttribute("id", topic.getId());
+        model.addAttribute("appID", topic.getConfig().getAppetAppId());
+        model.addAttribute("version", topic.getConfig().getVersion());
+        if (!validate(topic, TopicConfig.Estate.AUDITING)) {
             return "/admin/smallRange/view/qcCodeView";
         }
         String token;
-        String url=null;
+        String url = null;
         if ((token = getAuthToken(topic)) != null) {
             try {
-                url=WeixinApi.getQccode(token);
-                if(url.equals("404")||url.equals("500")){
-                    return "/admin/smallRange/view/qcCodeView";
-                }
+                MultipartFile file = WeixinApi.getQccode(token);
+                StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                String folder1 = sdf.format(System.currentTimeMillis());
+                String name = String.valueOf(System.currentTimeMillis() * 1000000 + (int) ((Math.random() * 9 + 1) * 100000));
+                String uppath = "/upload/image/" + folder1 + "/" + name + ".jpg";
+                ossPlugin.upload(uppath, file, ossPlugin.getMineType(".jpg"));
+                url = ossPlugin.getUrl(uppath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -202,7 +209,7 @@ public class SmallRangeController extends BaseController {
     @ResponseBody
     public Message upLoad(Long id, String version, String templateId, String userDesc) {
         Topic topic = topicService.find(id);
-        if(validate(topic, TopicConfig.Estate.UNAUTHORIZED)){
+        if (validate(topic, TopicConfig.Estate.UNAUTHORIZED)) {
             return Message.error("未授权");
         }
         AppletCodeConfig appletCodeConfig = new AppletCodeConfig();
@@ -233,9 +240,9 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/commit", method = RequestMethod.POST)
     @ResponseBody
     public Message commit(Long id) {
-        Topic topic=topicService.find(id);
+        Topic topic = topicService.find(id);
         String token;
-        if(!validate(topic, TopicConfig.Estate.AUTHORIZED)){
+        if (!validate(topic, TopicConfig.Estate.AUTHORIZED)) {
             return Message.error("该小程序未上传");
         }
         if ((token = getAuthToken(topic)) != null) {
@@ -259,9 +266,9 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
     public Message publish(Long id) {
-        Topic topic=topicService.find(id);
+        Topic topic = topicService.find(id);
         String token;
-        if(!validate(topic, TopicConfig.Estate.ISAUDITING)){
+        if (!validate(topic, TopicConfig.Estate.ISAUDITING)) {
             return Message.error("该小程序未通过审核");
         }
         if ((token = getAuthToken(topic)) != null) {
@@ -285,9 +292,9 @@ public class SmallRangeController extends BaseController {
     @RequestMapping(value = "/comeBack", method = RequestMethod.POST)
     @ResponseBody
     public Message comeBack(Long id) {
-        Topic topic=topicService.find(id);
+        Topic topic = topicService.find(id);
         String token;
-        if(!validate(topic, TopicConfig.Estate.PASS)){
+        if (!validate(topic, TopicConfig.Estate.PASS)) {
             return Message.error("该小程序未发布");
         }
         if ((token = getAuthToken(topic)) != null) {
@@ -305,12 +312,12 @@ public class SmallRangeController extends BaseController {
      * 设置是否可被搜索
      */
     public boolean setAppletState(Long id, int status) {
-        Topic topic=topicService.find(id);
+        Topic topic = topicService.find(id);
         String token;
         if ((token = getAuthToken(topic)) != null) {
             if (WeixinApi.setAppletStatus(token, status).getErrcode().equals("0")) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } else {
@@ -358,10 +365,10 @@ public class SmallRangeController extends BaseController {
         return authorizer.getAuthorizer_access_token();
     }
 
-    public boolean validate(Topic topic, TopicConfig.Estate status){
-        if(topic.getConfig().getEstate()==status){
+    public boolean validate(Topic topic, TopicConfig.Estate status) {
+        if (topic.getConfig().getEstate() == status) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

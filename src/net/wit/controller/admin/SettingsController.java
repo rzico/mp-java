@@ -29,7 +29,7 @@ public class SettingsController {
      */
     @RequestMapping("/index")
     public String setting(int type, ModelMap modelMap) {
-        switch (type){
+        switch (type) {
             case 0:
                 PluginConfig android = pluginConfigService.findByPluginId("androidVersionPlugin");
                 modelMap.addAllAttributes(android.getAttributes());
@@ -42,10 +42,14 @@ public class SettingsController {
                 PluginConfig resource = pluginConfigService.findByPluginId("resourceVersionPlugin");
                 modelMap.addAllAttributes(resource.getAttributes());
                 break;
+            case 3:
+                PluginConfig three = pluginConfigService.findByPluginId("threePlugin");
+                modelMap.addAllAttributes(three.getAttributes());
+                break;
             default:
                 return "/404";
         }
-        modelMap.addAttribute("type",type);
+        modelMap.addAttribute("type", type);
         return "/admin/common/setting";
     }
 
@@ -53,27 +57,34 @@ public class SettingsController {
     @ResponseBody
     public Message edit(String android, String androidMin, String androidUrl,
                         String ios, String iosMin, String iosUrl,
-                        String resource, String resourceUrl,int type) {
-        switch (type){
+                        String resource, String resourceUrl,
+                        String codeVersion, String templateId, int type) {
+        switch (type) {
             case 0:
                 PluginConfig androidPlugin = pluginConfigService.findByPluginId("androidVersionPlugin");
-                androidPlugin.setAttribute("androidVersion",android);
-                androidPlugin.setAttribute("androidMinVersion",androidMin);
-                androidPlugin.setAttribute("androidUrl",androidUrl);
+                androidPlugin.setAttribute("androidVersion", android);
+                androidPlugin.setAttribute("androidMinVersion", androidMin);
+                androidPlugin.setAttribute("androidUrl", androidUrl);
                 pluginConfigService.update(androidPlugin);
                 break;
             case 1:
                 PluginConfig iosPlugin = pluginConfigService.findByPluginId("iosVersionPlugin");
-                iosPlugin.setAttribute("iosVersion",ios);
-                iosPlugin.setAttribute("iosMinVersion",iosMin);
-                iosPlugin.setAttribute("iosUrl",iosUrl);
+                iosPlugin.setAttribute("iosVersion", ios);
+                iosPlugin.setAttribute("iosMinVersion", iosMin);
+                iosPlugin.setAttribute("iosUrl", iosUrl);
                 pluginConfigService.update(iosPlugin);
                 break;
             case 2:
                 PluginConfig resourcePlugin = pluginConfigService.findByPluginId("resourceVersionPlugin");
-                resourcePlugin.setAttribute("resourceVersion",resource);
-                resourcePlugin.setAttribute("resourceUrl",resourceUrl);
+                resourcePlugin.setAttribute("resourceVersion", resource);
+                resourcePlugin.setAttribute("resourceUrl", resourceUrl);
                 pluginConfigService.update(resourcePlugin);
+                break;
+            case 3:
+                PluginConfig threePlugin = pluginConfigService.findByPluginId("threePlugin");
+                threePlugin.setAttribute("codeVersion", codeVersion);
+                threePlugin.setAttribute("templateId", templateId);
+                pluginConfigService.update(threePlugin);
                 break;
             default:
                 return Message.error("修改失败");

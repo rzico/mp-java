@@ -92,6 +92,22 @@
         </div>
     </div>
 [/#if]
+[#if codeVersion??]
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">第三方版本：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            <input id="resource" name="resource" type="text" class="input-text" value="${codeVersion}" placeholder="">
+        </div>
+    </div>
+[/#if]
+[#if templateId??]
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">第三方模板ID：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            <input id="resourceUrl" name="resourceUrl" type="text" class="input-text" value="${templateId}" placeholder="">
+        </div>
+    </div>
+[/#if]
     <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"></label>
         <div class="formControls col-xs-8 col-sm-9">

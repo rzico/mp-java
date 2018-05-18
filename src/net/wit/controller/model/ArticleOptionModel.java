@@ -9,9 +9,9 @@ import java.io.Serializable;
 public class ArticleOptionModel extends BaseModel implements Serializable {
 
     private Long id;
-    /** 是否投稿 */
+    /** 是否投稿    2018-05-18 改成是否发布 */
     private Boolean isPublish;
-    /** 是否精选 */
+    /** 是否精选  2018-05-18 改成是否投稿 */
     private Boolean isPitch;
     /** 是否评论 */
     private Boolean isReview;

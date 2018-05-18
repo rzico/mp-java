@@ -260,8 +260,9 @@ public class ArticleController extends BaseController {
             article.setIsReward(articleOptions.getIsReward());
             article.setIsTop(articleOptions.getIsTop());
             article.setIsReview(articleOptions.getIsReview());
-            article.setIsPublish(articleOptions.getIsPublish());
+            article.setIsPublish(true);
             article.setAuthority(articleOptions.getAuthority());
+            article.setIsPitch(articleOptions.getIsPitch());
             if (articleOptions.getPassword()!=null) {
                 article.setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
             }

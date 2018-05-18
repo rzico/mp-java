@@ -239,9 +239,9 @@ public class WeixinApi {
      *
      * @param authToken 第三方平台获取到的该小程序授权的authorizer_access_token
      * @param testpath  临时文件存放位置
-     * @return 返回  404,500二维码获取失败，成功返回图片地址
+     * @return 返回  null二维码获取失败，成功返回图片MultipartFile
      */
-    public static String getQccode(String authToken) throws IOException {
+    public static MultipartFile getQccode(String authToken) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(GETQRCODE.replace("AUTH_TOKEN", authToken));
         RequestConfig config = RequestConfig.custom().setConnectTimeout(1000)
@@ -258,7 +258,7 @@ public class WeixinApi {
                 entity = response.getEntity();
             }
             if (entity == null) {
-                return "404";
+                return null;
             }
             Header contentHeader = response.getFirstHeader("Content-Disposition");
             String filename = null;
@@ -271,6 +271,7 @@ public class WeixinApi {
                             filename = param.getValue();
                         } catch (Exception e) {
                             e.printStackTrace();
+							log.error("文件名获取失败", e);
                         }
                     }
                 }
@@ -280,22 +281,22 @@ public class WeixinApi {
 //            entity.writeTo(out);
 //            FileInputStream fileInputStream=(FileInputStream) entity.getContent();
             MultipartFile multi = new MockMultipartFile(filename, entity.getContent());
-            PluginService pluginService=new PluginServiceImpl();
-            StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            String folder1 = sdf.format(System.currentTimeMillis());
-            String name = String.valueOf(System.currentTimeMillis() * 1000000 + (int) ((Math.random() * 9 + 1) * 100000));
-            String uppath = "/upload/image/" + folder1 + "/" + name + ".jpg";
-            ossPlugin.upload(uppath, multi, ossPlugin.getMineType(".jpg"));
-            String string=ossPlugin.getUrl(uppath);
-            return string;
+//            PluginService pluginService=new PluginServiceImpl();
+//            StoragePlugin ossPlugin = pluginService.getStoragePlugin("ossPlugin");
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//            String folder1 = sdf.format(System.currentTimeMillis());
+//            String name = String.valueOf(System.currentTimeMillis() * 1000000 + (int) ((Math.random() * 9 + 1) * 100000));
+//            String uppath = "/upload/image/" + folder1 + "/" + name + ".jpg";
+//            ossPlugin.upload(uppath, multi, ossPlugin.getMineType(".jpg"));
+//            String string=ossPlugin.getUrl(uppath);
+            return multi;
         } catch (IOException e) {
             e.printStackTrace();
             log.error("文件上传失败", e);
         } finally {
             response.close();
         }
-        return "500";
+        return null;
     }
 
     /**

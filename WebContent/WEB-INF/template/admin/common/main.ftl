@@ -65,6 +65,7 @@
                             <li><a href="javascript:;" onClick="show('安卓版本设置','${base}/admin/settings/index.jhtml?type=0','400','600')">安卓版本</a></li>
                             <li><a href="javascript:;" onClick="show('苹果版本设置','${base}/admin/settings/index.jhtml?type=1','400','600')">苹果版本</a></li>
                             <li><a href="javascript:;" onClick="show('服务器版本设置','${base}/admin/settings/index.jhtml?type=2','400','600')">服务器版本</a></li>
+                            <li><a href="javascript:;" onClick="show('第三方版本设置','${base}/admin/settings/index.jhtml?type=3','400','600')">第三方设置</a></li>
                         </ul>
                     </li>
                     <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
