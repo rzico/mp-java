@@ -241,7 +241,7 @@ public class WeixinApi {
      * @param testpath  临时文件存放位置
      * @return 返回  404,500二维码获取失败，成功返回图片地址
      */
-    public static String getQccode(String authToken, String testpath) throws IOException {
+    public static String getQccode(String authToken) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(GETQRCODE.replace("AUTH_TOKEN", authToken));
         RequestConfig config = RequestConfig.custom().setConnectTimeout(1000)
