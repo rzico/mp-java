@@ -826,6 +826,7 @@ title	小程序页面的标题,标题长度不超过32*/
                 "\"authorizer_refresh_token\":\"" + rfresh_token + "\"," +
                 "}";
         JSONObject jsonObject=WeixinApi.httpRequest(REFRESHAUTHTOKEN.replace("COMPONENT_TOKEN",componentToken),"POST", params);
+        System.out.println("getRefreshAuthorizationCode + " + jsonObject.toString());
         AuthAccessToken authAccessToken = null;
         if(jsonObject != null){
             authAccessToken = new AuthAccessToken();
