@@ -1,8 +1,10 @@
 package net.wit.controller.model;
 import net.wit.entity.Member;
 import net.wit.entity.Message;
+import org.apache.commons.net.util.Base64;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -127,11 +129,11 @@ public class MessageModel extends BaseModel implements Serializable {
         }
         this.createDate = message.getCreateDate();
         this.type = message.getType();
-//        if (message.getExt()==null) {
+        if (message.getExt()==null) {
             this.ext = "";
-//        } else {
-//            this.ext = message.getExt();
-//        }
+        } else {
+            this.ext = Base64.encodeBase64String(message.getExt().getBytes());
+        }
      }
 
     public static List<MessageModel> bindList(List<net.wit.entity.Message> messages) {
