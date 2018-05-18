@@ -224,30 +224,30 @@ public class EnterpriseController extends BaseController {
             enterprise.setImage2(img[i]);
             i++;
         }else{
-            enterprise.setImage1(null);
+            enterprise.setImage2(null);
         }
         if(i<size){
             enterprise.setImage3(img[i]);
             i++;
         }else{
-            enterprise.setImage1(null);
+            enterprise.setImage3(null);
         }
         if(i<size){
             enterprise.setImage4(img[i]);
             i++;
         }else{
-            enterprise.setImage1(null);
+            enterprise.setImage4(null);
         }
         if(i<size){
             enterprise.setImage5(img[i]);
             i++;
         }else{
-            enterprise.setImage1(null);
+            enterprise.setImage5(null);
         }
         if(i<size){
             enterprise.setImage6(img[i]);
         }else{
-            enterprise.setImage1(null);
+            enterprise.setImage6(null);
         }
         enterprise.setAutograph(autogragh);
         enterpriseService.update(enterprise);
