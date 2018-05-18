@@ -165,7 +165,7 @@ public class ArticleController extends BaseController {
 
 		entity.setLaud(0L);
 
-		entity.setMediaType(Article.MediaType.html);
+		entity.setMediaType(Article.ArticleType.html);
 
 		entity.setMusic(article.getMusic());
 
@@ -283,7 +283,7 @@ public class ArticleController extends BaseController {
 
 		entity.setAuthor(article.getAuthor());
 
-		if (entity.getMediaType().equals(Article.MediaType.html)) {
+		if (entity.getMediaType().equals(Article.ArticleType.html)) {
 			entity.setContent(article.getContent());
 		}
 

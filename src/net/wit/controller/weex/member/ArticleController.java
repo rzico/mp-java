@@ -171,7 +171,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(String body,Long goodsId, HttpServletRequest request) {
+    public Message submit(String body,Long goodsId,Article.ArticleType articleType, HttpServletRequest request) {
 
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -191,7 +191,11 @@ public class ArticleController extends BaseController {
             return Message.error("无效数据包");
         }
 
+        if (articleType==null) {
+            articleType = Article.ArticleType.article;
+        }
         Long id = model.getId();
+
         String title = model.getTitle();
         String author = member.getNickName();
         String thumbnail = model.getThumbnail();
@@ -203,11 +207,33 @@ public class ArticleController extends BaseController {
         if (model.getTemplates()!=null) {
             content = JsonUtils.toJson(model.getTemplates());
         }
-        if (goodsId==null) {
-            for (ArticleContentModel acm : model.getTemplates()) {
-                if (acm.getMediaType().equals(Article.MediaType.product)) {
-                    goodsId = acm.getId();
+
+        Goods goods = null;
+        if (articleType.equals(Article.ArticleType.product)) {
+
+            if (goodsId == null) {
+                for (ArticleContentModel acm : model.getTemplates()) {
+                    if (acm.getMediaType().equals(Article.MediaType.product)) {
+                        goodsId = acm.getId();
+                    }
                 }
+            }
+
+            if (goodsId==null) {
+                return Message.error("关联商品已下架");
+            }
+
+            goods = goodsService.find(goodsId);
+
+            List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new Filter("goods", Filter.Operator.eq,goods));
+            filters.add(new Filter("mediaType", Filter.Operator.eq, Article.ArticleType.product));
+            filters.add(new Filter("deleted", Filter.Operator.eq,false));
+            List<Article> art = articleService.findList(null,null,filters,null);
+            if (art.size()>0) {
+                id = art.get(0).getId();
+            } else {
+                id = null;
             }
         }
 
@@ -220,7 +246,7 @@ public class ArticleController extends BaseController {
         Article article = null;
         Boolean isNew = false;
         if (id!=null) {
-            article = articleService.find(model.getId());
+            article = articleService.find(id);
         }
         if (article==null) {
             isNew = true;
@@ -249,26 +275,16 @@ public class ArticleController extends BaseController {
         article.setMusic(music);
         article.setContent(content);
         article.setVotes(votes);
-        article.setMediaType(Article.MediaType.image);
+        article.setGoods(goods);
 
         if (isNew) {
-            if (goodsId!=null) {
-                article.setGoods(goodsService.find(goodsId));
-            }
             articleService.save(article);
         } else {
-            if (article.getGoods()==null) {
-                if (goodsId!=null) {
-                    article.setGoods(goodsService.find(goodsId));
-                }
-            }
             articleService.update(article);
         }
 
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
-
-        System.out.println(JsonUtils.toJson(entityModel));
         return Message.success(entityModel,"保存成功");
 
     }
@@ -356,6 +372,18 @@ public class ArticleController extends BaseController {
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
         return Message.success(entityModel,"保存成功");
+    }
+
+    /**
+     * 标签
+     */
+    @RequestMapping(value = "/tag", method = RequestMethod.POST)
+    public @ResponseBody
+    Message view(Long id,Long [] tagIds,HttpServletRequest request) {
+        Article article = articleService.find(id);
+        article.setTags(tagService.findList(tagIds));
+        articleService.update(article);
+        return Message.success("success");
     }
 
     /**

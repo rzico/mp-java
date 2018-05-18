@@ -45,8 +45,8 @@ public class Article extends BaseEntity{
 
 
     public static enum MediaType{
-        /**   */
-        html,
+        /** 文本 */
+        text,
         /** 图文 */
         image,
         /** 音频 */
@@ -57,12 +57,24 @@ public class Article extends BaseEntity{
         product,
         /** 链接 */
         href
-        };
+    };
+
+
+    public static enum ArticleType{
+        /** 系统公告  */
+        html,
+        /** 用户图文 */
+        article,
+        /** 商品详情 */
+        product,
+        /** 圈子论评 */
+        circle
+    };
 
     /** 类型 */
     @NotNull
-    @Column(columnDefinition="int(11) comment '类型 {image:图文,audio:音频,video:视频}'")
-    private MediaType mediaType;
+    @Column(columnDefinition="int(11) comment '类型 {html:系统公告,article:用户图文,product:商品详情,circle:圈子论评}'")
+    private ArticleType mediaType;
 
     /** 作者 */
     @Length(max = 200)
@@ -394,11 +406,11 @@ public class Article extends BaseEntity{
         this.tags = tags;
     }
 
-    public MediaType getMediaType() {
+    public ArticleType getMediaType() {
         return mediaType;
     }
 
-    public void setMediaType(MediaType mediaType) {
+    public void setMediaType(ArticleType mediaType) {
         this.mediaType = mediaType;
     }
 
