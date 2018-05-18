@@ -250,7 +250,7 @@ public class ArticleController extends BaseController {
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
-//
+
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
