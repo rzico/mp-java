@@ -347,6 +347,7 @@ public class Article extends BaseEntity{
     }
 
 
+
     public Long getHits() {
         return hits;
     }
