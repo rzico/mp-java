@@ -320,8 +320,8 @@ public class SmallRangeController extends BaseController {
         if ((token = getAuthToken(topic)) != null) {
             WeiXinCallBack weiXinCallBack = WeixinApi.unpushCode(token);
             boolean b;
-            if (weiXinCallBack == null || WeixinApi.unpushCode(token).getErrcode() == null) b = false;
-            b = WeixinApi.unpushCode(token).getErrcode().equals("0");
+            if (weiXinCallBack == null || weiXinCallBack.getErrcode() == null) return Message.error("撤回失败");
+            b = weiXinCallBack.getErrcode().equals("0");
             if (b) {
                 return Message.success("撤回成功");
             } else {

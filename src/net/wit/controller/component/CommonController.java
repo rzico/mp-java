@@ -169,13 +169,13 @@ public class CommonController extends BaseController {
                         topicService.update(topic);
                         System.out.println("commitAppletCode===============================" + commit);
                         if(commit){
+                            topicConfig.setVersion(codeVersion);
+                            topic.setConfig(topicConfig);
+                            topicService.update(topic);
                             String shenheID = WeixinApi.pushAppletCode(authToken);
                             System.out.println("pushAppletCode===============================" + shenheID);
                             if(!shenheID.equalsIgnoreCase("")){
                                 topicConfig.setEstate(TopicConfig.Estate.AUDITING);
-                                topicConfig.setVersion(codeVersion);
-                                topicConfig.setRefreshToken("");
-                                topicConfig.setQrcodePath("");
                                 topic.setConfig(topicConfig);
                                 topicService.update(topic);
                             }

@@ -755,7 +755,7 @@ title	小程序页面的标题,标题长度不超过32*/
 				"]" +
 				"}," +
 				"\\\"networkTimeout\\\": {" +
-				"\\\"request\\\": 10000," +
+				"\\\"request\\\": 15000," +
 				"\\\"downloadFile\\\": 10000" +
 				"}" +
 				"}";
@@ -826,6 +826,7 @@ title	小程序页面的标题,标题长度不超过32*/
                 "\"authorizer_refresh_token\":\"" + rfresh_token + "\"," +
                 "}";
         JSONObject jsonObject=WeixinApi.httpRequest(REFRESHAUTHTOKEN.replace("COMPONENT_TOKEN",componentToken),"POST", params);
+        System.out.println("getRefreshAuthorizationCode + " + jsonObject.toString());
         AuthAccessToken authAccessToken = null;
         if(jsonObject != null){
             authAccessToken = new AuthAccessToken();
