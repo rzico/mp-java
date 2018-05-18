@@ -16,15 +16,10 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.wit.controller.model.AppletCodeConfig;
-import net.wit.entity.TopicConfig;
-import net.wit.entity.VerifyTicket;
 import net.wit.entity.weixin.Category;
 import net.wit.entity.weixin.Domain;
 import net.wit.entity.weixin.WeiXinCallBack;
 import net.wit.plat.weixin.pojo.*;
-import net.wit.plugin.StoragePlugin;
-import net.wit.service.PluginService;
-import net.wit.service.impl.PluginServiceImpl;
 import net.wit.util.DateUtil;
 
 import org.apache.http.Header;
@@ -161,6 +156,9 @@ public class WeixinApi {
 
 	//获取授权小程序帐号的可选类目
 	public static final String GETCATEGORY = "https://api.weixin.qq.com/wxa/get_category?access_token=AUTH_TOKEN";
+
+	//小程序审核撤回
+	public static final String UNPUSHCODE = "https://api.weixin.qq.com/wxa/undocodeaudit?access_token=AUTH_TOKEN";
 	/**
 	 * 发起https请求并获取结果
 	 * @param requestUrl 请求地址
@@ -299,8 +297,26 @@ public class WeixinApi {
         return null;
     }
 
-    /**
-     * 获取小程序审核状态
+
+	/**
+	 * UNPUSHCODE
+	 * 小程序审核撤回
+	 * 单个帐号每天审核撤回次数最多不超过1次，一个月不超过10次。
+	 */
+
+	public static WeiXinCallBack unpushCode(String authToken){
+		JSONObject jsonObject = httpRequest(UNPUSHCODE.replace("AUTH_TOKEN", authToken), "GET", null);
+			WeiXinCallBack weiXinCallBack = null;
+			if(jsonObject != null) {
+				weiXinCallBack = new WeiXinCallBack();
+				weiXinCallBack.setErrmsg(jsonObject.getString("errmsg"));
+				weiXinCallBack.setErrcode(jsonObject.getString("errcode"));
+			}
+			return weiXinCallBack;
+	}
+
+	/**
+	 * 获取小程序审核状态
      *
      * @param authToken 第三方平台获取到的该小程序授权的authorizer_access_token
      * @return 返回小程序最新提交结果 0 审核通过 2 审核中 1审核失败，当审核失败时返回失败具体原因
@@ -844,7 +860,7 @@ title	小程序页面的标题,标题长度不超过32*/
 
 		String string="{\"component_appid\":\""+authAppId+"\" ,\"authorization_code\": \""+ authCode +"\"}";
 		JSONObject jsonObject=WeixinApi.httpRequest(CODEANDTOKEN.replace("COMPONENT_TOKEN",componentToken),"POST",string);
-		System.out.println("换取的令牌:"+jsonObject);
+//		System.out.println("换取的令牌:"+jsonObject);
 		if(jsonObject != null){
 			JSONObject info = jsonObject.getJSONObject("authorization_info");
 			AuthAccessToken authAccessToken = null;

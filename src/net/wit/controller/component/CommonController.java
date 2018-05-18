@@ -108,7 +108,7 @@ public class CommonController extends BaseController {
                     //设置小程序
                     System.out.println("TopicAppetAppid == null ===============================");
                     TopicConfig topicConfig = topic.getConfig();
-                    if(topicConfig.getAppetAppId() != null || !topicConfig.getAppetAppId().equalsIgnoreCase("")){
+                    if(topicConfig.getAppetAppId() != null && !topicConfig.getAppetAppId().equals("")){
                         return "redirect:http://" + serverUrl + "/#/agreeError";
                     }
 
@@ -160,8 +160,9 @@ public class CommonController extends BaseController {
                         appletCodeConfig.setAppid(topicConfig.getAppetAppId());
                         appletCodeConfig.setName(topic.getName());
                         //上传代码
-                        String codeVersion = "v1.0.0";
-                        String templateId = "2";
+                        PluginConfig threePlugin = pluginConfigService.findByPluginId("threePlugin");
+                        String codeVersion = threePlugin.getAttribute("codeVersion");
+                        String templateId = threePlugin.getAttribute("templateId");
                         boolean commit = WeixinApi.commitAppletCode(authToken, templateId, codeVersion, enterprise.getAutograph(), appletCodeConfig);
                         System.out.println("commitAppletCode===============================" + commit);
                         if(commit){

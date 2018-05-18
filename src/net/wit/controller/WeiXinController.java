@@ -535,17 +535,24 @@ public class WeiXinController extends BaseController {
                 System.out.println("=================================：updateauthorized");
 
             } else if (infoType.equalsIgnoreCase("unauthorized")) {//取消授权通知
-                System.out.println("=================================：unauthorized");
+                System.out.println("=================================：unauthorizedAuthorizerAppid" + AuthorizerAppid);
                 Topic topic = topicService.findByAppid(AuthorizerAppid);
+                System.out.println("=================================：topic" + (topic == null? "null" : "nonull"));
                 if(topic!=null){
                     TopicConfig topicConfig = topic.getConfig();
+                    System.out.println("=================================：topicConfig" + (topicConfig == null? "null" : "nonull"));
                     if(topicConfig!=null){
-                        topicConfig.setAppetAppId("");
+                        topicConfig.setAppetAppId(null);
                         topicConfig.setVersion("");
                         topicConfig.setStateRemark("");
+                        topicConfig.setQrcodePath("");
+                        topicConfig.setRefreshToken("");
+                        topicConfig.setUserName("");
                         topicConfig.setEstate(TopicConfig.Estate.UNAUTHORIZED);
                         topic.setConfig(topicConfig);
                         topicService.update(topic);
+
+                        System.out.println("=================================：setsuccess");
                     }
                 }
 
