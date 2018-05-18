@@ -208,35 +208,6 @@ public class ArticleController extends BaseController {
             content = JsonUtils.toJson(model.getTemplates());
         }
 
-        Goods goods = null;
-        if (articleType.equals(Article.ArticleType.product)) {
-
-            if (goodsId == null) {
-                for (ArticleContentModel acm : model.getTemplates()) {
-                    if (acm.getMediaType().equals(Article.MediaType.product)) {
-                        goodsId = acm.getId();
-                    }
-                }
-            }
-
-            if (goodsId==null) {
-                return Message.error("关联商品已下架");
-            }
-
-            goods = goodsService.find(goodsId);
-
-            List<Filter> filters = new ArrayList<Filter>();
-            filters.add(new Filter("goods", Filter.Operator.eq,goods));
-            filters.add(new Filter("mediaType", Filter.Operator.eq, Article.ArticleType.product));
-            filters.add(new Filter("deleted", Filter.Operator.eq,false));
-            List<Article> art = articleService.findList(null,null,filters,null);
-            if (art.size()>0) {
-                id = art.get(0).getId();
-            } else {
-                id = null;
-            }
-        }
-
         Boolean isDraft = model.getIsDraft();
 
         String votes = null;
@@ -266,7 +237,15 @@ public class ArticleController extends BaseController {
             article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
             article.setMember(member);
+            article.setMediaType(articleType);
+
+            Goods goods = null;
+            if (articleType.equals(Article.ArticleType.product)) {
+                goods = goodsService.find(goodsId);
+                article.setGoods(goods);
+            }
         }
+
         article.setIsDraft(isDraft);
         article.setIsAudit(false);
         article.setTitle(title);
@@ -275,7 +254,6 @@ public class ArticleController extends BaseController {
         article.setMusic(music);
         article.setContent(content);
         article.setVotes(votes);
-        article.setGoods(goods);
 
         if (isNew) {
             articleService.save(article);
