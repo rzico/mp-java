@@ -243,6 +243,12 @@
                         if(data.estate=="PASS"){
                             return "已发布";
                         }
+                        if(data.estate=="UNAUDITING"){
+                            return "审核不通过";
+                        }
+                        if(data.estate=="ISCOMMIT"){
+                            return "已提交代码";
+                        }
                         return "";
                     }
                 },
