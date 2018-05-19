@@ -85,7 +85,7 @@ public class LoginController extends BaseController {
 
             String sessionKey = result.get("session_key").toString();
             String openId = result.get("openid").toString();
-            String unionId = null;
+            String unionId = "#";
             if (result.containsKey("unionid")) {
                 unionId = result.get("unionid").toString();
             }
