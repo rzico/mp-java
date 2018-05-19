@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * Controller - 商品
@@ -70,6 +72,10 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
 	Message list(Long authorId,Long productCategoryId,Long tagId ,Pageable pageable,HttpServletRequest request) {
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		if (authorId==null) {
+			authorId = Long.parseLong(bundle.getString("platform"));
+		}
 		Member member = memberService.find(authorId);
 		if (member==null) {
 			return Message.error("作者id无效");

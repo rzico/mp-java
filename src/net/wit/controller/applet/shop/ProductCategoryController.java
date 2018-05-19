@@ -16,6 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 
 /**
@@ -52,8 +54,14 @@ public class ProductCategoryController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Long authorId,HttpServletRequest request){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (authorId==null) {
+            authorId = Long.parseLong(bundle.getString("platform"));
+        }
         Member member = memberService.find(authorId);
         if (member==null) {
+
+
             return Message.error("作者id无效");
         }
         List<Filter> filters = new ArrayList<>();
