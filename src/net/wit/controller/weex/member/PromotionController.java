@@ -1,9 +1,10 @@
 package net.wit.controller.weex.member;
 
-import net.wit.Filter;
+import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.DistributionModel;
+import net.wit.controller.model.GoodsListModel;
 import net.wit.controller.model.PromotionListModel;
 import net.wit.controller.model.PromotionModel;
 import net.wit.entity.*;
@@ -77,7 +78,7 @@ public class PromotionController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long goodsId,HttpServletRequest request){
+    public Message list(Long goodsId, Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -89,9 +90,11 @@ public class PromotionController extends BaseController {
         }
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("goods", Filter.Operator.eq,goods));
-        List<Promotion> promotions = promotionService.findList(null,null,filters,null);
+        Page<Promotion> page = promotionService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(PromotionListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
 
-        return Message.bind(PromotionListModel.bindList(promotions),request);
     }
 
     /**
