@@ -170,7 +170,7 @@ public class SmallRangeController extends BaseController {
         model.addAttribute("id", topic.getId());
         model.addAttribute("appID", topic.getConfig().getAppetAppId());
         model.addAttribute("version", topic.getConfig().getVersion());
-        if (!validate(topic, TopicConfig.Estate.AUDITING)) {
+        if (validate(topic, TopicConfig.Estate.UNAUTHORIZED) || (validate(topic, TopicConfig.Estate.AUTHORIZED))){
             return "/admin/smallRange/view/qcCodeView";
         }
         String token;
