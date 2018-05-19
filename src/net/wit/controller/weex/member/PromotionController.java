@@ -117,6 +117,7 @@ public class PromotionController extends BaseController {
         Product product = productService.find(giftId);
 
         Promotion promotion = new Promotion();
+        promotion.setType(type);
         promotion.setDeleted(false);
         promotion.setGift(product);
         promotion.setGoods(goods);
@@ -155,6 +156,7 @@ public class PromotionController extends BaseController {
         Product product = productService.find(giftId);
 
         Promotion promotion = promotionService.find(id);
+        promotion.setType(type);
         promotion.setDeleted(false);
         promotion.setGift(product);
         promotion.setGoods(goods);

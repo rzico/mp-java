@@ -496,7 +496,7 @@ public class CardController extends BaseController {
         }
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
-            return Message.error("没有开通");
+            return Message.error("没有开通店铺");
         }
         if (admin.getEnterprise()==null) {
             return Message.error("店铺已打洋,请先启APP");
@@ -519,8 +519,10 @@ public class CardController extends BaseController {
         data.put("name",owner.getTopic().getName());
         data.put("prerogative",owner.getTopic().getTopicCard().getPrerogative());
         data.put("description",owner.getTopic().getTopicCard().getDescription());
-        Long c = 100000000+shop.getId();
-        String qr = "http://"+bundle.getString("weixin.url")+"/q/818801"+"86"+String.valueOf(c)+".jhtml";
+
+
+        Long c = 10200+member.getId();
+        String qr = "http://"+bundle.getString("weixin.url")+"/q/865380"+String.valueOf(c)+".jhtml";
         data.put("qrcode",qr);
         return Message.bind(data,request);
     }

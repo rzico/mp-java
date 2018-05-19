@@ -2,10 +2,7 @@
 package net.wit.controller;
 
 import net.wit.Message;
-import net.wit.entity.Card;
-import net.wit.entity.Payment;
-import net.wit.entity.Shop;
-import net.wit.entity.Topic;
+import net.wit.entity.*;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.ScanUtil;
@@ -40,6 +37,12 @@ public class QrcodeController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "memberServiceImpl")
+    private MemberService memberService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
      /**
       * 生成二维码
       */
@@ -51,7 +54,19 @@ public class QrcodeController extends BaseController {
              if ("865380".equals(cmd)) {
                  String userId = id.substring(6, id.length());
                  Long uid = Long.parseLong(userId) - 10200L;
-                 return "redirect:/#/topic?id=" + uid;
+
+                 Member member = memberService.find(uid);
+                 Admin admin = adminService.findByMember(member);
+                 if (admin!=null && admin.getEnterprise()!=null) {
+                     Topic topic = admin.getEnterprise().getMember().getTopic();
+                     if (topic!=null && topic.getTopicCard()!=null) {
+                         return "redirect:/#/card?code=85" + String.valueOf(100000000 + topic.getTopicCard().getId()) + "&xuid=" + String.valueOf(uid);
+                     } else {
+                         return "redirect:/#/topic?id=" + uid;
+                     }
+                 } else {
+                    return "redirect:/#/topic?id=" + uid;
+                 }
              } else
              /**
               * 会员卡 空卡，跑转领卡界面,会员卡界面判断跳转  会号规则 88100006165001042 实体卡  86100006165 商家码
@@ -101,7 +116,19 @@ public class QrcodeController extends BaseController {
 //
         String c = data.get("code");
         if (data.get("type").toString().equals("865380")) {
-            data.put("id", String.valueOf(Long.parseLong(c.substring(6)) - 10200));
+            Long id = Long.parseLong(c.substring(6)) - 10200;
+            data.put("id", String.valueOf(id));
+            Member member = memberService.find(id);
+            if (member==null) {
+                return Message.error("无效名片");
+            }
+            Admin admin = adminService.findByMember(member);
+            if (admin!=null && admin.getEnterprise()!=null) {
+                data.put("tuid", String.valueOf(admin.getEnterprise().getMember().getId()));
+                data.put("shopId",String.valueOf(admin.getShop().getId()));
+            }
+            data.put("xuid", String.valueOf(id));
+
         } else if (data.get("type").toString().equals("818801")) {
             String no = c.substring(6);
             if (no.substring(0, 2).equals("86")) {
