@@ -114,12 +114,12 @@ public class PromotionController extends BaseController {
         if (goods==null) {
             return Message.error("无效商品");
         }
-        Product product = productService.find(giftId);
+        Goods gift = goodsService.find(giftId);
 
         Promotion promotion = new Promotion();
         promotion.setType(type);
         promotion.setDeleted(false);
-        promotion.setGift(product);
+        promotion.setGift(gift.product());
         promotion.setGoods(goods);
         promotion.setGiftQuantity(giftQuantity);
         promotion.setQuantity(quantity);
@@ -153,12 +153,12 @@ public class PromotionController extends BaseController {
         if (goods==null) {
             return Message.error("");
         }
-        Product product = productService.find(giftId);
+        Goods gift = goodsService.find(giftId);
 
         Promotion promotion = promotionService.find(id);
         promotion.setType(type);
         promotion.setDeleted(false);
-        promotion.setGift(product);
+        promotion.setGift(gift.product());
         promotion.setGoods(goods);
         promotion.setGiftQuantity(giftQuantity);
         promotion.setQuantity(quantity);
