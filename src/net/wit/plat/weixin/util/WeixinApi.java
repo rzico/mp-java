@@ -730,25 +730,25 @@ title	小程序页面的标题,标题长度不超过32*/
 				"}," +
 				"\\\"extPages\\\": {}," +
 				"\\\"window\\\": {" +
-				"\\\"navigationBarBackgroundColor\\\": \\\"#99ccff\\\"," +
+				"\\\"navigationBarBackgroundColor\\\": \\\"#333333\\\"," +
 				"\\\"navigationBarTitleText\\\": \\\"" + appletCodeConfig.getName() + "\\\"," +
 				"\\\"navigationBarTextStyle\\\": \\\"white\\\"," +
-				"\\\"backgroundTextStyle\\\": \\\"dark\\\"" +
+				"\\\"backgroundTextStyle\\\": \\\"light\\\"" +
 				"}," +
 				"\\\"tabBar\\\": {" +
-				"\\\"color\\\": \\\"#333333\\\"," +
-				"\\\"selectedColor\\\": \\\"#99ccff\\\"," +
+				"\\\"color\\\": \\\"#999999\\\"," +
+				"\\\"selectedColor\\\": \\\"#333333\\\"," +
 				"\\\"borderStyle\\\": \\\"#ccc\\\"," +
 				"\\\"list\\\": [" +
 				"{" +
-				"\\\"selectedIconPath\\\": \\\"images/home-fill.png\\\"," +
-				"\\\"iconPath\\\": \\\"images/home.png\\\"," +
+				"\\\"selectedIconPath\\\": \\\"images/home-fill-three.png\\\"," +
+				"\\\"iconPath\\\": \\\"images/home-nine.png\\\"," +
 				"\\\"pagePath\\\": \\\"pages/index/index\\\"," +
 				"\\\"text\\\": \\\"首页\\\"" +
 				"}," +
 				"{" +
-				"\\\"selectedIconPath\\\": \\\"images/call-fill.png\\\"," +
-				"\\\"iconPath\\\": \\\"images/call.png\\\"," +
+				"\\\"selectedIconPath\\\": \\\"images/call-fill-three.png\\\"," +
+				"\\\"iconPath\\\": \\\"images/call-nine.png\\\"," +
 				"\\\"pagePath\\\": \\\"pages/contact/contact\\\"," +
 				"\\\"text\\\": \\\"联系我们\\\"" +
 				"}" +

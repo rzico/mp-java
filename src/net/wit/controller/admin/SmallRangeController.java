@@ -323,6 +323,10 @@ public class SmallRangeController extends BaseController {
             if (weiXinCallBack == null || weiXinCallBack.getErrcode() == null) return Message.error("撤回失败");
             b = weiXinCallBack.getErrcode().equals("0");
             if (b) {
+                TopicConfig config = topic.getConfig();
+                config.setEstate(TopicConfig.Estate.ISCOMMIT);
+                topic.setConfig(config);
+                topicService.update(topic);
                 return Message.success("撤回成功");
             } else {
                 return Message.error("撤回失败");
