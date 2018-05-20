@@ -8,6 +8,7 @@ import net.wit.util.JsonUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //文章列表图
@@ -17,6 +18,11 @@ public class EvaluationModel extends BaseModel implements Serializable {
     private Long id;
     private String result;
     private String jsonResult;
+    private String nickName;
+    private String logo;
+    private Date createDate;
+    private String title;
+    private String subTitle;
 //    /**  结果 */
 //    private List<EvaluationResultModel> result;
 //
@@ -44,6 +50,46 @@ public class EvaluationModel extends BaseModel implements Serializable {
         this.jsonResult = jsonResult;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
     //    public List<EvaluationResultModel> getResult() {
 //        return result;
 //    }
@@ -56,6 +102,13 @@ public class EvaluationModel extends BaseModel implements Serializable {
         this.id = evaluation.getId();
         this.result = evaluation.getResult();
         this.jsonResult = evaluation.getJsonResult();
+
+        this.title = evaluation.getTitle();
+        this.subTitle = evaluation.getSubTitle();
+        this.createDate = evaluation.getCreateDate();
+        this.nickName = evaluation.getMember().displayName();
+        this.nickName = evaluation.getMember().getLogo();
+
 //
 //        List<EvaluationResultModel> templates = new ArrayList<EvaluationResultModel>();
 //        if (evaluation.getResult()!=null) {

@@ -269,8 +269,8 @@
                         "aTargets": [10],
                         "mRender": function (data, display, row) {
                             if(data != null){
-                                return "<a title='分类' href='javascript:;' data-title='代理商分类' data-href='../ agentCategory/index.jhtml?enterpriseId=" + data + "' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>分类</i></a>" +
-                                        "<a title='量表' href='javascript:;' data-title='代理商量表' data-href='../ agentGauge/index.jhtml?enterpriseId=" + data + "' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>量表</i></a>";
+                                return "<a title='分类' href='javascript:;' onclick=\"agentCategory('首页 &gt; 合作伙伴 &gt; 分类','" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>分类</i></a>" +
+                                        "<a title='量表' href='javascript:;' onclick=\"agentGauge('首页 &gt; 合作伙伴 &gt; 量表','" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>量表</i></a>";
                             }else{
                                 return "";
                             }
@@ -346,6 +346,7 @@
     function search(){
         table.ajax.reload();
     }
+
     /*添加*/
     function add(title, url, w, h) {
         var index = layer.open({
@@ -355,6 +356,27 @@
         });
         layer.full(index);
     }
+
+    /* 量表分类*/
+    function agentCategory(title,  id) {
+        var index = layer.open({
+            type:2,
+            title:title,
+            content:"../agentCategory/index.jhtml?enterpriseId="+id
+        });
+        layer.full(index);
+    }
+
+    /* 量表分类*/
+    function agentGauge(title, id) {
+        var index = layer.open({
+            type:2,
+            title:title,
+            content:"../agentGauge/index.jhtml?enterpriseId="+id
+        });
+        layer.full(index);
+    }
+
     /*查看*/
     function show(title, url, id, w, h) {
         layer_show(title, url, w, h);

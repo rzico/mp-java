@@ -9,8 +9,10 @@ import java.io.Serializable;
 
 public class ResultModel extends BaseModel implements Serializable {
 
+    private String title;
     private GaugeResult.Type type;
     private GaugeResult.ChartType chartType;
+
 
     /**  结果 */
     private String result;
@@ -39,5 +41,11 @@ public class ResultModel extends BaseModel implements Serializable {
         this.chartType = chartType;
     }
 
-    
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

@@ -441,6 +441,7 @@ public class GeneCalculator implements Serializable {
                     ResultModel m = new ResultModel();
                     m.setChartType(r.getChartType());
                     m.setType(r.getType());
+                    m.setTitle(r.getTitle());
                     String text = r.getContent();
                     String expr = FreemarkerUtils.process(text,model);
                     m.setResult(Base64.encodeBase64String(expr.getBytes()));

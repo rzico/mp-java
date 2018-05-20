@@ -204,6 +204,10 @@ public class GaugeModel extends BaseModel implements Serializable {
         this.content = gauge.getContent();
         this.revisionNote = gauge.getRevisionNote();
         this.notice = gauge.getNotice();
+        this.notice1 = gauge.getNotice1();
+        this.notice2 = gauge.getNotice2();
+        this.notice3 = gauge.getNotice3();
+        this.notice4 = gauge.getNotice4();
         this.spots = new ArrayList<>();
         this.spots.addAll(gauge.getSpots());
     }
