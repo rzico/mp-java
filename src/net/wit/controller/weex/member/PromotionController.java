@@ -90,6 +90,7 @@ public class PromotionController extends BaseController {
         }
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("goods", Filter.Operator.eq,goods));
+        pageable.setFilters(filters);
         Page<Promotion> page = promotionService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(PromotionListModel.bindList(page.getContent()));

@@ -124,8 +124,7 @@ public class QrcodeController extends BaseController {
             }
             Admin admin = adminService.findByMember(member);
             if (admin!=null && admin.getEnterprise()!=null) {
-                data.put("tuid", String.valueOf(admin.getEnterprise().getMember().getId()));
-                data.put("shopId",String.valueOf(admin.getShop().getId()));
+                data.put("tuid", String.valueOf(admin.getEnterprise().getMember().getId())); 
             }
             data.put("xuid", String.valueOf(id));
 
