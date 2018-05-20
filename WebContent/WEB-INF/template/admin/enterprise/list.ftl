@@ -71,7 +71,7 @@
                 class="Hui-iconfont">&#xe600;</i> 新增企业</a>
         <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
     </span></div>
-    <div class="mt-20">
+    <div class="mt-20 menu-member">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
             <tr class="text-c">
@@ -93,6 +93,8 @@
 <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
+
+
 <script type="text/javascript">
     var table;
     var isSelectAll = false;
@@ -192,23 +194,17 @@
                     "sTitle": "上级",
                     "sClass": "center"
                 },
-            [@adminDirective]
-                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
+
                     {
                         "mData": "id",
                         "sTitle": "管理",
                         "sClass": "center"
-                    }
-                [/#if]
-                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
-                    {
+                    },
+                {
                         "mData": "id",
                         "sTitle": "操作",
                         "sClass": "center"
                     }
-                [/#if]
-            [/@adminDirective]
-
             ],
             "aoColumnDefs": [
                 {
@@ -269,23 +265,20 @@
                         }
                     }
                 },
-            [@adminDirective]
-                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
                         "aTargets": [10],
                         "mRender": function (data, display, row) {
                             if(data != null){
-                                return "<a title='分类' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                        "<a title='量表' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                                return "<a title='分类' href='javascript:;' data-title='代理商分类' data-href='../ agentCategory/index.jhtml?enterpriseId=" + data + "' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>分类</i></a>" +
+                                        "<a title='量表' href='javascript:;' data-title='代理商量表' data-href='../ agentGauge/index.jhtml?enterpriseId=" + data + "' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>量表</i></a>";
                             }else{
                                 return "";
                             }
                         }
 
                     },
-                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [10],
+                        "aTargets": [11],
                         "mRender": function (data, display, row) {
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 合作伙伴 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -296,16 +289,7 @@
                         }
 
                     },
-                [/#if]
-            [/@adminDirective]
-            [@adminDirective]
-                [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
-                    //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 8,9,10]}// 制定列不参与排序
-                [#else]
-                    {"orderable": false, "aTargets": [0, 8,9]}
-                [/#if]
-            [/@adminDirective]
+                    {"orderable": false, "aTargets": [0, 8,9,10,11]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
@@ -360,7 +344,7 @@
 
     /*搜索*/
     function search(){
-     table.ajax.reload();
+        table.ajax.reload();
     }
     /*添加*/
     function add(title, url, w, h) {

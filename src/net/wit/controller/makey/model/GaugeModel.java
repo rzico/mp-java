@@ -32,8 +32,16 @@ public class GaugeModel extends BaseModel implements Serializable {
     /** 常模类型 */
     private Gauge.Type type;
 
-    /** 测评须知 */
+    /** 测评图片 */
     private String notice;
+    /** 测评目的 */
+    private String notice1;
+    /** 测评介绍 */
+    private String notice2;
+    /** 专业支持 */
+    private String notice3;
+    /** 测评须知 */
+    private String notice4;
 
     /** 常模修订说明 */
     private String revisionNote;
@@ -149,6 +157,38 @@ public class GaugeModel extends BaseModel implements Serializable {
 
     public void setType(Gauge.Type type) {
         this.type = type;
+    }
+
+    public String getNotice1() {
+        return notice1;
+    }
+
+    public void setNotice1(String notice1) {
+        this.notice1 = notice1;
+    }
+
+    public String getNotice2() {
+        return notice2;
+    }
+
+    public void setNotice2(String notice2) {
+        this.notice2 = notice2;
+    }
+
+    public String getNotice3() {
+        return notice3;
+    }
+
+    public void setNotice3(String notice3) {
+        this.notice3 = notice3;
+    }
+
+    public String getNotice4() {
+        return notice4;
+    }
+
+    public void setNotice4(String notice4) {
+        this.notice4 = notice4;
     }
 
     public void bind(Gauge gauge) {

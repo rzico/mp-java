@@ -38,7 +38,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
                 <div class="formControls col-xs-8">
-                    <input id="password" name="password" type="password" placeholder="密码" class="input-text size-L">
+                    <input id="password" name="password" type="text" placeholder="密码" class="input-text size-L">
                 </div>
             </div>
             <div class="row cl">
@@ -117,7 +117,8 @@
                     },
                     success: function (data) {
                         var rsaKey = new RSAKey();
-                        rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent));
+                        rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent))
+                        alert($password.val());
                         var enPassword = hex2b64(rsaKey.encrypt($password.val()));
                         $.ajax({
                             url: $loginForm.attr("action"),
