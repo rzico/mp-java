@@ -16,6 +16,7 @@ public class EvaluationModel extends BaseModel implements Serializable {
     
     private Long id;
     private String result;
+    private String jsonResult;
 //    /**  结果 */
 //    private List<EvaluationResultModel> result;
 //
@@ -35,6 +36,14 @@ public class EvaluationModel extends BaseModel implements Serializable {
         this.result = result;
     }
 
+    public String getJsonResult() {
+        return jsonResult;
+    }
+
+    public void setJsonResult(String jsonResult) {
+        this.jsonResult = jsonResult;
+    }
+
     //    public List<EvaluationResultModel> getResult() {
 //        return result;
 //    }
@@ -46,6 +55,7 @@ public class EvaluationModel extends BaseModel implements Serializable {
     public void bind(Evaluation evaluation) {
         this.id = evaluation.getId();
         this.result = evaluation.getResult();
+        this.jsonResult = evaluation.getJsonResult();
 //
 //        List<EvaluationResultModel> templates = new ArrayList<EvaluationResultModel>();
 //        if (evaluation.getResult()!=null) {

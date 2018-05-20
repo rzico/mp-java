@@ -8,6 +8,7 @@ import net.sf.json.JSONObject;
 import net.wit.entity.*;
 import net.wit.util.FreemarkerUtils;
 import net.wit.util.JsonUtils;
+import org.apache.commons.net.util.Base64;
 import org.springframework.ui.ModelMap;
 import org.tuckey.web.filters.urlrewrite.Run;
 
@@ -409,7 +410,6 @@ public class GeneCalculator implements Serializable {
     }
 
     public String getHtml() {
-        System.out.printf(JsonUtils.toJson(this.genes));
         ModelMap model = new ModelMap();
         for (String key : this.genes.keySet()) {
             model.addAttribute(key,this.genes.get(key));
@@ -417,14 +417,40 @@ public class GeneCalculator implements Serializable {
         String s="";
         for (GaugeResult r:this.results) {
             try {
-                String text = r.getContent();
-                String expr = FreemarkerUtils.process(text,model);
-                s = s+expr;
+                if (r.getType().equals(GaugeResult.Type.html)) {
+                    String text = r.getContent();
+                    String expr = FreemarkerUtils.process(text, model);
+                    s = s + expr;
+                }
             } catch (Exception e) {
                 throw new RuntimeException("结果页面出错:id="+r.getId());
             }
         }
         return s;
+    }
+
+    public String getJson() {
+        ModelMap model = new ModelMap();
+        for (String key : this.genes.keySet()) {
+            model.addAttribute(key,this.genes.get(key));
+        }
+        List<ResultModel> data = new ArrayList<>();
+        for (GaugeResult r:this.results) {
+            try {
+                if (!r.getType().equals(GaugeResult.Type.html)) {
+                    ResultModel m = new ResultModel();
+                    m.setChartType(r.getChartType());
+                    m.setType(r.getType());
+                    String text = r.getContent();
+                    String expr = FreemarkerUtils.process(text,model);
+                    m.setResult(Base64.encodeBase64String(expr.getBytes()));
+                    data.add(m);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("结果页面出错:id="+r.getId());
+            }
+        }
+        return JsonUtils.toJson(data);
     }
 
     public String getVars() {

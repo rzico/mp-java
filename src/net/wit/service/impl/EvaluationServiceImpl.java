@@ -138,6 +138,7 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
             }
 			ev.setSeconds(sec);
 			ev.setResult(calculator.getHtml());
+			ev.setJsonResult(calculator.getJson());
 			ev.setEvalvar(calculator.getVars());
         } catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
