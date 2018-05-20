@@ -107,7 +107,7 @@ public class EvaluationModel extends BaseModel implements Serializable {
         this.subTitle = evaluation.getSubTitle();
         this.createDate = evaluation.getCreateDate();
         this.nickName = evaluation.getMember().displayName();
-        this.nickName = evaluation.getMember().getLogo();
+        this.logo = evaluation.getMember().getLogo();
 
 //
 //        List<EvaluationResultModel> templates = new ArrayList<EvaluationResultModel>();
