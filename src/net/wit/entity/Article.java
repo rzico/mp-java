@@ -65,7 +65,11 @@ public class Article extends BaseEntity{
         /** 用户图文 */
         article,
         /** 商品详情 */
-        product
+        product,
+        /** 品牌介绍 */
+        brand,
+        /** 企业动态 */
+        news
     };
 
     /** 类型 */

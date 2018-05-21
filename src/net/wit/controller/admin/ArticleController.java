@@ -100,10 +100,11 @@ public class ArticleController extends BaseController {
 		model.addAttribute("authoritys",authoritys);
 
 		List<MapEntity> mediaTypes = new ArrayList<>();
-		mediaTypes.add(new MapEntity("html","文本"));
-		mediaTypes.add(new MapEntity("image","图文"));
-		mediaTypes.add(new MapEntity("audio","音频"));
-		mediaTypes.add(new MapEntity("video","视频"));
+		mediaTypes.add(new MapEntity("html","系统公告"));
+		mediaTypes.add(new MapEntity("article","用户图文"));
+		mediaTypes.add(new MapEntity("product","商品详情"));
+		mediaTypes.add(new MapEntity("brand","品牌介绍"));
+		mediaTypes.add(new MapEntity("news","企业动态"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
@@ -124,6 +125,16 @@ public class ArticleController extends BaseController {
 		authoritys.add(new MapEntity("isEncrypt","加密"));
 		authoritys.add(new MapEntity("isPrivate","私秘"));
 		model.addAttribute("authoritys",authoritys);
+
+
+		List<MapEntity> mediaTypes = new ArrayList<>();
+		mediaTypes.add(new MapEntity("html","系统公告"));
+		mediaTypes.add(new MapEntity("article","用户图文"));
+		mediaTypes.add(new MapEntity("product","商品详情"));
+		mediaTypes.add(new MapEntity("brand","品牌介绍"));
+		mediaTypes.add(new MapEntity("news","企业动态"));
+		model.addAttribute("mediaTypes",mediaTypes);
+
 //
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
@@ -243,10 +254,11 @@ public class ArticleController extends BaseController {
 		model.addAttribute("authoritys",authoritys);
 
 		List<MapEntity> mediaTypes = new ArrayList<>();
-		mediaTypes.add(new MapEntity("html","文本"));
-		mediaTypes.add(new MapEntity("image","图文"));
-		mediaTypes.add(new MapEntity("audio","音频"));
-		mediaTypes.add(new MapEntity("video","视频"));
+		mediaTypes.add(new MapEntity("html","系统公告"));
+		mediaTypes.add(new MapEntity("article","用户图文"));
+		mediaTypes.add(new MapEntity("product","商品详情"));
+		mediaTypes.add(new MapEntity("brand","品牌介绍"));
+		mediaTypes.add(new MapEntity("news","企业动态"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
