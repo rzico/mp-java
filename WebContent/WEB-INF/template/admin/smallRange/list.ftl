@@ -216,37 +216,47 @@
                 {
                     "aTargets": [4],
                     "mRender": function (data, display, row) {
-                        return "" + data.appetAppId;
+                        if (data.appetAppId == null){
+                            return "暂未绑定";
+                        }
+                        else{
+                            return "" + data.appetAppId;
+                        }
                     }
                 },
                 {
                     "aTargets": [5],
                     "mRender": function (data, display, row) {
-                        return "" + data.version;
+                        if (data.appetAppId == null){
+                            return "暂未上传版本";
+                        }
+                        else{
+                            return "" + data.version;
+                        }
                     }
                 },
                 {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
-                        if(data.estate=="UNAUTHORIZED"){
+                        if (data.estate == "UNAUTHORIZED") {
                             return "未授权";
                         }
-                        if(data.estate=="AUTHORIZED"){
+                        if (data.estate == "AUTHORIZED") {
                             return "已授权";
                         }
-                        if(data.estate=="AUDITING"){
+                        if (data.estate == "AUDITING") {
                             return "正在审核";
                         }
-                        if(data.estate=="ISAUDITING"){
+                        if (data.estate == "ISAUDITING") {
                             return "审核通过";
                         }
-                        if(data.estate=="PASS"){
+                        if (data.estate == "PASS") {
                             return "已发布";
                         }
-                        if(data.estate=="UNAUDITING"){
+                        if (data.estate == "UNAUDITING") {
                             return "审核不通过";
                         }
-                        if(data.estate=="ISCOMMIT"){
+                        if (data.estate == "ISCOMMIT") {
                             return "已提交代码";
                         }
                         return "";
@@ -268,7 +278,7 @@
                     "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if (data != null) {
-                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show('程序上传','upLoadView.jhtml?id="+data+"','400','600');\" name=\"\">上传程序</button>"
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show('程序上传','upLoadView.jhtml?id=" + data + "','400','600');\" name=\"\">上传程序</button>"
                         } else {
                             return "";
                         }
@@ -308,7 +318,7 @@
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if (data != null) {
-                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show('体验二维码','qcCodeView.jhtml?id="+data+"','400','600');\" name=\"\">获取二维码</button>";
+                            return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"show('体验二维码','qcCodeView.jhtml?id=" + data + "','400','600');\" name=\"\">获取二维码</button>";
                         } else {
                             return "";
                         }
@@ -325,7 +335,7 @@
                     }
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7, 8, 9, 10, 11, 12, 13]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
