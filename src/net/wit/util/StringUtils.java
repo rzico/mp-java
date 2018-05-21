@@ -122,7 +122,7 @@ public class StringUtils  {
 		try {
 			String repx = new String(Base64.encodeBase64(binaryData, false, true), "UTF-8");
 
-			String reg = "[^0-9a-zA-Z]";
+			String reg = "[\r\n]";
 			return repx.replaceAll(reg, "");
 
 		} catch (UnsupportedEncodingException e ){
@@ -137,7 +137,7 @@ public class StringUtils  {
 		try {
 			String repx = new String(Base64.encodeBase64(binaryData, false, false), "UTF-8");
 
-			String reg = "[^0-9a-zA-Z]";
+			String reg = "[\r\n]";
 			return repx.replaceAll(reg, "");
 
 		} catch (UnsupportedEncodingException e ){
