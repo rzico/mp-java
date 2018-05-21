@@ -445,7 +445,7 @@ public class GeneCalculator implements Serializable {
                     m.setTitle(r.getTitle());
                     String text = r.getContent();
                     String expr = FreemarkerUtils.process(text,model);
-                    m.setResult(StringUtils.base64(expr.getBytes()));
+                    m.setResult(StringUtils.base64(expr.getBytes("UTF-8")));
                     data.add(m);
                 }
             } catch (Exception e) {
