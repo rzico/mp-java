@@ -8,6 +8,7 @@ import net.sf.json.JSONObject;
 import net.wit.entity.*;
 import net.wit.util.FreemarkerUtils;
 import net.wit.util.JsonUtils;
+import net.wit.util.StringUtils;
 import org.apache.commons.net.util.Base64;
 import org.springframework.ui.ModelMap;
 import org.tuckey.web.filters.urlrewrite.Run;
@@ -444,7 +445,7 @@ public class GeneCalculator implements Serializable {
                     m.setTitle(r.getTitle());
                     String text = r.getContent();
                     String expr = FreemarkerUtils.process(text,model);
-                    m.setResult(Base64.encodeBase64String(expr.getBytes()));
+                    m.setResult(StringUtils.base64(expr.getBytes()));
                     data.add(m);
                 }
             } catch (Exception e) {

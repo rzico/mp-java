@@ -120,12 +120,30 @@ public class StringUtils  {
 			return null;
 		}
 		try {
-			return new String(Base64.encodeBase64(binaryData, false, true), "UTF-8");
+			String repx = new String(Base64.encodeBase64(binaryData, false, true), "UTF-8");
+
+			String reg = "[\\S]";
+			return repx.replaceAll(reg, "");
+
 		} catch (UnsupportedEncodingException e ){
 			return null;
 		}
 	}
 
+	public static String base64(byte[] binaryData) {
+		if (binaryData==null) {
+			return null;
+		}
+		try {
+			String repx = new String(Base64.encodeBase64(binaryData, false, false), "UTF-8");
+
+			String reg = "[\\S]";
+			return repx.replaceAll(reg, "");
+
+		} catch (UnsupportedEncodingException e ){
+			return null;
+		}
+	}
 
 	public static String addSpace(String str,int countSpace)
 	{
