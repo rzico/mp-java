@@ -87,8 +87,6 @@ public class GaugeController extends BaseController {
         if (gauge==null) {
             return Message.error("无效量表编号");
         }
-
-
         Member member = memberService.getCurrent();
         if (member==null) {
             Enterprise enterprise = enterpriseService.find(agent);

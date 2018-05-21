@@ -1,6 +1,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,7 +26,6 @@ public class GaugeRelation extends OrderEntity {
     @JsonIgnore
     private  Gauge gauge;
 
-
     /** 量表 */
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,4 +47,14 @@ public class GaugeRelation extends OrderEntity {
     public void setRelation(Gauge relation) {
         this.relation = relation;
     }
+
+
+    public MapEntity getMapGauge() {
+        if (getRelation() != null) {
+            return new MapEntity(getRelation().getId().toString(), getRelation().getTitle());
+        } else {
+            return null;
+        }
+    }
+
 }

@@ -66,7 +66,10 @@ public class GaugeRelationController extends BaseController {
 	public Message save(Long gaugeId,Long relationId){
 		GaugeRelation entity = new GaugeRelation();
 
-
+        Gauge relation = gaugeService.find(relationId);
+        if (relation==null) {
+        	return Message.error("无效量表");
+		}
 		entity.setRelation(gaugeService.find(relationId));
 		entity.setGauge(gaugeService.find(gaugeId));
 		
