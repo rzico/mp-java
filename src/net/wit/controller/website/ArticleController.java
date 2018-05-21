@@ -169,7 +169,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Long tagId,Boolean isTop,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId, Long tagId, Boolean isTop, Long articleCategoryId, Long articleCatalogId, Article.ArticleType mediaType, Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
@@ -190,7 +190,10 @@ public class ArticleController extends BaseController {
         }
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
-        filters.add(new Filter("mediaType", Filter.Operator.eq, Article.ArticleType.article));
+        if (mediaType==null) {
+            mediaType = Article.ArticleType.article;
+        }
+        filters.add(new Filter("mediaType", Filter.Operator.eq,mediaType));
         List<Tag> tags = null;
         if (tagId!=null) {
             tags = tagService.findList(tagId);

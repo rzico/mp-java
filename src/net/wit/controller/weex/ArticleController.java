@@ -173,7 +173,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,Boolean isTop,Long tagId,Long articleCategoryId,Long articleCatalogId,Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId, Boolean isTop, Long tagId, Long articleCategoryId, Long articleCatalogId, Article.ArticleType mediaType, Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
@@ -198,9 +198,13 @@ public class ArticleController extends BaseController {
             tags = tagService.findList(tagId);
         }
 
-        filters.add(new Filter("mediaType", Filter.Operator.eq, Article.ArticleType.article));
+        if (mediaType==null) {
+            mediaType = Article.ArticleType.article;
+        }
+        filters.add(new Filter("mediaType", Filter.Operator.eq,mediaType));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+
         pageable.setFilters(filters);
         pageable.setOrderProperty("hits");
         pageable.setOrderDirection(Order.Direction.desc);
@@ -208,6 +212,7 @@ public class ArticleController extends BaseController {
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
+
     }
 
     /**
