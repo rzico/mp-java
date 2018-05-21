@@ -41,7 +41,17 @@ public class GaugeResult extends OrderEntity {
 
     public enum ChartType{
         /**  折线图 */
-        line
+        line,
+        /**  柱状图 */
+        bar,
+        /**  饼图 */
+        pie,
+        /**  散点图 */
+        scatter,
+        /**  雷达图 */
+        radar,
+        /**  仪表盘 */
+        gauge
     };
 
     /** 类型 */

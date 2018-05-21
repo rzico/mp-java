@@ -221,12 +221,17 @@
 
                 var ue = UE.getEditor('htmlContent');
 
+            [#if data.type='html']
                 ue.ready(function() {//编辑器初始化完成再赋值
                     ue.setContent('${data.content}');
                 });
-
+            [/#if]
+                
                 var r = '${data.type}';
                 if (r=='html') {
+
+
+
                     $("#json").addClass("hidden");
                     $("#image").addClass("hidden");
                     $("#chart").addClass("hidden");

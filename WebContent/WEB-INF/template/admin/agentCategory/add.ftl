@@ -105,7 +105,7 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/agentCategory/save.jhtml" ,
+                            url: "${base}/admin/agentCategory/save.jhtml?enterpriseId=${enterpriseId}" ,
                             beforeSend: function() {
                                $submit.prop("disabled", true);
                             },
