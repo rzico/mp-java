@@ -335,6 +335,8 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("mediaType", Filter.Operator.eq,mediaType));
 
         pageable.setFilters(filters);
+        pageable.setOrderProperty("modifyDate");
+        pageable.setOrderDirection(Order.Direction.desc);
         Page<Article> page = articleService.findPage(null,null,tags,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleListModel.bindList(page.getContent()));

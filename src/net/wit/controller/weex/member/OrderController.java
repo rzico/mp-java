@@ -184,10 +184,10 @@ public class OrderController extends BaseController {
 			return Message.error("没有开通专栏");
 		}
 
-		if (order.getPaymentStatus().equals(Order.PaymentStatus.unpaid)) {
-			return Message.error("没有付款不能审核");
-		}
-
+//		if (order.getPaymentStatus().equals(Order.PaymentStatus.unpaid)) {
+//			return Message.error("没有付款不能审核");
+//		}
+//
 		if (!order.getOrderStatus().equals(Order.OrderStatus.unconfirmed)) {
 			return Message.error("订单已审核");
 		}
