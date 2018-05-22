@@ -17,6 +17,8 @@ public class CouponCodeModel extends BaseModel implements Serializable {
     private String name;
     /** 头像 */
     private String logo;
+    /** 券类型 */
+    private Coupon.Type type;
     /** 背景色 */
     private Coupon.Color color;
     /** 名称 */
@@ -100,6 +102,14 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         this.couponId = couponId;
     }
 
+    public Coupon.Type getType() {
+        return type;
+    }
+
+    public void setType(Coupon.Type type) {
+        this.type = type;
+    }
+
     public void bind(CouponCode couponCode) {
         this.id = couponCode.getId();
         Coupon coupon = couponCode.getCoupon();
@@ -121,6 +131,7 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         } else {
             sc = "全场";
         }
+        this.type = coupon.getType();
         this.couponName = sc+coupon.getName();
         this.introduction = coupon.getIntroduction();
         if (this.descr==null) {
