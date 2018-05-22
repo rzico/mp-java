@@ -19,8 +19,6 @@ public class CouponCodeModel extends BaseModel implements Serializable {
     private String logo;
     /** 券类型 */
     private Coupon.Type type;
-    /** 背景色 */
-    private Coupon.Color color;
     /** 名称 */
     private String couponName;
     /** 介绍 */
@@ -29,7 +27,8 @@ public class CouponCodeModel extends BaseModel implements Serializable {
     private String descr;
     /** 金额 */
     private String amount;
-
+    /** 数量 */
+    private Long stock;
     public Long getId() {
         return id;
     }
@@ -54,12 +53,12 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
-    public Coupon.Color getColor() {
-        return color;
+    public Long getStock() {
+        return stock;
     }
 
-    public void setColor(Coupon.Color color) {
-        this.color = color;
+    public void setStock(Long stock) {
+        this.stock = stock;
     }
 
     public String getCouponName() {
@@ -143,7 +142,7 @@ public class CouponCodeModel extends BaseModel implements Serializable {
 
             }
         }
-        this.color = coupon.getColor();
+        this.stock = couponCode.getStock();
         NumberFormat nf = NumberFormat.getNumberInstance();
         nf.setMaximumFractionDigits(1);
         if (coupon.getType().equals(Coupon.Type.discount)) {
