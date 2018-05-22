@@ -40,6 +40,9 @@ public class GaugeController extends BaseController {
     @Resource(name = "gaugeServiceImpl")
     private GaugeService gaugeService;
 
+    @Resource(name = "gaugeRelationServiceImpl")
+    private GaugeRelationService gaugeRelationService;
+
     @Resource(name = "tagServiceImpl")
     private TagService tagService;
 
@@ -119,4 +122,22 @@ public class GaugeController extends BaseController {
         return Message.bind(model,request);
     }
 
+
+    /**
+     *  列表
+     */
+    @RequestMapping(value = "/relation", method = RequestMethod.GET)
+    @ResponseBody
+    public Message relation(Long gaugeId,Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        if (gaugeId!=null) {
+            Gauge gauge = gaugeService.find(gaugeId);
+            filters.add(new Filter("gauge", Filter.Operator.eq, gauge));
+        }
+        pageable.setFilters(filters);
+        Page<GaugeRelation> page = gaugeRelationService.findPage(null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(GaugeListModel.bindRelation(page.getContent()));
+        return Message.bind(model,request);
+    }
 }

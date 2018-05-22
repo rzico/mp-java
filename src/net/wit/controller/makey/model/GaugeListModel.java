@@ -5,6 +5,7 @@ import net.wit.controller.model.TagModel;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleFavorite;
 import net.wit.entity.Gauge;
+import net.wit.entity.GaugeRelation;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -111,6 +112,17 @@ public class GaugeListModel extends BaseModel implements Serializable {
         for (Gauge gauge:gauges) {
             GaugeListModel m = new GaugeListModel();
             m.bind(gauge);
+            ms.add(m);
+        }
+        return ms;
+    }
+
+
+    public static List<GaugeListModel> bindRelation(List<GaugeRelation> relations) {
+        List<GaugeListModel> ms = new ArrayList<GaugeListModel>();
+        for (GaugeRelation gaugeRelation:relations) {
+            GaugeListModel m = new GaugeListModel();
+            m.bind(gaugeRelation.getRelation());
             ms.add(m);
         }
         return ms;
