@@ -38,68 +38,13 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
         <input type="hidden" value="${gaugeId}" id="gaugeId" name="gaugeId">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>题目：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="title" name="title">
-            </div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>题型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if types??]
-                [#list types as type]
-                    <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}">
-                        <label for="type-${type_index}">${type.name}</label>
-                    </div>
-                [/#list]
-            [/#if]
-            </div>
-        </div>
 
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">选项：</label>
+            <label class="form-label col-xs-4 col-sm-2">量表编号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-            <table class="table table-border table-bordered table-bg table-hover table-sort">
-                <thead>
-                <tr class="text-c">
-                    <th width="100">名称</th>
-                    <th>图片</th>
-                    <th width="60">分数</th>
-                    <th width="100">操作</th>
-                </tr>
-                </thead>
-                <tbody  id="option">
-                <tr class="text-c hidden" >
-                    <td>
-                        <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
-                    </td>
-                    <td>
-                        <div class="uploader-thum-container">
-                            <div id="fileList" class="uploader-list">
-                            </div>
-                            <div id="filePicker">选择图片</div>
-                            <input type="hidden" id="image" name="image">
-                        </div>
-                    </td>
-                    <td class="text-c">
-                        <input type="text" class="input-text" value="" placeholder="" id="score" name="score">
-                    </td>
-                    <td class="td-manage">
-                        <a style="text-decoration:none" class="ml-5" onClick="del_opt(this)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"></label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" onClick="add_opt()" type="button" value="&nbsp;&nbsp;添加&nbsp;&nbsp;">
+                <input type="text" class="input-text" name="relationId" value="" placeholder="" id="relationId" onInput="intInit(this)">
             </div>
         </div>
 
@@ -152,10 +97,10 @@
 
                 $("#form-add").validate({
                     rules:{
-                        title:{
+                        relationId:{
                             required:true,
                         },
-                        type:{
+                        orders:{
                             required:true,
                         },
 
@@ -171,7 +116,7 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/gaugeQuestion/save.jhtml" ,
+                            url: "${base}/admin/gaugeRelation/save.jhtml?gaugeId=${gaugeId}" ,
                             beforeSend: function() {
                                $submit.prop("disabled", true);
                             },

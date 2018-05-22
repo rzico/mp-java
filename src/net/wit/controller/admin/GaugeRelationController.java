@@ -53,6 +53,7 @@ public class GaugeRelationController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(Long gaugeId,ModelMap model) {
+		model.addAttribute("gaugeId",gaugeId);
 
 		return "/admin/gaugeRelation/add";
 	}
@@ -63,16 +64,17 @@ public class GaugeRelationController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Long gaugeId,Long relationId){
+	public Message save(Long gaugeId,Long relationId,Integer orders){
 		GaugeRelation entity = new GaugeRelation();
 
         Gauge relation = gaugeService.find(relationId);
         if (relation==null) {
         	return Message.error("无效量表");
 		}
-		entity.setRelation(gaugeService.find(relationId));
+		entity.setRelation(relation);
 		entity.setGauge(gaugeService.find(gaugeId));
-		
+		entity.setOrders(orders);
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -99,5 +101,22 @@ public class GaugeRelationController extends BaseController {
 		Page<GaugeRelation> page = gaugeRelationService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
+
+
+	/**
+	 * 删除
+	 */
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public @ResponseBody
+	Message delete(Long[] ids) {
+		try {
+			gaugeRelationService.delete(ids);
+			return Message.success("admin.delete.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.delete.error");
+		}
+	}
+
 
 }

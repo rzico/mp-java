@@ -117,7 +117,7 @@
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "title",
+                    "mData": "mapGauge",
                     "sTitle": "量表",
                     "sClass": "center"
                 },
@@ -138,6 +138,16 @@
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<input style='text-align: center;' type='checkbox' value='" + data + "' name='ids'>";
+                        }else{
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [1],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
                         }else{
                             return "";
                         }
