@@ -75,6 +75,6 @@ public class AgentGaugeServiceImpl extends BaseServiceImpl<AgentGauge, Long> imp
 	}
 
 	public Page<AgentGauge> findPage(Date beginDate,Date endDate, List<Tag> tags, Pageable pageable) {
-		return agentGaugeDao.findPage(beginDate,endDate,tags,pageable);
+		return agentGaugeDao.findPage(beginDate,endDate,pageable);
 	}
 }

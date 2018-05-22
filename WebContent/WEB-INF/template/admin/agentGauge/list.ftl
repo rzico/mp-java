@@ -29,9 +29,9 @@
     <title>量表管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 量表管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
-                                               href="javascript:location.replace(location.href);" title="刷新"><i
-        class="Hui-iconfont">&#xe68f;</i></a></nav>
+[#--<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 量表管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"--]
+                                               [#--href="javascript:location.replace(location.href);" title="刷新"><i--]
+        [#--class="Hui-iconfont">&#xe68f;</i></a></nav>--]
 <div class="page-container">
     <div class=""> 日期范围：
         <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin"
@@ -40,6 +40,17 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 
+    [#if agentCategorys??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="agentCategory" class="select" style="background-color: #FFFFFF;">
+					<option value="">分类</option>
+                    [#list agentCategorys as agentCategory]
+                        <option value="${agentCategory.id}">${agentCategory.name}</option>
+                    [/#list]
+				</select>
+			</span>
+    [/#if]
+
         <input type="text" class="input-text" style="width:150px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -47,7 +58,7 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; 量表管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <a href="javascript:;" onclick="add('首页 &gt; 量表管理 &gt; 新增','add.jhtml?enterpriseId=${enterpriseId}','','510')" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe600;</i>添加量表</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
@@ -91,7 +102,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/agentGauge/list.jhtml",
+            "sAjaxSource": "${base}/admin/agentGauge/list.jhtml?enterpriseId=${enterpriseId}",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -189,10 +200,7 @@
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
                 /*处理常量*/
-                var _type =  $('select[name="type"]').val();
-                var _userType =  $('select[name="userType"]').val();
-                var _status =  $('select[name="status"]').val();
-                var _gaugeCategory =  $('select[name="gaugeCategory"]').val();
+                var _agentCategory =  $('select[name="agentCategory"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
@@ -203,10 +211,7 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-                        "type":_type,
-                        "userType":_userType,
-                        "status":_status,
-                        "gaugeCategoryId":_gaugeCategory,
+                        "agentCategoryId":_agentCategory,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
@@ -275,7 +280,7 @@
     }
     /*删除全部*/
     function delAll(){
-        var url = "${base}/admin/gauge/delete.jhtml";
+        var url = "${base}/admin/agentGauge/delete.jhtml";
         var i = 0;
         $('input[type="checkbox"][name="ids"]:checked').each(
                 function() {
@@ -329,7 +334,7 @@
                 data: {
                     ids: id
                 },
-                url: '${base}/admin/gauge/delete.jhtml',
+                url: '${base}/admin/agentGauge/delete.jhtml',
                 dataType: 'json',
                 success: function (data) {
                     layer.close(load);
@@ -340,31 +345,6 @@
                     } else {
                         layer.msg('删除失败!', {icon: 2, time: 1000});
                     }
-                },
-                error: function (data) {
-                    console.log(data.msg);
-                },
-            });
-        });
-    }
-    /*检查*/
-    function check(obj, id) {
-        layer.confirm('确认要检查表达式语法吗？', function (index) {
-            var load = layer.msg('加载中', {
-                icon: 16
-                ,shade: 0.01
-            });
-            $.ajax({
-                type: 'GET',
-                data: {
-                    id: id
-                },
-                url: '${base}/admin/gauge/expr_check.jhtml',
-                dataType: 'json',
-                success: function (data) {
-                    layer.close(load);
-
-                    layer.msg(data.content, {icon: 2, time: 5000});
                 },
                 error: function (data) {
                     console.log(data.msg);

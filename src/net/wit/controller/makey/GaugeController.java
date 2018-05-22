@@ -122,7 +122,6 @@ public class GaugeController extends BaseController {
         return Message.bind(model,request);
     }
 
-
     /**
      *  列表
      */
@@ -140,4 +139,5 @@ public class GaugeController extends BaseController {
         model.setData(GaugeListModel.bindRelation(page.getContent()));
         return Message.bind(model,request);
     }
+
 }

@@ -37,14 +37,11 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <input type="hidden" value="${gaugeId}" id="gaugeId" name="gaugeId">
-
-
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">量表编号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="relationId" value="" placeholder="" id="relationId" onInput="intInit(this)">
+                <input type="text" class="input-text" name="gaugeId" value="" placeholder="" id="gaugeId" onInput="intInit(this)">
             </div>
         </div>
 
@@ -131,7 +128,7 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/agentGauge/save.jhtml?gaugeId=${gaugeId}" ,
+                            url: "${base}/admin/agentGauge/save.jhtml?enterpriseId=${enterpriseId}" ,
                             beforeSend: function() {
                                $submit.prop("disabled", true);
                             },

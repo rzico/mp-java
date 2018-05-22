@@ -60,7 +60,7 @@ public class AgentGaugeController extends BaseController {
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("enterprise", Filter.Operator.eq,enterpriseService.find(enterpriseId)));
         List<AgentCategory> agentCategories = agentCategoryService.findList(null,null,filters,null);
-		model.addAttribute("agentCategory",agentCategories);
+		model.addAttribute("agentCategorys",agentCategories);
 		return "/admin/agentGauge/list";
 	}
 
@@ -71,6 +71,10 @@ public class AgentGaugeController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(Long enterpriseId,ModelMap model) {
 		model.addAttribute("enterpriseId",enterpriseId);
+		List<Filter> filters = new ArrayList<>();
+		filters.add(new Filter("enterprise", Filter.Operator.eq,enterpriseService.find(enterpriseId)));
+		List<AgentCategory> agentCategories = agentCategoryService.findList(null,null,filters,null);
+		model.addAttribute("agentCategorys",agentCategories);
 		return "/admin/agentGauge/add";
 	}
 
@@ -92,6 +96,8 @@ public class AgentGaugeController extends BaseController {
 		if (agentCategory==null) {
 			return Message.error("无效分类");
 		}
+
+		entity.setEnterprise(enterprise);
 
 		entity.setOrders(orders);
 		entity.setGauge(gauge);
@@ -119,7 +125,7 @@ public class AgentGaugeController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
-            agentCategoryService.delete(ids);
+            agentGaugeService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,11 +139,14 @@ public class AgentGaugeController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Long enterpriseId,Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Long enterpriseId,Long agentCategoryId,Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
 		Enterprise enterprise = enterpriseService.find(enterpriseId);
 
 		List<Filter> filters = pageable.getFilters();
 		filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
+		if (agentCategoryId!=null) {
+			filters.add(new Filter("agentCategory", Filter.Operator.eq, agentCategoryService.find(agentCategoryId)));
+		}
 		Page<AgentGauge> page = agentGaugeService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
