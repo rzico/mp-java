@@ -370,8 +370,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		if (order.getCouponCode() != null) {
 			CouponCode couponCode = order.getCouponCode();
-			couponCode.setIsUsed(true);
 			couponCode.setUsedDate(new Date());
+			couponCode.setStock(couponCode.getStock()-1);
+			couponCode.setIsUsed(couponCode.getStock()<=0);
 			couponCodeDao.merge(couponCode);
 		}
 
@@ -424,6 +425,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		}
 		orderDao.persist(order);
+
 		cardService.decPoint(card, order.getPointDiscount().longValue(), "订单支付", order);
 
 		OrderLog orderLog = new OrderLog();
@@ -447,6 +449,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		messageService.orderMemberPushTo(orderLog);
+
+		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) {
+			order.setOrderStatus(Order.OrderStatus.confirmed);
+			order.setPaymentStatus(Order.PaymentStatus.paid);
+			order.setExpire(null);
+			orderDao.merge(order);
+		}
 
 		return order;
 	}
@@ -523,6 +532,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (couponCode != null) {
 				couponCode.setIsUsed(false);
 				couponCode.setUsedDate(null);
+				couponCode.setStock(couponCode.getStock()+1);
 				couponCodeDao.merge(couponCode);
 
 				order.setCouponCode(null);
@@ -861,6 +871,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		if (couponCode != null) {
 			couponCode.setIsUsed(false);
 			couponCode.setUsedDate(null);
+			couponCode.setStock(couponCode.getStock()+1);
 			couponCodeDao.merge(couponCode);
 
 			order.setCouponCode(null);
