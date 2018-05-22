@@ -125,11 +125,6 @@
                     "mData": "orders",
                     "sTitle": "排序",
                     "sClass": "center"
-                },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
                 }
             ],
             "aoColumnDefs": [
@@ -153,19 +148,8 @@
                         }
                     }
                 },
-                {
-                    "aTargets": [4],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
-                        }else{
-                            return "";
-                        }
-                    }
-
-                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 3]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/

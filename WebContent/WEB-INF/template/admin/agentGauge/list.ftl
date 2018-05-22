@@ -40,46 +40,6 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 
-		[#if types??]
-			<span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
-				<select name="type" class="select" style="background-color: #FFFFFF">
-					<option value="">常模类型</option>
-					[#list types as type]
-					<option value="${type.id}">${type.name}</option>
-					[/#list]
-				</select>
-			</span>
-		[/#if]
-        [#if userTypes??]
-			<span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
-				<select name="userType" class="select" style="background-color: #FFFFFF;">
-					<option value="">用户类型</option>
-					[#list userTypes as userType]
-					<option value="${userType.id}">${userType.name}</option>
-					[/#list]
-				</select>
-			</span>
-		[/#if]
-    [#if statuss??]
-        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
-				<select name="status" class="select" style="background-color: #FFFFFF;">
-					<option value="">发布状态</option>
-                    [#list statuss as status]
-                        <option value="${status.id}">${status.name}</option>
-                    [/#list]
-				</select>
-			</span>
-    [/#if]
-    [#if statuss??]
-        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
-				<select name="gaugeCategory" class="select" style="background-color: #FFFFFF;">
-					<option value="">分类</option>
-                    [#list gaugeCategorys as gaugeCategory]
-                        <option value="${gaugeCategory.id}">${gaugeCategory.name}</option>
-                    [/#list]
-				</select>
-			</span>
-    [/#if]
         <input type="text" class="input-text" style="width:150px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
@@ -88,7 +48,7 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
                 <a href="javascript:;" onclick="add('首页 &gt; 量表管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增量表</a>
+                <i class="Hui-iconfont">&#xe600;</i>添加量表</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
@@ -131,7 +91,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/gauge/list.jhtml",
+            "sAjaxSource": "${base}/admin/agentGauge/list.jhtml",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -195,56 +155,6 @@
                     "mData": "subTitle",
                     "sTitle": "副标题",
                     "sClass": "center"
-                },
-                {
-                    "mData": "marketPrice",
-                    "sTitle": "原价",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "price",
-                    "sTitle": "现价",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "brokerage",
-                    "sTitle": "推广佣金",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "distribution",
-                    "sTitle": "分销佣金",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "evaluation",
-                    "sTitle": "测评人数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "type",
-                    "sTitle": "常模类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "userType",
-                    "sTitle": "用户类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "status",
-                    "sTitle": "状态",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "id",
-                    "sTitle": "设置",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
                 }
             ],
             "aoColumnDefs": [
@@ -270,83 +180,8 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
-                {
-                    "aTargets": [11],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if types??]
-                            [#list types as type]
-                                if ("${type.id}" == data) {
-                                    return "${type.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [12],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if userTypes??]
-                            [#list userTypes as userType]
-                                if ("${userType.id}" == data) {
-                                    return "${userType.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [13],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                        [#if statuss??]
-                            [#list statuss as status]
-                                if ("${status.id}" == data) {
-                                    return "${status.name}";
-                                }
-                            [/#list]
-                        [/#if]
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [14],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return  "<a title='题目' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 题目','../gaugeQuestion/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>题目</i></a>" +
-                                    "<a title='因子' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 因子','../gaugeGene/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>因子</i></a>" +
-                                    "<a title='结果' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 结果','../gaugeResult/index.jhtml?gaugeId=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>结果</i></a>"+
-                                    "<a title='测谎' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 测谎','detect.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>测谎</i></a>";
-                        }else{
-                            return "";
-                        }
-                    }
-
-                },
-                {
-                    "aTargets": [15],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return  "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>"+
-                                    "<a title='删除' href='javascript:;' onclick=\"check(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>语法检查</i></a>";
-                        }else{
-                            return "";
-                        }
-                    }
-
-                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 14,15]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

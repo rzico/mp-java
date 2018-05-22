@@ -12,6 +12,7 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="${base}/resources/admin/lib/html5shiv.js"></script>
     <script type="text/javascript" src="${base}/resources/admin/lib/respond.min.js"></script>
+
     <![endif]-->
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui/css/H-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/H-ui.admin.css" />
@@ -22,37 +23,28 @@
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
 
     <!--[if IE 6]>
-    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
     <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+    <style>
+        img {
+            width:80px;
+        }
+    </style>
 </head>
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>主标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="title" name="title">
-            </div>
-        </div>
+        <input type="hidden" value="${gaugeId}" id="gaugeId" name="gaugeId">
+
+
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>副标题：</label>
+            <label class="form-label col-xs-4 col-sm-2">量表编号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="subTitle" name="subTitle">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <div class="uploader-thum-container">
-                    <div id="fileList" class="uploader-list"></div>
-                    <div id="filePicker">选择图片</div>
-                    <input type="hidden" value="" id="thumbnail" name="thumbnail">
-                </div>
+                <input type="text" class="input-text" name="relationId" value="" placeholder="" id="relationId" onInput="intInit(this)">
             </div>
         </div>
 
@@ -60,10 +52,10 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">分类：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-            [#if gaugeCategorys??]
-                <select name="gaugeCategoryId" class="select" style="background-color: #FFFFFF">
-                    [#list gaugeCategorys as gaugeCategory]
-                        <option value="${gaugeCategory.id}">${gaugeCategory.name}</option>
+            [#if agentCategorys??]
+                <select name="agentCategoryId" class="select" style="background-color: #FFFFFF">
+                    [#list agentCategorys as agentCategory]
+                        <option value="${agentCategory.id}">${agentCategory.name}</option>
                     [/#list]
 				</select>
             [/#if]
@@ -72,164 +64,11 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if types??]
-                [#list types as type]
-                    <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}">
-                        <label for="type-${type_index}">${type.name}</label>
-                    </div>
-                [/#list]
-            [/#if]
+            <label class="form-label col-xs-4 col-sm-2">排序：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
             </div>
         </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评方法：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if methods??]
-                [#list methods as method]
-                    <div class="radio-box">
-                        <input name="method" type="radio" id="method-${method_index}" value="${method.id}">
-                        <label for="method-${method_index}">${method.name}</label>
-                    </div>
-                [/#list]
-            [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if userTypes??]
-                [#list userTypes as userType]
-                    <div class="radio-box">
-                        <input name="userType" type="radio" id="userType-${userType_index}" value="${userType.id}">
-                        <label for="userType-${userType_index}">${userType.name}</label>
-                    </div>
-                [/#list]
-            [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评目的：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-               <textarea class="input-text" name="notice1" id="notice1" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评介绍：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="notice2" id="notice2" style="height:200px;width:500px;"></textarea>
-            </div>
-
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>专业支持：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="notice3" id="notice3" style="height:200px;width:500px;"></textarea>
-            </div>
-
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="notice4" id="notice4" style="height:200px;width:500px;"></textarea>
-            </div>
-
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评人数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="evaluation" value="" placeholder="" id="evaluation" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>亮点介绍：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots1" >
-                <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots2" >
-            </div>
-        </div>
-
-       [#--<div class="row cl">--]
-            [#--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>--]
-            [#--<div class="formControls col-xs-8 col-sm-9">--]
-                [#--<textarea class="input-text" name="notice" id="notice" style="height:100px;width:300px;"></textarea>--]
-            [#--</div>--]
-        [#--</div>--]
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模修订说明：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                    <textarea class="input-text" name="revisionNote" id="revisionNote" style="height:100px;width:300px;"></textarea>
-            </div>
-        </div>
-
-                    <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>市场价：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="marketPrice" name="marketPrice" onInput="floatInit(this)">
-                    </div>
-                    </div>
-
-                    <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>销售价：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="price" name="price" onInput="floatInit(this)">
-                    </div>
-                    </div>
-
-                    <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>推广佣金（%）：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="0.6" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
-                    </div>
-                    </div>
-
-                    <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分销佣金（%）：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="0.6" placeholder="" id="distribution" name="distribution" onInput="percentInit(this)">
-                    </div>
-                    </div>
-
-
-                    <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">标签：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if tags??]
-                [#list tags as tag]
-                <div class="check-box">
-                        <label class=""><input type="checkbox" value="${tag.id}" name="tagIds" >${tag.name}</label>
-                </div>
-                [/#list]
-            [/#if]
-            </div>
-            </div>
-
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发布状态：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if  statuss??]
-                [#list statuss as status]
-                    <div class="radio-box">
-                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}">
-                        <label for="status-${status_index}">${status.name}</label>
-                    </div>
-                [/#list]
-            [/#if]
-            </div>
-        </div>
-
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
@@ -255,11 +94,14 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
-                <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
 
-                <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
 
         <script type="text/javascript">
+            var $option = $("#option");
+            var rw = 0;
+
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -268,41 +110,12 @@
                     increaseArea: '20%'
                 });
 
-                new $uploadpicture("contentFileList","contentFilePicker");
-
                 $("#form-add").validate({
                     rules:{
-                        brokerage:{
+                        relationId:{
                             required:true,
                         },
-                        distribution:{
-                            required:true,
-                        },
-                        evaluation:{
-                            required:true,
-                        },
-                        marketPrice:{
-                            required:true,
-                        },
-                        notice:{
-                            required:true,
-                        },
-                        price:{
-                            required:true,
-                        },
-                        revisionNote:{
-                            required:true,
-                        },
-                        subTitle:{
-                            required:true,
-                        },
-                        title:{
-                            required:true,
-                        },
-                        type:{
-                            required:true,
-                        },
-                        userType:{
+                        orders:{
                             required:true,
                         },
 
@@ -318,14 +131,13 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/gauge/save.jhtml" ,
+                            url: "${base}/admin/agentGauge/save.jhtml?gaugeId=${gaugeId}" ,
                             beforeSend: function() {
                                $submit.prop("disabled", true);
                             },
                             success: function(message){
                                 layer.close(load);
                                 if(message.type ==  "success"){
-//                                    关闭当前页面
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
                                     parent.closeWindow(index, '添加成功');
@@ -342,7 +154,25 @@
                         });
                     }
                 });
+
             });
+
+            function add_opt() {
+                var $row = $option.find("tr:eq(0)").clone().show();
+                $row.removeClass("hidden");
+                $row.appendTo($option);
+
+                rw = rw +1;
+                $row.find("#fileList").attr("id","fileList"+rw);
+                $row.find("#filePicker").attr("id","filePicker"+rw);
+                new $uploadpicture("fileList"+rw,"filePicker"+rw);
+            };
+
+            function del_opt(val) {
+                var $this = val;
+                $this.closest("tr").remove();
+            };
+
         </script>
 </body>
 </html>
