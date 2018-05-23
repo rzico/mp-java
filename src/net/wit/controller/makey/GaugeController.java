@@ -52,6 +52,13 @@ public class GaugeController extends BaseController {
     @Resource(name = "enterpriseServiceImpl")
     private EnterpriseService enterpriseService;
 
+    @Resource(name = "agentCategoryServiceImpl")
+    private AgentCategoryService agentCategoryService;
+
+
+    @Resource(name = "agentGaugeServiceImpl")
+    private AgentGaugeService agentGaugeService;
+
     /**
      *  详情
      */
@@ -107,19 +114,33 @@ public class GaugeController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long gaugeCategoryId,Long tagId, Pageable pageable, HttpServletRequest request){
-        List<Filter> filters = new ArrayList<Filter>();
-        if (gaugeCategoryId!=null) {
-            GaugeCategory category = gaugeCategoryService.find(gaugeCategoryId);
-            filters.add(new Filter("gaugeCategory", Filter.Operator.eq, category));
+    public Message list(Long gaugeCategoryId,Long tagId,Long agent, Pageable pageable, HttpServletRequest request){
+        if (agent==null) {
+            List<Filter> filters = new ArrayList<Filter>();
+            if (gaugeCategoryId != null) {
+                GaugeCategory category = gaugeCategoryService.find(gaugeCategoryId);
+                filters.add(new Filter("gaugeCategory", Filter.Operator.eq, category));
+            }
+            filters.add(new Filter("status", Filter.Operator.eq, Gauge.Status.enabled));
+            pageable.setFilters(filters);
+            List<Tag> tags = tagService.findList(tagId);
+            Page<Gauge> page = gaugeService.findPage(null, null, tags, pageable);
+            PageBlock model = PageBlock.bind(page);
+            model.setData(GaugeListModel.bindList(page.getContent()));
+            return Message.bind(model, request);
+        } else {
+            List<Filter> filters = new ArrayList<Filter>();
+            if (gaugeCategoryId != null) {
+                AgentCategory category = agentCategoryService.find(gaugeCategoryId);
+                filters.add(new Filter("agentCategory", Filter.Operator.eq, category));
+            }
+            pageable.setFilters(filters);
+            List<Tag> tags = tagService.findList(tagId);
+            Page<AgentGauge> page = agentGaugeService.findPage(null, null, tags, pageable);
+            PageBlock model = PageBlock.bind(page);
+            model.setData(GaugeListModel.bindAgent(page.getContent()));
+            return Message.bind(model, request);
         }
-        filters.add(new Filter("status", Filter.Operator.eq, Gauge.Status.enabled));
-        pageable.setFilters(filters);
-        List<Tag> tags = tagService.findList(tagId);
-        Page<Gauge> page = gaugeService.findPage(null,null,tags,pageable);
-        PageBlock model = PageBlock.bind(page);
-        model.setData(GaugeListModel.bindList(page.getContent()));
-        return Message.bind(model,request);
     }
 
     /**

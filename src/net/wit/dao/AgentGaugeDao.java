@@ -26,5 +26,5 @@ public interface AgentGaugeDao extends BaseDao<AgentGauge, Long> {
 	 * @param pageable
 	 * @return Page<Gauge>
 	 */
-	Page<AgentGauge> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<AgentGauge> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable);
 }

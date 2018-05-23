@@ -4,6 +4,8 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.makey.model.GaugeCategoryModel;
+import net.wit.entity.AgentCategory;
+import net.wit.entity.Enterprise;
 import net.wit.entity.GaugeCategory;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
@@ -30,15 +32,29 @@ public class GaugeCategoryController extends BaseController {
     @Resource(name = "gaugeCategoryServiceImpl")
     private GaugeCategoryService gaugeCategoryService;
 
+    @Resource(name = "agentCategoryServiceImpl")
+    private AgentCategoryService agentCategoryService;
+
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
     /**
      *  列表
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(HttpServletRequest request){
-        List<GaugeCategory> categories = gaugeCategoryService.findAll();
+    public Message list(Long agent,HttpServletRequest request){
+        if (agent==null) {
+            List<GaugeCategory> categories = gaugeCategoryService.findAll();
 
-        return Message.bind(GaugeCategoryModel.bindList(categories),request);
+            return Message.bind(GaugeCategoryModel.bindList(categories), request);
+        } else {
+            Enterprise enterprise = enterpriseService.find(agent);
+            List<Filter> filters = new ArrayList<>();
+            filters.add(new Filter("enterprise", Filter.Operator.eq,enterprise));
+            List<AgentCategory> categories = agentCategoryService.findList(null,null,filters,null);
+            return Message.bind(GaugeCategoryModel.bindAgent(categories), request);
+        }
     }
 
 }

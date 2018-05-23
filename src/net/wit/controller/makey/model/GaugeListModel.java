@@ -2,10 +2,7 @@ package net.wit.controller.makey.model;
 
 import net.wit.controller.model.BaseModel;
 import net.wit.controller.model.TagModel;
-import net.wit.entity.Article;
-import net.wit.entity.ArticleFavorite;
-import net.wit.entity.Gauge;
-import net.wit.entity.GaugeRelation;
+import net.wit.entity.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -123,6 +120,17 @@ public class GaugeListModel extends BaseModel implements Serializable {
         for (GaugeRelation gaugeRelation:relations) {
             GaugeListModel m = new GaugeListModel();
             m.bind(gaugeRelation.getRelation());
+            ms.add(m);
+        }
+        return ms;
+    }
+
+
+    public static List<GaugeListModel> bindAgent(List<AgentGauge> gauges) {
+        List<GaugeListModel> ms = new ArrayList<GaugeListModel>();
+        for (AgentGauge agentGauge:gauges) {
+            GaugeListModel m = new GaugeListModel();
+            m.bind(agentGauge.getGauge());
             ms.add(m);
         }
         return ms;

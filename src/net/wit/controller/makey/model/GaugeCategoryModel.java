@@ -1,5 +1,6 @@
 package net.wit.controller.makey.model;
 import net.wit.controller.model.BaseModel;
+import net.wit.entity.AgentCategory;
 import net.wit.entity.GaugeCategory;
 
 import java.io.Serializable;
@@ -55,12 +56,28 @@ public class GaugeCategoryModel extends BaseModel implements Serializable {
         this.count = gaugeCategory.getGauges().size();
         this.english = gaugeCategory.getEnglish();
     }
+    public void bind(AgentCategory agentCategory) {
+        this.id = agentCategory.getId();
+        this.name = agentCategory.getName();
+        this.count = agentCategory.getGauges().size();
+        this.english = agentCategory.getEnglish();
+    }
     public static List<GaugeCategoryModel> bindList(List<GaugeCategory> gaugeCategories) {
         List<GaugeCategoryModel> ms = new ArrayList<GaugeCategoryModel>();
         for (GaugeCategory gaugeCategory:gaugeCategories) {
           GaugeCategoryModel m = new GaugeCategoryModel();
           m.bind(gaugeCategory);
           ms.add(m);
+        }
+        return ms;
+    }
+
+    public static List<GaugeCategoryModel> bindAgent(List<AgentCategory> agentCategories) {
+        List<GaugeCategoryModel> ms = new ArrayList<GaugeCategoryModel>();
+        for (AgentCategory agentCategory:agentCategories) {
+            GaugeCategoryModel m = new GaugeCategoryModel();
+            m.bind(agentCategory);
+            ms.add(m);
         }
         return ms;
     }

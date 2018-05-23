@@ -4,16 +4,15 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.dao.AgentGaugeDao;
 import net.wit.entity.AgentGauge;
+import net.wit.entity.Gauge;
+import net.wit.entity.Tag;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.*;
 
 
@@ -35,7 +34,7 @@ public class AgentGaugeDaoImpl extends BaseDaoImpl<AgentGauge, Long> implements 
 	 * @param pageable
 	 * @return Page<agentCategory>
 	 */
-	public Page<AgentGauge> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<AgentGauge> findPage(Date beginDate, Date endDate, List<Tag> tags, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<AgentGauge> criteriaQuery = criteriaBuilder.createQuery(AgentGauge.class);
 		Root<AgentGauge> root = criteriaQuery.from(AgentGauge.class);
@@ -51,6 +50,15 @@ public class AgentGaugeDaoImpl extends BaseDaoImpl<AgentGauge, Long> implements 
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
+
+		if (tags != null && !tags.isEmpty()) {
+			Subquery<AgentGauge> subquery = criteriaQuery.subquery(AgentGauge.class);
+			Root<AgentGauge> subqueryRoot = subquery.from(AgentGauge.class);
+			subquery.select(subqueryRoot);
+			subquery.where(criteriaBuilder.equal(subqueryRoot, root), subqueryRoot.join("tags").in(tags));
+			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.exists(subquery));
+		}
+
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}

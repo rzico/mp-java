@@ -1,10 +1,8 @@
 package net.wit.controller.admin;
 
 import net.wit.*;
-import net.wit.entity.AgentCategory;
-import net.wit.entity.AgentGauge;
-import net.wit.entity.Enterprise;
-import net.wit.entity.Gauge;
+import net.wit.Message;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -61,6 +59,10 @@ public class AgentGaugeController extends BaseController {
         filters.add(new Filter("enterprise", Filter.Operator.eq,enterpriseService.find(enterpriseId)));
         List<AgentCategory> agentCategories = agentCategoryService.findList(null,null,filters,null);
 		model.addAttribute("agentCategorys",agentCategories);
+
+
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
+
 		return "/admin/agentGauge/list";
 	}
 
@@ -75,6 +77,10 @@ public class AgentGaugeController extends BaseController {
 		filters.add(new Filter("enterprise", Filter.Operator.eq,enterpriseService.find(enterpriseId)));
 		List<AgentCategory> agentCategories = agentCategoryService.findList(null,null,filters,null);
 		model.addAttribute("agentCategorys",agentCategories);
+
+
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
+
 		return "/admin/agentGauge/add";
 	}
 
@@ -84,7 +90,7 @@ public class AgentGaugeController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Long enterpriseId,Long agentCategoryId,Long gaugeId,Integer orders){
+	public Message save(Long enterpriseId,Long agentCategoryId,Long gaugeId,Integer orders, Long [] tagIds){
 		Enterprise enterprise = enterpriseService.find(enterpriseId);
 		AgentGauge entity = new AgentGauge();
 
@@ -107,6 +113,8 @@ public class AgentGaugeController extends BaseController {
 		entity.setTitle(gauge.getTitle());
 		entity.setSubTitle(gauge.getSubTitle());
 		entity.setThumbnail(gauge.getThumbnail());
+
+		entity.setTags(tagService.findList(tagIds));
 
         try {
             agentGaugeService.save(entity);

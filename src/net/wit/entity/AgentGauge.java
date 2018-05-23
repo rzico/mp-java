@@ -60,6 +60,12 @@ public class AgentGauge extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '缩列图'")
 	private String thumbnail;
 
+	/** 量表标签*/
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ky_agent_gauge_tag")
+	@OrderBy("orders asc")
+	@JsonIgnore
+	private List<Tag> tags = new ArrayList<Tag>();
 
 	/**
 	 * 删除前处理
@@ -115,5 +121,13 @@ public class AgentGauge extends OrderEntity {
 
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 }
