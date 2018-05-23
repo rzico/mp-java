@@ -3,6 +3,7 @@ package net.wit.entity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -154,6 +155,14 @@ public class Shipping extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '备注'")
 	private String memo;
 
+	/** 锁定到期时间 */
+	@Column(columnDefinition="datetime comment '锁定到期时间'")
+	private Date lockExpire;
+
+	/** 操作人 */
+	@Column(columnDefinition="varchar(255) comment '操作人'")
+	private String operator;
+
 	/** 订单 */
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -208,6 +217,8 @@ public class Shipping extends BaseEntity {
 	public void setShippingStatus(ShippingStatus shippingStatus) {
 		this.shippingStatus = shippingStatus;
 	}
+
+
 
 	/**
 	 * 获取配送方式
@@ -477,6 +488,28 @@ public class Shipping extends BaseEntity {
 		this.shippingItems = shippingItems;
 	}
 
+
+	public Date getLockExpire() {
+		return lockExpire;
+	}
+
+	public void setLockExpire(Date lockExpire) {
+		this.lockExpire = lockExpire;
+	}
+
+
+	/**
+	 * 判断是否已锁定
+	 *
+	 * @param operator
+	 *            操作员
+	 * @return 是否已锁定
+	 */
+	@Transient
+	public boolean isLocked(String operator) {
+		return getLockExpire() != null && new Date().before(getLockExpire()) && ((operator != null && !operator.equals(getOperator())) || (operator == null && getOperator() != null));
+	}
+
 	/**
 	 * 获取数量
 	 * 
@@ -514,5 +547,7 @@ public class Shipping extends BaseEntity {
 			return "等待商家确认";
 		}
 	}
+
+
 
 }

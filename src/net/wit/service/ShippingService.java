@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Order;
 import net.wit.entity.Shipping;
 
 /**
@@ -17,4 +18,14 @@ import net.wit.entity.Shipping;
 
 public interface ShippingService extends BaseService<Shipping, Long> {
 	Page<Shipping> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+
+	/**
+	 * 根据订单编号查找订单
+	 *
+	 * @param sn
+	 *            订单编号(忽略大小写)
+	 * @return 订单，若不存在则返回null
+	 */
+	Shipping findBySn(String sn);
 }

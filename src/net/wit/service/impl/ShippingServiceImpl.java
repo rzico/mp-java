@@ -86,4 +86,18 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	public Page<Shipping> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return shippingDao.findPage(beginDate,endDate,pageable);
 	}
+
+
+	/**
+	 * 根据订单编号查找订单
+	 *
+	 * @param sn
+	 *            订单编号(忽略大小写)
+	 * @return 订单，若不存在则返回null
+	 */
+	public Shipping findBySn(String sn) {
+		return shippingDao.findBySn(sn);
+	}
+
+
 }
