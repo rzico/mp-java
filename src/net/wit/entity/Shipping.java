@@ -35,6 +35,43 @@ public class Shipping extends BaseEntity {
 
 	private static final long serialVersionUID = 51L;
 
+	/**
+	 * 单据状态
+	 */
+	public enum OrderStatus {
+		/** 未确认 */
+		unconfirmed,
+
+		/** 已确认 */
+		confirmed,
+
+		/** 已完成 */
+		completed,
+
+		/** 已取消 */
+		cancelled
+	}
+
+	/**
+	 * 配送状态
+	 */
+	public enum ShippingStatus {
+		/** 未确认 */
+		unconfirmed,
+
+		/** 已派单 */
+		dispatch,
+
+		/** 已发货 */
+		delivery,
+
+		/** 已送达 */
+		receive,
+
+		/** 已核销 */
+		completed
+	}
+
 	/** 卖家 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
@@ -45,10 +82,15 @@ public class Shipping extends BaseEntity {
 	@JoinColumn(nullable = false, updatable = false)
 	private Member member;
 
-	/** 配送点 */
+	/** 配送单位 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
 	private Enterprise enterprise;
+
+	/** 配送门店 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private Shop shop;
 
 	/** 送货员 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -57,6 +99,14 @@ public class Shipping extends BaseEntity {
 	/** 编号 */
 	@Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '编号'")
 	private String sn;
+
+	/** 订单状态 */
+	@Column(nullable = false,columnDefinition="int(11) not null comment '订单状态'")
+	private OrderStatus orderStatus;
+
+	/** 配送状态 */
+	@Column(nullable = false,columnDefinition="int(11) not null comment '配送状态'")
+	private ShippingStatus shippingStatus;
 
 	/** 配送方式 */
 	@Column(columnDefinition="varchar(255) comment '配送方式'")
@@ -133,6 +183,30 @@ public class Shipping extends BaseEntity {
 	 */
 	public void setSn(String sn) {
 		this.sn = sn;
+	}
+
+	public Enterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
+	}
+
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public ShippingStatus getShippingStatus() {
+		return shippingStatus;
+	}
+
+	public void setShippingStatus(ShippingStatus shippingStatus) {
+		this.shippingStatus = shippingStatus;
 	}
 
 	/**
@@ -260,6 +334,14 @@ public class Shipping extends BaseEntity {
 
 	public void setAdmin(Admin admin) {
 		this.admin = admin;
+	}
+
+	public Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
 	}
 
 	/**
@@ -411,6 +493,26 @@ public class Shipping extends BaseEntity {
 			}
 		}
 		return quantity;
+	}
+	@Transient
+	public String getStatusDescr() {
+		if (getShippingStatus().equals(ShippingStatus.unconfirmed)) {
+			return "订单正在调配中";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.dispatch)) {
+			return "订单正在提货中";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.delivery)) {
+			return "订单正在送货中";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.receive)) {
+			return "订单已送达";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.completed)) {
+			return "订单已完成";
+		} else {
+			return "等待商家确认";
+		}
 	}
 
 }

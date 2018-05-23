@@ -2,6 +2,7 @@
 package net.wit.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import net.wit.MapEntity;
@@ -54,6 +55,12 @@ public class Receiver extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '电话'")
 	private String phone;
 
+	/** 楼层 */
+	@NotNull
+	@Min(1)
+	@Column(nullable = false,columnDefinition="int(11) not null default 0 comment '楼层'")
+	private Integer level;
+
 	/** 是否默认 */
 	@NotNull
 	@Column(columnDefinition="bit not null comment '是否默认'")
@@ -78,6 +85,11 @@ public class Receiver extends BaseEntity {
 	/** 定位 */
 	@Embedded
 	private Location location;
+
+	/** 配送点 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private Shop shop;
 
 	/**
 	 * 获取收货人

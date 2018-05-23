@@ -23,6 +23,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class ShippingItem extends BaseEntity {
 
 	private static final long serialVersionUID = 52L;
+	/** 缩例图 */
+	private String thumbnail;
 
 	/** 商品编号 */
 	@NotEmpty
@@ -144,5 +146,13 @@ public class ShippingItem extends BaseEntity {
 
 	public void setSpec(String spec) {
 		this.spec = spec;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 }

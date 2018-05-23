@@ -1090,7 +1090,6 @@ public class Member extends BaseEntity {
 		}
 	}
 
-
 	public String topicName() {
 		if (getTopic()!=null) {
 			return getTopic().getName();
