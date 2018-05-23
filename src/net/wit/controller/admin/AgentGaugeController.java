@@ -140,7 +140,6 @@ public class AgentGaugeController extends BaseController {
             return Message.error("admin.delete.error");
         }
     }
-	
 
 	/**
      * 列表
