@@ -13,7 +13,6 @@ public class ShippingListModel extends BaseModel implements Serializable {
 
     private Long id;
 
-
     /**  买方 id */
     private Long memberId;
 
