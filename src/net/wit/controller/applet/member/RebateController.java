@@ -146,19 +146,35 @@ public class RebateController extends BaseController {
             model.setInvalid(inv);
 
 
-            List<Filter> filters = new ArrayList<>();
-            filters.add(new Filter("owner", Filter.Operator.eq, owner));
-            List<Order> orders = new ArrayList<>();
-            Order o = new Order();
-            o.setProperty("orders");
-            o.setDirection(Order.Direction.desc);
-            orders.add(o);
-            List<OrderRanking> ors = orderRankingService.findList(null, 1, filters, orders);
+            if (owner.equals(member)) {
+                List<Filter> filters = new ArrayList<>();
+                filters.add(new Filter("owner", Filter.Operator.eq, owner));
+                List<Order> orders = new ArrayList<>();
+                Order o = new Order();
+                o.setProperty("orders");
+                o.setDirection(Order.Direction.desc);
+                orders.add(o);
+                List<OrderRanking> ors = orderRankingService.findList(null, 1, filters, orders);
 
-            if (ors.size() == 0) {
-                model.setRanking(0L);
+                if (ors.size() == 0) {
+                    model.setRanking(0L);
+                } else {
+                    model.setRanking(ors.get(0).getOrders());
+                }
             } else {
-                model.setRanking(ors.get(0).getOrders());
+                List<Filter> filters = new ArrayList<>();
+                filters.add(new Filter("member", Filter.Operator.eq, member));
+                List<Order> orders = new ArrayList<>();
+                Order o = new Order();
+                o.setProperty("orders");
+                o.setDirection(Order.Direction.asc);
+                orders.add(o);
+                List<OrderRanking> ors = orderRankingService.findList(null, 1, filters, orders);
+                if (ors.size() == 0) {
+                    model.setRanking(0L);
+                } else {
+                    model.setRanking(ors.get(0).getOrders());
+                }
             }
 
         } else {
