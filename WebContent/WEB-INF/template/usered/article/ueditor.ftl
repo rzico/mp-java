@@ -256,7 +256,6 @@
         if (middle != null) {
             middle.children().eq(0).html($(this).html());
         }
-        $("#qseditor").focus();
     });
 
     //左菜单样式事件
