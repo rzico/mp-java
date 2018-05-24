@@ -304,7 +304,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId, Long tagId, Boolean isTop, Long articleCategoryId, Long articleCatalogId, Article.ArticleType mediaType, Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,String keyword, Long tagId, Boolean isTop, Long articleCategoryId, Long articleCatalogId, Article.ArticleType mediaType, Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
@@ -334,6 +334,9 @@ public class ArticleController extends BaseController {
         }
         filters.add(new Filter("mediaType", Filter.Operator.eq,mediaType));
 
+        if (keyword!=null) {
+            filters.add(Filter.like("title", "%" + keyword + "%"));
+        }
         pageable.setFilters(filters);
         pageable.setOrderProperty("modifyDate");
         pageable.setOrderDirection(Order.Direction.desc);

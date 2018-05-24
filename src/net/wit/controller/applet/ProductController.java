@@ -52,6 +52,9 @@ public class ProductController extends BaseController {
 	@Resource(name = "articleFavoriteServiceImpl")
 	private ArticleFavoriteService articleFavoriteService;
 
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
+
 	/**
 	 * 详情
 	 */
@@ -108,7 +111,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(Long productCategoryId,Pageable pageable,HttpServletRequest request) {
+	Message list(Long productCategoryId,Long tagId,String keyword,Pageable pageable,HttpServletRequest request) {
 		ProductCategory productCategory = productCategoryService.find(productCategoryId);
 		List<Filter> filters = new ArrayList<Filter>();
 		if (productCategory!=null) {
@@ -118,6 +121,16 @@ public class ProductController extends BaseController {
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
+
+		Tag tag = null;
+		if (tagId!=null) {
+			tag = tagService.find(tagId);
+		}
+
+		if (keyword!=null) {
+			filters.add(Filter.like("name", "%" + keyword + "%"));
+		}
+
 		Page<Product> page = productService.findPage(null,null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));

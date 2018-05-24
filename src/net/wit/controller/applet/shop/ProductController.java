@@ -71,7 +71,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(Long authorId,Long productCategoryId,Long tagId ,Pageable pageable,HttpServletRequest request) {
+	Message list(Long authorId,Long productCategoryId,String keyword,Long tagId ,Pageable pageable,HttpServletRequest request) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		if (authorId==null) {
 			authorId = Long.parseLong(bundle.getString("platform"));
@@ -95,6 +95,11 @@ public class ProductController extends BaseController {
 		if (tagId!=null) {
 			tag = tagService.find(tagId);
 		}
+
+		if (keyword!=null) {
+			filters.add(Filter.like("name", "%" + keyword + "%"));
+		}
+
 		Page<Product> page = productService.findPage(null,null,tag,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));

@@ -1384,10 +1384,12 @@ public class Order extends BaseEntity {
 	}
 
 	/**
+	 *
 	 * 获取本单收益
 	 *
 	 * @return 本单收益
 	 */
+
 	@Transient
 	public BigDecimal getRebate() {
 		BigDecimal rebate = BigDecimal.ZERO;

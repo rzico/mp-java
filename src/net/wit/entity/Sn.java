@@ -39,7 +39,9 @@ public class Sn extends BaseEntity {
 		/** 订单 */
 		order,
 		/** 充值 */
-		recharge
+		recharge,
+		/** 送货单 */
+		shipping
 	}
 
 	/** 类型 */

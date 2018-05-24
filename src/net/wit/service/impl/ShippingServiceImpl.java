@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.service.SnService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,8 +34,12 @@ import net.wit.service.ShippingService;
  
 @Service("shippingServiceImpl")
 public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> implements ShippingService {
+
 	@Resource(name = "shippingDaoImpl")
 	private ShippingDao shippingDao;
+
+	@Resource(name = "snServiceImpl")
+	private SnService snService;
 
 	@Resource(name = "shippingDaoImpl")
 	public void setBaseDao(ShippingDao shippingDao) {
@@ -99,5 +104,23 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		return shippingDao.findBySn(sn);
 	}
 
+	public Shipping create(Order order) {
+		
+		Shipping shipping = new Shipping();
+		shipping.setAddress(order.getAddress());
+		shipping.setAreaName(order.getAreaName());
+		shipping.setConsignee(order.getConsignee());
 
+		shipping.setMember(order.getMember());
+		shipping.setOrder(order);
+		shipping.setOrderStatus(Shipping.OrderStatus.unconfirmed);
+		shipping.setShippingStatus(Shipping.ShippingStatus.unconfirmed);
+		shipping.setPhone(order.getPhone());
+		shipping.setSeller(order.getMember());
+		shipping.setZipCode(order.getZipCode());
+		shipping.setSn(snService.generate(Sn.Type.shipping));
+
+		return shipping;
+
+	}
 }

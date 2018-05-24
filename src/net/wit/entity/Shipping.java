@@ -147,10 +147,6 @@ public class Shipping extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '电话'")
 	private String phone;
 
-	/** 操作员 */
-	@Column(columnDefinition="varchar(255) comment '操作员'")
-	private String operator;
-
 	/** 备注 */
 	@Column(columnDefinition="varchar(255) comment '备注'")
 	private String memo;

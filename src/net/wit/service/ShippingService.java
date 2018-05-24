@@ -28,4 +28,6 @@ public interface ShippingService extends BaseService<Shipping, Long> {
 	 * @return 订单，若不存在则返回null
 	 */
 	Shipping findBySn(String sn);
+
+	Shipping create(Order order);
 }

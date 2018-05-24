@@ -102,10 +102,12 @@ public class MemberController extends BaseController {
     @RequestMapping(value = "/roles")
     @ResponseBody
     public Message roles(HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
         Admin admin = adminService.findByMember(member);
         String s = "";
         if (admin==null) {
