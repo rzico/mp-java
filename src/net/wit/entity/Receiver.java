@@ -88,7 +88,6 @@ public class Receiver extends BaseEntity {
 
 	/** 配送点 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
 	private Shop shop;
 
 	/**
@@ -257,6 +256,22 @@ public class Receiver extends BaseEntity {
 	 */
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
+	public Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
 	}
 
 	/**

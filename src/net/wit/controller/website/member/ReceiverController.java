@@ -88,6 +88,8 @@ public class ReceiverController extends BaseController {
         }
         receiver.setZipCode("000000");
         receiver.setMember(member);
+        receiver.setLevel(0);
+        receiver.setShop(null);
 
         receiverService.save(receiver);
 
@@ -120,6 +122,9 @@ public class ReceiverController extends BaseController {
         }
         receiver.setZipCode("000000");
         receiver.setMember(member);
+        receiver.setLevel(0);
+        receiver.setShop(null);
+
         receiverService.update(receiver);
         ReceiverModel model = new ReceiverModel();
         model.bind(receiver);
