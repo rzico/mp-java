@@ -1,5 +1,6 @@
 package net.wit.controller.usered;
 
+import net.wit.plat.weixin.util.WeixinApi;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,11 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/usered/login")
 public class LoginController {
 
+
     /**
      * 登录页面
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("login",WeixinApi.askCode("wxbdc5610cc59c1631","https%3A%2F%2Fpassport.yhd.com%2Fwechat%2Fcallback.do","3d6be0a4035d839573b04816624a415e"));
         return "/usered/login/index";
     }
 

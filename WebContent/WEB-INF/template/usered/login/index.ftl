@@ -27,34 +27,35 @@
 <body>
 <div class="header"></div>
 <div class="loginWraper">
-    <div class="loginBox">
-        <form id="loginform" class="form form-horizontal" action="submit.jhtml" method="post">
-            <div class="row cl">
-                <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
-                <div class="formControls col-xs-8">
-                    <input id="mobile" name="mobile" type="text" placeholder="手机号码" class="input-text size-L">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
-                <div class="formControls col-xs-8">
-                    <input id="captcha" name="captcha" type="text" placeholder="验证码" class="input-text size-L">
-                </div>
-            </div>
-            <div class="row cl">
-                <div class="formControls col-xs-8 col-xs-offset-3">
-                    <a id="captchaClick" href="javascript:;">获取验证码</a></div>
-            </div>
-            <div class="row cl">
-                <div class="formControls col-xs-8 col-xs-offset-3">
-                    <input name="" type="submit" class="btn btn-success radius size-L"
-                           value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
-                    <input name="" type="reset" class="btn btn-default radius size-L"
-                           value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">
-                </div>
-            </div>
-        </form>
-    </div>
+    <#--<div class="loginBox">-->
+        <#--<form id="loginform" class="form form-horizontal" action="submit.jhtml" method="post">-->
+            <#--<div class="row cl">-->
+                <#--<label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>-->
+                <#--<div class="formControls col-xs-8">-->
+                    <#--<input id="mobile" name="mobile" type="text" placeholder="手机号码" class="input-text size-L">-->
+                <#--</div>-->
+            <#--</div>-->
+            <#--<div class="row cl">-->
+                <#--<label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>-->
+                <#--<div class="formControls col-xs-8">-->
+                    <#--<input id="captcha" name="captcha" type="text" placeholder="验证码" class="input-text size-L">-->
+                <#--</div>-->
+            <#--</div>-->
+            <#--<div class="row cl">-->
+                <#--<div class="formControls col-xs-8 col-xs-offset-3">-->
+                    <#--<a id="captchaClick" href="javascript:;">获取验证码</a></div>-->
+            <#--</div>-->
+            <#--<div class="row cl">-->
+                <#--<div class="formControls col-xs-8 col-xs-offset-3">-->
+                    <#--<input name="" type="submit" class="btn btn-success radius size-L"-->
+                           <#--value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">-->
+                    <#--<input name="" type="reset" class="btn btn-default radius size-L"-->
+                           <#--value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">-->
+                <#--</div>-->
+            <#--</div>-->
+        <#--</form>-->
+        <iframe class="loginBox" style="background-image: none;" frameborder="0" scrolling="no" src="${login}"></iframe>
+    <#--</div>-->
 </div>
 
 <div class="footer">Copyright ${setting.company} ${setting.siteName} v1.0</div>
