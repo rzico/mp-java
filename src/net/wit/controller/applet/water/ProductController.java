@@ -49,6 +49,11 @@ public class ProductController extends BaseController {
 	@Resource(name = "couponServiceImpl")
 	private CouponService couponService;
 
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
+
+	@Resource(name = "promotionServiceImpl")
+	private PromotionService promotionService;
 
 	/**
 	 * 详情

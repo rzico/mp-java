@@ -456,5 +456,31 @@ public class OrderController extends BaseController {
 		return Message.success(model,"退款成功");
 	}
 
-
+	/**
+	 * 支付
+	 */
+	@RequestMapping(value = "/payment")
+	public @ResponseBody Message payment(String sn,String tranSn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("无效订单号");
+		}
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		try {
+			if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
+				Payment payment = orderService.payment(order, null);
+				PaymentModel model = new PaymentModel();
+				model.bind(payment);
+				return Message.success(model, "发起成功");
+			} else {
+				return Message.error("不是待付款订单");
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			return Message.error(e.getMessage());
+		}
+	}
 }

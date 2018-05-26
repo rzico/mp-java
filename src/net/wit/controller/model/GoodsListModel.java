@@ -3,6 +3,7 @@ package net.wit.controller.model;
 import net.wit.entity.Goods;
 import net.wit.entity.Product;
 import net.wit.entity.ProductStock;
+import net.wit.entity.Promotion;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -161,4 +162,15 @@ public class GoodsListModel extends BaseModel implements Serializable {
         return ms;
     }
 
+
+
+    public static List<GoodsListModel> bindPromotion(List<Promotion> promotions) {
+        List<GoodsListModel> ms = new ArrayList<GoodsListModel>();
+        for (Promotion promotion:promotions) {
+            GoodsListModel m = new GoodsListModel();
+            m.bind(promotion.getGoods());
+            ms.add(m);
+        }
+        return ms;
+    }
 }

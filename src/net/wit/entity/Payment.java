@@ -33,6 +33,7 @@ public class Payment extends BaseEntity {
 	/**
 	 * 类型
 	 */
+
 	public enum Type {
 
 		/** 购物支付 */

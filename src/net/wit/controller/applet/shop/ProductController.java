@@ -51,6 +51,8 @@ public class ProductController extends BaseController {
 	private ProductCategoryService productCategoryService;
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
+	@Resource(name = "promotionServiceImpl")
+	private PromotionService promotionService;
 
 	/**
 	 * 详情
@@ -106,33 +108,84 @@ public class ProductController extends BaseController {
 		return Message.bind(model,request);
 	}
 
+
 	/**
 	 * 列表
 	 */
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/news", method = RequestMethod.GET)
 	public @ResponseBody
-	Message search(Long authorId,Long productCategoryId,String keyword,Pageable pageable,HttpServletRequest request) {
+	Message news(Long authorId,Pageable pageable,HttpServletRequest request) {
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		if (authorId==null) {
+			authorId = Long.parseLong(bundle.getString("platform"));
+		}
 		Member member = memberService.find(authorId);
 		if (member==null) {
 			return Message.error("作者id无效");
 		}
-		ProductCategory productCategory = productCategoryService.find(productCategoryId);
 		List<Filter> filters = new ArrayList<Filter>();
-		if (productCategory!=null) {
-			filters.add(new Filter("productCategory", Filter.Operator.eq,productCategory));
-		}
-		if (keyword!=null) {
-			filters.add(Filter.like("name","%"+keyword+"%"));
-		}
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
-		Page<Product> page = productService.findPage(null,null,null,pageable);
+
+		Tag tag = tagService.find(2L);
+		Page<Product> page = productService.findPage(null,null,tag,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
 	}
+
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping(value = "/recommend", method = RequestMethod.GET)
+	public @ResponseBody
+	Message recommend(Long authorId,Pageable pageable,HttpServletRequest request) {
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		if (authorId==null) {
+			authorId = Long.parseLong(bundle.getString("platform"));
+		}
+		Member member = memberService.find(authorId);
+		if (member==null) {
+			return Message.error("作者id无效");
+		}
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("member", Filter.Operator.eq,member));
+		filters.add(new Filter("isList", Filter.Operator.eq,true));
+
+		Tag tag = tagService.find(3L);
+		Page<Product> page = productService.findPage(null,null,tag,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(GoodsListModel.bindList(page.getContent()));
+		return Message.bind(model,request);
+	}
+
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping(value = "/promotion", method = RequestMethod.GET)
+	public @ResponseBody
+	Message promotion(Long authorId,Pageable pageable,HttpServletRequest request) {
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		if (authorId==null) {
+			authorId = Long.parseLong(bundle.getString("platform"));
+		}
+		Member member = memberService.find(authorId);
+		if (member==null) {
+			return Message.error("作者id无效");
+		}
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("owner", Filter.Operator.eq,member));
+
+		Page<Promotion> page = promotionService.findPage(null,null,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(GoodsListModel.bindPromotion(page.getContent()));
+		return Message.bind(model,request);
+	}
+
 
 }

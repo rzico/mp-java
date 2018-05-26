@@ -60,16 +60,14 @@ public class Article extends BaseEntity{
     };
 
     public static enum ArticleType{
-        /** 系统公告  */
+        /** 公告  */
         html,
-        /** 用户图文 */
+        /** 图文 */
         article,
         /** 商品详情 */
         product,
-        /** 品牌介绍 */
-        brand,
-        /** 企业动态 */
-        news
+        /** 视频 */
+        video
     };
 
     /** 类型 */

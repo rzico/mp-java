@@ -330,10 +330,11 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         if (mediaType==null) {
-            mediaType = Article.ArticleType.article;
+            filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
+            filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.video));
+        } else {
+            filters.add(new Filter("mediaType", Filter.Operator.eq, mediaType));
         }
-        filters.add(new Filter("mediaType", Filter.Operator.eq,mediaType));
-
         if (keyword!=null) {
             filters.add(Filter.like("title", "%" + keyword + "%"));
         }
