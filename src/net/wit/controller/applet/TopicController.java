@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCatalogModel;
+import net.wit.controller.model.NavigationModel;
 import net.wit.controller.model.TopicListModel;
 import net.wit.controller.model.TopicViewModel;
 import net.wit.entity.*;
@@ -90,6 +91,37 @@ public class TopicController extends BaseController {
         }
         return Message.bind(model,request);
    }
+
+    /**
+     * 导航信息
+     * id 会员
+     */
+    @RequestMapping(value = "/navigation", method = RequestMethod.GET)
+    @ResponseBody
+    public Message navigation(Long id,HttpServletRequest request){
+        List<NavigationModel> data = new ArrayList<>();
+        NavigationModel news = new NavigationModel();
+        news.setType(Navigation.Type.news);
+        news.setName("新品");
+        news.setLogo("");
+        data.add(news);
+        NavigationModel videos = new NavigationModel();
+        videos.setType(Navigation.Type.video);
+        videos.setName("视频");
+        videos.setLogo("");
+        data.add(videos);
+        NavigationModel promotions = new NavigationModel();
+        promotions.setType(Navigation.Type.promotion);
+        promotions.setName("抢购");
+        promotions.setLogo("");
+        data.add(promotions);
+        NavigationModel products = new NavigationModel();
+        products.setType(Navigation.Type.mall);
+        products.setName("商城");
+        products.setLogo("");
+        data.add(products);
+        return Message.bind(data,request);
+    }
 
     /**
      *  专栏搜索
