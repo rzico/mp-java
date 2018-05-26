@@ -214,7 +214,9 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         for (int i=0;i<jo.size();i++) {
             JSONObject ob = jo.getJSONObject(i);
             ArticleContentViewModel m = new ArticleContentViewModel();
-            m.setContent(ob.getString("content"));
+            if(ob.containsKey("content")){
+                m.setContent(ob.getString("content"));
+            }
             if (ob.containsKey("id") && !"".equals(ob.getString("id"))) {
                 m.setId(ob.getLong("id"));
             } else {
