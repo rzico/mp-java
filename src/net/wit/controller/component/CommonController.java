@@ -56,12 +56,12 @@ public class CommonController extends BaseController {
             String verifyTicket = pluginConfig.getAttribute("verify_ticket");
             ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, appId, secret);
             String url = "";
-            //http://mopian.1xx.me/weixin/notify.jhtml
+            //http://mp.1xx.me/weixin/notify.jhtml
             if (componentAccessToken != null && componentAccessToken.getComponent_access_token() != null && !componentAccessToken.getComponent_access_token().equals("")) {
                 String preAuthCode = WeixinApi.getPreAuthCode(componentAccessToken.getComponent_access_token(), appId);
                 Member member = memberService.getCurrent();
                 System.out.println("weixinSouquan===============================:" + (member == null ? "null" : "nonull"));
-                if (member == null) return "redirect:http://mopian.1xx.me";
+                if (member == null) return "redirect:http://mp.1xx.me";
                 System.out.println("weixinSouquan===============================" + member.getId());
                 //+ memberService.getCurrent().getId()；
 //                String reUrl = net.wit.util.StringUtils.base64Encode(("http://" + bundle.getString("weixin.component.url") + "/component/common/weixinCallback.jhtml").getBytes());
@@ -70,7 +70,7 @@ public class CommonController extends BaseController {
                 return "redirect:" + url;
             }
         }
-        return "redirect:http://mopian.1xx.me";
+        return "redirect:http://mp.1xx.me";
 //        HashMap<String, Object> data = new HashMap<>();
 //        data.put("url", url);
 //        return Message.bind(data,request);
