@@ -151,6 +151,9 @@ public class NihtanController extends BaseController {
                     game.setRoundNo(jsonObject.getString("round_id"));
                 }
                 Double amount = jsonObject.getDouble("amount");
+                if ("cancel".equals(jsonObject.getString("type"))) {
+                    amount = -amount;
+                }
 //                if (!game.getGame().equals("Sicbo") && !game.getGame().equals("Poker") && !game.getGame().equals("Dragon-Tiger") && !game.getGame().equals("Baccarat")) {
 //                    amount = amount * 10;
 //                }
