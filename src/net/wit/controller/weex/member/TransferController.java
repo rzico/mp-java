@@ -122,7 +122,6 @@ public class TransferController extends BaseController {
         PageBlock model = PageBlock.bind(page);
         model.setData(TransferModel.bindList(page.getContent()));
 
-
         return Message.bind(model,request);
 
     }
@@ -156,6 +155,7 @@ public class TransferController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
         if (amount.compareTo(new BigDecimal(100))<0) {
             return Message.error("提现金额必须大于100元");
         }
@@ -203,6 +203,7 @@ public class TransferController extends BaseController {
         } else {
             return Message.error("不支持的类型");
         }
+
         transfer.setMember(member);
         transfer.setStatus(Transfer.Status.waiting);
         transfer.setAmount(amount);
@@ -215,6 +216,8 @@ public class TransferController extends BaseController {
         } catch (Exception e) {
             return Message.error(e.getMessage());
         }
+
+
     }
 
 

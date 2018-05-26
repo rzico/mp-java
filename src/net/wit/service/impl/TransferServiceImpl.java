@@ -242,8 +242,6 @@ public class TransferServiceImpl extends BaseServiceImpl<Transfer, Long> impleme
 		transfer.setStatus(Transfer.Status.success);
 		transferDao.merge(transfer);
 
-
-
 	}
 
 

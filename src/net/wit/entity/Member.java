@@ -1026,7 +1026,7 @@ public class Member extends BaseEntity {
 	}
 
 	public BigDecimal effectiveBalance() {
-		return getBalance();
+		return getBalance().setScale(2,BigDecimal.ROUND_HALF_DOWN);
 	}
 
 	public String userId() {
