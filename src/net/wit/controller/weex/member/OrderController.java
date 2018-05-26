@@ -470,7 +470,7 @@ public class OrderController extends BaseController {
 			return Message.error("订单处理中，请稍候再试");
 		}
 		try {
-			if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
+			if (order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
 				Payment payment = orderService.payment(order, null);
 				PaymentModel model = new PaymentModel();
 				model.bind(payment);
