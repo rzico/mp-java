@@ -134,7 +134,7 @@ public class NihtanController extends BaseController {
     public String transaction(String hash,HttpServletRequest request,ModelMap model){
         String json = WebUtils.getBodyParams(request);
 //        System.out.println("transaction");
-//        System.out.println(json);
+        System.out.println(json);
         Map<String,String> data = new HashMap<>();
 //        if (hash!=null && json!=null && !json.equals("") && hash.equals(Crypto.encrypt(Crypto.key,json))) {
             JSONObject jsonObject = JSONObject.fromObject(json);
@@ -210,8 +210,8 @@ public class NihtanController extends BaseController {
             if (member!=null) {
                 Game gameData = gameService.find(member,game,table,round_no);
                 if (gameData==null) {
-                    System.out.printf("zero======");
-                    System.out.printf(json);
+//                    System.out.printf("zero======");
+//                    System.out.printf(json);
                     gameData = new Game();
                     gameData.setGame(game);
                     gameData.setTableNo(table);

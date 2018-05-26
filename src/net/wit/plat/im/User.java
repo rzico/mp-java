@@ -44,8 +44,8 @@ public class User {
         // generate signature
         tls_sigature.GenTLSSignatureResult result = null;
         try {
-            System.out.printf(bundle.getString("im.privateKey"));
-            System.out.printf(username);
+//            System.out.printf(bundle.getString("im.privateKey"));
+//            System.out.printf(username);
             result = GenTLSSignatureEx(Long.parseLong(bundle.getString("x-tls-appId")), username,bundle.getString("im.privateKey"));
             return result.urlSig;
         } catch (IOException e) {
