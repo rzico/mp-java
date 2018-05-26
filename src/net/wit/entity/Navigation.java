@@ -21,7 +21,7 @@ public class Navigation extends OrderEntity{
     private static final long serialVersionUID = 56L;
 
     /**
-     * 状态
+     * 状态 orderType=priceAsc  priceDesc  dateDesc, hitsDesc, default
      */
     public enum Type {
         /**  文章 */
