@@ -103,22 +103,22 @@ public class TopicController extends BaseController {
         NavigationModel news = new NavigationModel();
         news.setType(Navigation.Type.news);
         news.setName("新品");
-        news.setLogo("");
+        news.setLogo("http://cdnx.rzico.com/images/news.png");
         data.add(news);
         NavigationModel videos = new NavigationModel();
         videos.setType(Navigation.Type.video);
         videos.setName("视频");
-        videos.setLogo("");
+        videos.setLogo("http://cdnx.rzico.com/images/video.png");
         data.add(videos);
         NavigationModel promotions = new NavigationModel();
         promotions.setType(Navigation.Type.promotion);
         promotions.setName("抢购");
-        promotions.setLogo("");
+        promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
         data.add(promotions);
         NavigationModel products = new NavigationModel();
         products.setType(Navigation.Type.mall);
         products.setName("商城");
-        products.setLogo("");
+        products.setLogo("http://cdnx.rzico.com/images/mall.png");
         data.add(products);
         return Message.bind(data,request);
     }
