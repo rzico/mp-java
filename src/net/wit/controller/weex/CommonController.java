@@ -77,7 +77,7 @@ public class CommonController extends BaseController {
 	@RequestMapping(value = "/resources", method = RequestMethod.GET)
 	@ResponseBody
 	public Message resources(HttpServletRequest request, HttpServletResponse response) {
-//		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		Map<String,Object> data = new HashMap<String,Object>();
 		String ua = request.getHeader("user-agent");
 //		if (ua != null) {
@@ -134,6 +134,7 @@ public class CommonController extends BaseController {
 		}
 		data.put("resVersion",pluginConfig.getAttribute("resourceVersion"));
 		data.put("resUrl",pluginConfig.getAttribute("resourceUrl"));
+		data.put("key",bundle.getString("app.key"));
 		return Message.bind(data,request);
 	}
 
