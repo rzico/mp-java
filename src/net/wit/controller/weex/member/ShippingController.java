@@ -8,10 +8,7 @@ package net.wit.controller.weex.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
-import net.wit.controller.model.OrderListModel;
-import net.wit.controller.model.OrderModel;
-import net.wit.controller.model.ShippingListModel;
-import net.wit.controller.model.ShippingModel;
+import net.wit.controller.model.*;
 import net.wit.controller.weex.BaseController;
 import net.wit.entity.*;
 
@@ -267,5 +264,71 @@ public class ShippingController extends BaseController {
 		return Message.bind(model,request);
 	}
 
+
+	/**
+	 *  获取配送站
+	 */
+	@RequestMapping(value = "/shop", method = RequestMethod.GET)
+	@ResponseBody
+	public Message shop(Pageable pageable,Double lat,Double lng, HttpServletRequest request){
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+		if (member.getTopic()==null) {
+			return Message.error("没有开通专栏");
+		}
+		Admin admin = adminService.findByMember(member);
+		if (admin==null) {
+			return Message.error("没有点亮专栏");
+		}
+		if (admin.getEnterprise()==null) {
+			return Message.error("店铺已打洋,请先启APP");
+		}
+		Enterprise enterprise = admin.getEnterprise();
+		List<Filter> filters = new ArrayList<Filter>();
+
+		filters.add(new Filter("enterprise", Filter.Operator.eq,enterprise));
+
+		pageable.setFilters(filters);
+		Page<Shop> page = shopService.findPage(null,null,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(ShopModel.bindList(page.getContent(),lat,lng));
+		return Message.bind(model,request);
+	}
+
+
+	/**
+	 *  获取送货员
+	 */
+	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	@ResponseBody
+	public Message  admin(Long shopId,Pageable pageable,HttpServletRequest request){
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+		Admin admin = adminService.findByMember(member);
+		if (admin==null) {
+			return Message.error("没有点亮专栏");
+		}
+		if (admin.getEnterprise()==null) {
+			return Message.error("店铺已打洋,请先启APP");
+		}
+		Enterprise enterprise = admin.getEnterprise();
+		List<Filter> filters = new ArrayList<Filter>();
+		if (shopId==null) {
+			filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
+		} else {
+			filters.add(new Filter("shop", Filter.Operator.eq, shopService.find(shopId)));
+		}
+		pageable.setFilters(filters);
+		pageable.setOrderProperty("shop");
+		pageable.setOrderDirection(Order.Direction.asc);
+		Page<Admin> page = adminService.findPage(null,null,pageable);
+		PageBlock model = PageBlock.bind(page);
+		model.setData(AdminModel.bindList(page.getContent()));
+		return Message.bind(model,request);
+	}
 
 }
