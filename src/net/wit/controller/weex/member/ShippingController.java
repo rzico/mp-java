@@ -47,6 +47,9 @@ public class ShippingController extends BaseController {
 	@Resource(name = "shippingServiceImpl")
 	private ShippingService shippingService;
 
+	@Resource(name = "shopServiceImpl")
+	private ShopService shopService;
+
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
@@ -95,6 +98,129 @@ public class ShippingController extends BaseController {
 		if (shipping==null) {
 			return Message.error("无效送货id");
 		}
+		ShippingModel model = new ShippingModel();
+		model.bind(shipping);
+		return Message.bind(model,request);
+	}
+
+
+	/**
+	 *  派单
+	 */
+	@RequestMapping(value = "/dispatch", method = RequestMethod.POST)
+	public @ResponseBody
+	Message dispatch(String sn,Long shopId,Long adminId,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Shipping shipping = shippingService.findBySn(sn);
+		if (shipping==null) {
+			return Message.error("无效送货id");
+		}
+
+		Shop shop = shopService.find(shopId);
+		if (shop==null) {
+			return Message.error("无效配送点 id");
+		}
+
+		Admin admin = null;
+		if (adminId!=null) {
+			admin = adminService.find(adminId);
+		}
+		shipping.setShop(shop);
+
+		shipping.setEnterprise(shop.getEnterprise());
+		shipping.setAdmin(admin);
+		if (admin!=null) {
+			shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
+			shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
+		}
+
+		shippingService.update(shipping);
+
+		ShippingModel model = new ShippingModel();
+		model.bind(shipping);
+		return Message.bind(model,request);
+	}
+
+
+	/**
+	 *  送达
+	 */
+	@RequestMapping(value = "/receive", method = RequestMethod.POST)
+	public @ResponseBody
+	Message receive(String sn,Long [] barrelIds,Long [] retrieves,Long sends,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Shipping shipping = shippingService.findBySn(sn);
+		if (shipping==null) {
+			return Message.error("无效送货id");
+		}
+
+
+		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
+
+		shippingService.update(shipping);
+
+		ShippingModel model = new ShippingModel();
+		model.bind(shipping);
+		return Message.bind(model,request);
+	}
+
+
+
+	/**
+	 *  计算
+	 */
+	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
+	public @ResponseBody
+	Message calculate(String sn,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Shipping shipping = shippingService.findBySn(sn);
+		if (shipping==null) {
+			return Message.error("无效送货id");
+		}
+
+
+		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
+
+		shippingService.update(shipping);
+
+		ShippingModel model = new ShippingModel();
+		model.bind(shipping);
+		return Message.bind(model,request);
+	}
+
+	/**
+	 *  核销
+	 */
+	@RequestMapping(value = "/completed", method = RequestMethod.POST)
+	public @ResponseBody
+	Message completed(String sn,Long [] barrelIds,Long [] retrieves,Long sends,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Shipping shipping = shippingService.findBySn(sn);
+		if (shipping==null) {
+			return Message.error("无效送货id");
+		}
+
+
+		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
+
+		shippingService.update(shipping);
+
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);
 		return Message.bind(model,request);

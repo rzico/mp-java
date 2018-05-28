@@ -14,6 +14,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.service.AdminService;
+import net.wit.service.ReceiverService;
 import net.wit.service.SnService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -40,6 +42,12 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	@Resource(name = "snServiceImpl")
 	private SnService snService;
+
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
+	@Resource(name = "receiverServiceImpl")
+	private ReceiverService receiverService;
 
 	@Resource(name = "shippingDaoImpl")
 	public void setBaseDao(ShippingDao shippingDao) {
@@ -120,6 +128,49 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setZipCode(order.getZipCode());
 		shipping.setSn(snService.generate(Sn.Type.shipping));
 
+		List<ShippingItem> shippingItems = new ArrayList<>();
+		for (OrderItem orderItem:order.getOrderItems()) {
+			ShippingItem shippingItem = new ShippingItem();
+			shippingItem.setName(orderItem.getName());
+			shippingItem.setProduct(orderItem.getProduct());
+			shippingItem.setQuantity(orderItem.getQuantity());
+			shippingItem.setSn(orderItem.getProduct().getSn());
+			shippingItem.setSpec(orderItem.getSpec());
+			shippingItem.setThumbnail(orderItem.getThumbnail());
+			shippingItem.setShipping(shipping);
+			shippingItems.add(shippingItem);
+		}
+
+		shipping.setShippingItems(shippingItems);
+
+		Receiver receiver = receiverService.find(order.getReceiverId());
+		if (receiver!=null && receiver.getShop()!=null) {
+			shipping.setEnterprise(receiver.getShop().getEnterprise());
+			shipping.setShop(receiver.getShop());
+			shipping.setAdmin(receiver.getAdmin());
+		} else {
+			//没有分配，按距离来，选按谁的客户给谁
+			Member member = order.getMember();
+			Card card = member.card(order.getSeller());
+			if (card==null) {
+				card = member.getCards().get(0);
+			}
+			if (card!=null) {
+				Admin admin = adminService.findByMember(card.getOwner());
+				if (admin!=null) {
+					shipping.setEnterprise(admin.getEnterprise());
+					shipping.setShop(admin.getShop());
+				}
+			} else {
+				Admin admin = adminService.findByMember(order.getSeller());
+				if (admin!=null) {
+					shipping.setEnterprise(admin.getEnterprise());
+					shipping.setShop(admin.getShop());
+				}
+			}
+		}
+
+		shippingDao.persist(shipping);
 		return shipping;
 
 	}

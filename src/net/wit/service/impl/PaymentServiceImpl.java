@@ -198,7 +198,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				}
 
 				if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
-					orderService.shipping(order,null);
+					orderService.shipping(order,Order.ShippingMethod.cardbkg,null,null);
 					orderService.complete(order,null);
 				}
 

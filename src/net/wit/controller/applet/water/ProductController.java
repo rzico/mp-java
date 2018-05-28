@@ -46,8 +46,8 @@ public class ProductController extends BaseController {
 	private GoodsService goodsService;
 	@Resource(name = "productCategoryServiceImpl")
 	private ProductCategoryService productCategoryService;
-	@Resource(name = "couponServiceImpl")
-	private CouponService couponService;
+	@Resource(name = "couponCodeServiceImpl")
+	private CouponCodeService couponCodeService;
 
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
@@ -87,6 +87,29 @@ public class ProductController extends BaseController {
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
+	}
+
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping(value = "/water", method = RequestMethod.GET)
+	public @ResponseBody
+	Message water(Pageable pageable,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("member", Filter.Operator.eq,member));
+		filters.add(new Filter("stock", Filter.Operator.ge,0L));
+		List<CouponCode> page = couponCodeService.findList(null,null,filters,null);
+		List<Product> products = new ArrayList<>();
+		for (CouponCode couponCode:page) {
+			Coupon coupon = couponCode.getCoupon();
+			if (coupon.getType().equals(Coupon.Type.exchange)) {
+				Product product = coupon.getGoods().product();
+				products.add(product);
+			}
+		}
+		return Message.bind(GoodsListModel.bindList(products),request);
 	}
 
 }

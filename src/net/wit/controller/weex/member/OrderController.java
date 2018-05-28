@@ -212,7 +212,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/shipping", method = RequestMethod.POST)
 	public @ResponseBody
-	Message shipping(String sn,HttpServletRequest request) {
+	Message shipping(String sn, Order.ShippingMethod shippingMethod,String trackingNo, HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -241,7 +241,7 @@ public class OrderController extends BaseController {
 		}
 
 		try {
-			orderService.shipping(order,admin);
+			orderService.shipping(order,shippingMethod,trackingNo,admin);
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
 		}

@@ -92,9 +92,9 @@ public class CouponServiceImpl extends BaseServiceImpl<Coupon, Long> implements 
 		return couponDao.findPage(beginDate,endDate,pageable);
 	}
 
-	public Coupon create(Product product) {
+	public Coupon create(Product product,Member owner) {
 		List<Filter> filters = new ArrayList<>();
-		filters.add(new Filter("distributor",Operator.eq,product.getMember()));
+		filters.add(new Filter("distributor",Operator.eq,owner));
 		filters.add(new Filter("goods",Operator.eq,product.getGoods()));
 
 		List<Coupon> data = couponDao.findList(null,null,filters,null);
@@ -111,13 +111,13 @@ public class CouponServiceImpl extends BaseServiceImpl<Coupon, Long> implements 
 			coupon.setEndDate(e);
 			coupon.setColor(Coupon.Color.c1);
 			coupon.setDeleted(false);
-			coupon.setDistributor(product.getMember());
+			coupon.setDistributor(owner);
 			coupon.setIntroduction("提货券,请勿删除");
 			coupon.setMinimumPrice(BigDecimal.ZERO);
 			coupon.setType(Coupon.Type.exchange);
 			coupon.setName(product.getName()+"-提货券");
 			coupon.setScope(Coupon.Scope.all);
-			coupon.setStock(9999999L);
+			coupon.setStock(0L);
 			couponDao.persist(coupon);
 			return coupon;
 		}

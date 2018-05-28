@@ -124,12 +124,12 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 
 	public CouponCode build(Coupon coupon, Member member,Long amount) throws Exception {
 		couponDao.lock(coupon, LockModeType.PESSIMISTIC_WRITE);
-		if (coupon.getStock().equals(0L)) {
-			throw new RuntimeException("已抢完,下次再来");
-		}
-		if (coupon.getStock().compareTo(amount)<0) {
-			throw new RuntimeException("库存不足，下次再来");
-		}
+//		if (coupon.getStock().equals(0L)) {
+//			throw new RuntimeException("已抢完,下次再来");
+//		}
+//		if (coupon.getStock().compareTo(amount)<0) {
+//			throw new RuntimeException("库存不足，下次再来");
+//		}
 		CouponCode couponCode = null;
 		for (CouponCode c:member.getCouponCodes()) {
 			if (c.getCoupon().equals(coupon)) {
@@ -150,8 +150,8 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 			couponCode.setStock(couponCode.getStock()+amount);
 			couponCodeDao.merge(couponCode);
 		}
-		coupon.setStock(coupon.getStock()-amount);
-		couponDao.merge(coupon);
+//		coupon.setStock(coupon.getStock()-amount);
+//		couponDao.merge(coupon);
 		return couponCode;
 	}
 

@@ -128,7 +128,7 @@ public interface OrderService extends BaseService<Order, Long> {
          * @param operator
          *            操作员
          */
-	void shipping(Order order, Admin operator) throws Exception;
+	void shipping(Order order, Order.ShippingMethod shippingMethod,String trackingNo, Admin operator) throws Exception;
 
 	/**
 	 * 订单退货

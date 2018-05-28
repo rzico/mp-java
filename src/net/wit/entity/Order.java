@@ -211,6 +211,10 @@ public class Order extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null comment '赠送积分'")
 	private Long point;
 
+	/** 收货地址 id */
+	@Column(columnDefinition="bigint(20) not null comment '收货地址 id'")
+	private Long receiverId;
+
 	/** 来源编码 */
 	@Column(columnDefinition="varchar(50) comment '来源编码'")
 	private String groupNo;
@@ -335,6 +339,10 @@ public class Order extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bit comment '是否分配佣金'")
 	private Boolean isPartner;
 
+	/** 运单号 */
+	@Column(columnDefinition="varchar(255) comment '运单号'")
+	private String trackingNo;
+
 	/** 优惠码 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -378,6 +386,15 @@ public class Order extends BaseEntity {
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
 	private Set<Deposit> deposits = new HashSet<Deposit>();
+
+
+	public Long getReceiverId() {
+		return receiverId;
+	}
+
+	public void setReceiverId(Long receiverId) {
+		this.receiverId = receiverId;
+	}
 
 	public String getGroupNo() {
 		return groupNo;
@@ -1054,6 +1071,14 @@ public class Order extends BaseEntity {
 
 	public void setOperate(Enterprise operate) {
 		this.operate = operate;
+	}
+
+	public String getTrackingNo() {
+		return trackingNo;
+	}
+
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 
 	/**

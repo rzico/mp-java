@@ -87,6 +87,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "couponServiceImpl")
 	private CouponService couponService;
 
+	@Resource(name = "shippingServiceImpl")
+	private ShippingService shippingService;
+
 	@Resource(name = "couponCodeServiceImpl")
 	private CouponCodeService couponCodeService;
 
@@ -214,6 +217,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setPhone(receiver.getPhone());
 			order.setArea(receiver.getArea());
 			order.setLocation(receiver.getLocation());
+			order.setReceiverId(receiver.getId());
 		}
 
 		List<OrderItem> orderItems = order.getOrderItems();
@@ -232,7 +236,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderItem.setOrder(order);
 
 			orderItems.add(orderItem);
-			order.setSeller(product.getMember());
+
+			ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+			if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
+                Card card = member.getCards().get(0);
+                order.setSeller(card.getOwner());
+			} else {
+				order.setSeller(product.getMember());
+			}
+
 			if (promotionId!=null) {
 				Promotion promotion = promotionDao.find(promotionId);
 				if (promotion!=null) {
@@ -841,7 +853,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		//放入卡包
 		if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 			for (OrderItem orderItem:order.getOrderItems()) {
-				Coupon coupon = couponService.create(orderItem.getProduct());
+				Coupon coupon = couponService.create(orderItem.getProduct(),order.getSeller());
 				couponCodeService.build(coupon,order.getMember(),orderItem.getQuantity().longValue());
 			}
 		}
@@ -980,7 +992,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void shipping(Order order, Admin operator) throws Exception {
+	public void shipping(Order order, Order.ShippingMethod shippingMethod,String trackingNo, Admin operator) throws Exception {
 		Assert.notNull(order);
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
@@ -1010,6 +1022,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setIsAllocatedStock(false);
 		}
 
+		if (shippingMethod!=null) {
+			order.setShippingMethod(shippingMethod);
+		}
+		order.setTrackingNo(trackingNo);
 		order.setShippingStatus(Order.ShippingStatus.shipped);
 		order.setShippingDate(new Date());
 		order.setExpire(null);
@@ -1022,6 +1038,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
 		messageService.orderMemberPushTo(orderLog);
+
+		if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse)) {
+			shippingService.create(order);
+		}
+
 		return;
 
 	}

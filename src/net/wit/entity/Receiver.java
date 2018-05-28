@@ -90,6 +90,10 @@ public class Receiver extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Shop shop;
 
+	/** 送货员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Admin admin;
+
 	/**
 	 * 获取收货人
 	 * 
@@ -272,6 +276,14 @@ public class Receiver extends BaseEntity {
 
 	public void setShop(Shop shop) {
 		this.shop = shop;
+	}
+
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
 	}
 
 	/**
