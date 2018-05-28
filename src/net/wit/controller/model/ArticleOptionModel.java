@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 
 import net.wit.entity.Article;
+import net.wit.entity.Tag;
 
 import java.io.Serializable;
 
@@ -25,6 +26,10 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
     private String  password;
     /** 是否置顶 */
     private Boolean isTop;
+    /** 是否精选 */
+    private Boolean isTag5;
+    /** 是否推荐 */
+    private Boolean isTag4;
 
     /** 文章文集 */
     private ArticleCatalogModel articleCatalog;
@@ -119,6 +124,22 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
         this.articleCategory = articleCategory;
     }
 
+    public Boolean getIsTag5() {
+        return isTag5;
+    }
+
+    public void setIsTag5(Boolean tag5) {
+        isTag5 = tag5;
+    }
+
+    public Boolean getIsTag4() {
+        return isTag4;
+    }
+
+    public void setIsTag4(Boolean tag4) {
+        isTag4 = tag4;
+    }
+
     public void bind(Article article) {
         this.authority = article.getAuthority();
         this.isPublish = article.getIsPublish();
@@ -140,6 +161,16 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
             articleCategoryModel.setName(article.getArticleCategory().getName());
         }
         this.articleCategory = articleCategoryModel;
+        this.isTag4 = false;
+        this.isTag5 = false;
+        for (Tag tag:article.getTags()) {
+            if (tag.getId().equals(4L)) {
+                this.isTag4 = true;
+            }
+            if (tag.getId().equals(5L)) {
+                this.isTag5 = true;
+            }
+        }
    }
 
 }
