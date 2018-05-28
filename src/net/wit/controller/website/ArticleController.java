@@ -191,9 +191,11 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         if (mediaType==null) {
-            mediaType = Article.ArticleType.article;
+            filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
+            filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
+        } else {
+            filters.add(new Filter("mediaType", Filter.Operator.eq, mediaType));
         }
-        filters.add(new Filter("mediaType", Filter.Operator.eq,mediaType));
         List<Tag> tags = null;
         if (tagId!=null) {
             tags = tagService.findList(tagId);

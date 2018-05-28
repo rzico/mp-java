@@ -360,7 +360,8 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("isPitch", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
-        filters.add(new Filter("mediaType", Filter.Operator.eq, Article.ArticleType.article));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
 
         List<Tag> tags = null;
 //        tags = tagService.findList(4L);
@@ -389,7 +390,8 @@ public class ArticleController extends BaseController {
             filters.add(new Filter("isAudit", Filter.Operator.eq,true));
             tags = tagService.findList(4L,5L);
         }
-        filters.add(new Filter("mediaType", Filter.Operator.eq, Article.ArticleType.article));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         pageable.setFilters(filters);
@@ -398,28 +400,7 @@ public class ArticleController extends BaseController {
         model.setData(ArticleListModel.bindList(page.getContent()));
         return Message.bind(model,request);
     }
-
-    /**
-     *  文章搜索
-     *  keyword
-     */
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    @ResponseBody
-    public Message search(String keyword,Pageable pageable, HttpServletRequest request){
-        if (keyword==null) {
-            return Message.error("请输入关键词");
-        }
-        List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("mediaType", Filter.Operator.eq, Article.ArticleType.article));
-        filters.add(Filter.like("title","%"+keyword+"%"));
-        pageable.setFilters(filters);
-        Page<Article> page = articleService.findPage(null,null,null,pageable);
-        PageBlock model = PageBlock.bind(page);
-        model.setData(ArticleListModel.bindList(page.getContent()));
-        return Message.bind(model,request);
-    }
-
-
+    
     /**
      *  商品信息
      */

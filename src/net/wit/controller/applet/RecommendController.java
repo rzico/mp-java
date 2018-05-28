@@ -53,6 +53,11 @@ public class RecommendController extends BaseController {
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,article.getMember()));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);
