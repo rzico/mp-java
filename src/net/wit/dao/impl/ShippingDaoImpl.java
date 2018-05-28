@@ -65,7 +65,7 @@ public class ShippingDaoImpl extends BaseDaoImpl<Shipping, Long> implements Ship
 		if (sn == null) {
 			return null;
 		}
-		String jpql = "select orders from Shipping orders where lower(orders.sn) = lower(:sn)";
+		String jpql = "select shippings from Shipping shippings where lower(shippings.sn) = lower(:sn)";
 		try {
 			return entityManager.createQuery(jpql, Shipping.class).setFlushMode(FlushModeType.COMMIT).setParameter("sn", sn).getSingleResult();
 		} catch (NoResultException e) {

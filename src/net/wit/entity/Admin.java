@@ -389,7 +389,7 @@ public class Admin extends BaseEntity {
             }
             return roleStr;
         } else {
-            return null;
+            return "";
         }
     }
 

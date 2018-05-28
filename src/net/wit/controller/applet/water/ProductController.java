@@ -89,7 +89,6 @@ public class ProductController extends BaseController {
 		return Message.bind(model,request);
 	}
 
-
 	/**
 	 * 列表
 	 */

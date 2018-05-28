@@ -127,6 +127,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setSeller(order.getMember());
 		shipping.setZipCode(order.getZipCode());
 		shipping.setSn(snService.generate(Sn.Type.shipping));
+		shipping.setFreight(BigDecimal.ZERO);
 
 		List<ShippingItem> shippingItems = new ArrayList<>();
 		for (OrderItem orderItem:order.getOrderItems()) {
@@ -139,6 +140,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			shippingItem.setThumbnail(orderItem.getThumbnail());
 			shippingItem.setShipping(shipping);
 			shippingItems.add(shippingItem);
+
 		}
 
 		shipping.setShippingItems(shippingItems);

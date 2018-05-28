@@ -249,18 +249,18 @@ public class ShippingController extends BaseController {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
 		} else
 		if ("confirmed".equals(status)) {
-			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
 		} else {
-			filters.add(new Filter("orderStatus", Filter.Operator.gt,Shipping.OrderStatus.unconfirmed));
+			filters.add(new Filter("orderStatus", Filter.Operator.gt,Shipping.OrderStatus.confirmed));
 		}
-		if (admin.isRole("3")) {
+		if (admin.roles().contains("3")) {
 			filters.add(new Filter("admin", Filter.Operator.eq,admin));
 		} else {
 			filters.add(new Filter("shop", Filter.Operator.eq,shop));
 		}
 		pageable.setFilters(filters);
-		pageable.setOrderDirection(net.wit.Order.Direction.desc);
-		pageable.setOrderProperty("modifyDate");
+//		pageable.setOrderDirection(net.wit.Order.Direction.desc);
+//		pageable.setOrderProperty("createDate");
 		Page<Shipping> page = shippingService.findPage(null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(ShippingListModel.bindList(page.getContent()));

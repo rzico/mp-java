@@ -114,8 +114,8 @@ public class OrderController extends BaseController {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("seller", Filter.Operator.eq,member));
 		pageable.setFilters(filters);
-		pageable.setOrderDirection(net.wit.Order.Direction.desc);
-		pageable.setOrderProperty("modifyDate");
+//		pageable.setOrderDirection(net.wit.Order.Direction.desc);
+//		pageable.setOrderProperty("modifyDate");
 		Page<Order> page = orderService.findPage(null,null,status,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindList(page.getContent()));

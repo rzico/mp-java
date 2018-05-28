@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "wx_barrel")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_barrel_sequence")
+@Table(name = "wx_barrel_stock")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_barrel_stock_sequence")
 public class BarrelStock extends OrderEntity {
 
 	private static final long serialVersionUID = 2L;
