@@ -204,7 +204,7 @@ public class ArticleController extends BaseController {
             article.setLaud(0L);
             article.setReview(0L);
             article.setShare(0L);
-            article.setAuthority(Article.Authority.isPublic);
+            article.setAuthority(Article.Authority.isPrivate);
             article.setIsExample(false);
             article.setIsPitch(false);
             article.setIsPublish(false);

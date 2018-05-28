@@ -148,6 +148,12 @@ public class Topic extends BaseEntity {
     @JsonIgnore
     private TopicCard topicCard;
 
+
+
+    @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<AppletSowingMap> appletSowingMaps = new ArrayList<AppletSowingMap>();
+
     public Type getType() {
         return type;
     }
@@ -350,5 +356,13 @@ public class Topic extends BaseEntity {
 
     public void setRanking(Long ranking) {
         this.ranking = ranking;
+    }
+
+    public List<AppletSowingMap> getAppletSowingMaps() {
+        return appletSowingMaps;
+    }
+
+    public void setAppletSowingMaps(List<AppletSowingMap> appletSowingMaps) {
+        this.appletSowingMaps = appletSowingMaps;
     }
 }

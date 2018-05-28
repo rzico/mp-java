@@ -144,6 +144,11 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '备注 version'")
 	private String stateRemark;
 
+	/**
+	 * 产品类
+	 * @return
+	 */
+
 	public PromoterType getPromoterType() {
 		return promoterType;
 	}

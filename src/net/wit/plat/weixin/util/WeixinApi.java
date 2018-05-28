@@ -239,8 +239,8 @@ public class WeixinApi {
 	 * 请求CODE
 	 *@param appid 应用唯一标识
 	 *@param redirectUri 请使用urlEncode对服务器链接进行处理
-	 *@param responseType	 填code
-	 *@param scope 应用授权作用域，拥有多个作用域用逗号（,）分隔，网页应用目前仅填写snsapi_login即
+//	 *@param responseType	 填code
+//	 *@param scope 应用授权作用域，拥有多个作用域用逗号（,）分隔，网页应用目前仅填写snsapi_login即
 	 *@param state 用于保持请求和回调的状态，授权请求后原样带回给第三方。该参数可用于防止csrf攻击（跨站请求伪造攻击）
 	 *@return  返回 微信登陆二维码
 	 * */

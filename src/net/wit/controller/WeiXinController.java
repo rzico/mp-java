@@ -10,6 +10,7 @@ import net.wit.plat.im.User;
 import net.wit.plat.weixin.aes.AesException;
 import net.wit.plat.weixin.aes.WXBizMsgCrypt;
 import net.wit.plat.weixin.main.MenuManager;
+import net.wit.plat.weixin.pojo.AuthAccessToken;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.propa.ArticlePropa;
 import net.wit.plat.weixin.util.SignUtil;
@@ -81,7 +82,12 @@ public class WeiXinController extends BaseController {
     @Resource(name = "paymentServiceImpl")
     private PaymentService paymentService;
 
+    @Resource(name = "topicServiceImpl")
+    private TopicService topicService;
 
+
+    @Resource(name = "pluginConfigServiceImpl")
+    private PluginConfigService pluginConfigService;
     //消息校验TOKEN
     private static final String COMPONENT_TOKEN="witpay";
 
@@ -526,12 +532,79 @@ public class WeiXinController extends BaseController {
 
     }
 
+    /**
+     * 处理 Event 事件
+     * @param request
+     * @param response
+     * @param event
+     * @param toUserName
+     * @param fromUserName
+     * @param appId
+     * @throws AesException
+     */
     public void replyEventMessage(HttpServletRequest request, HttpServletResponse response, String event, String toUserName, String fromUserName,String appId) throws AesException {
         String content = event + "from_callback";
         System.out.println("--------------EVENT事件回复消息  content="+content + "   toUserName="+toUserName+"   fromUserName="+fromUserName +"     appid="+appId);
+        Topic topic = topicService.findByAppid(appId);
+        if(topic!=null){
+            TopicConfig topicConfig = topic.getConfig();
+            if(topicConfig!=null){
+                if(event.equalsIgnoreCase("weapp_audit_success")){
+                    //审核通过
+                    topicConfig.setEstate(TopicConfig.Estate.ISAUDITING);
+                    //这里可以发布代码
+                    String token = getAuthToken(topic);
+                    if (WeixinApi.releaseAppletCode(token)) {
+                        topicConfig.setEstate(TopicConfig.Estate.PASS);
+                    }
+                }else if(event.equalsIgnoreCase("weapp_audit_fail")){
+                    topicConfig.setEstate(TopicConfig.Estate.UNAUDITING);
+                }
+                topic.setConfig(topicConfig);
+                topicService.update(topic);
+            }
+        }
         replyTextMessage(request,response,content,toUserName,fromUserName,appId);
     }
+    /**
+     * 获取authorizerToken
+     */
+    public AuthAccessToken authToken(String refresh, String threeAppID) {
+        //拿ticket
+        PluginConfig pluginConfig = pluginConfigService.findByPluginId("verifyTicket");
+        String verifyTicket = pluginConfig.getAttribute("verify_ticket");
 
+        //拿第三方平台APPID SECRET
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String appid = bundle.getString("weixin.component.appid");
+        String secret = bundle.getString("weixin.component.secret");
+
+        //拿comtonken
+        String componentToken = WeixinApi.getComponentToken(verifyTicket, appid, secret).getComponent_access_token();
+
+        return WeixinApi.getRefreshAuthorizationCode(componentToken, threeAppID, refresh);
+    }
+
+    /**
+     * 拿refresh_token和APPID
+     */
+    public String getAuthToken(Topic topic) {
+        //拿refresh_token
+        String refresh = topic.getConfig().getRefreshToken();
+        String threeAppID = topic.getConfig().getAppetAppId();
+
+        if (refresh == null || threeAppID == null) {
+            return null;
+        }
+
+        AuthAccessToken authorizer = authToken(refresh, threeAppID);
+
+        topic.getConfig().setRefreshToken(authorizer.getAuthorizer_refresh_token());
+        topic.getConfig().setTokenExpire(authorizer.getExpire());
+        topicService.update(topic);
+
+        return authorizer.getAuthorizer_access_token();
+    }
     public void processTextMessage(HttpServletRequest request, HttpServletResponse response, String content, String toUserName, String fromUserName,String appid) throws AesException {
         if("TESTCOMPONENT_MSG_TYPE_TEXT".equals(content)){
             System.out.println("--------------文本事件回复消息  content="+content + "   toUserName="+toUserName+"   fromUserName="+fromUserName);
