@@ -9,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @ClassName: SafeKey
@@ -30,7 +31,7 @@ public class TopicConfig implements Serializable {
 		team,
 		/** 分红股东 */
 		partner
-	};
+	}
 
 	public static enum Pattern{
 		/** 无门槛，领卡，即成为团队成员 */
@@ -44,7 +45,27 @@ public class TopicConfig implements Serializable {
 		/** 累计消费满3000(设置)，即成为团队成员 */
 		pattern5
 
-	};
+	}
+
+	/**
+	 * 1、未授权
+	 * 2、已授权
+	 * 3、待审核
+	 * 4、正在审核
+	 * 5、通过审核（待发布）
+	 * 6、已发布
+	 */
+	public static enum Estate{
+		UNAUTHORIZED,//未授权
+		AUTHORIZED,//已授权
+		ISCOMMIT,//已提交代码
+		AUDITING,//正在审核
+
+		ISAUDITING,//通过审核（待发布）
+		UNAUDITING,//审核不通过
+		PASS//已发布
+
+	}
 
 	/**  团队类型 */
 	@NotNull
@@ -88,6 +109,45 @@ public class TopicConfig implements Serializable {
 	/** 小程序 appSerect */
 	@Column(columnDefinition="varchar(255) comment '小程序appSerect'")
 	private String appetAppSerect;
+
+	/** 小程序 version */
+	@Column(columnDefinition="varchar(255) comment '小程序 version'")
+	private String version;
+
+	/** 小程序 estate */
+	@NotNull
+	@Column(columnDefinition="int(11) default '0'comment '状态 { 未授权:UNAUTHORIZED, 已授权:AUTHORIZED,已提交代码:ISCOMMIT, 正在审核:AUDITING, 通过审核:ISAUDITING, 已发布:PASS}'")
+	private Estate estate;
+
+	/** 小程序 刷新token */
+	@Column(columnDefinition="varchar(255) comment '刷新Token version'")
+	private String refreshToken;
+
+	/** 小程序 token到期时间 */
+	@NotNull
+	@Column(columnDefinition="datetime not null comment '到期日'")
+	private Date tokenExpire;
+
+	/** 小程序原始id */
+	@Column(columnDefinition="varchar(255) comment '原始ID version'")
+	private String userName;
+
+	/** 小程序 二维码地址 */
+	@Column(columnDefinition="varchar(255) comment '二维码地址 version'")
+	private String qrcodePath;
+
+	/** 小程序 审核id */
+	@Column(columnDefinition="varchar(255) comment '审核id version'")
+	private String auditId;
+
+	/** 小程序 状态备注 */
+	@Column(columnDefinition="varchar(255) comment '备注 version'")
+	private String stateRemark;
+
+	/**
+	 * 产品类
+	 * @return
+	 */
 
 	public PromoterType getPromoterType() {
 		return promoterType;
@@ -169,4 +229,67 @@ public class TopicConfig implements Serializable {
 		this.amount = amount;
 	}
 
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public Estate getEstate() {
+		return estate;
+	}
+
+	public void setEstate(Estate estate) {
+		this.estate = estate;
+	}
+
+	public String getStateRemark() {
+		return stateRemark;
+	}
+
+	public void setStateRemark(String stateRemark) {
+		this.stateRemark = stateRemark;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public Date getTokenExpire() {
+		return tokenExpire;
+	}
+
+	public void setTokenExpire(Date tokenExpire) {
+		this.tokenExpire = tokenExpire;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getQrcodePath() {
+		return qrcodePath;
+	}
+
+	public void setQrcodePath(String qrcodePath) {
+		this.qrcodePath = qrcodePath;
+	}
+
+	public String getAuditId() {
+		return auditId;
+	}
+
+	public void setAuditId(String auditId) {
+		this.auditId = auditId;
+	}
 }

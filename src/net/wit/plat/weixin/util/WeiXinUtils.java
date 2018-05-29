@@ -76,7 +76,7 @@ public class WeiXinUtils {
 		Set es = parameters.entrySet();
 		Iterator it = es.iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
+			Entry entry = (Entry) it.next();
 			String k = (String) entry.getKey();
 			String v = (String) entry.getValue();
 			if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k) || "sign".equalsIgnoreCase(k)) {
@@ -126,15 +126,15 @@ public class WeiXinUtils {
 	public static String FormatBizQueryParaMap(HashMap<String, Object> paraMap, boolean urlencode) throws Exception {
 
 		String buff = "";
-		List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paraMap.entrySet());
+		List<Entry<String, Object>> infoIds = new ArrayList<Entry<String, Object>>(paraMap.entrySet());
 
-		Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
-			public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+		Collections.sort(infoIds, new Comparator<Entry<String, Object>>() {
+			public int compare(Entry<String, Object> o1, Entry<String, Object> o2) {
 				return (o1.getKey()).toString().compareTo(o2.getKey());
 			}
 		});
 		for (int i = 0; i < infoIds.size(); i++) {
-			Map.Entry<String, Object> item = infoIds.get(i);
+			Entry<String, Object> item = infoIds.get(i);
 			String key = item.getKey();
 			String val = (String) item.getValue();
 			if (null != val && !"".equals(val) && !"sign".equals(key) && !"key".equals(key)) {

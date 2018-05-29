@@ -65,6 +65,7 @@ public class ShippingController extends BaseController {
 	@RequestMapping(value = "/lock", method = RequestMethod.POST)
 	public @ResponseBody
 	Message lock(String sn) {
+
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -72,12 +73,17 @@ public class ShippingController extends BaseController {
 
 		Shipping shipping = shippingService.findBySn(sn);
 		if (shipping != null && !shipping.isLocked(member.userId())) {
+
 			shipping.setLockExpire(DateUtils.addSeconds(new Date(), 20));
 			shipping.setOperator(member.userId());
 			shippingService.update(shipping);
+
 			return Message.success(true,"true");
+
 		}
+
 		return Message.success(false,"false");
+
 	}
 
 	/**
@@ -248,7 +254,8 @@ public class ShippingController extends BaseController {
 		if ("confirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
 		} else {
-			filters.add(new Filter("orderStatus", Filter.Operator.gt,Shipping.OrderStatus.confirmed));
+			filters.add(new Filter("orderStatus", Filter.Operator.ne,Shipping.OrderStatus.confirmed));
+			filters.add(new Filter("orderStatus", Filter.Operator.ne,Shipping.OrderStatus.unconfirmed));
 		}
 		if (admin.roles().contains("3")) {
 			filters.add(new Filter("admin", Filter.Operator.eq,admin));
