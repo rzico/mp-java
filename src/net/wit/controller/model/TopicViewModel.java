@@ -37,6 +37,8 @@ public class TopicViewModel extends BaseModel implements Serializable {
     private String thumbnail;
     /** 地址 */
     private String url;
+    /** 有会员卡 */
+    private Boolean useCard;
     /** 状态 */
     private Friends.Status friendStatus;
     /** 标签 */
@@ -172,6 +174,14 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.thumbnail = thumbnail;
     }
 
+    public Boolean getUseCard() {
+        return useCard;
+    }
+
+    public void setUseCard(Boolean useCard) {
+        this.useCard = useCard;
+    }
+
     public void bind(Member member, Member shareUser) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -189,6 +199,11 @@ public class TopicViewModel extends BaseModel implements Serializable {
             this.thumbnail = topic.getLogo();
             this.hits = topic.getHits().intValue();
             template = topic.getTemplate();
+            if (topic.getConfig()!=null) {
+                this.useCard = topic.getConfig().getUseCard();
+            } else {
+                this.useCard = false;
+            }
         } else {
             this.name = member.displayName();
             this.thumbnail = member.getLogo();
