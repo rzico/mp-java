@@ -263,12 +263,13 @@ public class LoginController extends BaseController {
             unionId = userinfo.getString("unionid");
         }
 
-        BindUser bindUser = null;
-        if (unionId!=null) {
-            bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
-        } else {
-            bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
+        BindUser bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
+        if (bindUser==null) {
+            if (unionId!=null && !"#".equals(unionId)) {
+                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+            }
         }
+
         Member member = null;
         if (bindUser!=null) {
             member = bindUser.getMember();

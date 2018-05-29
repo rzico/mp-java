@@ -90,11 +90,11 @@ public class LoginController extends BaseController {
                 unionId = result.get("unionid").toString();
             }
 
-            BindUser bindUser = null;
-            if (unionId!=null && !"#".equals(unionId)) {
-                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
-            } else {
-                bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
+            BindUser bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
+            if (bindUser==null) {
+                if (unionId!=null && !"#".equals(unionId)) {
+                    bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+                }
             }
             Member member = null;
             if (bindUser!=null) {
@@ -175,8 +175,7 @@ public class LoginController extends BaseController {
                 if (!User.userAttr(member)) {
                     return Message.success(data,Message.LOGIN_SUCCESS);
                 };
-
-//                data.put("userId", Base64.encodeBase64String(openId.getBytes()));
+//              data.put("userId", Base64.encodeBase64String(openId.getBytes()));
                 return Message.success(data,Message.LOGIN_SUCCESS);
 
             } catch (Exception e) {
