@@ -138,7 +138,7 @@ public class AppletController extends BaseController {
                         //更新企业信息
                         Enterprise enterprise = admin.getEnterprise();
                         enterprise.setName(authorizerInfo.getPrincipalName());//公司名称
-                        enterprise.setAutograph(authorizerInfo.getSignature());//小程序签名
+//                        enterprise.setAutograph(authorizerInfo.getSignature());//小程序签名
                         enterpriseService.update(enterprise);
                         //接下来 设置小程序的 域名===================
                         Domain domain = WeixinApi.setDomain1(authToken, WeixinApi.ACTION.SET);
@@ -163,7 +163,7 @@ public class AppletController extends BaseController {
                         PluginConfig threePlugin = pluginConfigService.findByPluginId("threePlugin");
                         String codeVersion = threePlugin.getAttribute("codeVersion");
                         String templateId = threePlugin.getAttribute("templateId");
-                        boolean commit = WeixinApi.commitAppletCode(authToken, templateId, codeVersion, enterprise.getAutograph(), appletCodeConfig);
+                        boolean commit = WeixinApi.commitAppletCode(authToken, templateId, codeVersion,"", appletCodeConfig);
                         topicConfig.setEstate(TopicConfig.Estate.ISCOMMIT);
                         topic.setConfig(topicConfig);
                         topicService.update(topic);
