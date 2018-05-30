@@ -191,16 +191,20 @@ public class LoginController extends BaseController {
                 Map<String,String> data = new HashMap<>();
                 data.put("jsessionId",sessionId);
                 data.put("session_key",sessionKey);
+//
+//
+                //水达人有卡才能登录
+                if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
+                    if (member.getCards().size()==0) {
+                        return Message.success(data,"card.no");
+                    }
+                }
 
                 if (!User.userAttr(member)) {
                     return Message.success(data,Message.LOGIN_SUCCESS);
                 };
 
-                if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
-                    if (member.getCards().size()==0) {
-                        return Message.error("card.no");
-                    }
-                }
+
 
 //              data.put("userId", Base64.encodeBase64String(openId.getBytes()));
                 return Message.success(data,Message.LOGIN_SUCCESS);
