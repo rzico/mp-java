@@ -14,6 +14,7 @@ import net.wit.entity.*;
 
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
+import net.wit.util.DateUtil;
 import net.wit.util.JsonUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -23,10 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Controller - 送货单
@@ -188,6 +186,7 @@ public class ShippingController extends BaseController {
 		}
 
 		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
+		shipping.setOrderStatus(Shipping.OrderStatus.completed);
 
 		shippingService.update(shipping);
 
@@ -251,6 +250,7 @@ public class ShippingController extends BaseController {
 		}
 
 		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
+		shipping.setOrderStatus(Shipping.OrderStatus.completed);
 
 		shippingService.update(shipping);
 
@@ -284,8 +284,8 @@ public class ShippingController extends BaseController {
 		if ("confirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
 		} else {
-			filters.add(new Filter("orderStatus", Filter.Operator.ne,Shipping.OrderStatus.confirmed));
-			filters.add(new Filter("orderStatus", Filter.Operator.ne,Shipping.OrderStatus.unconfirmed));
+			filters.add(new Filter("orderStatus", Filter.Operator.ne,Shipping.OrderStatus.completed));
+			filters.add(new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
 		}
 		if (admin.roles().contains("3")) {
 			filters.add(new Filter("admin", Filter.Operator.eq,admin));
