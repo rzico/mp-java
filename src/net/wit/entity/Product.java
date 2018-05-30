@@ -39,7 +39,6 @@ public class Product extends OrderEntity {
 	 * 产品类型
 	 */
 	public enum Type {
-
 		/** 快递 */
 		product,
 

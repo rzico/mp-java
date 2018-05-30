@@ -4,12 +4,16 @@ import java.util.Calendar;
 
 import java.util.Date;
 import javax.persistence.FlushModeType;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Barrel;
+import net.wit.entity.Card;
+import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -57,4 +61,20 @@ public class BarrelStockDaoImpl extends BaseDaoImpl<BarrelStock, Long> implement
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+	public synchronized BarrelStock find(Member member, Barrel barrel) {
+		String jpql = "select barrelStock from BarrelStock barrelStock where barrelStock.member = :member and barrelStock.barrel=:barrel";
+		try {
+			BarrelStock barrelStock = entityManager.createQuery(jpql, BarrelStock.class).setFlushMode(FlushModeType.COMMIT)
+					.setParameter("member", member)
+					.setParameter("barrel", barrel)
+					.getSingleResult();
+			super.lock(barrelStock, LockModeType.PESSIMISTIC_WRITE);
+			return barrelStock;
+		} catch (NoResultException e) {
+			return null;
+		}
+
+	}
+
 }

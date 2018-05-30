@@ -45,6 +45,11 @@ public class ShippingBarrel extends BaseEntity {
 	@JoinColumn(name = "orders", nullable = false, updatable = false)
 	private Order order;
 
+	/** 送货单 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "shipping", nullable = false, updatable = false)
+	private Shipping shipping;
+
 	/**
 	 * 获取商品名称
 	 * 
@@ -96,4 +101,11 @@ public class ShippingBarrel extends BaseEntity {
 		this.returnQuantity = returnQuantity;
 	}
 
+	public Shipping getShipping() {
+		return shipping;
+	}
+
+	public void setShipping(Shipping shipping) {
+		this.shipping = shipping;
+	}
 }

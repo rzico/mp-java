@@ -6,6 +6,7 @@ import net.wit.entity.BarrelStock;
 import net.wit.entity.ShippingBarrel;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: ShippingBarrelService
@@ -15,4 +16,5 @@ import java.util.Date;
 
 public interface ShippingBarrelService extends BaseService<ShippingBarrel, Long> {
 	Page<ShippingBarrel> findPage(Date beginDate, Date endDate, Pageable pageable);
+
 }

@@ -14,6 +14,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.dao.BarrelStockDao;
 import net.wit.service.AdminService;
 import net.wit.service.ReceiverService;
 import net.wit.service.SnService;
@@ -48,6 +49,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	@Resource(name = "receiverServiceImpl")
 	private ReceiverService receiverService;
+
+	@Resource(name = "barrelStockDaoImpl")
+	private BarrelStockDao barrelStockDao;
 
 	@Resource(name = "shippingDaoImpl")
 	public void setBaseDao(ShippingDao shippingDao) {
@@ -181,4 +185,30 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		return shipping;
 
 	}
+
+
+	public Shipping receive(Shipping shipping) {
+		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
+		shipping.setOrderStatus(Shipping.OrderStatus.completed);
+		shippingDao.merge(shipping);
+		return shipping;
+	}
+
+	public Shipping completed(Shipping shipping) {
+
+		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
+		shipping.setOrderStatus(Shipping.OrderStatus.completed);
+		shippingDao.merge(shipping);
+
+		Member ec = shipping.getEnterprise().getMember();
+		for (ShippingBarrel b:shipping.getShippingBarrels()) {
+		 	BarrelStock bs = barrelStockDao.find(ec,b.getBarrel());
+		 	bs.setStock(bs.getStock()+b.getQuantity()-b.getReturnQuantity());
+		 	barrelStockDao.merge(bs);
+		}
+
+		return shipping;
+
+	}
+
 }

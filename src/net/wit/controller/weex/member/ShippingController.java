@@ -5,6 +5,8 @@
  */
 package net.wit.controller.weex.member;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
@@ -45,6 +47,9 @@ public class ShippingController extends BaseController {
 
 	@Resource(name = "shopServiceImpl")
 	private ShopService shopService;
+
+	@Resource(name = "barrelServiceImpl")
+	private BarrelService barrelService;
 
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
@@ -168,13 +173,10 @@ public class ShippingController extends BaseController {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 
-//		ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
-//
 		Shipping shipping = shippingService.findBySn(sn);
 		if (shipping==null) {
 			return Message.error("无效送货id");
 		}
-
 
 		if (memo!=null) {
 			String s = shipping.getMemo();
@@ -185,14 +187,33 @@ public class ShippingController extends BaseController {
 			shipping.setMemo(s);
 		}
 
-		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
-		shipping.setOrderStatus(Shipping.OrderStatus.completed);
+		if (body!=null) {
+			List<ShippingBarrel> barrels = new ArrayList<>();
+			JSONArray ja = JSONArray.fromObject(body);
+			for (int i=0;i<ja.size();i++) {
+				JSONObject jn = ja.getJSONObject(i);
+				ShippingBarrel b = new ShippingBarrel();
+				Barrel br = barrelService.find(jn.getLong("id"));
+				b.setBarrel(br);
+				b.setQuantity(jn.getInt("quantity"));
+				b.setReturnQuantity(jn.getInt("returnQuantity"));
+				b.setName(b.getName());
+				b.setShipping(shipping);
+				b.setOrder(shipping.getOrder());
+				barrels.add(b);
+			}
 
-		shippingService.update(shipping);
+			shipping.setShippingBarrels(barrels);
+
+		}
+
+		shipping.setLevel(level);
+		shippingService.receive(shipping);
 
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);
 		return Message.bind(model,request);
+
 	}
 
 
@@ -212,7 +233,6 @@ public class ShippingController extends BaseController {
 		if (shipping==null) {
 			return Message.error("无效送货id");
 		}
-
 
 		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
 
@@ -249,10 +269,28 @@ public class ShippingController extends BaseController {
 			shipping.setMemo(s);
 		}
 
-		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
-		shipping.setOrderStatus(Shipping.OrderStatus.completed);
+		if (body!=null) {
+			shipping.getShippingBarrels().clear();
+			List<ShippingBarrel> barrels = new ArrayList<>();
+			JSONArray ja = JSONArray.fromObject(body);
+			for (int i=0;i<ja.size();i++) {
+				JSONObject jn = ja.getJSONObject(i);
+				ShippingBarrel b = new ShippingBarrel();
+				Barrel br = barrelService.find(jn.getLong("id"));
+				b.setBarrel(br);
+				b.setQuantity(jn.getInt("quantity"));
+				b.setReturnQuantity(jn.getInt("returnQuantity"));
+				b.setName(b.getName());
+				b.setShipping(shipping);
+				b.setOrder(shipping.getOrder());
+				barrels.add(b);
+			}
+			shipping.setShippingBarrels(barrels);
 
-		shippingService.update(shipping);
+		}
+		shipping.setLevel(level);
+
+		shippingService.completed(shipping);
 
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);

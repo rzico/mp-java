@@ -177,6 +177,12 @@ public class Shipping extends BaseEntity {
 	@OneToMany(mappedBy = "shipping", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<ShippingItem> shippingItems = new ArrayList<ShippingItem>();
 
+	/** 包装项 */
+	@Valid
+	@NotEmpty
+	@OneToMany(mappedBy = "shipping", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<ShippingBarrel> shippingBarrels = new ArrayList<ShippingBarrel>();
+
 	/**
 	 * 获取编号
 	 * 
@@ -557,6 +563,11 @@ public class Shipping extends BaseEntity {
 		}
 	}
 
+	public List<ShippingBarrel> getShippingBarrels() {
+		return shippingBarrels;
+	}
 
-
+	public void setShippingBarrels(List<ShippingBarrel> shippingBarrels) {
+		this.shippingBarrels = shippingBarrels;
+	}
 }

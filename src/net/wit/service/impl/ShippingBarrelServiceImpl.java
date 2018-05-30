@@ -75,4 +75,7 @@ public class ShippingBarrelServiceImpl extends BaseServiceImpl<ShippingBarrel, L
 	public Page<ShippingBarrel> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return shippingBarrelDao.findPage(beginDate,endDate,pageable);
 	}
+
+
+
 }

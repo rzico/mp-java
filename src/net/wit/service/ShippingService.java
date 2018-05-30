@@ -30,4 +30,9 @@ public interface ShippingService extends BaseService<Shipping, Long> {
 	Shipping findBySn(String sn);
 
 	Shipping create(Order order);
+
+	Shipping receive(Shipping shipping);
+
+	Shipping completed(Shipping shipping);
+
 }
