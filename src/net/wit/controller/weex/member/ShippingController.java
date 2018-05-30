@@ -197,7 +197,7 @@ public class ShippingController extends BaseController {
 				b.setBarrel(br);
 				b.setQuantity(jn.getInt("quantity"));
 				b.setReturnQuantity(jn.getInt("returnQuantity"));
-				b.setName(b.getName());
+				b.setName(br.getName());
 				b.setShipping(shipping);
 				b.setOrder(shipping.getOrder());
 				barrels.add(b);
@@ -280,7 +280,7 @@ public class ShippingController extends BaseController {
 				b.setBarrel(br);
 				b.setQuantity(jn.getInt("quantity"));
 				b.setReturnQuantity(jn.getInt("returnQuantity"));
-				b.setName(b.getName());
+				b.setName(br.getName());
 				b.setShipping(shipping);
 				b.setOrder(shipping.getOrder());
 				barrels.add(b);
@@ -322,7 +322,7 @@ public class ShippingController extends BaseController {
 		if ("confirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
 		} else {
-			filters.add(new Filter("orderStatus", Filter.Operator.ne,Shipping.OrderStatus.completed));
+			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed));
 			filters.add(new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
 		}
 		if (admin.roles().contains("3")) {
