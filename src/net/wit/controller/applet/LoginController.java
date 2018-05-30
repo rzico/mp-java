@@ -74,10 +74,25 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "")
     public
     @ResponseBody
-    Message login(String code,String nickName,String logo, HttpServletRequest request, HttpServletResponse response) {
+    Message login(String code,String nickName,String logo,Long mid, HttpServletRequest request, HttpServletResponse response) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
-        String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +bundle.getString("applet.appid") + "&secret=" + bundle.getString("applet.secret") + "&js_code=" + code + "&grant_type=authorization_code";
+        String appid = bundle.getString("applet.appid");
+        String appsecret = bundle.getString("applet.secret");
+        if (mid!=null) {
+           Member agent = memberService.getCurrent();
+           if (agent.getTopic()!=null) {
+               return Message.error("没有开通");
+           }
+           if (agent.getTopic().getConfig().getAppetAppId()==null)  {
+               return Message.error("没有设置");
+           }
+
+            appid = agent.getTopic().getConfig().getAppetAppId();
+            appsecret = agent.getTopic().getConfig().getAppetAppSerect();
+        }
+
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + appsecret + "&js_code=" + code + "&grant_type=authorization_code";
         JSONObject result = WeixinApi.httpRequest(url, "GET", null);
         if (result.containsKey("session_key")) {
             HttpSession session = request.getSession();
@@ -86,15 +101,15 @@ public class LoginController extends BaseController {
             String sessionKey = result.get("session_key").toString();
             String openId = result.get("openid").toString();
             String unionId = "#";
-            if (result.containsKey("unionid")) {
+            if (result.containsKey("unionid") && (mid==null)) {
                 unionId = result.get("unionid").toString();
             }
 
             BindUser bindUser = null;
-            if (unionId!=null) {
+            if (unionId!=null && !"#".equals(unionId)) {
                 bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
             } else {
-                bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
+                bindUser = bindUserService.findOpenId(openId,appid,BindUser.Type.weixin);
             }
 
             Member member = null;
@@ -102,8 +117,8 @@ public class LoginController extends BaseController {
                 member = bindUser.getMember();
             }
             if (member==null) {
-                if ("#".equals(unionId)) {
-                   return Message.error("登录失败");
+                if ("#".equals(unionId) && (mid==null)) {
+                   return Message.error("无效授权");
                 }
                 member = new Member();
                 member.setNickName(nickName);
@@ -131,18 +146,19 @@ public class LoginController extends BaseController {
             }
 
             try {
-
-                bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
+                bindUser = bindUserService.findOpenId(openId,appid,BindUser.Type.weixin);
                 if (bindUser==null) {
                     bindUser = new BindUser();
-                    bindUser.setAppId(bundle.getString("applet.appid"));
+                    bindUser.setAppId(appid);
                     bindUser.setType(BindUser.Type.weixin);
                     bindUser.setMember(member);
                     bindUser.setUnionId(unionId);
                     bindUser.setOpenId(openId);
                 } else {
                     bindUser.setMember(member);
-                    bindUser.setUnionId(unionId);
+                    if (!"#".equals(unionId)) {
+                        bindUser.setUnionId(unionId);
+                    }
                 }
                 bindUserService.save(bindUser);
 

@@ -254,17 +254,17 @@ public class LoginController extends BaseController {
         JSONObject userinfo = WeixinApi.getUserInfoByCode(token.getToken(), openId);
         String nickName=null;
         String headImg=null;
-        String unionId=null;
         if (userinfo.containsKey("nickname")) {
             nickName = StringUtils.filterEmoji(userinfo.getString("nickname"));
             headImg = userinfo.getString("headimgurl");
         }
+        String unionId = "#";
         if (userinfo.containsKey("unionid")) {
             unionId = userinfo.getString("unionid");
         }
 
         BindUser bindUser = null;
-        if (unionId!=null) {
+        if (unionId!=null && !"#".equals(unionId)) {
             bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
         } else {
             bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
@@ -301,9 +301,6 @@ public class LoginController extends BaseController {
         try {
 
             bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
-            if (unionId==null) {
-                unionId = "#";
-            }
 
             if (bindUser==null) {
                 bindUser = new BindUser();
