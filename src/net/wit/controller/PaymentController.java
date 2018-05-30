@@ -118,7 +118,7 @@ public class PaymentController extends BaseController {
 
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(String paymentPluginId, String sn,String safeKey, HttpServletRequest request) {
+    public Message submit(String paymentPluginId, String sn,String safeKey,Long mid, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
         if (payment==null) {
             return Message.error("无效付款单");
