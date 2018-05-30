@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.persistence.LockModeType;
 
 import net.wit.Filter;
 import net.wit.Page;
@@ -210,9 +211,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				bs.setStock(b.getQuantity()-b.getReturnQuantity());
 				barrelStockDao.persist(bs);
 			} else {
+				barrelStockDao.lock(bs,LockModeType.PESSIMISTIC_WRITE);
 				bs.setStock(bs.getStock()+b.getQuantity()-b.getReturnQuantity());
 				barrelStockDao.merge(bs);
 			}
+			barrelStockDao.flush();
 		}
 
 		return shipping;

@@ -69,7 +69,6 @@ public class BarrelStockDaoImpl extends BaseDaoImpl<BarrelStock, Long> implement
 					.setParameter("member", member)
 					.setParameter("barrel", barrel)
 					.getSingleResult();
-			super.lock(barrelStock, LockModeType.PESSIMISTIC_WRITE);
 			return barrelStock;
 		} catch (NoResultException e) {
 			return null;
