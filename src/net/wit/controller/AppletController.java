@@ -124,7 +124,7 @@ public class AppletController extends BaseController {
                     if (smallInformation.getAuthorizerInfo() != null) {
                         AuthorizerInfo authorizerInfo = smallInformation.getAuthorizerInfo();
                         //为了防止重复设置
-                        topicConfig.setUserName(authorizerInfo.getUserName());//原始id
+                        topicConfig.setAppletgid(authorizerInfo.getUserName());//原始id
                         topicConfig.setQrcodePath(authorizerInfo.getQrcodeUrl());//二维码地址
                         topic.setName(authorizerInfo.getPrincipalName());//这里用专栏信息
                         topic.setConfig(topicConfig);

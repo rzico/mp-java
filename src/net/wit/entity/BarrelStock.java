@@ -36,8 +36,8 @@ public class BarrelStock extends OrderEntity {
 
 	/** 库存数 */
 	@Min(0)
-	@Column(columnDefinition="bigint(20) not null default 0 comment '库存数'")
-	private Long stock;
+	@Column(columnDefinition="int(11) not null default 0 comment '库存数'")
+	private Integer stock;
 
 	public Member getMember() {
 		return member;
@@ -55,13 +55,11 @@ public class BarrelStock extends OrderEntity {
 		this.barrel = barrel;
 	}
 
-	public Long getStock() {
+	public Integer getStock() {
 		return stock;
 	}
 
-	public void setStock(Long stock) {
+	public void setStock(Integer stock) {
 		this.stock = stock;
 	}
-
-
 }

@@ -110,6 +110,7 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '小程序appSerect'")
 	private String appetAppSerect;
 
+
 	/** 小程序 version */
 	@Column(columnDefinition="varchar(255) comment '小程序 version'")
 	private String version;
@@ -130,7 +131,7 @@ public class TopicConfig implements Serializable {
 
 	/** 小程序原始id */
 	@Column(columnDefinition="varchar(255) comment '原始ID version'")
-	private String userName;
+	private String appletgid;
 
 	/** 小程序 二维码地址 */
 	@Column(columnDefinition="varchar(255) comment '二维码地址 version'")
@@ -269,13 +270,6 @@ public class TopicConfig implements Serializable {
 		this.tokenExpire = tokenExpire;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 
 	public String getQrcodePath() {
 		return qrcodePath;
@@ -291,5 +285,13 @@ public class TopicConfig implements Serializable {
 
 	public void setAuditId(String auditId) {
 		this.auditId = auditId;
+	}
+
+	public String getAppletgid() {
+		return appletgid;
+	}
+
+	public void setAppletgid(String appletgid) {
+		this.appletgid = appletgid;
 	}
 }
