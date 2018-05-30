@@ -96,6 +96,7 @@ public class LoginController extends BaseController {
                     bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
                 }
             }
+
             Member member = null;
             if (bindUser!=null) {
                 member = bindUser.getMember();
@@ -187,5 +188,28 @@ public class LoginController extends BaseController {
         }
     }
 
+
+    /**
+     * 检查是否登录
+     */
+    @RequestMapping("/isAuthenticated")
+    @ResponseBody
+    public Message authorized(String scope,HttpServletRequest request, HttpServletResponse response) {
+        Map<String,Object> data = new HashMap<String,Object>();
+        Member member = memberService.getCurrent();
+        if ("user".equals(scope)) {
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            BindUser bindUser = bindUserService.findMember(member,bundle.getString("weixin.appid"),BindUser.Type.weixin);
+            data.put("loginStatus",member!=null && bindUser!=null && !bindUser.getUnionId().equals("#"));
+        } else {
+            data.put("loginStatus", member != null);
+        }
+        if (member!=null) {
+            data.put("uid", member.getId());
+            data.put("userId",member.userId());
+            data.put("authed",(member.getLogo()!=null));
+        }
+        return Message.success(data,"success");
+    }
 
 }
