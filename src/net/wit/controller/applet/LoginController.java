@@ -106,20 +106,20 @@ public class LoginController extends BaseController {
             }
 
             BindUser bindUser = null;
-            if (unionId!=null && !"#".equals(unionId)) {
-                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
-            } else {
+//            if (unionId!=null && !"#".equals(unionId)) {
+//                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+//            } else {
                 bindUser = bindUserService.findOpenId(openId,appid,BindUser.Type.weixin);
-            }
+//            }
 
             Member member = null;
             if (bindUser!=null) {
                 member = bindUser.getMember();
             }
             if (member==null) {
-                if ("#".equals(unionId) && (mid==null)) {
-                   return Message.error("无效授权");
-                }
+//                if ("#".equals(unionId) && (mid==null)) {
+//                   return Message.error("无效授权");
+//                }
                 member = new Member();
                 member.setNickName(nickName);
                 member.setLogo(logo);

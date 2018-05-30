@@ -89,6 +89,12 @@ public class ProductController extends BaseController {
 			}
 		}
 
+		if (member!=null) {
+			if (member.leaguer(goods.product().getMember())) {
+				model.getProducts().get(0).setRebate(goods.product().calcRebate());
+			}
+		}
+
 		return Message.bind(model,request);
 	}
 

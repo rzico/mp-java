@@ -555,4 +555,18 @@ public class Product extends OrderEntity {
 		}
 	}
 
+	public BigDecimal calcRebate() {
+		Distribution distribution = getDistribution();
+		if (distribution!=null && distribution.getType().equals(Distribution.Type.dividend) ){
+			BigDecimal d1 =
+					getPrice().multiply(
+							distribution.getPercent1().multiply(new BigDecimal("0.01")))
+							.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+//			d1 = d1.multiply(distribution.caleMoneyRate()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+			return d1;
+		} else {
+			return BigDecimal.ZERO;
+		}
+	}
+
 }

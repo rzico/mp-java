@@ -287,26 +287,30 @@ public class ArticleController extends BaseController {
                 article.setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
             }
 
-            Tag tag4 = tagService.find(4L);
-            if (articleOptions.getIsTag4()) {
-                if (!article.getTags().contains(tag4)) {
-                    article.getTags().add(tag4);
-                }
-            } else {
-                if (article.getTags().contains(tag4)) {
-                    article.getTags().remove(tag4);
+            if (articleOptions.getIsTag4()!=null) {
+                Tag tag4 = tagService.find(4L);
+                if (articleOptions.getIsTag4()) {
+                    if (!article.getTags().contains(tag4)) {
+                        article.getTags().add(tag4);
+                    }
+                } else {
+                    if (article.getTags().contains(tag4)) {
+                        article.getTags().remove(tag4);
+                    }
                 }
             }
 
 
-            Tag tag5 = tagService.find(5L);
-            if (articleOptions.getIsTag5()) {
-                if (!article.getTags().contains(tag5)) {
-                    article.getTags().add(tag5);
-                }
-            } else {
-                if (article.getTags().contains(tag5)) {
-                    article.getTags().remove(tag5);
+            if (articleOptions.getIsTag5()!=null) {
+                Tag tag5 = tagService.find(5L);
+                if (articleOptions.getIsTag5()) {
+                    if (!article.getTags().contains(tag5)) {
+                        article.getTags().add(tag5);
+                    }
+                } else {
+                    if (article.getTags().contains(tag5)) {
+                        article.getTags().remove(tag5);
+                    }
                 }
             }
 

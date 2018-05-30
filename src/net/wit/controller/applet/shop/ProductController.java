@@ -65,6 +65,13 @@ public class ProductController extends BaseController {
 		goodsService.update(goods);
 		GoodsViewModel model =new GoodsViewModel();
 		model.bind(goods);
+
+		Member member = memberService.getCurrent();
+		if (member!=null) {
+			if (member.leaguer(goods.product().getMember())) {
+			   model.getProducts().get(0).setRebate(goods.product().calcRebate());
+			}
+		}
 		return Message.bind(model,request);
 	}
 
