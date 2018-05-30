@@ -146,6 +146,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setShippingItems(shippingItems);
 
 		Receiver receiver = receiverService.find(order.getReceiverId());
+		if (receiver!=null) {
+			shipping.setLevel(receiver.getLevel());
+		}
 		if (receiver!=null && receiver.getShop()!=null) {
 			shipping.setEnterprise(receiver.getShop().getEnterprise());
 			shipping.setShop(receiver.getShop());

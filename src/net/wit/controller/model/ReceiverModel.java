@@ -13,6 +13,7 @@ public class ReceiverModel extends BaseModel implements Serializable {
     private String address;
     private String phone;
     private Long areaId;
+    private Integer level;
     private double lat;
     private double lng;
     private Boolean isDefault;
@@ -75,6 +76,14 @@ public class ReceiverModel extends BaseModel implements Serializable {
         isDefault = aDefault;
     }
 
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
     public double getLng() {
         return lng;
     }
@@ -124,6 +133,7 @@ public class ReceiverModel extends BaseModel implements Serializable {
             this.lng = receiver.getLocation().getLng();
             this.lat = receiver.getLocation().getLat();
         }
+        this.level = receiver.getLevel();
 //        if (receiver.getRoad()!=null) {
 //            this.roadId = receiver.getRoad().getId();
 //            this.roadName = receiver.getRoad().getName();

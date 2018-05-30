@@ -121,6 +121,12 @@ public class Shipping extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '运单号'")
 	private String trackingNo;
 
+	/** 楼层 */
+	@NotNull
+	@Min(1)
+	@Column(nullable = false,columnDefinition="int(11) not null default 0 comment '楼层'")
+	private Integer level;
+
 	/** 物流费用 */
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
@@ -493,6 +499,13 @@ public class Shipping extends BaseEntity {
 		this.lockExpire = lockExpire;
 	}
 
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
 
 	/**
 	 * 判断是否已锁定

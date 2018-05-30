@@ -46,6 +46,21 @@ public class ShippingModel extends BaseModel implements Serializable {
     /**  状态描述 */
     private String status;
 
+    /**  运费 */
+    private BigDecimal freight;
+
+    /**  配送点 */
+    private Long shopId;
+
+    /**  配送名称 */
+    private String shopName;
+
+    /**  送货员 */
+    private Long adminId;
+
+    /**  送货员姓名 */
+    private String adminName;
+
     /**  支付方式 */
     private Order.PaymentMethod paymentMethod;
 
@@ -208,10 +223,52 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.shippingItems = shippingItems;
     }
 
+    public BigDecimal getFreight() {
+        return freight;
+    }
+
+    public void setFreight(BigDecimal freight) {
+        this.freight = freight;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public String getAdminName() {
+        return adminName;
+    }
+
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
+
     public void bind(Shipping shipping) {
+
         this.id = shipping.getId();
         this.createDate = shipping.getCreateDate();
         this.sn = shipping.getSn();
+
         Order order = shipping.getOrder();
         this.orderSn = order.getSn();
         this.memberId = shipping.getMember().getId();
@@ -232,29 +289,82 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.paymentStatus = order.getPaymentStatus();
         this.shippingStatus = order.getShippingStatus();
 
+        this.freight = shipping.getFreight();
+
         this.receiver = new ReceiverModel();
-        this.receiver.setAddress(order.getAddress());
-        this.receiver.setAreaName(order.getAreaName());
-        this.receiver.setConsignee(order.getConsignee());
-        this.receiver.setPhone(order.getPhone());
+        this.receiver.setAddress(shipping.getAddress());
+        this.receiver.setAreaName(shipping.getAreaName());
+        this.receiver.setConsignee(shipping.getConsignee());
+        this.receiver.setPhone(shipping.getPhone());
+        this.receiver.setLevel(shipping.getLevel());
+
         if (order.getLocation()!=null) {
             this.receiver.setLat(order.getLocation().getLat());
             this.receiver.setLng(order.getLocation().getLng());
         }
 
+        if (shipping.getShop()!=null) {
+            this.shopId = shipping.getShop().getId();
+            this.shopName = shipping.getShop().getName();
+        }
+
+        if (shipping.getAdmin()!=null) {
+            this.adminId = shipping.getAdmin().getId();
+            this.adminName = shipping.getAdmin().getName();
+        }
+
     }
 
 
-    public void bindHeader(Order order) {
-        this.id = order.getId();
-        this.createDate = order.getCreateDate();
-        this.sn = order.getSn();
-        this.logo = order.getMember().getLogo();
-        this.name = order.getMember().displayName();
+    public void bindHeader(Shipping shipping) {
+
+        this.id = shipping.getId();
+        this.createDate = shipping.getCreateDate();
+        this.sn = shipping.getSn();
+
+        Order order = shipping.getOrder();
+        this.orderSn = order.getSn();
+        this.memberId = shipping.getMember().getId();
+        this.logo = shipping.getMember().getLogo();
+        this.name = shipping.getMember().displayName();
+        this.sellerId = shipping.getSeller().getId();
+
+        this.sellerLogo = shipping.getSeller().getLogo();
+        this.sellerName = shipping.getSeller().topicName();
+
         this.status = order.getStatus();
         this.statusDescr = order.getStatusDescr();
+
+        this.shippingItems = ShippingItemModel.bindList(shipping.getShippingItems());
+
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
+        this.paymentStatus = order.getPaymentStatus();
+        this.shippingStatus = order.getShippingStatus();
+
+        this.freight = shipping.getFreight();
+
+        this.receiver = new ReceiverModel();
+        this.receiver.setAddress(shipping.getAddress());
+        this.receiver.setAreaName(shipping.getAreaName());
+        this.receiver.setConsignee(shipping.getConsignee());
+        this.receiver.setPhone(shipping.getPhone());
+        this.receiver.setLevel(shipping.getLevel());
+
+        if (order.getLocation()!=null) {
+            this.receiver.setLat(order.getLocation().getLat());
+            this.receiver.setLng(order.getLocation().getLng());
+        }
+
+        if (shipping.getShop()!=null) {
+            this.shopId = shipping.getShop().getId();
+            this.shopName = shipping.getShop().getName();
+        }
+
+        if (shipping.getAdmin()!=null) {
+            this.adminId = shipping.getAdmin().getId();
+            this.adminName = shipping.getAdmin().getName();
+        }
 
     }
 
