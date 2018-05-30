@@ -18,6 +18,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 
 /**
@@ -67,9 +69,17 @@ public class TopicController extends BaseController {
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
     public Message view(Long id,HttpServletRequest request){
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.find(id);
         if (member==null) {
-            return Message.error("无效会员编号");
+            if ("3".equals(bundle.getString("weex")) ) {
+                if (id==null) {
+                    id = Long.parseLong(bundle.getString("platform"));
+                }
+                member = memberService.find(id);
+            } else {
+                return Message.error("无效会员编号");
+            }
         }
         TopicViewModel model =new TopicViewModel();
         model.bind(member,member);

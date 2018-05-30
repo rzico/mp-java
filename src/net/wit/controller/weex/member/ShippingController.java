@@ -14,6 +14,7 @@ import net.wit.entity.*;
 
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
+import net.wit.util.JsonUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,7 +113,7 @@ public class ShippingController extends BaseController {
 	 */
 	@RequestMapping(value = "/dispatch", method = RequestMethod.POST)
 	public @ResponseBody
-	Message dispatch(String sn,Long shopId,Long adminId,HttpServletRequest request) {
+	Message dispatch(String sn,Long shopId,Long adminId,String memo,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -134,6 +135,15 @@ public class ShippingController extends BaseController {
 		}
 		shipping.setShop(shop);
 
+		if (memo!=null) {
+			String s = shipping.getMemo();
+			if (s==null) {
+				s = "";
+			}
+			s = s.concat(member.displayName()+":"+memo+"\n");
+			shipping.setMemo(s);
+		}
+
 		shipping.setEnterprise(shop.getEnterprise());
 		shipping.setAdmin(admin);
 		if (admin!=null) {
@@ -154,17 +164,28 @@ public class ShippingController extends BaseController {
 	 */
 	@RequestMapping(value = "/receive", method = RequestMethod.POST)
 	public @ResponseBody
-	Message receive(String sn,Long [] barrelIds,Long [] retrieves,Long sends,HttpServletRequest request) {
+	Message receive(String sn,String body,Integer level,String memo,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 
+//		ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
+//
 		Shipping shipping = shippingService.findBySn(sn);
 		if (shipping==null) {
 			return Message.error("无效送货id");
 		}
 
+
+		if (memo!=null) {
+			String s = shipping.getMemo();
+			if (s==null) {
+				s = "";
+			}
+			s = s.concat(member.displayName()+":"+memo+"\n");
+			shipping.setMemo(s);
+		}
 
 		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
 
@@ -208,7 +229,7 @@ public class ShippingController extends BaseController {
 	 */
 	@RequestMapping(value = "/completed", method = RequestMethod.POST)
 	public @ResponseBody
-	Message completed(String sn,Long [] barrelIds,Long [] retrieves,Long sends,HttpServletRequest request) {
+	Message completed(String sn,String body,Integer level,String memo,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -219,6 +240,15 @@ public class ShippingController extends BaseController {
 			return Message.error("无效送货id");
 		}
 
+
+		if (memo!=null) {
+			String s = shipping.getMemo();
+			if (s==null) {
+				s = "";
+			}
+			s = s.concat(member.displayName()+":"+memo+"\n");
+			shipping.setMemo(s);
+		}
 
 		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
 

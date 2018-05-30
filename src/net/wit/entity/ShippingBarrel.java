@@ -10,14 +10,15 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
+ *
  * Entity - 订单项
  *
  */
 
 @Entity
-@Table(name = "wx_order_barrel")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_order_barrel_sequence")
-public class OrderBarrel extends BaseEntity {
+@Table(name = "wx_shipping_barrel")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_shipping_barrel_sequence")
+public class ShippingBarrel extends BaseEntity {
 
 	private static final long serialVersionUID = 36L;
 
@@ -29,6 +30,11 @@ public class OrderBarrel extends BaseEntity {
 	@NotNull
 	@Column(nullable = false,columnDefinition="int(11) not null comment '数量'")
 	private Integer quantity;
+
+	/** 数量 */
+	@NotNull
+	@Column(nullable = false,columnDefinition="int(11) not null comment '数量'")
+	private Integer returnQuantity;
 
 	/** 商品 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -80,6 +86,14 @@ public class OrderBarrel extends BaseEntity {
 
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public Integer getReturnQuantity() {
+		return returnQuantity;
+	}
+
+	public void setReturnQuantity(Integer returnQuantity) {
+		this.returnQuantity = returnQuantity;
 	}
 
 }

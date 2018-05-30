@@ -195,6 +195,13 @@ public class LoginController extends BaseController {
                 if (!User.userAttr(member)) {
                     return Message.success(data,Message.LOGIN_SUCCESS);
                 };
+
+                if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
+                    if (member.getCards().size()==0) {
+                        return Message.error("card.no");
+                    }
+                }
+
 //              data.put("userId", Base64.encodeBase64String(openId.getBytes()));
                 return Message.success(data,Message.LOGIN_SUCCESS);
 
