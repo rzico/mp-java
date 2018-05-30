@@ -83,4 +83,5 @@ public class NoticeController extends BaseController {
          }
          return Message.bind(data,request);
     }
+
 }

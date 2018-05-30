@@ -108,6 +108,8 @@ public class TopicController extends BaseController {
                 config.setPromoterType(TopicConfig.PromoterType.any);
                 config.setPattern(TopicConfig.Pattern.pattern1);
                 config.setAmount(BigDecimal.ZERO);
+                config.setTokenExpire(new Date());
+                config.setEstate(TopicConfig.Estate.UNAUTHORIZED);
             }
             topic.setConfig(config);
             Calendar calendar   =   new GregorianCalendar();
@@ -273,6 +275,9 @@ public class TopicController extends BaseController {
             config.setPattern(TopicConfig.Pattern.pattern1);
             config.setAmount(BigDecimal.ZERO);
             config.setPromoterType(TopicConfig.PromoterType.any);
+            config.setTokenExpire(new Date());
+            config.setEstate(TopicConfig.Estate.UNAUTHORIZED);
+
         }
         if (useCard!=null) {
             if (member.getMobile()==null) {

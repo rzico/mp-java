@@ -356,6 +356,9 @@ public class Auth2Controller extends BaseController {
                 config.setPromoterType(TopicConfig.PromoterType.any);
                 config.setPattern(TopicConfig.Pattern.pattern1);
                 config.setAmount(BigDecimal.ZERO);
+                config.setTokenExpire(new Date());
+                config.setEstate(TopicConfig.Estate.UNAUTHORIZED);
+
             }
             topic.setConfig(config);
             Calendar calendar   =   new GregorianCalendar();
