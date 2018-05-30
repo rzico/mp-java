@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "wx_applet_sowing_map")
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_applet_sowing_map_sequence")
-public class AppletSowingMap extends BaseEntity{
+public class AppletSowingMap extends OrderEntity{
 
     public static enum ACTION{
         OPENARTICLE,//打开文章
@@ -21,17 +21,17 @@ public class AppletSowingMap extends BaseEntity{
         OPENWEBVIEW//打开网页
     }
 
+    /** 动作 */
     @NotNull
     @Column(columnDefinition="int(11) default '0' comment '做什么  {OPENARTICLE:打开文章,OPENPRODUCT:打开产品, OPENWEBVIEW:打开网页}'")
     private ACTION action;
-    /**
-     * 需要传的id
-     */
+
+    /** 跳转ID */
     @NotNull
-    @Column(columnDefinition="bigint(20) not null default 0 comment '发卡序号'")
+    @Column(columnDefinition="bigint(20) not null default 0 comment '跳转ID'")
     private Long actionId;
 
-    /**跳转链接 可以为空 **/
+    /** 跳转链接 */
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) comment '跳转链接'")
     private String url;
@@ -40,7 +40,7 @@ public class AppletSowingMap extends BaseEntity{
     @Column(columnDefinition="varchar(255) comment '封面'")
     private String frontcover;
 
-    /**  企业的用户，这个轮播图是属于那个专栏账号的  **/
+    /**  企业专栏  */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition="bigint(20) not null comment '专栏'")
     private Topic topic;

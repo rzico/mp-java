@@ -151,6 +151,7 @@ public class Topic extends BaseEntity {
 
 
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY)
+    @OrderBy("orders asc")
     @JsonIgnore
     private List<AppletSowingMap> appletSowingMaps = new ArrayList<AppletSowingMap>();
 
