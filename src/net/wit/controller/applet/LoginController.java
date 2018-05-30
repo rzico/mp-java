@@ -90,11 +90,11 @@ public class LoginController extends BaseController {
                 unionId = result.get("unionid").toString();
             }
 
-            BindUser bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
-            if (bindUser==null) {
-                if (unionId!=null && !"#".equals(unionId)) {
-                    bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
-                }
+            BindUser bindUser = null;
+            if (unionId!=null) {
+                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+            } else {
+                bindUser = bindUserService.findOpenId(openId,bundle.getString("weixin.appid"),BindUser.Type.weixin);
             }
 
             Member member = null;
@@ -102,6 +102,9 @@ public class LoginController extends BaseController {
                 member = bindUser.getMember();
             }
             if (member==null) {
+                if ("#".equals(unionId)) {
+                   return Message.error("登录失败");
+                }
                 member = new Member();
                 member.setNickName(nickName);
                 member.setLogo(logo);
