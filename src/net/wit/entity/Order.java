@@ -177,6 +177,15 @@ public class Order extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '优惠券折扣'")
 	private BigDecimal couponDiscount;
 
+
+	/** 提货券抵扣 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '提货券抵扣'")
+	private BigDecimal exchangeDiscount;
+
+
 	/** 调整金额 */
 	@NotNull
 	@Min(0)
@@ -1091,6 +1100,14 @@ public class Order extends BaseEntity {
 		this.trackingNo = trackingNo;
 	}
 
+	public BigDecimal getExchangeDiscount() {
+		return exchangeDiscount;
+	}
+
+	public void setExchangeDiscount(BigDecimal exchangeDiscount) {
+		this.exchangeDiscount = exchangeDiscount;
+	}
+
 	/**
 	 * 获取订单名称
 	 *
@@ -1255,6 +1272,9 @@ public class Order extends BaseEntity {
 		}
 		if (getCouponDiscount() != null) {
 			amount = amount.subtract(getCouponDiscount());
+		}
+		if (getExchangeDiscount() != null) {
+			amount = amount.subtract(getExchangeDiscount());
 		}
 		if (getOffsetAmount() != null) {
 			amount = amount.add(getOffsetAmount());

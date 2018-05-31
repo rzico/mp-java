@@ -190,6 +190,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setShippingStatus(Order.ShippingStatus.unshipped);
 		order.setFee(new BigDecimal(0));
 		order.setCouponDiscount(new BigDecimal(0));
+		order.setExchangeDiscount(BigDecimal.ZERO);
 		order.setOffsetAmount(new BigDecimal(0));
 		order.setPoint(0L);
 		order.setPointDiscount(BigDecimal.ZERO);
@@ -221,7 +222,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		List<OrderItem> orderItems = order.getOrderItems();
+
 		if (product != null) {
+
 			OrderItem orderItem = new OrderItem();
 			orderItem.setName(product.getName());
 			orderItem.setSpec(product.getSpec());
@@ -234,6 +237,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderItem.setReturnQuantity(0);
 			orderItem.setProduct(product);
 			orderItem.setOrder(order);
+			orderItem.setCouponQuantity(0L);
 
 			orderItems.add(orderItem);
 
@@ -261,6 +265,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						giftItem.setQuantity(qt);
 						giftItem.setShippedQuantity(0);
 						giftItem.setReturnQuantity(0);
+						giftItem.setCouponQuantity(0L);
 						giftItem.setProduct(gift);
 						giftItem.setPromotion(promotion);
 						giftItem.setOrder(order);
@@ -284,6 +289,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					orderItem.setReturnQuantity(0);
 					orderItem.setProduct(cartProduct);
 					orderItem.setOrder(order);
+					orderItem.setCouponQuantity(0L);
 					orderItems.add(orderItem);
 					order.setSeller(cartItem.getSeller());
 
@@ -302,6 +308,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							giftItem.setQuantity(qt);
 							giftItem.setShippedQuantity(0);
 							giftItem.setReturnQuantity(0);
+							giftItem.setCouponQuantity(0L);
 							giftItem.setProduct(gift);
 							giftItem.setPromotion(promotion);
 							giftItem.setOrder(order);
@@ -328,7 +335,30 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			List<CouponCode> couponCodes = member.getCouponCodes();
 			BigDecimal discount = BigDecimal.ZERO;
 			for (CouponCode code : couponCodes) {
-				if (code.getCoupon().getDistributor().equals(order.getSeller()) && code.getEnabled() && !code.getCoupon().getScope().equals(Coupon.Scope.shop)) {
+				if (    code.getCoupon().getDistributor().equals(order.getSeller())
+						&& code.getCoupon().getType().equals(Coupon.Type.exchange)
+						&& code.getEnabled()
+						&& !code.getCoupon().getScope().equals(Coupon.Scope.shop)
+						) {
+					BigDecimal d = code.calculate(order.getPrice(),order);
+					discount = discount.add(d);
+
+				}
+			}
+			if (discount.compareTo(BigDecimal.ZERO) > 0) {
+				order.setExchangeDiscount(discount);
+			}
+		}
+
+		if (member != null && (order.getExchangeDiscount().compareTo(BigDecimal.ZERO)>0)) {
+			List<CouponCode> couponCodes = member.getCouponCodes();
+			BigDecimal discount = BigDecimal.ZERO;
+			for (CouponCode code : couponCodes) {
+				if (    code.getCoupon().getDistributor().equals(order.getSeller())
+						&& !code.getCoupon().getType().equals(Coupon.Type.exchange)
+						&& code.getEnabled()
+						&& !code.getCoupon().getScope().equals(Coupon.Scope.shop)
+				) {
 					BigDecimal d = code.calculate(order.getPrice(),order);
 					if (d.compareTo(discount) > 0) {
 						order.setCouponDiscount(d);
@@ -389,6 +419,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			couponCode.setStock(couponCode.getStock()-1);
 			couponCode.setIsUsed(couponCode.getStock()<=0);
 			couponCodeDao.merge(couponCode);
+		}
+
+		for (OrderItem orderItem:order.getOrderItems()) {
+			if (orderItem.getCouponCode() != null) {
+				CouponCode couponCode = orderItem.getCouponCode();
+				couponCode.setUsedDate(new Date());
+				couponCode.setStock(couponCode.getStock()-orderItem.getCouponQuantity());
+				couponCode.setIsUsed(couponCode.getStock()<=0);
+				couponCodeDao.merge(couponCode);
+			}
 		}
 
 		order.setIsAllocatedStock(true);
@@ -553,6 +593,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				order.setCouponCode(null);
 				orderDao.merge(order);
 			}
+
+
+			for (OrderItem orderItem:order.getOrderItems()) {
+				if (orderItem.getCouponCode() != null) {
+					couponCode.setIsUsed(false);
+					couponCode.setUsedDate(null);
+					couponCode.setStock(couponCode.getStock()+orderItem.getCouponQuantity());
+					couponCodeDao.merge(couponCode);
+
+					orderItem.setCouponCode(null);
+					orderItem.setCouponQuantity(0L);
+					orderItemDao.merge(orderItem);
+				}
+			}
+
 		}
 
 //		member.setAmount(member.getAmount().add(order.getAmountPaid()));
@@ -892,6 +947,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setCouponCode(null);
 			orderDao.merge(order);
 		}
+
+
+		for (OrderItem orderItem:order.getOrderItems()) {
+			if (orderItem.getCouponCode() != null) {
+				couponCode.setIsUsed(false);
+				couponCode.setUsedDate(null);
+				couponCode.setStock(couponCode.getStock()+orderItem.getCouponQuantity());
+				couponCodeDao.merge(couponCode);
+
+				orderItem.setCouponCode(null);
+				orderItem.setCouponQuantity(0L);
+				orderItemDao.merge(orderItem);
+			}
+		}
+
 
 		if (order.getIsAllocatedStock()) {
 			for (OrderItem orderItem : order.getOrderItems()) {

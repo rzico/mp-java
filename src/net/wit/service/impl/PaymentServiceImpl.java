@@ -202,6 +202,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					orderService.complete(order,null);
 				}
 
+				if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse)) {
+					orderService.shipping(order,Order.ShippingMethod.warehouse,null,null);
+				}
+
 				messageService.orderMemberPushTo(orderLog);
 				messageService.orderSellerPushTo(orderLog);
 
@@ -247,7 +251,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					couponCodeDao.merge(couponCode);
 				}
 				messageService.payBillPushTo(payBill);
-				cardService.createAndActivate(member,payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
+//				cardService.createAndActivate(payBill.getMember(),payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
 			}else
 			if (payment.getType() == Payment.Type.cardFill) {
 				Member member = payment.getPayee();
@@ -334,7 +338,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 				}
 				messageService.payBillPushTo(payBill);
-				cardService.createAndActivate(member,payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
+//				cardService.createAndActivate(payBill.getMember(),payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
 			} else
 			if (payment.getType() == Payment.Type.reward) {
 				Member member = payment.getPayee();

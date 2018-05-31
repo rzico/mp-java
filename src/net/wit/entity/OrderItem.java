@@ -15,6 +15,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -84,6 +85,19 @@ public class OrderItem extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orders", nullable = false, updatable = false)
 	private Order order;
+
+	/** 提货券 */
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	private CouponCode couponCode;
+
+	/** 使用券 */
+	@NotNull
+	@Min(0)
+	@Max(10000)
+	@Column(nullable = false,columnDefinition="bigint(20) not null comment '使用券'")
+	private Long couponQuantity;
 
 	/**
 	 * 获取商品名称
@@ -483,4 +497,19 @@ public class OrderItem extends BaseEntity {
 		}
 	}
 
+	public CouponCode getCouponCode() {
+		return couponCode;
+	}
+
+	public void setCouponCode(CouponCode couponCode) {
+		this.couponCode = couponCode;
+	}
+
+	public Long getCouponQuantity() {
+		return couponQuantity;
+	}
+
+	public void setCouponQuantity(Long couponQuantity) {
+		this.couponQuantity = couponQuantity;
+	}
 }

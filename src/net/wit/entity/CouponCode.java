@@ -195,9 +195,13 @@ public class CouponCode extends BaseEntity {
 			for (OrderItem orderItem:order.getOrderItems()) {
 				if (coupon.getGoods().equals(orderItem.getProduct().getGoods())) {
 					if (orderItem.getQuantity()>getStock()) {
+						orderItem.setCouponQuantity(getStock());
+						orderItem.setCouponCode(this);
 						discount = discount.add(orderItem.getPrice().multiply(new BigDecimal(getStock())).setScale(2,BigDecimal.ROUND_DOWN));
 					} else {
 						discount = discount.add(orderItem.getSubtotal());
+						orderItem.setCouponQuantity(new Long(orderItem.getQuantity()));
+						orderItem.setCouponCode(this);
 					}
 				}
 			}
