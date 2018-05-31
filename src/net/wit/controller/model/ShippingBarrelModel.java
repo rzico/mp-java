@@ -13,6 +13,7 @@ import java.util.List;
 public class ShippingBarrelModel extends BaseModel implements Serializable {
 
     private Long id;
+    private Long barrelId;
 
     private String name;
 
@@ -54,9 +55,17 @@ public class ShippingBarrelModel extends BaseModel implements Serializable {
         this.name = name;
     }
 
+    public Long getBarrelId() {
+        return barrelId;
+    }
+
+    public void setBarrelId(Long barrelId) {
+        this.barrelId = barrelId;
+    }
 
     public void bind(ShippingBarrel shippingBarrel) {
         this.id = shippingBarrel.getId();
+        this.barrelId = shippingBarrel.getBarrel().getId();
         this.name = shippingBarrel.getName();
         this.quantity = shippingBarrel.getQuantity();
         this.returnQuantity = shippingBarrel.getReturnQuantity();
