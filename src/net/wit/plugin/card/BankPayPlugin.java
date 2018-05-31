@@ -158,7 +158,7 @@ public class BankPayPlugin extends PaymentPlugin {
 	 */
 	public String refundsQuery(Refunds refunds,HttpServletRequest request) throws Exception {
 		if (refunds.getTranSn()==null) {
-			if (DateUtils.addSeconds(refunds.getCreateDate(),30).compareTo(new Date())<0) {
+			if (DateUtils.addSeconds(refunds.getCreateDate(),30).compareTo(new Date())>0) {
 				return "0001";
 			} else {
 				return "9999";
