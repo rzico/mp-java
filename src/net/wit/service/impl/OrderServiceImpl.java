@@ -54,8 +54,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	@Resource(name = "refundsDaoImpl")
 	private RefundsDao refundsDao;
 
-	@Resource(name = "paymentDaoImpl")
-	private PaymentDao paymentDao;
+	@Resource(name = "paymentServiceImpl")
+	private PaymentService paymentService;
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
@@ -506,30 +506,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		messageService.orderMemberPushTo(orderLog);
 
 		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) { //没有付款时，直接确定订单
-			order.setOrderStatus(Order.OrderStatus.confirmed);
-			order.setPaymentStatus(Order.PaymentStatus.paid);
-			order.setExpire(null);
-			order.setFee(BigDecimal.ZERO);
-			orderDao.merge(order);
-
-			OrderLog orderLog1 = new OrderLog();
-			orderLog1.setType(OrderLog.Type.payment);
-			orderLog1.setOperator("system");
-			orderLog1.setContent("买家付款成功");
-			orderLog1.setOrder(order);
-			orderLogDao.persist(orderLog1);
-
+			orderDao.flush();
 			try {
+				Payment payment = payment(order,null);
+				if (payment!=null) {
+					payment.setTranSn(payment.getSn());
+					payment.setMethod(Payment.Method.offline);
+					paymentService.update(payment);
 
-				if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
-					shipping(order,Order.ShippingMethod.cardbkg,null,null);
-					complete(order,null);
+					paymentService.handle(payment);
 				}
-
-				if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse)) {
-					shipping(order,Order.ShippingMethod.warehouse,null,null);
-				}
-
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
@@ -1041,30 +1027,36 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 
-		Card card = order.getMember().card(order.getSeller());
 		Payment payment = new Payment();
 
-		order.setFee(BigDecimal.ZERO);
-		if (card != null) {
-			if (card.getBalance().compareTo(order.getAmountPayable()) >= 0) {
-				payment.setPaymentPluginId("cardPayPlugin");
+		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)!=0) {
+			Card card = order.getMember().card(order.getSeller());
+			order.setFee(BigDecimal.ZERO);
+			if (card != null) {
+				if (card.getBalance().compareTo(order.getAmountPayable()) >= 0) {
+					payment.setPaymentPluginId("cardPayPlugin");
+				}
 			}
-		}
-		if (payment.getPaymentPluginId() == null) {
-			Member member = order.getMember();
-			if (member.getBalance().compareTo(order.getAmountPayable()) >= 0) {
-				payment.setPaymentPluginId("balancePayPlugin");
+			if (payment.getPaymentPluginId() == null) {
+				Member member = order.getMember();
+				if (member.getBalance().compareTo(order.getAmountPayable()) >= 0) {
+					payment.setPaymentPluginId("balancePayPlugin");
+				}
 			}
-		}
-		if (payment.getPaymentPluginId() == null) {
-			Topic topic = order.getSeller().getTopic();
-			if (topic == null) {
-				order.setFee(order.getAmountPayable().multiply(new BigDecimal("0.006")).setScale(2, BigDecimal.ROUND_UP));
-			} else {
-				order.setFee(topic.calcFee(order.getAmountPayable()));
+			if (payment.getPaymentPluginId() == null) {
+				Topic topic = order.getSeller().getTopic();
+				if (topic == null) {
+					order.setFee(order.getAmountPayable().multiply(new BigDecimal("0.006")).setScale(2, BigDecimal.ROUND_UP));
+				} else {
+					order.setFee(topic.calcFee(order.getAmountPayable()));
+				}
 			}
+			orderDao.merge(order);
+		} else {
+			order.setFee(BigDecimal.ZERO);
+			payment.setPaymentPluginId("cashPayPlugin");
+			payment.setPaymentMethod("现金");
 		}
-		orderDao.merge(order);
 
 		payment.setPayee(order.getSeller());
 		payment.setMember(order.getMember());
@@ -1075,7 +1067,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		payment.setAmount(order.getAmountPayable());
 		payment.setSn(snService.generate(Sn.Type.payment));
 		payment.setOrder(order);
-		paymentDao.persist(payment);
+		paymentService.save(payment);
 
 		return payment;
 
