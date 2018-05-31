@@ -17,7 +17,7 @@ public class NavigationModel extends BaseModel implements Serializable {
     /** 标签 */
     private Long tagId;
     /** 文章分类 */
-    private Long articleCategoryId;
+    private Long articleCatalogId;
     /** 产品分类 */
     private Long productCategoryId;
 
@@ -45,12 +45,12 @@ public class NavigationModel extends BaseModel implements Serializable {
         this.tagId = tagId;
     }
 
-    public Long getArticleCategoryId() {
-        return articleCategoryId;
+    public Long getArticleCatalogId() {
+        return articleCatalogId;
     }
 
-    public void setArticleCategoryId(Long articleCategoryId) {
-        this.articleCategoryId = articleCategoryId;
+    public void setArticleCatalogId(Long articleCatalogId) {
+        this.articleCatalogId = articleCatalogId;
     }
 
     public Long getProductCategoryId() {
@@ -73,7 +73,7 @@ public class NavigationModel extends BaseModel implements Serializable {
         this.name = navigation.getName();
         this.logo = navigation.getLogo();
         this.type = navigation.getType();
-        this.articleCategoryId = 0L;
+        this.articleCatalogId = 0L;
         this.productCategoryId = 0L;
         this.tagId = 0L;
         Map<String,Long> data = JsonUtils.toObject(navigation.getExtend(),Map.class);
@@ -81,7 +81,7 @@ public class NavigationModel extends BaseModel implements Serializable {
             this.tagId = data.get("tag");
         }
         if (data.containsKey("category")) {
-            this.articleCategoryId = data.get("category");
+            this.articleCatalogId = data.get("category");
             this.productCategoryId = data.get("category");
         }
     }
