@@ -62,6 +62,17 @@ public class ShippingModel extends BaseModel implements Serializable {
     /**  送货员姓名 */
     private String adminName;
 
+
+    /**  买家留言 */
+    private String orderMemo;
+
+    /**  备注 */
+    private String memo;
+
+    /**  预约时间 */
+    private Date hopeDate;
+
+
     /**  支付方式 */
     private Order.PaymentMethod paymentMethod;
 
@@ -82,6 +93,8 @@ public class ShippingModel extends BaseModel implements Serializable {
 
     /** 包装 */
     private List<ShippingBarrelModel> shippingBarrels;
+
+
 
     public Long getId() {
         return id;
@@ -275,6 +288,30 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.shippingBarrels = shippingBarrels;
     }
 
+    public String getOrderMemo() {
+        return orderMemo;
+    }
+
+    public void setOrderMemo(String orderMemo) {
+        this.orderMemo = orderMemo;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public Date getHopeDate() {
+        return hopeDate;
+    }
+
+    public void setHopeDate(Date hopeDate) {
+        this.hopeDate = hopeDate;
+    }
+
     public void bind(Shipping shipping) {
 
         this.id = shipping.getId();
@@ -325,6 +362,10 @@ public class ShippingModel extends BaseModel implements Serializable {
             this.adminId = shipping.getAdmin().getId();
             this.adminName = shipping.getAdmin().getName();
         }
+
+        this.memo = shipping.getMemo();
+        this.orderMemo = order.getMemo();
+        this.hopeDate = order.getHopeDate();
 
     }
 
@@ -378,6 +419,11 @@ public class ShippingModel extends BaseModel implements Serializable {
             this.adminId = shipping.getAdmin().getId();
             this.adminName = shipping.getAdmin().getName();
         }
+
+        this.memo = shipping.getMemo();
+        this.orderMemo = order.getMemo();
+        this.hopeDate = order.getHopeDate();
+
 
     }
 

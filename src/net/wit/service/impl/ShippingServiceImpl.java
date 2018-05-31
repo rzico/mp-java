@@ -197,26 +197,26 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	public Shipping completed(Shipping shipping) {
 
-		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
-		shipping.setOrderStatus(Shipping.OrderStatus.completed);
-		shippingDao.merge(shipping);
+			shipping.setShippingStatus(Shipping.ShippingStatus.completed);
+			shipping.setOrderStatus(Shipping.OrderStatus.completed);
+			shippingDao.merge(shipping);
 
-		Member ec = shipping.getEnterprise().getMember();
-		for (ShippingBarrel b:shipping.getShippingBarrels()) {
-		 	BarrelStock bs = barrelStockDao.find(ec,b.getBarrel());
-		 	if (bs==null) {
-		 		bs = new BarrelStock();
-		 		bs.setMember(ec);
-				bs.setBarrel(b.getBarrel());
-				bs.setStock(b.getQuantity()-b.getReturnQuantity());
-				barrelStockDao.persist(bs);
-			} else {
-				barrelStockDao.lock(bs,LockModeType.PESSIMISTIC_WRITE);
-				bs.setStock(bs.getStock()+b.getQuantity()-b.getReturnQuantity());
-				barrelStockDao.merge(bs);
+			Member ec = shipping.getEnterprise().getMember();
+			for (ShippingBarrel b : shipping.getShippingBarrels()) {
+				BarrelStock bs = barrelStockDao.find(ec, b.getBarrel());
+				if (bs == null) {
+					bs = new BarrelStock();
+					bs.setMember(ec);
+					bs.setBarrel(b.getBarrel());
+					bs.setStock(b.getQuantity() - b.getReturnQuantity());
+					barrelStockDao.persist(bs);
+				} else {
+					barrelStockDao.lock(bs, LockModeType.PESSIMISTIC_WRITE);
+					bs.setStock(bs.getStock() + b.getQuantity() - b.getReturnQuantity());
+					barrelStockDao.merge(bs);
+				}
+				barrelStockDao.flush();
 			}
-			barrelStockDao.flush();
-		}
 
 		return shipping;
 

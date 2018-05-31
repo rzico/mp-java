@@ -249,6 +249,7 @@ public class ShippingController extends BaseController {
 	@RequestMapping(value = "/completed", method = RequestMethod.POST)
 	public @ResponseBody
 	Message completed(String sn,String body,Integer level,String memo,HttpServletRequest request) {
+
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -258,7 +259,6 @@ public class ShippingController extends BaseController {
 		if (shipping==null) {
 			return Message.error("无效送货id");
 		}
-
 
 		if (memo!=null) {
 			String s = shipping.getMemo();
@@ -270,13 +270,20 @@ public class ShippingController extends BaseController {
 		}
 
 		if (body!=null) {
-			shipping.getShippingBarrels().clear();
-			List<ShippingBarrel> barrels = new ArrayList<>();
+			List<ShippingBarrel> barrels = shipping.getShippingBarrels();
+
 			JSONArray ja = JSONArray.fromObject(body);
+
 			for (int i=0;i<ja.size();i++) {
 				JSONObject jn = ja.getJSONObject(i);
-				ShippingBarrel b = new ShippingBarrel();
 				Barrel br = barrelService.find(jn.getLong("id"));
+				ShippingBarrel b = null;
+				for (ShippingBarrel sb:barrels) {
+					if (sb.getBarrel().equals(br)) {
+						b = sb;
+						break;
+					}
+				}
 				b.setBarrel(br);
 				b.setQuantity(jn.getInt("quantity"));
 				b.setReturnQuantity(jn.getInt("returnQuantity"));

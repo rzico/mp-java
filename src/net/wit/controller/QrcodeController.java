@@ -116,7 +116,7 @@ public class QrcodeController extends BaseController {
 //
         String c = data.get("code");
         if (data.get("type").toString().equals("865380")) {
-            Long id = Long.parseLong(c.substring(6)) - 10200;
+            Long id = Long.parseLong(c) - 10200;
             data.put("id", String.valueOf(id));
             Member member = memberService.find(id);
             if (member==null) {

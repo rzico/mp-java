@@ -62,6 +62,12 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  配送方式 */
     private Order.ShippingStatus shippingStatus;
 
+    /**  买家留言 */
+    private String memo;
+
+    /**  预约时间 */
+    private Date hopeDate;
+
     /**  商品合计 */
     private BigDecimal price;
 
@@ -307,6 +313,22 @@ public class OrderModel extends BaseModel implements Serializable {
         this.track = track;
     }
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public Date getHopeDate() {
+        return hopeDate;
+    }
+
+    public void setHopeDate(Date hopeDate) {
+        this.hopeDate = hopeDate;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -358,6 +380,9 @@ public class OrderModel extends BaseModel implements Serializable {
            }
         }
         this.freight = order.getFreight();
+
+        this.memo = order.getMemo();
+        this.hopeDate = order.getHopeDate();
     }
 
 
@@ -381,6 +406,9 @@ public class OrderModel extends BaseModel implements Serializable {
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
         this.freight = order.getFreight();
+
+        this.memo = order.getMemo();
+        this.hopeDate = order.getHopeDate();
 
     }
 
