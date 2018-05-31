@@ -58,7 +58,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	 *            操作员
 	 * @return 订单
 	 */
-	Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo,Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon);
+	Order create(Member member ,Product product, Integer quantity, Cart cart, Receiver receiver, String memo,Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon,Date hopeDate);
 
 	/**
 	 * 更新订单

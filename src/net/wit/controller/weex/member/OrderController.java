@@ -241,8 +241,8 @@ public class OrderController extends BaseController {
 		}
 
 		try {
-			if (shippingMethod!=null) {
-				shippingMethod = Order.ShippingMethod.shipping;
+			if (shippingMethod==null) {
+				shippingMethod = order.getShippingMethod();
 			}
 			orderService.shipping(order,shippingMethod,trackingNo,admin);
 		} catch (Exception e) {

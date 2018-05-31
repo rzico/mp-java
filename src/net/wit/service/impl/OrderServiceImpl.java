@@ -363,7 +363,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 *            操作员
 	 * @return 订单
 	 */
-	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon) {
+	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon,Date hopeDate) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -379,6 +379,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
 		order.setOperator(member.userId());
+
+		order.setHopeDate(hopeDate);
 
 		if (order.getCouponCode() != null) {
 			CouponCode couponCode = order.getCouponCode();

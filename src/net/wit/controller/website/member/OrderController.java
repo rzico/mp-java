@@ -172,7 +172,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Order.ShippingMethod shippingMethod,Long dragonId) {
+	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -199,7 +199,7 @@ public class OrderController extends BaseController {
 		if (dragonId!=null) {
 			dragon = dragonService.find(dragonId);
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate);
 		if (cart != null) {
 			cartService.delete(cart);
 		}

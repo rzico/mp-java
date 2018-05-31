@@ -283,6 +283,10 @@ public class Order extends BaseEntity {
 	@Embedded
 	private Location location;
 
+	/** 预约时间 */
+	@Column(columnDefinition="datetime comment '预约时间'")
+	private Date hopeDate;
+
 	/** 发货时间 */
 	@Column(columnDefinition="datetime comment '发货时间'")
 	private Date shippingDate;
@@ -450,6 +454,13 @@ public class Order extends BaseEntity {
 		this.orderStatus = orderStatus;
 	}
 
+	public Date getHopeDate() {
+		return hopeDate;
+	}
+
+	public void setHopeDate(Date hopeDate) {
+		this.hopeDate = hopeDate;
+	}
 
 	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
