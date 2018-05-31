@@ -139,7 +139,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setOrderStatus(Shipping.OrderStatus.unconfirmed);
 		shipping.setShippingStatus(Shipping.ShippingStatus.unconfirmed);
 		shipping.setPhone(order.getPhone());
-		shipping.setSeller(order.getMember());
+		shipping.setSeller(order.getSeller());
 		shipping.setZipCode(order.getZipCode());
 		shipping.setSn(snService.generate(Sn.Type.shipping));
 		shipping.setFreight(BigDecimal.ZERO);
@@ -243,7 +243,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				BigDecimal freight = shipping.getFreight();
 				sellerMember.setBalance(sellerMember.getBalance().subtract(freight));
 				if (sellerMember.getBalance().compareTo(BigDecimal.ZERO)<0) {
-					throw new RuntimeException("余额不足核销");
+					throw new RuntimeException("余额不足不能核销");
 				}
 				memberDao.merge(sellerMember);
 

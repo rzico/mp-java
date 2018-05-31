@@ -331,7 +331,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		//按楼层加价
 		order.setFreight(order.calcFreight(receiver));
 
-		if (member != null) {
+		if (member != null && !order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 			List<CouponCode> couponCodes = member.getCouponCodes();
 			BigDecimal discount = BigDecimal.ZERO;
 			for (CouponCode code : couponCodes) {
@@ -505,11 +505,35 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		messageService.orderMemberPushTo(orderLog);
 
-		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) {
+		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) { //没有付款时，直接确定订单
 			order.setOrderStatus(Order.OrderStatus.confirmed);
 			order.setPaymentStatus(Order.PaymentStatus.paid);
 			order.setExpire(null);
+			order.setFee(BigDecimal.ZERO);
 			orderDao.merge(order);
+
+			OrderLog orderLog1 = new OrderLog();
+			orderLog1.setType(OrderLog.Type.payment);
+			orderLog1.setOperator("system");
+			orderLog1.setContent("买家付款成功");
+			orderLog1.setOrder(order);
+			orderLogDao.persist(orderLog1);
+
+			try {
+
+				if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+					shipping(order,Order.ShippingMethod.cardbkg,null,null);
+					complete(order,null);
+				}
+
+				if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse)) {
+					shipping(order,Order.ShippingMethod.warehouse,null,null);
+				}
+
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+
 		}
 
 		return order;
