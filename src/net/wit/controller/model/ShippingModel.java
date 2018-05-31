@@ -267,6 +267,14 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.adminName = adminName;
     }
 
+    public List<ShippingBarrelModel> getShippingBarrels() {
+        return shippingBarrels;
+    }
+
+    public void setShippingBarrels(List<ShippingBarrelModel> shippingBarrels) {
+        this.shippingBarrels = shippingBarrels;
+    }
+
     public void bind(Shipping shipping) {
 
         this.id = shipping.getId();
