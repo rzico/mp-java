@@ -1,6 +1,7 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,9 +17,9 @@ import net.wit.Principal;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.BarrelStockDao;
-import net.wit.service.AdminService;
-import net.wit.service.ReceiverService;
-import net.wit.service.SnService;
+import net.wit.dao.DepositDao;
+import net.wit.dao.MemberDao;
+import net.wit.service.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.wit.dao.ShippingDao;
 import net.wit.entity.*;
-import net.wit.service.ShippingService;
 
 /**
  * @ClassName: ShippingDaoImpl
@@ -41,6 +41,16 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	@Resource(name = "shippingDaoImpl")
 	private ShippingDao shippingDao;
+
+	@Resource(name = "memberDaoImpl")
+	private MemberDao memberDao;
+
+
+	@Resource(name = "depositDaoImpl")
+	private DepositDao depositDao;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
 
 	@Resource(name = "snServiceImpl")
 	private SnService snService;
@@ -188,18 +198,21 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	}
 
 
-	public Shipping receive(Shipping shipping) {
+	public Shipping receive(Shipping shipping) throws Exception {
 		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
 		shipping.setOrderStatus(Shipping.OrderStatus.completed);
 		shippingDao.merge(shipping);
 		return shipping;
 	}
 
-	public Shipping completed(Shipping shipping) {
+	public Shipping completed(Shipping shipping) throws Exception {
 
 			shipping.setShippingStatus(Shipping.ShippingStatus.completed);
 			shipping.setOrderStatus(Shipping.OrderStatus.completed);
-			shippingDao.merge(shipping);
+
+		    //结算运费
+		    shipping.setFreight(new BigDecimal(5));
+  			shippingDao.merge(shipping);
 
 			Member ec = shipping.getEnterprise().getMember();
 			for (ShippingBarrel b : shipping.getShippingBarrels()) {
@@ -216,6 +229,110 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					barrelStockDao.merge(bs);
 				}
 				barrelStockDao.flush();
+			}
+
+			BigDecimal adminFreight = shipping.getFreight().multiply(new BigDecimal(0.8)).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+
+			//结算配送站运费
+		    if (shipping.getEnterprise()!=null) {
+
+		    	//扣销售站
+				Member sellerMember = shipping.getSeller();
+				memberDao.lock(sellerMember,LockModeType.PESSIMISTIC_WRITE);
+
+				BigDecimal freight = shipping.getFreight();
+				sellerMember.setBalance(sellerMember.getBalance().subtract(freight));
+				if (sellerMember.getBalance().compareTo(BigDecimal.ZERO)<0) {
+					throw new RuntimeException("余额不足核销");
+				}
+				memberDao.merge(sellerMember);
+
+				memberDao.flush();
+
+				Deposit  sellerDeposit = new Deposit();
+				sellerDeposit.setBalance(sellerMember.getBalance());
+				sellerDeposit.setType(Deposit.Type.freight);
+				sellerDeposit.setMemo("支付运费");
+				sellerDeposit.setMember(sellerMember);
+				sellerDeposit.setCredit(BigDecimal.ZERO.subtract(freight));
+				sellerDeposit.setDebit(BigDecimal.ZERO);
+				sellerDeposit.setDeleted(false);
+				sellerDeposit.setOperator("system");
+				sellerDeposit.setOrder(shipping.getOrder());
+				sellerDeposit.setSeller(shipping.getSeller());
+				depositDao.persist(sellerDeposit);
+				messageService.depositPushTo(sellerDeposit);
+
+				//给配送站
+				Member shippingMember = shipping.getEnterprise().getMember();
+				memberDao.lock(shippingMember,LockModeType.PESSIMISTIC_WRITE);
+
+				shippingMember.setBalance(shippingMember.getBalance().add(freight));
+				memberDao.merge(shippingMember);
+
+				memberDao.flush();
+
+				Deposit deposit = new Deposit();
+				deposit.setBalance(shippingMember.getBalance());
+				deposit.setType(Deposit.Type.freight);
+				deposit.setMemo("运费结算");
+				deposit.setMember(shippingMember);
+				deposit.setCredit(freight);
+				deposit.setDebit(BigDecimal.ZERO);
+				deposit.setDeleted(false);
+				deposit.setOperator("system");
+				deposit.setOrder(shipping.getOrder());
+				deposit.setSeller(shipping.getSeller());
+				depositDao.persist(deposit);
+				messageService.depositPushTo(deposit);
+
+
+				shippingMember.setBalance(shippingMember.getBalance().subtract(adminFreight));
+				memberDao.merge(shippingMember);
+
+				memberDao.flush();
+
+				Deposit adminDeposit = new Deposit();
+				adminDeposit.setBalance(shippingMember.getBalance());
+				adminDeposit.setType(Deposit.Type.freight);
+				adminDeposit.setMemo("支付工资");
+				adminDeposit.setMember(shippingMember);
+				adminDeposit.setCredit(BigDecimal.ZERO.subtract(adminFreight));
+				adminDeposit.setDebit(BigDecimal.ZERO);
+				adminDeposit.setDeleted(false);
+				adminDeposit.setOperator("system");
+				adminDeposit.setOrder(shipping.getOrder());
+				adminDeposit.setSeller(shipping.getSeller());
+				depositDao.persist(adminDeposit);
+				messageService.depositPushTo(adminDeposit);
+
+
+				//送水员运费
+				if (shipping.getAdmin()!=null) {
+
+					Member adminMember = shipping.getAdmin().getMember();
+					memberDao.lock(adminMember,LockModeType.PESSIMISTIC_WRITE);
+
+					adminMember.setBalance(adminMember.getBalance().add(adminFreight));
+					memberDao.merge(adminMember);
+
+					memberDao.flush();
+
+					Deposit wagesDeposit = new Deposit();
+					wagesDeposit.setBalance(adminMember.getBalance());
+					wagesDeposit.setType(Deposit.Type.wages);
+					wagesDeposit.setMemo("送货工资");
+					wagesDeposit.setMember(adminMember);
+					wagesDeposit.setCredit(adminFreight);
+					wagesDeposit.setDebit(BigDecimal.ZERO);
+					wagesDeposit.setDeleted(false);
+					wagesDeposit.setOperator("system");
+					wagesDeposit.setOrder(shipping.getOrder());
+					wagesDeposit.setSeller(shipping.getSeller());
+					depositDao.persist(wagesDeposit);
+					messageService.depositPushTo(wagesDeposit);
+				}
+
 			}
 
 		return shipping;

@@ -69,7 +69,10 @@ public class Deposit extends BaseEntity {
 		freight,
 
 		/** 罚款  支出 */
-		forfeit
+		forfeit,
+
+		/** 工资  收入 */
+		wages
 	}
 
 	/** 类型 */

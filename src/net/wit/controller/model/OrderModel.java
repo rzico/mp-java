@@ -80,6 +80,9 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  优惠券折扣 */
     private BigDecimal couponDiscount;
 
+    /**  提货券抵扣 */
+    private BigDecimal exchangeDiscount;
+
     /**  应付金额 */
     private BigDecimal amountPayable;
 
@@ -329,6 +332,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.hopeDate = hopeDate;
     }
 
+    public BigDecimal getExchangeDiscount() {
+        return exchangeDiscount;
+    }
+
+    public void setExchangeDiscount(BigDecimal exchangeDiscount) {
+        this.exchangeDiscount = exchangeDiscount;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -360,6 +371,8 @@ public class OrderModel extends BaseModel implements Serializable {
         this.shippingMethod = order.getShippingMethod();
         this.paymentStatus = order.getPaymentStatus();
         this.shippingStatus = order.getShippingStatus();
+
+        this.exchangeDiscount = order.getExchangeDiscount();
 
         this.receiver = new ReceiverModel();
         this.receiver.setAddress(order.getAddress());
@@ -406,6 +419,8 @@ public class OrderModel extends BaseModel implements Serializable {
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
         this.freight = order.getFreight();
+
+        this.exchangeDiscount = order.getExchangeDiscount();
 
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();

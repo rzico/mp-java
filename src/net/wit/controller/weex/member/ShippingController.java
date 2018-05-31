@@ -208,7 +208,11 @@ public class ShippingController extends BaseController {
 		}
 
 		shipping.setLevel(level);
-		shippingService.receive(shipping);
+		try {
+			shippingService.receive(shipping);
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
 
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);
@@ -297,7 +301,11 @@ public class ShippingController extends BaseController {
 		}
 		shipping.setLevel(level);
 
-		shippingService.completed(shipping);
+		try {
+			shippingService.completed(shipping);
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
 
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);

@@ -31,8 +31,8 @@ public interface ShippingService extends BaseService<Shipping, Long> {
 
 	Shipping create(Order order);
 
-	Shipping receive(Shipping shipping);
+	Shipping receive(Shipping shipping) throws Exception;
 
-	Shipping completed(Shipping shipping);
+	Shipping completed(Shipping shipping) throws Exception;
 
 }
