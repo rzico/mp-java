@@ -99,7 +99,6 @@ public class AdminModel extends BaseModel implements Serializable {
 
     public void bind(Admin admin) {
         this.id = admin.getId();
-        this.name = admin.getName();
         if (admin.getShop()!=null) {
             this.shopId = admin.getShop().getId();
             this.shopName = admin.getShop().getName();
@@ -108,9 +107,11 @@ public class AdminModel extends BaseModel implements Serializable {
             this.shopName = "未分配";
         }
         if (admin.getMember()!=null) {
+            this.name = admin.getMember().realName();
             this.mobile = admin.getMember().getMobile();
             this.logo = admin.getMember().getLogo();
         } else {
+            this.name = admin.getName();
             this.mobile = "未绑定";
         }
         if (admin.isOwner()) {

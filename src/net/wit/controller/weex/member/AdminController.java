@@ -96,7 +96,7 @@ public class AdminController extends BaseController {
         if (code!=null) {
             Admin r = enterpriseService.addAdmin(enterprise,adminMember);
             if (r==null) {
-                return Message.error("就业状态，请先解除就业关系");
+                return Message.error("您在就业状态");
             }
             try {
                 memberService.create(adminMember,member);

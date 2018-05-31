@@ -1090,6 +1090,18 @@ public class Member extends BaseEntity {
 		}
 	}
 
+	public String realName() {
+		if (getName()!=null) {
+			return getName();
+		} else
+		if (getNickName()!=null) {
+			return getNickName();
+		} else
+		{
+			return userId();
+		}
+	}
+
 	public String topicName() {
 		if (getTopic()!=null) {
 			return getTopic().getName();

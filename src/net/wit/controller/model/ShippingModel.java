@@ -3,6 +3,7 @@ package net.wit.controller.model;
 import net.wit.entity.Member;
 import net.wit.entity.Order;
 import net.wit.entity.Shipping;
+import net.wit.entity.ShippingBarrel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -78,6 +79,9 @@ public class ShippingModel extends BaseModel implements Serializable {
 
     /** 商品 */
     private List<ShippingItemModel> shippingItems;
+
+    /** 包装 */
+    private List<ShippingBarrelModel> shippingBarrels;
 
     public Long getId() {
         return id;
@@ -283,6 +287,7 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.statusDescr = order.getStatusDescr();
 
         this.shippingItems = ShippingItemModel.bindList(shipping.getShippingItems());
+        this.shippingBarrels = ShippingBarrelModel.bindList(shipping.getShippingBarrels());
 
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
