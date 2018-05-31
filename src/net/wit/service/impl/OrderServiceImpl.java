@@ -321,7 +321,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 //			}
 //		}
 
-		order.setFreight(BigDecimal.ZERO);
+		//按楼层加价
+		order.setFreight(order.calcFreight(receiver));
 
 		if (member != null) {
 			List<CouponCode> couponCodes = member.getCouponCodes();

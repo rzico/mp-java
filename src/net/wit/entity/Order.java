@@ -319,7 +319,6 @@ public class Order extends BaseEntity {
 	@JoinColumn(updatable = false)
 	private Member partner;
 
-
 	/** 推广员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -1197,6 +1196,25 @@ public class Order extends BaseEntity {
 			for (OrderItem orderItem : getOrderItems()) {
 				if (orderItem != null && orderItem.getSubtotal() != null) {
 					price = price.add(orderItem.getSubtotal());
+				}
+			}
+		}
+		return price;
+	}
+
+	@Transient
+	public BigDecimal calcFreight(Receiver receiver) {
+		BigDecimal price = new BigDecimal(0);
+		if (receiver!=null && receiver.getLevel()>2) {
+			if (getOrderItems() != null) {
+				for (OrderItem orderItem : getOrderItems()) {
+					if (orderItem != null && orderItem.getQuantity() != null) {
+						price = price.add(
+								new BigDecimal(
+										orderItem.getQuantity() * (receiver.getLevel() - 1)
+								)
+						);
+					}
 				}
 			}
 		}

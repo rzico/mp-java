@@ -41,7 +41,7 @@ public class Deposit extends BaseEntity {
 		/** 提现  支出 */
 		transfer,
 
-		/** 支付  支出 */
+		/** 付款  支出 */
 		payment,
 
 		/** 退款  收入 */
@@ -59,11 +59,17 @@ public class Deposit extends BaseEntity {
 		/** 收款  收入 */
 		cashier,
 
-		/** 会员卡  收入 */
+		/** 充卡  收入 */
 		card,
 
-		/** 手机短信 支出 */
-		smsSend
+		/** 短信  支出 */
+		smsSend,
+
+		/** 运费  收入 */
+		freight,
+
+		/** 罚款  支出 */
+		forfeit
 	}
 
 	/** 类型 */
