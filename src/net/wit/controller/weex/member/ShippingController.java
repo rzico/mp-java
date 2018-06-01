@@ -148,13 +148,18 @@ public class ShippingController extends BaseController {
 		}
 
 		shipping.setEnterprise(shop.getEnterprise());
+
 		shipping.setAdmin(admin);
 		if (admin!=null) {
 			shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
 			shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
 		}
 
-		shippingService.update(shipping);
+		try {
+			shippingService.dispatch(shipping);
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
 
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);

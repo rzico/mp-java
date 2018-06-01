@@ -16,9 +16,7 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
-import net.wit.dao.BarrelStockDao;
-import net.wit.dao.DepositDao;
-import net.wit.dao.MemberDao;
+import net.wit.dao.*;
 import net.wit.service.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -26,7 +24,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.ShippingDao;
 import net.wit.entity.*;
 
 /**
@@ -66,6 +63,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	@Resource(name = "barrelStockDaoImpl")
 	private BarrelStockDao barrelStockDao;
+
+	@Resource(name = "orderLogDaoImpl")
+	private OrderLogDao orderLogDao;
 
 	@Resource(name = "shippingDaoImpl")
 	public void setBaseDao(ShippingDao shippingDao) {
@@ -216,10 +216,46 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	}
 
 
+	public Shipping dispatch(Shipping shipping) throws Exception {
+
+		if (shipping.getAdmin()!=null) {
+			shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
+			shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
+			OrderLog orderLog = new OrderLog();
+			orderLog.setType(OrderLog.Type.shipping);
+			orderLog.setOperator("system");
+			orderLog.setContent("已指派送货员“"+shipping.getAdmin().getMember().realName()+"”");
+			orderLog.setOrder(shipping.getOrder());
+			orderLogDao.persist(orderLog);
+			messageService.orderMemberPushTo(orderLog);
+			messageService.shippingAdminPushTo(shipping,orderLog);
+		} else {
+			OrderLog orderLog = new OrderLog();
+			orderLog.setType(OrderLog.Type.shipping);
+			orderLog.setOperator("system");
+			orderLog.setContent("订单至"+shipping.getShop().getName()+"");
+			orderLog.setOrder(shipping.getOrder());
+			orderLogDao.persist(orderLog);
+			messageService.shippingPushTo(shipping,orderLog);
+		}
+
+		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
+		shipping.setOrderStatus(Shipping.OrderStatus.completed);
+		shippingDao.merge(shipping);
+		return shipping;
+	}
+
 	public Shipping receive(Shipping shipping) throws Exception {
 		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
 		shipping.setOrderStatus(Shipping.OrderStatus.completed);
 		shippingDao.merge(shipping);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.shipping);
+		orderLog.setOperator("system");
+		orderLog.setContent("您的订单已送达");
+		orderLog.setOrder(shipping.getOrder());
+		orderLogDao.persist(orderLog);
+		messageService.orderMemberPushTo(orderLog);
 		return shipping;
 	}
 
@@ -361,6 +397,21 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			}
 
 		orderService.complete(shipping.getOrder(),null);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.complete);
+		orderLog.setOperator("system");
+		orderLog.setContent("订单已完成");
+		Long d = 0L;
+		for (ShippingBarrel b:shipping.getShippingBarrels()) {
+			d = d + b.getReturnQuantity();
+		}
+		if (d>0L) {
+			orderLog.setContent(orderLog.getContent()+",回桶数"+String.valueOf(d));
+		}
+		orderLog.setOrder(shipping.getOrder());
+		orderLogDao.persist(orderLog);
+		messageService.orderMemberPushTo(orderLog);
 
 		return shipping;
 

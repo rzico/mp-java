@@ -52,4 +52,11 @@ public interface MessageService extends BaseService<Message, Long> {
 
 	//订单提醒
 	public Boolean orderSellerPushTo(OrderLog orderLog);
+
+	//送货提醒
+	public Boolean shippingPushTo(Shipping shipping,OrderLog orderLog);
+
+	//送货提醒
+	public Boolean shippingAdminPushTo(Shipping shipping,OrderLog orderLog);
+
 }

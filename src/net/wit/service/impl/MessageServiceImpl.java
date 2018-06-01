@@ -317,6 +317,36 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		return pushTo(msg);
 	}
 
+	//提醒配送站
+	public Boolean shippingPushTo(Shipping shipping,OrderLog orderLog) {
+		Message msg = new Message();
+		msg.setReceiver(shipping.getEnterprise().getMember());
+		msg.setMember(shipping.getSeller());
+		msg.setType(Message.Type.order);
+		msg.setThumbnial(msg.getMember().getLogo());
+		msg.setTitle("订单提醒");
+		msg.setContent(orderLog.getContent());
+		OrderListModel ext = new OrderListModel();
+		ext.bind(orderLog.getOrder());
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
+	//提醒送货员
+	public Boolean shippingAdminPushTo(Shipping shipping,OrderLog orderLog) {
+		Message msg = new Message();
+		msg.setReceiver(shipping.getAdmin().getMember());
+		msg.setMember(shipping.getEnterprise().getMember());
+		msg.setType(Message.Type.order);
+		msg.setThumbnial(msg.getMember().getLogo());
+		msg.setTitle("订单提醒");
+		msg.setContent(orderLog.getContent());
+		OrderListModel ext = new OrderListModel();
+		ext.bind(orderLog.getOrder());
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
 	//收单提醒
 	public Boolean payBillPushTo(PayBill payBill) {
 		Message msg = new Message();
