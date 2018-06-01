@@ -257,7 +257,7 @@ public class OrderController extends BaseController {
 	/**
 	 *  退货
 	 */
-	@RequestMapping(value = "/returns", method = RequestMethod.POST)
+	@RequestMapping(value = "/returns")
 	public @ResponseBody
 	Message returns(String sn,HttpServletRequest request) {
 		Member member = memberService.getCurrent();

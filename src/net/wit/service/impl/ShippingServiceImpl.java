@@ -146,16 +146,21 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 		List<ShippingItem> shippingItems = new ArrayList<>();
 		for (OrderItem orderItem:order.getOrderItems()) {
-			ShippingItem shippingItem = new ShippingItem();
-			shippingItem.setName(orderItem.getName());
-			shippingItem.setProduct(orderItem.getProduct());
-			shippingItem.setQuantity(orderItem.getQuantity());
-			shippingItem.setSn(orderItem.getProduct().getSn());
-			shippingItem.setSpec(orderItem.getSpec());
-			shippingItem.setThumbnail(orderItem.getThumbnail());
-			shippingItem.setShipping(shipping);
-			shippingItems.add(shippingItem);
+			if (orderItem.getProduct().getType().equals(Product.Type.warehouse)) {
+				ShippingItem shippingItem = new ShippingItem();
+				shippingItem.setName(orderItem.getName());
+				shippingItem.setProduct(orderItem.getProduct());
+				shippingItem.setQuantity(orderItem.getQuantity());
+				shippingItem.setSn(orderItem.getProduct().getSn());
+				shippingItem.setSpec(orderItem.getSpec());
+				shippingItem.setThumbnail(orderItem.getThumbnail());
+				shippingItem.setShipping(shipping);
+				shippingItems.add(shippingItem);
+			}
+		}
 
+		if (shippingItems.size()==0) {
+			return null;
 		}
 
 		shipping.setShippingItems(shippingItems);
@@ -172,24 +177,24 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			shipping.setAdmin(receiver.getAdmin());
 		} else {
 			//没有分配，按距离来，选按谁的客户给谁
-			Member member = order.getMember();
-			Card card = member.card(order.getSeller());
-			if (card==null) {
-				card = member.getCards().get(0);
-			}
-			if (card!=null) {
-				Admin admin = adminService.findByMember(card.getOwner());
-				if (admin!=null) {
-					shipping.setEnterprise(admin.getEnterprise());
-					shipping.setShop(admin.getShop());
-				}
-			} else {
+//			Member member = order.getMember();
+//			Card card = member.card(order.getSeller());
+//			if (card==null) {
+//				card = member.getCards().get(0);
+//			}
+//			if (card!=null) {
+//				Admin admin = adminService.findByMember(card.getOwner());
+//				if (admin!=null) {
+//					shipping.setEnterprise(admin.getEnterprise());
+//					shipping.setShop(admin.getShop());
+//				}
+//			} else {
 				Admin admin = adminService.findByMember(order.getSeller());
 				if (admin!=null) {
 					shipping.setEnterprise(admin.getEnterprise());
 					shipping.setShop(admin.getShop());
 				}
-			}
+//			}
 		}
 
 		shippingDao.persist(shipping);
@@ -211,8 +216,18 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			shipping.setOrderStatus(Shipping.OrderStatus.completed);
 
 		    //结算运费
-		    shipping.setFreight(new BigDecimal(5));
+		    shipping.setFreight(new BigDecimal(5).multiply(new BigDecimal(shipping.getQuantity())));
   			shippingDao.merge(shipping);
+
+  			//记忆楼层和送货点
+
+		    Receiver receiver = receiverService.find(shipping.getOrder().getReceiverId());
+		    if (receiver!=null) {
+		    	receiver.setLevel(shipping.getLevel());
+				receiver.setShop(shipping.getShop());
+				receiver.setAdmin(shipping.getAdmin());
+				receiverService.update(receiver);
+			}
 
 			Member ec = shipping.getEnterprise().getMember();
 			for (ShippingBarrel b : shipping.getShippingBarrels()) {

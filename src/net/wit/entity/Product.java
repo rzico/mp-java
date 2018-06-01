@@ -36,16 +36,16 @@ public class Product extends OrderEntity {
 	private static final long serialVersionUID = 41L;
 
 	/**
-	 * 产品类型
+	 * 配送方式
 	 */
 	public enum Type {
-		/** 快递 */
+		/** 普通快递 */
 		product,
 
-		/** 同城 */
+		/** 同城配送 */
 		warehouse,
 
-		/** 虚拟 */
+		/** 虚拟物品 */
 		dummy
 	}
 

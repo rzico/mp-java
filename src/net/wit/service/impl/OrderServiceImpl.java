@@ -350,7 +350,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 
-		if (member != null && (order.getExchangeDiscount().compareTo(BigDecimal.ZERO)>0)) {
+		if (member != null && (order.getExchangeDiscount().compareTo(BigDecimal.ZERO)==0)) {
 			List<CouponCode> couponCodes = member.getCouponCodes();
 			BigDecimal discount = BigDecimal.ZERO;
 			for (CouponCode code : couponCodes) {
@@ -369,7 +369,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		order.setAmountPaid(new BigDecimal(0));
-
 
 		order.setOrderStatus(Order.OrderStatus.unconfirmed);
 		order.setPaymentStatus(Order.PaymentStatus.unpaid);
@@ -607,10 +606,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 			for (OrderItem orderItem:order.getOrderItems()) {
 				if (orderItem.getCouponCode() != null) {
-					couponCode.setIsUsed(false);
-					couponCode.setUsedDate(null);
-					couponCode.setStock(couponCode.getStock()+orderItem.getCouponQuantity());
-					couponCodeDao.merge(couponCode);
+					CouponCode couponCode1 = orderItem.getCouponCode();
+					couponCode1.setIsUsed(false);
+					couponCode1.setUsedDate(null);
+					couponCode1.setStock(couponCode1.getStock()+orderItem.getCouponQuantity());
+					couponCodeDao.merge(couponCode1);
 
 					orderItem.setCouponCode(null);
 					orderItem.setCouponQuantity(0L);
@@ -959,12 +959,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 
+
 		for (OrderItem orderItem:order.getOrderItems()) {
 			if (orderItem.getCouponCode() != null) {
-				couponCode.setIsUsed(false);
-				couponCode.setUsedDate(null);
-				couponCode.setStock(couponCode.getStock()+orderItem.getCouponQuantity());
-				couponCodeDao.merge(couponCode);
+				CouponCode couponCode1 = orderItem.getCouponCode();
+				couponCode1.setIsUsed(false);
+				couponCode1.setUsedDate(null);
+				couponCode1.setStock(couponCode1.getStock()+orderItem.getCouponQuantity());
+				couponCodeDao.merge(couponCode1);
 
 				orderItem.setCouponCode(null);
 				orderItem.setCouponQuantity(0L);
@@ -1128,7 +1130,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLogDao.persist(orderLog);
 		messageService.orderMemberPushTo(orderLog);
 
-		if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse)) {
+		if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+		  //对同城配送商品，生成配送单
 			shippingService.create(order);
 		}
 

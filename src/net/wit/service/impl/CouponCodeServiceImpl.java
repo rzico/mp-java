@@ -130,12 +130,18 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 //		if (coupon.getStock().compareTo(amount)<0) {
 //			throw new RuntimeException("库存不足，下次再来");
 //		}
+
+
 		CouponCode couponCode = null;
-		for (CouponCode c:member.getCouponCodes()) {
-			if (c.getCoupon().equals(coupon)) {
-				couponCode = c;
-				break;
-			}
+
+		List<Filter> filters = new ArrayList<>();
+		filters.add(new Filter("member",Operator.eq,member));
+		filters.add(new Filter("coupon",Operator.eq,coupon));
+
+		List<CouponCode> codes = couponCodeDao.findList(null,null,filters,null);
+
+		if (codes.size()>0) {
+			couponCode = codes.get(0);
 		}
 		if (couponCode==null) {
 			couponCode = new CouponCode();
@@ -148,6 +154,7 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 			couponCodeDao.persist(couponCode);
 		} else {
 			couponCode.setStock(couponCode.getStock()+amount);
+			couponCode.setIsUsed(false);
 			couponCodeDao.merge(couponCode);
 		}
 //		coupon.setStock(coupon.getStock()-amount);
