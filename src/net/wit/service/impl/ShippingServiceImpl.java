@@ -52,6 +52,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
+	@Resource(name = "orderServiceImpl")
+	private OrderService orderService;
+
 	@Resource(name = "snServiceImpl")
 	private SnService snService;
 
@@ -171,6 +174,16 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		} else {
 			shipping.setLevel(0);
 		}
+
+		//结算运费
+		shipping.setFreight(
+				new BigDecimal(5).multiply(new BigDecimal(shipping.getQuantity()))
+		);
+
+		if (shipping.getLevel()>2) {
+			shipping.setFreight(shipping.getFreight().add(new BigDecimal(shipping.getLevel()-2)));
+		}
+
 		if (receiver!=null && receiver.getShop()!=null) {
 			shipping.setEnterprise(receiver.getShop().getEnterprise());
 			shipping.setShop(receiver.getShop());
@@ -214,9 +227,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 			shipping.setShippingStatus(Shipping.ShippingStatus.completed);
 			shipping.setOrderStatus(Shipping.OrderStatus.completed);
-
-		    //结算运费
-		    shipping.setFreight(new BigDecimal(5).multiply(new BigDecimal(shipping.getQuantity())));
   			shippingDao.merge(shipping);
 
   			//记忆楼层和送货点
@@ -349,6 +359,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				}
 
 			}
+
+		orderService.complete(shipping.getOrder(),null);
 
 		return shipping;
 

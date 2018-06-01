@@ -74,6 +74,9 @@ public class OrderModel extends BaseModel implements Serializable {
     /**   运费 */
     private BigDecimal freight;
 
+    /**  商品数量 */
+    private Integer quantity;
+
     /**  订单金额 */
     private BigDecimal amount;
 
@@ -340,6 +343,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.exchangeDiscount = exchangeDiscount;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -373,6 +384,8 @@ public class OrderModel extends BaseModel implements Serializable {
         this.shippingStatus = order.getShippingStatus();
 
         this.exchangeDiscount = order.getExchangeDiscount();
+
+        this.quantity = order.getQuantity();
 
         this.receiver = new ReceiverModel();
         this.receiver.setAddress(order.getAddress());
@@ -419,6 +432,8 @@ public class OrderModel extends BaseModel implements Serializable {
         this.paymentMethod = order.getPaymentMethod();
         this.shippingMethod = order.getShippingMethod();
         this.freight = order.getFreight();
+
+        this.quantity = order.getQuantity();
 
         this.exchangeDiscount = order.getExchangeDiscount();
 

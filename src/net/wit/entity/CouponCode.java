@@ -178,6 +178,9 @@ public class CouponCode extends BaseEntity {
 	  if (!getEnabled()) {
 		  return  BigDecimal.ZERO;
 	  }
+	  if (getStock()<=0) {
+      	  return  BigDecimal.ZERO;
+	  }
 	  Coupon coupon = getCoupon();
       BigDecimal discount = BigDecimal.ZERO;
 
@@ -193,7 +196,7 @@ public class CouponCode extends BaseEntity {
 		} else
 		if (coupon.getType().equals(Coupon.Type.exchange) && order!=null){
 			for (OrderItem orderItem:order.getOrderItems()) {
-				if (coupon.getGoods().equals(orderItem.getProduct().getGoods())) {
+				if (orderItem.getCouponCode()==null && coupon.getGoods().equals(orderItem.getProduct().getGoods())) {
 					if (orderItem.getQuantity()>getStock()) {
 						orderItem.setCouponQuantity(getStock());
 						orderItem.setCouponCode(this);
