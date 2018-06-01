@@ -386,12 +386,6 @@ public class Coupon extends BaseEntity {
 	 */
 	@PreRemove
 	public void preRemove() {
-		List<Order> orders = getOrders();
-		if (orders != null) {
-			for (Order order : orders) {
-				order.getCoupons().remove(this);
-			}
-		}
 	}
 
 }

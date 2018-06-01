@@ -197,12 +197,14 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					depositDao.persist(deposit);
 				}
 
+				//卡包
 				if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 					orderService.shipping(order,Order.ShippingMethod.cardbkg,null,null);
 					orderService.complete(order,null);
 				}
 
-				if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse)) {
+				//新客户不自动配送
+				if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse) && order.getMember().getOrders().size()>0) {
 					orderService.shipping(order,Order.ShippingMethod.warehouse,null,null);
 				}
 

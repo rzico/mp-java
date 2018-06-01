@@ -250,14 +250,30 @@ public class OrderController extends BaseController {
 		model.bind(order);
 
 		ShippingTrackModel track = new ShippingTrackModel();
-		track.setLng(118.08);
-		track.setLat(24.48);
-
-		track.setName("张大大");
-		track.setMethod("送货到户");
-		track.setStatus("订单正在送货中");
-		track.setMobile("13860431130");
-		track.setMemberId(43L);
+		track.setLng(0);
+		track.setLat(0);
+		if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+			track.setMethod("存入卡包");
+		} else {
+			track.setMethod("普通快递");
+		}
+		if (order.getShippings().size()>0) {
+			Shipping shipping = order.getShippings().get(0);
+			if (shipping.getAdmin()!=null && shipping.getMember()!=null) {
+				Member shippingMember = shipping.getMember();
+				if (shippingMember.getLocation()!=null) {
+					track.setLng(shippingMember.getLocation().getLng());
+					track.setLat(shippingMember.getLocation().getLng());
+				}
+				track.setMethod("同城配送");
+				track.setName(shippingMember.realName());
+				track.setStatus(shipping.getStatusDescr());
+				track.setMobile(shippingMember.getMobile());
+				track.setMemberId(shippingMember.getId());
+			}
+		} else {
+			track.setStatus(order.getStatus());
+		}
 
 		model.setTrack(track);
 		return Message.success(model,"success");

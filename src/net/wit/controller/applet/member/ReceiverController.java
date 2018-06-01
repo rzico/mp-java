@@ -72,7 +72,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -89,7 +89,10 @@ public class ReceiverController extends BaseController {
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
         receiver.setMember(member);
-        receiver.setLevel(0);
+        if (level==null) {
+            level = 0;
+        }
+        receiver.setLevel(level);
         receiver.setShop(null);
 
 //        if (roadId!=null) {
@@ -114,7 +117,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -131,7 +134,9 @@ public class ReceiverController extends BaseController {
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
         receiver.setMember(member);
-        receiver.setLevel(0);
+        if (level!=null) {
+            receiver.setLevel(0);
+        }
         receiver.setShop(null);
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));

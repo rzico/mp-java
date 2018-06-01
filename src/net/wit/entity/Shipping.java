@@ -543,15 +543,36 @@ public class Shipping extends BaseEntity {
 		return quantity;
 	}
 	@Transient
-	public String getStatusDescr() {
+	public String getShippingDescr() {
 		if (getShippingStatus().equals(ShippingStatus.unconfirmed)) {
-			return "订单正在调配中";
+			return "已接单";
 		} else
 		if (getShippingStatus().equals(ShippingStatus.dispatch)) {
-			return "订单正在提货中";
+			return "已派单";
 		} else
 		if (getShippingStatus().equals(ShippingStatus.delivery)) {
-			return "订单正在送货中";
+			return "送货中";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.receive)) {
+			return "已送达";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.completed)) {
+			return "已核销";
+		} else {
+			return "已接单";
+		}
+	}
+
+	@Transient
+	public String getStatusDescr() {
+		if (getShippingStatus().equals(ShippingStatus.unconfirmed)) {
+			return "订单正在备货";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.dispatch)) {
+			return "订单正在提货";
+		} else
+		if (getShippingStatus().equals(ShippingStatus.delivery)) {
+			return "订单正在送货";
 		} else
 		if (getShippingStatus().equals(ShippingStatus.receive)) {
 			return "订单已送达";

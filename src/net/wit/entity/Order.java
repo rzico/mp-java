@@ -361,12 +361,6 @@ public class Order extends BaseEntity {
 	@JoinColumn(updatable = false)
 	private CouponCode couponCode;
 
-	/** 优惠券 */
-	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "wx_order_coupon")
-	private List<Coupon> coupons = new ArrayList<Coupon>();
-
 	/** 订单项 */
 	@Valid
 	@NotEmpty
@@ -385,20 +379,25 @@ public class Order extends BaseEntity {
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
-	private Set<Payment> payments = new HashSet<Payment>();
+	private List<Payment> payments = new ArrayList<Payment>();
 
 	/** 退款单 */
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
-	private Set<Refunds> refunds = new HashSet<Refunds>();
+	private List<Refunds> refunds = new ArrayList<Refunds>();
 
 	/** 账单 */
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("createDate asc")
-	private Set<Deposit> deposits = new HashSet<Deposit>();
+	private List<Deposit> deposits = new ArrayList<Deposit>();
 
+	/** 配送单 */
+	@JsonIgnore
+	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OrderBy("createDate asc")
+	private List<Shipping> shippings = new ArrayList<>();
 
 	public Long getReceiverId() {
 		return receiverId;
@@ -522,6 +521,14 @@ public class Order extends BaseEntity {
 	 */
 	public void setShippingStatus(ShippingStatus shippingStatus) {
 		this.shippingStatus = shippingStatus;
+	}
+
+	public List<Shipping> getShippings() {
+		return shippings;
+	}
+
+	public void setShippings(List<Shipping> shippings) {
+		this.shippings = shippings;
 	}
 
 	/**
@@ -916,30 +923,12 @@ public class Order extends BaseEntity {
 		this.couponCode = couponCode;
 	}
 
-	/**
-	 * 获取优惠券
-	 *
-	 * @return 优惠券
-	 */
-	public List<Coupon> getCoupons() {
-		return coupons;
-	}
 
-	/**
-	 * 设置优惠券
-	 *
-	 * @param coupons
-	 *            优惠券
-	 */
-	public void setCoupons(List<Coupon> coupons) {
-		this.coupons = coupons;
-	}
-
-	public Set<Deposit> getDeposits() {
+	public List<Deposit> getDeposits() {
 		return deposits;
 	}
 
-	public void setDeposits(Set<Deposit> deposits) {
+	public void setDeposits(List<Deposit> deposits) {
 		this.deposits = deposits;
 	}
 
@@ -986,7 +975,7 @@ public class Order extends BaseEntity {
 	 *
 	 * @return 收款单
 	 */
-	public Set<Payment> getPayments() {
+	public List<Payment> getPayments() {
 		return payments;
 	}
 
@@ -996,7 +985,7 @@ public class Order extends BaseEntity {
 	 * @param payments
 	 *            收款单
 	 */
-	public void setPayments(Set<Payment> payments) {
+	public void setPayments(List<Payment> payments) {
 		this.payments = payments;
 	}
 
@@ -1005,7 +994,7 @@ public class Order extends BaseEntity {
 	 *
 	 * @return 退款单
 	 */
-	public Set<Refunds> getRefunds() {
+	public List<Refunds> getRefunds() {
 		return refunds;
 	}
 
@@ -1015,7 +1004,7 @@ public class Order extends BaseEntity {
 	 * @param refunds
 	 *            退款单
 	 */
-	public void setRefunds(Set<Refunds> refunds) {
+	public void setRefunds(List<Refunds> refunds) {
 		this.refunds = refunds;
 	}
 
@@ -1413,7 +1402,12 @@ public class Order extends BaseEntity {
 			return "待发货";
 		} else
 		if (getOrderStatus().equals(OrderStatus.confirmed) && getShippingStatus().equals(ShippingStatus.shipped)) {
-			return "已发货";
+		    if (getShippings().size()>0) {
+			    Shipping shipping = getShippings().get(0);
+				return shipping.getShippingDescr();
+			} else {
+				return "已发货";
+			}
 		} else
 		if (getOrderStatus().equals(OrderStatus.completed) && getShippingStatus().equals(ShippingStatus.returned) ) {
 			return "已退货";

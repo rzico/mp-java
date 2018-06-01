@@ -7,10 +7,7 @@ package net.wit.controller.website.member;
 
 import net.wit.*;
 import net.wit.Message;
-import net.wit.controller.model.OrderListModel;
-import net.wit.controller.model.OrderModel;
-import net.wit.controller.model.PaymentModel;
-import net.wit.controller.model.ReceiverModel;
+import net.wit.controller.model.*;
 import net.wit.controller.website.BaseController;
 import net.wit.entity.*;
 import net.wit.entity.Order;
@@ -249,6 +246,36 @@ public class OrderController extends BaseController {
 
 		OrderModel model = new OrderModel();
 		model.bind(order);
+
+
+		ShippingTrackModel track = new ShippingTrackModel();
+		track.setLng(0);
+		track.setLat(0);
+		if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+			track.setMethod("存入卡包");
+		} else {
+			track.setMethod("普通快递");
+		}
+		if (order.getShippings().size()>0) {
+			Shipping shipping = order.getShippings().get(0);
+			if (shipping.getAdmin()!=null && shipping.getMember()!=null) {
+				Member shippingMember = shipping.getMember();
+				if (shippingMember.getLocation()!=null) {
+					track.setLng(shippingMember.getLocation().getLng());
+					track.setLat(shippingMember.getLocation().getLng());
+				}
+				track.setMethod("同城配送");
+				track.setName(shippingMember.realName());
+				track.setStatus(shipping.getStatusDescr());
+				track.setMobile(shippingMember.getMobile());
+				track.setMemberId(shippingMember.getId());
+			}
+		} else {
+			track.setStatus(order.getStatus());
+		}
+
+		model.setTrack(track);
+
 		return Message.success(model,"success");
 	}
 
