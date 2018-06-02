@@ -337,9 +337,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 //			}
 //		}
 
-		//按楼层加价
-		order.setFreight(order.calcFreight(receiver));
-
 		if (member != null && !order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 			List<CouponCode> couponCodes = member.getCouponCodes();
 			BigDecimal discount = BigDecimal.ZERO;
@@ -376,6 +373,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				}
 			}
 		}
+
+		//按楼层加价
+		order.setFreight(order.calcFreight(receiver));
+
 
 		order.setAmountPaid(new BigDecimal(0));
 
