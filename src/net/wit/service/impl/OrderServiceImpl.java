@@ -291,7 +291,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					orderItem.setOrder(order);
 					orderItem.setCouponQuantity(0L);
 					orderItems.add(orderItem);
-					order.setSeller(cartItem.getSeller());
+
+
+					ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+					if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
+						Card card = member.getCards().get(0);
+						order.setSeller(card.getOwner());
+					} else {
+						order.setSeller(cartItem.getSeller());
+					}
+
 
 					Promotion promotion = cartItem.getPromotion();
 					if (promotion!=null) {
