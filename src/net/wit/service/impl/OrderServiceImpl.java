@@ -445,7 +445,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 
-
 		//接龙订单,业绩归接龙人
 		if (dragon!=null && !dragon.getMember().equals(order.getSeller())) {
             order.setPromoter(dragon.getMember());
