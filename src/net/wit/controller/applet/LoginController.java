@@ -78,7 +78,7 @@ public class LoginController extends BaseController {
     public
     @ResponseBody
     Message login(Long memberId, String code,String nickName,String logo, HttpServletRequest request, HttpServletResponse response) {
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String appletAppid = bundle.getString("applet.appid");//默认是取这个appid
         Member.MemberType memberType = Member.MemberType.SELF;//默认
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +bundle.getString("applet.appid") + "&secret=" + bundle.getString("applet.secret") + "&js_code=" + code + "&grant_type=authorization_code";
@@ -101,6 +101,7 @@ public class LoginController extends BaseController {
         }
         JSONObject result = WeixinApi.httpRequest(url, "GET", null);
 
+        System.out.println("result：" + result);
         if (result.containsKey("session_key")) {
             HttpSession session = request.getSession();
             String sessionId = session.getId();

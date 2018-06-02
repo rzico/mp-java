@@ -106,7 +106,6 @@ public class CommonController extends BaseController {
                 if (authAccessToken != null) {
                     String authToken = authAccessToken.getAuthorizer_access_token();
                     //设置小程序
-                    System.out.println("TopicAppetAppid == null ===============================");
                     TopicConfig topicConfig = topic.getConfig();
                     if(topicConfig.getAppetAppId() != null && !topicConfig.getAppetAppId().equals("")){
                         return "redirect:http://" + serverUrl + "/#/agreeError";

@@ -136,6 +136,7 @@ public class OrderController extends BaseController {
 		}
 		Order order = orderService.build(member,product,quantity,cart, receiver,null);
 
+
 		OrderModel model = new OrderModel();
 		model.bindHeader(order);
 		if (member!=null) {

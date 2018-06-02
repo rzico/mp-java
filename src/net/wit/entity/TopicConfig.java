@@ -110,6 +110,10 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '小程序appSerect'")
 	private String appetAppSerect;
 
+	/** 小程序 appSerect */
+	@Column(columnDefinition="varchar(255) comment '小程序商户号'")
+	private String appetPartner;
+
 	/** 小程序 version */
 	@Column(columnDefinition="varchar(255) comment '小程序 version'")
 	private String version;
@@ -291,5 +295,13 @@ public class TopicConfig implements Serializable {
 
 	public void setAuditId(String auditId) {
 		this.auditId = auditId;
+	}
+
+	public String getAppetPartner() {
+		return appetPartner;
+	}
+
+	public void setAppetPartner(String appetPartner) {
+		this.appetPartner = appetPartner;
 	}
 }

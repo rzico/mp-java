@@ -9,6 +9,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.entity.model.AppletSowingMapModel;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -106,7 +107,10 @@ public class AppletSowingMapController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(AppletSowingMap appletSowingMap, Long topicId){
+	public Message save(AppletSowingMap appletSowingMap){
+		Member member = memberService.getCurrent();
+		if(member == null) return Message.error(Message.SESSION_INVAILD);
+
 		AppletSowingMap entity = new AppletSowingMap();	
 
 		entity.setCreateDate(appletSowingMap.getCreateDate());
@@ -121,7 +125,7 @@ public class AppletSowingMapController extends BaseController {
 
 		entity.setUrl(appletSowingMap.getUrl());
 
-		entity.setTopic(topicService.find(topicId));
+		entity.setTopic(member.getTopic());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -205,24 +209,29 @@ public class AppletSowingMapController extends BaseController {
             return Message.error("admin.update.error");
         }
 	}
-	
+
 
 	/**
      * 列表
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, AppletSowingMap.ACTION action, Pageable pageable, ModelMap model) {
-		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		if (action!=null) {
-			Filter actionFilter = new Filter("action", Filter.Operator.eq, action);
-			filters.add(actionFilter);
+	public Message list(Long memberId) {
+		Member member = memberService.find(memberId);//获取当前会员
+		if(member == null) return Message.error("没有找到该小程序账号id");
+		Topic topic = member.getTopic();
+		if(topic != null){
+			List<AppletSowingMap> appletSowingMaps = topic.getAppletSowingMaps();
+			List<AppletSowingMapModel> appletSowingMapModels = new ArrayList<>();
+			if(appletSowingMaps != null && appletSowingMaps.size() > 0){
+				for (AppletSowingMap item : appletSowingMaps){
+					AppletSowingMapModel appletSowingMapModel = AppletSowingMapModel.bind(item);
+					appletSowingMapModels.add(appletSowingMapModel);
+				}
+				return Message.success(appletSowingMapModels, "admin.list.success");
+			}
 		}
-
-		Page<AppletSowingMap> page = appletSowingMapService.findPage(beginDate,endDate,pageable);
-		Topic topic = null;
-		topic.getAppletSowingMaps();
-		return Message.success(PageBlock.bind(page), "admin.list.success");
+		return Message.error("获取列表失败");
 	}
 	
 	

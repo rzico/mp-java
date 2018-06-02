@@ -83,6 +83,12 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 			map.put("is_minipg","1");
 			map.put("sub_appid", pluginConfig.getAttribute("applet"));
 			BindUser bindUser = findByUser(payment.getMember(),pluginConfig.getAttribute("applet"), BindUser.Type.weixin);
+			if(bindUser == null) {
+				HashMap<String, Object> finalpackage = new HashMap<String, Object>();
+				finalpackage.put("result_msg","没有找到该用户信息");
+				finalpackage.put("return_code","FAIL");
+				return finalpackage;
+			}
 			map.put("sub_openid", bindUser.getOpenId());
 		} else {
 			BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);

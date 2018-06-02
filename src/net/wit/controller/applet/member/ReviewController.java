@@ -64,13 +64,15 @@ public class ReviewController extends BaseController {
         }
 
         Member member = memberService.getCurrent();
+        if(member != null){
+
+        }
         ArticleReview review = new ArticleReview();
         review.setArticle(article);
         review.setContent(content);
         review.setDeleted(false);
         review.setIp(request.getRemoteAddr());
         review.setMember(member);
-        System.out.println("membermembermembermembermembermember====" + member.getId());
         review.setAuthor(article.getMember());
         articleReviewService.save(review);
         messageService.reviewPushTo(review);
