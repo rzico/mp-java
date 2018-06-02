@@ -110,6 +110,11 @@ public class TopicController extends BaseController {
     @ResponseBody
     public Message navigation(Long id,HttpServletRequest request){
         List<NavigationModel> data = new ArrayList<>();
+        NavigationModel dragon = new NavigationModel();
+        dragon.setType(Navigation.Type.dragon);
+        dragon.setName("拼团");
+        dragon.setLogo("http://cdnx.rzico.com/images/dragon.png");
+        data.add(dragon);
         NavigationModel news = new NavigationModel();
         news.setType(Navigation.Type.news);
         news.setName("新品");

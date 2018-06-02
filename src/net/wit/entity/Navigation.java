@@ -37,7 +37,9 @@ public class Navigation extends OrderEntity{
         /**  推荐 */
         recommend,
         /**  商城 */
-        mall
+        mall,
+        /**  拼团 */
+        dragon
     }
 
     /**  类型 */

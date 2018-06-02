@@ -135,7 +135,7 @@ public class ReceiverController extends BaseController {
         receiver.setZipCode("000000");
         receiver.setMember(member);
         if (level!=null) {
-            receiver.setLevel(0);
+            receiver.setLevel(level);
         }
         receiver.setShop(null);
 //        if (roadId!=null) {

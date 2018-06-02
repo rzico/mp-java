@@ -67,7 +67,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message add(Long areaId,String address,Integer level,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -88,7 +88,10 @@ public class ReceiverController extends BaseController {
         }
         receiver.setZipCode("000000");
         receiver.setMember(member);
-        receiver.setLevel(0);
+        if (level==null) {
+            level = 0;
+        }
+        receiver.setLevel(level);
         receiver.setShop(null);
 
         receiverService.save(receiver);
@@ -103,7 +106,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message update(Long id,Long areaId,String address,Integer level,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -122,7 +125,9 @@ public class ReceiverController extends BaseController {
         }
         receiver.setZipCode("000000");
         receiver.setMember(member);
-        receiver.setLevel(0);
+        if (level!=null) {
+            receiver.setLevel(level);
+        }
         receiver.setShop(null);
 
         receiverService.update(receiver);
