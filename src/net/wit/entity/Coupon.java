@@ -148,10 +148,6 @@ public class Coupon extends BaseEntity {
 	@OneToMany(mappedBy = "coupon", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<CouponCode> couponCodes = new HashSet<CouponCode>();
 
-	/** 订单 */
-	@ManyToMany(mappedBy = "coupons", fetch = FetchType.LAZY)
-	private List<Order> orders = new ArrayList<Order>();
-
 	/** 是否删除 */
 	@Column(nullable = false,columnDefinition="bit not null comment '是否删除'")
 	private Boolean deleted;
@@ -268,25 +264,6 @@ public class Coupon extends BaseEntity {
 	 */
 	public void setCouponCodes(Set<CouponCode> couponCodes) {
 		this.couponCodes = couponCodes;
-	}
-
-	/**
-	 * 获取订单
-	 * 
-	 * @return 订单
-	 */
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	/**
-	 * 设置订单
-	 * 
-	 * @param orders
-	 *            订单
-	 */
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
 	}
 
 	/**

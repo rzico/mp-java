@@ -61,8 +61,10 @@ public class DepositController extends BaseController {
 
         List<DepositSummary> by = depositService.sumPage(member,b,e);
 
-        b =DateUtils.addMonths(e,-1);
-        e =DateUtils.addMonths(e,-1);
+        b = DateUtils.truncate(new Date(),Calendar.MONTH);
+        e = DateUtils.truncate(new Date(),Calendar.MONTH);
+        b =DateUtils.addMonths(b,-1);
+        e =DateUtils.addDays(e,-1);
 
         List<DepositSummary> sy = depositService.sumPage(member,b,e);
 
@@ -79,6 +81,7 @@ public class DepositController extends BaseController {
         }
         data.put("lastMonth",lam);
         return Message.bind(data,request);
+
     }
 
     /**
@@ -117,15 +120,20 @@ public class DepositController extends BaseController {
         if (type==null) {
             type = "1";
         }
+        //0 是本日账单
         Date d = DateUtils.truncate(billDate, Calendar.DATE);
         Date e = DateUtils.truncate(billDate, Calendar.DATE);
         if (type!=null) {
+
+            //本月账单
             if ("1".equals(type)) {
                 d = DateUtils.truncate(billDate, Calendar.MONTH);
                 e = DateUtils.truncate(billDate, Calendar.MONTH);
                 e = DateUtils.addMonths(e,1);
                 e = DateUtils.addDays(e,-1);
             }
+
+            //本年账单
             if ("2".equals(type)) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(d);
@@ -139,7 +147,9 @@ public class DepositController extends BaseController {
                 calendar1.set(Calendar.DATE, 1);
                 calendar1.roll(Calendar.DAY_OF_YEAR, -1);
                 e = calendar1.getTime();
+
             }
+
         }
         List<DepositSummary> deps = depositService.sumPage(member,d,e);
         return Message.bind(deps,request);
