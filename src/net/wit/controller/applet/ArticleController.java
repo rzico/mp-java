@@ -365,7 +365,6 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
         filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
-        filters.add(new Filter("dragon", Filter.Operator.ne, Article.ArticleType.html));
         pageable.setFilters(filters);
         pageable.setOrderProperty("modifyDate");
         pageable.setOrderDirection(Order.Direction.desc);
