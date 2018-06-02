@@ -347,6 +347,33 @@ public class ArticleController extends BaseController {
         return Message.bind(model,request);
     }
 
+    /**
+     *  接龙列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/dragonlist", method = RequestMethod.GET)
+    @ResponseBody
+    public Message dragonList(Long authorId,Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        if (authorId!=null) {
+            Member member = memberService.find(authorId);
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+        } else {
+            filters.add(new Filter("isAudit", Filter.Operator.eq, true));
+        }
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
+        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
+        filters.add(new Filter("dragon", Filter.Operator.ne, Article.ArticleType.html));
+        pageable.setFilters(filters);
+        pageable.setOrderProperty("modifyDate");
+        pageable.setOrderDirection(Order.Direction.desc);
+        Page<Article> page = articleService.findPage(null,null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleListModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
 
     /**
      *  热点查询列表
