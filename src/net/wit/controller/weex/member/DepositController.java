@@ -112,7 +112,7 @@ public class DepositController extends BaseController {
      */
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
-    public Message summary(Date billDate,String type,HttpServletRequest request){
+    public Message summary(Date billDate,String type,HttpServletRequest request) {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -120,6 +120,7 @@ public class DepositController extends BaseController {
         if (type==null) {
             type = "1";
         }
+
         //0 是本日账单
         Date d = DateUtils.truncate(billDate, Calendar.DATE);
         Date e = DateUtils.truncate(billDate, Calendar.DATE);
