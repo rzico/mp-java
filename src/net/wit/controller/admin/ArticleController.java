@@ -103,8 +103,7 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("html","系统公告"));
 		mediaTypes.add(new MapEntity("article","用户图文"));
 		mediaTypes.add(new MapEntity("product","商品详情"));
-		mediaTypes.add(new MapEntity("brand","品牌介绍"));
-		mediaTypes.add(new MapEntity("news","企业动态"));
+		mediaTypes.add(new MapEntity("video","品牌介绍"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
@@ -131,8 +130,7 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("html","系统公告"));
 		mediaTypes.add(new MapEntity("article","用户图文"));
 		mediaTypes.add(new MapEntity("product","商品详情"));
-		mediaTypes.add(new MapEntity("brand","品牌介绍"));
-		mediaTypes.add(new MapEntity("news","企业动态"));
+		mediaTypes.add(new MapEntity("video","品牌介绍"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 //
@@ -257,8 +255,7 @@ public class ArticleController extends BaseController {
 		mediaTypes.add(new MapEntity("html","系统公告"));
 		mediaTypes.add(new MapEntity("article","用户图文"));
 		mediaTypes.add(new MapEntity("product","商品详情"));
-		mediaTypes.add(new MapEntity("brand","品牌介绍"));
-		mediaTypes.add(new MapEntity("news","企业动态"));
+		mediaTypes.add(new MapEntity("video","品牌介绍"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
