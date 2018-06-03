@@ -147,6 +147,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "username",
+                    "sTitle": "账号",
+                    "sClass": "center"
+                },
+                {
                     "mData": "nickName",
                     "sTitle": "昵称",
                     "sClass": "center"
@@ -221,7 +226,7 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
@@ -235,7 +240,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -245,7 +250,7 @@
                     }
                 },
                 {
-                    "aTargets": [7],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if genders??]
@@ -261,7 +266,7 @@
                     }
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [9],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -271,7 +276,7 @@
                     }
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [10],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data;
@@ -291,7 +296,7 @@
                     }
                 },
                 {
-                    "aTargets": [13],
+                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -301,7 +306,7 @@
                     }
                 },
                 {
-                    "aTargets": [14],
+                    "aTargets": [15],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
                             return "<span class=\"label label-success radius\">是</span>";
@@ -313,7 +318,7 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [15],
+                        "aTargets": [16],
                         "mRender": function (data, display, row) {
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 用户管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
@@ -327,9 +332,9 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 6, 8, 15]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 7, 9, 16]}// 制定列不参与排序
                 [#else]
-                    {"orderable": false, "aTargets": [0, 6, 8]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 7, 9]}// 制定列不参与排序
                 [/#if]
             [/@adminDirective]
             ],

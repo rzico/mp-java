@@ -128,7 +128,7 @@ public class AdminController extends BaseController {
 		entity.setLoginFailureCount(0);
 		//entity.setLoginIp(admin.getLoginIp());
 		entity.setName(admin.getName());
-
+//
 		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
 
 		entity.setUsername(admin.getUsername());
@@ -234,7 +234,7 @@ public class AdminController extends BaseController {
 
 		entity.setName(admin.getName());
 		//entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
-		entity.setUsername(admin.getUsername());
+//		entity.setUsername(admin.getUsername());
 
 		entity.setEnterprise(enterpriseService.find(enterpriseId));
 
