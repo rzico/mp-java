@@ -1211,7 +1211,7 @@ public class Order extends BaseEntity {
 	@Transient
 	public BigDecimal calcFreight(Receiver receiver) {
 		BigDecimal price = BigDecimal.ZERO;
-		if (receiver!=null && receiver.getLevel()>2) {
+		if (receiver!=null && receiver.getLevel()!=null && receiver.getLevel()>2) {
 			if (getOrderItems() != null) {
 				for (OrderItem orderItem : getOrderItems()) {
 					if (orderItem != null && orderItem.getQuantity() != null) {

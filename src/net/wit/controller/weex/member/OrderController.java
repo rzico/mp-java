@@ -113,6 +113,7 @@ public class OrderController extends BaseController {
 		}
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("seller", Filter.Operator.eq,member));
+		filters.add(new Filter("orderStatus", Filter.Operator.ne, Order.OrderStatus.cancelled));
 		pageable.setFilters(filters);
 //		pageable.setOrderDirection(net.wit.Order.Direction.desc);
 //		pageable.setOrderProperty("modifyDate");

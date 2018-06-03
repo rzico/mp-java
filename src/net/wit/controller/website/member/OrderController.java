@@ -417,6 +417,7 @@ public class OrderController extends BaseController {
 
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
+		filters.add(new Filter("orderStatus", Filter.Operator.ne, Order.OrderStatus.cancelled));
 		if (authorId!=null) {
 			Member seller = memberService.find(authorId);
 			if (seller!=null) {
