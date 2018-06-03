@@ -484,12 +484,10 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 	/**
 	 * 查询状态
 	 */
-	public void query() {
-		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(new Filter("status", Filter.Operator.eq,Refunds.Status.confirmed));
-		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
-		List<Refunds> data = refundsDao.findList(null,null,filters,null);
-		for (Refunds refunds:data) {
+	public void query(Long id) {
+
+		Refunds refunds = refundsDao.find(id,LockModeType.PESSIMISTIC_WRITE);
+		if (refunds.getStatus().equals(Refunds.Status.confirmed)) {
 			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(refunds.getPaymentPluginId());
 			String resultCode = null;
 			try {

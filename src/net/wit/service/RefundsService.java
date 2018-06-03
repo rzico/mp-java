@@ -44,6 +44,6 @@ public interface RefundsService extends BaseService<Refunds, Long> {
 	/**
 	 * 查询状态
 	 */
-	void query();
+	void query(Long id);
 
 }

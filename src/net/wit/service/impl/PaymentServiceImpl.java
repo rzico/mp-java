@@ -518,20 +518,16 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	/**
 	 * 查询状态
 	 */
-	public void query() {
-		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(new Filter("status", Filter.Operator.eq,Payment.Status.waiting));
-		filters.add(new Filter("paymentPluginId", Operator.isNotNull,null));
-		filters.add(new Filter("createDate", Operator.le, DateUtils.addMinutes(new Date(),-30) ));
-		List<Payment> data = paymentDao.findList(null,null,filters,null);
-		for (Payment payment:data) {
+	public void query(Long id) {
+		Payment payment = paymentDao.find(id,LockModeType.PESSIMISTIC_WRITE);
+		if (payment.getStatus().equals(Payment.Status.waiting)) {
 			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
 			String resultCode = null;
 			try {
 				if (paymentPlugin == null) {
 					resultCode = "0001";
 				} else {
-					resultCode = paymentPlugin.queryOrder(payment,null);
+					resultCode = paymentPlugin.queryOrder(payment, null);
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage());
@@ -551,7 +547,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 			}
 		}
-
 	}
 
 }

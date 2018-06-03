@@ -69,9 +69,9 @@ public class TESTController extends BaseController {
     @RequestMapping(value = "task", method = RequestMethod.GET)
     @ResponseBody
     public Message task(Long tagIds,HttpServletRequest request) throws Exception {
-        paymentService.query();
-        orderService.releaseStock();
-        orderService.evictCompleted();
+//        paymentService.query();
+//        orderService.releaseStock();
+//        orderService.evictCompleted();
         return Message.success("");
     }
 

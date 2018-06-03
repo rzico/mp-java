@@ -103,25 +103,4 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 		}
 	}
 
-	public void releaseStock() {
-		String jpql = "select orders from Order orders where orders.isAllocatedStock = :isAllocatedStock and orders.expire is not null and orders.expire <= :now";
-		List<Order> orders = entityManager.createQuery(jpql, Order.class).setParameter("isAllocatedStock", true).setParameter("now", new Date()).getResultList();
-		if (orders != null) {
-			for (Order order : orders) {
-				if (order != null && order.getOrderItems() != null) {
-					for (OrderItem orderItem : order.getOrderItems()) {
-						if (orderItem != null) {
-							Product product = orderItem.getProduct();
-							if (product != null) {
-								entityManager.lock(product, LockModeType.PESSIMISTIC_WRITE);
-								product.setAllocatedStock(product.getAllocatedStock() - (orderItem.getQuantity() - orderItem.getShippedQuantity()));
-							}
-						}
-					}
-					order.setIsAllocatedStock(false);
-				}
-			}
-		}
-	}
-
 }

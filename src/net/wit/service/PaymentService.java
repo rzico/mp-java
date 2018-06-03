@@ -43,6 +43,6 @@ public interface PaymentService extends BaseService<Payment, Long> {
 	/**
 	 * 查询状态
 	 */
-	void query();
+	void query(Long id);
 
 }

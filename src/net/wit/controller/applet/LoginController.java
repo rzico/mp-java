@@ -204,8 +204,6 @@ public class LoginController extends BaseController {
                     return Message.success(data,Message.LOGIN_SUCCESS);
                 };
 
-
-
 //              data.put("userId", Base64.encodeBase64String(openId.getBytes()));
                 return Message.success(data,Message.LOGIN_SUCCESS);
 

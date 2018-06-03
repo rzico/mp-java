@@ -37,9 +37,4 @@ public interface OrderDao extends BaseDao<Order, Long> {
 	 */
 	Order findBySn(String sn);
 
-	/**
-	 * 释放过期订单库存
-	 */
-	void releaseStock();
-
 }

@@ -30,7 +30,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	/**
 	 * 释放过期订单库存
 	 */
-	void releaseStock();
+	void releaseStock(Long orderId);
 
 	/**
 	 * 生成订单
@@ -141,7 +141,7 @@ public interface OrderService extends BaseService<Order, Long> {
 	void returns(Order order, Admin operator) throws Exception;
 
 
-	void evictCompleted();
+	void evictCompleted(Long orderId);
 
 
 }
