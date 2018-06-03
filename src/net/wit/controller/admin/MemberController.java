@@ -314,7 +314,7 @@ public class MemberController extends BaseController {
 		//个人代理商(無權限)
 		//商家(無權限)
 		if(searchValue!=null){
-			Filter mediaTypeFilter = new Filter("nickName", Filter.Operator.like, "%"+searchValue+"%");
+			Filter mediaTypeFilter = new Filter("mobile", Filter.Operator.like, "%"+searchValue+"%");
 			filters.add(mediaTypeFilter);
 		}
 		Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
