@@ -9,6 +9,7 @@ import net.wit.entity.*;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.MemberService;
+import net.wit.service.TopicService;
 import net.wit.util.MD5Utils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,6 +23,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -40,7 +42,7 @@ import java.util.Map;
 
 /**
  * Plugin - 微信第三方小程序支付(在模版生产小程序中使用，所以该支付插件数据库不必配置，需要后台用户提交)
- * @author rsico Team
+ * @author jinlesoft Team
  * @version 3.0
  */
 @Component("weiXinComPayPlugin")
@@ -52,6 +54,9 @@ public class WeiXinComPayPlugin extends PaymentPlugin {
 
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
+
+	@Resource(name = "topicServiceImpl")
+	private TopicService topicService;
 
 	@Override
 	public String getName() {
@@ -85,7 +90,18 @@ public class WeiXinComPayPlugin extends PaymentPlugin {
 
 	public TopicConfig getTopicConfig(){
 		Member member = memberService.getCurrent();
-		return member.getTopic().getConfig();
+		String appId = member.getComponentAppid();
+		Topic topic = topicService.findByAppid(appId);
+		if(topic!=null && appId != null && !appId.equalsIgnoreCase("")){
+			return topic.getConfig();
+		}
+		//如果是空的 就默认
+		PluginConfig pluginConfig = getPluginConfig();
+		TopicConfig defTopic = new TopicConfig();
+		defTopic.setAppetAppSerect(pluginConfig.getAttribute("key"));
+		defTopic.setAppetAppId(pluginConfig.getAttribute("appId"));
+		defTopic.setAppetPartner(pluginConfig.getAttribute("partner"));
+		return defTopic;
 	}
 
 
@@ -95,6 +111,7 @@ public class WeiXinComPayPlugin extends PaymentPlugin {
 	public String getSign(HashMap<String, Object> params) throws Exception {
 //		PluginConfig pluginConfig = getPluginConfig();
 		TopicConfig topicConfig = getTopicConfig();
+
 		// 签名步骤一：按字典序排序参数
 		String str = WeiXinUtils.FormatBizQueryParaMap(params, false);
 		// 签名步骤二：在string后加入KEY
