@@ -187,6 +187,8 @@ public class PaymentController extends BaseController {
 		entity.setArticleReward(articleRewardService.find(articleRewardId));
 
 		entity.setPayee(memberService.find(payeeId));
+
+		entity.setWay(Payment.Way.yundian);
 		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");

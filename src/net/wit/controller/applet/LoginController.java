@@ -80,7 +80,7 @@ public class LoginController extends BaseController {
         String appid = bundle.getString("applet.appid");
         String appsecret = bundle.getString("applet.secret");
         if (mid!=null) {
-           Member agent = memberService.getCurrent();
+           Member agent = memberService.find(mid);
            if (agent.getTopic()!=null) {
                return Message.error("没有开通");
            }

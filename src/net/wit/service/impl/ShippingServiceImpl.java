@@ -239,8 +239,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			messageService.shippingPushTo(shipping,orderLog);
 		}
 
-		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
-		shipping.setOrderStatus(Shipping.OrderStatus.completed);
 		shippingDao.merge(shipping);
 		return shipping;
 	}

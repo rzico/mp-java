@@ -127,6 +127,8 @@ public class TopicBillServiceImpl extends BaseServiceImpl<TopicBill, Long> imple
 		payment.setAmount(topicBill.getAmount());
 		payment.setTopicBill(topicBill);
 		payment.setStatus(Payment.Status.waiting);
+		payment.setWay(Payment.Way.yundian);
+
 		paymentDao.persist(payment);
 		topicBill.setPayment(payment);
 		topicBillDao.merge(topicBill);

@@ -34,6 +34,17 @@ public class Payment extends BaseEntity {
 	 * 类型
 	 */
 
+	public enum Way {
+		/** 代付 */
+		yundian,
+		/** 直清 */
+		merchant
+	}
+
+	/**
+	 * 类型
+	 */
+
 	public enum Type {
 		/** 购物支付 */
 		payment,
@@ -99,6 +110,10 @@ public class Payment extends BaseEntity {
 	@Column(columnDefinition="int(11) not null comment '类型 {payment:消费支付,recharge:钱包充值}'")
 	private Type type;
 
+	/** 方向 */
+	@Column(columnDefinition="int(11) not null default 0 comment '方向 {yundian:代付,merchant:直清}'")
+	private Way way;
+
 	/** 方式 */
 	@NotNull
 	@Column(columnDefinition="int(11) not null comment '方式 {online:在线支付,offline:线下支付,deposit:钱包支付}'")
@@ -149,6 +164,11 @@ public class Payment extends BaseEntity {
 	@JoinColumn(nullable = false)
 	@JsonIgnore
 	private Member member;
+
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Member merchant;
 
 	/** 收款方 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -346,6 +366,22 @@ public class Payment extends BaseEntity {
 		this.recharge = recharge;
 	}
 
+	public Way getWay() {
+		return way;
+	}
+
+	public void setWay(Way way) {
+		this.way = way;
+	}
+
+	public Member getMerchant() {
+		return merchant;
+	}
+
+	public void setMerchant(Member merchant) {
+		this.merchant = merchant;
+	}
+
 	/**
 	 * 判断是否已过期
 	 * 
@@ -362,6 +398,7 @@ public class Payment extends BaseEntity {
 	@PreRemove
 	public void preRemove() {
 	}
+
 
 
 	public MapEntity getMapPayee() {

@@ -115,10 +115,10 @@ public class CommonController extends BaseController {
 		String ua = request.getHeader("user-agent");
 //		if (ua.indexOf("V1")>0) {
 			menu.put("home","file://view/shop/cashier/index.js?index=true");
-			menu.put("add", "file://view/shop/card/add.js");
+			menu.put("add", "file://view/member/editor/editor.js");
  			menu.put("friend", "file://view/friend/list.js");
 			menu.put("message","file://view/message/list.js");
-			menu.put("member", "file://view/member/index.js");
+			menu.put("member", "file://view/member/mine.js");
 //		} else {
 //			if (member!=null) {
 //				Admin admin = adminService.findByMember(member);

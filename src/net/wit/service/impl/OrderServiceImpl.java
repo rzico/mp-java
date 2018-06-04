@@ -932,7 +932,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		//计算公球公排
-		orderRankingService.add(order);
+		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			orderRankingService.add(order);
+		}
 
 		//代理商佣金
 //		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
@@ -1088,6 +1090,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		payment.setAmount(order.getAmountPayable());
 		payment.setSn(snService.generate(Sn.Type.payment));
 		payment.setOrder(order);
+		payment.setWay(Payment.Way.yundian);
+
 		paymentService.save(payment);
 
 		return payment;

@@ -221,6 +221,7 @@ public class RechargeServiceImpl extends BaseServiceImpl<Recharge, Long> impleme
 			payment.setType(Payment.Type.recharge);
 			payment.setRecharge(recharge);
 			payment.setStatus(Payment.Status.waiting);
+			payment.setWay(Payment.Way.yundian);
 			paymentDao.persist(payment);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());

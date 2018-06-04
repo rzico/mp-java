@@ -134,6 +134,22 @@ public class PaymentController extends BaseController {
         payment.setPaymentMethod(paymentPlugin.getName());
         paymentService.update(payment);
 
+        if (mid!=null) {
+            Member agent = memberService.find(mid);
+            if (agent.getTopic()!=null) {
+                return Message.error("没有开通");
+            }
+            if (agent.getTopic().getConfig().getAppetAppId()==null)  {
+                return Message.error("没有设置");
+            }
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+            String appid = agent.getTopic().getConfig().getAppetAppId();
+
+            payment.setWay(Payment.Way.yundian);
+            payment.setMerchant(agent);
+        }
+
         Map<String, Object> parameters = null;
         if (safeKey==null) {
             parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);

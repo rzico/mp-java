@@ -127,6 +127,8 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			payment.setAmount(payBill.getPayBillAmount());
 			payment.setSn(snService.generate(Sn.Type.payment));
 			payment.setPayBill(payBill);
+			payment.setWay(Payment.Way.yundian);
+
 			paymentDao.persist(payment);
 
 			payBill.setPayment(payment);
@@ -161,6 +163,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			payment.setAmount(payBill.getPayBillAmount());
 			payment.setSn(snService.generate(Sn.Type.payment));
 			payment.setPayBill(payBill);
+			payment.setWay(Payment.Way.yundian);
 			paymentDao.persist(payment);
 
 			payBill.setPayment(payment);
