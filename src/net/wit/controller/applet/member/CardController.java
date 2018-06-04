@@ -205,9 +205,13 @@ public class CardController extends BaseController {
             if (member.getCards().size()>0) {
                card = member.getCards().get(0);
             } else {
-                if (promoter!=null) {
-                    if (promoter.getCards().size()>0) {
-                        owner = promoter.getCards().get(0).getOwner();
+                if (authorId!=null) {
+                    owner = memberService.find(authorId);
+                } else {
+                    if (promoter != null) {
+                        if (promoter.getCards().size() > 0) {
+                            owner = promoter.getCards().get(0).getOwner();
+                        }
                     }
                 }
                 if (owner==null) {

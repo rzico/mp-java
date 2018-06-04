@@ -26,6 +26,10 @@ public class MemberModel extends BaseModel implements Serializable {
     private String autograph;
     /** 头像 */
     private String logo;
+    /** 背景 */
+    private String backgroud;
+    /** 职业 */
+    private OccupationModel occupation;
     /** 卡包 */
     private int coupon;
     /** 订单 */
@@ -130,6 +134,22 @@ public class MemberModel extends BaseModel implements Serializable {
         this.username = username;
     }
 
+    public String getBackgroud() {
+        return backgroud;
+    }
+
+    public void setBackgroud(String backgroud) {
+        this.backgroud = backgroud;
+    }
+
+    public OccupationModel getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(OccupationModel occupation) {
+        this.occupation = occupation;
+    }
+
     public void bind(Member member) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -152,5 +172,17 @@ public class MemberModel extends BaseModel implements Serializable {
             }
         }
         this.coupon = c;
+
+        OccupationModel occupation = new OccupationModel();
+        if (member.getOccupation()!=null) {
+            occupation.bind(member.getOccupation());
+        }
+        this.occupation = occupation;
+        if (member.getTopic()!=null) {
+           this.backgroud = member.getTopic().getLogo();
+        } else {
+
+        }
+
     }
 }
