@@ -162,8 +162,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapOccupation",
-                    "sTitle": "职业",
+                    "mData": "uuid",
+                    "sTitle": "设备",
                     "sClass": "center"
                 },
                 {
@@ -237,16 +237,6 @@
                     "aTargets": [3],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [7],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
-                        }else{
-                            return "";
-                        }
                     }
                 },
                 {
@@ -332,7 +322,7 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 7, 9, 16]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 7, 9, 15]}// 制定列不参与排序
                 [#else]
                     {"orderable": false, "aTargets": [0, 7, 9]}// 制定列不参与排序
                 [/#if]

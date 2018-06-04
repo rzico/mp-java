@@ -206,7 +206,6 @@ public class Member extends BaseEntity {
 
 	/** 设备号 */
 	@Column(columnDefinition="varchar(50) comment '设备号'")
-	@JsonIgnore
 	private String uuid;
 
 	/** 设备环境 IOS Andriod */
