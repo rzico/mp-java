@@ -81,8 +81,11 @@ public class LoginController extends BaseController {
         String appsecret = bundle.getString("applet.secret");
         if (mid!=null) {
            Member agent = memberService.find(mid);
-           if (agent.getTopic()!=null) {
+           if (agent.getTopic()==null) {
                return Message.error("没有开通");
+           }
+           if (agent.getTopic().getConfig()==null)  {
+               return Message.error("没有设置");
            }
            if (agent.getTopic().getConfig().getAppetAppId()==null)  {
                return Message.error("没有设置");
