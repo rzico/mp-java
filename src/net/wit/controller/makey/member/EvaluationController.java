@@ -128,6 +128,8 @@ public class EvaluationController extends BaseController {
         eval.setRebate(BigDecimal.ZERO);
         eval.setTitle(gauge.getTitle());
         eval.setSubTitle(gauge.getSubTitle());
+        eval.setUserType(gauge.getUserType());
+        eval.setType(gauge.getType());
         eval.setSeconds(0L);
         eval.setTotal(new Long(gauge.getGaugeQuestions().size()));
         if (xuid!=null) {
@@ -237,7 +239,6 @@ public class EvaluationController extends BaseController {
 //
 //        System.out.printf(mBody);
 
-
         JSONArray answers = JSONArray.fromObject(mBody);
         List<EvalAnswer> evals = new ArrayList<EvalAnswer>();
 
@@ -254,6 +255,7 @@ public class EvaluationController extends BaseController {
                 eas.setGauge(evaluation.getGauge());
                 eas.setGaugeQuestion(question);
                 eas.setMember(evaluation.getMember());
+                eas.setNo(new Long(question.getOrders()));
                 eas.setScore(new BigDecimal(ar.getString("score")));
                 evals.add(eas);
             }

@@ -49,6 +49,28 @@
 				</select>
 			</span>
 		[/#if]
+
+    [#if types??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="type" class="select" style="background-color: #FFFFFF">
+					<option value="">常模类型</option>
+                    [#list types as type]
+                        <option value="${type.id}">${type.name}</option>
+                    [/#list]
+				</select>
+			</span>
+    [/#if]
+    [#if userTypes??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="userType" class="select" style="background-color: #FFFFFF;">
+					<option value="">用户类型</option>
+                    [#list userTypes as userType]
+                        <option value="${userType.id}">${userType.name}</option>
+                    [/#list]
+				</select>
+			</span>
+    [/#if]
+
     [#if organizations??]
         <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
 				<select name="organization" class="select" style="background-color: #FFFFFF;">
@@ -67,10 +89,11 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                <a href="javascript:;" onclick="exports()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量导出</a>
         </span>
     </div>
     <div class="mt-20">
-        <table class="table table-border table-bordered table-hover table-bg table-sort">
+        <table class="table table-border table-bordered table-hover table-bg table-sort" id="table_export">
             <thead style="width: 100%;">
             <tr class="text-c">
             </tr>
@@ -88,12 +111,15 @@
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="${base}/resources/admin/js/jquery.table2excel.js"></script>
+
 <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
     var table;
     var isSelectAll = false;
+    var idTmr=null;
     var idTitleChange = function(){
         if(!isSelectAll){
             $('tbody').find("input[name='ids']:checkbox").prop('checked', true);
@@ -208,6 +234,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "answer",
+                    "sTitle": "答题",
+                    "sClass": "center"
+                },
+                {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -253,7 +284,7 @@
                     }
                 },
                 {
-                    "aTargets": [13],
+                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 订单管理 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>" +
@@ -265,7 +296,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 13]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 14]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
@@ -275,10 +306,15 @@
                 /*处理常量*/
                 var _evalStatus =  $('select[name="evalStatus"]').val();
                 var _organization =  $('select[name="organization"]').val();
+
+                var _type =  $('select[name="type"]').val();
+                var _userType =  $('select[name="userType"]').val();
+
                 var index = layer.msg('加载中', {
                     icon: 16
                     ,shade: 0.01
                 });
+
                 $.ajax({
                     url: sSource,//这个就是请求地址对应sAjaxSource
                     data: {
@@ -286,6 +322,8 @@
                         "beginDate":_beginDate,
                         "endDate":_endDate,
                         "evalStatus":_evalStatus,
+                        "type":_type,
+                        "userType":_userType,
                         "organization":_organization,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
@@ -427,7 +465,101 @@
             });
         });
     }
-	
+
+    function  getExplorer() {
+        var explorer = window.navigator.userAgent ;
+        //ie
+        if (explorer.indexOf("MSIE") >= 0) {
+            return 'ie';
+        }
+        //firefox
+        else if (explorer.indexOf("Firefox") >= 0) {
+            return 'Firefox';
+        }
+        //Chrome
+        else if(explorer.indexOf("Chrome") >= 0){
+            return 'Chrome';
+        }
+        //Opera
+        else if(explorer.indexOf("Opera") >= 0){
+            return 'Opera';
+        }
+        //Safari
+        else if(explorer.indexOf("Safari") >= 0){
+            return 'Safari';
+        }
+    }
+    function method1(tableid) {//整个表格拷贝到EXCEL中
+        if(getExplorer()=='ie') {
+            if(confirm("最多导出1万条记录")) {
+                confirm("IE下请对所有提示框点击‘是’,否则将导致导出失败,谢谢");
+
+                var curTbl = document.getElementById(tableid);
+                var oXL = new ActiveXObject("Excel.Application");
+
+                //创建AX对象excel
+                var oWB = oXL.Workbooks.Add();
+                //获取workbook对象
+                var xlsheet = oWB.Worksheets(1);
+                //激活当前sheet
+                var sel = document.body.createTextRange();
+                sel.moveToElementText(curTbl);
+                //把表格中的内容移到TextRange中
+                sel.select;
+                //全选TextRange中内容
+                sel.execCommand("Copy");
+                //复制TextRange中内容
+                xlsheet.Paste();
+                //粘贴到活动的EXCEL中
+                oXL.Visible = true;
+                //设置excel可见属性
+
+                try {
+                    var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
+                } catch (e) {
+                    print("Nested catch caught " + e);
+                } finally {
+                    oWB.SaveAs(fname);
+
+                    oWB.Close(savechanges = false);
+                    //xls.visible = false;
+                    oXL.Quit();
+                    oXL = null;
+                    //结束excel进程，退出完成
+                    //window.setInterval("Cleanup();",1);
+                    idTmr = window.setInterval("Cleanup();", 1);
+                }
+            }
+        } else {
+            if(confirm("最多导出1万条记录")){
+
+                //导出数据到excel
+                $(".table2excel").table2excel({
+                    exclude: ".noExl",
+                    name: "销售明细",
+                    filename: "销售明细",
+                    fileext: ".xls",
+                    exclude_img: true,
+                    exclude_links: false,
+                    exclude_inputs: true
+                });
+            }
+        }
+    }
+    function Cleanup() {
+        window.clearInterval(idTmr);
+        CollectGarbage();
+    }
+
+    function exports() {
+        method1("table_export");
+    }
+
+    function Cleanup() {
+        window.clearInterval(idTmr);
+        CollectGarbage();
+    }
+
     function DateFormat(timestamp, format) {
         var newDate = new Date();
         newDate.setTime(timestamp);

@@ -440,6 +440,11 @@ public class GaugeController extends BaseController {
 			filters.add(categoryFilter);
 		}
 
+		if (pageable.getSearchValue()!=null) {
+			Filter titleFilter = new Filter("title", Filter.Operator.like, "%"+pageable.getSearchValue()+"%");
+			filters.add(titleFilter);
+		}
+
 		Page<Gauge> page = gaugeService.findPage(beginDate,endDate,null,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

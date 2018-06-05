@@ -55,6 +55,12 @@ public class EvalAnswer extends OrderEntity {
     @JsonIgnore
     private GaugeQuestion gaugeQuestion;
 
+    /** 题号 */
+    @Min(0)
+    @NotNull
+    @Column(columnDefinition="bigint(20) not null default 0 comment '题号'")
+    private Long no;
+
     /** 答案id */
     @Min(0)
     @NotNull
@@ -147,5 +153,13 @@ public class EvalAnswer extends OrderEntity {
 
     public void setEvaluation(Evaluation evaluation) {
         this.evaluation = evaluation;
+    }
+
+    public Long getNo() {
+        return no;
+    }
+
+    public void setNo(Long no) {
+        this.no = no;
     }
 }

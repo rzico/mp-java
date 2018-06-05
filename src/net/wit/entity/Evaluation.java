@@ -52,6 +52,16 @@ public class Evaluation extends BaseEntity {
     @Column(columnDefinition="int(11) not null comment '状态 {waiting:待付款,paid:已付款,completed:已完成,cancelled:已取消}'")
     private EvalStatus evalStatus;
 
+    /** 用户类型 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '用户类型 {general:普通用户,enterprise:企业用户,school:学校用户}'")
+    private Gauge.UserType userType;
+
+    /** 常模类型 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '常模类型 {single:单常模,complex:多常模}'")
+    private Gauge.Type type;
+
     /** 主标题 */
     @Length(max = 200)
     @NotNull
@@ -388,6 +398,56 @@ public class Evaluation extends BaseEntity {
 
     public void setJsonResult(String jsonResult) {
         this.jsonResult = jsonResult;
+    }
+
+    public Gauge.UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Gauge.UserType userType) {
+        this.userType = userType;
+    }
+
+    public Gauge.Type getType() {
+        return type;
+    }
+
+    public void setType(Gauge.Type type) {
+        this.type = type;
+    }
+
+    private String N2A(Long a) {
+        if (a.equals(1L)) {
+            return "A";
+        } else
+        if (a.equals(2L)) {
+            return "B";
+        } else
+        if (a.equals(3L)) {
+            return "C";
+        } else
+        if (a.equals(4L)) {
+            return "D";
+        } else
+        if (a.equals(5L)) {
+            return "E";
+        } else
+        if (a.equals(6L)) {
+            return "F";
+        } else
+        if (a.equals(7L)) {
+            return "G";
+        } else {
+            throw new RuntimeException("error");
+        }
+    }
+
+    public String getAnswer() {
+        StringBuilder  sb = new StringBuilder();
+        for (EvalAnswer a:getEvalAnswers()) {
+           sb.append("第"+a.getNo()+"题:"+N2A(a.getAnswer())+" 得分:"+a.getScore()+"\n");
+        }
+        return sb.toString();
     }
 
 }
