@@ -217,8 +217,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "evaluation",
-                    "sTitle": "测评人数",
+                    "mData": "employee",
+                    "sTitle": "实测人数",
                     "sClass": "center"
                 },
                 {

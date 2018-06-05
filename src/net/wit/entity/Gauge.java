@@ -2,6 +2,7 @@ package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -213,6 +214,12 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     @OrderBy("orders asc")
     private List<GaugeResult> gaugeResults = new ArrayList<GaugeResult>();
+
+    /** 订单*/
+    @OneToMany(mappedBy = "gauge",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @Where(clause="eval_status=2")
+    private List<Evaluation> evaluations = new ArrayList<Evaluation>();
 
     /** 所属商品 */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -490,5 +497,17 @@ public class Gauge extends BaseEntity {
 
     public void setNotice4(String notice4) {
         this.notice4 = notice4;
+    }
+
+    public List<Evaluation> getEvaluations() {
+        return evaluations;
+    }
+
+    public void setEvaluations(List<Evaluation> evaluations) {
+        this.evaluations = evaluations;
+    }
+
+    public int getEmployee() {
+        return getEvaluations().size();
     }
 }
