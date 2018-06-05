@@ -132,6 +132,11 @@ public class ProductController extends BaseController {
 			Product product = null;
 			if (pm.getProductId()==null) {
 				product = new Product();
+				product.setCost(BigDecimal.ZERO);
+				product.setWeight(0);
+				product.setPoint(0L);
+				product.setAllocatedStock(0);
+				product.setDeleted(false);
 			} else {
 				for (Product prod:goods.getProducts()) {
 					if (prod.getId().equals(pm.getProductId())) {
@@ -163,14 +168,9 @@ public class ProductController extends BaseController {
 			product.setVip3Price(pm.getPrice());
 			product.setSpec1(pm.getSpec1());
 			product.setSpec2(pm.getSpec2());
-			product.setCost(BigDecimal.ZERO);
-			product.setDeleted(false);
-			product.setWeight(0);
-			product.setPoint(0L);
 			product.setGoods(goods);
 			product.setMember(member);
 			product.setStock(pm.getStock());
-			product.setAllocatedStock(0);
 			i = i+1;
 			product.setOrders(i);
 			if (i==1) {
