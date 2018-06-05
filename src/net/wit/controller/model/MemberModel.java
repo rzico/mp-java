@@ -180,8 +180,9 @@ public class MemberModel extends BaseModel implements Serializable {
         this.occupation = occupation;
         if (member.getTopic()!=null) {
            this.backgroud = member.getTopic().getLogo();
-        } else {
-
+        }
+        if (this.backgroud==null) {
+           this.backgroud = "http://cdnx.rzico.com/images/topicBk.jpg";
         }
 
     }

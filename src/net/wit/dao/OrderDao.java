@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import net.wit.Filter;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Order;
@@ -27,6 +28,7 @@ public interface OrderDao extends BaseDao<Order, Long> {
 	 * @return Page<Order>
 	 */
 	Page<Order> findPage(Date beginDate,Date endDate, String status, Pageable pageable);
+	Long count(Date beginDate,Date endDate, String status,List<Filter> filters);
 
 	/**
 	 * 根据订单编号查找订单

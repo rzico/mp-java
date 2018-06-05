@@ -150,6 +150,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		return orderDao.findPage(beginDate, endDate, status, pageable);
 	}
 
+	public Long count(Date beginDate, Date endDate, String status, List<Filter> filters) {
+		return orderDao.count(beginDate, endDate, status, filters);
+	}
+
 	/**
 	 * 根据订单编号查找订单
 	 *

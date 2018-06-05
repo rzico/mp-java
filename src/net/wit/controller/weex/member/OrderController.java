@@ -25,10 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Controller - 订单
@@ -95,6 +92,35 @@ public class OrderController extends BaseController {
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		return Message.bind(model,request);
+	}
+
+	/**
+	 *  订单统计
+	 */
+	@RequestMapping(value = "/count", method = RequestMethod.POST)
+	public @ResponseBody
+	Message count(HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+		Admin admin = adminService.findByMember(member);
+		if (admin!=null && admin.getEnterprise()!=null) {
+			member = admin.getEnterprise().getMember();
+		}
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("seller", Filter.Operator.eq,member));
+		filters.add(new Filter("orderStatus", Filter.Operator.ne, Order.OrderStatus.cancelled));
+		Long unpaid = orderService.count(null,null,"unpaid",filters);
+		Long unshipped = orderService.count(null,null,"unshipped",filters);
+		Long shipped = orderService.count(null,null,"shipped",filters);
+		Long refund = orderService.count(null,null,"refund",filters);
+		Map<String,Long> data = new HashMap<>();
+		data.put("unpaid",unpaid);
+		data.put("unshipped",unshipped);
+		data.put("shipped",shipped);
+		data.put("refund",refund);
+		return Message.success(data,"success");
 	}
 
 	/**
