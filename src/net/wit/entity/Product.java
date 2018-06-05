@@ -398,6 +398,17 @@ public class Product extends OrderEntity {
 		this.allocatedStock = allocatedStock;
 	}
 
+
+	public Long [] getTagIds() {
+		List<Long> data = new ArrayList<>();
+		for (Tag tag:getTags()) {
+			data.add(tag.getId());
+		}
+		Long [] aa = null;
+		data.toArray(aa);
+		return aa;
+	}
+
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
 			return new MapEntity(getMember().getId().toString(), getMember().getNickName()+"("+getMember().getName()+")");

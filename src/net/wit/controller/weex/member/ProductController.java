@@ -111,6 +111,7 @@ public class ProductController extends BaseController {
 		}
 
 		Goods goods = null;
+		Long [] tagIds =null;
 		if (model.getId()==null) {
 			goods = new Goods();
 			goods.setRanking(0L);
@@ -118,6 +119,7 @@ public class ProductController extends BaseController {
 			goods.setHits(0L);
 		} else {
 			goods = goodsService.find(model.getId());
+			tagIds = goods.product().getTagIds();
 		}
 
 		List<Product> products = new ArrayList<Product>();
@@ -150,6 +152,8 @@ public class ProductController extends BaseController {
 			if (model.getDistribution()!=null && model.getDistribution().getId()!=null) {
 				product.setDistribution(distributionService.find(model.getDistribution().getId()));
 			}
+
+			product.setTags(tagService.findList(tagIds));
 
 			product.setThumbnail(pm.getThumbnail());
 			product.setMarketPrice(pm.getPrice());
