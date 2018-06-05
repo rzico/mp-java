@@ -54,6 +54,9 @@ public class LoginController extends BaseController {
     @Resource(name = "smssendServiceImpl")
     private SmssendService smssendService;
 
+    @Resource(name = "topicServiceImpl")
+    private TopicService topicService;
+
     @Resource(name = "mailServiceImpl")
     private MailService mailService;
 
@@ -246,6 +249,8 @@ public class LoginController extends BaseController {
                 memberService.create(member,member.getPromoter());
             }
 
+            topicService.autoCreate(member);
+
             messageService.login(member,request);
 
             if (!User.userAttr(member)) {
@@ -311,6 +316,7 @@ public class LoginController extends BaseController {
             if (member.getPromoter()!=null) {
                 memberService.create(member,member.getPromoter());
             }
+            topicService.autoCreate(member);
 
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);
@@ -462,6 +468,9 @@ public class LoginController extends BaseController {
             if (member.getPromoter()!=null) {
                 memberService.create(member,member.getPromoter());
             }
+
+            topicService.autoCreate(member);
+
             messageService.login(member,request);
             if (!User.userAttr(member)) {
                 return Message.success(Message.LOGIN_SUCCESS);

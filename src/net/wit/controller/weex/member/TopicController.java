@@ -89,7 +89,7 @@ public class TopicController extends BaseController {
         Topic topic =  member.getTopic();
         if (topic==null) {
             topic = new Topic();
-            topic.setName(member.getNickName());
+            topic.setName(member.displayName());
             topic.setBrokerage(new BigDecimal("0.6"));
             topic.setPaybill(new BigDecimal("0.4"));
             topic.setStatus(Topic.Status.waiting);

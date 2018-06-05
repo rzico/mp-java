@@ -27,6 +27,8 @@ public class ArticleContentViewModel extends BaseModel implements Serializable {
     private BigDecimal price;
     /** 商品名称 */
     private BigDecimal marketPrice;
+    /** 分享歉 */
+    private BigDecimal rebate;
 
     public Article.MediaType getMediaType() {
         return mediaType;
@@ -98,5 +100,13 @@ public class ArticleContentViewModel extends BaseModel implements Serializable {
 
     public void setMarketPrice(BigDecimal marketPrice) {
         this.marketPrice = marketPrice;
+    }
+
+    public BigDecimal getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(BigDecimal rebate) {
+        this.rebate = rebate;
     }
 }

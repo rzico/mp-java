@@ -1060,15 +1060,14 @@ public class Member extends BaseEntity {
 	//是否有分润
 	public Boolean leaguer(Member seller) {
 		Card card = card(seller);
-		if (card==null) {
-			return false;
-		}
-
 		Topic topic = seller.getTopic();
 		TopicConfig config = topic.getConfig();
 		if (config.getPromoterType().equals(TopicConfig.PromoterType.any)) {
 			return true;
-		} else
+		}
+		if (card==null) {
+			return false;
+		}
 		if ((config.getPromoterType().equals(TopicConfig.PromoterType.team) && card.getType().compareTo(Card.Type.team)>=0)){
 			return true;
 		} else

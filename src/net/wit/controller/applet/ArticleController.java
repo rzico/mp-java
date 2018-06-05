@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,6 +111,13 @@ public class ArticleController extends BaseController {
                         m.setPrice(product.getPrice());
                         m.setThumbnail(product.getThumbnail());
                         m.setMarketPrice(product.getMarketPrice());
+                        if (member!=null) {
+                            if (member.leaguer(product.getMember())) {
+                                m.setRebate(product.calcRebate());
+                            }
+                        } else {
+                            m.setRebate(BigDecimal.ZERO);
+                        }
                     }
                 }
             }

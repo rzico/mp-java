@@ -1,20 +1,15 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
-import net.wit.Filter;
-import net.wit.Page;
-import net.wit.Pageable;
-import net.wit.Principal;
+import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.MemberDao;
+import net.wit.service.TemplateService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,6 +33,9 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements To
 
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
+
+	@Resource(name = "templateServiceImpl")
+	private TemplateService templateService;
 
 	@Resource(name = "topicDaoImpl")
 	public void setBaseDao(TopicDao topicDao) {
@@ -99,6 +97,45 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements To
 		member.setTopic(topic);
 		memberDao.merge(member);
 		return topic;
+	}
+
+	public Topic autoCreate(Member member) {
+		Topic topic =  member.getTopic();
+		if (topic==null) {
+			topic = new Topic();
+			topic.setName(member.displayName());
+			topic.setBrokerage(new BigDecimal("0.6"));
+			topic.setPaybill(new BigDecimal("0.6"));
+			topic.setStatus(Topic.Status.waiting);
+			topic.setHits(0L);
+			topic.setMember(member);
+			topic.setFee(new BigDecimal("588"));
+			topic.setLogo(member.getLogo());
+			topic.setType(Topic.Type.personal);
+			topic.setRanking(0L);
+			TopicConfig config = topic.getConfig();
+			if (config==null) {
+				config = new TopicConfig();
+				config.setUseCard(false);
+				config.setUseCashier(false);
+				config.setUseCoupon(false);
+				config.setPromoterType(TopicConfig.PromoterType.any);
+				config.setPattern(TopicConfig.Pattern.pattern1);
+				config.setAmount(BigDecimal.ZERO);
+				config.setTokenExpire(new Date());
+				config.setEstate(TopicConfig.Estate.UNAUTHORIZED);
+			}
+			topic.setConfig(config);
+			Calendar calendar   =   new GregorianCalendar();
+			calendar.setTime(new Date());
+			calendar.add(calendar.MONTH, 1);
+			topic.setExpire(calendar.getTime());
+			topic.setTemplate(templateService.findDefault(Template.Type.topic));
+		    return create(topic);
+		} else {
+			return member.getTopic();
+		}
+
 	}
 
 }
