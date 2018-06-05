@@ -534,7 +534,7 @@
             if(confirm("最多导出1万条记录")){
 
                 //导出数据到excel
-                $(".table2excel").table2excel({
+                $(".table_export").table2excel({
                     exclude: ".noExl",
                     name: "销售明细",
                     filename: "销售明细",
