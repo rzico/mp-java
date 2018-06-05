@@ -229,7 +229,7 @@ public class ArticleListModel extends BaseModel implements Serializable {
             JSONArray ja = JSONArray.fromObject(content);
             for (int i=0;i<ja.size();i++) {
                 JSONObject jo = ja.getJSONObject(i);
-                if (jo.getString("mediaType").equals("image")) {
+                if (jo.getString("mediaType").equals("image") && !"".equals(jo.getString("original"))) {
                     this.images.add(jo.getString("original"));
                 }
                 if (this.images.size()==3) {

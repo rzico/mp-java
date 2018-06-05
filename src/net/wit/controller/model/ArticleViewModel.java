@@ -318,7 +318,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
                 templates.add(m);
             }
 
-            if (ob.getString("mediaType").equals("image") && (this.images.size()==4)) {
+            if (ob.getString("mediaType").equals("image") && !"".equals(ob.getString("original")) && (this.images.size()==4)) {
                 this.images.add(ob.getString("original"));
             }
 
