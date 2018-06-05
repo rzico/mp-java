@@ -284,7 +284,7 @@ public class EvaluationController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate,Gauge.UserType userType,Gauge.Type type,String organization, Evaluation.EvalStatus evalStatus, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate,Gauge.UserType userType,Gauge.Type type,String organization,String searchValue, Evaluation.EvalStatus evalStatus, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (evalStatus!=null) {
 			Filter evalStatusFilter = new Filter("evalStatus", Filter.Operator.eq, evalStatus);
@@ -303,8 +303,8 @@ public class EvaluationController extends BaseController {
 			filters.add(typeFilter);
 		}
 
-		if (pageable.getSearchValue()!=null) {
-			Filter titleFilter = new Filter("title", Filter.Operator.like, "%"+pageable.getSearchValue()+"%");
+		if (searchValue!=null) {
+			Filter titleFilter = new Filter("title", Filter.Operator.like, "%"+searchValue+"%");
 			filters.add(titleFilter);
 		}
 

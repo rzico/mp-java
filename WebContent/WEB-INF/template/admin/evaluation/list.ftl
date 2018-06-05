@@ -81,7 +81,7 @@
 				</select>
 			</span>
     [/#if]
-        <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
+        <input type="text" class="input-text" style="width:250px" placeholder="输入量表标题" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
@@ -166,7 +166,7 @@
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
                 $(row).children('td').eq(5).attr('style', 'text-align: left;');
-                $(row).children('td').eq(13).attr('style', 'max-width: 200px;');
+                $(row).children('td').eq(13).attr('style', 'width: 150px;');
 
             },
             "aoColumns": [
@@ -301,10 +301,10 @@
                 {"orderable": false, "aTargets": [0, 14]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
                 var _evalStatus =  $('select[name="evalStatus"]').val();
                 var _organization =  $('select[name="organization"]').val();
