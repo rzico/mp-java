@@ -230,9 +230,9 @@ public class ArticleListModel extends BaseModel implements Serializable {
             for (int i=0;i<ja.size();i++) {
                 JSONObject jo = ja.getJSONObject(i);
                 if (jo.getString("mediaType").equals("image")) {
-                    this.images.add(jo.getString("url"));
+                    this.images.add(jo.getString("original"));
                 }
-                if (i>3) {
+                if (this.images.size()==3) {
                     break;
                 }
             }

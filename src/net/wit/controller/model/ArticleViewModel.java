@@ -58,6 +58,8 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private Boolean hasFavorite;
     /** 是否关注 */
     private Boolean hasFollow;
+    /** 图集 */
+    private List<String> images = new ArrayList<String>();
 
     /** 内容 */
     private List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
@@ -289,6 +291,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         MemberViewModel member = new MemberViewModel();
         member.bind(article.getMember());
         this.member = member;
+        this.images = new ArrayList<>();
         List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
         JSONArray jo = JSONArray.fromObject(article.getContent());
 
@@ -314,6 +317,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             } else {
                 templates.add(m);
             }
+
+            if (ob.getString("mediaType").equals("image") && (this.images.size()==4)) {
+                this.images.add(ob.getString("original"));
+            }
+
         }
 
         List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
