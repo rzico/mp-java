@@ -1,4 +1,7 @@
 package net.wit.controller.model;
+import com.sun.org.apache.xerces.internal.xs.StringList;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleFavorite;
 import net.wit.entity.Product;
@@ -24,6 +27,8 @@ public class ArticleListModel extends BaseModel implements Serializable {
     private String title;
     /** 标题图 */
     private String thumbnail;
+    /** 标题图 */
+    private Article.ArticleType mediaType;
     /** 简说明 */
     private String htmlTag;
     /** 销售价 */
@@ -42,6 +47,8 @@ public class ArticleListModel extends BaseModel implements Serializable {
     private Boolean showAuthor;
     /** 标签名 */
     private List<TagModel> tags = new ArrayList<TagModel>();
+    /** 图集 */
+    private List<String> images = new ArrayList<String>();
 
     public Long getId() {
         return id;
@@ -172,6 +179,22 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.showAuthor = showAuthor;
     }
 
+    public Article.ArticleType getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(Article.ArticleType mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.authorId = article.getMember().getId();
@@ -186,6 +209,7 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.htmlTag = article.delHTMLTag();
         this.tags = TagModel.bindList(article.getTags());
         this.showAuthor = false;
+        this.mediaType = article.getMediaType();
         if (article.getGoods()!=null) {
             Product product = article.getGoods().product();
             if (product!=null) {
@@ -198,6 +222,20 @@ public class ArticleListModel extends BaseModel implements Serializable {
             this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId();
         } else {
             this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId();
+        }
+        this.images = new ArrayList<>();
+        if (!article.getMediaType().equals(Article.ArticleType.html)) {
+            String content = article.getContent();
+            JSONArray ja = JSONArray.fromObject(content);
+            for (int i=0;i<ja.size();i++) {
+                JSONObject jo = ja.getJSONObject(i);
+                if (jo.getString("mediaType").equals("image")) {
+                    this.images.add(jo.getString("url"));
+                }
+                if (i>3) {
+                    break;
+                }
+            }
         }
     }
 
