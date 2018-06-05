@@ -116,6 +116,7 @@
 <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/laypage/1.2/laypage.js"></script>
+
 <script type="text/javascript">
     var table;
     var isSelectAll = false;
@@ -165,6 +166,7 @@
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
                 $(row).children('td').eq(5).attr('style', 'text-align: left;');
+                $(row).children('td').eq(13).attr('style', 'max-width: 200px;');
 
             },
             "aoColumns": [

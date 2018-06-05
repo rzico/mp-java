@@ -445,7 +445,7 @@ public class Evaluation extends BaseEntity {
     public String getAnswer() {
         StringBuilder  sb = new StringBuilder();
         for (EvalAnswer a:getEvalAnswers()) {
-           sb.append("第"+a.getNo()+"题:"+N2A(a.getAnswer())+" 得分:"+a.getScore()+"\n");
+           sb.append("第"+a.getNo()+"题:"+N2A(a.getAnswer())+" 得分:"+a.getScore()+"<br/>");
         }
         return sb.toString();
     }
