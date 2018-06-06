@@ -200,7 +200,7 @@ public class OrderController extends BaseController {
 	 * 支付
 	 */
 	@RequestMapping(value = "/order_payment")
-	public @ResponseBody Message payment(String sn) {
+	public @ResponseBody Message OrderPayment(String sn) {
 		Member member = memberService.getCurrent();
 		Order order = orderService.findBySn(sn);
 		if (order==null) {
