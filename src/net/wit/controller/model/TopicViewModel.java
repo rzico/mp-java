@@ -45,6 +45,8 @@ public class TopicViewModel extends BaseModel implements Serializable {
     private List<TagModel> tags = new ArrayList<TagModel>();
 
     private List<ArticleCatalogModel> catalogs = new ArrayList<ArticleCatalogModel>();
+    /** 模块 */
+    private String template;
 
     public Long getId() {
         return id;
@@ -182,6 +184,14 @@ public class TopicViewModel extends BaseModel implements Serializable {
         this.useCard = useCard;
     }
 
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
     public void bind(Member member, Member shareUser) {
         this.id = member.getId();
         this.autograph = member.getAutograph();
@@ -217,8 +227,10 @@ public class TopicViewModel extends BaseModel implements Serializable {
             shareUser = member;
         }
         if (template==null) {
+            this.template = "c1001";
             this.url = "http://" + bundle.getString("weixin.url") + "/#/c1001?id=" + member.getId() + "&xuid=" + shareUser.getId();
         } else {
+            this.template = "c"+template.getSn();
             this.url = "http://" + bundle.getString("weixin.url") + "/#/c"+template.getSn()+"?id=" + member.getId() + "&xuid=" + shareUser.getId();
         }
     }

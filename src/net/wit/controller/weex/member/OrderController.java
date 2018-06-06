@@ -53,6 +53,177 @@ public class OrderController extends BaseController {
 	@Resource(name = "enterpriseServiceImpl")
 	private EnterpriseService enterpriseService;
 
+	@Resource(name = "areaServiceImpl")
+	private AreaService areaService;
+
+	@Resource(name = "receiverServiceImpl")
+	private ReceiverService receiverService;
+
+	@Resource(name = "cartServiceImpl")
+	private CartService cartService;
+
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
+	@Resource(name = "dragonServiceImpl")
+	private DragonService dragonService;
+
+	@Resource(name = "productServiceImpl")
+	private ProductService productService;
+
+	/**
+	 *  获取订单信息
+	 */
+	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	public @ResponseBody Message info(Long receiverId,Order.ShippingMethod shippingMethod,Long dragonId) {
+		Member member = memberService.getCurrent();
+		Cart cart = cartService.getCurrent();
+		if (cart == null || cart.isEmpty()) {
+			return Message.error("购物车为空");
+		}
+		Receiver receiver = null;
+		if (receiverId!=null) {
+			receiver = receiverService.find(receiverId);
+		}
+		Dragon dragon = null;
+		if (dragonId!=null) {
+			dragon = dragonService.find(dragonId);
+		}
+		Order order = orderService.build(member,null,null, cart, receiver, null,null,shippingMethod,dragon);
+		OrderModel model = new OrderModel();
+		model.bind(order);
+		if (member!=null) {
+			if (receiver==null) {
+				for (Receiver r : member.getReceivers()) {
+					if (r.getIsDefault()) {
+						receiver = r;
+						break;
+					}
+				}
+			}
+			ReceiverModel m = new ReceiverModel();
+			if (receiver!=null) {
+				m.bind(receiver);
+			}
+			model.setReceiver(m);
+		}
+		return Message.success(model,"success");
+	}
+
+	/**
+	 * 计算
+	 */
+	@RequestMapping(value = "/calculate")
+	public @ResponseBody
+	Message calculate(Long id,Integer quantity,Long receiverId,Long promotionId,Order.ShippingMethod shippingMethod,Long dragonId) {
+		Member member = memberService.getCurrent();
+		Map<String, Object> data = new HashMap<String, Object>();
+		Cart cart = cartService.getCurrent();
+		Product product = null;
+		if (id!=null) {
+			product = productService.find(id);
+		}
+		Receiver receiver = null;
+		if (receiverId!=null) {
+			receiver = receiverService.find(receiverId);
+		}
+		Dragon dragon = null;
+		if (dragonId!=null) {
+			dragon = dragonService.find(dragonId);
+		}
+		Order order = orderService.build(member,product,quantity,cart, receiver,null,promotionId,shippingMethod,dragon);
+
+		OrderModel model = new OrderModel();
+		model.bindHeader(order);
+		if (member!=null) {
+			if (receiver==null) {
+				for (Receiver r : member.getReceivers()) {
+					if (r.getIsDefault()) {
+						receiver = r;
+						break;
+					}
+				}
+			}
+			ReceiverModel m = new ReceiverModel();
+			if (receiver!=null) {
+				m.bind(receiver);
+			}
+			model.setReceiver(m);
+		}
+		return Message.success(model,"success");
+	}
+
+	/**
+	 * 创建
+	 */
+	@RequestMapping(value = "/create")
+	public @ResponseBody
+	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
+		Member member = memberService.getCurrent();
+		Cart cart = null;
+		if (id==null) {
+			cart = cartService.getCurrent();
+			if (cart == null || cart.isEmpty()) {
+				return Message.error("购物车为空");
+			}
+			if (cart.getIsLowStock()) {
+				return Message.error("库存不足");
+			}
+		}
+		Receiver receiver = receiverService.find(receiverId);
+		if (receiver == null) {
+			return Message.error("无效地址");
+		}
+		Product product = null;
+		if (id!=null) {
+			product = productService.find(id);
+			if (product.getIsLowStock(quantity)) {
+				return Message.error("库存不足");
+			}
+		}
+		Dragon dragon = null;
+		if (dragonId!=null) {
+			dragon = dragonService.find(dragonId);
+		}
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate);
+
+		if (cart != null) {
+			cartService.delete(cart);
+		}
+
+		OrderModel model = new OrderModel();
+		model.bindHeader(order);
+		return Message.success(model,"success");
+	}
+
+	/**
+	 * 支付
+	 */
+	@RequestMapping(value = "/payment")
+	public @ResponseBody Message payment(String sn) {
+		Member member = memberService.getCurrent();
+		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("无效订单号");
+		}
+		if (order.isLocked(member.userId())) {
+			return Message.error("订单处理中，请稍候再试");
+		}
+		try {
+			if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.unconfirmed && order.getPaymentStatus() == Order.PaymentStatus.unpaid) {
+				Payment payment = orderService.payment(order, null);
+				PaymentModel model = new PaymentModel();
+				model.bind(payment);
+				return Message.success(model, "发起成功");
+			} else {
+				return Message.error("不是待付款订单");
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			return Message.error(e.getMessage());
+		}
+	}
+
 	/**
 	 * 订单锁定
 	 */
