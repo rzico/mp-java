@@ -26,6 +26,8 @@ public class ManagerModel extends BaseModel implements Serializable {
 
     /** 是否商家 */
     private Boolean isShop;
+    /** 是否激活 */
+    private Boolean activated;
 
     /** 是否完善店铺资料 */
     private Boolean hasShop;
@@ -123,6 +125,14 @@ public class ManagerModel extends BaseModel implements Serializable {
         this.hasShop = hasShop;
     }
 
+    public Boolean getActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
+
     public void bind(Member member) {
 
         this.id = member.getId();
@@ -138,6 +148,9 @@ public class ManagerModel extends BaseModel implements Serializable {
 
         this.useCashier = false;
         this.hasTopic = (member.getTopic()!=null);
+        if (topic!=null) {
+            this.activated = topic.getStatus().equals(Topic.Status.success);
+        }
         if (topic==null) {
             this.topic = "未开通";
         } else {

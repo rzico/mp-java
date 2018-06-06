@@ -70,6 +70,9 @@ public class TopicController extends BaseController {
     @Resource(name = "liveServiceImpl")
     private LiveService liveService;
 
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
      /**
      *  开通专栏
      */
@@ -139,18 +142,9 @@ public class TopicController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
 
-        Member loginMember = member;
-
-        Admin admin = adminService.findByMember(member);
-        if (admin!=null && admin.getEnterprise()!=null) {
-            member = admin.getEnterprise().getMember();
-        }
         Topic topic = member.getTopic();
         if (topic==null) {
             return Message.error("请先开通专栏");
-        }
-        if (!loginMember.equals(topic.getMember())) {
-            return Message.error("你没有专栏权限");
         }
         if (topic.getLogo()==null) {
             return Message.error("请设置专栏头像");
@@ -173,20 +167,10 @@ public class TopicController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
 
-
-        Member loginMember = member;
-
-        Admin admin = adminService.findByMember(member);
-        if (admin!=null && admin.getEnterprise()!=null) {
-            member = admin.getEnterprise().getMember();
-        }
         Topic topic = member.getTopic();
 
         if (topic==null) {
             return Message.error("请先开通专栏");
-        }
-        if (!loginMember.equals(topic.getMember())) {
-            return Message.error("你没有专栏权限");
         }
 
         if (topic.getFee().compareTo(BigDecimal.ZERO)==0)  {
@@ -221,18 +205,17 @@ public class TopicController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
 
-        Member loginMember = member;
-
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
-            member = admin.getEnterprise().getMember();
+            Role role = roleService.find(1L);
+            if (admin.getRoles().contains(role)) {
+                member = admin.getEnterprise().getMember();
+            }
         }
+
         Topic topic = member.getTopic();
         if (topic==null) {
             return Message.error("请先开通专栏");
-        }
-        if (!loginMember.equals(topic.getMember())) {
-            return Message.error("你没有专栏权限");
         }
 
         if (name!=null) {
@@ -243,6 +226,7 @@ public class TopicController extends BaseController {
                 enterpriseService.update(enterprise);
             }
         }
+
         if (topic.getName().length()>27) {
             return Message.error("专栏名不能超过9个汉字");
         }
@@ -324,9 +308,8 @@ public class TopicController extends BaseController {
 
     }
 
-
     /**
-     *  获取企业专栏信息
+     *  获取所在单位专栏
      */
     @RequestMapping(value = "/owner", method = RequestMethod.GET)
     @ResponseBody
@@ -363,7 +346,10 @@ public class TopicController extends BaseController {
 
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
-            member = admin.getEnterprise().getMember();
+            Role role = roleService.find(1L);
+            if (admin.getRoles().contains(role)) {
+                member = admin.getEnterprise().getMember();
+            }
         }
 
         Topic topic = member.getTopic();

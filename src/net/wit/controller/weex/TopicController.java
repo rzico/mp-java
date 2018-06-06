@@ -96,7 +96,7 @@ public class TopicController extends BaseController {
         }
         TopicViewModel model =new TopicViewModel();
         model.bind(member,member);
-        Long at = articleService.count(new Filter("member", Filter.Operator.eq,member));
+        Long at = articleService.count(new Filter("member", Filter.Operator.eq,member),new Filter("deleted", Filter.Operator.eq,0));
         model.setArticle(at.intValue());
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("member", Filter.Operator.eq,member));

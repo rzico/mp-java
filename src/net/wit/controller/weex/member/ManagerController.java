@@ -71,16 +71,20 @@ public class ManagerController extends BaseController {
         ManagerModel model =new ManagerModel();
         model.bind(member);
 
-        if (member.getTopic()!=null && member.getTopic().getStatus().equals(Topic.Status.success)) {
-            model.setIsShop(true);
-        }
-
         Admin admin = adminService.findByMember(member);
+        //有企业，以所在企主为
         if (admin!=null && admin.getEnterprise()!=null) {
             Enterprise ent = admin.getEnterprise();
+            Topic topic = ent.getMember().getTopic();
+            model.setIsShop(true);
+            if (topic.equals(Topic.Status.success)) {
+                model.setActivated(true);
+            } else {
+                model.setActivated(false);
+            }
 
             model.setHasTopic(ent.getMember().getTopic()!=null);
-            Topic topic = ent.getMember().getTopic();
+
             if (topic!=null) {
                 if (topic == null) {
                     model.setTopic("未开通");
@@ -97,15 +101,12 @@ public class ManagerController extends BaseController {
                 }
             }
 
-            if (ent.getMember().getTopic()!=null && ent.getMember().getTopic().getStatus().equals(Topic.Status.success)) {
-                model.setIsShop(true);
-            }
-
             if (!ent.getType().equals(Enterprise.Type.shop) && ent.getStatus().equals(Enterprise.Status.success)) {
                 model.setIsAgent(true);
             }
             Long shops = shopService.count(new Filter("enterprise", Filter.Operator.eq,admin.getEnterprise()));
             model.setHasShop(shops>0L);
+
         }
 
         return Message.bind(model,request);
