@@ -130,7 +130,7 @@ public class TopicController extends BaseController {
         data.add(videos);
         NavigationModel promotions = new NavigationModel();
         promotions.setType(Navigation.Type.promotion);
-        promotions.setName("抢购");
+        promotions.setName("秒杀");
         promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
         data.add(promotions);
         if ("c1001".equals(template)) {

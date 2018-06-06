@@ -113,6 +113,11 @@ public class ShopController extends BaseController {
         } else {
             shopService.update(entity);
         }
+        if (admin.getShop()==null) {
+            admin.setShop(shop);
+            adminService.update(admin);
+        }
+
         ShopModel model = new ShopModel();
         model.bind(entity);
         return Message.success(model,"发布成功");
@@ -154,9 +159,15 @@ public class ShopController extends BaseController {
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
     public Message view(Long shopId,HttpServletRequest request){
+        Member member = memberService.getCurrent();
         Shop shop = shopService.find(shopId);
         if (shop==null) {
-            return Message.error("无效shopid");
+            Admin admin = adminService.findByMember(member);
+
+            shop = admin.getShop();
+            if (shop==null) {
+                return Message.error("无效shopid");
+            }
         }
 
         ShopModel model = new ShopModel();

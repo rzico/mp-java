@@ -80,7 +80,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(Long authorId,Long productCategoryId,String keyword,Long tagId ,Pageable pageable,HttpServletRequest request) {
+	Message list(Long authorId,Long productCategoryId,String keyword,Long tagId,String orderType,Pageable pageable,HttpServletRequest request) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		if (authorId==null) {
 			authorId = Long.parseLong(bundle.getString("platform"));
@@ -97,6 +97,25 @@ public class ProductController extends BaseController {
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
 		pageable.setFilters(filters);
+		if (orderType==null) {
+			orderType = "default";
+		}
+		List<Order> orders = new ArrayList<>();
+		if ("hitsDesc".equals(orderType)) {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		} else
+		if ("dateDesc".equals(orderType)) {
+			orders.add(new Order("createDate",Order.Direction.desc));
+		} else
+		if ("priceAsc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.asc));
+		} else
+		if ("priceDesc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.desc));
+		} else {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		}
+
 		pageable.setOrderDirection(Order.Direction.desc);
 		pageable.setOrderProperty("modifyDate");
 
