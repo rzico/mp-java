@@ -31,8 +31,8 @@ import java.util.*;
  * @author SHOP++ Team
  * @version 3.0
  */
-@Controller("appletCartController")
-@RequestMapping("/applet/cart")
+@Controller("weexCartController")
+@RequestMapping("/weex/cart")
 public class CartController extends BaseController {
 
 	@Resource(name = "memberServiceImpl")
