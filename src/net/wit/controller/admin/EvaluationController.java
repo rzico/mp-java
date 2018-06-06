@@ -1,10 +1,15 @@
 package net.wit.controller.admin;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
@@ -17,6 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import net.wit.entity.BaseEntity.Save;
@@ -370,6 +376,68 @@ public class EvaluationController extends BaseController {
 		return "/admin/evaluation/view/memberView";
 	}
 
+	@RequestMapping(value = "/export", method = RequestMethod.GET)
+	public ModelAndView exprt(Date beginDate, Date endDate,Long gaugeCategoryId,Gauge.UserType userType,Gauge.Type type,String organization,String searchValue, Evaluation.EvalStatus evalStatus, ModelMap model, HttpServletRequest request) throws ServletException, IOException {
 
+		ArrayList<Filter> filters = new ArrayList<>();
+		if (evalStatus!=null) {
+			Filter evalStatusFilter = new Filter("evalStatus", Filter.Operator.eq, evalStatus);
+			filters.add(evalStatusFilter);
+		}
+		if (organization!=null) {
+			Filter organizationFilter = new Filter("attr1", Filter.Operator.eq, organization);
+			filters.add(organizationFilter);
+		}
+		if (userType!=null) {
+			Filter userTypeFilter = new Filter("userType", Filter.Operator.eq, userType);
+			filters.add(userTypeFilter);
+		}
+		if (type!=null) {
+			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
+			filters.add(typeFilter);
+		}
+
+		if (searchValue!=null) {
+			Filter titleFilter = new Filter("title", Filter.Operator.like, "%"+searchValue+"%");
+			filters.add(titleFilter);
+		}
+
+		if (gaugeCategoryId!=null) {
+			Filter categoryFilter = new Filter("gaugeCategory", Filter.Operator.eq, gaugeCategoryService.find(gaugeCategoryId));
+			filters.add(categoryFilter);
+		}
+
+
+		List<Evaluation> data = evaluationService.findList(null,null,filters,null);
+        List<Map<String,String>> maps = new ArrayList<>();
+			for (Evaluation evaluation : data) {
+				Map<String, String> map = new HashMap<>();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:SS");
+				String dateString = sdf.format(new Date());
+				//创建时间
+				map.put("createDate",sdf.format(evaluation.getCreateDate()));
+				//订单编号
+				map.put("sn", evaluation.getSn());
+				//商品编号
+				map.put("title", evaluation.getTitle());
+				//销售金额
+				map.put("attr3", evaluation.getAttr3());
+				//销售数量
+				map.put("answer", evaluation.getAnswer("\n"));
+				//销售金额
+				map.put("score", evaluation.getScore("\n"));
+				maps.add(map);
+			}
+
+		String sheetName = "测评表" + new SimpleDateFormat("yyyyMM").format(new Date());
+
+		String filename = sheetName + ".xls";
+
+		String[] properties = new String[]{"createDate", "sn", "title", "attr3", "answer", "score"};
+
+		String[] titles = new String[]{"测评时间", "订单编号", "量表", "工号/学号", "答题", "得分"};
+
+		return new ModelAndView(new ExcelView(filename, sheetName, properties, titles, null, null, maps, null), model);
+	}
 
 }

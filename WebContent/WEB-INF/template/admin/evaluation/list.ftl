@@ -121,7 +121,6 @@
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="${base}/resources/admin/js/jquery.table2excel.js"></script>
 
 <script type="text/javascript" src="${base}/resources/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
@@ -148,7 +147,7 @@
             "sAjaxSource": "${base}/admin/evaluation/list.jhtml",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
-            "bLengthChange": false, //改变每页显示数据数量
+            "bLengthChange": false,
             language: {
                 "sProcessing": "",
                 "sLengthMenu": "显示 _MENU_ 项结果",
@@ -486,99 +485,44 @@
         });
     }
 
-    function  getExplorer() {
-        var explorer = window.navigator.userAgent ;
-        //ie
-        if (explorer.indexOf("MSIE") >= 0) {
-            return 'ie';
-        }
-        //firefox
-        else if (explorer.indexOf("Firefox") >= 0) {
-            return 'Firefox';
-        }
-        //Chrome
-        else if(explorer.indexOf("Chrome") >= 0){
-            return 'Chrome';
-        }
-        //Opera
-        else if(explorer.indexOf("Opera") >= 0){
-            return 'Opera';
-        }
-        //Safari
-        else if(explorer.indexOf("Safari") >= 0){
-            return 'Safari';
-        }
-    }
-    function method1(tableid) {//整个表格拷贝到EXCEL中
-        if(getExplorer()=='ie') {
-            if(confirm("最多导出1万条记录")) {
-                confirm("IE下请对所有提示框点击‘是’,否则将导致导出失败,谢谢");
-
-                var curTbl = document.getElementById(tableid);
-                var oXL = new ActiveXObject("Excel.Application");
-
-                //创建AX对象excel
-                var oWB = oXL.Workbooks.Add();
-                //获取workbook对象
-                var xlsheet = oWB.Worksheets(1);
-                //激活当前sheet
-                var sel = document.body.createTextRange();
-                sel.moveToElementText(curTbl);
-                //把表格中的内容移到TextRange中
-                sel.select;
-                //全选TextRange中内容
-                sel.execCommand("Copy");
-                //复制TextRange中内容
-                xlsheet.Paste();
-                //粘贴到活动的EXCEL中
-                oXL.Visible = true;
-                //设置excel可见属性
-
-                try {
-                    var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
-                } catch (e) {
-                    print("Nested catch caught " + e);
-                } finally {
-                    oWB.SaveAs(fname);
-
-                    oWB.Close(savechanges = false);
-                    //xls.visible = false;
-                    oXL.Quit();
-                    oXL = null;
-                    //结束excel进程，退出完成
-                    //window.setInterval("Cleanup();",1);
-                    idTmr = window.setInterval("Cleanup();", 1);
-                }
-            }
-        } else {
-            if(confirm("最多导出1万条记录")){
-
-                //导出数据到excel
-                $(".table_export").table2excel({
-                    exclude: ".noExl",
-                    name: "销售明细",
-                    filename: "销售明细",
-                    fileext: ".xls",
-                    exclude_img: true,
-                    exclude_links: false,
-                    exclude_inputs: true
-                });
-            }
-        }
-    }
-    function Cleanup() {
-        window.clearInterval(idTmr);
-        CollectGarbage();
-    }
-
     function exports() {
-        method1("table_export");
+        var _beginDate = $("#datemin").val();
+        var _endDate   = $("#datemax").val();
+        var _searchValue = $("#searchValue").val();
+        /*处理常量*/
+        var _evalStatus =  $('select[name="evalStatus"]').val();
+        var _organization =  $('select[name="organization"]').val();
+
+        var _type =  $('select[name="type"]').val();
+        var _userType =  $('select[name="userType"]').val();
+        var _gaugeCategory =  $('select[name="gaugeCategory"]').val();
+        if (_beginDate==null || _beginDate==undefined) {
+            _beginDate = ""
+        }
+        if (_endDate==null || _endDate==undefined) {
+            _endDate = ""
+        }
+        if (_searchValue==null || _searchValue==undefined) {
+            _searchValue = ""
+        }
+        if (_evalStatus==null || _evalStatus==undefined) {
+            _evalStatus = ""
+        }
+        if (_organization==null || _organization==undefined) {
+            _organization = ""
+        }
+        if (_type==null || _type==undefined) {
+            _type = ""
+        }
+        if (_userType==null || _userType==undefined) {
+            _userType = ""
+        }
+        if (_gaugeCategory==null || _gaugeCategory==undefined) {
+            _gaugeCategory = ""
+        }
+        location.href = "/admin/evaluation/export.jhtml?beginDate="+_beginDate+"&endDate="+_endDate+"&searchValue="+_searchValue+"&evalStatus="+_evalStatus+"&organization="+_organization+'&type='+_type+"&userType="+_userType+"&gaugeCategory="+_gaugeCategory
     }
 
-    function Cleanup() {
-        window.clearInterval(idTmr);
-        CollectGarbage();
-    }
 
     function DateFormat(timestamp, format) {
         var newDate = new Date();

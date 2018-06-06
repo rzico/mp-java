@@ -455,18 +455,24 @@ public class Evaluation extends BaseEntity {
         }
     }
 
-    public String getAnswer() {
+    public String getAnswer(String c) {
+        if (c==null) {
+            c = "<br/>";
+        }
         StringBuilder  sb = new StringBuilder();
         for (EvalAnswer a:getEvalAnswers()) {
-           sb.append("第"+a.getNo()+"题:"+N2A(a.getAnswer())+" 得分:"+a.getScore()+"<br/>");
+           sb.append("第"+a.getNo()+"题:"+N2A(a.getAnswer())+" 得分:"+a.getScore()+c);
         }
         return sb.toString();
     }
 
-    public String getScore() {
+    public String getScore(String c) {
+        if (c==null) {
+            c = "<br/>";
+        }
         StringBuilder  sb = new StringBuilder();
         for (EvalGeneScore a:getEvalGeneScores()) {
-            sb.append(""+a.getName()+":"+a.getScore()+"<br/>");
+            sb.append(""+a.getName()+":"+a.getScore()+c);
         }
         return sb.toString();
     }
