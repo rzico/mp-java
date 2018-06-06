@@ -469,7 +469,7 @@ public class Evaluation extends BaseEntity {
         return sb.toString();
     }
 
-    public String getScore(String c) {
+    public String getScore() {
         return xlsScore(null);
     }
     public String xlsScore(String c) {
