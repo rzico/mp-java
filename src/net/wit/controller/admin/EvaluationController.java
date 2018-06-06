@@ -423,9 +423,9 @@ public class EvaluationController extends BaseController {
 				//销售金额
 				map.put("attr3", evaluation.getAttr3());
 				//销售数量
-				map.put("answer", evaluation.getAnswer("\n"));
+				map.put("answer", evaluation.xlsAnswer("\n"));
 				//销售金额
-				map.put("score", evaluation.getScore("\n"));
+				map.put("score", evaluation.xlsScore("\n"));
 				maps.add(map);
 			}
 

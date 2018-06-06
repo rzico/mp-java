@@ -455,7 +455,10 @@ public class Evaluation extends BaseEntity {
         }
     }
 
-    public String getAnswer(String c) {
+    public String getAnswer() {
+        return xlsAnswer(null);
+    }
+    public String xlsAnswer(String c) {
         if (c==null) {
             c = "<br/>";
         }
@@ -467,6 +470,9 @@ public class Evaluation extends BaseEntity {
     }
 
     public String getScore(String c) {
+        return xlsScore(null);
+    }
+    public String xlsScore(String c) {
         if (c==null) {
             c = "<br/>";
         }
