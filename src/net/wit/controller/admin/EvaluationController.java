@@ -101,6 +101,8 @@ public class EvaluationController extends BaseController {
 		userTypes.add(new MapEntity("school","学校用户"));
 		model.addAttribute("userTypes",userTypes);
 
+		model.addAttribute("gaugeCategorys",gaugeCategoryService.findAll());
+
 		return "/admin/evaluation/list";
 	}
 
@@ -284,7 +286,7 @@ public class EvaluationController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate,Gauge.UserType userType,Gauge.Type type,String organization,String searchValue, Evaluation.EvalStatus evalStatus, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate,Long gaugeCategoryId,Gauge.UserType userType,Gauge.Type type,String organization,String searchValue, Evaluation.EvalStatus evalStatus, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (evalStatus!=null) {
 			Filter evalStatusFilter = new Filter("evalStatus", Filter.Operator.eq, evalStatus);
@@ -306,6 +308,11 @@ public class EvaluationController extends BaseController {
 		if (searchValue!=null) {
 			Filter titleFilter = new Filter("title", Filter.Operator.like, "%"+searchValue+"%");
 			filters.add(titleFilter);
+		}
+
+		if (gaugeCategoryId!=null) {
+			Filter categoryFilter = new Filter("gaugeCategory", Filter.Operator.eq, gaugeCategoryService.find(gaugeCategoryId));
+			filters.add(categoryFilter);
 		}
 
 		Page<Evaluation> page = evaluationService.findPage(beginDate,endDate,pageable);

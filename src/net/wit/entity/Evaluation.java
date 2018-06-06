@@ -112,6 +112,11 @@ public class Evaluation extends BaseEntity {
     @JsonIgnore
     private Gauge gauge;
 
+    /** 量表分类 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private GaugeCategory gaugeCategory;
+
     /** 完成数 */
     @Min(0)
     @NotNull
@@ -416,6 +421,14 @@ public class Evaluation extends BaseEntity {
         this.type = type;
     }
 
+    public GaugeCategory getGaugeCategory() {
+        return gaugeCategory;
+    }
+
+    public void setGaugeCategory(GaugeCategory gaugeCategory) {
+        this.gaugeCategory = gaugeCategory;
+    }
+
     private String N2A(Long a) {
         if (a.equals(1L)) {
             return "A";
@@ -446,6 +459,14 @@ public class Evaluation extends BaseEntity {
         StringBuilder  sb = new StringBuilder();
         for (EvalAnswer a:getEvalAnswers()) {
            sb.append("第"+a.getNo()+"题:"+N2A(a.getAnswer())+" 得分:"+a.getScore()+"<br/>");
+        }
+        return sb.toString();
+    }
+
+    public String getScore() {
+        StringBuilder  sb = new StringBuilder();
+        for (EvalGeneScore a:getEvalGeneScores()) {
+            sb.append(""+a.getName()+":"+a.getScore()+"<br/>");
         }
         return sb.toString();
     }

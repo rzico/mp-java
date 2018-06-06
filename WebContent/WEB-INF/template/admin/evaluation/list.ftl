@@ -70,6 +70,16 @@
 				</select>
 			</span>
     [/#if]
+    [#if gaugeCategorys??]
+        <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
+				<select name="gaugeCategory" class="select" style="background-color: #FFFFFF;">
+					<option value="">分类</option>
+                    [#list gaugeCategorys as gaugeCategory]
+                        <option value="${gaugeCategory.id}">${gaugeCategory.name}</option>
+                    [/#list]
+				</select>
+			</span>
+    [/#if]
 
     [#if organizations??]
         <span class="select-box" style="background-color:#FFFFFF;width:100px;height:32px;">
@@ -167,6 +177,7 @@
                 $(row).children('td').attr('style', 'text-align: center;')
                 $(row).children('td').eq(5).attr('style', 'text-align: left;');
                 $(row).children('td').eq(13).attr('style', 'width: 150px;');
+                $(row).children('td').eq(14).attr('style', 'width: 100px;');
 
             },
             "aoColumns": [
@@ -241,6 +252,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "score",
+                    "sTitle": "得分",
+                    "sClass": "center"
+                },
+                {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -286,7 +302,7 @@
                     }
                 },
                 {
-                    "aTargets": [14],
+                    "aTargets": [15],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='详情' href='javascript:;' onclick=\"edit('首页 &gt; 订单管理 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>" +
@@ -298,7 +314,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 14]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 15]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
@@ -311,6 +327,7 @@
 
                 var _type =  $('select[name="type"]').val();
                 var _userType =  $('select[name="userType"]').val();
+                var _gaugeCategory =  $('select[name="gaugeCategory"]').val();
 
                 var index = layer.msg('加载中', {
                     icon: 16
@@ -327,6 +344,7 @@
                         "type":_type,
                         "userType":_userType,
                         "organization":_organization,
+                        "gaugeCategoryId":_gaugeCategory,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

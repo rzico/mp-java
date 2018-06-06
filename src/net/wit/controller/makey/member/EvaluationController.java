@@ -132,6 +132,7 @@ public class EvaluationController extends BaseController {
         eval.setType(gauge.getType());
         eval.setSeconds(0L);
         eval.setTotal(new Long(gauge.getGaugeQuestions().size()));
+        eval.setGaugeCategory(gauge.getGaugeCategory());
         if (xuid!=null) {
             Member promoter = memberService.find(xuid);
             if (promoter!=null) {
