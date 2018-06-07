@@ -74,13 +74,13 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "")
     public
     @ResponseBody
-    Message login(String code,String nickName,String logo,Long mid, HttpServletRequest request, HttpServletResponse response) {
+    Message login(String code,String nickName,String logo,Long xmid, HttpServletRequest request, HttpServletResponse response) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
         String appid = bundle.getString("applet.appid");
         String appsecret = bundle.getString("applet.secret");
-        if (mid!=null) {
-           Member agent = memberService.find(mid);
+        if (xmid!=null) {
+           Member agent = memberService.find(xmid);
            if (agent.getTopic()==null) {
                return Message.error("没有开通");
            }
@@ -104,7 +104,7 @@ public class LoginController extends BaseController {
             String sessionKey = result.get("session_key").toString();
             String openId = result.get("openid").toString();
             String unionId = "#";
-            if (result.containsKey("unionid") && (mid==null)) {
+            if (result.containsKey("unionid") && (xmid==null)) {
                 unionId = result.get("unionid").toString();
             }
 
@@ -112,8 +112,11 @@ public class LoginController extends BaseController {
 //            if (unionId!=null && !"#".equals(unionId)) {
 //                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
 //            } else {
-                bindUser = bindUserService.findOpenId(openId,appid,BindUser.Type.weixin);
+            bindUser = bindUserService.findOpenId(openId,appid,BindUser.Type.weixin);
 //            }
+            if (bindUser==null && !"#".equals(unionId)) {
+                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
+            }
 
             Member member = null;
             if (bindUser!=null) {
@@ -225,12 +228,31 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("/isAuthenticated")
     @ResponseBody
-    public Message authorized(String scope,HttpServletRequest request, HttpServletResponse response) {
+    public Message authorized(String scope,Long xmid, HttpServletRequest request, HttpServletResponse response) {
         Map<String,Object> data = new HashMap<String,Object>();
         Member member = memberService.getCurrent();
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String appid = bundle.getString("applet.appid");
+        String appsecret = bundle.getString("applet.secret");
+        if (xmid!=null) {
+            Member agent = memberService.find(xmid);
+            if (agent.getTopic()==null) {
+                return Message.error("没有开通");
+            }
+            if (agent.getTopic().getConfig()==null)  {
+                return Message.error("没有设置");
+            }
+            if (agent.getTopic().getConfig().getAppetAppId()==null)  {
+                return Message.error("没有设置");
+            }
+
+            appid = agent.getTopic().getConfig().getAppetAppId();
+            appsecret = agent.getTopic().getConfig().getAppetAppSerect();
+        }
+
         if ("user".equals(scope)) {
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-            BindUser bindUser = bindUserService.findMember(member,bundle.getString("weixin.appid"),BindUser.Type.weixin);
+            BindUser bindUser = bindUserService.findMember(member,appid,BindUser.Type.weixin);
             data.put("loginStatus",member!=null && bindUser!=null && !bindUser.getUnionId().equals("#"));
         } else {
             data.put("loginStatus", member != null);
