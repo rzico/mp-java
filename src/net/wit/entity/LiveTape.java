@@ -198,4 +198,12 @@ public class LiveTape extends BaseEntity {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+
+	public Long getLiveTime() {
+		if (getEndTime()!=null) {
+			return (getEndTime().getTime()-getCreateDate().getTime()) / 1000 /60;
+		} else {
+			return 0L;
+		}
+	}
 }

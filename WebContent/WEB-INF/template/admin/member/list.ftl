@@ -206,6 +206,11 @@
                     "sTitle": "是否锁定",
                     "sClass": "center"
                 },
+                {
+                    "mData": "id",
+                    "sTitle": "功能",
+                    "sClass": "center"
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
@@ -305,10 +310,20 @@
                         }
                     }
                 },
+                {
+                    "aTargets": [16],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"deposit(this,'"+data.id+"');\" name=\"\">账单</button>"
+                        }else{
+                            return "";
+                        }
+                    }
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [16],
+                        "aTargets": [17],
                         "mRender": function (data, display, row) {
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 用户管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
@@ -322,7 +337,7 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 7, 9, 15]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 7, 9, 16,17]}// 制定列不参与排序
                 [#else]
                     {"orderable": false, "aTargets": [0, 7, 9]}// 制定列不参与排序
                 [/#if]
@@ -400,6 +415,15 @@
             type:2,
             title:title,
             content:url
+        });
+        layer.full(index);
+    }
+    /*编辑*/
+    function deposit(title, id) {
+        var index = layer.open({
+            type:2,
+            title:"账单",
+            content:"../deposit/index.jhtml?memberId="+id
         });
         layer.full(index);
     }

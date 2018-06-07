@@ -324,6 +324,7 @@ public class LiveController extends BaseController {
 
         LiveTapeModel model = new LiveTapeModel();
         model.bind(liveTape);
+        model.setGift(live.getGiftTotal());
 
         model.setFans(new Long(member.getFans().size()));
         model.setFollow(new Long(member.getFollows().size()));
@@ -422,6 +423,7 @@ public class LiveController extends BaseController {
         model.setFans(new Long(live.getMember().getFans().size()));
         model.setFollow(new Long(live.getMember().getFollows().size()));
         model.setVip(live.getMember().getVip());
+        model.setGift(live.getGiftTotal());
 
         return Message.success(model,"success");
     }
@@ -443,10 +445,12 @@ public class LiveController extends BaseController {
         }
         LiveTape liveTape = live.getLiveTape();
 
-        live.setViewerCount(live.getViewerCount()-1);
-        liveService.update(live);
+//        live.setViewerCount(live.getViewerCount()-1);
+//        liveService.update(live);
 
-        liveTape.setViewerCount(liveTape.getViewerCount()-1);
+        if (liveTape.getViewerCount()>0) {
+            liveTape.setViewerCount(liveTape.getViewerCount() - 1);
+        }
         liveTapeService.update(liveTape);
 
         return Message.success("success");

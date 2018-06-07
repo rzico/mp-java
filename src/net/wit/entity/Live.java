@@ -104,6 +104,12 @@ public class Live extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '礼物数'")
 	private Long gift;
 
+	/** 礼物合计 */
+	@NotNull
+	@Min(0)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '礼物合计'")
+	private Long giftTotal;
+
 	public Member getMember() {
 		return member;
 	}
@@ -224,6 +230,13 @@ public class Live extends BaseEntity {
 		this.online = online;
 	}
 
+	public Long getGiftTotal() {
+		return giftTotal;
+	}
+
+	public void setGiftTotal(Long giftTotal) {
+		this.giftTotal = giftTotal;
+	}
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {

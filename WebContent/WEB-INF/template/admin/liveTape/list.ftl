@@ -45,13 +45,13 @@
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20">
-        <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; LiveTape &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增LiveTape</a>
-                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-        </span>
-    </div>
+    <#--<div class="cl pd-5 bg-1 bk-gray mt-20">-->
+        <#--<span class="l">-->
+                <#--<a href="javascript:;" onclick="add('首页 &gt; LiveTape &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">-->
+                <#--<i class="Hui-iconfont">&#xe600;</i> 新增LiveTape</a>-->
+                <#--<a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>-->
+        <#--</span>-->
+    <#--</div>-->
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -147,38 +147,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "frontcover",
-                    "sTitle": "封面",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "gift",
-                    "sTitle": "礼物数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "headpic",
-                    "sTitle": "头像",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "hlsPlayUrl",
-                    "sTitle": "回放地址",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "likeCount",
-                    "sTitle": "点赞数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "location",
-                    "sTitle": "位置",
+                    "mData": "title",
+                    "sTitle": "标题",
                     "sClass": "center"
                 },
                 {
@@ -187,38 +157,28 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "playUrl",
-                    "sTitle": "观看地址",
+                    "mData": "endTime",
+                    "sTitle": "结束时间",
                     "sClass": "center"
                 },
                 {
-                    "mData": "startTime",
-                    "sTitle": "开始时间",
+                    "mData": "liveTime",
+                    "sTitle": "时长(分)",
                     "sClass": "center"
                 },
                 {
-                    "mData": "title",
-                    "sTitle": "标题",
+                    "mData": "gift",
+                    "sTitle": "礼物数",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "likeCount",
+                    "sTitle": "点赞数",
                     "sClass": "center"
                 },
                 {
                     "mData": "viewerCount",
                     "sTitle": "在线数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapLiveGroup",
-                    "sTitle": "LiveGroup",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
                     "sClass": "center"
                 }
             ],
@@ -239,52 +199,17 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
-                {
-                    "aTargets": [3],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [12],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [15],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','liveGroupView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [16],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [17],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; LiveTape &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
-                        }else{
-                            return "";
-                        }
-                    }
 
+                {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                    }
                 },
+
+
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 15, 16, 17]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue

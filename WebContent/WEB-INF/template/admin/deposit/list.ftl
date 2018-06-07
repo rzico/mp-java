@@ -96,7 +96,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/deposit/list.jhtml",
+            "sAjaxSource": "${base}/admin/deposit/list.jhtml?memberId=${memberId}",
             "aaSorting": [[1, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -144,13 +144,13 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
+                    "mData": "摘要",
+                    "sTitle": "备注",
                     "sClass": "center"
                 },
                 {
-                    "mData": "balance",
-                    "sTitle": "当前余额",
+                    "mData": "type",
+                    "sTitle": "类型",
                     "sClass": "center"
                 },
                 {
@@ -163,39 +163,9 @@
                     "sTitle": "支出金额",
                     "sClass": "center"
                 },
-                {
-                    "mData": "memo",
-                    "sTitle": "备注",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "operator",
-                    "sTitle": "操作员",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "type",
-                    "sTitle": "类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapPayment",
-                    "sTitle": "Payment",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapRefunds",
-                    "sTitle": "Refunds",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "deleted",
-                    "sTitle": "是否删除",
+                 {
+                    "mData": "balance",
+                    "sTitle": "当前余额",
                     "sClass": "center"
                 },
                 {
@@ -221,14 +191,9 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
+
                 {
-                    "aTargets": [3],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [9],
+                    "aTargets": [4],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -243,60 +208,8 @@
                         }
                     }
                 },
-                {
-                    "aTargets": [10],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [11],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','paymentView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [12],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','refundsView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [13],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [14],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 账单管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
-                        }else{
-                            return "";
-                        }
-                    }
-
-                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 10, 11, 12, 14]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/searchValue
