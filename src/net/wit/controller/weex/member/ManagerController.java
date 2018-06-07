@@ -77,7 +77,7 @@ public class ManagerController extends BaseController {
             Enterprise ent = admin.getEnterprise();
             Topic topic = ent.getMember().getTopic();
             model.setIsShop(true);
-            if (topic.equals(Topic.Status.success)) {
+            if (topic.getStatus().equals(Topic.Status.success)) {
                 model.setActivated(true);
             } else {
                 model.setActivated(false);

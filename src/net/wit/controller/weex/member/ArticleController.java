@@ -235,6 +235,7 @@ public class ArticleController extends BaseController {
             article.setIsReview(true);
             article.setIsTop(false);
             article.setIsReward(false);
+            article.setDragonStatus(Article.DragonStatus.none);
             article.setTemplate(templateService.findDefault(Template.Type.article));
             article.setMember(member);
             article.setMediaType(articleType);

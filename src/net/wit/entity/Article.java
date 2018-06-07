@@ -70,6 +70,15 @@ public class Article extends BaseEntity{
         video
     };
 
+    public static enum DragonStatus{
+        /** 无  */
+        none,
+        /** 开启 */
+        enabled,
+        /** 关闭 */
+        disabled
+    };
+
     /** 类型 */
     @NotNull
     @Column(columnDefinition="int(11) comment '类型 {html:系统公告,article:用户图文,product:商品详情}'")
@@ -262,6 +271,13 @@ public class Article extends BaseEntity{
     @JsonIgnore
     @Where(clause="status=0")
     private List<Dragon> dragons = new ArrayList<>();
+
+
+    /** 接龙状态 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '接龙状态 {none:无,enabled:开启, disabled:关闭}'")
+    private DragonStatus dragonStatus;
+
 
     /** 投票项 */
     private String votes;
@@ -548,6 +564,14 @@ public class Article extends BaseEntity{
 
     public void setDragons(List<Dragon> dragons) {
         this.dragons = dragons;
+    }
+
+    public DragonStatus getDragonStatus() {
+        return dragonStatus;
+    }
+
+    public void setDragonStatus(DragonStatus dragonStatus) {
+        this.dragonStatus = dragonStatus;
     }
 
     public MapEntity getMapTemplate() {
