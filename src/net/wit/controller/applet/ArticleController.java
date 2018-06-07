@@ -372,7 +372,7 @@ public class ArticleController extends BaseController {
         }
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
-        filters.add(new Filter("dragonStatus", Filter.Operator.ne, Article.DragonStatus.enabled));
+        filters.add(new Filter("dragonStatus", Filter.Operator.eq, Article.DragonStatus.enabled));
         pageable.setFilters(filters);
         pageable.setOrderProperty("modifyDate");
         pageable.setOrderDirection(Order.Direction.desc);
