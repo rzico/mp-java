@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity -  直播数据
@@ -109,6 +111,14 @@ public class Live extends BaseEntity {
 	@Min(0)
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '礼物合计'")
 	private Long giftTotal;
+
+	/** 文章标签*/
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "wx_live_tag")
+	@OrderBy("orders asc")
+	@JsonIgnore
+	private List<Tag> tags = new ArrayList<Tag>();
+
 
 	public Member getMember() {
 		return member;
@@ -236,6 +246,14 @@ public class Live extends BaseEntity {
 
 	public void setGiftTotal(Long giftTotal) {
 		this.giftTotal = giftTotal;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 
 	public MapEntity getMapMember() {

@@ -80,6 +80,7 @@ public class LiveController extends BaseController {
 		statuss.add(new MapEntity("success","开通"));
 		statuss.add(new MapEntity("failure","关闭"));
 		model.addAttribute("statuss",statuss);
+		model.addAttribute("tags",tagService.findList(Tag.Type.live));
 
 		return "/admin/live/list";
 	}
@@ -97,6 +98,7 @@ public class LiveController extends BaseController {
 		statuss.add(new MapEntity("success","开通"));
 		statuss.add(new MapEntity("failure","关闭"));
 		model.addAttribute("statuss",statuss);
+		model.addAttribute("tags",tagService.findList(Tag.Type.live));
 
 
 		model.addAttribute("data",liveService.find(id));
@@ -161,6 +163,7 @@ public class LiveController extends BaseController {
 		statuss.add(new MapEntity("failure","关闭"));
 		model.addAttribute("statuss",statuss);
 
+		model.addAttribute("tags",tagService.findList(Tag.Type.live));
 
 		model.addAttribute("data",liveService.find(id));
 
@@ -173,12 +176,14 @@ public class LiveController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Live live){
+	public Message update(Live live,Long [] tagIds){
 		Live entity = liveService.find(live.getId());
 
 		entity.setTitle(live.getTitle());
 
 		entity.setStatus(live.getStatus());
+
+		entity.setTags(tagService.findList(tagIds));
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");

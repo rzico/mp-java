@@ -182,8 +182,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "location",
-                    "sTitle": "位置",
+                    "mData": "viewerCount",
+                    "sTitle": "人气指数",
                     "sClass": "center"
                 },
                 {
@@ -191,12 +191,7 @@
                     "sTitle": "状态",
                     "sClass": "center"
                 },
-                {
-                    "mData": "viewerCount",
-                    "sTitle": "在线数",
-                    "sClass": "center"
-                },
-                {
+                 {
                     "mData": "id",
                     "sTitle": "",
                     "sClass": "center"
@@ -231,7 +226,7 @@
                     }
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [10],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if  statuss??]
