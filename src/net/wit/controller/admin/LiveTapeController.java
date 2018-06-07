@@ -218,7 +218,10 @@ public class LiveTapeController extends BaseController {
 
 		List<Filter> filters = pageable.getFilters();
 		if (liveId!=null) {
-			filters.add(new Filter("live", Filter.Operator.eq, liveService.find(liveId)));
+			Live live = liveService.find(liveId);
+			if (live!=null) {
+				filters.add(new Filter("live", Filter.Operator.eq,live));
+			}
 		}
 
 		Page<LiveTape> page = liveTapeService.findPage(beginDate,endDate,pageable);

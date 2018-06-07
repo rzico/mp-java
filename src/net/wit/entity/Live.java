@@ -38,13 +38,11 @@ public class Live extends BaseEntity {
 
 	/** 主播 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
 	@JsonIgnore
 	private Member member;
 
 	/** 最后一次直播 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '最后一次直播'")
 	@JsonIgnore
 	private LiveTape liveTape;
 

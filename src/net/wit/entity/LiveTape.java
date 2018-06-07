@@ -25,7 +25,7 @@ public class LiveTape extends BaseEntity {
 	private static final long serialVersionUID = 617L;
 
 	/** 房间 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Live live;
 
@@ -91,12 +91,12 @@ public class LiveTape extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '礼物数'")
 	private Long gift;
 
-//	/** 结束时间 */
-//	@DateBridge(resolution = Resolution.SECOND)
-//	@Column(columnDefinition="datetime comment '结束时间'")
-//	@JsonIgnore
-//	private Date endTime;
-//
+	/** 结束时间 */
+	@DateBridge(resolution = Resolution.SECOND)
+	@Column(columnDefinition="datetime comment '结束时间'")
+	@JsonIgnore
+	private Date endTime;
+
 	public String getTitle() {
 		return title;
 	}
@@ -184,14 +184,14 @@ public class LiveTape extends BaseEntity {
 	public void setGift(Long gift) {
 		this.gift = gift;
 	}
-//
-//	public Date getEndTime() {
-//		return endTime;
-//	}
-//
-//	public void setEndTime(Date endTime) {
-//		this.endTime = endTime;
-//	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 
 	public Live getLive() {
 		return live;
@@ -209,20 +209,20 @@ public class LiveTape extends BaseEntity {
 		this.member = member;
 	}
 
-	//	public MapEntity getMapMember() {
-//		if (getMember() != null) {
-//			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
-//		} else {
-//			return null;
-//		}
-//	}
-//
-//
-//	public Long getLiveTime() {
-//		if (getEndTime()!=null) {
-//			return (getEndTime().getTime()-getCreateDate().getTime()) / 1000 /60;
-//		} else {
-//			return 0L;
-//		}
-//	}
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
+		} else {
+			return null;
+		}
+	}
+
+
+	public Long getLiveTime() {
+		if (getEndTime()!=null) {
+			return (getEndTime().getTime()-getCreateDate().getTime()) / 1000 /60;
+		} else {
+			return 0L;
+		}
+	}
 }

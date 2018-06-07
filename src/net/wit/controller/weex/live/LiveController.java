@@ -352,7 +352,7 @@ public class LiveController extends BaseController {
         LiveTape liveTape = live.getLiveTape();
 
         liveTape.setTitle(live.getTitle());
-//        liveTape.setEndTime(new Date());
+        liveTape.setEndTime(new Date());
         liveTapeService.save(liveTape);
 
         live.setOnline("0");
