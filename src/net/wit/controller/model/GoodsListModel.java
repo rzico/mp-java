@@ -32,6 +32,8 @@ public class GoodsListModel extends BaseModel implements Serializable {
     private Integer availableStock;
     /** 标签名 */
     private List<TagModel> tags = new ArrayList<TagModel>();
+    /** 商品 */
+    private List<PromotionListModel> promotions;
 
     public Long getId() {
         return id;
@@ -106,6 +108,14 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.tags = tags;
     }
 
+    public List<PromotionListModel> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(List<PromotionListModel> promotions) {
+        this.promotions = promotions;
+    }
+
     public void bind(Goods goods) {
 
         this.id = goods.getId();
@@ -128,6 +138,9 @@ public class GoodsListModel extends BaseModel implements Serializable {
         this.review = goods.getReview();
 
         this.tags = TagModel.bindList(product.getTags());
+
+        this.promotions = PromotionListModel.bindList(goods.getPromotions());
+
     }
 
 

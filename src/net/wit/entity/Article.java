@@ -270,6 +270,7 @@ public class Article extends BaseEntity{
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     @Where(clause="status=0")
+    @OrderBy("createDate desc")
     private List<Dragon> dragons = new ArrayList<>();
 
 

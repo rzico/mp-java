@@ -4,6 +4,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.wit.entity.Article;
 import net.wit.entity.ArticleFavorite;
+import net.wit.entity.Dragon;
 import net.wit.entity.Product;
 
 import java.io.Serializable;
@@ -49,6 +50,8 @@ public class ArticleListModel extends BaseModel implements Serializable {
     private List<TagModel> tags = new ArrayList<TagModel>();
     /** 图集 */
     private List<String> images = new ArrayList<String>();
+    /** 接龙 */
+    private String promotion;
 
     public Long getId() {
         return id;
@@ -195,6 +198,14 @@ public class ArticleListModel extends BaseModel implements Serializable {
         this.images = images;
     }
 
+    public String getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.authorId = article.getMember().getId();
@@ -215,6 +226,14 @@ public class ArticleListModel extends BaseModel implements Serializable {
             if (product!=null) {
                 this.price = product.getPrice();
                 this.marketPrice = product.getMarketPrice();
+            }
+        }
+        if (article.getDragonStatus().equals(Article.DragonStatus.none)) {
+            Dragon dragon = article.getDragons().get(0);
+            if (dragon.getTitle().equals(Dragon.Type.buying)) {
+                this.promotion = "拼团";
+            } else {
+                this.promotion = "预订";
             }
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
