@@ -55,6 +55,9 @@ public class LoginController extends BaseController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
     /**
      * 登录页面
      */
@@ -83,8 +86,9 @@ public class LoginController extends BaseController {
                 return Message.error("无效用户名");
             }
 
-            if (admin.getEnterprise()!=null && !admin.getEnterprise().getId().equals(1L)) {
-                return Message.error("不是管理员，不能登录");
+            Role role = roleService.find(1L);
+            if (!admin.getRoles().contains(role)) {
+                return Message.error("管理员才能登录");
             }
 
             String password = rsaService.decryptParameter("enPassword", request);

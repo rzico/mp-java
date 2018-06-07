@@ -35,7 +35,9 @@ public class Tag extends OrderEntity{
         /* 商品 */
         product,
         /* 专栏 */
-        topic
+        topic,
+        /* 直播 */
+        live
     }
 
     /*名称*/
