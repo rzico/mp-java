@@ -67,6 +67,12 @@ public class ArticleController extends BaseController {
     @Resource(name = "articleCatalogServiceImpl")
     private ArticleCatalogService articleCatalogService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
     /**
      * 文章预览详情
      */
@@ -146,6 +152,18 @@ public class ArticleController extends BaseController {
             MemberFollow memberFollow = memberFollowService.find(member, article.getMember());
             model.setHasFollow(memberFollow!=null);
 
+        }
+
+
+        if (member!=null) {
+            Admin admin = adminService.findByMember(member);
+            if (admin != null && admin.getEnterprise() != null) {
+                Role role = roleService.find(1L);
+                if (admin.getRoles().contains(role)) {
+                    member = admin.getEnterprise().getMember();
+                }
+            }
+            model.setCanEdit(article.getMember().equals(member));
         }
         return Message.bind(model,request);
     }

@@ -35,6 +35,11 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
     private Boolean hasFavorite;
     /** 是否关注 */
     private Boolean hasFollow;
+    /** 能编辑 */
+    private Boolean canEdit;
+    /** 能复制 */
+    private Boolean canCopy;
+
 
     public Long getId() {
         return id;
@@ -141,6 +146,22 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         this.dragon = dragon;
     }
 
+    public Boolean getCanEdit() {
+        return canEdit;
+    }
+
+    public void setCanEdit(Boolean canEdit) {
+        this.canEdit = canEdit;
+    }
+
+    public Boolean getCanCopy() {
+        return canCopy;
+    }
+
+    public void setCanCopy(Boolean canCopy) {
+        this.canCopy = canCopy;
+    }
+
     public void bind(Article article) {
         this.id = article.getId();
         this.hits = article.getHits();
@@ -159,6 +180,8 @@ public class ArticlePreviewModel extends BaseModel implements Serializable {
         } else {
             this.template = "1001";
         }
+        this.canCopy = false;
+        this.canEdit = false;
     }
 
 }

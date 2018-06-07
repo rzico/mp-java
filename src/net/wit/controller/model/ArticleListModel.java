@@ -228,7 +228,7 @@ public class ArticleListModel extends BaseModel implements Serializable {
                 this.marketPrice = product.getMarketPrice();
             }
         }
-        if (article.getDragonStatus().equals(Article.DragonStatus.none)) {
+        if (article.getDragonStatus().equals(Article.DragonStatus.enabled)) {
             Dragon dragon = article.getDragons().get(0);
             if (dragon.getTitle().equals(Dragon.Type.buying)) {
                 this.promotion = "拼团";
