@@ -204,13 +204,17 @@ public class ArticleController extends BaseController {
                         m.setPrice(product.getPrice());
                         m.setThumbnail(product.getThumbnail());
                         m.setMarketPrice(product.getMarketPrice());
+                        if (member!=null) {
+                            if (member.leaguer(product.getMember())) {
+                                m.setRebate(product.calcRebate());
+                            }
+                        } else {
+                            m.setRebate(BigDecimal.ZERO);
+                        }
                     }
                 }
             }
         }
-
-        Map<String,Object> data = new HashMap<String,Object>();
-        data.put("article",model);
 
         Dragon dragon = dragonService.find(article,member);
 
@@ -224,27 +228,24 @@ public class ArticleController extends BaseController {
             dragon = dragonService.find(article,article.getMember());
         }
 
-        ArticlePreviewModel option =new ArticlePreviewModel();
-        option.bind(article);
         if (member!=null) {
 
             List<Filter> filters = new ArrayList<Filter>();
             filters.add(new Filter("member", Filter.Operator.eq,member));
             filters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleFavorite> favorites = articleFavoriteService.findList(null,null,filters,null);
-            option.setHasFavorite(favorites.size()>0);
+            model.setHasFavorite(favorites.size()>0);
 
             List<Filter> laudfilters = new ArrayList<Filter>();
             laudfilters.add(new Filter("member", Filter.Operator.eq,member));
             laudfilters.add(new Filter("article", Filter.Operator.eq,article));
             List<ArticleLaud> lauds = articleLaudService.findList(null,null,laudfilters,null);
-            option.setHasLaud(lauds.size()>0);
+            model.setHasLaud(lauds.size()>0);
 
             MemberFollow memberFollow = memberFollowService.find(member, article.getMember());
-            option.setHasFollow(memberFollow!=null);
+            model.setHasFollow(memberFollow!=null);
 
         }
-        data.put("option",option);
 
         if (dragon!=null && dragon.getStatus().equals(Dragon.Status.normal)) {
             model.setDragonName(dragon.getMember().displayName());
@@ -255,7 +256,7 @@ public class ArticleController extends BaseController {
 
         }
 
-        return Message.bind(data,request);
+        return Message.bind(model,request);
    }
 
      /**
@@ -371,8 +372,7 @@ public class ArticleController extends BaseController {
         }
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
-        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
-        filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
+        filters.add(new Filter("dragonStatus", Filter.Operator.ne, Article.DragonStatus.enabled));
         pageable.setFilters(filters);
         pageable.setOrderProperty("modifyDate");
         pageable.setOrderDirection(Order.Direction.desc);
