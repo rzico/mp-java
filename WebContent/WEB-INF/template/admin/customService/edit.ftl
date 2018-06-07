@@ -85,6 +85,15 @@
         </div>
 
             <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">是否在线：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="checkbox" name="online" id="online" value="true"[#if data.online] checked[/#if]>
+                    <input type="hidden" name="_online" value="false" />
+                    <label for="isPublish">&nbsp;</label>
+                </div>
+            </div>
+
+            <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">描述：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="${data.description}" placeholder="" id="description" name="description">
