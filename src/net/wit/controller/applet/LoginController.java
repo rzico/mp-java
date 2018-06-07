@@ -234,7 +234,6 @@ public class LoginController extends BaseController {
 
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String appid = bundle.getString("applet.appid");
-        String appsecret = bundle.getString("applet.secret");
         if (xmid!=null) {
             Member agent = memberService.find(xmid);
             if (agent.getTopic()==null) {
@@ -248,7 +247,6 @@ public class LoginController extends BaseController {
             }
 
             appid = agent.getTopic().getConfig().getAppetAppId();
-            appsecret = agent.getTopic().getConfig().getAppetAppSerect();
         }
 
         if ("user".equals(scope)) {
