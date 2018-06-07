@@ -69,7 +69,9 @@ public class CustomServiceController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Pageable pageable, HttpServletRequest request){
-        List<CustomService> data = customServiceService.findAll();
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("online", Filter.Operator.eq,true));
+        List<CustomService> data = customServiceService.findList(null,null,filters,null);
         return Message.bind(CustomServiceModel.bindList(data),request);
     }
 
