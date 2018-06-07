@@ -25,7 +25,7 @@ public class LiveTape extends BaseEntity {
 	private static final long serialVersionUID = 617L;
 
 	/** 房间 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Live live;
 

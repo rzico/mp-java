@@ -216,20 +216,13 @@ public class LiveTapeController extends BaseController {
 	@ResponseBody
 	public Message list(Long liveId,Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
 
-		List<Filter> filters = pageable.getFilters();
+		Live live = null;
 		if (liveId!=null) {
-			Live live = liveService.find(liveId);
-			if (live!=null) {
-				filters.add(new Filter("live", Filter.Operator.eq,live));
-			}
+			live = liveService.find(liveId);
 		}
 
-		Page<LiveTape> page = liveTapeService.findPage(beginDate,endDate,pageable);
-//		for (LiveTape tape:page.getContent()) {
-//			if (tape.getEndTime()==null) {
-//				tape.setEndTime(tape.getCreateDate());
-//			}
-//		}
+		Page<LiveTape> page = liveTapeService.findPage(beginDate,endDate,live,pageable);
+
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	

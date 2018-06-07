@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Live;
 import net.wit.entity.LiveTape;
 
 
@@ -26,5 +27,5 @@ public interface LiveTapeDao extends BaseDao<LiveTape, Long> {
 	 * @param pageable
 	 * @return Page<LiveTape>
 	 */
-	Page<LiveTape> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<LiveTape> findPage(Date beginDate, Date endDate, Live live, Pageable pageable);
 }
