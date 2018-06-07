@@ -123,8 +123,8 @@ public class LoginController extends BaseController {
                 member = bindUser.getMember();
             }
             if (member==null) {
-//                if ("#".equals(unionId) && (mid==null)) {
-//                   return Message.error("无效授权");
+//                if ("#".equals(unionId) && (xmid==null)) {
+//                   return Message.error(Message.SESSION_INVAILD);
 //                }
                 member = new Member();
                 member.setNickName(nickName);
