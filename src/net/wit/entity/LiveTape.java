@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Resolution;
 
@@ -25,11 +26,13 @@ public class LiveTape extends BaseEntity {
 	/** 房间 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '房间'")
+	@JsonIgnore
 	private Live live;
 
 	/** 主播 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
+	@JsonIgnore
 	private Member member;
 
 	/**  标题  */

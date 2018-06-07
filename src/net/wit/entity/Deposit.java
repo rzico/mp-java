@@ -12,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.MapEntity;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -94,41 +95,49 @@ public class Deposit extends BaseEntity {
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
+	@JsonIgnore
 	private Member member;
 
 	/** 商家 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '商家'")
+	@JsonIgnore
 	private Member seller;
 
 	/** 收款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '收款单'")
+	@JsonIgnore
 	private Payment payment;
 
 	/** 退款单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '退款单'")
+	@JsonIgnore
 	private Refunds refunds;
 
 	/** 转账单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '转账单'")
+	@JsonIgnore
 	private Transfer transfer;
 
 	/** 充值单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '充值单'")
+	@JsonIgnore
 	private Recharge recharge;
 
 	/** 线下收单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) comment '线下收单'")
+	@JsonIgnore
 	private PayBill payBill;
 
 	/** 线上订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orders", updatable = false)
+	@JsonIgnore
 	private Order order;
 
 	/** 是否删除 */

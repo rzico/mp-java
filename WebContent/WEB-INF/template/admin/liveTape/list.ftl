@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>LiveTape</title>
+    <title>直播记录</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> LiveTape <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 直播记录 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -91,7 +91,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/liveTape/list.jhtml",
+            "sAjaxSource": "${base}/admin/liveTape/list.jhtml?liveId=${liveId}",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -121,13 +121,6 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(5).attr('style', 'text-align: left;');
-                $(row).children('td').eq(7).attr('style', 'text-align: left;');
-                $(row).children('td').eq(8).attr('style', 'text-align: left;');
-                $(row).children('td').eq(10).attr('style', 'text-align: left;');
-                $(row).children('td').eq(11).attr('style', 'text-align: left;');
-                $(row).children('td').eq(12).attr('style', 'text-align: left;');
-                $(row).children('td').eq(14).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -212,7 +205,7 @@
                 {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchvalue").val();
@@ -228,7 +221,6 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',

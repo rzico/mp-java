@@ -141,21 +141,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "amount",
-                    "sTitle": "兑换金额",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "gift",
-                    "sTitle": "印票数",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "headpic",
-                    "sTitle": "头像",
-                    "sClass": "center"
-                },
-                {
                     "mData": "nickname",
                     "sTitle": "昵称",
                     "sClass": "center"
@@ -163,6 +148,16 @@
                 {
                     "mData": "mapMember",
                     "sTitle": "主播",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "amount",
+                    "sTitle": "兑换金额",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "gift",
+                    "sTitle": "印票数",
                     "sClass": "center"
                 },
                 {
@@ -195,7 +190,7 @@
                     }
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
