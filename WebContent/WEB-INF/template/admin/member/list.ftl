@@ -314,7 +314,7 @@
                     "aTargets": [16],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"deposit(this,'"+data.id+"');\" name=\"\">账单</button>"
+                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"deposit(this,'"+data+"');\" name=\"\">账单</button>"
                         }else{
                             return "";
                         }

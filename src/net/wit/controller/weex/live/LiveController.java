@@ -352,7 +352,7 @@ public class LiveController extends BaseController {
         LiveTape liveTape = live.getLiveTape();
 
         liveTape.setTitle(live.getTitle());
-        liveTape.setEndTime(new Date());
+//        liveTape.setEndTime(new Date());
         liveTapeService.save(liveTape);
 
         live.setOnline("0");
@@ -423,7 +423,6 @@ public class LiveController extends BaseController {
         model.setFans(new Long(live.getMember().getFans().size()));
         model.setFollow(new Long(live.getMember().getFollows().size()));
         model.setVip(live.getMember().getVip());
-        model.setGift(live.getGiftTotal());
 
         return Message.success(model,"success");
     }

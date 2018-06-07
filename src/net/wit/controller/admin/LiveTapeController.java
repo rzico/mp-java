@@ -119,7 +119,7 @@ public class LiveTapeController extends BaseController {
 
 		entity.setViewerCount(liveTape.getViewerCount() == null ? 0 : liveTape.getViewerCount());
 
-		entity.setMember(memberService.find(memberId));
+//		entity.setMember(memberService.find(memberId));
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -194,8 +194,8 @@ public class LiveTapeController extends BaseController {
 
 		entity.setViewerCount(liveTape.getViewerCount() == null ? 0 : liveTape.getViewerCount());
 
-		entity.setMember(memberService.find(memberId));
-		
+//		entity.setMember(memberService.find(memberId));
+//
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -222,6 +222,11 @@ public class LiveTapeController extends BaseController {
 		}
 
 		Page<LiveTape> page = liveTapeService.findPage(beginDate,endDate,pageable);
+//		for (LiveTape tape:page.getContent()) {
+//			if (tape.getEndTime()==null) {
+//				tape.setEndTime(tape.getCreateDate());
+//			}
+//		}
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	

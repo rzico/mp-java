@@ -29,9 +29,9 @@
     <title>账单明细</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 账单明细 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
-                                               href="javascript:location.replace(location.href);" title="刷新"><i
-        class="Hui-iconfont">&#xe68f;</i></a></nav>
+[#--<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 账单明细 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"--]
+                                               [#--href="javascript:location.replace(location.href);" title="刷新"><i--]
+        [#--class="Hui-iconfont">&#xe68f;</i></a></nav>--]
 <div class="page-container">
     <div class=""> 日期范围：
         <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin"
@@ -144,8 +144,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "摘要",
-                    "sTitle": "备注",
+                    "mData": "memo",
+                    "sTitle": "摘要",
                     "sClass": "center"
                 },
                 {
