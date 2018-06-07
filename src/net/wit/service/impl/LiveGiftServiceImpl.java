@@ -130,12 +130,12 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 		gold.setOperator("system");
 		gold.setType(Gold.Type.reward);
 		goldDao.persist(gold);
-
+		LiveTape liveTape = liveTapeDao.find(live.getLiveTape());
        LiveGiftData data = new LiveGiftData();
        data.setGiftName(gift.getName());
        data.setHeadpic(member.getLogo());
        data.setLiveGift(gift);
-       data.setLiveTape(live.getLiveTape());
+       data.setLiveTape(liveTape);
        data.setMember(member);
        data.setNickname(member.displayName());
        data.setPrice(gift.getPrice());
@@ -147,7 +147,6 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 	   live.setGiftTotal(live.getGiftTotal()+gift.getPrice());
 	   liveDao.merge(live);
 
-	   LiveTape liveTape = live.getLiveTape();
 	   liveTape.setGift(liveTape.getGift()+gift.getPrice());
 	   liveTapeDao.merge(liveTape);
 
@@ -159,7 +158,7 @@ public class LiveGiftServiceImpl extends BaseServiceImpl<LiveGift, Long> impleme
 		live.setLikeCount(live.getLikeCount()+1L);
 		liveDao.merge(live);
 
-		LiveTape liveTape = live.getLiveTape();
+		LiveTape liveTape = liveTapeDao.find(live.getLiveTape());
 		liveTape.setLikeCount(live.getLikeCount()+1L);
 		liveTapeDao.merge(liveTape);
 

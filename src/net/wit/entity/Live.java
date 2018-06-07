@@ -42,9 +42,9 @@ public class Live extends BaseEntity {
 	private Member member;
 
 	/** 最后一次直播 */
-	@ManyToOne(fetch = FetchType.LAZY)
+//	@ManyToOne(fetch = FetchType.EAGER )
 	@JsonIgnore
-	private LiveTape liveTape;
+	private Long liveTape;
 
 	/**  标题  */
 	@Column(columnDefinition="varchar(255) comment '标题'")
@@ -214,11 +214,11 @@ public class Live extends BaseEntity {
 		this.gift = gift;
 	}
 
-	public LiveTape getLiveTape() {
+	public Long getLiveTape() {
 		return liveTape;
 	}
 
-	public void setLiveTape(LiveTape liveTape) {
+	public void setLiveTape(Long liveTape) {
 		this.liveTape = liveTape;
 	}
 

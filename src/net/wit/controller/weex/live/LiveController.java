@@ -317,7 +317,7 @@ public class LiveController extends BaseController {
         liveTape.setLocation(location);
         liveTapeService.save(liveTape);
 
-        live.setLiveTape(liveTape);
+        live.setLiveTape(liveTape.getId());
         live.setPushUrl(pushUrl);
         live.setOnline("1");
         liveService.update(live);
@@ -349,7 +349,7 @@ public class LiveController extends BaseController {
         if (live == null) {
             return Message.error("无效直播id");
         }
-        LiveTape liveTape = live.getLiveTape();
+        LiveTape liveTape = liveTapeService.find(live.getLiveTape());
 
         liveTape.setTitle(live.getTitle());
         liveTape.setEndTime(new Date());
@@ -389,9 +389,10 @@ public class LiveController extends BaseController {
 //        String hlsPlayUrl = "rtmp://22303.liveplay.myqcloud.com/live/22303_"+String.valueOf(live.getId()+10201)+"_550.m3u8";
 
         LiveData liveData = new LiveData();
+        LiveTape liveTape = liveTapeService.find(live.getLiveTape());
 
         liveData.setLive(live);
-        liveData.setLiveTape(live.getLiveTape());
+        liveData.setLiveTape(liveTape);
         liveData.setMember(member);
         liveData.setFrontcover(live.getFrontcover());
         liveData.setHeadpic(member.getLogo());
@@ -405,7 +406,6 @@ public class LiveController extends BaseController {
         live.setPlayUrl(playUrl);
         liveService.update(live);
 
-        LiveTape liveTape = live.getLiveTape();
         liveTape.setPlayUrl(playUrl);
         liveTape.setViewerCount(liveTape.getViewerCount()+1);
         liveTapeService.update(liveTape);
@@ -442,7 +442,7 @@ public class LiveController extends BaseController {
         if (live == null) {
             return Message.error("无效直播id");
         }
-        LiveTape liveTape = live.getLiveTape();
+        LiveTape liveTape = liveTapeService.find(live.getLiveTape());
 
 //        live.setViewerCount(live.getViewerCount()-1);
 //        liveService.update(live);
