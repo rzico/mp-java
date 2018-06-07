@@ -81,7 +81,8 @@ public class DragonController extends BaseController {
         dragonService.save(dragon);
         dragon.setMainId(dragon.getId());
         dragonService.update(dragon);
-//        messageService.reviewPushTo(review);
+        article.setDragonStatus(Article.DragonStatus.enabled);
+        articleService.update(article);
         DragonModel model = new DragonModel();
         model.bind(dragon);
         return Message.success(model,"创建接龙成功，请分享至群。");
@@ -98,6 +99,9 @@ public class DragonController extends BaseController {
         if (dragon==null) {
             return Message.error("无效评论编号");
         }
+        Article article = dragon.getArticle();
+        article.setDragonStatus(Article.DragonStatus.disabled);
+        articleService.update(article);
         dragonService.delete(id);
         return Message.success("删除成功");
 
@@ -115,6 +119,9 @@ public class DragonController extends BaseController {
         }
         dragon.setStatus(Dragon.Status.closed);
         dragonService.update(dragon);
+        Article article = dragon.getArticle();
+        article.setDragonStatus(Article.DragonStatus.disabled);
+        articleService.update(article);
         return Message.success("关闭接龙");
     }
 
