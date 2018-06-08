@@ -31,6 +31,9 @@ public class CartItem extends BaseEntity {
 	/** 最大数量 */
 	public static final Integer MAX_QUANTITY = 10000;
 
+	/**  单价 */
+	private BigDecimal price;
+
 	/** 数量 */
 	@Column(nullable = false)
 	private Integer quantity;
@@ -172,15 +175,26 @@ public class CartItem extends BaseEntity {
 		return Friends.Type.friend;
 	}
 
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
 	/**
 	 * 获取价格
 	 * 
 	 * @return 价格
 	 */
 	@Transient
-	public BigDecimal getPrice() {
-		if (getProduct() != null && getProduct().getPrice() != null) {
-			Setting setting = SettingUtils.get();
+	public BigDecimal getEffectivePrice() {
+		if (getPrice()!=null) {
+			return  getPrice();
+		} else {
+			if (getProduct() != null && getProduct().getPrice() != null) {
+				Setting setting = SettingUtils.get();
 //			BigDecimal price = BigDecimal.ZERO;
 //			Friends.Type vip = friendsType();
 //			if (vip.equals(Friends.Type.friend)) {
@@ -201,9 +215,10 @@ public class CartItem extends BaseEntity {
 //			if (price==null || price.compareTo(BigDecimal.ZERO)==0) {
 //				price = getProduct().getPrice();
 //			}
-			return setting.setScale(getProduct().getPrice());
-		} else {
-			return BigDecimal.ZERO;
+				return setting.setScale(getProduct().getPrice());
+			} else {
+				return BigDecimal.ZERO;
+			}
 		}
 	}
 
@@ -215,7 +230,7 @@ public class CartItem extends BaseEntity {
 	@Transient
 	public BigDecimal getSubtotal() {
 		if (getQuantity() != null) {
-			return getPrice().multiply(new BigDecimal(getQuantity()));
+			return getEffectivePrice().multiply(new BigDecimal(getQuantity()));
 		} else {
 			return new BigDecimal(0);
 		}

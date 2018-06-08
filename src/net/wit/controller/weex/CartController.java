@@ -53,7 +53,7 @@ public class CartController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public @ResponseBody
-	Message add(Long id, Integer quantity,Long promotionId, HttpServletRequest request, HttpServletResponse response) {
+	Message add(Long id, Integer quantity,BigDecimal price,Long promotionId, HttpServletRequest request, HttpServletResponse response) {
 		if (quantity == null || quantity < 1) {
 			return Message.error("请输入购买数量");
 		}
@@ -99,6 +99,7 @@ public class CartController extends BaseController {
 				return Message.warn("库存不足,稍等试试");
 			}
 			CartItem cartItem = new CartItem();
+			cartItem.setPrice(price);
 			cartItem.setQuantity(quantity);
 			cartItem.setProduct(product);
 			cartItem.setCart(cart);
@@ -157,7 +158,7 @@ public class CartController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public @ResponseBody
-	Message edit(Long id, Integer quantity,Long promotionId) {
+	Message edit(Long id, Integer quantity,BigDecimal price,Long promotionId) {
 		Map<String, Object> data = new HashMap<String, Object>();
 		if (quantity == null || quantity < 1) {
 			return Message.error("数据不能为零");
@@ -184,6 +185,7 @@ public class CartController extends BaseController {
 		if (quantity > product.getAvailableStock()) {
 			return Message.error("库存不足");
 		}
+		cartItem.setPrice(price);
 		cartItem.setQuantity(quantity);
 		cartItemService.update(cartItem);
 

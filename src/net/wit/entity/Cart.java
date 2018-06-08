@@ -280,7 +280,7 @@ public class Cart extends BaseEntity {
 		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(17, 37).append(getKey());
 		if (getCartItems() != null) {
 			for (CartItem cartItem : getCartItems()) {
-				hashCodeBuilder.append(cartItem.getProduct()).append(cartItem.getQuantity()).append(cartItem.getPrice());
+				hashCodeBuilder.append(cartItem.getProduct()).append(cartItem.getQuantity()).append(cartItem.getEffectivePrice());
 			}
 		}
 		return DigestUtils.md5Hex(hashCodeBuilder.toString());

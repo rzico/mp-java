@@ -86,7 +86,7 @@ public class CartItemModel extends BaseModel implements Serializable {
     public void bind(CartItem cartItem) {
         this.id = cartItem.getId();
         this.quantity = cartItem.getQuantity();
-        this.price = cartItem.getPrice();
+        this.price = cartItem.getEffectivePrice();
         Product product = cartItem.getProduct();
         this.name = product.getName();
         this.spec = product.getSpec();
