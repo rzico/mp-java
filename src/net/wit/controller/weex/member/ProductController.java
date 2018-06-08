@@ -6,13 +6,7 @@
 package net.wit.controller.weex.member;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -247,7 +241,8 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(Long productCategoryId,String keyword,Pageable pageable,HttpServletRequest request) {
+	Message list(Long productCategoryId,String keyword,String type,Pageable pageable,HttpServletRequest request) {
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -264,7 +259,14 @@ public class ProductController extends BaseController {
         if (keyword!=null) {
 		    filters.add(Filter.like("name","%"+keyword+"%"));
 		}
-		filters.add(new Filter("member", Filter.Operator.eq,member));
+		if ("3".equals(bundle.getString("weex"))) {
+            if (type.equals("query")) {
+				Long memberId = Long.parseLong(bundle.getString("platform"));
+				member = memberService.find(memberId);
+			}
+		}
+
+		filters.add(new Filter("member", Filter.Operator.eq, member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
 		pageable.setFilters(filters);
 		pageable.setOrderDirection(Order.Direction.desc);
