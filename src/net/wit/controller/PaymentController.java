@@ -134,24 +134,24 @@ public class PaymentController extends BaseController {
         payment.setPaymentMethod(paymentPlugin.getName());
         paymentService.update(payment);
 
-        if (xmid!=null) {
-            Member agent = memberService.find(xmid);
-            if (agent.getTopic()==null) {
-                return Message.error("没有开通");
-            }
-            if (agent.getTopic().getConfig()==null)  {
-                return Message.error("没有设置");
-            }
-            if (agent.getTopic().getConfig().getAppetAppId()==null)  {
-                return Message.error("没有设置");
-            }
-//            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-//
-//            String appid = agent.getTopic().getConfig().getAppetAppId();
-//
-            payment.setWay(Payment.Way.yundian);
-            payment.setMerchant(agent);
-        }
+//        if (xmid!=null) {
+//            Member agent = memberService.find(xmid);
+//            if (agent.getTopic()==null) {
+//                return Message.error("没有开通");
+//            }
+//            if (agent.getTopic().getConfig()==null)  {
+//                return Message.error("没有设置");
+//            }
+//            if (agent.getTopic().getConfig().getAppetAppId()==null)  {
+//                return Message.error("没有设置");
+//            }
+////            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+////
+////            String appid = agent.getTopic().getConfig().getAppetAppId();
+////
+//            payment.setWay(Payment.Way.yundian);
+//            payment.setMerchant(agent);
+//        }
 
         Map<String, Object> parameters = null;
         if (safeKey==null) {

@@ -80,17 +80,10 @@ public class LoginController extends BaseController {
         String appid = bundle.getString("applet.appid");
         String appsecret = bundle.getString("applet.secret");
         if (xmid!=null) {
-           Member agent = memberService.find(xmid);
-           if (agent.getTopic()==null) {
-               return Message.error("没有开通");
-           }
-           if (agent.getTopic().getConfig()==null)  {
-               return Message.error("没有设置");
-           }
-           if (agent.getTopic().getConfig().getAppetAppId()!=null)  {
-               appid = agent.getTopic().getConfig().getAppetAppId();
-               appsecret = agent.getTopic().getConfig().getAppetAppSerect();
-           }
+            Member agent = memberService.find(xmid);
+            if (agent.getTopic()!=null && agent.getTopic().getConfig()!=null && agent.getTopic().getConfig().getAppetAppId()!=null) {
+                appid = agent.getTopic().getConfig().getAppetAppId();
+            }
         }
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + appsecret + "&js_code=" + code + "&grant_type=authorization_code";
@@ -234,16 +227,9 @@ public class LoginController extends BaseController {
         String appid = bundle.getString("applet.appid");
         if (xmid!=null) {
             Member agent = memberService.find(xmid);
-            if (agent.getTopic()==null) {
-                return Message.error("没有开通");
-            }
-            if (agent.getTopic().getConfig()==null)  {
-                return Message.error("没有设置");
-            }
-            if (agent.getTopic().getConfig().getAppetAppId()!=null)  {
+            if (agent.getTopic()!=null && agent.getTopic().getConfig()!=null && agent.getTopic().getConfig().getAppetAppId()!=null) {
                 appid = agent.getTopic().getConfig().getAppetAppId();
             }
-
         }
 
         if ("user".equals(scope)) {
