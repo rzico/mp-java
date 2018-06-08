@@ -62,6 +62,9 @@ public class TopicController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "productCategoryServiceImpl")
+    private ProductCategoryService productCategoryService;
+
     /**
      * 专栏信息
      * id 会员
@@ -109,36 +112,60 @@ public class TopicController extends BaseController {
     @RequestMapping(value = "/navigation", method = RequestMethod.GET)
     @ResponseBody
     public Message navigation(Long id,String template,HttpServletRequest request){
+        Member member =memberService.find(id);
         if (template==null) {
             template = "c1001";
         }
         List<NavigationModel> data = new ArrayList<>();
-        NavigationModel news = new NavigationModel();
-        news.setType(Navigation.Type.news);
-        news.setName("新品");
-        news.setLogo("http://cdnx.rzico.com/images/news.png");
-        data.add(news);
-        NavigationModel dragon = new NavigationModel();
-        dragon.setType(Navigation.Type.dragon);
-        dragon.setName("拼团");
-        dragon.setLogo("http://cdnx.rzico.com/images/dragon.png");
-        data.add(dragon);
-        NavigationModel videos = new NavigationModel();
-        videos.setType(Navigation.Type.video);
-        videos.setName("视频");
-        videos.setLogo("http://cdnx.rzico.com/images/video.png");
-        data.add(videos);
-        NavigationModel promotions = new NavigationModel();
-        promotions.setType(Navigation.Type.promotion);
-        promotions.setName("秒杀");
-        promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
-        data.add(promotions);
         if ("c1001".equals(template)) {
+            NavigationModel news = new NavigationModel();
+            news.setType(Navigation.Type.news);
+            news.setName("新品");
+            news.setLogo("http://cdnx.rzico.com/images/news.png");
+            data.add(news);
+            NavigationModel dragon = new NavigationModel();
+            dragon.setType(Navigation.Type.dragon);
+            dragon.setName("拼团");
+            dragon.setLogo("http://cdnx.rzico.com/images/dragon.png");
+            data.add(dragon);
+            NavigationModel videos = new NavigationModel();
+            videos.setType(Navigation.Type.video);
+            videos.setName("视频");
+            videos.setLogo("http://cdnx.rzico.com/images/video.png");
+            data.add(videos);
+            NavigationModel promotions = new NavigationModel();
+            promotions.setType(Navigation.Type.promotion);
+            promotions.setName("抢购");
+            promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
+            data.add(promotions);
             NavigationModel products = new NavigationModel();
             products.setType(Navigation.Type.mall);
             products.setName("商城");
             products.setLogo("http://cdnx.rzico.com/images/mall.png");
             data.add(products);
+        } else {
+            NavigationModel promotions = new NavigationModel();
+            promotions.setType(Navigation.Type.promotion);
+            promotions.setName("抢购");
+            promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
+            data.add(promotions);
+            NavigationModel dragon = new NavigationModel();
+            dragon.setType(Navigation.Type.dragon);
+            dragon.setName("拼团");
+            dragon.setLogo("http://cdnx.rzico.com/images/dragon.png");
+            data.add(dragon);
+            List<Filter> filters = new ArrayList<>();
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+            List<ProductCategory> categories = productCategoryService.findList(null,null,filters,null);
+            for (ProductCategory productCategory:categories) {
+                NavigationModel pc = new NavigationModel();
+                pc.setType(Navigation.Type.product);
+                pc.setName(productCategory.getName());
+                pc.setLogo(productCategory.getThumbnail());
+                pc.setProductCategoryId(productCategory.getId());
+                data.add(pc);
+            }
+
         }
         return Message.bind(data,request);
     }

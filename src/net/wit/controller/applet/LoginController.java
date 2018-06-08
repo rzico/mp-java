@@ -87,12 +87,10 @@ public class LoginController extends BaseController {
            if (agent.getTopic().getConfig()==null)  {
                return Message.error("没有设置");
            }
-           if (agent.getTopic().getConfig().getAppetAppId()==null)  {
-               return Message.error("没有设置");
+           if (agent.getTopic().getConfig().getAppetAppId()!=null)  {
+               appid = agent.getTopic().getConfig().getAppetAppId();
+               appsecret = agent.getTopic().getConfig().getAppetAppSerect();
            }
-
-            appid = agent.getTopic().getConfig().getAppetAppId();
-            appsecret = agent.getTopic().getConfig().getAppetAppSerect();
         }
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + appsecret + "&js_code=" + code + "&grant_type=authorization_code";
@@ -242,11 +240,10 @@ public class LoginController extends BaseController {
             if (agent.getTopic().getConfig()==null)  {
                 return Message.error("没有设置");
             }
-            if (agent.getTopic().getConfig().getAppetAppId()==null)  {
-                return Message.error("没有设置");
+            if (agent.getTopic().getConfig().getAppetAppId()!=null)  {
+                appid = agent.getTopic().getConfig().getAppetAppId();
             }
 
-            appid = agent.getTopic().getConfig().getAppetAppId();
         }
 
         if ("user".equals(scope)) {
