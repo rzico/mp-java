@@ -1211,10 +1211,10 @@ public class Order extends BaseEntity {
 	@Transient
 	public BigDecimal calcFreight(Receiver receiver) {
 		BigDecimal price = BigDecimal.ZERO;
-		if (receiver!=null && receiver.getLevel()!=null && receiver.getLevel()>2) {
+		if (!getShippingMethod().equals(ShippingMethod.cardbkg) && receiver!=null && receiver.getLevel()!=null && receiver.getLevel()>2) {
 			if (getOrderItems() != null) {
 				for (OrderItem orderItem : getOrderItems()) {
-					if (orderItem != null && orderItem.getQuantity() != null) {
+					if (orderItem != null && orderItem.getQuantity() != null && orderItem.getProduct().getType().equals(Product.Type.warehouse)) {
 						price = price.add(
 								new BigDecimal(
 										(orderItem.getQuantity()-orderItem.getCouponQuantity()) * (receiver.getLevel() - 1)
