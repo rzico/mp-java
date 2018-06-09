@@ -167,6 +167,7 @@ public class OrderController extends BaseController {
 	public @ResponseBody
 	Message create(Long id,Integer quantity,Long receiverId,Long memberId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
+		Member loginMember = member;
 		if (memberId!=null) {
 			member = memberService.find(memberId);
 		}
@@ -196,6 +197,9 @@ public class OrderController extends BaseController {
 			dragon = dragonService.find(dragonId);
 		}
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate);
+		order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
+		order.setOperator(loginMember.userId());
+		orderService.update(order);
 
 		if (cart != null) {
 			cartService.delete(cart);
