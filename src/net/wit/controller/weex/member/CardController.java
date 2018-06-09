@@ -406,7 +406,7 @@ public class CardController extends BaseController {
         payBill.setCard(card);
         payBill.setEnterprise(shop.getEnterprise());
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(shop.getEnterprise().calcFee(effective));
+        payBill.setFee(shop.getOwner().getTopic().calcPaybill(effective));
         try {
             if (amount.compareTo(BigDecimal.ZERO)<=0) {
                 return Message.error("请输入充值金额");
@@ -469,7 +469,7 @@ public class CardController extends BaseController {
         payBill.setCard(card);
         payBill.setEnterprise(shop.getEnterprise());
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(shop.getEnterprise().calcFee(effective));
+        payBill.setFee(shop.getOwner().getTopic().calcPaybill(effective));
         try {
             if (amount.compareTo(BigDecimal.ZERO)<=0) {
                 return Message.error("请输入退款金额");

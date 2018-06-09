@@ -449,7 +449,7 @@ public class CardController extends BaseController {
         Admin admin = adminService.findByMember(card.getOwner());
         payBill.setEnterprise(admin.getEnterprise());
         BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(admin.getEnterprise().calcFee(effective));
+        payBill.setFee(card.getOwner().getTopic().calcPaybill(effective));
         try {
             if (amount.compareTo(BigDecimal.ZERO)<=0) {
                 return Message.error("请输入充值金额");
