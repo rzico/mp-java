@@ -264,7 +264,7 @@ public class ProductController extends BaseController {
 		    filters.add(Filter.like("name","%"+keyword+"%"));
 		}
 		if ("3".equals(bundle.getString("weex"))) {
-            if (type.equals("query")) {
+            if (type!=null && type.equals("query")) {
 				Long memberId = Long.parseLong(bundle.getString("platform"));
 				member = memberService.find(memberId);
 			}
