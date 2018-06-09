@@ -105,8 +105,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	}
 
 
-	private Card.VIP calculateVip(Shop shop, BigDecimal amount) {
-		Member owner = shop.getOwner();
+	private Card.VIP calculateVip(Member owner, BigDecimal amount) {
 		Topic topic = owner.getTopic();
 
 		if (topic==null) {
@@ -294,7 +293,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					Card card = payBill.getCard();
 					cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 
-					Card.VIP vip = calculateVip(payBill.getShop(),payBill.getAmount());
+					Card.VIP vip = calculateVip(payBill.getOwner(),payBill.getAmount());
                     if (vip!=null) {
                     	if (card.getVip().ordinal()<vip.ordinal()) {
                     		card.setVip(vip);
