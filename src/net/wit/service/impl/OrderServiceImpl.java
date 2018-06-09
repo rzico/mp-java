@@ -288,57 +288,59 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				}
 			}
 		} else {
-			for (CartItem cartItem : cart.getCartItems()) {
-				if (cartItem != null && cartItem.getProduct() != null) {
-					Product cartProduct = cartItem.getProduct();
-					OrderItem orderItem = new OrderItem();
-					orderItem.setName(cartProduct.getName());
-					orderItem.setSpec(cartProduct.getSpec());
-					orderItem.setPrice(cartItem.getEffectivePrice());
-					orderItem.setWeight(cartProduct.getWeight());
-					orderItem.setThumbnail(cartProduct.getThumbnail());
-					orderItem.setIsGift(false);
-					orderItem.setQuantity(cartItem.getQuantity());
-					orderItem.setShippedQuantity(0);
-					orderItem.setReturnQuantity(0);
-					orderItem.setProduct(cartProduct);
-					orderItem.setOrder(order);
-					orderItem.setCouponQuantity(0L);
-					orderItems.add(orderItem);
+			if (cart!=null) {
+				for (CartItem cartItem : cart.getCartItems()) {
+					if (cartItem != null && cartItem.getProduct() != null) {
+						Product cartProduct = cartItem.getProduct();
+						OrderItem orderItem = new OrderItem();
+						orderItem.setName(cartProduct.getName());
+						orderItem.setSpec(cartProduct.getSpec());
+						orderItem.setPrice(cartItem.getEffectivePrice());
+						orderItem.setWeight(cartProduct.getWeight());
+						orderItem.setThumbnail(cartProduct.getThumbnail());
+						orderItem.setIsGift(false);
+						orderItem.setQuantity(cartItem.getQuantity());
+						orderItem.setShippedQuantity(0);
+						orderItem.setReturnQuantity(0);
+						orderItem.setProduct(cartProduct);
+						orderItem.setOrder(order);
+						orderItem.setCouponQuantity(0L);
+						orderItems.add(orderItem);
 
 
-					ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-					if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
-						Card card = member.getCards().get(0);
-						order.setSeller(card.getOwner());
-					} else {
-						order.setSeller(cartItem.getSeller());
-					}
-
-
-					Promotion promotion = cartItem.getPromotion();
-					if (promotion!=null) {
-						Integer qt = promotion.calc(orderItem.getSubtotal(),orderItem.getQuantity());
-						if (qt>0) {
-							Product gift = promotion.getGift();
-							OrderItem giftItem = new OrderItem();
-							giftItem.setName(gift.getName());
-							giftItem.setSpec(gift.getSpec());
-							giftItem.setPrice(BigDecimal.ZERO);
-							giftItem.setWeight(gift.getWeight());
-							giftItem.setThumbnail(gift.getThumbnail());
-							giftItem.setIsGift(true);
-							giftItem.setQuantity(qt);
-							giftItem.setShippedQuantity(0);
-							giftItem.setReturnQuantity(0);
-							giftItem.setCouponQuantity(0L);
-							giftItem.setProduct(gift);
-							giftItem.setPromotion(promotion);
-							giftItem.setOrder(order);
-							orderItems.add(giftItem);
+						ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+						if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
+							Card card = member.getCards().get(0);
+							order.setSeller(card.getOwner());
+						} else {
+							order.setSeller(cartItem.getSeller());
 						}
-					}
 
+
+						Promotion promotion = cartItem.getPromotion();
+						if (promotion != null) {
+							Integer qt = promotion.calc(orderItem.getSubtotal(), orderItem.getQuantity());
+							if (qt > 0) {
+								Product gift = promotion.getGift();
+								OrderItem giftItem = new OrderItem();
+								giftItem.setName(gift.getName());
+								giftItem.setSpec(gift.getSpec());
+								giftItem.setPrice(BigDecimal.ZERO);
+								giftItem.setWeight(gift.getWeight());
+								giftItem.setThumbnail(gift.getThumbnail());
+								giftItem.setIsGift(true);
+								giftItem.setQuantity(qt);
+								giftItem.setShippedQuantity(0);
+								giftItem.setReturnQuantity(0);
+								giftItem.setCouponQuantity(0L);
+								giftItem.setProduct(gift);
+								giftItem.setPromotion(promotion);
+								giftItem.setOrder(order);
+								orderItems.add(giftItem);
+							}
+						}
+
+					}
 				}
 			}
 		}
