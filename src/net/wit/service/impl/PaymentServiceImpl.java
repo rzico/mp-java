@@ -203,7 +203,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				}
 
 				//新客户不自动配送
-				if (order.getShippingMethod().equals(Order.ShippingMethod.warehouse) && order.getMember().getOrders().size()>0) {
+				if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg) && order.getMember().getOrders().size()>0) {
 					orderService.shipping(order,Order.ShippingMethod.warehouse,null,null);
 				}
 

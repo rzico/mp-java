@@ -349,7 +349,7 @@ public class Member extends BaseEntity {
 	/** 订单 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
-	@Where(clause="order_status<2")
+	@Where(clause="order_status=2")
 	@OrderBy("createDate desc")
 	private Set<Order> orders = new HashSet<Order>();
 

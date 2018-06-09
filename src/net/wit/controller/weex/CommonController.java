@@ -118,7 +118,7 @@ public class CommonController extends BaseController {
 			menu.put("add", "file://view/member/editor/editor.js");
  			menu.put("friend", "file://view/friend/list.js");
 			menu.put("message","file://view/message/list.js");
-			menu.put("member", "file://view/member/index.js");
+			menu.put("member", "file://view/member/mine.js");
 //		} else {
 //			if (member!=null) {
 //				Admin admin = adminService.findByMember(member);
