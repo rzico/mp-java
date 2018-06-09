@@ -84,6 +84,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 			if ("cancelled".equals(status)) {
 				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("orderStatus"), Order.OrderStatus.cancelled));
 			}
+			if ("pending".equals(status)) {
+				restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.or(criteriaBuilder.equal(root.get("orderStatus"), Order.OrderStatus.unconfirmed),criteriaBuilder.equal(root.get("orderStatus"), Order.OrderStatus.confirmed)  ));
+			}
 		}
 		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);

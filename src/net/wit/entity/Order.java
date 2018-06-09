@@ -1285,13 +1285,17 @@ public class Order extends BaseEntity {
 					if (orderItem != null && orderItem.getSubtotal() != null) {
 						d = d.add(orderItem.calcPercent1());
 						Card c2 = getPromoter().card(getSeller());
-						Member p2 = c2.getPromoter();
-						if (p2!=null  && p2.leaguer(getSeller()) ) {
-							d = d.add(orderItem.calcPercent2());
-							Card c3 = p2.card(getSeller());
-							Member p3 = c3.getPromoter();
-							if (p3!=null  && p3.leaguer(getSeller())) {
-								d = d.add(orderItem.calcPercent3());
+						if (c2!=null) {
+							Member p2 = c2.getPromoter();
+							if (p2 != null && p2.leaguer(getSeller())) {
+								d = d.add(orderItem.calcPercent2());
+								Card c3 = p2.card(getSeller());
+								if (c3!=null) {
+									Member p3 = c3.getPromoter();
+									if (p3 != null && p3.leaguer(getSeller())) {
+										d = d.add(orderItem.calcPercent3());
+									}
+								}
 							}
 						}
 					}

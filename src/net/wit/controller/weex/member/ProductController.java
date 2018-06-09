@@ -152,7 +152,11 @@ public class ProductController extends BaseController {
 				product.setDistribution(distributionService.find(model.getDistribution().getId()));
 			}
 
-			product.setTags(tags);
+			if (tags!=null) {
+				product.setTags(new ArrayList<Tag>(tags));
+			} else {
+				product.setTags(new ArrayList<Tag>());
+			}
 
 			product.setThumbnail(pm.getThumbnail());
 			product.setMarketPrice(pm.getPrice());

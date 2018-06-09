@@ -149,6 +149,11 @@ public class TopicController extends BaseController {
             promotions.setName("抢购");
             promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
             data.add(promotions);
+            NavigationModel news = new NavigationModel();
+            news.setType(Navigation.Type.news);
+            news.setName("上新");
+            news.setLogo("http://cdnx.rzico.com/images/news.png");
+            data.add(news);
             NavigationModel dragon = new NavigationModel();
             dragon.setType(Navigation.Type.dragon);
             dragon.setName("拼团");

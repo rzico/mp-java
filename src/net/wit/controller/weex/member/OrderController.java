@@ -75,8 +75,12 @@ public class OrderController extends BaseController {
 	 *  获取订单信息
 	 */
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
-	public @ResponseBody Message info(Long receiverId,Order.ShippingMethod shippingMethod,Long dragonId) {
+	public @ResponseBody Message info(Long receiverId,Long memberId,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
+		if (memberId!=null) {
+			member = memberService.find(memberId);
+		}
+
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
 			return Message.error("购物车为空");
@@ -115,8 +119,11 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/calculate")
 	public @ResponseBody
-	Message calculate(Long id,Integer quantity,Long receiverId,Long promotionId,Order.ShippingMethod shippingMethod,Long dragonId) {
+	Message calculate(Long id,Integer quantity,Long receiverId,Long memberId,Long promotionId,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
+		if (memberId!=null) {
+			member = memberService.find(memberId);
+		}
 		Map<String, Object> data = new HashMap<String, Object>();
 		Cart cart = cartService.getCurrent();
 		Product product = null;
@@ -158,8 +165,11 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
+	Message create(Long id,Integer quantity,Long receiverId,Long memberId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
+		if (memberId!=null) {
+			member = memberService.find(memberId);
+		}
 		Cart cart = null;
 		if (id==null) {
 			cart = cartService.getCurrent();

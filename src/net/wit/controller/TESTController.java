@@ -1,13 +1,16 @@
 package net.wit.controller;
 
+import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCategoryModel;
 import net.wit.entity.ArticleCategory;
+import net.wit.entity.Payment;
 import net.wit.plat.unspay.Merchant;
 import net.wit.service.ArticleCategoryService;
 import net.wit.service.OrderService;
 import net.wit.service.PaymentService;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -69,9 +74,14 @@ public class TESTController extends BaseController {
     @RequestMapping(value = "task", method = RequestMethod.GET)
     @ResponseBody
     public Message task(Long tagIds,HttpServletRequest request) throws Exception {
-//        paymentService.query();
-//        orderService.releaseStock();
-//        orderService.evictCompleted();
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("status", Filter.Operator.eq, Payment.Status.waiting));
+        filters.add(new Filter("paymentPluginId", Filter.Operator.isNotNull,null));
+        filters.add(new Filter("createDate", Filter.Operator.le, DateUtils.addMinutes(new Date(),-30) ));
+        List<Payment> data = paymentService.findList(null,null,filters,null);
+        for (Payment payment:data) {
+            paymentService.query(payment.getId());
+        }
         return Message.success("");
     }
 

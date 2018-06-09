@@ -272,7 +272,9 @@ public class OrderController extends BaseController {
 				track.setMemberId(shippingMember.getId());
 			}
 		} else {
-			track.setStatus(order.getStatus());
+			track.setStatus(order.getStatusDescr());
+			track.setLat(24.46);
+			track.setLng(118.1);
 		}
 
 		model.setTrack(track);
@@ -434,6 +436,78 @@ public class OrderController extends BaseController {
 		return Message.bind(model,request);
 
 	}
+
+	/**
+	 * 列表  unpaid 待付款   unshipped 待发货  shipped 已发货  refund 退款/售后
+	 */
+
+	@RequestMapping(value = "/pending", method = RequestMethod.GET)
+	public @ResponseBody
+	Message pending(Long authorId,Pageable pageable, HttpServletRequest request) {
+
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("member", Filter.Operator.eq,member));
+		filters.add(new Filter("orderStatus", Filter.Operator.ne, Order.OrderStatus.cancelled));
+		if (authorId!=null) {
+			Member seller = memberService.find(authorId);
+			if (seller!=null) {
+				filters.add(new Filter("seller", Filter.Operator.eq,seller));
+			}
+		}
+
+		pageable.setFilters(filters);
+		pageable.setOrderDirection(net.wit.Order.Direction.desc);
+		pageable.setOrderProperty("modifyDate");
+		Page<Order> page = orderService.findPage(null,null,"pending",pageable);
+
+		List<OrderModel> data = new ArrayList<>();
+		for (Order order:page.getContent()) {
+			OrderModel model = new OrderModel();
+			model.bind(order);
+
+			ShippingTrackModel track = new ShippingTrackModel();
+			track.setLng(0);
+			track.setLat(0);
+			if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+				track.setMethod("存入卡包");
+			} else {
+				track.setMethod("普通快递");
+			}
+			if (order.getShippings().size()>0) {
+				Shipping shipping = order.getShippings().get(0);
+				if (shipping.getAdmin()!=null && shipping.getMember()!=null) {
+					Member shippingMember = shipping.getMember();
+					if (shippingMember.getLocation()!=null) {
+						track.setLng(shippingMember.getLocation().getLng());
+						track.setLat(shippingMember.getLocation().getLng());
+					}
+					track.setMethod("同城配送");
+					track.setName(shippingMember.realName());
+					track.setStatus(shipping.getStatusDescr());
+					track.setMobile(shippingMember.getMobile());
+					track.setMemberId(shippingMember.getId());
+				}
+			} else {
+				track.setStatus(order.getStatusDescr());
+				track.setLat(24.46);
+				track.setLng(118.1);
+			}
+
+			model.setTrack(track);
+			data.add(model);
+		}
+
+		PageBlock model = PageBlock.bind(page);
+		model.setData(data);
+		return Message.bind(model,request);
+
+	}
+
 
 	/**
 	 *  接龙订单
