@@ -9,6 +9,8 @@ import java.util.List;
 public class CardModel extends BaseModel implements Serializable {
 
     private Long id;
+
+    private Long memberId;
     /** 商户 */
     private String name;
     /** 店铺 */
@@ -128,6 +130,14 @@ public class CardModel extends BaseModel implements Serializable {
         this.type = type;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
@@ -146,6 +156,11 @@ public class CardModel extends BaseModel implements Serializable {
             this.shopName = "";
         }
         this.point = card.getPoint();
+        if (card.getMembers().size()>0) {
+            this.memberId = card.getMembers().get(0).getId();
+        } else {
+            this.memberId = 0L;
+        }
     }
 
 

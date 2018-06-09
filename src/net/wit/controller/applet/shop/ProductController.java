@@ -115,9 +115,9 @@ public class ProductController extends BaseController {
 		} else {
 			orders.add(new Order("modifyDate",Order.Direction.desc));
 		}
-
-		pageable.setOrderDirection(Order.Direction.desc);
-		pageable.setOrderProperty("modifyDate");
+		pageable.setOrders(orders);
+//		pageable.setOrderDirection(Order.Direction.desc);
+//		pageable.setOrderProperty("modifyDate");
 
 		Tag tag = null;
 		if (tagId!=null) {
