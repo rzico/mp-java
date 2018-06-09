@@ -591,13 +591,240 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	}
 
 	/**
-	 * 订单完成
+	 * 计算返利
 	 *
 	 * @param order
 	 *            订单
 	 * @param operator
 	 *            操作员
 	 */
+	private void createRebate(Order order, Admin operator) throws Exception {
+		//判断是会员
+		//计算分润
+		if (order.getPromoter() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			BigDecimal d = order.getDistribution();
+			if (d.compareTo(BigDecimal.ZERO) > 0) {
+				//扣除商家分配佣金
+				Member seller = order.getSeller();
+				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
+				BigDecimal bal = seller.getBalance().subtract(d);
+				if (bal.compareTo(BigDecimal.ZERO) >= 0) {
+					seller.setBalance(seller.getBalance().subtract(d));
+					memberDao.merge(seller);
+					memberDao.flush();
+					Deposit deposit = new Deposit();
+					deposit.setBalance(seller.getBalance());
+					deposit.setType(Deposit.Type.product);
+					deposit.setMemo("支付分销佣金");
+					deposit.setMember(seller);
+					deposit.setCredit(BigDecimal.ZERO.subtract(d));
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setOrder(order);
+					deposit.setSeller(order.getSeller());
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+
+					order.setRebateAmount(d);
+					order.setIsDistribution(true);
+					orderDao.merge(order);
+				} else {
+					order.setRebateAmount(d);
+					order.setIsDistribution(false);
+					orderDao.merge(order);
+				}
+			}
+			if (order.getIsDistribution()) {
+				for (OrderItem orderItem : order.getOrderItems()) {
+					if (orderItem != null) {
+						Member p1 = order.getPromoter();
+						Card c1 = p1.card(order.getSeller());
+						BigDecimal r1 = orderItem.calcPercent1();
+						if (r1.compareTo(BigDecimal.ZERO) > 0 && p1 != null && p1.leaguer(order.getSeller())) {
+							memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
+							p1.setBalance(p1.getBalance().add(r1));
+							memberDao.merge(p1);
+							memberDao.flush();
+							Deposit d1 = new Deposit();
+							d1.setBalance(p1.getBalance());
+							d1.setType(Deposit.Type.rebate);
+							d1.setMemo(orderItem.getName() + "奖励金");
+							d1.setMember(p1);
+							d1.setCredit(r1);
+							d1.setDebit(BigDecimal.ZERO);
+							d1.setDeleted(false);
+							d1.setOperator("system");
+							d1.setOrder(order);
+							d1.setSeller(order.getSeller());
+							depositDao.persist(d1);
+							messageService.depositPushTo(d1);
+						}
+						Long point1 = orderItem.calcPoint1();
+						if (point1.compareTo(0L) > 0 && c1 != null && p1 != null && p1.leaguer(order.getSeller())) {
+							cardService.addPoint(c1, point1, orderItem.getName() + "奖励", order);
+						}
+						Member p2 = null;
+						Card c2 = null;
+						if (p1 != null) {
+							c1 = p1.card(order.getSeller());
+							if (c1 != null) {
+								p2 = c1.getPromoter();
+								if (p2 != null) {
+									c2 = p2.card(order.getSeller());
+								}
+							}
+						}
+						BigDecimal r2 = orderItem.calcPercent2();
+						if (r2.compareTo(BigDecimal.ZERO) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
+							memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
+							p2.setBalance(p2.getBalance().add(r2));
+							memberDao.merge(p2);
+							memberDao.flush();
+							Deposit d2 = new Deposit();
+							d2.setBalance(p2.getBalance());
+							d2.setType(Deposit.Type.rebate);
+							d2.setMemo(orderItem.getName() + "奖励金");
+							d2.setMember(p2);
+							d2.setCredit(r2);
+							d2.setDebit(BigDecimal.ZERO);
+							d2.setDeleted(false);
+							d2.setOperator("system");
+							d2.setOrder(order);
+							d2.setSeller(order.getSeller());
+							depositDao.persist(d2);
+							messageService.depositPushTo(d2);
+						}
+						Long point2 = orderItem.calcPoint2();
+						if (point2.compareTo(0L) > 0 && c2 != null && p2 != null && p2.leaguer(order.getSeller())) {
+							cardService.addPoint(c2, point2, orderItem.getName() + "奖励", order);
+						}
+						Member p3 = null;
+						Card c3 = null;
+						if (p2 != null) {
+							c2 = p2.card(order.getSeller());
+							if (c2 != null) {
+								p3 = c2.getPromoter();
+								if (p3 != null) {
+									c3 = p3.card(order.getSeller());
+								}
+							}
+						}
+						BigDecimal r3 = orderItem.calcPercent3();
+						if (r3.compareTo(BigDecimal.ZERO) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
+							memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
+							p3.setBalance(p3.getBalance().add(r3));
+							memberDao.merge(p3);
+							memberDao.flush();
+							Deposit d3 = new Deposit();
+							d3.setBalance(p3.getBalance());
+							d3.setType(Deposit.Type.rebate);
+							d3.setMemo(orderItem.getName() + "奖励金");
+							d3.setMember(p3);
+							d3.setCredit(r3);
+							d3.setDebit(BigDecimal.ZERO);
+							d3.setDeleted(false);
+							d3.setOperator("system");
+							d3.setOrder(order);
+							d3.setSeller(order.getSeller());
+							depositDao.persist(d3);
+							messageService.depositPushTo(d3);
+						}
+						Long point3 = orderItem.calcPoint3();
+						if (point3.compareTo(0L) > 0 && c3 != null && p3 != null && p3.leaguer(order.getSeller())) {
+							cardService.addPoint(c3, point3, orderItem.getName() + "奖励", order);
+						}
+
+					}
+				}
+			}
+
+		}
+
+		//计算股东分红
+		if (order.getPartner() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			BigDecimal partnerAmount = order.calcPartner();
+			Card pcard = order.getPartner().card(order.getSeller());
+
+			BigDecimal pt = partnerAmount.subtract(order.getDistribution());
+			if (pcard!=null && pt.compareTo(BigDecimal.ZERO)>0) {
+
+				BigDecimal pte = pt.multiply(pcard.getBonus().multiply(new BigDecimal("0.01"))).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+
+				Member seller = order.getSeller();
+				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
+
+				//扣除股东分红
+
+				BigDecimal bal = seller.getBalance().subtract(pte);
+				if (bal.compareTo(BigDecimal.ZERO)<0) {
+					seller.setBalance(seller.getBalance().subtract(pte));
+					memberDao.merge(seller);
+					memberDao.flush();
+					Deposit deposit = new Deposit();
+					deposit.setBalance(seller.getBalance());
+					deposit.setType(Deposit.Type.product);
+					deposit.setMemo("支付分红佣金");
+					deposit.setMember(seller);
+					deposit.setCredit(BigDecimal.ZERO.subtract(pte));
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setOrder(order);
+					deposit.setSeller(order.getSeller());
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+
+					Member partner = order.getPartner();
+					memberDao.refresh(partner, LockModeType.PESSIMISTIC_WRITE);
+
+					//股东分红
+					partner.setBalance(partner.getBalance().add(pte));
+					memberDao.merge(partner);
+					memberDao.flush();
+					Deposit deposit_partner = new Deposit();
+					deposit_partner.setBalance(seller.getBalance());
+					deposit_partner.setType(Deposit.Type.rebate);
+					deposit_partner.setMemo("分红佣金");
+					deposit_partner.setMember(partner);
+					deposit_partner.setCredit(pte);
+					deposit_partner.setDebit(BigDecimal.ZERO);
+					deposit_partner.setDeleted(false);
+					deposit_partner.setOperator("system");
+					deposit_partner.setOrder(order);
+					deposit_partner.setSeller(order.getSeller());
+					depositDao.persist(deposit_partner);
+					messageService.depositPushTo(deposit_partner);
+
+					order.setIsPartner(true);
+					orderDao.merge(order);
+
+				} else {
+					order.setIsPartner(false);
+					orderDao.merge(order);
+
+				}
+
+			}
+
+		}
+
+		//计算公球公排
+		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			orderRankingService.add(order);
+		}
+
+
+	}
+
+		/**
+         * 订单完成
+         *
+         * @param order
+         *            订单
+         * @param operator
+         *            操作员
+         */
 	public void complete(Order order, Admin operator) throws Exception {
 		Assert.notNull(order);
 
@@ -743,202 +970,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			memberService.addAmount(member, order.getAmount());
 		}
 
-		//判断是会员
-		//计算分润
-		if (order.getPromoter() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
-			BigDecimal d = order.getDistribution();
-			if (d.compareTo(BigDecimal.ZERO) > 0) {
-				//扣除商家分配佣金
-				Member seller = order.getSeller();
-				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
-				seller.setBalance(seller.getBalance().subtract(d));
-				if (seller.getBalance().compareTo(BigDecimal.ZERO) >= 0) {
-					memberDao.merge(seller);
-					memberDao.flush();
-					Deposit deposit = new Deposit();
-					deposit.setBalance(seller.getBalance());
-					deposit.setType(Deposit.Type.product);
-					deposit.setMemo("支付分销佣金");
-					deposit.setMember(seller);
-					deposit.setCredit(BigDecimal.ZERO.subtract(d));
-					deposit.setDebit(BigDecimal.ZERO);
-					deposit.setDeleted(false);
-					deposit.setOperator("system");
-					deposit.setOrder(order);
-					deposit.setSeller(order.getSeller());
-					depositDao.persist(deposit);
-					messageService.depositPushTo(deposit);
+		//分销结算
 
-					order.setRebateAmount(d);
-					order.setIsDistribution(true);
-					orderDao.merge(order);
-				}
-			}
-			for (OrderItem orderItem : order.getOrderItems()) {
-				if (orderItem != null) {
-					Member p1 = order.getPromoter();
-					Card c1 = p1.card(order.getSeller());
-					BigDecimal r1 = orderItem.calcPercent1();
-					if (r1.compareTo(BigDecimal.ZERO) > 0 && p1 != null && p1.leaguer(order.getSeller())) {
-						memberDao.refresh(p1, LockModeType.PESSIMISTIC_WRITE);
-						p1.setBalance(p1.getBalance().add(r1));
-						memberDao.merge(p1);
-						memberDao.flush();
-						Deposit d1 = new Deposit();
-						d1.setBalance(p1.getBalance());
-						d1.setType(Deposit.Type.rebate);
-						d1.setMemo(orderItem.getName() + "奖励金");
-						d1.setMember(p1);
-						d1.setCredit(r1);
-						d1.setDebit(BigDecimal.ZERO);
-						d1.setDeleted(false);
-						d1.setOperator("system");
-						d1.setOrder(order);
-						d1.setSeller(order.getSeller());
-						depositDao.persist(d1);
-						messageService.depositPushTo(d1);
-					}
-					Long point1 = orderItem.calcPoint1();
-					if (point1.compareTo(0L) > 0 && c1 != null && p1 != null && p1.leaguer(order.getSeller())) {
-						cardService.addPoint(c1, point1, orderItem.getName() + "奖励", order);
-					}
-					Member p2 = null;
-					Card c2 = null;
-					if (p1 != null) {
-						c1 = p1.card(order.getSeller());
-						if (c1 != null) {
-							p2 = c1.getPromoter();
-							if (p2 != null) {
-								c2 = p2.card(order.getSeller());
-							}
-						}
-					}
-					BigDecimal r2 = orderItem.calcPercent2();
-					if (r2.compareTo(BigDecimal.ZERO) > 0 && p2 != null && p2.leaguer(order.getSeller())) {
-						memberDao.refresh(p2, LockModeType.PESSIMISTIC_WRITE);
-						p2.setBalance(p2.getBalance().add(r2));
-						memberDao.merge(p2);
-						memberDao.flush();
-						Deposit d2 = new Deposit();
-						d2.setBalance(p2.getBalance());
-						d2.setType(Deposit.Type.rebate);
-						d2.setMemo(orderItem.getName() + "奖励金");
-						d2.setMember(p2);
-						d2.setCredit(r2);
-						d2.setDebit(BigDecimal.ZERO);
-						d2.setDeleted(false);
-						d2.setOperator("system");
-						d2.setOrder(order);
-						d2.setSeller(order.getSeller());
-						depositDao.persist(d2);
-						messageService.depositPushTo(d2);
-					}
-					Long point2 = orderItem.calcPoint2();
-					if (point2.compareTo(0L) > 0 && c2 != null && p2 != null && p2.leaguer(order.getSeller())) {
-						cardService.addPoint(c2, point2, orderItem.getName() + "奖励", order);
-					}
-					Member p3 = null;
-					Card c3 = null;
-					if (p2 != null) {
-						c2 = p2.card(order.getSeller());
-						if (c2 != null) {
-							p3 = c2.getPromoter();
-							if (p3 != null) {
-								c3 = p3.card(order.getSeller());
-							}
-						}
-					}
-					BigDecimal r3 = orderItem.calcPercent3();
-					if (r3.compareTo(BigDecimal.ZERO) > 0 && p3 != null && p3.leaguer(order.getSeller())) {
-						memberDao.refresh(p3, LockModeType.PESSIMISTIC_WRITE);
-						p3.setBalance(p3.getBalance().add(r3));
-						memberDao.merge(p3);
-						memberDao.flush();
-						Deposit d3 = new Deposit();
-						d3.setBalance(p3.getBalance());
-						d3.setType(Deposit.Type.rebate);
-						d3.setMemo(orderItem.getName() + "奖励金");
-						d3.setMember(p3);
-						d3.setCredit(r3);
-						d3.setDebit(BigDecimal.ZERO);
-						d3.setDeleted(false);
-						d3.setOperator("system");
-						d3.setOrder(order);
-						d3.setSeller(order.getSeller());
-						depositDao.persist(d3);
-						messageService.depositPushTo(d3);
-					}
-					Long point3 = orderItem.calcPoint3();
-					if (point3.compareTo(0L) > 0 && c3 != null && p3 != null && p3.leaguer(order.getSeller())) {
-						cardService.addPoint(c3, point3, orderItem.getName() + "奖励", order);
-					}
-
-				}
-			}
-
-		}
-
-		//计算股东分红
-		if (order.getPartner() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
-			BigDecimal partnerAmount = order.calcPartner();
-			Card pcard = order.getPartner().card(order.getSeller());
-
-			BigDecimal pt = partnerAmount.subtract(order.getDistribution());
-			if (pcard!=null && pt.compareTo(BigDecimal.ZERO)>0) {
-
-				BigDecimal pte = pt.multiply(pcard.getBonus().multiply(new BigDecimal("0.01"))).setScale(2,BigDecimal.ROUND_HALF_DOWN);
-
-				Member seller = order.getSeller();
-				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
-				//扣除股东分红
-				seller.setBalance(seller.getBalance().subtract(pte));
-				memberDao.merge(seller);
-				memberDao.flush();
-				Deposit deposit = new Deposit();
-				deposit.setBalance(seller.getBalance());
-				deposit.setType(Deposit.Type.product);
-				deposit.setMemo("支付分红佣金");
-				deposit.setMember(seller);
-				deposit.setCredit(BigDecimal.ZERO.subtract(pte));
-				deposit.setDebit(BigDecimal.ZERO);
-				deposit.setDeleted(false);
-				deposit.setOperator("system");
-				deposit.setOrder(order);
-				deposit.setSeller(order.getSeller());
-				depositDao.persist(deposit);
-				messageService.depositPushTo(deposit);
-
-				Member partner = order.getPartner();
-				memberDao.refresh(partner, LockModeType.PESSIMISTIC_WRITE);
-				//股东分红
-				partner.setBalance(partner.getBalance().add(pte));
-				memberDao.merge(partner);
-				memberDao.flush();
-				Deposit deposit_partner = new Deposit();
-				deposit_partner.setBalance(seller.getBalance());
-				deposit_partner.setType(Deposit.Type.rebate);
-				deposit_partner.setMemo("分红佣金");
-				deposit_partner.setMember(partner);
-				deposit_partner.setCredit(pte);
-				deposit_partner.setDebit(BigDecimal.ZERO);
-				deposit_partner.setDeleted(false);
-				deposit_partner.setOperator("system");
-				deposit_partner.setOrder(order);
-				deposit_partner.setSeller(order.getSeller());
-				depositDao.persist(deposit_partner);
-				messageService.depositPushTo(deposit_partner);
-
-				order.setIsPartner(true);
-				orderDao.merge(order);
-
-			}
-
-		}
-
-		//计算公球公排
-		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
-			orderRankingService.add(order);
-		}
+		createRebate(order,operator);
 
 		//代理商佣金
 //		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);

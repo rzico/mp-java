@@ -134,7 +134,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 		}
 
 		if (curr!=null) {
-			return Card.VIP.valueOf(curr.get("vip").toString());
+			return Card.VIP.valueOf(curr.get("vip").toString().toLowerCase());
 		} else {
 			return null;
 		}

@@ -13,6 +13,9 @@ import java.util.List;
 public class CardViewModel extends BaseModel implements Serializable {
 
     private Long id;
+
+    private Long memberId;
+
     /** 姓名 */
     private String name;
     /** 手机号 */
@@ -184,6 +187,14 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.bonus = bonus;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
@@ -213,6 +224,11 @@ public class CardViewModel extends BaseModel implements Serializable {
             this.promoter = card.getPromoter().displayName();
         } else {
             this.promoter = "";
+        }
+        if (card.getMembers().size()>0) {
+            this.memberId = card.getMembers().get(0).getId();
+        } else {
+            this.memberId = 0L;
         }
 
     }
