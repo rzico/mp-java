@@ -100,11 +100,8 @@ public class OrderController extends BaseController {
 		if (dragonId!=null) {
 			dragon = dragonService.find(dragonId);
 		}
-		Order order = orderService.build(member,null,null, cart, receiver, null,null,shippingMethod,dragon);
-		OrderModel model = new OrderModel();
-		model.bind(order);
 		if (member!=null) {
-			if (receiver==null) {
+			if (receiver == null) {
 				for (Receiver r : member.getReceivers()) {
 					if (r.getIsDefault()) {
 						receiver = r;
@@ -112,12 +109,16 @@ public class OrderController extends BaseController {
 					}
 				}
 			}
+		}
+
+		Order order = orderService.build(member,null,null, cart, receiver, null,null,shippingMethod,dragon);
+		OrderModel model = new OrderModel();
+		model.bind(order);
 			ReceiverModel m = new ReceiverModel();
 			if (receiver!=null) {
 				m.bind(receiver);
 			}
 			model.setReceiver(m);
-		}
 		return Message.success(model,"success");
 	}
 
@@ -142,12 +143,8 @@ public class OrderController extends BaseController {
 		if (dragonId!=null) {
 			dragon = dragonService.find(dragonId);
 		}
-		Order order = orderService.build(member,product,quantity,cart, receiver,null,promotionId,shippingMethod,dragon);
-
-		OrderModel model = new OrderModel();
-		model.bindHeader(order);
 		if (member!=null) {
-			if (receiver==null) {
+			if (receiver == null) {
 				for (Receiver r : member.getReceivers()) {
 					if (r.getIsDefault()) {
 						receiver = r;
@@ -155,12 +152,19 @@ public class OrderController extends BaseController {
 					}
 				}
 			}
-			ReceiverModel m = new ReceiverModel();
-			if (receiver!=null) {
-				m.bind(receiver);
-			}
-			model.setReceiver(m);
 		}
+
+		Order order = orderService.build(member,product,quantity,cart, receiver,null,promotionId,shippingMethod,dragon);
+
+		OrderModel model = new OrderModel();
+		model.bindHeader(order);
+
+		ReceiverModel m = new ReceiverModel();
+		if (receiver!=null) {
+			m.bind(receiver);
+		}
+		model.setReceiver(m);
+
 		return Message.success(model,"success");
 	}
 
