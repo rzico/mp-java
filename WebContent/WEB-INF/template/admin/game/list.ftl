@@ -205,7 +205,7 @@
                             return "";
                         }
                     }
-                }
+                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
                 {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
@@ -226,7 +226,6 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
                     type: 'get',
