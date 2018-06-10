@@ -2,6 +2,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -130,4 +131,15 @@ public class Game extends BaseEntity {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getUsername());
+		} else {
+			return null;
+		}
+	}
+
 }

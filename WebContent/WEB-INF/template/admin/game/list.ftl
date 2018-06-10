@@ -134,7 +134,7 @@
                 },
                 {
                     "mData": "mapMember",
-                    "sTitle": "Member",
+                    "sTitle": "会员",
                     "sClass": "center"
                 },
                 {
