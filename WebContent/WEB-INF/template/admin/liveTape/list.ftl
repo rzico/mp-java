@@ -145,11 +145,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "nickname",
-                    "sTitle": "昵称",
-                    "sClass": "center"
-                },
-                {
                     "mData": "endTime",
                     "sTitle": "结束时间",
                     "sClass": "center"
@@ -194,9 +189,13 @@
                 },
 
                 {
-                    "aTargets": [5],
+                    "aTargets": [4],
                     "mRender": function (data, display, row) {
+                        if (data!=null && data!=undefined) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
+                        } else {
+                            return "";
+                        }
                     }
                 },
 

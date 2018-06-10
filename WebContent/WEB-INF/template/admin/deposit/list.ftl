@@ -167,11 +167,6 @@
                     "mData": "balance",
                     "sTitle": "当前余额",
                     "sClass": "center"
-                },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
                 }
             ],
             "aoColumnDefs": [
