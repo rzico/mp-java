@@ -72,6 +72,7 @@ public class LiveController extends BaseController {
 			     * KEY+ stream_id + txTime
 			     */
     private static String getSafeUrl(String key, String streamId, long txTime) {
+
         String input = new StringBuilder().
                 append(key).
                 append(streamId).
@@ -324,6 +325,7 @@ public class LiveController extends BaseController {
 
         LiveTapeModel model = new LiveTapeModel();
         model.bind(liveTape);
+        model.setViewerCount(live.getViewerCount());
         model.setGift(live.getGiftTotal());
 
         model.setFans(new Long(member.getFans().size()));
@@ -423,6 +425,8 @@ public class LiveController extends BaseController {
         model.setFans(new Long(live.getMember().getFans().size()));
         model.setFollow(new Long(live.getMember().getFollows().size()));
         model.setVip(live.getMember().getVip());
+        model.setViewerCount(live.getViewerCount());
+        model.setGift(live.getGiftTotal());
 
         return Message.success(model,"success");
     }

@@ -84,7 +84,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/game/list.jhtml",
+            "sAjaxSource": "${base}/admin/game/list.jhtml[#if memberId??]?memberId=${memberId}[/#if]",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -171,11 +171,6 @@
                     "mData": "status",
                     "sTitle": "状态",
                     "sClass": "center"
-                },
-                {
-                    "mData": "id",
-                    "sTitle": "操作",
-                    "sClass": "center"
                 }
             ],
             "aoColumnDefs": [
@@ -213,7 +208,7 @@
                 /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
 
                 var index = layer.msg('加载中', {

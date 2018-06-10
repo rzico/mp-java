@@ -314,7 +314,8 @@
                     "aTargets": [16],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"deposit(this,'"+data+"');\" name=\"\">账单</button>"
+                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"deposit(this,'"+data+"');\" name=\"\">账单</button>"+
+                                    "<button class=\"btn btn-success radius\" id=\"\" onclick=\"game(this,'"+data+"');\" name=\"\">投注</button>"
                         }else{
                             return "";
                         }
@@ -424,6 +425,15 @@
             type:2,
             title:"账单",
             content:"../deposit/index.jhtml?memberId="+id
+        });
+        layer.full(index);
+    }
+    /*编辑*/
+    function game(title, id) {
+        var index = layer.open({
+            type:2,
+            title:"投注",
+            content:"../game/index.jhtml?memberId="+id
         });
         layer.full(index);
     }

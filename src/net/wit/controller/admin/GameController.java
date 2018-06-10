@@ -203,8 +203,12 @@ public class GameController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+	public Message list(Date beginDate, Date endDate,Long memberId, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		if (memberId!=null) {
+			Filter memberFilter = new Filter("member", Filter.Operator.eq, memberService.find(memberId));
+			filters.add(memberFilter);
+		} else
 		if (pageable.getSearchValue()!=null) {
 			Member member = memberService.findByMobile(pageable.getSearchValue());
 			if (member!=null) {
