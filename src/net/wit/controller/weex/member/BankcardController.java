@@ -196,8 +196,10 @@ public class BankcardController extends BaseController {
                 return Message.error("手机验证不合法");
             }
 
-            String host = "https://aliyun-bankcard4-verify.apistore.cn";
-            String path = "/bank4";
+            String host = "https://aliyun-bankcard-verify.apistore.cn";
+//            String host = "https://aliyun-bankcard4-verify.apistore.cn";
+            String path = "/bank";
+//            String path = "/bank4";
             String method = "GET";
 
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
@@ -208,9 +210,9 @@ public class BankcardController extends BaseController {
             //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
             headers.put("Authorization", "APPCODE " + appcode);
             Map<String, String> querys = new HashMap<String, String>();
-            querys.put("Mobile", data.get("mobile"));
+//            querys.put("Mobile", data.get("mobile"));
             querys.put("bankcard", data.get("cardno"));
-            querys.put("cardNo", data.get("identity"));
+//            querys.put("cardNo", data.get("identity"));
             querys.put("realName",data.get("name"));
             HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
             String resp =  EntityUtils.toString(response.getEntity());
