@@ -58,7 +58,6 @@ public class MemberController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
-
 	/**
 	 * 会员管理视图
 	 */
