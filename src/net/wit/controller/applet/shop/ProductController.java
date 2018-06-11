@@ -149,7 +149,7 @@ public class ProductController extends BaseController {
 		if (member==null) {
 			return Message.error("作者id无效");
 		}
-		List<Filter> filters = new ArrayList<Filter>();
+		List<Filter> filters = pageable.getFilters();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
 		pageable.setFilters(filters);
@@ -178,7 +178,7 @@ public class ProductController extends BaseController {
 		if (member==null) {
 			return Message.error("作者id无效");
 		}
-		List<Filter> filters = new ArrayList<Filter>();
+		List<Filter> filters = pageable.getFilters();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
 
@@ -204,7 +204,7 @@ public class ProductController extends BaseController {
 		if (member==null) {
 			return Message.error("作者id无效");
 		}
-		List<Filter> filters = new ArrayList<Filter>();
+		List<Filter> filters = pageable.getFilters();
 		filters.add(new Filter("owner", Filter.Operator.eq,member));
 
 		Page<Promotion> page = promotionService.findPage(null,null,pageable);
