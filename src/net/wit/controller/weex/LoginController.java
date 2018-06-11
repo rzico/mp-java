@@ -212,6 +212,7 @@ public class LoginController extends BaseController {
                 member.setIsLocked(false);
                 member.setLoginFailureCount(0);
                 member.setRegisterIp(request.getRemoteAddr());
+                member.setUserType(Member.UserType.REAL);
                 memberService.save(member);
             }
 
@@ -404,6 +405,7 @@ public class LoginController extends BaseController {
             member.setIsLocked(false);
             member.setLoginFailureCount(0);
             member.setRegisterIp(request.getRemoteAddr());
+            member.setUserType(Member.UserType.REAL);
             memberService.save(member);
         }
         else {
@@ -534,6 +536,7 @@ public class LoginController extends BaseController {
             member.setIsLocked(false);
             member.setLoginFailureCount(0);
             member.setRegisterIp(request.getRemoteAddr());
+            member.setUserType(Member.UserType.REAL);
             member.setGender(Member.Gender.secrecy);
             memberService.save(member);
         }

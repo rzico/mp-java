@@ -34,6 +34,10 @@ public class Member extends BaseEntity {
 
 	private static final long serialVersionUID = 29L;
 
+	public enum UserType {
+		REAL,//真实用户
+		ROBOT//机器人用户
+	}
 	/**
 	 * 性别
 	 */
@@ -176,6 +180,11 @@ public class Member extends BaseEntity {
 	/** 性别 */
 	@Column(columnDefinition="int(11) comment '性别 {male:男,female:女,secrecy:保密}'")
 	private Gender gender;
+
+	/** 性别 */
+	@NotNull
+	@Column(columnDefinition="int(11) not null default 0  comment '用户类型 {REAL:真实用户,ROBOT:机器人}'")
+	private UserType userType;
 
 	/** 职业 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -546,7 +555,16 @@ public class Member extends BaseEntity {
 	public void setBirth(Date birth) {
 		this.birth = birth;
 	}
-//
+
+	public UserType getUserType() {
+		return userType;
+	}
+
+	public void setUserType(UserType userType) {
+		this.userType = userType;
+	}
+
+	//
 //	public String getAddress() {
 //		return address;
 //	}
