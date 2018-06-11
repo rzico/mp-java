@@ -57,6 +57,29 @@ public class MemberController extends BaseController {
 
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
+
+
+	/**
+	 * 会员管理视图
+	 */
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
+	public String memberView(Long id, ModelMap model) {
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
+		model.addAttribute("genders",genders);
+
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
+
+		model.addAttribute("tags",tagService.findAll());
+
+		model.addAttribute("member",memberService.find(id));
+		return "/admin/member/view/memberView";
+	}
+
 	/**
 	 * 主页
 	 */

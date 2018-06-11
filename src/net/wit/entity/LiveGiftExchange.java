@@ -118,7 +118,7 @@ public class LiveGiftExchange extends BaseEntity {
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
+			return new MapEntity(getMember().getId().toString(), getMember().displayName()+"("+getMember().getUsername()+")" );
 		} else {
 			return null;
 		}
