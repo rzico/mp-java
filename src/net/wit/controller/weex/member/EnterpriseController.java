@@ -25,11 +25,11 @@ import java.util.Map;
 
 
 /**
- * @ClassName: EnterpriseController
  * @author 降魔战队
+ * @ClassName: EnterpriseController
  * @date 2017-9-14 19:42:9
  */
- 
+
 @Controller("weexMemberEnterpriseController")
 @RequestMapping("/weex/member/enterprise")
 public class EnterpriseController extends BaseController {
@@ -69,72 +69,72 @@ public class EnterpriseController extends BaseController {
 
     @Resource(name = "companyLabelServiceImpl")
     private CompanyLabelService companyLabelService;
-    
+
 
     /**
-     *   企业信息
+     * 企业信息
      */
     @RequestMapping(value = "/view")
     @ResponseBody
-    public Message view(HttpServletRequest request){
+    public Message view(HttpServletRequest request) {
 
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
         }
 
-        Map<String,Object> data = new HashMap<String,Object>();
+        Map<String, Object> data = new HashMap<String, Object>();
 
         Admin admin = adminService.findByMember(member);
-        if (admin!=null && admin.getEnterprise()!=null) {
-            data.put("status",admin.getEnterprise().getStatus());
+        if (admin != null && admin.getEnterprise() != null) {
+            data.put("status", admin.getEnterprise().getStatus());
             Enterprise enterprise = admin.getEnterprise();
 
-            data.put("logo",enterprise.getLogo());
-            data.put("name",enterprise.getName());
-            if (admin.getShop()!=null) {
-                data.put("shopName",admin.getShop().getName());
+            data.put("logo", enterprise.getLogo());
+            data.put("name", enterprise.getName());
+            if (admin.getShop() != null) {
+                data.put("shopName", admin.getShop().getName());
             } else {
-                data.put("shopName","未分配");
+                data.put("shopName", "未分配");
             }
-            data.put("isOwner",admin.isOwner());
-            data.put("creditLine",enterprise.getCreditLine());
+            data.put("isOwner", admin.isOwner());
+            data.put("creditLine", enterprise.getCreditLine());
             if (admin.isOwner()) {
-                data.put("roleName","店主");
+                data.put("roleName", "店主");
             } else {
                 String s = "";
-                for (Role role:admin.getRoles()) {
+                for (Role role : admin.getRoles()) {
                     if (s.equals("")) {
                         s = s + ",";
                     }
-                    s = s +role.getName();
+                    s = s + role.getName();
                 }
-                data.put("roleName",s);
+                data.put("roleName", s);
             }
         } else {
-            data.put("status","none");
+            data.put("status", "none");
         }
 
-        return Message.bind(data,request);
+        return Message.bind(data, request);
 
     }
 
     /**
-     *  解除就业
+     * 解除就业
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Message delete(HttpServletRequest request){
+    public Message delete(HttpServletRequest request) {
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
         }
         Admin admin = adminService.findByMember(member);
-        if (admin==null) {
+        if (admin == null) {
             return Message.error("没有开通");
         }
         Enterprise enterprise = admin.getEnterprise();
-        if (enterprise==null) {
+        if (enterprise == null) {
             return Message.error("不在就业状态");
         }
 
@@ -146,7 +146,7 @@ public class EnterpriseController extends BaseController {
     }
 
     /**
-     *   添加企业信息
+     * 添加企业信息
      */
     @RequestMapping(value = "/add")
     @ResponseBody
@@ -161,34 +161,34 @@ public class EnterpriseController extends BaseController {
             Long[] label,
             String[] img,
             String autogragh,
-            HttpServletRequest request){
+            HttpServletRequest request) {
 
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
         }
 
         Admin admin = adminService.findByMember(member);
 
-        if(admin==null){
+        if (admin == null) {
             return Message.error("该用户没有企业");
         }
 
         Enterprise enterprise = admin.getEnterprise();
 
-        if(enterprise==null||enterprise.getDeleted()){
+        if (enterprise == null || enterprise.getDeleted()) {
             return Message.error("该企业不存在");
         }
 
-        if(admin.getIsLocked()){
+        if (admin.getIsLocked()) {
             return Message.error("该管理员已锁定,暂无权限");
         }
 
-        if(!admin.getIsEnabled()){
+        if (!admin.getIsEnabled()) {
             return Message.error("该管理员已停用");
         }
 
-        if(!(admin.isRole("店长/主管")||admin.isRole("管理员"))){
+        if (!(admin.isRole("店长/主管") || admin.isRole("管理员"))) {
             return Message.error("权限不足");
         }
 
@@ -202,7 +202,6 @@ public class EnterpriseController extends BaseController {
 //        System.out.println(label);
 //        System.out.println(img);
 //        System.out.println(autogragh);
-
         enterprise.setAddress(address);
         enterprise.setName(name);
         enterprise.setLogo(logo);
@@ -210,44 +209,46 @@ public class EnterpriseController extends BaseController {
         enterprise.setEndTime(endTime);
         enterprise.setPhone(phone);
         enterprise.setArea(areaService.find(area));
-        List<CompanyLabel> list=companyLabelService.findList(label);
+        List<CompanyLabel> list = companyLabelService.findList(label);
         enterprise.setLabel(list);
-        int size=img.length;
-        int i=0;
-        if(i<size){
-            enterprise.setImage1(img[i]);
-            i++;
-        }else{
-            enterprise.setImage1(null);
-        }
-        if(i<size){
-            enterprise.setImage2(img[i]);
-            i++;
-        }else{
-            enterprise.setImage2(null);
-        }
-        if(i<size){
-            enterprise.setImage3(img[i]);
-            i++;
-        }else{
-            enterprise.setImage3(null);
-        }
-        if(i<size){
-            enterprise.setImage4(img[i]);
-            i++;
-        }else{
-            enterprise.setImage4(null);
-        }
-        if(i<size){
-            enterprise.setImage5(img[i]);
-            i++;
-        }else{
-            enterprise.setImage5(null);
-        }
-        if(i<size){
-            enterprise.setImage6(img[i]);
-        }else{
-            enterprise.setImage6(null);
+        if (img != null) {
+            int size = img.length;
+            int i = 0;
+            if (i < size) {
+                enterprise.setImage1(img[i]);
+                i++;
+            } else {
+                enterprise.setImage1(null);
+            }
+            if (i < size) {
+                enterprise.setImage2(img[i]);
+                i++;
+            } else {
+                enterprise.setImage2(null);
+            }
+            if (i < size) {
+                enterprise.setImage3(img[i]);
+                i++;
+            } else {
+                enterprise.setImage3(null);
+            }
+            if (i < size) {
+                enterprise.setImage4(img[i]);
+                i++;
+            } else {
+                enterprise.setImage4(null);
+            }
+            if (i < size) {
+                enterprise.setImage5(img[i]);
+                i++;
+            } else {
+                enterprise.setImage5(null);
+            }
+            if (i < size) {
+                enterprise.setImage6(img[i]);
+            } else {
+                enterprise.setImage6(null);
+            }
         }
         enterprise.setAutograph(autogragh);
         enterpriseService.update(enterprise);
@@ -255,58 +256,58 @@ public class EnterpriseController extends BaseController {
     }
 
     /**
-     *   获取企业标签
+     * 获取企业标签
      */
     @RequestMapping(value = "/getLabel")
     @ResponseBody
-    public Message getLabel(ModelMap model,HttpServletRequest request, HttpServletResponse response){
-        List<MapEntity> list=new ArrayList<>();
-        List<CompanyLabel> companyLabelList= companyLabelService.findAll();
-        for(CompanyLabel companyLabel:companyLabelList){
-            list.add(new MapEntity(companyLabel.getId().toString(),companyLabel.getName()));
+    public Message getLabel(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+        List<MapEntity> list = new ArrayList<>();
+        List<CompanyLabel> companyLabelList = companyLabelService.findAll();
+        for (CompanyLabel companyLabel : companyLabelList) {
+            list.add(new MapEntity(companyLabel.getId().toString(), companyLabel.getName()));
         }
-       return Message.success(list,"success");
+        return Message.success(list, "success");
     }
 
     /**
-     *   获取当前企业信息
+     * 获取当前企业信息
      */
     @RequestMapping(value = "/views")
     @ResponseBody
     public Message views(
-            HttpServletRequest request){
+            HttpServletRequest request) {
 
         Member member = memberService.getCurrent();
-        if (member==null) {
+        if (member == null) {
             return Message.error(Message.SESSION_INVAILD);
         }
 
         Admin admin = adminService.findByMember(member);
 
-        if(admin==null){
+        if (admin == null) {
             return Message.error("该用户没有企业");
         }
 
         Enterprise enterprise = admin.getEnterprise();
 
-        if(enterprise==null||enterprise.getDeleted()){
+        if (enterprise == null || enterprise.getDeleted()) {
             return Message.error("该企业不存在");
         }
 
-        if(admin.getIsLocked()){
+        if (admin.getIsLocked()) {
             return Message.error("该管理员已锁定,暂无权限");
         }
 
-        if(!admin.getIsEnabled()){
+        if (!admin.getIsEnabled()) {
             return Message.error("该管理员已停用");
         }
 
-        if(!(admin.isRole("店长/主管")||admin.isRole("管理员"))){
+        if (!(admin.isRole("店长/主管") || admin.isRole("管理员"))) {
             return Message.error("权限不足");
         }
-        CompanyViewsModel model=new CompanyViewsModel();
+        CompanyViewsModel model = new CompanyViewsModel();
 
         model.bind(enterprise);
-        return Message.success(model,"打开成功");
+        return Message.success(model, "打开成功");
     }
 }

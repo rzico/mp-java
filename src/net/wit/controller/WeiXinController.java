@@ -89,6 +89,8 @@ public class WeiXinController extends BaseController {
     @Resource(name = "pluginConfigServiceImpl")
     private PluginConfigService pluginConfigService;
 
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
     /**
      * 付款页
      *
@@ -361,6 +363,7 @@ public class WeiXinController extends BaseController {
                 }
                 topic.setConfig(topicConfig);
                 topicService.update(topic);
+                messageService.topicConfigPushTo(topic);
             }
         }
         replyTextMessage(request,response,content,toUserName,fromUserName,appId);

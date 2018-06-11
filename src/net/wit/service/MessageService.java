@@ -22,6 +22,8 @@ public interface MessageService extends BaseService<Message, Long> {
 	public Member GMInit(Message.Type type);
 	public Boolean pushTo(Message message);
 	//活动专栏
+	public Boolean topicConfigPushTo(Topic topic);
+	//活动专栏
 	public Boolean topicPushTo(Topic topic);
 	//账单提醒
 	public Boolean depositPushTo(Deposit deposit);

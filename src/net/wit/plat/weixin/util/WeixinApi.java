@@ -746,9 +746,9 @@ title	小程序页面的标题,标题长度不超过32*/
 				"}," +
 				"\\\"extPages\\\": {}," +
 				"\\\"window\\\": {" +
-				"\\\"navigationBarBackgroundColor\\\": \\\"#333333\\\"," +
+				"\\\"navigationBarBackgroundColor\\\": \\\"#f0f0f0\\\"," +
 				"\\\"navigationBarTitleText\\\": \\\"" + appletCodeConfig.getName() + "\\\"," +
-				"\\\"navigationBarTextStyle\\\": \\\"white\\\"," +
+				"\\\"navigationBarTextStyle\\\": \\\"black\\\"," +
 				"\\\"backgroundTextStyle\\\": \\\"light\\\"" +
 				"}," +
 				"\\\"tabBar\\\": {" +

@@ -36,7 +36,7 @@ public class AppletSowingMap extends OrderEntity{
     @Column(columnDefinition="varchar(255) comment '跳转链接'")
     private String url;
 
-    /**  封面  */
+        /**  封面  */
     @Column(columnDefinition="varchar(255) comment '封面'")
     private String frontcover;
 

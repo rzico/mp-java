@@ -532,6 +532,36 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		return true;
 	}
 
+	public Boolean topicConfigPushTo(Topic topic) {
+		TopicConfig topicConfig = topic.getConfig();
+		Message msg = new Message();
+		msg.setMember(topic.getMember());
+		msg.setReceiver(topic.getMember());
+		msg.setType(Message.Type.message);
+		msg.setTitle("活动专栏");
+		String content = "";
+		switch (topicConfig.getEstate()){
+			case AUDITING://已提交审核
+				content = "您的小程序【"+topic.getMember().getNickName()+"】已提交审核请耐心等待审核结果。";
+				break;
+			case ISAUDITING://审核通过
+				content = "您的小程序【"+topic.getMember().getNickName()+"】已通过审核。";
+				break;
+			case UNAUDITING://审核不通过
+				content = "您的小程序【"+topic.getMember().getNickName()+"】审核不通过，审核不通过原因：" + topicConfig.getStateRemark();
+				break;
+
+			case PASS://小程序已发布
+				content = "您的小程序【"+topic.getMember().getNickName()+"】已发布成功，可在微信小程序中搜索。";
+				break;
+		}
+		msg.setContent(content);
+		Map<String,String> ext = new HashMap<String,String>();
+		ext.put("type","topic");
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
 	//活动专栏
 	public Boolean topicPushTo(Topic topic) {
 		Message msg = new Message();
@@ -545,6 +575,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
+
+
+	//
 
 	public Boolean depositPushTo(Deposit deposit) {
         Message msg = new Message();

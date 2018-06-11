@@ -5,11 +5,15 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.controller.model.AppletSowingModel;
 import net.wit.entity.model.AppletSowingMapModel;
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -40,8 +44,8 @@ import net.wit.controller.admin.model.*;
  * @date 2018-5-29 16:52:28
  */
  
-@Controller("adminAppletSowingMapController")
-@RequestMapping("/admin/appletSowingMap")
+@Controller("componentAppletSowingMapController")
+@RequestMapping("/component/appletSowingMap")
 public class AppletSowingMapController extends BaseController {
 	@Resource(name = "appletSowingMapServiceImpl")
 	private AppletSowingMapService appletSowingMapService;
@@ -101,9 +105,54 @@ public class AppletSowingMapController extends BaseController {
 		return "/admin/appletSowingMap/add";
 	}
 
+	/**
+	 * 保存文章信息
+	 */
+	@RequestMapping(value = "/submit", method = RequestMethod.POST)
+	@ResponseBody
+	public Message submit(String body, HttpServletRequest request) {
+
+		Member member = memberService.getCurrent();
+		if(member == null) return Message.error(Message.SESSION_INVAILD);
+		AppletSowingModel appletSowingModel = JsonUtils.toObject(body, AppletSowingModel.class);
+		List<AppletSowingMap> appletSowingMaps = new ArrayList<>();
+		List<AppletSowingMap> oldAppletSowingMaps = member.getTopic().getAppletSowingMaps();
+		int oldLen = oldAppletSowingMaps.size();
+
+		for (int i = 0; i < oldLen; i++){
+			appletSowingMapService.delete(oldAppletSowingMaps.get(i));
+		}
+			if(appletSowingModel != null && appletSowingModel.getAppletSowingMapModels() != null){
+				int len = appletSowingModel.getAppletSowingMapModels().size();
+
+				for (int i = 0; i < len; i++){
+					AppletSowingMap appletSowingMap = new AppletSowingMap();
+					appletSowingMap.setAction(appletSowingModel.getAppletSowingMapModels().get(i).getAction());
+					appletSowingMap.setActionId(appletSowingModel.getAppletSowingMapModels().get(i).getActionId());
+					appletSowingMap.setFrontcover(appletSowingModel.getAppletSowingMapModels().get(i).getFrontcover());
+					appletSowingMap.setUrl(appletSowingModel.getAppletSowingMapModels().get(i).getUrl());
+					appletSowingMap.setOrders(appletSowingModel.getAppletSowingMapModels().get(i).getOrders());
+					appletSowingMap.setTopic(member.getTopic());
+					appletSowingMapService.save(appletSowingMap);
+					appletSowingMaps.add(appletSowingMap);
+				}
+				member.getTopic().setAppletSowingMaps(appletSowingMaps);
+				memberService.update(member);
+				return Message.success("admin.save.success");
+			}
+
+		//回滚数据
+		for (int i = 0; i < oldLen; i++){
+			appletSowingMapService.save(oldAppletSowingMaps.get(i));
+		}
+		member.getTopic().setAppletSowingMaps(oldAppletSowingMaps);
+		memberService.update(member);
+			return Message.error("admin.save.error");
+
+	}
 
 	/**
-     * 保存
+     * 添加
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
@@ -112,10 +161,6 @@ public class AppletSowingMapController extends BaseController {
 		if(member == null) return Message.error(Message.SESSION_INVAILD);
 
 		AppletSowingMap entity = new AppletSowingMap();	
-
-		entity.setCreateDate(appletSowingMap.getCreateDate());
-
-		entity.setModifyDate(appletSowingMap.getModifyDate());
 
 		entity.setAction(appletSowingMap.getAction());
 
