@@ -4,12 +4,14 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.ArticleCatalogModel;
 import net.wit.controller.model.ReceiverModel;
-import net.wit.entity.ArticleCatalog;
+import net.wit.entity.Location;
 import net.wit.entity.Member;
 import net.wit.entity.Receiver;
-import net.wit.service.*;
+import net.wit.service.AreaService;
+import net.wit.service.MemberService;
+import net.wit.service.ReceiverService;
+import net.wit.service.RoadService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,11 +24,11 @@ import java.util.List;
 
 
 /**
- * @ClassName: ArticleCatalogController
+ * @ClassName: ReceiverController
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
- 
+
 @Controller("weexMemberReceiverController")
 @RequestMapping("/weex/member/receiver")
 public class ReceiverController extends BaseController {
@@ -36,6 +38,9 @@ public class ReceiverController extends BaseController {
 
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
+
+    @Resource(name = "roadServiceImpl")
+    private RoadService roadService;
 
     @Resource(name = "receiverServiceImpl")
     private ReceiverService receiverService;
@@ -67,7 +72,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -84,6 +89,21 @@ public class ReceiverController extends BaseController {
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
         receiver.setMember(member);
+        if (level==null) {
+            level = 0;
+        }
+        receiver.setLevel(level);
+        receiver.setShop(null);
+
+//        if (roadId!=null) {
+//            receiver.setRoad(roadService.find(roadId));
+//        }
+//        if (lat!=null && lng!=null) {
+//            Location location = new Location();
+//            location.setLat(lat);
+//            location.setLng(lng);
+//            receiver.setLocation(location);
+//        }
 
         receiverService.save(receiver);
 
@@ -97,7 +117,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,HttpServletRequest request){
+    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -114,6 +134,20 @@ public class ReceiverController extends BaseController {
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
         receiver.setMember(member);
+        if (level!=null) {
+            receiver.setLevel(level);
+        }
+        receiver.setShop(null);
+//        if (roadId!=null) {
+//            receiver.setRoad(roadService.find(roadId));
+//        }
+//        if (lat!=null && lng!=null) {
+//            Location location = new Location();
+//            location.setLat(lat);
+//            location.setLng(lng);
+//            receiver.setLocation(location);
+//        }
+//
         receiverService.update(receiver);
         ReceiverModel model = new ReceiverModel();
         model.bind(receiver);
@@ -155,4 +189,51 @@ public class ReceiverController extends BaseController {
         receiverService.delete(id);
         return Message.success("删除成功");
     }
+
+
+    /**
+     *  添加文集
+     */
+    @RequestMapping(value = "/addcard", method = RequestMethod.POST)
+    @ResponseBody
+    public Message addCard(Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        if (areaId==null) {
+            return Message.error("所在地区无效");
+        }
+        Receiver receiver = new Receiver();
+        receiver.setAddress(address);
+        receiver.setConsignee(consignee);
+        receiver.setArea(areaService.find(areaId));
+        receiver.setAreaName(receiver.getArea().getFullName());
+        receiver.setPhone(phone);
+        receiver.setIsDefault(isDefault);
+        receiver.setZipCode("000000");
+        receiver.setMember(member);
+        if (level==null) {
+            level = 0;
+        }
+        receiver.setLevel(level);
+        receiver.setShop(null);
+
+//        if (roadId!=null) {
+//            receiver.setRoad(roadService.find(roadId));
+//        }
+//        if (lat!=null && lng!=null) {
+//            Location location = new Location();
+//            location.setLat(lat);
+//            location.setLng(lng);
+//            receiver.setLocation(location);
+//        }
+
+        receiverService.save(receiver);
+
+        ReceiverModel model = new ReceiverModel();
+        model.bind(receiver);
+        return Message.success(model,"添加成功");
+    }
+
 }
