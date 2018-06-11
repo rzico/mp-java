@@ -5,13 +5,11 @@ import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ReceiverModel;
+import net.wit.entity.Card;
 import net.wit.entity.Location;
 import net.wit.entity.Member;
 import net.wit.entity.Receiver;
-import net.wit.service.AreaService;
-import net.wit.service.MemberService;
-import net.wit.service.ReceiverService;
-import net.wit.service.RoadService;
+import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,6 +43,9 @@ public class ReceiverController extends BaseController {
     @Resource(name = "receiverServiceImpl")
     private ReceiverService receiverService;
 
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
+
     /**
      *  列表
      */
@@ -66,6 +67,37 @@ public class ReceiverController extends BaseController {
         return Message.bind(ReceiverModel.bindList(receivers),request);
     }
 
+
+    /**
+     *  列表
+     */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(Long cardId,HttpServletRequest request){
+
+        Card card =  cardService.find(cardId);
+
+        if (card==null) {
+            return Message.error("卡无效");
+        }
+
+        //卡主
+        Member member = card.getMember();
+        if (member==null) {
+           if (card.getMembers().size()==1) {
+               member = card.getMembers().get(0);
+           }
+        }
+
+        Receiver receiver = member.getReceiverDefault();
+
+        ReceiverModel model = new ReceiverModel();
+        if (receiver!=null) {
+            model.bind(receiver);
+        }
+
+        return Message.bind(model,request);
+    }
 
     /**
      *  添加文集
@@ -204,6 +236,22 @@ public class ReceiverController extends BaseController {
         if (areaId==null) {
             return Message.error("所在地区无效");
         }
+        if (member.getTopic()==null) {
+            return Message.error("没有开通专栏");
+        }
+        if (member.getTopic().getTopicCard()==null) {
+            return Message.error("没有开通会员卡");
+        }
+
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("phone", Filter.Operator.eq,phone));
+
+        List<Card> cards = cardService.findList(null,null,filters,null);
+
+        if (cards.size()>0) {
+            return Message.error("当前电话已办卡");
+        }
+
         Receiver receiver = new Receiver();
         receiver.setAddress(address);
         receiver.setConsignee(consignee);
@@ -212,24 +260,13 @@ public class ReceiverController extends BaseController {
         receiver.setPhone(phone);
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
-        receiver.setMember(member);
         if (level==null) {
             level = 0;
         }
         receiver.setLevel(level);
         receiver.setShop(null);
 
-//        if (roadId!=null) {
-//            receiver.setRoad(roadService.find(roadId));
-//        }
-//        if (lat!=null && lng!=null) {
-//            Location location = new Location();
-//            location.setLat(lat);
-//            location.setLng(lng);
-//            receiver.setLocation(location);
-//        }
-
-        receiverService.save(receiver);
+        cardService.createAndMember(receiver,member);
 
         ReceiverModel model = new ReceiverModel();
         model.bind(receiver);

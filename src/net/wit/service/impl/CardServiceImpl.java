@@ -45,6 +45,9 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	@Resource(name = "memberDaoImpl")
 	private MemberDao memberDao;
 
+	@Resource(name = "receiverDaoImpl")
+	private ReceiverDao receiverDao;
+
 	@Resource(name = "cardBillDaoImpl")
 	private CardBillDao cardBillDao;
 
@@ -449,6 +452,60 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			bill.setMember(card.getMembers().get(0));
 			cardPointBillDao.persist(bill);
 		}
+	}
+
+
+
+	public synchronized Card createAndMember(Receiver receiver,Member owner) {
+
+		Member member = new Member();
+		member.setNickName(receiver.getConsignee());
+		member.setLogo(null);
+		member.setPoint(0L);
+		member.setAmount(BigDecimal.ZERO);
+		member.setBalance(BigDecimal.ZERO);
+		member.setFreezeBalance(BigDecimal.ZERO);
+		member.setVip(Member.VIP.vip1);
+		member.setIsEnabled(false);
+		member.setIsLocked(false);
+		member.setLoginFailureCount(0);
+		member.setRegisterIp("127.0.0.1");
+		memberDao.persist(member);
+		receiver.setMember(member);
+		receiverDao.persist(receiver);
+
+		memberDao.lock(owner,LockModeType.PESSIMISTIC_WRITE);
+
+		TopicCard topicCard = owner.getTopic().getTopicCard();
+		Card card = new Card();
+		card.setOwner(owner.getTopic().getMember());
+		card.setVip(Card.VIP.vip1);
+		card.setType(Card.Type.member);
+		card.setBonus(BigDecimal.ZERO);
+		card.setStatus(Card.Status.none);
+		card.setTopicCard(owner.getTopic().getTopicCard());
+		card.setBalance(BigDecimal.ZERO);
+		card.setAmount(BigDecimal.ZERO);
+		card.setPoint(0L);
+		topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
+		Long no = topicCard.getIncrement() + 1L;
+		topicCard.setIncrement(no);
+		topicCardDao.merge(topicCard);
+		card.setCode("85" + String.valueOf(topicCard.getId() + 100000000L) + String.valueOf(no + 10200L));
+		card.setStatus(Card.Status.none);
+		card.setShop(null);
+		card.setMember(member);
+
+		cardDao.persist(card);
+
+		card.getMembers().add(member);
+		cardDao.persist(card);
+		if (!member.getCards().contains(card)) {
+			member.getCards().add(card);
+			memberDao.merge(member);
+		}
+		return card;
+
 	}
 
 }

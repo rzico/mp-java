@@ -37,4 +37,7 @@ public interface CardService extends BaseService<Card, Long> {
 	public void addPoint(Card card, Long point,String memo,Order order);
 	public void decPoint(Card card, Long point,String memo,Order order);
 
-}
+	public Card createAndMember(Receiver receiver,Member owner);
+
+
+	}

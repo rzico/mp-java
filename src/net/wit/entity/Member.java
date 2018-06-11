@@ -362,7 +362,7 @@ public class Member extends BaseEntity {
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("isDefault desc, createDate desc")
 	@JsonIgnore
-	private Set<Receiver> receivers = new HashSet<Receiver>();
+	private List<Receiver> receivers = new ArrayList<>();
 
 	/** 收藏文章*/
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -681,11 +681,11 @@ public class Member extends BaseEntity {
 		this.payments = payments;
 	}
 
-	public Set<Receiver> getReceivers() {
+	public List<Receiver> getReceivers() {
 		return receivers;
 	}
 
-	public void setReceivers(Set<Receiver> receivers) {
+	public void setReceivers(List<Receiver> receivers) {
 		this.receivers = receivers;
 	}
 
@@ -1076,6 +1076,22 @@ public class Member extends BaseEntity {
 		} else {
 			return false;
 		}
+	}
+
+	public Receiver getReceiverDefault() {
+		Receiver receiver = null;
+		for (Receiver rcv:getReceivers()) {
+			if (rcv.getIsDefault()==true) {
+				receiver = rcv;
+				break;
+			}
+		}
+		if (receiver==null) {
+			if (getReceivers().size()>0) {
+				receiver = getReceivers().get(0);
+			}
+		}
+		return  receiver;
 	}
 
 	public String displayName() {
