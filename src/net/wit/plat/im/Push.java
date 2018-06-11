@@ -25,13 +25,12 @@ public class Push {
     public static String sendGroupUrl="https://console.tim.qq.com/v4/group_open_http_svc/send_group_msg?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
 
 
-    public static boolean impushgroup(String groupId, UserInfo userInfo){
+    public static boolean impushgroup(String groupId, UserInfo userInfo) throws UnsupportedEncodingException {
 
-        try {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String userSig= User.createUserSig("zhangsr");
+        String userSig = User.createUserSig("liveAdmin");
         int random= StringUtils.Random6Code();
-        String url = sendGroupUrl.replace("USERSIG",userSig).replace("ADMIN","zhangsr").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random));
+        String url = sendGroupUrl.replace("USERSIG",userSig).replace("ADMIN","liveAdmin").replace("SDKAPPID",bundle.getString("x-tls-appId")).replace("RANDOM",String.valueOf(random));
 
         Map<String,Object> data = new HashMap<>();
         data.put("GroupId", groupId);
@@ -39,7 +38,13 @@ public class Push {
         List<Object> body = new ArrayList<Object>();
             Map<String,Object> msgBody1 = new HashMap<String,Object>();
             msgBody1.put("MsgType", "TIMCustomElem");
-            msgBody1.put("MsgContent", JsonUtils.toJson(userInfo).getBytes("UTF-8"));
+            Map<String, Object> customData = new HashMap<>();
+        customData.put("cmd", userInfo.cmd);
+        customData.put("data", userInfo);
+
+        Map<String,Object> cusMsgContent = new HashMap<String,Object>();
+        cusMsgContent.put("Data", JsonUtils.toJson(customData));
+            msgBody1.put("MsgContent", cusMsgContent);
             body.add(msgBody1);
             Map<String,Object> msgBody2 = new HashMap<String,Object>();
             msgBody2.put("MsgType", "TIMTextElem");
@@ -53,11 +58,13 @@ public class Push {
             HttpClient httpClient = new DefaultHttpClient();
             try {
                 String msg = JsonUtils.toJson(data);
+                System.out.println("=====Send=====：" + msg);
                 HttpPost httpPost = new HttpPost(url);
                 httpPost.setEntity(new StringEntity(msg, "UTF-8"));
                 HttpResponse response = httpClient.execute(httpPost);
                 String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
                 Map resp = JsonUtils.toObject(jsonStr,Map.class);
+                System.out.println("==========" + resp.toString());
                 if ("OK".equals(resp.get("ActionStatus"))) {
                     return true;
                 } else {
@@ -70,10 +77,6 @@ public class Push {
             } finally {
                 httpClient.getConnectionManager().shutdown();
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
     public static boolean impush(Message message) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");

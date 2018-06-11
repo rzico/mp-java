@@ -1,6 +1,7 @@
 package net.wit.controller.admin;
 
 import net.wit.*;
+import net.wit.controller.model.live.UserInfo;
 import net.wit.entity.Member;
 import net.wit.entity.Role;
 import net.wit.plat.im.Push;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller("adminRobotController")
 @RequestMapping("/admin/robot")
@@ -77,11 +80,30 @@ public class RobotController extends BaseController{
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public @ResponseBody
-    Message delete(Long[] ids) {
+    Message delete(Long[] ids,Date beginDate, Date endDate, Pageable pageable, String searchValue, ModelMap model) {
 //        memberService.delete(ids);
         //
-//        Push.impushgroup();
-        return Message.success("admin.delete.success");
+        ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+        Filter mediaTypeFilter = new Filter("userType", Filter.Operator.eq, Member.UserType.ROBOT);
+
+        filters.add(mediaTypeFilter);
+        Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
+        List<Member> members = page.getContent();
+        Member member = members.get(0);
+        UserInfo userInfo = new UserInfo();
+        userInfo.id = member.getId();
+        userInfo.nickName = member.getNickName();
+        userInfo.headPic = member.getLogo();
+        userInfo.text = "主播你好呀！";
+        userInfo.cmd = "CustomTextMsg";
+        try {
+            Push.impushgroup("1",userInfo);
+            return Message.success("admin.delete.success");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+
+            return Message.success("admin.delete.error");
+        }
 
     }
 
