@@ -1,6 +1,8 @@
 
 package net.wit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -34,6 +36,7 @@ public class Game extends BaseEntity {
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '会员'")
+	@JsonIgnore
 	private Member member;
 
 	/** 游戏名 */
@@ -128,4 +131,15 @@ public class Game extends BaseEntity {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getUsername());
+		} else {
+			return null;
+		}
+	}
+
 }

@@ -7,6 +7,8 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.entity.GoldBuy;
+import net.wit.entity.Member;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -206,6 +208,15 @@ public class GoldExchangeController extends BaseController {
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
+		}
+		if (pageable.getSearchValue()!=null) {
+			Member member = memberService.findByMobile(pageable.getSearchValue());
+			if (member!=null) {
+				Filter memberFilter = new Filter("member", Filter.Operator.eq, member);
+				filters.add(memberFilter);
+			} else {
+				return Message.success(PageBlock.bind(new Page<GoldExchange>(new ArrayList<GoldExchange>(),0, pageable)), "admin.list.success");
+			}
 		}
 
 		Page<GoldExchange> page = goldExchangeService.findPage(beginDate,endDate,pageable);

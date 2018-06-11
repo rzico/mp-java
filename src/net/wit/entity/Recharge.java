@@ -220,7 +220,7 @@ public class Recharge extends BaseEntity {
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {
-			return new MapEntity(getMember().getId().toString(), getMember().displayName() );
+			return new MapEntity(getMember().getId().toString(), "("+getMember().getUsername()+")"+getMember().displayName() );
 		} else {
 			return null;
 		}

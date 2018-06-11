@@ -215,7 +215,7 @@
                     "aTargets": [4],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','../member/view.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
                         }else{
                             return "";
                         }
@@ -225,7 +225,7 @@
                     "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
+                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','../member/view.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
                         }else{
                             return "";
                         }

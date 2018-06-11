@@ -66,9 +66,9 @@ public class GameController extends BaseController {
 	 * 主页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(ModelMap model) {
+	public String index(Long memberId,ModelMap model) {
 
-		model.addAttribute("members",memberService.findAll());
+		model.addAttribute("memberId",memberId);
 
 		return "/admin/game/list";
 	}
@@ -203,7 +203,21 @@ public class GameController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate,Long memberId, Pageable pageable, ModelMap model) {
+		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+		if (memberId!=null) {
+			Filter memberFilter = new Filter("member", Filter.Operator.eq, memberService.find(memberId));
+			filters.add(memberFilter);
+		} else
+		if (pageable.getSearchValue()!=null) {
+			Member member = memberService.findByMobile(pageable.getSearchValue());
+			if (member!=null) {
+				Filter memberFilter = new Filter("member", Filter.Operator.eq, member);
+				filters.add(memberFilter);
+			} else {
+				return Message.success(PageBlock.bind(new Page<GoldBuy>(new ArrayList<GoldBuy>(),0, pageable)), "admin.list.success");
+			}
+		}
 
 		Page<Game> page = gameService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

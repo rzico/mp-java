@@ -83,7 +83,7 @@ public class LiveTapeServiceImpl extends BaseServiceImpl<LiveTape, Long> impleme
 		super.delete(liveTape);
 	}
 
-	public Page<LiveTape> findPage(Date beginDate,Date endDate, Pageable pageable) {
-		return liveTapeDao.findPage(beginDate,endDate,pageable);
+	public Page<LiveTape> findPage(Date beginDate,Date endDate,Live live, Pageable pageable) {
+		return liveTapeDao.findPage(beginDate,endDate, live,pageable);
 	}
 }

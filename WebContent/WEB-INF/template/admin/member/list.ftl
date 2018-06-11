@@ -147,6 +147,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "username",
+                    "sTitle": "账号",
+                    "sClass": "center"
+                },
+                {
                     "mData": "nickName",
                     "sTitle": "昵称",
                     "sClass": "center"
@@ -157,8 +162,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapOccupation",
-                    "sTitle": "职业",
+                    "mData": "uuid",
+                    "sTitle": "设备",
                     "sClass": "center"
                 },
                 {
@@ -201,6 +206,11 @@
                     "sTitle": "是否锁定",
                     "sClass": "center"
                 },
+                {
+                    "mData": "id",
+                    "sTitle": "功能",
+                    "sClass": "center"
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
@@ -221,7 +231,7 @@
                             return "";
                         }
                     }
-                }, 
+                },
                 {
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
@@ -235,17 +245,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return data.name;
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [7],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if genders??]
@@ -261,7 +261,7 @@
                     }
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [9],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -271,7 +271,7 @@
                     }
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [10],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data;
@@ -291,16 +291,6 @@
                     }
                 },
                 {
-                    "aTargets": [13],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
                     "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
@@ -310,10 +300,31 @@
                         }
                     }
                 },
+                {
+                    "aTargets": [15],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [16],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"deposit(this,'"+data+"');\" name=\"\">账单</button>"+
+                                    "<button class=\"btn btn-success radius\" id=\"\" onclick=\"game(this,'"+data+"');\" name=\"\">投注</button>"
+                        }else{
+                            return "";
+                        }
+                    }
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [15],
+                        "aTargets": [17],
                         "mRender": function (data, display, row) {
                             if(data != null){
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 用户管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
@@ -327,9 +338,9 @@
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable": false, "aTargets": [0, 6, 8, 15]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 7, 9, 16,17]}// 制定列不参与排序
                 [#else]
-                    {"orderable": false, "aTargets": [0, 6, 8]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 7, 9]}// 制定列不参与排序
                 [/#if]
             [/@adminDirective]
             ],
@@ -405,6 +416,24 @@
             type:2,
             title:title,
             content:url
+        });
+        layer.full(index);
+    }
+    /*编辑*/
+    function deposit(title, id) {
+        var index = layer.open({
+            type:2,
+            title:"账单",
+            content:"../deposit/index.jhtml?memberId="+id
+        });
+        layer.full(index);
+    }
+    /*编辑*/
+    function game(title, id) {
+        var index = layer.open({
+            type:2,
+            title:"投注",
+            content:"../game/index.jhtml?memberId="+id
         });
         layer.full(index);
     }

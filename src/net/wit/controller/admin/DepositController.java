@@ -75,19 +75,21 @@ public class DepositController extends BaseController {
 	 * 主页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(ModelMap model) {
+	public String index(Long memberId,ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("recharge","充值"));
+		types.add(new MapEntity("transfer","提现"));
 		types.add(new MapEntity("payment","支付"));
 		types.add(new MapEntity("refunds","退款"));
+		types.add(new MapEntity("product","货款"));
+		types.add(new MapEntity("reward","赞赏"));
+		types.add(new MapEntity("rebate","奖励"));
+		types.add(new MapEntity("cashier","收款"));
+		types.add(new MapEntity("card","充卡"));
+		types.add(new MapEntity("smsSend","短信"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("payments",paymentService.findAll());
-
-		model.addAttribute("refundss",refundsService.findAll());
+		model.addAttribute("memberId",memberId);
 
 		return "/admin/deposit/list";
 	}
@@ -250,11 +252,16 @@ public class DepositController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Deposit.Type type, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Deposit.Type type,Long memberId, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
 			filters.add(typeFilter);
+		}
+
+		if (memberId!=null) {
+			Filter memberFilter = new Filter("member", Filter.Operator.eq, memberService.find(memberId));
+			filters.add(memberFilter);
 		}
 
 		Page<Deposit> page = depositService.findPage(beginDate,endDate,pageable);

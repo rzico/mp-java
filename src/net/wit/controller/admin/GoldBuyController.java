@@ -207,7 +207,15 @@ public class GoldBuyController extends BaseController {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
-
+		if (pageable.getSearchValue()!=null) {
+		    Member member = memberService.findByMobile(pageable.getSearchValue());
+		    if (member!=null) {
+				Filter memberFilter = new Filter("member", Filter.Operator.eq, member);
+				filters.add(memberFilter);
+			} else {
+				return Message.success(PageBlock.bind(new Page<GoldBuy>(new ArrayList<GoldBuy>(),0, pageable)), "admin.list.success");
+			}
+		}
 		Page<GoldBuy> page = goldBuyService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}

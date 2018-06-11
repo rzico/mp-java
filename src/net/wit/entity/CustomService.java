@@ -57,6 +57,12 @@ public class CustomService extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
 	private Member member;
 
+
+	/** 在线 */
+	@Length(max = 200)
+	@Column(columnDefinition="bit not null default 1 comment '在线'")
+	private Boolean online;
+
 	public String getName() {
 		return name;
 	}
@@ -105,6 +111,13 @@ public class CustomService extends BaseEntity {
 		this.member = member;
 	}
 
+	public Boolean getOnline() {
+		return online;
+	}
+
+	public void setOnline(Boolean online) {
+		this.online = online;
+	}
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {

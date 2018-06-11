@@ -168,7 +168,12 @@
                 },
                 {
                     "mData": "gift",
-                    "sTitle": "礼物数",
+                    "sTitle": "炭币余额",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "giftTotal",
+                    "sTitle": "炭币总数",
                     "sClass": "center"
                 },
                 {
@@ -177,8 +182,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "location",
-                    "sTitle": "位置",
+                    "mData": "viewerCount",
+                    "sTitle": "人气指数",
                     "sClass": "center"
                 },
                 {
@@ -186,12 +191,7 @@
                     "sTitle": "状态",
                     "sClass": "center"
                 },
-                {
-                    "mData": "viewerCount",
-                    "sTitle": "在线数",
-                    "sClass": "center"
-                },
-                {
+                 {
                     "mData": "id",
                     "sTitle": "",
                     "sClass": "center"
@@ -226,7 +226,7 @@
                     }
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [10],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if  statuss??]
@@ -245,7 +245,8 @@
                     "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"offline(this,'"+data+"');\" name=\"\">离线</button>";
+                            return "<button class=\"btn btn-success radius\" id=\"\" onclick=\"offline(this,'"+data+"');\" name=\"\">离线</button>"+
+                                    "<button class=\"btn btn-success radius\" id=\"\" onclick=\"tape(this,'"+data+"');\" name=\"\">直播记录</button>";
 
                         }else{
                             return "";
@@ -346,6 +347,17 @@
         });
         layer.full(index);
     }
+    /*编辑*/
+    function tape(title,id) {
+        var index = layer.open({
+            type:2,
+            title:"直播记录",
+            content:"../liveTape/index.jhtml?liveId="+id
+        });
+        layer.full(index);
+    }
+
+
     /*提示框*/
     function toast(msg, icon) {
         layer.msg(msg, {icon: icon, time: 1000});

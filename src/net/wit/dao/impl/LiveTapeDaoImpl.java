@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Live;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -38,7 +39,7 @@ public class LiveTapeDaoImpl extends BaseDaoImpl<LiveTape, Long> implements Live
 	 * @param pageable
 	 * @return Page<LiveTape>
 	 */
-	public Page<LiveTape> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<LiveTape> findPage(Date beginDate, Date endDate, Live live, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<LiveTape> criteriaQuery = criteriaBuilder.createQuery(LiveTape.class);
 		Root<LiveTape> root = criteriaQuery.from(LiveTape.class);
@@ -53,6 +54,9 @@ public class LiveTapeDaoImpl extends BaseDaoImpl<LiveTape, Long> implements Live
 			Date e = DateUtils.truncate(endDate,Calendar.DATE);
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
+		}
+		if (live!=null) {
+			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.equal(root.get("live"), live));
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);

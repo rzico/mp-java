@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity -  直播数据
@@ -36,15 +38,13 @@ public class Live extends BaseEntity {
 
 	/** 主播 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '主播'")
 	@JsonIgnore
 	private Member member;
 
 	/** 最后一次直播 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(columnDefinition="bigint(20) not null comment '最后一次直播'")
+//	@ManyToOne(fetch = FetchType.EAGER )
 	@JsonIgnore
-	private LiveTape liveTape;
+	private Long liveTape;
 
 	/**  标题  */
 	@Column(columnDefinition="varchar(255) comment '标题'")
@@ -103,6 +103,20 @@ public class Live extends BaseEntity {
 	@Min(0)
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '礼物数'")
 	private Long gift;
+
+	/** 礼物合计 */
+	@NotNull
+	@Min(0)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '礼物合计'")
+	private Long giftTotal;
+
+	/** 文章标签*/
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "wx_live_tag")
+	@OrderBy("orders asc")
+	@JsonIgnore
+	private List<Tag> tags = new ArrayList<Tag>();
+
 
 	public Member getMember() {
 		return member;
@@ -200,11 +214,11 @@ public class Live extends BaseEntity {
 		this.gift = gift;
 	}
 
-	public LiveTape getLiveTape() {
+	public Long getLiveTape() {
 		return liveTape;
 	}
 
-	public void setLiveTape(LiveTape liveTape) {
+	public void setLiveTape(Long liveTape) {
 		this.liveTape = liveTape;
 	}
 
@@ -224,6 +238,21 @@ public class Live extends BaseEntity {
 		this.online = online;
 	}
 
+	public Long getGiftTotal() {
+		return giftTotal;
+	}
+
+	public void setGiftTotal(Long giftTotal) {
+		this.giftTotal = giftTotal;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
 
 	public MapEntity getMapMember() {
 		if (getMember() != null) {

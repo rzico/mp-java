@@ -241,9 +241,14 @@ public class TransferController extends BaseController {
 			filters.add(typeFilter);
 		}
 
-		if(searchValue!=null){
-			Filter mediaTypeFilter = new Filter("sn", Filter.Operator.like, "%"+searchValue+"%");
-			filters.add(mediaTypeFilter);
+		if (pageable.getSearchValue()!=null) {
+			Member member = memberService.findByMobile(pageable.getSearchValue());
+			if (member!=null) {
+				Filter memberFilter = new Filter("member", Filter.Operator.eq, member);
+				filters.add(memberFilter);
+			} else {
+				return Message.success(PageBlock.bind(new Page<Transfer>(new ArrayList<Transfer>(),0, pageable)), "admin.list.success");
+			}
 		}
 		Page<Transfer> page = transferService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Live;
 import net.wit.entity.LiveTape;
 
 /**
@@ -16,5 +17,5 @@ import net.wit.entity.LiveTape;
  */
 
 public interface LiveTapeService extends BaseService<LiveTape, Long> {
-	Page<LiveTape> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<LiveTape> findPage(Date beginDate, Date endDate, Live live, Pageable pageable);
 }

@@ -90,8 +90,10 @@ public class CustomServiceController extends BaseController {
 
 		entity.setWechat(customService.getWechat());
 
+		entity.setOnline(customService.getOnline());
+
 		entity.setMember(memberService.find(memberId));
-		
+
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -152,6 +154,8 @@ public class CustomServiceController extends BaseController {
 		entity.setQq(customService.getQq());
 
 		entity.setWechat(customService.getWechat());
+
+		entity.setOnline(customService.getOnline());
 
 		entity.setMember(memberService.find(memberId));
 

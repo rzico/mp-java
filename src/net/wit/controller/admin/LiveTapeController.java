@@ -48,8 +48,8 @@ public class LiveTapeController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
-	@Resource(name = "liveGroupServiceImpl")
-	private LiveGroupService liveGroupService;
+	@Resource(name = "liveServiceImpl")
+	private LiveService liveService;
 
 	@Resource(name = "areaServiceImpl")
 	private AreaService areaService;
@@ -69,11 +69,9 @@ public class LiveTapeController extends BaseController {
 	 * 主页
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(ModelMap model) {
+	public String index(Long liveId,ModelMap model) {
 
-		model.addAttribute("liveGroups",liveGroupService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
+		model.addAttribute("liveId",liveId);
 
 		return "/admin/liveTape/list";
 	}
@@ -84,10 +82,6 @@ public class LiveTapeController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
-
-		model.addAttribute("liveGroups",liveGroupService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
 
 		return "/admin/liveTape/add";
 	}
@@ -125,7 +119,7 @@ public class LiveTapeController extends BaseController {
 
 		entity.setViewerCount(liveTape.getViewerCount() == null ? 0 : liveTape.getViewerCount());
 
-		entity.setMember(memberService.find(memberId));
+//		entity.setMember(memberService.find(memberId));
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -161,10 +155,6 @@ public class LiveTapeController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
-
-		model.addAttribute("liveGroups",liveGroupService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("data",liveTapeService.find(id));
 
@@ -204,8 +194,8 @@ public class LiveTapeController extends BaseController {
 
 		entity.setViewerCount(liveTape.getViewerCount() == null ? 0 : liveTape.getViewerCount());
 
-		entity.setMember(memberService.find(memberId));
-		
+//		entity.setMember(memberService.find(memberId));
+//
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -224,9 +214,15 @@ public class LiveTapeController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Pageable pageable, ModelMap model) {	
+	public Message list(Long liveId,Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
 
-		Page<LiveTape> page = liveTapeService.findPage(beginDate,endDate,pageable);
+		Live live = null;
+		if (liveId!=null) {
+			live = liveService.find(liveId);
+		}
+
+		Page<LiveTape> page = liveTapeService.findPage(beginDate,endDate,live,pageable);
+
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	
@@ -266,11 +262,6 @@ public class LiveTapeController extends BaseController {
 	 */
 	@RequestMapping(value = "/liveGroupView", method = RequestMethod.GET)
 	public String liveGroupView(Long id, ModelMap model) {
-		model.addAttribute("liveMembers",memberService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("liveGroup",liveGroupService.find(id));
 		return "/admin/liveTape/view/liveGroupView";
 	}
 

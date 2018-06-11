@@ -2,6 +2,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -119,4 +120,14 @@ public class GoldBuy extends BaseEntity {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
+
+
+	public MapEntity getMapMember() {
+		if (getMember() != null) {
+			return new MapEntity(getMember().getId().toString(), getMember().getUsername());
+		} else {
+			return null;
+		}
+	}
+
 }
