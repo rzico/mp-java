@@ -124,7 +124,9 @@ public class TopicController extends BaseController {
             return Message.bind(NavigationModel.bindList(navigations),request);
         }
 
-        if (template==null) {
+        if (member!=null && member.getTopic()!=null && member.getTopic().getTemplate()!=null) {
+            template = "c" + member.getTopic().getTemplate();
+        } else {
             template = "c1001";
         }
 
