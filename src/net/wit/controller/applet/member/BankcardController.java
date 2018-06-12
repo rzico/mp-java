@@ -116,9 +116,6 @@ public class BankcardController extends BaseController {
             }
         }
 
-//        String m = rsaService.decryptParameter("mobile", request);
-//        rsaService.removePrivateKey(request);
-
         if (m==null) {
             Member member = memberService.getCurrent();
             if (member!=null & member.getMobile()!=null) {
@@ -165,8 +162,7 @@ public class BankcardController extends BaseController {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-//            String captcha = rsaService.decryptParameter("captcha", request);
-//            rsaService.removePrivateKey(request);
+
             if (member==null) {
                 return Message.error("无效验证码");
             }
