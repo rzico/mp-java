@@ -39,7 +39,9 @@ public class Navigation extends OrderEntity{
         /**  商城 */
         mall,
         /**  拼团 */
-        dragon
+        dragon,
+        /**  图集 */
+        images
     }
 
     /**  类型 */
@@ -112,4 +114,6 @@ public class Navigation extends OrderEntity{
     public void setLogo(String logo) {
         this.logo = logo;
     }
+
+
 }

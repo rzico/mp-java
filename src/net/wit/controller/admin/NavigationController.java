@@ -82,6 +82,7 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("product","商品"));
 		types.add(new MapEntity("news","新品"));
 		types.add(new MapEntity("video","视频"));
+		types.add(new MapEntity("images","图集"));
 		types.add(new MapEntity("promotion","促销"));
 		types.add(new MapEntity("recommend","推荐"));
 		types.add(new MapEntity("dragon","拼团"));
@@ -104,6 +105,7 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("product","商品"));
 		types.add(new MapEntity("news","新品"));
 		types.add(new MapEntity("video","视频"));
+		types.add(new MapEntity("images","图集"));
 		types.add(new MapEntity("promotion","促销"));
 		types.add(new MapEntity("recommend","推荐"));
 		types.add(new MapEntity("dragon","拼团"));
@@ -191,6 +193,7 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("product","商品"));
 		types.add(new MapEntity("news","新品"));
 		types.add(new MapEntity("video","视频"));
+		types.add(new MapEntity("images","图集"));
 		types.add(new MapEntity("promotion","促销"));
 		types.add(new MapEntity("recommend","推荐"));
 		types.add(new MapEntity("dragon","拼团"));

@@ -32,24 +32,18 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
-            </div>
-        </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">参数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="extend" name="extend">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图标：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="logo" name="logo">
+            <label class="form-label col-xs-4 col-sm-2">类型：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+            [#if types??]
+                [#list types as type]
+                    <div class="radio-box">
+                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}">
+                        <label for="type-${type_index}">${type.name}</label>
+                    </div>
+                [/#list]
+            [/#if]
             </div>
         </div>
 
@@ -61,32 +55,46 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if types??]
-                [#list types as type]
-                    <div class="radio-box">
-                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}">
-                        <label for="type-${type_index}">${type.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图标：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="logo" name="logo">
             </div>
         </div>
 
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Owner：</label>
+            <label class="form-label col-xs-4 col-sm-2">排序：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">商品分类：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if owners??]
+                [#if  productCategorys??]
 				<select name="ownerId" class="select" style="background-color: #FFFFFF">
-                    [#list owners as owner]
-					<option value="${owner.id}">${owner.name}</option>
+                    [#list productCategorys as productCategory]
+					<option value="${productCategory.id}">${productCategory.name}</option>
                     [/#list]
 				</select>
                 [/#if]
 				</span>
             </div>
         </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">文集分类：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+            [#if   articleCatalogs??]
+                <select name="ownerId" class="select" style="background-color: #FFFFFF">
+                    [#list articleCatalogs as articleCatalog]
+                        <option value="${articleCatalog.id}">${articleCatalog.name}</option>
+                    [/#list]
+				</select>
+            [/#if]
+				</span>
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -141,7 +149,7 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/navigation/save.jhtml" ,
+                            url: "${base}/admin/navigation/save.jhtml?topicId=${topicId}" ,
                             beforeSend: function() {
                                $submit.prop("disabled", true);
                             },
