@@ -50,7 +50,7 @@ public class Card extends BaseEntity {
 	};
 
 	public static enum  PaymentMethod{
-		/** 现结 */
+		/** 现金 */
 		immediate,
 		/** 月结 */
 		monthly

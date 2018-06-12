@@ -50,6 +50,8 @@ public class CardViewModel extends BaseModel implements Serializable {
     /** 股东比例 */
     private BigDecimal bonus;
 
+    private Card.PaymentMethod paymentMethod;
+
     public Long getId() {
         return id;
     }
@@ -230,6 +232,8 @@ public class CardViewModel extends BaseModel implements Serializable {
         } else {
             this.memberId = 0L;
         }
+
+        this.paymentMethod = card.getPaymentMethod();
 
     }
 
