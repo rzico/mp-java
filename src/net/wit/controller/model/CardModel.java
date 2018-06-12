@@ -176,7 +176,6 @@ public class CardModel extends BaseModel implements Serializable {
             }
         }
         this.paymentMethod = card.getPaymentMethod();
-
     }
 
 
