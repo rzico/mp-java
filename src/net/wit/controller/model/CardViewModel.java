@@ -215,7 +215,6 @@ public class CardViewModel extends BaseModel implements Serializable {
 
         Member member = card.getMembers().get(0);
         this.logo = member.getLogo();
-
         this.type = card.getType();
         this.bindMobile = false;
         this.bindName = false;
@@ -241,7 +240,6 @@ public class CardViewModel extends BaseModel implements Serializable {
         } else {
             this.memberId = 0L;
         }
-
         this.paymentMethod = card.getPaymentMethod();
 
     }
