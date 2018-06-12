@@ -151,6 +151,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		card.setBonus(BigDecimal.ZERO);
 		card.setAmount(BigDecimal.ZERO);
 		card.setPromoter(promoter);
+		card.setMember(member);
 
 		TopicConfig config = card.getOwner().getTopic().getConfig();
 		if (config.getPattern().equals(TopicConfig.Pattern.pattern1)) {
@@ -186,6 +187,8 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setBalance(BigDecimal.ZERO);
 			card.setAmount(BigDecimal.ZERO);
 			card.setPoint(0L);
+			card.setMember(member);
+
 			if (code == null) {
 				topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 				Long no = topicCard.getIncrement() + 1L;
@@ -248,6 +251,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setMobile(member.getMobile());
 			card.setPoint(0L);
 			card.setPromoter(promoter);
+			card.setMember(member);
 
 			topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 			Long no = topicCard.getIncrement() + 1L;
