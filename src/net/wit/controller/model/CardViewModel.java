@@ -197,7 +197,16 @@ public class CardViewModel extends BaseModel implements Serializable {
         this.memberId = memberId;
     }
 
+    public Card.PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(Card.PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public void bind(Card card) {
+
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
         this.name = card.getName();
