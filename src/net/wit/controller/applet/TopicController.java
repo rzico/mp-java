@@ -62,6 +62,9 @@ public class TopicController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
+    @Resource(name = "navigationServiceImpl")
+    private NavigationService navigationService;
+
     @Resource(name = "productCategoryServiceImpl")
     private ProductCategoryService productCategoryService;
 
@@ -113,11 +116,48 @@ public class TopicController extends BaseController {
     @ResponseBody
     public Message navigation(Long id,String template,HttpServletRequest request){
         Member member =memberService.find(id);
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("owner", Filter.Operator.eq, member));
+
+        List<Navigation> navigations = navigationService.findList(null,null,filters,null);
+        if (navigations.size()>0) {
+            return Message.bind(NavigationModel.bindList(navigations),request);
+        }
+
         if (template==null) {
             template = "c1001";
         }
+
         List<NavigationModel> data = new ArrayList<>();
         if ("c1001".equals(template)) {
+            NavigationModel news = new NavigationModel();
+            news.setType(Navigation.Type.news);
+            news.setName("新品");
+            news.setLogo("http://cdnx.rzico.com/images/news.png");
+            data.add(news);
+            NavigationModel promotions = new NavigationModel();
+            promotions.setType(Navigation.Type.promotion);
+            promotions.setName("抢购");
+            promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
+            data.add(promotions);
+            NavigationModel dragon = new NavigationModel();
+            dragon.setType(Navigation.Type.dragon);
+            dragon.setName("拼团");
+            dragon.setLogo("http://cdnx.rzico.com/images/dragon.png");
+            data.add(dragon);
+            filters = new ArrayList<>();
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+            List<ProductCategory> categories = productCategoryService.findList(null,null,filters,null);
+            for (ProductCategory productCategory:categories) {
+                NavigationModel pc = new NavigationModel();
+                pc.setType(Navigation.Type.product);
+                pc.setName(productCategory.getName());
+                pc.setLogo(productCategory.getThumbnail());
+                pc.setProductCategoryId(productCategory.getId());
+                data.add(pc);
+            }
+        } else
+        if ("c1002".equals(template)) {
             NavigationModel news = new NavigationModel();
             news.setType(Navigation.Type.news);
             news.setName("新品");
@@ -159,7 +199,7 @@ public class TopicController extends BaseController {
             dragon.setName("拼团");
             dragon.setLogo("http://cdnx.rzico.com/images/dragon.png");
             data.add(dragon);
-            List<Filter> filters = new ArrayList<>();
+            filters = new ArrayList<>();
             filters.add(new Filter("member", Filter.Operator.eq,member));
             List<ProductCategory> categories = productCategoryService.findList(null,null,filters,null);
             for (ProductCategory productCategory:categories) {

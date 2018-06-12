@@ -5,6 +5,8 @@ import net.wit.util.JsonUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class NavigationModel extends BaseModel implements Serializable {
@@ -84,5 +86,15 @@ public class NavigationModel extends BaseModel implements Serializable {
             this.articleCatalogId = data.get("category");
             this.productCategoryId = data.get("category");
         }
+    }
+
+    public static List<NavigationModel> bindList(List<Navigation> navigations) {
+        List<NavigationModel> models = new ArrayList<>();
+        for (Navigation navigation:navigations) {
+            NavigationModel m = new NavigationModel();
+            m.bind(navigation);
+            models.add(m);
+        }
+        return models;
     }
 }
