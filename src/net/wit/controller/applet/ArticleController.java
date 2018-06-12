@@ -382,6 +382,32 @@ public class ArticleController extends BaseController {
         return Message.bind(model,request);
     }
 
+
+    /**
+     *  图集列表
+     *  会员 id
+     */
+    @RequestMapping(value = "/imagelist", method = RequestMethod.GET)
+    @ResponseBody
+    public Message imageList(Long authorId,Pageable pageable, HttpServletRequest request){
+        List<Filter> filters = new ArrayList<Filter>();
+        if (authorId!=null) {
+            Member member = memberService.find(authorId);
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+        } else {
+            filters.add(new Filter("isAudit", Filter.Operator.eq, true));
+        }
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        filters.add(new Filter("isPublish", Filter.Operator.eq, true));
+        pageable.setFilters(filters);
+        pageable.setOrderProperty("modifyDate");
+        pageable.setOrderDirection(Order.Direction.desc);
+        Page<Article> page = articleService.findPage(null,null,null,pageable);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ArticleImageModel.bindList(page.getContent()));
+        return Message.bind(model,request);
+    }
+
     /**
      *  热点查询列表
      *  会员 id

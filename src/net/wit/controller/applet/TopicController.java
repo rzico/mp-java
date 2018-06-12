@@ -183,34 +183,41 @@ public class TopicController extends BaseController {
             products.setName("商城");
             products.setLogo("http://cdnx.rzico.com/images/mall.png");
             data.add(products);
-        } else {
+        } else
+        if ("c1004".equals(template)) {
+            NavigationModel videos = new NavigationModel();
+            videos.setType(Navigation.Type.video);
+            videos.setName("视频");
+            videos.setLogo("http://cdnx.rzico.com/images/video.png");
+            data.add(videos);
             NavigationModel promotions = new NavigationModel();
             promotions.setType(Navigation.Type.promotion);
             promotions.setName("抢购");
             promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
             data.add(promotions);
-            NavigationModel news = new NavigationModel();
-            news.setType(Navigation.Type.news);
-            news.setName("上新");
-            news.setLogo("http://cdnx.rzico.com/images/news.png");
-            data.add(news);
-            NavigationModel dragon = new NavigationModel();
-            dragon.setType(Navigation.Type.dragon);
-            dragon.setName("拼团");
-            dragon.setLogo("http://cdnx.rzico.com/images/dragon.png");
-            data.add(dragon);
-            filters = new ArrayList<>();
-            filters.add(new Filter("member", Filter.Operator.eq,member));
-            List<ProductCategory> categories = productCategoryService.findList(null,null,filters,null);
-            for (ProductCategory productCategory:categories) {
-                NavigationModel pc = new NavigationModel();
-                pc.setType(Navigation.Type.product);
-                pc.setName(productCategory.getName());
-                pc.setLogo(productCategory.getThumbnail());
-                pc.setProductCategoryId(productCategory.getId());
-                data.add(pc);
-            }
-
+            NavigationModel products = new NavigationModel();
+            products.setType(Navigation.Type.product);
+            products.setName("宝贝");
+            products.setLogo("http://cdnx.rzico.com/images/mall.png");
+            products.setProductCategoryId(0L);
+            data.add(products);
+        } else {
+            NavigationModel videos = new NavigationModel();
+            videos.setType(Navigation.Type.video);
+            videos.setName("视频");
+            videos.setLogo("http://cdnx.rzico.com/images/video.png");
+            data.add(videos);
+            NavigationModel  images = new NavigationModel();
+            images.setType(Navigation.Type.images);
+            images.setName("图集");
+            images.setLogo("http://cdnx.rzico.com/images/promotion.png");
+            data.add(images);
+            NavigationModel products = new NavigationModel();
+            products.setType(Navigation.Type.product);
+            products.setName("宝贝");
+            products.setLogo("http://cdnx.rzico.com/images/mall.png");
+            products.setProductCategoryId(0L);
+            data.add(products);
         }
         return Message.bind(data,request);
     }
