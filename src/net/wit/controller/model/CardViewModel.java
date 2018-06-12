@@ -244,7 +244,6 @@ public class CardViewModel extends BaseModel implements Serializable {
 
     }
 
-
     public static List<CardViewModel> bindList(List<Card> cards) {
         List<CardViewModel> ms = new ArrayList<CardViewModel>();
         for (Card card:cards) {
