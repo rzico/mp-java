@@ -34,6 +34,8 @@ public class CardModel extends BaseModel implements Serializable {
     /** 积分 */
     private Long point;
 
+    private Card.PaymentMethod paymentMethod;
+
     public Long getId() {
         return id;
     }
@@ -138,6 +140,14 @@ public class CardModel extends BaseModel implements Serializable {
         this.memberId = memberId;
     }
 
+    public Card.PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(Card.PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public void bind(Card card) {
         this.id = card.getId();
         Topic topic = card.getOwner().getTopic();
@@ -156,11 +166,17 @@ public class CardModel extends BaseModel implements Serializable {
             this.shopName = "";
         }
         this.point = card.getPoint();
-        if (card.getMembers().size()>0) {
-            this.memberId = card.getMembers().get(0).getId();
+        if (card.getMember()!=null) {
+            this.memberId = card.getMember().getId();
         } else {
-            this.memberId = 0L;
+            if (card.getMembers().size() > 0) {
+                this.memberId = card.getMembers().get(0).getId();
+            } else {
+                this.memberId = 0L;
+            }
         }
+        this.paymentMethod = card.getPaymentMethod();
+
     }
 
 

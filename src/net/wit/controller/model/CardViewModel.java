@@ -235,10 +235,14 @@ public class CardViewModel extends BaseModel implements Serializable {
         } else {
             this.promoter = "";
         }
-        if (card.getMembers().size()>0) {
-            this.memberId = card.getMembers().get(0).getId();
+        if (card.getMember()!=null) {
+            this.memberId = card.getMember().getId();
         } else {
-            this.memberId = 0L;
+            if (card.getMembers().size() > 0) {
+                this.memberId = card.getMembers().get(0).getId();
+            } else {
+                this.memberId = 0L;
+            }
         }
         this.paymentMethod = card.getPaymentMethod();
 

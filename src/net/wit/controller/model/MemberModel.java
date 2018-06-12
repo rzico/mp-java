@@ -186,4 +186,14 @@ public class MemberModel extends BaseModel implements Serializable {
         }
 
     }
+
+    public static List<MemberModel> bindList(List<Member> members) {
+        List<MemberModel> models = new ArrayList<>();
+        for (Member member:members) {
+            MemberModel m = new MemberModel();
+            m.bind(member);
+            models.add(m);
+        }
+        return models;
+    }
 }

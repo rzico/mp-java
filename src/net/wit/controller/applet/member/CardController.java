@@ -3,10 +3,7 @@ package net.wit.controller.applet.member;
 import net.wit.*;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
-import net.wit.controller.model.CardActivityModel;
-import net.wit.controller.model.CardBillModel;
-import net.wit.controller.model.CardModel;
-import net.wit.controller.model.CardPointBillModel;
+import net.wit.controller.model.*;
 import net.wit.entity.*;
 import net.wit.plat.weixin.main.MenuManager;
 import net.wit.plat.weixin.pojo.Ticket;
@@ -275,6 +272,18 @@ public class CardController extends BaseController {
 
         return Message.success(data,"激活成功");
 
+    }
+    /**
+     *  授权用户
+     */
+    @RequestMapping(value = "users")
+    @ResponseBody
+    public Message users(Long id,HttpServletRequest request) {
+       Card card = cardService.find(id);
+       return Message.bind(
+               MemberModel.bindList(card.getMembers()),
+               request
+       );
     }
 
     /**
