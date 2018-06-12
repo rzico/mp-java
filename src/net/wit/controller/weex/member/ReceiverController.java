@@ -89,7 +89,7 @@ public class ReceiverController extends BaseController {
            }
         }
 
-        Receiver receiver = member.getReceiverDefault();
+        Receiver receiver = member.defaultReceiver();
 
         ReceiverModel model = new ReceiverModel();
         if (receiver!=null) {

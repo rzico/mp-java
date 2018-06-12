@@ -1078,17 +1078,19 @@ public class Member extends BaseEntity {
 		}
 	}
 
-	public Receiver getReceiverDefault() {
+	public Receiver defaultReceiver() {
 		Receiver receiver = null;
-		for (Receiver rcv:getReceivers()) {
-			if (rcv.getIsDefault()==true) {
-				receiver = rcv;
-				break;
+		if (getReceivers()!=null) {
+			for (Receiver rcv : getReceivers()) {
+				if (rcv.getIsDefault() == true) {
+					receiver = rcv;
+					break;
+				}
 			}
-		}
-		if (receiver==null) {
-			if (getReceivers().size()>0) {
-				receiver = getReceivers().get(0);
+			if (receiver == null) {
+				if (getReceivers().size() > 0) {
+					receiver = getReceivers().get(0);
+				}
 			}
 		}
 		return  receiver;

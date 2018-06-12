@@ -154,7 +154,7 @@ public class BankcardController extends BaseController {
             if (!captcha.equals(safeKey.getValue())) {
                 return Message.error("无效验证码");
             }
-            return Message.success(member,"验证成功");
+            return Message.success("验证成功");
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("验证失败");
