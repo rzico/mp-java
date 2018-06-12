@@ -119,9 +119,9 @@ public class NavigationController extends BaseController {
 		List<Filter> filters = new ArrayList<>();
 		filters.add(new Filter("member", Filter.Operator.eq,topic.getMember()));
 
-	    model.addAttribute("articleCatalog",articleCatalogService.findList(null,null,filters,null));
+	    model.addAttribute("articleCatalogs",articleCatalogService.findList(null,null,filters,null));
 
-		model.addAttribute("productCatagorys",productCategoryService.findList(null,null,filters,null));
+		model.addAttribute("productCategorys",productCategoryService.findList(null,null,filters,null));
 
 
 		return "/admin/navigation/add";
@@ -207,9 +207,11 @@ public class NavigationController extends BaseController {
 		List<Filter> filters = new ArrayList<>();
 		filters.add(new Filter("member", Filter.Operator.eq,navigation.getOwner()));
 
-		model.addAttribute("articleCatalog",articleCatalogService.findList(null,null,filters,null));
 
-		model.addAttribute("productCatagorys",productCategoryService.findList(null,null,filters,null));
+		model.addAttribute("articleCatalogs",articleCatalogService.findList(null,null,filters,null));
+
+		model.addAttribute("productCategorys",productCategoryService.findList(null,null,filters,null));
+
 
 
 		model.addAttribute("data",navigation);
@@ -224,6 +226,7 @@ public class NavigationController extends BaseController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
 	public Message update(Navigation navigation,Long articleCatalogId,Long productCategoryId){
+
 		Navigation entity = navigationService.find(navigation.getId());
 		
 		entity.setCreateDate(navigation.getCreateDate());

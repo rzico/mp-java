@@ -72,7 +72,7 @@
             <label class="form-label col-xs-4 col-sm-2">商品分类：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
                 [#if  productCategorys??]
-				<select name="ownerId" class="select" style="background-color: #FFFFFF">
+				<select name="productCategoryId" class="select" style="background-color: #FFFFFF">
                     [#list productCategorys as productCategory]
 					<option value="${productCategory.id}">${productCategory.name}</option>
                     [/#list]
@@ -85,7 +85,7 @@
             <label class="form-label col-xs-4 col-sm-2">文集分类：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
             [#if   articleCatalogs??]
-                <select name="ownerId" class="select" style="background-color: #FFFFFF">
+                <select name="articleCatalogId" class="select" style="background-color: #FFFFFF">
                     [#list articleCatalogs as articleCatalog]
                         <option value="${articleCatalog.id}">${articleCatalog.name}</option>
                     [/#list]

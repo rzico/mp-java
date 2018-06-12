@@ -106,9 +106,6 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(6).attr('style', 'text-align: left;');
-                $(row).children('td').eq(7).attr('style', 'text-align: left;');
-                $(row).children('td').eq(8).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -139,7 +136,7 @@
                 },
                 {
                     "mData": "orders",
-                    "sTitle": "Orders",
+                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
@@ -184,7 +181,7 @@
                 },
 
                 {
-                    "aTargets": [10],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 菜单 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
