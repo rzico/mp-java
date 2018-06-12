@@ -9,6 +9,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -132,7 +133,7 @@ public class NavigationController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Navigation navigation,Long topicId){
+	public Message save(Navigation navigation,Long topicId,Long articleCatalogId,Long productCategoryId){
 		Navigation entity = new Navigation();	
 
 		entity.setCreateDate(navigation.getCreateDate());
@@ -141,7 +142,10 @@ public class NavigationController extends BaseController {
 
 		entity.setOrders(navigation.getOrders() == null ? 0 : navigation.getOrders());
 
-		entity.setExtend(navigation.getExtend());
+		Map<String,Long> data = new HashMap<>();
+		data.put("articleCatalog",articleCatalogId);
+		data.put("productCategory",productCategoryId);
+		entity.setExtend(JsonUtils.toJson(data));
 
 		entity.setLogo(navigation.getLogo());
 
@@ -219,7 +223,7 @@ public class NavigationController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Navigation navigation){
+	public Message update(Navigation navigation,Long articleCatalogId,Long productCategoryId){
 		Navigation entity = navigationService.find(navigation.getId());
 		
 		entity.setCreateDate(navigation.getCreateDate());
@@ -228,7 +232,10 @@ public class NavigationController extends BaseController {
 
 		entity.setOrders(navigation.getOrders() == null ? 0 : navigation.getOrders());
 
-		entity.setExtend(navigation.getExtend());
+		Map<String,Long> data = new HashMap<>();
+		data.put("articleCatalog",articleCatalogId);
+		data.put("productCategory",productCategoryId);
+		entity.setExtend(JsonUtils.toJson(data));
 
 		entity.setLogo(navigation.getLogo());
 

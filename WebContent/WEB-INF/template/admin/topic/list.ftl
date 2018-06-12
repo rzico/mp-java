@@ -207,6 +207,11 @@
                     "sTitle": "模板",
                     "sClass": "center"
                 },
+                {
+                    "mData": "id",
+                    "sTitle": "功能",
+                    "sClass": "center"
+                },
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
@@ -318,10 +323,18 @@
                         }
                     }
                 },
-            [@adminDirective]
+                {
+                    "aTargets": [14],
+                    "mRender": function (data, display, row) {
+                        return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"menu(this,'"+data+"');\" name=\"\">菜单</button>"
+                    }
+
+                },
+
+    [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
                     {
-                        "aTargets": [14],
+                        "aTargets": [15],
                         "mRender": function (data, display, row) {
                             if (data != null) {
                                 return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 专栏管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>";
@@ -336,9 +349,9 @@
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
             [@adminDirective]
                 [#if !(admin.role?contains("3"))||admin.role?contains("1")||admin.role?contains("2")]
-                    {"orderable": false, "aTargets": [0, 5, 11, 12, 14]}// 制定列不参与排序
+                    {"orderable": false, "aTargets": [0, 5, 11, 12, 14,15]}// 制定列不参与排序
                 [#else]
-                    {"orderable": false, "aTargets": [0, 5, 11, 12]}
+                    {"orderable": false, "aTargets": [0, 5, 11, 12,14]}
                 [/#if]
             [/@adminDirective]
             ],
@@ -416,6 +429,15 @@
             type:2,
             title:title,
             content:url
+        });
+        layer.full(index);
+    }
+    /*编辑*/
+    function  menu(title, data) {
+        var index = layer.open({
+            type:2,
+            title:title,
+            content:"../navigation/index.jhtml?topicId="+data
         });
         layer.full(index);
     }

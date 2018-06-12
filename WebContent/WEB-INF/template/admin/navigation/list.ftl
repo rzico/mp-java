@@ -26,7 +26,7 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>Navigation</title>
+    <title>菜单</title>
 </head>
 <body>
 <div class="page-container">

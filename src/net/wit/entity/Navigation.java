@@ -1,12 +1,14 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.util.JsonUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * Entity-navigation
@@ -23,6 +25,7 @@ public class Navigation extends OrderEntity{
     /**
      * 状态 orderType=priceAsc  priceDesc  dateDesc, hitsDesc, default
      */
+
     public enum Type {
         /**  文章 */
         article,
@@ -115,5 +118,23 @@ public class Navigation extends OrderEntity{
         this.logo = logo;
     }
 
+    public Long getArticleCategoryId() {
+        if (getExtend()!=null) {
+            Map<String, Long> data = JsonUtils.toObject(getExtend(),Map.class);
+            return data.get("articleCategory");
+        } else {
+            return 0L;
+        }
+    }
+
+
+    public Long getArticleCatalogId() {
+        if (getExtend()!=null) {
+            Map<String, Long> data = JsonUtils.toObject(getExtend(),Map.class);
+            return data.get("articleCatalog");
+        } else {
+            return 0L;
+        }
+    }
 
 }
