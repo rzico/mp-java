@@ -118,6 +118,19 @@ public class CardController extends BaseController {
     }
 
     /**
+     *  授权用户
+     */
+    @RequestMapping(value = "users")
+    @ResponseBody
+    public Message users(Long id,HttpServletRequest request) {
+        Card card = cardService.find(id);
+        return Message.bind(
+                MemberModel.bindList(card.getMembers()),
+                request
+        );
+    }
+
+    /**
      *   获取会员卡
      */
     @RequestMapping(value = "/view")
