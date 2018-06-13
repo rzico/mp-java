@@ -88,8 +88,10 @@ public class ReceiverController extends BaseController {
                member = card.getMembers().get(0);
            }
         }
-
-        Receiver receiver = member.defaultReceiver();
+        Receiver receiver = null;
+        if (member!=null) {
+            receiver = member.defaultReceiver();
+        }
 
         ReceiverModel model = new ReceiverModel();
         if (receiver!=null) {

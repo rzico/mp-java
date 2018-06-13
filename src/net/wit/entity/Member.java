@@ -1082,7 +1082,7 @@ public class Member extends BaseEntity {
 		Receiver receiver = null;
 		if (getReceivers()!=null) {
 			for (Receiver rcv : getReceivers()) {
-				if (rcv.getIsDefault() == true) {
+				if (rcv.getIsDefault()) {
 					receiver = rcv;
 					break;
 				}
