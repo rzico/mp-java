@@ -118,6 +118,7 @@ public class Navigation extends OrderEntity{
         this.logo = logo;
     }
 
+    @JsonIgnore
     public Long getArticleCategoryId() {
         if (getExtend()!=null) {
             Map<String, Long> data = JsonUtils.toObject(getExtend(),Map.class);
@@ -127,7 +128,7 @@ public class Navigation extends OrderEntity{
         }
     }
 
-
+    @JsonIgnore
     public Long getArticleCatalogId() {
         if (getExtend()!=null) {
             Map<String, Long> data = JsonUtils.toObject(getExtend(),Map.class);
