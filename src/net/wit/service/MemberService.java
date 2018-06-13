@@ -56,6 +56,8 @@ public interface MemberService extends BaseService<Member, Long> {
 	 */
 	Member getCurrent();
 
+	Long getRobotCount();
+
 	//支付插件专用方法
 	public void payment(Member member, Payment payment) throws Exception;
 

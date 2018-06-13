@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.rowset.spi.SyncProvider;
 
 import net.wit.Setting;
 import net.wit.entity.Payment;
@@ -136,7 +137,6 @@ public class WeiXinAppPlugin extends PaymentPlugin {
 		}
 
 		String xml = WeiXinUtils.getRequestXml(packageParams);
-
 		String prepay_id = "";
 		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
 		try {

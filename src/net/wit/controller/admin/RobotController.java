@@ -45,9 +45,6 @@ public class RobotController extends BaseController{
      */
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(ModelMap model) {
-
-
-
         return "/admin/robot/add";
     }
     /**
@@ -71,9 +68,9 @@ public class RobotController extends BaseController{
         member.setRegisterIp(request.getRemoteAddr());
         memberService.save(member);
         if(!User.userAttr(member)){
-            return Message.success("admin.save.success");
+            return Message.success(member,"admin.save.success");
         }
-        return Message.success("admin.save.success");
+        return Message.success(member,"admin.save.success");
     }
     /**
      * 删除
@@ -83,27 +80,27 @@ public class RobotController extends BaseController{
     Message delete(Long[] ids,Date beginDate, Date endDate, Pageable pageable, String searchValue, ModelMap model) {
 //        memberService.delete(ids);
         //
-        ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-        Filter mediaTypeFilter = new Filter("userType", Filter.Operator.eq, Member.UserType.ROBOT);
-
-        filters.add(mediaTypeFilter);
-        Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
-        List<Member> members = page.getContent();
-        Member member = members.get(0);
-        UserInfo userInfo = new UserInfo();
-        userInfo.id = member.getId();
-        userInfo.nickName = member.getNickName();
-        userInfo.headPic = member.getLogo();
-        userInfo.text = "主播你好呀！";
-        userInfo.cmd = "CustomTextMsg";
-        try {
-            Push.impushgroup("1",userInfo);
-            return Message.success("admin.delete.success");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-
+//        ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
+//        Filter mediaTypeFilter = new Filter("userType", Filter.Operator.eq, Member.UserType.ROBOT);
+//
+//        filters.add(mediaTypeFilter);
+//        Page<Member> page = memberService.findPage(beginDate,endDate,pageable);
+//        List<Member> members = page.getContent();
+//        Member member = members.get(0);
+//        UserInfo userInfo = new UserInfo();
+//        userInfo.id = member.getId();
+//        userInfo.nickName = member.getNickName();
+//        userInfo.headPic = member.getLogo();
+//        userInfo.text = "当前机器人数量：" + memberService.getRobotCount();
+//        userInfo.cmd = "CustomTextMsg";
+//        try {
+//            Push.impushgroup("1",userInfo);
+//            return Message.success("admin.delete.success");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//
             return Message.success("admin.delete.error");
-        }
+//        }
 
     }
 
@@ -125,8 +122,25 @@ public class RobotController extends BaseController{
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Role role){
-            return Message.error("admin.update.error");
+    public Message update(Member m, HttpServletRequest request){
+        Member member = memberService.find(m.getId());
+        member.setNickName(m.getNickName());
+        member.setLogo(m.getLogo());
+        member.setPoint(0L);
+        member.setAmount(BigDecimal.ZERO);
+        member.setBalance(BigDecimal.ZERO);
+        member.setFreezeBalance(BigDecimal.ZERO);
+        member.setVip(Member.VIP.vip1);
+        member.setIsEnabled(true);
+        member.setIsLocked(false);
+        member.setUserType(Member.UserType.ROBOT);
+        member.setLoginFailureCount(0);
+        member.setRegisterIp(request.getRemoteAddr());
+        memberService.update(member);
+        if(!User.userAttr(member)){
+            return Message.success(member,"admin.update.success");
+        }
+        return Message.success(member,"admin.update.success");
     }
 
 

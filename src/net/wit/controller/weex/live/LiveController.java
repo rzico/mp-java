@@ -6,6 +6,7 @@ import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.*;
 import net.wit.entity.*;
+import net.wit.liveRobot.Robot;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -428,6 +429,8 @@ public class LiveController extends BaseController {
         model.setViewerCount(live.getViewerCount());
         model.setGift(live.getGiftTotal());
 
+        //加入机器人
+        Robot.create(memberService, liveService).joinRobot(model.getLiveId() + "");
         return Message.success(model,"success");
     }
 

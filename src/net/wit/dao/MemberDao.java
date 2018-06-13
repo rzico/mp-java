@@ -53,4 +53,6 @@ public interface MemberDao extends BaseDao<Member, Long> {
 	 * @return 会员，若不存在则返回null
 	 */
 	Member findByUUID(String uuid);
+
+	Long getRobotCount();
 }

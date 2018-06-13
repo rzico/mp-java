@@ -115,6 +115,11 @@ public class StringUtils  {
 		return result;
 	}
 
+	public  static int randomNum(int MIN, int MAX){
+		Random rand = new Random();
+		return rand.nextInt(MAX - MIN + 1) + MIN;
+	}
+
 	public static String base64Encode(byte[] binaryData) {
 		if (binaryData==null) {
 			return null;

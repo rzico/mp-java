@@ -151,6 +151,11 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		return null;
 	}
 
+	@Override
+	public Long getRobotCount() {
+		return memberDao.getRobotCount();
+	}
+
 	//支付插件专用方法
 	public void payment(Member member,Payment payment) throws Exception {
 		memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);

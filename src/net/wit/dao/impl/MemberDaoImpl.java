@@ -109,4 +109,16 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements MemberDa
 			return null;
 		}
 	}
+
+	@Override
+	public Long getRobotCount() {
+		Member.UserType userType = Member.UserType.ROBOT;
+		try {
+			String jpql = "select COUNT(*) from Member members where members.userType = :userType";
+			return entityManager.createQuery(jpql, Long.class).setFlushMode(FlushModeType.COMMIT).setParameter("userType", userType).getSingleResult();
+
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }
