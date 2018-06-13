@@ -131,7 +131,7 @@ public class TopicController extends BaseController {
         }
 
         List<NavigationModel> data = new ArrayList<>();
-        if ("c1001".equals(template)) {
+        if ("c1003".equals(template)) {
             NavigationModel news = new NavigationModel();
             news.setType(Navigation.Type.news);
             news.setName("新品");
@@ -186,24 +186,7 @@ public class TopicController extends BaseController {
             products.setLogo("http://cdnx.rzico.com/images/mall.png");
             data.add(products);
         } else
-        if ("c1004".equals(template)) {
-            NavigationModel videos = new NavigationModel();
-            videos.setType(Navigation.Type.video);
-            videos.setName("视频");
-            videos.setLogo("http://cdnx.rzico.com/images/video.png");
-            data.add(videos);
-            NavigationModel promotions = new NavigationModel();
-            promotions.setType(Navigation.Type.promotion);
-            promotions.setName("抢购");
-            promotions.setLogo("http://cdnx.rzico.com/images/promotion.png");
-            data.add(promotions);
-            NavigationModel products = new NavigationModel();
-            products.setType(Navigation.Type.product);
-            products.setName("宝贝");
-            products.setLogo("http://cdnx.rzico.com/images/mall.png");
-            products.setProductCategoryId(0L);
-            data.add(products);
-        } else {
+         {
             NavigationModel videos = new NavigationModel();
             videos.setType(Navigation.Type.video);
             videos.setName("视频");
