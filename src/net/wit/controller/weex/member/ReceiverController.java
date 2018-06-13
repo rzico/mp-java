@@ -106,10 +106,13 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
+    public Message add(Long memberId,Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
+        }
+        if (memberId!=null) {
+            member = memberService.find(memberId);
         }
         if (areaId==null) {
             return Message.error("所在地区无效");
@@ -167,7 +170,7 @@ public class ReceiverController extends BaseController {
         receiver.setPhone(phone);
         receiver.setIsDefault(isDefault);
         receiver.setZipCode("000000");
-        receiver.setMember(member);
+//        receiver.setMember(member);
         if (level!=null) {
             receiver.setLevel(level);
         }

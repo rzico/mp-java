@@ -166,15 +166,21 @@ public class CardModel extends BaseModel implements Serializable {
             this.shopName = "";
         }
         this.point = card.getPoint();
+
+        Member member = null;
         if (card.getMember()!=null) {
-            this.memberId = card.getMember().getId();
+            member = card.getMember();
         } else {
             if (card.getMembers().size() > 0) {
-                this.memberId = card.getMembers().get(0).getId();
-            } else {
-                this.memberId = 0L;
+                member = card.getMembers().get(0);
             }
         }
+
+        if (member!=null) {
+            this.memberId = member.getId();
+            this.logo = member.getLogo();
+        }
+
         this.paymentMethod = card.getPaymentMethod();
     }
 
