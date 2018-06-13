@@ -319,7 +319,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,Long promoterId,Card.Type type,BigDecimal bonus,HttpServletRequest request){
+    public Message update(Long id,Card.VIP vip,String name,String mobile,Long shopId,Long promoterId,Card.Type type,Card.PaymentMethod paymentMethod,BigDecimal bonus,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -359,6 +359,9 @@ public class CardController extends BaseController {
         }
         if (type!=null) {
             card.setType(type);
+        }
+        if (paymentMethod!=null) {
+            card.setPaymentMethod(paymentMethod);
         }
         cardService.update(card);
         return Message.success("更新成功");
