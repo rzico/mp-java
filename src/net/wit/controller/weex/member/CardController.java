@@ -131,6 +131,56 @@ public class CardController extends BaseController {
     }
 
     /**
+     *  设为卡主
+     */
+    @RequestMapping(value = "cardowner")
+    @ResponseBody
+    public Message users(Long cardId,Long memberId,HttpServletRequest request) {
+        Card card = cardService.find(cardId);
+        if (card==null) {
+            return Message.error("卡id无效");
+        }
+        Member member = memberService.find(memberId);
+        if (member==null) {
+            return Message.error("会员 id 无效");
+        }
+        if (!card.getMembers().contains(member)) {
+            return Message.error("不是授权用户");
+        }
+        card.setMember(member);
+        cardService.update(card);
+        return Message.success("设置完成");
+    }
+
+    /**
+     *  删除授权
+     */
+    @RequestMapping(value = "userDelete")
+    @ResponseBody
+    public Message userDelete(Long cardId,Long memberId,HttpServletRequest request) {
+        Card card = cardService.find(cardId);
+        if (card==null) {
+            return Message.error("卡id无效");
+        }
+        Member member = memberService.find(memberId);
+        if (member==null) {
+            return Message.error("会员 id 无效");
+        }
+        if (!card.getMembers().contains(member)) {
+            return Message.error("不是授权用户");
+        }
+
+        if (card.getMember().equals(member)) {
+            return Message.error("卡主不能删除");
+        }
+        card.getMembers().remove(member);
+        member.getCards().remove(card);
+        cardService.update(card);
+        memberService.update(member);
+        return Message.success("设置完成");
+    }
+
+    /**
      *   获取会员卡
      */
     @RequestMapping(value = "/view")

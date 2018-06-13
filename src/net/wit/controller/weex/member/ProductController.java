@@ -100,10 +100,6 @@ public class ProductController extends BaseController {
 			return Message.error("无效数据包");
 		}
 
-		if (type==null) {
-			type = Product.Type.product;
-		}
-
 		Goods goods = null;
 		List<Tag> tags = null;
 		if (model.getId()==null) {
@@ -111,9 +107,17 @@ public class ProductController extends BaseController {
 			goods.setRanking(0L);
 			goods.setReview(0L);
 			goods.setHits(0L);
+			if (type==null) {
+				type = Product.Type.product;
+			}
+
 		} else {
 			goods = goodsService.find(model.getId());
 			tags = goods.product().getTags();
+			if (type==null) {
+				type = goods.product().getType();
+			}
+
 		}
 
 		List<Product> products = new ArrayList<Product>();

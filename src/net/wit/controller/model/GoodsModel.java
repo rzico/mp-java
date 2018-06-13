@@ -28,6 +28,9 @@ public class GoodsModel extends BaseModel implements Serializable {
     /** 分销策略 */
     private DistributionViewModel distribution;
 
+    /** 配送方式 */
+    private Product.Type type;
+
     /** 商品 */
     private List<ProductModel> products;
 
@@ -95,6 +98,14 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.availableStock = availableStock;
     }
 
+    public Product.Type getType() {
+        return type;
+    }
+
+    public void setType(Product.Type type) {
+        this.type = type;
+    }
+
     public void bind(Goods goods) {
         Product mProduct = goods.getProducts().get(0);
         this.id = goods.getId();
@@ -109,6 +120,8 @@ public class GoodsModel extends BaseModel implements Serializable {
         if (mProduct.getDistribution()!=null) {
             distributionViewModel.bind(mProduct.getDistribution());
         }
+
+        this.type = mProduct.getType();
         this.distribution = distributionViewModel;
 
         this.unit = mProduct.getUnit();
