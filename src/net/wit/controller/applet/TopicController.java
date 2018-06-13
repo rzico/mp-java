@@ -125,7 +125,7 @@ public class TopicController extends BaseController {
         }
 
         if (member!=null && member.getTopic()!=null && member.getTopic().getTemplate()!=null) {
-            template = "c" + member.getTopic().getTemplate();
+            template = "c" + member.getTopic().getTemplate().getSn();
         } else {
             template = "c1001";
         }
