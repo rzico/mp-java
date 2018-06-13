@@ -348,7 +348,9 @@ public class ArticleController extends BaseController {
             filters.add(Filter.like("title", "%" + keyword + "%"));
         }
         pageable.setFilters(filters);
-        pageable.setOrderProperty("modifyDate");
+        if (pageable.getOrderProperty()==null) {
+            pageable.setOrderProperty("modifyDate");
+        }
         pageable.setOrderDirection(Order.Direction.desc);
         Page<Article> page = articleService.findPage(null,null,tags,pageable);
         PageBlock model = PageBlock.bind(page);
