@@ -16,12 +16,8 @@ public class NavigationModel extends BaseModel implements Serializable {
     private String name;
     /** 图标 */
     private String logo;
-    /** 标签 */
-    private Long tagId;
-    /** 文章分类 */
-    private Long articleCatalogId;
-    /** 产品分类 */
-    private Long productCategoryId;
+    /** 分类 */
+    private Long id;
 
     public Navigation.Type getType() {
         return type;
@@ -39,30 +35,6 @@ public class NavigationModel extends BaseModel implements Serializable {
         this.name = name;
     }
 
-    public Long getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(Long tagId) {
-        this.tagId = tagId;
-    }
-
-    public Long getArticleCatalogId() {
-        return articleCatalogId;
-    }
-
-    public void setArticleCatalogId(Long articleCatalogId) {
-        this.articleCatalogId = articleCatalogId;
-    }
-
-    public Long getProductCategoryId() {
-        return productCategoryId;
-    }
-
-    public void setProductCategoryId(Long productCategoryId) {
-        this.productCategoryId = productCategoryId;
-    }
-
     public String getLogo() {
         return logo;
     }
@@ -71,20 +43,26 @@ public class NavigationModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void bind(Navigation navigation) {
         this.name = navigation.getName();
         this.logo = navigation.getLogo();
         this.type = navigation.getType();
-        this.articleCatalogId = 0L;
-        this.productCategoryId = 0L;
-        this.tagId = 0L;
-        Map<String,Long> data = JsonUtils.toObject(navigation.getExtend(),Map.class);
-        if (data.containsKey("tag")) {
-            this.tagId = data.get("tag");
-        }
-        if (data.containsKey("category")) {
-            this.articleCatalogId = data.get("category");
-            this.productCategoryId = data.get("category");
+        this.id = 0L;
+        if (navigation.getType().equals(Navigation.Type.article)) {
+            this.id =  navigation.getArticleCatalogId();
+        } else
+        if (navigation.getType().equals(Navigation.Type.product)) {
+            this.id = navigation.getProductCategoryId();
+        } else {
+            this.id = 0L;
         }
     }
 

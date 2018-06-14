@@ -155,7 +155,7 @@ public class TopicController extends BaseController {
                 pc.setType(Navigation.Type.product);
                 pc.setName(productCategory.getName());
                 pc.setLogo(productCategory.getThumbnail());
-                pc.setProductCategoryId(productCategory.getId());
+                pc.setId(productCategory.getId());
                 data.add(pc);
             }
         } else
@@ -201,7 +201,7 @@ public class TopicController extends BaseController {
             products.setType(Navigation.Type.product);
             products.setName("宝贝");
             products.setLogo("http://cdnx.rzico.com/images/mall.png");
-            products.setProductCategoryId(0L);
+            products.setId(0L);
             data.add(products);
         }
         return Message.bind(data,request);

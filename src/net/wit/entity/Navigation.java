@@ -119,13 +119,13 @@ public class Navigation extends OrderEntity{
     }
 
     @JsonIgnore
-    public Long getArticleCategoryId() {
+    public Long getProductCategoryId() {
         if (getExtend()!=null) {
             Map<String, Object> data = JsonUtils.toObject(getExtend(),Map.class);
-            if ("null".equals(data.get("articleCategory").toString())) {
+            if ("null".equals(data.get("productCategory").toString())) {
                 return 0L;
             }
-            return Long.parseLong(data.get("articleCategory").toString());
+            return Long.parseLong(data.get("productCategory").toString());
         } else {
             return 0L;
         }
