@@ -164,12 +164,13 @@ public class ArticleModel extends BaseModel implements Serializable {
         this.laud = article.getLaud();
         this.review = article.getReview();
         this.articleOption.setIsTop(false);
-        for (Tag tag:article.getTags()) {
-           if (tag.getId().equals(6L)) {
-               this.articleOption.setIsTop(true);
-           }
+        if (article.getTags()!=null) {
+            for (Tag tag : article.getTags()) {
+                if (tag.getId().equals(6L)) {
+                    this.articleOption.setIsTop(true);
+                }
+            }
         }
-
     }
 
 
