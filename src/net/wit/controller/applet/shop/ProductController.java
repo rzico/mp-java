@@ -140,7 +140,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/news", method = RequestMethod.GET)
 	public @ResponseBody
-	Message news(Long authorId,Pageable pageable,HttpServletRequest request) {
+	Message news(Long authorId,String orderType,Pageable pageable,HttpServletRequest request) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		if (authorId==null) {
 			authorId = Long.parseLong(bundle.getString("platform"));
@@ -153,8 +153,22 @@ public class ProductController extends BaseController {
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
 		pageable.setFilters(filters);
-		pageable.setOrderDirection(Order.Direction.desc);
-		pageable.setOrderProperty("modifyDate");
+		List<Order> orders = new ArrayList<>();
+		if ("hitsDesc".equals(orderType)) {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		} else
+		if ("dateDesc".equals(orderType)) {
+			orders.add(new Order("createDate",Order.Direction.desc));
+		} else
+		if ("priceAsc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.asc));
+		} else
+		if ("priceDesc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.desc));
+		} else {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		}
+		pageable.setOrders(orders);
 
 		Tag tag = tagService.find(2L);
 		Page<Product> page = productService.findPage(null,null,tag,pageable);
@@ -169,7 +183,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/recommend", method = RequestMethod.GET)
 	public @ResponseBody
-	Message recommend(Long authorId,Pageable pageable,HttpServletRequest request) {
+	Message recommend(Long authorId,String orderType,Pageable pageable,HttpServletRequest request) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		if (authorId==null) {
 			authorId = Long.parseLong(bundle.getString("platform"));
@@ -181,7 +195,22 @@ public class ProductController extends BaseController {
 		List<Filter> filters = pageable.getFilters();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
-
+		List<Order> orders = new ArrayList<>();
+		if ("hitsDesc".equals(orderType)) {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		} else
+		if ("dateDesc".equals(orderType)) {
+			orders.add(new Order("createDate",Order.Direction.desc));
+		} else
+		if ("priceAsc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.asc));
+		} else
+		if ("priceDesc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.desc));
+		} else {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		}
+		pageable.setOrders(orders);
 		Tag tag = tagService.find(3L);
 		Page<Product> page = productService.findPage(null,null,tag,pageable);
 		PageBlock model = PageBlock.bind(page);
@@ -195,7 +224,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/promotion", method = RequestMethod.GET)
 	public @ResponseBody
-	Message promotion(Long authorId,Pageable pageable,HttpServletRequest request) {
+	Message promotion(Long authorId,String orderType,Pageable pageable,HttpServletRequest request) {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		if (authorId==null) {
 			authorId = Long.parseLong(bundle.getString("platform"));
@@ -206,7 +235,22 @@ public class ProductController extends BaseController {
 		}
 		List<Filter> filters = pageable.getFilters();
 		filters.add(new Filter("owner", Filter.Operator.eq,member));
-
+		List<Order> orders = new ArrayList<>();
+		if ("hitsDesc".equals(orderType)) {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		} else
+		if ("dateDesc".equals(orderType)) {
+			orders.add(new Order("createDate",Order.Direction.desc));
+		} else
+		if ("priceAsc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.asc));
+		} else
+		if ("priceDesc".equals(orderType)) {
+			orders.add(new Order("price",Order.Direction.desc));
+		} else {
+			orders.add(new Order("modifyDate",Order.Direction.desc));
+		}
+		pageable.setOrders(orders);
 		Page<Promotion> page = promotionService.findPage(null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindPromotion(page.getContent()));
