@@ -59,8 +59,7 @@ public class CustomService extends BaseEntity {
 
 
 	/** 在线 */
-	@Length(max = 200)
-	@Column(columnDefinition="bit not null default 1 comment '在线'")
+	@Column(columnDefinition="bit comment '在线'")
 	private Boolean online;
 
 	public String getName() {
