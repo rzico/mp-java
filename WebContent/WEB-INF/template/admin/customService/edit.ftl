@@ -41,7 +41,7 @@
         </div>
     </div>
     <form action="" method="post" class="form form-horizontal" id="form-update">
-        <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
+        <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId" value=" [#if data.member??]${data.member.id}[/#if]">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
         <div class="row cl">
