@@ -84,7 +84,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public @ResponseBody
-	    Message save(String body,Product.Type type,HttpServletRequest request, RedirectAttributes redirectAttributes) {
+	    Message save(String body,HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -107,17 +107,9 @@ public class ProductController extends BaseController {
 			goods.setRanking(0L);
 			goods.setReview(0L);
 			goods.setHits(0L);
-			if (type==null) {
-				type = Product.Type.product;
-			}
-
 		} else {
 			goods = goodsService.find(model.getId());
 			tags = goods.product().getTags();
-			if (type==null) {
-				type = goods.product().getType();
-			}
-
 		}
 
 		List<Product> products = new ArrayList<Product>();
@@ -145,7 +137,7 @@ public class ProductController extends BaseController {
 				product.setDeleted(false);
 			}
 
-			product.setType(type);
+			product.setType(model.getType());
 			product.setName(model.getName());
 			product.setUnit(model.getUnit());
 
