@@ -102,7 +102,7 @@ public class CommonController extends BaseController {
 //		return Message.bind(data,request);
 //		String ua = request.getHeader("user-agent");
 		if (ua != null) {
-			if (ua.indexOf("iOS")!=-1) {
+			if (ua.indexOf("iOS")!=-1 || ua.toLowerCase().indexOf("iphone")!=-1) {
 				PluginConfig pluginConfig=pluginConfigService.findByPluginId("iosVersionPlugin");
 				if(pluginConfig==null){
 					return Message.error("您已断开链接请稍候再试!");
