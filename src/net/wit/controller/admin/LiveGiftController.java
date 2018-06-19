@@ -90,7 +90,8 @@ public class LiveGiftController extends BaseController {
 		entity.setThumbnail(liveGift.getThumbnail());
 
 		entity.setAnimation(liveGift.getAnimation());
-		
+
+		entity.setIsPlay(liveGift.getIsPlay());
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -151,6 +152,8 @@ public class LiveGiftController extends BaseController {
 		entity.setThumbnail(liveGift.getThumbnail());
 
 		entity.setAnimation(liveGift.getAnimation());
+
+		entity.setIsPlay(liveGift.getIsPlay());
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");

@@ -162,6 +162,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "isPlay",
+                    "sTitle": "是否播放礼物",
+                    "sClass": "center"
+                },
+                {
                     "mData": "id",
                     "sTitle": "操作",
                     "sClass": "center"
@@ -190,9 +195,18 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
-
                 {
                     "aTargets": [7],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 礼物管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +

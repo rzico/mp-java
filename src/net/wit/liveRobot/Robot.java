@@ -1,22 +1,19 @@
 package net.wit.liveRobot;
 
 import net.wit.Filter;
-import net.wit.Page;
 import net.wit.controller.model.live.UserInfo;
 import net.wit.entity.Live;
+import net.wit.entity.LiveTape;
 import net.wit.entity.Member;
-import net.wit.entity.Order;
 import net.wit.plat.im.Push;
 import net.wit.service.LiveService;
+import net.wit.service.LiveTapeService;
 import net.wit.service.MemberService;
 import net.wit.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Robot {
 
@@ -25,30 +22,35 @@ public class Robot {
 
     private LiveService liveService;
 
+    private LiveTapeService liveTapeService;
+
     private  List<Member> robots;
+
 
     public static Robot robot;
     public enum Type{
         CustomTextMsg//文本消息
     }
-    public Robot(MemberService memberService, LiveService liveService){
+    public Robot(MemberService memberService, LiveService liveService,LiveTapeService liveTapeService){
         this.memberService = memberService;
         this.liveService = liveService;
+        this.liveTapeService = liveTapeService;
     }
 
-    public static Robot create(MemberService memberService, LiveService liveService){
+    public static Robot create(MemberService memberService, LiveService liveService,LiveTapeService liveTapeService){
         if(robot == null){
-            return robot = new Robot(memberService, liveService);
+            return robot = new Robot(memberService, liveService, liveTapeService);
         }else {
             return robot;
         }
     }
 
+
     private long time = 3000; //每隔几秒加机器人
     /**
      * 机器人启动
      */
-    public  void joinRobot(final String groupId){
+    public  void joinRobot(final String groupId, final Live live, final LiveTape liveTape){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -62,7 +64,6 @@ public class Robot {
                         try {
                             //向直播间发送消息
                             Push.impushgroup(groupId, bindRobot(member, "加入房间", Type.CustomTextMsg));
-
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -71,6 +72,11 @@ public class Robot {
                         Thread.sleep(time);//睡眠1000毫秒
                     }catch(InterruptedException e){e.printStackTrace();}
                 }
+
+                live.setViewerCount(live.getViewerCount() + 10);
+                liveTape.setViewerCount(liveTape.getViewerCount()+10);
+                liveService.update(live);
+                liveTapeService.update(liveTape);
             }
         }).start();
     }

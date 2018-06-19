@@ -58,7 +58,7 @@
                                 <div class="file-item thumbnail">
                                     <img width="100px" height="100px" src="${data.thumbnail}"/>
                                     <div class="info"></div>
-                                </div>'
+                                </div>
                             [/#if]
                         </div>
                         <div id="filePicker">选择图片</div>
@@ -75,7 +75,7 @@
                                 <div class="file-item thumbnail">
                                     <img width="100px" height="100px" src="${data.animation}"/>
                                     <div class="info"></div>
-                                </div>'
+                                </div>
                             [/#if]
                         </div>
                         <div id="animationfilePicker">选择图片</div>
@@ -90,6 +90,17 @@
                     <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
                 </div>
             </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否播放动画：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="check-box">
+                    <input type="checkbox" name="isPlay" id="isPlay" value="true"[#if data.isPlay?? && data.isPlay] checked[/#if]>
+                    <input type="hidden" name="_isPlay" value="false" />
+                    <label for="isPlay">&nbsp;</label>
+                </div>
+            </div>
+        </div>
 
             <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>

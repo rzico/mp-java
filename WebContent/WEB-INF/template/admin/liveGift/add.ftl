@@ -76,6 +76,16 @@
             </div>
         </div>
 
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否播放动画：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="check-box">
+                    <input type="checkbox" name="isPlay" id="isPlay" value="true" checked>
+                    <input type="hidden" name="_isPlay" value="false" />
+                    <label for="isPlay">&nbsp;</label>
+                </div>
+            </div>
+        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>

@@ -428,9 +428,8 @@ public class LiveController extends BaseController {
         model.setVip(live.getMember().getVip());
         model.setViewerCount(live.getViewerCount());
         model.setGift(live.getGiftTotal());
-
         //加入机器人
-        Robot.create(memberService, liveService).joinRobot(model.getLiveId() + "");
+        Robot.create(memberService, liveService, liveTapeService).joinRobot(model.getLiveId() + "",live, liveTape);
         return Message.success(model,"success");
     }
 
@@ -455,7 +454,7 @@ public class LiveController extends BaseController {
 //        liveService.update(live);
 
         if (liveTape.getViewerCount()>0) {
-            liveTape.setViewerCount(liveTape.getViewerCount() - 1);
+            liveTape.setViewerCount(liveTape.getViewerCount());//修改人数不减
         }
         liveTapeService.update(liveTape);
 

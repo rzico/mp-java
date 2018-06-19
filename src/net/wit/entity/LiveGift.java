@@ -36,6 +36,11 @@ public class LiveGift extends OrderEntity {
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '缩略图'")
 	private String thumbnail;
 
+	/** 是否启用动画 */
+	@NotNull
+	@Column(columnDefinition="bit not null comment '是否启用动画'")
+	private Boolean isPlay;
+
 	/** 动图效果 */
 	@Length(max = 200)
 	@Column(nullable = false, length = 200,columnDefinition="varchar(255) not null comment '动图效果'")
@@ -90,5 +95,13 @@ public class LiveGift extends OrderEntity {
 
 	public void setAnimation(String animation) {
 		this.animation = animation;
+	}
+
+	public Boolean getIsPlay() {
+		return isPlay;
+	}
+
+	public void setIsPlay(Boolean play) {
+		isPlay = play;
 	}
 }
