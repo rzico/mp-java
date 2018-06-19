@@ -15,6 +15,10 @@ public class AppletSowingMapModel {
     /**  封面  */
     private String frontcover;
 
+
+    /** 排序 */
+    private Integer orders;
+
     public static AppletSowingMapModel bind(AppletSowingMap appletSowingMap){
         AppletSowingMapModel model = new AppletSowingMapModel();
         model.action = appletSowingMap.getAction();
@@ -54,5 +58,13 @@ public class AppletSowingMapModel {
 
     public void setFrontcover(String frontcover) {
         this.frontcover = frontcover;
+    }
+
+    public Integer getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Integer orders) {
+        this.orders = orders;
     }
 }

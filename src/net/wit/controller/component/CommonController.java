@@ -46,6 +46,9 @@ public class CommonController extends BaseController {
     @Resource(name = "enterpriseServiceImpl")
     private EnterpriseService enterpriseService;
 
+    @Resource(name = "messageServiceImpl")
+    private MessageService messageService;
+
     @RequestMapping(value = "/getAuthUrl", method = RequestMethod.GET)
     public String getAuthUrl(HttpServletRequest request) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
@@ -56,12 +59,12 @@ public class CommonController extends BaseController {
             String verifyTicket = pluginConfig.getAttribute("verify_ticket");
             ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, appId, secret);
             String url = "";
-            //http://mp.1xx.me/weixin/notify.jhtml
+            //http://mopian.1xx.me/weixin/notify.jhtml
             if (componentAccessToken != null && componentAccessToken.getComponent_access_token() != null && !componentAccessToken.getComponent_access_token().equals("")) {
                 String preAuthCode = WeixinApi.getPreAuthCode(componentAccessToken.getComponent_access_token(), appId);
                 Member member = memberService.getCurrent();
                 System.out.println("weixinSouquan===============================:" + (member == null ? "null" : "nonull"));
-                if (member == null) return "redirect:http://mp.1xx.me";
+                if (member == null) return "redirect:http://mopian.1xx.me";
                 System.out.println("weixinSouquan===============================" + member.getId());
                 //+ memberService.getCurrent().getId()；
 //                String reUrl = net.wit.util.StringUtils.base64Encode(("http://" + bundle.getString("weixin.component.url") + "/component/common/weixinCallback.jhtml").getBytes());
@@ -70,7 +73,7 @@ public class CommonController extends BaseController {
                 return "redirect:" + url;
             }
         }
-        return "redirect:http://mp.1xx.me";
+        return "redirect:http://mopian.1xx.me";
 //        HashMap<String, Object> data = new HashMap<>();
 //        data.put("url", url);
 //        return Message.bind(data,request);
@@ -177,6 +180,7 @@ public class CommonController extends BaseController {
                                 topicConfig.setEstate(TopicConfig.Estate.AUDITING);
                                 topic.setConfig(topicConfig);
                                 topicService.update(topic);
+                                messageService.topicConfigPushTo(topic);
                             }
                         }
                     }
