@@ -34,14 +34,14 @@
     <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"></label>
         <div class="formControls col-xs-8 col-sm-9">
-            <input type="text" class="input-text" value="" placeholder="请输入手机号或邮箱" id="mobilemail" name="mobilemail" style="width:54%;">
+            <input type="text" class="input-text" value="[#if data.member??]${data.member.username}[/#if]" placeholder="请输入手机号或邮箱" id="mobilemail" name="mobilemail" style="width:54%;">
             <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 查询
             </button>
         </div>
     </div>
     <form action="" method="post" class="form form-horizontal" id="form-update">
-        <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId">
+        <input type="text" class="input-text" value="" placeholder="" hidden="hidden" id="memberId" name="memberId" value=" [#if data.member??]${data.member.id}[/#if]">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
         <div class="row cl">

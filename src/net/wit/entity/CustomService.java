@@ -54,13 +54,12 @@ public class CustomService extends BaseEntity {
 	/** 会员 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
+	@JoinColumn(columnDefinition="bigint(20) not null comment '备注'")
 	private Member member;
 
 
 	/** 在线 */
-	@Length(max = 200)
-	@Column(columnDefinition="bit not null default 1 comment '在线'")
+	@Column(columnDefinition="bit comment '在线'")
 	private Boolean online;
 
 	public String getName() {

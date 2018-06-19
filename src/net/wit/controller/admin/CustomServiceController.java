@@ -159,9 +159,7 @@ public class CustomServiceController extends BaseController {
 
 		entity.setMember(memberService.find(memberId));
 
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
+
         try {
             customServiceService.update(entity);
             return Message.success(entity,"admin.update.success");
