@@ -150,6 +150,7 @@ public class ArticleModel extends BaseModel implements Serializable {
         this.isDraft = article.getIsDraft();
 
         List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
+        System.out.print("articleId:" + article.getId());
         if (article.getContent()!=null) {
             templates = JsonUtils.toObject(article.getContent(), List.class);
         }
