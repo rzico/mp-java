@@ -228,6 +228,8 @@ public class CardController extends BaseController {
 
         if (card==null) {
 
+            //检查登记客户
+
             if (owner==null) {
                 return Message.error("无效店主");
             }
@@ -237,8 +239,19 @@ public class CardController extends BaseController {
             if (owner.getTopic().getTopicCard()==null) {
                 return Message.error("没有开通电子会员卡");
             }
+            List<Filter> filters = new ArrayList<>();
+            filters.add(new Filter("mobile",Filter.Operator.eq,mobile));
+            filters.add(new Filter("status",Filter.Operator.eq,Card.Status.none));
+            if (!"3".equals(bundle.getString("weex"))) {
+                filters.add(new Filter("owner",Filter.Operator.eq,owner));
+            }
+            List<Card> cards = cardService.findList(null,null,filters,null);
 
-            card = cardService.createAndActivate(member, owner, promoter, BigDecimal.ZERO, BigDecimal.ZERO);
+            if (cards.size()>0) {
+                card = cardService.activate(cards.get(0),member,promoter);
+            } else {
+                card = cardService.createAndActivate(member, owner, promoter, BigDecimal.ZERO, BigDecimal.ZERO);
+            }
         }
 
         String name = member.getName();

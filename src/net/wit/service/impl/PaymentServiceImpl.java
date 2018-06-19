@@ -203,7 +203,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				}
 
 				//新客户不自动配送
-				if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg) && order.getMember().getOrders().size()>0) {
+
+				ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+				if (bundle.containsKey("weex") && "3".equals(bundle.getString("weex")) && !order.getShippingMethod().equals(Order.ShippingMethod.cardbkg) && order.getMember().getOrders().size()>0) {
 					orderService.shipping(order,Order.ShippingMethod.warehouse,null,null);
 				}
 

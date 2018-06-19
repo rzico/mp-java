@@ -188,6 +188,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setAmount(BigDecimal.ZERO);
 			card.setPoint(0L);
 			card.setMember(member);
+			card.setPaymentMethod(Card.PaymentMethod.immediate);
 
 			if (code == null) {
 				topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
@@ -252,6 +253,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 			card.setPoint(0L);
 			card.setPromoter(promoter);
 			card.setMember(member);
+			card.setPaymentMethod(Card.PaymentMethod.immediate);
 
 			topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 			Long no = topicCard.getIncrement() + 1L;
@@ -491,6 +493,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		card.setBalance(BigDecimal.ZERO);
 		card.setAmount(BigDecimal.ZERO);
 		card.setPoint(0L);
+		card.setPaymentMethod(Card.PaymentMethod.immediate);
 		topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 		Long no = topicCard.getIncrement() + 1L;
 		topicCard.setIncrement(no);

@@ -5,10 +5,7 @@ import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ReceiverModel;
-import net.wit.entity.Card;
-import net.wit.entity.Location;
-import net.wit.entity.Member;
-import net.wit.entity.Receiver;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 
 /**
@@ -45,6 +44,9 @@ public class ReceiverController extends BaseController {
 
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
 
     /**
      *  列表
@@ -234,6 +236,7 @@ public class ReceiverController extends BaseController {
     @RequestMapping(value = "/addcard", method = RequestMethod.POST)
     @ResponseBody
     public Message addCard(Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -241,15 +244,31 @@ public class ReceiverController extends BaseController {
         if (areaId==null) {
             return Message.error("所在地区无效");
         }
-        if (member.getTopic()==null) {
+
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+
+        Member owner = admin.getEnterprise().getMember();
+
+        if (owner.getTopic()==null) {
             return Message.error("没有开通专栏");
         }
-        if (member.getTopic().getTopicCard()==null) {
+        if (owner.getTopic().getTopicCard()==null) {
             return Message.error("没有开通会员卡");
         }
 
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
         List<Filter> filters = new ArrayList<>();
-        filters.add(new Filter("phone", Filter.Operator.eq,phone));
+        filters.add(new Filter("mobile", Filter.Operator.eq,phone));
+        if (!"3".equals(bundle.getString("weex"))) {
+            filters.add(new Filter("owner",Filter.Operator.eq,owner));
+        }
 
         List<Card> cards = cardService.findList(null,null,filters,null);
 
@@ -271,7 +290,7 @@ public class ReceiverController extends BaseController {
         receiver.setLevel(level);
         receiver.setShop(null);
 
-        cardService.createAndMember(receiver,member);
+        cardService.createAndMember(receiver,owner);
 
         ReceiverModel model = new ReceiverModel();
         model.bind(receiver);
