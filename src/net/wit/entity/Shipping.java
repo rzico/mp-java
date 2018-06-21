@@ -133,6 +133,12 @@ public class Shipping extends BaseEntity {
 	@Column(updatable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '物流费用'")
 	private BigDecimal freight;
 
+	/** 送货工资 */
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(updatable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '送货工资'")
+	private BigDecimal adminFreight;
+
 	/** 收货人 */
 	@Column(columnDefinition="varchar(255) comment '收货人'")
 	private String consignee;
@@ -182,6 +188,14 @@ public class Shipping extends BaseEntity {
 	@NotEmpty
 	@OneToMany(mappedBy = "shipping", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<ShippingBarrel> shippingBarrels = new ArrayList<ShippingBarrel>();
+
+	public BigDecimal getAdminFreight() {
+		return adminFreight;
+	}
+
+	public void setAdminFreight(BigDecimal adminFreight) {
+		this.adminFreight = adminFreight;
+	}
 
 	/**
 	 * 获取编号
@@ -591,4 +605,65 @@ public class Shipping extends BaseEntity {
 	public void setShippingBarrels(List<ShippingBarrel> shippingBarrels) {
 		this.shippingBarrels = shippingBarrels;
 	}
+
+
+
+	@Transient
+	public BigDecimal calcFreight(Receiver receiver) {
+		BigDecimal price = BigDecimal.ZERO;
+		int quantity = getQuantity();
+
+		if (quantity<6) {
+			price = new BigDecimal(5);
+		} else
+		if (quantity<20) {
+			price = new BigDecimal(4.5);
+		} else
+		if (quantity<50) {
+			price = new BigDecimal(3.5);
+		} else {
+			price = new BigDecimal(2.5);
+		}
+
+		price = price.add(
+				new BigDecimal(receiver.getLevel() - 2)
+		);
+
+		BigDecimal amount = price.multiply(new BigDecimal(quantity));
+
+		if (quantity==1) {
+			 amount = amount.add(new BigDecimal(2));
+		}
+		return amount;
+	}
+
+	@Transient
+	public BigDecimal calcAdminFreight(Receiver receiver) {
+		BigDecimal price = BigDecimal.ZERO;
+		int quantity = getQuantity();
+
+		if (quantity<6) {
+			price = new BigDecimal(3);
+		} else
+		if (quantity<20) {
+			price = new BigDecimal(2.5);
+		} else
+		if (quantity<50) {
+			price = new BigDecimal(2);
+		} else {
+			price = new BigDecimal(1.5);
+		}
+
+		price = price.add(
+				new BigDecimal(receiver.getLevel() - 2)
+		);
+
+		BigDecimal amount = price.multiply(new BigDecimal(quantity));
+
+		if (quantity==1) {
+			amount = amount.add(new BigDecimal(2));
+		}
+		return amount;
+	}
+
 }
