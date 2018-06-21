@@ -131,6 +131,9 @@ public class GaugeListModel extends BaseModel implements Serializable {
         for (AgentGauge agentGauge:gauges) {
             GaugeListModel m = new GaugeListModel();
             m.bind(agentGauge.getGauge());
+
+            m.setTags(TagModel.bindList(agentGauge.getTags()));
+
             ms.add(m);
         }
         return ms;

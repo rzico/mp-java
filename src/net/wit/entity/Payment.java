@@ -33,6 +33,31 @@ public class Payment extends BaseEntity {
 	/**
 	 * 类型
 	 */
+
+	public enum Way {
+		/** 代付 */
+		yundian,
+		/** 直清 */
+		merchant
+	}
+
+	/**
+	 * 终端
+	 */
+
+	public enum Terminal {
+		/** 微信公众号 */
+		weixin,
+		/** 微信小程序 */
+		wxApplet,
+		/** App */
+		app
+	}
+
+	/**
+	 * 类型
+	 */
+
 	public enum Type {
 
 		/** 购物支付 */
@@ -67,6 +92,7 @@ public class Payment extends BaseEntity {
 
 		/** 会员卡 */
 		card
+
 	}
 
 	/**
@@ -100,6 +126,14 @@ public class Payment extends BaseEntity {
 	/** 类型 */
 	@Column(columnDefinition="int(11) not null comment '类型 {payment:消费支付,recharge:钱包充值}'")
 	private Type type;
+
+	/** 方向 */
+	@Column(columnDefinition="int(11) not null default 0 comment '方向 {yundian:代付,merchant:直清}'")
+	private Way way;
+
+	/** 终端 */
+	@Column(columnDefinition="int(11) not null default 0 comment '终端")
+	private Terminal terminal;
 
 	/** 方式 */
 	@NotNull
@@ -152,6 +186,11 @@ public class Payment extends BaseEntity {
 	@JsonIgnore
 	private Member member;
 
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Member merchant;
+
 	/** 收款方 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, updatable = false)
@@ -194,6 +233,13 @@ public class Payment extends BaseEntity {
 	@JsonIgnore
 	private Evaluation evaluation;
 
+	public Terminal getTerminal() {
+		return terminal;
+	}
+
+	public void setTerminal(Terminal terminal) {
+		this.terminal = terminal;
+	}
 
 	public String getSn() {
 		return sn;
@@ -355,12 +401,20 @@ public class Payment extends BaseEntity {
 		this.recharge = recharge;
 	}
 
-	public Evaluation getEvaluation() {
-		return evaluation;
+	public Way getWay() {
+		return way;
 	}
 
-	public void setEvaluation(Evaluation evaluation) {
-		this.evaluation = evaluation;
+	public void setWay(Way way) {
+		this.way = way;
+	}
+
+	public Member getMerchant() {
+		return merchant;
+	}
+
+	public void setMerchant(Member merchant) {
+		this.merchant = merchant;
 	}
 
 	/**
@@ -371,6 +425,14 @@ public class Payment extends BaseEntity {
 	@Transient
 	public boolean hasExpired() {
 		return getExpire() != null && new Date().after(getExpire());
+	}
+
+	public Evaluation getEvaluation() {
+		return evaluation;
+	}
+
+	public void setEvaluation(Evaluation evaluation) {
+		this.evaluation = evaluation;
 	}
 
 	/**

@@ -86,10 +86,20 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "")
     public
     @ResponseBody
-    Message login(String code,String nickName,String logo, HttpServletRequest request, HttpServletResponse response) {
+    Message login(String code,String nickName,String logo,Long xmid, HttpServletRequest request, HttpServletResponse response) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
-        String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +bundle.getString("applet.appid") + "&secret=" + bundle.getString("applet.secret") + "&js_code=" + code + "&grant_type=authorization_code";
+        String appid = bundle.getString("applet.appid");
+        String appsecret = bundle.getString("applet.secret");
+        if (xmid!=null) {
+            Member agent = memberService.find(xmid);
+            if (agent.getTopic()!=null && agent.getTopic().getConfig()!=null && agent.getTopic().getConfig().getAppetAppId()!=null) {
+                appid = agent.getTopic().getConfig().getAppetAppId();
+            }
+        }
+
+
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +appid + "&secret=" + appsecret + "&js_code=" + code + "&grant_type=authorization_code";
         JSONObject result = WeixinApi.httpRequest(url, "GET", null);
         if (result.containsKey("session_key")) {
             HttpSession session = request.getSession();
@@ -109,11 +119,9 @@ public class LoginController extends BaseController {
             if (nickName!=null) {
                 nickName = filterEmoji(nickName);
             }
-            if (unionId!=null && !"#".equals(unionId)) {
-                bindUser = bindUserService.findUnionId(unionId, BindUser.Type.weixin);
-            } else {
-                bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
-            }
+
+            bindUser = bindUserService.findOpenId(openId,appid,BindUser.Type.weixin);
+
             Member member = null;
             if (bindUser!=null) {
                 member = bindUser.getMember();
@@ -138,10 +146,10 @@ public class LoginController extends BaseController {
                 }
             }
             try {
-                bindUser = bindUserService.findOpenId(openId,bundle.getString("applet.appid"),BindUser.Type.weixin);
+                bindUser = bindUserService.findOpenId(openId,appid,BindUser.Type.weixin);
                 if (bindUser==null) {
                     bindUser = new BindUser();
-                    bindUser.setAppId(bundle.getString("applet.appid"));
+                    bindUser.setAppId(appid);
                     bindUser.setType(BindUser.Type.weixin);
                     bindUser.setMember(member);
                     bindUser.setUnionId(unionId);
@@ -178,14 +186,10 @@ public class LoginController extends BaseController {
                 }
                 member.setLoginDate(new Date());
                 memberService.save(member);
-//                if (!User.userAttr(member)) {
-//
-//                };
 
                 Map<String,String> data = new HashMap<>();
                 data.put("jsessionId",sessionId);
                 data.put("session_key",sessionKey);
-//                data.put("userId", Base64.encodeBase64String(openId.getBytes()));
                 return Message.success(data,Message.LOGIN_SUCCESS);
 
             } catch (Exception e) {

@@ -89,6 +89,10 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '小程序appSerect'")
 	private String appetAppSerect;
 
+	/** 小程序 partner */
+	@Column(columnDefinition="varchar(255) comment '小程序appId'")
+	private String appetPartner;
+
 	public PromoterType getPromoterType() {
 		return promoterType;
 	}
@@ -169,4 +173,11 @@ public class TopicConfig implements Serializable {
 		this.amount = amount;
 	}
 
+	public String getAppetPartner() {
+		return appetPartner;
+	}
+
+	public void setAppetPartner(String appetPartner) {
+		this.appetPartner = appetPartner;
+	}
 }

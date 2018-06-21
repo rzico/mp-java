@@ -114,7 +114,10 @@ public class GaugeController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long gaugeCategoryId,Long tagId,Long agent, Pageable pageable, HttpServletRequest request){
+    public Message list(Long gaugeCategoryId,Long tagId,Long agent,Long xmid, Pageable pageable, HttpServletRequest request){
+        if (xmid!=null) {
+            agent = xmid;
+        }
         if (agent==null) {
             List<Filter> filters = new ArrayList<Filter>();
             if (gaugeCategoryId != null) {

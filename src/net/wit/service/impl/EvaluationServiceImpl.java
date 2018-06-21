@@ -24,8 +24,7 @@ import java.util.List;
  * @author 降魔战队
  * @date 2018-2-12 21:4:37
  */
- 
- 
+
 @Service("evaluationServiceImpl")
 public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> implements EvaluationService {
 	@Resource(name = "evaluationDaoImpl")
@@ -105,13 +104,14 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		payment.setSn(snService.generate(Sn.Type.payment));
 		payment.setMemo("购买测评");
 		payment.setEvaluation(evaluation);
+		payment.setTerminal(Payment.Terminal.wxApplet);
+		payment.setWay(Payment.Way.yundian);
 		if (payment.getAmount().compareTo(BigDecimal.ZERO)==0) {
 			payment.setStatus(Payment.Status.success);
 			evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
 			evaluationDao.merge(evaluation);
 		}
 		paymentDao.persist(payment);
-
 		return payment;
 	}
 
@@ -158,6 +158,5 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 	public List<EvaluationSummary> sumPromoter(Gauge gauge,Date beginDate, Date endDate) {
 		return evaluationDao.sumPromoter(gauge,beginDate,endDate);
 	}
-
 
 }

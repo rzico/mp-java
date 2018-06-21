@@ -422,7 +422,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					deposit.setPayment(payment);
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
-
 					rebateService.rebate(evaluation.getPrice(),buyer,evaluation.getPersonal(),evaluation.getAgent(),evaluation.getOperate(),null);
 				}
 

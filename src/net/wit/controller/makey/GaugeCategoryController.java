@@ -43,7 +43,10 @@ public class GaugeCategoryController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long agent,HttpServletRequest request){
+    public Message list(Long agent,Long xmid,HttpServletRequest request){
+        if (xmid!=null) {
+            agent = xmid;
+        }
         if (agent==null) {
             List<GaugeCategory> categories = gaugeCategoryService.findAll();
 

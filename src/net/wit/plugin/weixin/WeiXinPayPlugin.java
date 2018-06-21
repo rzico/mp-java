@@ -129,8 +129,8 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		HashMap<String, Object> packageParams = new HashMap<>();
 		String createNoncestr = WeiXinUtils.CreateNoncestr();
 
-		packageParams.put("appid", pluginConfig.getAttribute("appId"));
-		packageParams.put("mch_id", pluginConfig.getAttribute("partner"));
+		packageParams.put("appid", getAttribute(payment,"appId"));
+		packageParams.put("mch_id", getAttribute(payment,"partner"));
 		packageParams.put("nonce_str", createNoncestr);
 		packageParams.put("body", description);
 		packageParams.put("out_trade_no", payment.getSn());
@@ -141,16 +141,9 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		packageParams.put("notify_url", getNotifyUrl(sn, NotifyMethod.async));
 		packageParams.put("trade_type", "JSAPI");
 
-		if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
-			BindUser bindUser = findByUser(payment.getMember(),pluginConfig.getAttribute("applet"), BindUser.Type.weixin);
-			if (bindUser!=null) {
-				packageParams.put("openid",bindUser.getOpenId());
-			}
-		} else {
-			BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
-			if (bindUser!=null) {
-				packageParams.put("openid",bindUser.getOpenId());
-			}
+		BindUser bindUser = findByUser(payment.getMember(),getAttribute(payment,"appId"), BindUser.Type.weixin);
+		if (bindUser!=null) {
+			packageParams.put("openid",bindUser.getOpenId());
 		}
 
 		try {
@@ -170,7 +163,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 				prepay_id = data.get("prepay_id");
 				String timestamp = WeiXinUtils.getTimeStamp();
 				String packages = "prepay_id=" + prepay_id;
-				finalpackage.put("appId",pluginConfig.getAttribute("appId"));
+				finalpackage.put("appId",getAttribute(payment,"appId"));
 				finalpackage.put("timeStamp", timestamp);
 				finalpackage.put("nonceStr", createNoncestr);
 				finalpackage.put("package", packages);
@@ -219,7 +212,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			map = WeiXinUtils.doXMLParse(info.toString());
 			if (map.get("result_code").toString().equals("SUCCESS")) {
 				String sign = getSign(map);
-				if (sign.equals(map.get("sign")) && sn.equals(map.get("out_trade_no")) && map.get("appid").equals(pluginConfig.getAttribute("appId"))
+				if (sign.equals(map.get("sign")) && sn.equals(map.get("out_trade_no")) && map.get("appid").equals(getAttribute(payment,"appId"))
 						&& payment.getAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal((String) map.get("total_fee"))) == 0) {
 					try {
 						return true;
@@ -244,8 +237,8 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		PluginConfig pluginConfig = getPluginConfig();
 		String createNoncestr = WeiXinUtils.CreateNoncestr();
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("appid", pluginConfig.getAttribute("appId"));
-		parameterMap.put("mch_id", pluginConfig.getAttribute("partner"));
+		parameterMap.put("appid", getAttribute(payment,"appId"));
+		parameterMap.put("mch_id", getAttribute(payment,"partner"));
 		parameterMap.put("out_trade_no", payment.getSn());
 		parameterMap.put("nonce_str", createNoncestr);
 		try {
@@ -360,8 +353,8 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		DecimalFormat decimalFormat = new DecimalFormat("#");
 		BigDecimal money = refunds.getAmount().multiply(new BigDecimal(100));
-		map.put("appid", pluginConfig.getAttribute("appId"));
-		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("appid", getAttribute(refunds.getPayment(),"appId"));
+		map.put("mch_id", getAttribute(refunds.getPayment(),"partner"));
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
 		map.put("out_trade_no",refunds.getPayment().getSn());
 		map.put("out_refund_no",refunds.getSn());
@@ -421,8 +414,8 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		PluginConfig pluginConfig = getPluginConfig();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		HashMap<String, Object> finalpackage = new HashMap<String, Object>();
-		map.put("appid", pluginConfig.getAttribute("appId"));
-		map.put("mch_id", pluginConfig.getAttribute("partner"));
+		map.put("appid", getAttribute(refunds.getPayment(),"appId"));
+		map.put("mch_id", getAttribute(refunds.getPayment(),"partner"));
 		map.put("out_refund_no", refunds.getSn());
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
 		try {
