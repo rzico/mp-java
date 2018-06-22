@@ -339,6 +339,11 @@ public class ShippingController extends BaseController {
 		List<Filter> filters = new ArrayList<Filter>();
 		if ("unconfirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
+			filters.add(new Filter("hopeDate", Filter.Operator.isNull,null));
+		} else
+		if ("hope".equals(status)) {
+			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
+			filters.add(new Filter("hopeDate", Filter.Operator.isNotNull,null));
 		} else
 		if ("confirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
@@ -360,6 +365,36 @@ public class ShippingController extends BaseController {
 		return Message.bind(model,request);
 	}
 
+	/**
+	 *  订单统计
+	 */
+	@RequestMapping(value = "/count", method = RequestMethod.POST)
+	public @ResponseBody
+	Message count(HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+		Admin admin = adminService.findByMember(member);
+		Shop shop = null;
+		if (admin!=null && admin.getEnterprise()!=null) {
+			shop = admin.getShop();
+		}
+		if (shop==null) {
+			return Message.error("没有分配店铺");
+		}
+		Map<String,Long> data = new HashMap<>();
+		Long unconfirmed = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed),new Filter("hopeDate", Filter.Operator.isNull,null));
+		data.put("unconfirmed",unconfirmed);
+		Long hope = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed),new Filter("hopeDate", Filter.Operator.isNotNull,null));
+		data.put("hope",hope);
+		Long confirmed = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
+		data.put("confirmed",confirmed);
+		Long completed = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed),new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
+		data.put("completed",completed);
+
+    	return Message.success(data,"success");
+	}
 
 	/**
 	 *  获取配送站

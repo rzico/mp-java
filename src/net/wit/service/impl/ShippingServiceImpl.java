@@ -2,10 +2,7 @@ package net.wit.service.impl;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.persistence.LockModeType;
@@ -18,6 +15,7 @@ import net.wit.Filter.Operator;
 
 import net.wit.dao.*;
 import net.wit.service.*;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -169,6 +167,12 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 		shipping.setShippingItems(shippingItems);
 
+		shipping.setHopeDate(null);
+		if (order.getHopeDate()!=null) {
+			if (order.getHopeDate().compareTo(DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.HOUR),-2))>0) {
+				shipping.setHopeDate(order.getHopeDate());
+			}
+		}
 		Receiver receiver = receiverService.find(order.getReceiverId());
 		if (receiver!=null) {
 			shipping.setLevel(receiver.getLevel());

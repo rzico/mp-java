@@ -97,6 +97,10 @@ public class Shipping extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Admin admin;
 
+	/** 预约时间 */
+	@Column(columnDefinition="datetime comment '预约时间'")
+	private Date hopeDate;
+
 	/** 编号 */
 	@Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '编号'")
 	private String sn;
@@ -195,6 +199,14 @@ public class Shipping extends BaseEntity {
 
 	public void setAdminFreight(BigDecimal adminFreight) {
 		this.adminFreight = adminFreight;
+	}
+
+	public Date getHopeDate() {
+		return hopeDate;
+	}
+
+	public void setHopeDate(Date hopeDate) {
+		this.hopeDate = hopeDate;
 	}
 
 	/**
