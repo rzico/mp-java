@@ -230,6 +230,8 @@ public class LoginController extends BaseController {
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
+
+            System.out.println(xuid);
             if (xuid!=null) {
                 Member u = memberService.findByUUID(xuid);
                 if (u!=null && !u.equals(member)) {
@@ -295,6 +297,9 @@ public class LoginController extends BaseController {
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
             String xuid = request.getHeader("x-uid");
+
+            System.out.println(xuid);
+
             if (xuid!=null) {
                 Member u = memberService.findByUUID(xuid);
                 if (u!=null && !u.equals(member)) {
@@ -349,6 +354,9 @@ public class LoginController extends BaseController {
             User.userAttr(member);
             Principal principal = new Principal(member.getId(),member.getUsername());
             redisService.put(Member.PRINCIPAL_ATTRIBUTE_NAME, JsonUtils.toJson(principal));
+
+            topicService.autoCreate(member);
+
             return Message.success(Message.LOGIN_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
