@@ -391,8 +391,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		//按楼层加价
-		order.setFreight(order.calcFreight(receiver));
-
+		if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+			order.setFreight(order.calcFreight(receiver));
+		} else {
+			order.setFreight(BigDecimal.ZERO);
+		}
 
 		order.setAmountPaid(new BigDecimal(0));
 
@@ -545,7 +548,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 
 		}
-
 		return order;
 	}
 

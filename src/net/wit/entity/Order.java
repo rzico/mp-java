@@ -1250,7 +1250,7 @@ public class Order extends BaseEntity {
 		if (receiver!=null && receiver.getLevel()!=null && receiver.getLevel()>4) {
 			if (getOrderItems() != null) {
 				for (OrderItem orderItem : getOrderItems()) {
-					if (orderItem != null && orderItem.getQuantity() != null && orderItem.getProduct().getType().equals(Product.Type.warehouse)) {
+					if (orderItem != null && orderItem.getQuantity() != null) {
 						price = price.add(
 								new BigDecimal(
 										(orderItem.getQuantity()-orderItem.getCouponQuantity()) * (receiver.getLevel() - 4)

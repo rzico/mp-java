@@ -145,10 +145,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setSn(snService.generate(Sn.Type.shipping));
 		shipping.setFreight(BigDecimal.ZERO);
 		shipping.setAdminFreight(BigDecimal.ZERO);
-
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		List<ShippingItem> shippingItems = new ArrayList<>();
 		for (OrderItem orderItem:order.getOrderItems()) {
-			if (orderItem.getProduct().getType().equals(Product.Type.warehouse)) {
+			if (("3".equals(bundle.getString("weex")) || orderItem.getProduct().getType().equals(Product.Type.warehouse))) {
 				ShippingItem shippingItem = new ShippingItem();
 				shippingItem.setName(orderItem.getName());
 				shippingItem.setProduct(orderItem.getProduct());
