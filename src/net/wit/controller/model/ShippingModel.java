@@ -381,10 +381,10 @@ public class ShippingModel extends BaseModel implements Serializable {
         ShippingTrackModel track = new ShippingTrackModel();
         track.setLng(0);
         track.setLat(0);
-        if (shipping.getShippingMethod().equals(net.wit.entity.Order.ShippingMethod.cardbkg)) {
-            track.setMethod("存入卡包");
+        if (shipping.getShippingMethod()==null) {
+            track.setMethod("同城快送");
         } else {
-            track.setMethod("普通快递");
+            track.setMethod(shipping.getShippingMethod());
         }
 
         if (shipping.getAdmin()!=null && shipping.getAdmin().getMember()!=null) {

@@ -383,14 +383,20 @@ public class ShippingController extends BaseController {
 		if (shop==null) {
 			return Message.error("没有分配店铺");
 		}
+		Filter filter = null;
+		if (admin.roles().contains("3")) {
+			filter = new Filter("admin", Filter.Operator.eq,admin);
+		} else {
+			filter = new Filter("shop", Filter.Operator.eq,shop);
+		}
 		Map<String,Long> data = new HashMap<>();
-		Long unconfirmed = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed),new Filter("hopeDate", Filter.Operator.isNull,null));
+		Long unconfirmed = shippingService.count(filter,new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed),new Filter("hopeDate", Filter.Operator.isNull,null));
 		data.put("unconfirmed",unconfirmed);
-		Long hope = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed),new Filter("hopeDate", Filter.Operator.isNotNull,null));
+		Long hope = shippingService.count(filter,new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed),new Filter("hopeDate", Filter.Operator.isNotNull,null));
 		data.put("hope",hope);
-		Long confirmed = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
+		Long confirmed = shippingService.count(filter,new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
 		data.put("confirmed",confirmed);
-		Long completed = shippingService.count(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed),new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
+		Long completed = shippingService.count(filter,new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed),new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
 		data.put("completed",completed);
 
     	return Message.success(data,"success");
