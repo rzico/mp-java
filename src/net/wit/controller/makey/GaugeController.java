@@ -49,6 +49,9 @@ public class GaugeController extends BaseController {
     @Resource(name = "memberServiceImpl")
     private MemberService memberService;
 
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     @Resource(name = "enterpriseServiceImpl")
     private EnterpriseService enterpriseService;
 
@@ -116,7 +119,9 @@ public class GaugeController extends BaseController {
     @ResponseBody
     public Message list(Long gaugeCategoryId,Long tagId,Long agent,Long xmid, Pageable pageable, HttpServletRequest request){
         if (xmid!=null) {
-            agent = xmid;
+            Member xmember = memberService.find(xmid);
+            Admin admin = adminService.findByMember(xmember);
+            agent = admin.getEnterprise().getId();
         }
         if (agent==null) {
             List<Filter> filters = new ArrayList<Filter>();
@@ -137,6 +142,7 @@ public class GaugeController extends BaseController {
                 AgentCategory category = agentCategoryService.find(gaugeCategoryId);
                 filters.add(new Filter("agentCategory", Filter.Operator.eq, category));
             }
+            filters.add(new Filter("enterprise", Filter.Operator.eq, enterpriseService.find(agent)));
             pageable.setFilters(filters);
             List<Tag> tags = tagService.findList(tagId);
             Page<AgentGauge> page = agentGaugeService.findPage(null, null, tags, pageable);

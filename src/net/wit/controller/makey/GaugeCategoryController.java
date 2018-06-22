@@ -4,9 +4,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.makey.model.GaugeCategoryModel;
-import net.wit.entity.AgentCategory;
-import net.wit.entity.Enterprise;
-import net.wit.entity.GaugeCategory;
+import net.wit.entity.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +36,12 @@ public class GaugeCategoryController extends BaseController {
     @Resource(name = "enterpriseServiceImpl")
     private EnterpriseService enterpriseService;
 
+    @Resource(name = "memberServiceImpl")
+    private MemberService memberService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
     /**
      *  列表
      */
@@ -45,11 +49,12 @@ public class GaugeCategoryController extends BaseController {
     @ResponseBody
     public Message list(Long agent,Long xmid,HttpServletRequest request){
         if (xmid!=null) {
-            agent = xmid;
+            Member xmember = memberService.find(xmid);
+            Admin admin = adminService.findByMember(xmember);
+            agent = admin.getEnterprise().getId();
         }
         if (agent==null) {
             List<GaugeCategory> categories = gaugeCategoryService.findAll();
-
             return Message.bind(GaugeCategoryModel.bindList(categories), request);
         } else {
             Enterprise enterprise = enterpriseService.find(agent);
