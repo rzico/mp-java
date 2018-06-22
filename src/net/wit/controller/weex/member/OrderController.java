@@ -249,7 +249,6 @@ public class OrderController extends BaseController {
 		OrderModel model = new OrderModel();
 		model.bind(order);
 
-
 		ShippingTrackModel track = new ShippingTrackModel();
 		track.setLng(0);
 		track.setLat(0);
