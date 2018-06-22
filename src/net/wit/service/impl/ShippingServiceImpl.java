@@ -146,6 +146,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setZipCode(order.getZipCode());
 		shipping.setSn(snService.generate(Sn.Type.shipping));
 		shipping.setFreight(BigDecimal.ZERO);
+		shipping.setFreight(BigDecimal.ZERO);
 
 		List<ShippingItem> shippingItems = new ArrayList<>();
 		for (OrderItem orderItem:order.getOrderItems()) {
@@ -177,12 +178,12 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 		//结算运费
 		shipping.setFreight(
-				new BigDecimal(5).multiply(new BigDecimal(shipping.getQuantity()))
+				shipping.calcFreight(receiver)
 		);
 
-		if (shipping.getLevel()>2) {
-			shipping.setFreight(shipping.getFreight().add(new BigDecimal(shipping.getLevel()-2)));
-		}
+		shipping.setAdminFreight(
+				shipping.calcAdminFreight(receiver)
+		);
 
 		if (receiver!=null && receiver.getShop()!=null) {
 			shipping.setEnterprise(receiver.getShop().getEnterprise());
@@ -290,8 +291,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				barrelStockDao.flush();
 			}
 
-			BigDecimal adminFreight = shipping.getFreight().multiply(new BigDecimal(0.8)).setScale(2,BigDecimal.ROUND_HALF_DOWN);
-
 			//结算配送站运费
 		    if (shipping.getEnterprise()!=null) {
 
@@ -325,10 +324,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				//给配送站
 				Member shippingMember = shipping.getEnterprise().getMember();
 				memberDao.lock(shippingMember,LockModeType.PESSIMISTIC_WRITE);
-
 				shippingMember.setBalance(shippingMember.getBalance().add(freight));
 				memberDao.merge(shippingMember);
-
 				memberDao.flush();
 
 				Deposit deposit = new Deposit();
@@ -345,34 +342,38 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 
-
-				shippingMember.setBalance(shippingMember.getBalance().subtract(adminFreight));
-				memberDao.merge(shippingMember);
-
-				memberDao.flush();
-
-				Deposit adminDeposit = new Deposit();
-				adminDeposit.setBalance(shippingMember.getBalance());
-				adminDeposit.setType(Deposit.Type.freight);
-				adminDeposit.setMemo("支付工资");
-				adminDeposit.setMember(shippingMember);
-				adminDeposit.setCredit(BigDecimal.ZERO.subtract(adminFreight));
-				adminDeposit.setDebit(BigDecimal.ZERO);
-				adminDeposit.setDeleted(false);
-				adminDeposit.setOperator("system");
-				adminDeposit.setOrder(shipping.getOrder());
-				adminDeposit.setSeller(shipping.getSeller());
-				depositDao.persist(adminDeposit);
-				messageService.depositPushTo(adminDeposit);
-
-
 				//送水员运费
 				if (shipping.getAdmin()!=null) {
+
+
+					shippingMember.setBalance(shippingMember.getBalance().subtract(shipping.getAdminFreight()));
+					if (shippingMember.getBalance().compareTo(BigDecimal.ZERO)<0) {
+						throw new RuntimeException("配送站余额不足不能核销");
+					}
+					memberDao.merge(shippingMember);
+
+					memberDao.flush();
+
+					Deposit adminDeposit = new Deposit();
+					adminDeposit.setBalance(shippingMember.getBalance());
+					adminDeposit.setType(Deposit.Type.freight);
+					adminDeposit.setMemo("支付工资");
+					adminDeposit.setMember(shippingMember);
+					adminDeposit.setCredit(BigDecimal.ZERO.subtract(shipping.getAdminFreight()));
+					adminDeposit.setDebit(BigDecimal.ZERO);
+					adminDeposit.setDeleted(false);
+					adminDeposit.setOperator("system");
+					adminDeposit.setOrder(shipping.getOrder());
+					adminDeposit.setSeller(shipping.getSeller());
+					depositDao.persist(adminDeposit);
+					messageService.depositPushTo(adminDeposit);
+
+
 
 					Member adminMember = shipping.getAdmin().getMember();
 					memberDao.lock(adminMember,LockModeType.PESSIMISTIC_WRITE);
 
-					adminMember.setBalance(adminMember.getBalance().add(adminFreight));
+					adminMember.setBalance(adminMember.getBalance().add(shipping.getAdminFreight()));
 					memberDao.merge(adminMember);
 
 					memberDao.flush();
@@ -382,7 +383,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					wagesDeposit.setType(Deposit.Type.wages);
 					wagesDeposit.setMemo("送货工资");
 					wagesDeposit.setMember(adminMember);
-					wagesDeposit.setCredit(adminFreight);
+					wagesDeposit.setCredit(shipping.getAdminFreight());
 					wagesDeposit.setDebit(BigDecimal.ZERO);
 					wagesDeposit.setDeleted(false);
 					wagesDeposit.setOperator("system");
