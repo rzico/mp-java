@@ -303,7 +303,7 @@ public class OrderController extends BaseController {
 		Long unpaid = orderService.count(null,null,"unpaid",filters);
 		Long unshipped = orderService.count(null,null,"unshipped",filters);
 		Long shipped = orderService.count(null,null,"shipped",filters);
-		Long refund = orderService.count(null,null,"refund",filters);
+		Long refund = orderService.count(null,null,"refunding",filters);
 		Map<String,Long> data = new HashMap<>();
 		data.put("unpaid",unpaid);
 		data.put("unshipped",unshipped);
