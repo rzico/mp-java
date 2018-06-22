@@ -1,9 +1,6 @@
 package net.wit.controller.model;
 
-import net.wit.entity.Location;
-import net.wit.entity.Member;
-import net.wit.entity.Order;
-import net.wit.entity.Payment;
+import net.wit.entity.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -83,8 +80,14 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  优惠券折扣 */
     private BigDecimal couponDiscount;
 
-    /**  提货券抵扣 */
+    /**  电子券抵扣 */
     private BigDecimal exchangeDiscount;
+
+    /**  电子券张数 */
+    private Integer exchangeQuantity;
+
+    /**  电子券余票 */
+    private Integer exchangeBalance;
 
     /**  应付金额 */
     private BigDecimal amountPayable;
@@ -351,6 +354,22 @@ public class OrderModel extends BaseModel implements Serializable {
         this.quantity = quantity;
     }
 
+    public Integer getExchangeQuantity() {
+        return exchangeQuantity;
+    }
+
+    public void setExchangeQuantity(Integer exchangeQuantity) {
+        this.exchangeQuantity = exchangeQuantity;
+    }
+
+    public Integer getExchangeBalance() {
+        return exchangeBalance;
+    }
+
+    public void setExchangeBalance(Integer exchangeBalance) {
+        this.exchangeBalance = exchangeBalance;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -376,6 +395,7 @@ public class OrderModel extends BaseModel implements Serializable {
         if (order.getCouponCode()!=null) {
             this.couponName = order.getCouponCode().getCoupon().getName();
         }
+
         this.couponDiscount = order.getCouponDiscount();
         this.pointDiscount = order.getPointDiscount();
         this.paymentMethod = order.getPaymentMethod();
@@ -384,6 +404,8 @@ public class OrderModel extends BaseModel implements Serializable {
         this.shippingStatus = order.getShippingStatus();
 
         this.exchangeDiscount = order.getExchangeDiscount();
+        this.exchangeQuantity = order.getExchangeQuantity();
+        this.exchangeBalance = order.getExchangeBalance();
 
         this.quantity = order.getQuantity();
 
@@ -397,6 +419,7 @@ public class OrderModel extends BaseModel implements Serializable {
             this.receiver.setLng(order.getLocation().getLng());
         }
         this.promoter = "";
+
         if (order.getPromoter()!=null) {
            Member promoter = order.getPromoter();
            if (promoter.getName()!=null) {
@@ -436,6 +459,8 @@ public class OrderModel extends BaseModel implements Serializable {
         this.quantity = order.getQuantity();
 
         this.exchangeDiscount = order.getExchangeDiscount();
+        this.exchangeQuantity = order.getExchangeQuantity();
+        this.exchangeBalance = order.getExchangeBalance();
 
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();

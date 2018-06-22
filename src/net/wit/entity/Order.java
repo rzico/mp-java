@@ -1173,6 +1173,42 @@ public class Order extends BaseEntity {
 	}
 
 	/**
+	 * 获取电子券数量
+	 *
+	 * @return 获取电子券数量
+	 */
+	@Transient
+	public int getExchangeQuantity() {
+		int exchangeQuantity = 0;
+		if (getOrderItems() != null) {
+			for (OrderItem orderItem : getOrderItems()) {
+				if (orderItem != null && orderItem.getCouponQuantity() != null) {
+					exchangeQuantity += orderItem.getCouponQuantity();
+				}
+			}
+		}
+		return exchangeQuantity;
+	}
+
+    /**
+     * 获取电子券余额
+     *
+     * @return 获取电子券余额
+     */
+    @Transient
+    public int getExchangeBalance() {
+        int exchangeQuantity = 0;
+        if (getOrderItems() != null) {
+            for (OrderItem orderItem : getOrderItems()) {
+                if (orderItem != null && orderItem.getCouponCode() != null) {
+                    exchangeQuantity += orderItem.getCouponCode().getStock();
+                }
+            }
+        }
+        return exchangeQuantity;
+    }
+
+	/**
 	 * 获取已退货数量
 	 *
 	 * @return 已退货数量

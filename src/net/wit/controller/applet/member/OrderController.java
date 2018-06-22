@@ -261,6 +261,7 @@ public class OrderController extends BaseController {
 		} else {
 			track.setMethod("普通快递");
 		}
+
 		if (order.getShippings().size()>0) {
 			Shipping shipping = order.getShippings().get(0);
 			if (shipping.getAdmin()!=null && shipping.getMember()!=null) {
@@ -571,9 +572,5 @@ public class OrderController extends BaseController {
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindAndRebate(page.getContent()));
 		return Message.bind(model,request);
-
 	}
-
-
-
 }

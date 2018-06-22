@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 
 import net.wit.Setting;
+import net.wit.entity.Card;
 import net.wit.entity.Payment;
 import net.wit.util.SettingUtils;
 
@@ -24,6 +25,10 @@ public class PaymentModel extends BaseModel implements Serializable {
     private String paymentPluginId;
     /** 金额 */
     private BigDecimal amount;
+    /** 金额 */
+    private BigDecimal balance;
+    /** 金额 */
+    private BigDecimal cardBalance;
     /** 交易时间 */
     private Date createDate;
 
@@ -83,6 +88,22 @@ public class PaymentModel extends BaseModel implements Serializable {
         this.sn = sn;
     }
 
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public BigDecimal getCardBalance() {
+        return cardBalance;
+    }
+
+    public void setCardBalance(BigDecimal cardBalance) {
+        this.cardBalance = cardBalance;
+    }
+
     public void bind(Payment payment) {
         this.sn = payment.getSn();
         this.amount = payment.getAmount();
@@ -97,5 +118,15 @@ public class PaymentModel extends BaseModel implements Serializable {
             this.logo = setting.getLogo();
         }
         this.paymentPluginId = payment.getPaymentPluginId();
+
+
+        this.balance = payment.getMember().getBalance();
+        Card card = payment.getMember().card(payment.getPayee());
+        if (card!=null) {
+            this.cardBalance = card.getBalance();
+        } else {
+            this.cardBalance = BigDecimal.ZERO;
+        }
+
     }
 }
