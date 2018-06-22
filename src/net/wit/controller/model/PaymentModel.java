@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 
 import net.wit.Setting;
+import net.wit.entity.Card;
 import net.wit.entity.Payment;
 import net.wit.util.SettingUtils;
 

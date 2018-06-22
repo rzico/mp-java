@@ -45,13 +45,13 @@ public class Payment extends BaseEntity {
 	 * 终端
 	 */
 
-	public enum Terminal {
+	public enum Platform {
 		/** 微信公众号 */
 		weixin,
 		/** 微信小程序 */
-		wxApplet,
+		applet,
 		/** App */
-		app
+		navapp
 	}
 
 	/**
@@ -132,8 +132,8 @@ public class Payment extends BaseEntity {
 	private Way way;
 
 	/** 终端 */
-	@Column(columnDefinition="int(11) not null default 0 comment '终端")
-	private Terminal terminal;
+	@Column(columnDefinition="int(11) not null default 0 comment '终端'")
+	private Platform platform;
 
 	/** 方式 */
 	@NotNull
@@ -233,12 +233,12 @@ public class Payment extends BaseEntity {
 	@JsonIgnore
 	private Evaluation evaluation;
 
-	public Terminal getTerminal() {
-		return terminal;
+	public Platform getPlatform() {
+		return platform;
 	}
 
-	public void setTerminal(Terminal terminal) {
-		this.terminal = terminal;
+	public void setPlatform(Platform platform) {
+		this.platform = platform;
 	}
 
 	public String getSn() {
