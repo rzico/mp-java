@@ -94,6 +94,8 @@ public class ShippingModel extends BaseModel implements Serializable {
     /** 包装 */
     private List<ShippingBarrelModel> shippingBarrels;
 
+    private ShippingTrackModel track;
+
 
 
     public Long getId() {
@@ -312,6 +314,14 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.hopeDate = hopeDate;
     }
 
+    public ShippingTrackModel getTrack() {
+        return track;
+    }
+
+    public void setTrack(ShippingTrackModel track) {
+        this.track = track;
+    }
+
     public void bind(Shipping shipping) {
 
         this.id = shipping.getId();
@@ -366,6 +376,31 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.memo = shipping.getMemo();
         this.orderMemo = order.getMemo();
         this.hopeDate = order.getHopeDate();
+
+
+        ShippingTrackModel track = new ShippingTrackModel();
+        track.setLng(0);
+        track.setLat(0);
+        if (shipping.getShippingMethod().equals(net.wit.entity.Order.ShippingMethod.cardbkg)) {
+            track.setMethod("存入卡包");
+        } else {
+            track.setMethod("普通快递");
+        }
+
+        if (shipping.getAdmin()!=null && shipping.getAdmin().getMember()!=null) {
+            Member shippingMember = shipping.getAdmin().getMember();
+            if (shippingMember.getLocation()!=null) {
+                track.setLng(shippingMember.getLocation().getLng());
+                track.setLat(shippingMember.getLocation().getLng());
+            }
+            track.setMethod("同城配送");
+            track.setName(shippingMember.realName());
+            track.setStatus(shipping.getStatusDescr());
+            track.setMobile(shippingMember.getMobile());
+            track.setMemberId(shippingMember.getId());
+        }
+
+        this.track = track;
 
     }
 
@@ -425,6 +460,29 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.hopeDate = order.getHopeDate();
 
 
+        ShippingTrackModel track = new ShippingTrackModel();
+        track.setLng(0);
+        track.setLat(0);
+        if (shipping.getShippingMethod().equals(net.wit.entity.Order.ShippingMethod.cardbkg)) {
+            track.setMethod("存入卡包");
+        } else {
+            track.setMethod("普通快递");
+        }
+
+        if (shipping.getAdmin()!=null && shipping.getAdmin().getMember()!=null) {
+            Member shippingMember = shipping.getAdmin().getMember();
+            if (shippingMember.getLocation()!=null) {
+                track.setLng(shippingMember.getLocation().getLng());
+                track.setLat(shippingMember.getLocation().getLng());
+            }
+            track.setMethod("同城配送");
+            track.setName(shippingMember.realName());
+            track.setStatus(shipping.getStatusDescr());
+            track.setMobile(shippingMember.getMobile());
+            track.setMemberId(shippingMember.getId());
+        }
+
+        this.track = track;
     }
 
 }

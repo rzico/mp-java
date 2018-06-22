@@ -107,6 +107,7 @@ public class ShippingController extends BaseController {
 		}
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);
+
 		return Message.bind(model,request);
 	}
 

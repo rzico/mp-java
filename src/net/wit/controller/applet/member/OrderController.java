@@ -278,8 +278,8 @@ public class OrderController extends BaseController {
 			}
 		} else {
 			track.setStatus(order.getStatusDescr());
-			track.setLat(24.46);
-			track.setLng(118.1);
+			track.setLat(0);
+			track.setLng(0);
 		}
 
 		model.setTrack(track);
