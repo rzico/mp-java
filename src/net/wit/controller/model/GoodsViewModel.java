@@ -33,6 +33,9 @@ public class GoodsViewModel extends BaseModel implements Serializable {
     /** 可用库存 */
     private Boolean hasFavorite;
 
+    /** 配送方式 */
+    private Product.Type type;
+
     /** 分类 */
     private ProductCategoryModel productCategory;
 
@@ -157,6 +160,14 @@ public class GoodsViewModel extends BaseModel implements Serializable {
         this.articleId = articleId;
     }
 
+    public Product.Type getType() {
+        return type;
+    }
+
+    public void setType(Product.Type type) {
+        this.type = type;
+    }
+
     public void bind(Goods goods) {
 
         Product mProduct = goods.getProducts().get(0);
@@ -174,6 +185,7 @@ public class GoodsViewModel extends BaseModel implements Serializable {
             distributionViewModel.bind(mProduct.getDistribution());
         }
         this.distribution = distributionViewModel;
+        this.type = mProduct.getType();
 
         this.unit = mProduct.getUnit();
         this.products = new ArrayList<ProductModel>();
