@@ -531,22 +531,48 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		messageService.orderMemberPushTo(orderLog);
-
-		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) { //没有付款时，直接确定订单
+        //没有付款时，直接确定订单
+		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) {
 			orderDao.flush();
 			try {
 				Payment payment = payment(order,null);
 				if (payment!=null) {
 					payment.setTranSn(payment.getSn());
 					payment.setMethod(Payment.Method.offline);
+					payment.setPaymentPluginId("cashPayPlugin");
+					payment.setPaymentMethod("电子券结算");
 					paymentService.update(payment);
 
 					paymentService.handle(payment);
+					order.setPaymentMethod(Order.PaymentMethod.offline);
+					orderDao.merge(order);
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
 
+		} else {
+			//判断月结客户
+			if (card != null && card.getPaymentMethod().equals(Card.PaymentMethod.monthly)) {
+				orderDao.flush();
+				try {
+					Payment payment = payment(order,null);
+					if (payment!=null) {
+						payment.setTranSn(payment.getSn());
+						payment.setMethod(Payment.Method.offline);
+						payment.setPaymentPluginId("monthPayPlugin");
+						payment.setPaymentMethod("月结付款");
+						paymentService.update(payment);
+
+						paymentService.handle(payment);
+
+						order.setPaymentMethod(Order.PaymentMethod.offline);
+						orderDao.merge(order);
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e.getMessage());
+				}
+			}
 		}
 		return order;
 	}

@@ -92,6 +92,9 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  应付金额 */
     private BigDecimal amountPayable;
 
+    /**  实付金额 */
+    private BigDecimal amountPaid;
+
     /**  积分支付 */
     private BigDecimal pointDiscount;
 
@@ -370,6 +373,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.exchangeBalance = exchangeBalance;
     }
 
+    public BigDecimal getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(BigDecimal amountPaid) {
+        this.amountPaid = amountPaid;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -391,6 +402,8 @@ public class OrderModel extends BaseModel implements Serializable {
 
         this.amount = order.getAmount();
         this.amountPayable = order.getAmountPayable();
+
+        this.amountPaid = order.getAmountPaid();
         this.price = order.getPrice();
         if (order.getCouponCode()!=null) {
             this.couponName = order.getCouponCode().getCoupon().getName();
@@ -446,6 +459,9 @@ public class OrderModel extends BaseModel implements Serializable {
 
         this.amount = order.getAmount();
         this.amountPayable = order.getAmountPayable();
+
+        this.amountPaid = order.getAmountPaid();
+
         this.price = order.getPrice();
         if (order.getCouponCode()!=null) {
             this.couponName = order.getCouponCode().getCoupon().getName();
