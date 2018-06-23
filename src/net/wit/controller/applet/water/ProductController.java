@@ -98,14 +98,16 @@ public class ProductController extends BaseController {
 		Member member = memberService.getCurrent();
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
-		filters.add(new Filter("stock", Filter.Operator.gt,0L));
+//		filters.add(new Filter("stock", Filter.Operator.gt,0L));
 		List<CouponCode> page = couponCodeService.findList(null,null,filters,null);
 		List<Product> products = new ArrayList<>();
 		for (CouponCode couponCode:page) {
 			Coupon coupon = couponCode.getCoupon();
 			if (coupon.getType().equals(Coupon.Type.exchange)) {
 				Product product = coupon.getGoods().product();
-				products.add(product);
+				if (!products.contains(product)) {
+					products.add(product);
+				}
 			}
 		}
 		return Message.bind(GoodsListModel.bindList(products),request);

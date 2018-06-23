@@ -1013,6 +1013,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				Coupon coupon = couponService.create(orderItem.getProduct(),order.getSeller());
 				couponCodeService.build(coupon,order.getMember(),orderItem.getQuantity().longValue());
 			}
+		} else {
+			for (OrderItem orderItem:order.getOrderItems()) {
+				if (orderItem.getProduct().getType().equals(Product.Type.warehouse)) {
+					Coupon coupon = couponService.create(orderItem.getProduct(), order.getSeller());
+					couponCodeService.build(coupon, order.getMember(),0L);
+				}
+			}
 		}
 
 		return;

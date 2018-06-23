@@ -21,6 +21,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 
 /**
@@ -60,10 +62,25 @@ public class ProductCategoryController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Long authorId,HttpServletRequest request){
-        List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("type", Filter.Operator.eq,Product.Type.warehouse));
-        filters.add(new Filter("isList", Filter.Operator.eq,true));
-        List<Product> page = productService.findList(null,null,filters,null);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (authorId==null) {
+            authorId = Long.parseLong(bundle.getString("platform"));
+        }
+        Member member = memberService.find(authorId);
+        if (member==null) {
+
+
+            return Message.error("作者id无效");
+        }
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("member", Filter.Operator.eq,member));
+        List<ProductCategory> categories = productCategoryService.findList(null,null,filters,null);
+
+
+        List<Filter> gfilters = new ArrayList<Filter>();
+        gfilters.add(new Filter("type", Filter.Operator.eq,Product.Type.warehouse));
+        gfilters.add(new Filter("isList", Filter.Operator.eq,true));
+        List<Product> page = productService.findList(null,null,gfilters,null);
         List<ProductCategory> productCategories = new ArrayList<>();
         for (Product product:page) {
             if (product.getProductCategory()!=null) {
@@ -72,7 +89,14 @@ public class ProductCategoryController extends BaseController {
                 }
             }
         }
-        return Message.bind(ProductCategoryModel.bindList(productCategories),request);
+
+        for (ProductCategory c:categories) {
+            if (!productCategories.contains(c)) {
+                categories.remove(c);
+            }
+        }
+
+        return Message.bind(ProductCategoryModel.bindList(categories),request);
     }
 
 }
