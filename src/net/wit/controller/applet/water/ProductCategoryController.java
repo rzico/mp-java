@@ -80,6 +80,7 @@ public class ProductCategoryController extends BaseController {
         List<Filter> gfilters = new ArrayList<Filter>();
         gfilters.add(new Filter("type", Filter.Operator.eq,Product.Type.warehouse));
         gfilters.add(new Filter("isList", Filter.Operator.eq,true));
+        gfilters.add(new Filter("deleted", Filter.Operator.eq,false));
         List<Product> page = productService.findList(null,null,gfilters,null);
         List<ProductCategory> productCategories = new ArrayList<>();
         for (Product product:page) {
@@ -90,13 +91,14 @@ public class ProductCategoryController extends BaseController {
             }
         }
 
+        List<ProductCategory> data = new ArrayList<>();
         for (ProductCategory c:categories) {
-            if (!productCategories.contains(c)) {
-                categories.remove(c);
+            if (productCategories.contains(c)) {
+                data.add(c);
             }
         }
 
-        return Message.bind(ProductCategoryModel.bindList(categories),request);
+        return Message.bind(ProductCategoryModel.bindList(data),request);
     }
 
 }
