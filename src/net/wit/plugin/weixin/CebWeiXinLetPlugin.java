@@ -5,12 +5,15 @@
  */
 package net.wit.plugin.weixin;
 
-import net.wit.Setting;
-import net.wit.entity.*;
+import net.wit.entity.BindUser;
+import net.wit.entity.Payment;
+import net.wit.entity.PluginConfig;
+import net.wit.entity.Refunds;
 import net.wit.plugin.PaymentPlugin;
-import net.wit.util.*;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.time.DateUtils;
+import net.wit.util.JsonUtils;
+import net.wit.util.MD5Utils;
+import net.wit.util.SignUtils;
+import net.wit.util.XmlUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -20,21 +23,18 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Plugin - 光大微信支付
+ * Plugin - 光大小程序支付
  * @author rsico Team
  * @version 3.0
  */
-@Component("weixinOcPayPlugin")
-public class CebWeiXinPayPlugin extends PaymentPlugin {
+@Component("weixinOcLetPlugin")
+public class CebWeiXinLetPlugin extends PaymentPlugin {
 
 	@Override
 	public String getName() {
@@ -79,16 +79,16 @@ public class CebWeiXinPayPlugin extends PaymentPlugin {
 		map.put("out_trade_no", payment.getSn());
 		map.put("is_raw","1");
 		map.put("body", description);
-
+		map.put("is_minipg","1");
+		map.put("sub_appid", pluginConfig.getAttribute("applet"));
 		BindUser bindUser = findByUser(payment.getMember(),pluginConfig.getAttribute("appId"), BindUser.Type.weixin);
 		map.put("sub_openid", bindUser.getOpenId());
-		map.put("sub_appid", pluginConfig.getAttribute("appId"));
-
 		map.put("total_fee", decimalFormat.format(money));
 		map.put("mch_create_ip", request.getRemoteAddr());
 		map.put("notify_url", getNotifyUrl(sn,NotifyMethod.async));
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
 
+		System.out.println(map);
 		Map<String,String> params = SignUtils.paraFilter(map);
 		StringBuilder buf = new StringBuilder((params.size() +1) * 10);
 		SignUtils.buildPayParams(buf,params,false);
