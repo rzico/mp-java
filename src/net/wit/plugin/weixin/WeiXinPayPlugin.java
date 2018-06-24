@@ -129,7 +129,11 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		HashMap<String, Object> packageParams = new HashMap<>();
 		String createNoncestr = WeiXinUtils.CreateNoncestr();
 
-		packageParams.put("appid", pluginConfig.getAttribute("appId"));
+		String appId = pluginConfig.getAttribute("appId");
+		if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
+			appId = pluginConfig.getAttribute("applet");
+		}
+		packageParams.put("appid",appId);
 		packageParams.put("mch_id", pluginConfig.getAttribute("partner"));
 		packageParams.put("nonce_str", createNoncestr);
 		packageParams.put("body", description);
@@ -140,10 +144,10 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		packageParams.put("spbill_create_ip", request.getRemoteAddr());
 		packageParams.put("notify_url", getNotifyUrl(sn, NotifyMethod.async));
 		packageParams.put("trade_type", "JSAPI");
-	    BindUser bindUser = findByUser(payment.getMember(), BindUser.Type.weixin);
-	    if (bindUser!=null) {
-			packageParams.put("openid",bindUser.getOpenId());
-		}
+
+		BindUser bindUser = findByUser(payment.getMember(),appId, BindUser.Type.weixin);
+		packageParams.put("openid",bindUser.getOpenId());
+
 
 		try {
 			String sign = getSign(packageParams);
@@ -158,11 +162,12 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		String prepay_id = "";
 		try {
 			Map<String,String> data = getPrepayId(UNIFIED_ORDER_URL, xml);
+			System.out.println(data);
 			if (data.get("return_code").equals("SUCCESS")) {
 				prepay_id = data.get("prepay_id");
 				String timestamp = WeiXinUtils.getTimeStamp();
 				String packages = "prepay_id=" + prepay_id;
-				finalpackage.put("appId",pluginConfig.getAttribute("appId"));
+				finalpackage.put("appId",appId);
 				finalpackage.put("timeStamp", timestamp);
 				finalpackage.put("nonceStr", createNoncestr);
 				finalpackage.put("package", packages);
@@ -211,7 +216,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			map = WeiXinUtils.doXMLParse(info.toString());
 			if (map.get("result_code").toString().equals("SUCCESS")) {
 				String sign = getSign(map);
-				if (sign.equals(map.get("sign")) && sn.equals(map.get("out_trade_no")) && map.get("appid").equals(pluginConfig.getAttribute("appId"))
+				if (sign.equals(map.get("sign")) && sn.equals(map.get("out_trade_no"))
 						&& payment.getAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal((String) map.get("total_fee"))) == 0) {
 					try {
 						return true;
@@ -236,7 +241,11 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		PluginConfig pluginConfig = getPluginConfig();
 		String createNoncestr = WeiXinUtils.CreateNoncestr();
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("appid", pluginConfig.getAttribute("appId"));
+		String appId = pluginConfig.getAttribute("appId");
+		if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
+			appId = pluginConfig.getAttribute("applet");
+		}
+		parameterMap.put("appid", appId);
 		parameterMap.put("mch_id", pluginConfig.getAttribute("partner"));
 		parameterMap.put("out_trade_no", payment.getSn());
 		parameterMap.put("nonce_str", createNoncestr);
