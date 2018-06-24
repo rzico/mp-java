@@ -5,25 +5,13 @@
  */
 package net.wit.plugin.weixin;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.security.KeyStore;
-import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-import javax.servlet.http.HttpServletRequest;
-
 import net.wit.entity.BindUser;
 import net.wit.entity.Payment;
 import net.wit.entity.PluginConfig;
 import net.wit.entity.Refunds;
+import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.util.MD5Utils;
-import net.wit.plat.weixin.util.WeiXinUtils;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -38,13 +26,26 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
+import javax.net.ssl.SSLContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.security.KeyStore;
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Plugin - 微信公众号支付
+ * Plugin - 微信小程序支付
  * @author rsico Team
  * @version 3.0
  */
-@Component("weixinPayPlugin")
-public class WeiXinPayPlugin extends PaymentPlugin {
+@Component("weixinLetPlugin")
+public class WeiXinLetPlugin extends PaymentPlugin {
 
 	public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	public static final String REFUNDS_ORDER_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
