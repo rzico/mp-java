@@ -261,7 +261,6 @@ public class TopicController extends BaseController {
             config.setPromoterType(TopicConfig.PromoterType.any);
             config.setTokenExpire(new Date());
             config.setEstate(TopicConfig.Estate.UNAUTHORIZED);
-
         }
         if (useCard!=null) {
             config.setUseCard(useCard);

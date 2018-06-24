@@ -1,10 +1,7 @@
 package net.wit.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -82,19 +79,29 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void save(TopicCard topicCard) {
-		JSONObject data = WeiXinUtils.createMemberCard(
-			    topicCard.getBackground(),
-				topicCard.getPrerogative(),
-				topicCard.getTopic().getName(),
-				topicCard.getTopic().getMember().getLogo(),
-				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor()),
-				topicCard.getTopic().getMember()
-		);
-		if (data.getString("errcode").equals("0")){
-			String cardId = data.getString("card_id");
+
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		if (!"3".equals(bundle.getString("weex"))) {
+			JSONObject data = WeiXinUtils.createMemberCard(
+					topicCard.getBackground(),
+					topicCard.getPrerogative(),
+					topicCard.getTopic().getName(),
+					topicCard.getTopic().getMember().getLogo(),
+					topicCard.getTitle(),
+					topicCard.getDescription(), getColor(topicCard.getColor()),
+					topicCard.getTopic().getMember()
+			);
+			if (data.getString("errcode").equals("0")){
+				String cardId = data.getString("card_id");
+				topicCard.setStatus(TopicCard.Status.waiting);
+				topicCard.setWeixinCardId(cardId);
+				super.save(topicCard);
+				Topic topic = topicCard.getTopic();
+				topic.setTopicCard(topicCard);
+				topicDao.merge(topic);
+			}
+		} else {
 			topicCard.setStatus(TopicCard.Status.waiting);
-			topicCard.setWeixinCardId(cardId);
 			super.save(topicCard);
 			Topic topic = topicCard.getTopic();
 			topic.setTopicCard(topicCard);
@@ -106,20 +113,26 @@ public class TopicCardServiceImpl extends BaseServiceImpl<TopicCard, Long> imple
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public TopicCard update(TopicCard topicCard) {
-		JSONObject data = WeiXinUtils.updateMemberCard(
-				topicCard.getWeixinCardId(),
-				topicCard.getBackground(),
-				topicCard.getPrerogative(),
-				topicCard.getTopic().getName(),
-				topicCard.getTopic().getMember().getLogo(),
-				topicCard.getTitle(),
-				topicCard.getDescription(),getColor(topicCard.getColor()),
-				topicCard.getTopic().getMember()
-		);
-		if (data.getString("errcode").equals("0")){
+
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if (!"3".equals(bundle.getString("weex"))) {
+			JSONObject data = WeiXinUtils.updateMemberCard(
+					topicCard.getWeixinCardId(),
+					topicCard.getBackground(),
+					topicCard.getPrerogative(),
+					topicCard.getTopic().getName(),
+					topicCard.getTopic().getMember().getLogo(),
+					topicCard.getTitle(),
+					topicCard.getDescription(), getColor(topicCard.getColor()),
+					topicCard.getTopic().getMember()
+			);
+			if (data.getString("errcode").equals("0")){
+				return super.update(topicCard);
+			}  else {
+				return null;
+			}
+		} else {
 			return super.update(topicCard);
-		}  else {
-			return null;
 		}
 	}
 
