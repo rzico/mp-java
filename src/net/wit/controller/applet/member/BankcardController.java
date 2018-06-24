@@ -283,13 +283,15 @@ public class BankcardController extends BaseController {
                 System.out.println(bankcard);
                 if (member.getMobile()==null) {
                     Member m = memberService.findByMobile(data.get("mobile"));
-                    if (m!=null) {
-                        m.setUsername(null);
-                        m.setMobile(null);
-                        memberService.save(m);
+                    if (m==null) {
+                        member.setUsername(data.get("mobile"));
+                        member.setMobile(data.get("mobile"));
+                        for (Card card:member.getCards()) {
+                            card.setMobile(member.getMobile());
+                            card.setName(member.getName());
+                            cardService.update(card);
+                        }
                     }
-                    member.setUsername(data.get("mobile"));
-                    member.setMobile(data.get("mobile"));
                 }
                 member.setName(data.get("name"));
                 memberService.update(member);

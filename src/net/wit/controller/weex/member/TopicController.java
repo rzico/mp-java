@@ -264,33 +264,15 @@ public class TopicController extends BaseController {
 
         }
         if (useCard!=null) {
-            if (member.getMobile()==null) {
-                return Message.error("请绑定银行卡才能开通");
-            }
-            if (member.getName()==null) {
-                return Message.error("请绑定银行卡才能开通");
-            }
             config.setUseCard(useCard);
             if (useCard) {
                 topicCardService.create(topic);
             }
         }
         if (useCoupon!=null) {
-            if (member.getMobile()==null) {
-                return Message.error("请绑定银行卡才能开通");
-            }
-            if (member.getName()==null) {
-                return Message.error("请绑定银行卡才能开通");
-            }
             config.setUseCoupon(useCoupon);
         }
         if (useCashier!=null) {
-            if (member.getMobile()==null) {
-                return Message.error("请绑定银行卡才能开通");
-            }
-            if (member.getName()==null) {
-                return Message.error("请绑定银行卡才能开通");
-            }
             config.setUseCashier(useCashier);
         }
         if (promoterType!=null) {
@@ -374,7 +356,7 @@ public class TopicController extends BaseController {
             model.setNoJob(false);
         } else {
             model.setNoJob(true);
-            model.setIsOwner(false);
+            model.setIsOwner(true);
         }
 
         Long lives = liveService.count(new Filter("member", Filter.Operator.eq,member));

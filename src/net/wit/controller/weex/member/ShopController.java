@@ -56,7 +56,15 @@ public class ShopController extends BaseController {
     @Resource(name = "payBillServiceImpl")
     private PayBillService payBillService;
 
-     /**
+    @Resource(name = "topicServiceImpl")
+    private TopicService topicService;
+
+
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
+
+    /**
      *  保存店铺
      */
 
@@ -67,6 +75,12 @@ public class ShopController extends BaseController {
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Topic topic = topicService.autoCreate(member);
+        if (topic!=null) {
+            enterpriseService.create(topic);
+        }
+
         Admin admin = adminService.findByMember(member);
         if (admin==null) {
             return Message.error("没有点亮专栏");

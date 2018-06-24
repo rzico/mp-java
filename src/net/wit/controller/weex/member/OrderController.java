@@ -144,12 +144,7 @@ public class OrderController extends BaseController {
 		model.bindHeader(order);
 		if (member!=null) {
 			if (receiver==null) {
-				for (Receiver r : member.getReceivers()) {
-					if (r.getIsDefault()) {
-						receiver = r;
-						break;
-					}
-				}
+				receiver = member.defaultReceiver();
 			}
 			ReceiverModel m = new ReceiverModel();
 			if (receiver!=null) {

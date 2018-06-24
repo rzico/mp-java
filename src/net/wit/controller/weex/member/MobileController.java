@@ -71,7 +71,7 @@ public class MobileController extends BaseController {
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             BindUser bindUser = bindUserService.findMember(member,bundle.getString("app.appid"), BindUser.Type.weixin);
             if (bindUser==null) {
-                return Message.error("当前手机已经注册");
+                return Message.error("此手机已绑定另一账号");
             }
         }
         int challege = StringUtils.Random6Code();
