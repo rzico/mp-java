@@ -78,4 +78,6 @@ public class ShippingTrackModel extends BaseModel implements Serializable {
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
+
+
 }

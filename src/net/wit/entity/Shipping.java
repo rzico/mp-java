@@ -85,12 +85,12 @@ public class Shipping extends BaseEntity {
 
 	/** 配送单位 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(nullable = false)
 	private Enterprise enterprise;
 
 	/** 配送门店 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(nullable = false)
 	private Shop shop;
 
 	/** 送货员 */
