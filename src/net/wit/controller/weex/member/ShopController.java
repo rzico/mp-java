@@ -128,7 +128,7 @@ public class ShopController extends BaseController {
             shopService.update(entity);
         }
         if (admin.getShop()==null) {
-            admin.setShop(shop);
+            admin.setShop(entity);
             adminService.update(admin);
         }
 
