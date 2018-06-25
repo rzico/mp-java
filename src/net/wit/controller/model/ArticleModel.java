@@ -26,6 +26,8 @@ public class ArticleModel extends BaseModel implements Serializable {
     private List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
     /** 投票 */
     private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
+    /** 表单 */
+    private List<ArticleFormDataModel> forms = new ArrayList<ArticleFormDataModel>();
 
     /** 是否草稿 */
     private Boolean isDraft;
@@ -74,6 +76,14 @@ public class ArticleModel extends BaseModel implements Serializable {
 
     public void setTemplates(List<ArticleContentModel> templates) {
         this.templates = templates;
+    }
+
+    public List<ArticleFormDataModel> getForms() {
+        return forms;
+    }
+
+    public void setForms(List<ArticleFormDataModel> forms) {
+        this.forms = forms;
     }
 
     public List<ArticleVoteOptionModel> getVotes() {
@@ -150,7 +160,7 @@ public class ArticleModel extends BaseModel implements Serializable {
         this.isDraft = article.getIsDraft();
 
         List<ArticleContentModel> templates = new ArrayList<ArticleContentModel>();
-        System.out.print("articleId:" + article.getId());
+//        System.out.print("articleId:" + article.getId());
         if (article.getContent()!=null) {
             templates = JsonUtils.toObject(article.getContent(), List.class);
         }

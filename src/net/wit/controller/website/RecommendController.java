@@ -43,23 +43,23 @@ public class RecommendController extends BaseController {
     private ArticleService articleService;
 
     /**
-     *  评论列表,带分页
+     * 评论列表,带分页
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long articleId, Pageable pageable, HttpServletRequest request){
+    public Message list(Long articleId, Pageable pageable, HttpServletRequest request) {
         Article article = articleService.find(articleId);
-        if (article==null) {
+        if (article == null) {
             return Message.error("无效文章编号");
         }
         List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("member", Filter.Operator.eq,article.getMember()));
-        filters.add(new Filter("authority",Filter.Operator.eq,Article.Authority.isPublic));
+        filters.add(new Filter("member", Filter.Operator.eq, article.getMember()));
+        filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
         pageable.setFilters(filters);
-        Page<Article> page = articleService.findPage(null,null,null,pageable);
+        Page<Article> page = articleService.findPage(null, null, null, pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(ArticleListModel.bindList(page.getContent()));
-        return Message.bind(model,request);
+        return Message.bind(model, request);
     }
 
 }

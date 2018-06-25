@@ -47,6 +47,8 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     private List<ArticleContentViewModel> templates = new ArrayList<ArticleContentViewModel>();
     /** 投票 */
     private List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
+    /** 表单 */
+    private List<ArticleFormDataModel> forms = new ArrayList<ArticleFormDataModel>();
 
     public Long getId() {
         return id;
@@ -152,6 +154,14 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.votes = votes;
     }
 
+    public List<ArticleFormDataModel> getForms() {
+        return forms;
+    }
+
+    public void setForms(List<ArticleFormDataModel> forms) {
+        this.forms = forms;
+    }
+
     public Boolean getIsPublish() {
         return isPublish;
     }
@@ -241,10 +251,16 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         if (article.getVotes()!=null) {
             votes = JsonUtils.toObject(article.getVotes(), List.class);
         }
+
+        List<ArticleFormDataModel> forms = new ArrayList<>();
+        if(article.getForm() != null){
+            forms = JsonUtils.toObject(article.getForm(), List.class);
+        }
         this.htmlTag = article.delHTMLTag();
 
         this.templates = templates;
         this.votes = votes;
+        this.forms = forms;
 
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (shareUser==null) {

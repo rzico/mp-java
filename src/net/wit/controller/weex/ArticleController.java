@@ -259,12 +259,21 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @ResponseBody
-    public Message search(String keyword,Pageable pageable, HttpServletRequest request){
+    public Message search(String keyword,Pageable pageable,Boolean isVote, Boolean isForm, HttpServletRequest request){
         if (keyword==null) {
             return Message.error("请输入关键词");
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(Filter.like("title","%"+keyword+"%"));
+
+        if (isVote!=null && isVote) {
+            filters.add(new Filter().isNotNull("votes"));
+        }
+
+        if (isForm!=null && isForm) {
+            filters.add(new Filter().isNotNull("form"));
+        }
+
         pageable.setFilters(filters);
         Page<Article> page = articleService.findPage(null,null,null,pageable);
         PageBlock model = PageBlock.bind(page);

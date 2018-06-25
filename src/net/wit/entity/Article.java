@@ -248,6 +248,8 @@ public class Article extends BaseEntity{
     /** 投票项 */
     private String votes;
 
+    private String form;
+
     public String getAuthor() {
         return author;
     }
@@ -469,6 +471,14 @@ public class Article extends BaseEntity{
 
     public Boolean getIsPublish() {
         return isPublish;
+    }
+
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
     }
 
     public void setIsPublish(Boolean publish) {

@@ -31,6 +31,8 @@ public interface MessageService extends BaseService<Message, Long> {
 	public Boolean rewardPushTo(ArticleReward reward);
 	//分享提醒
 	public Boolean sharePushTo(ArticleShare share);
+	//表单提醒
+	public Boolean formPushTo(ArticleForm form);
 	//发布提醒
 	public Boolean publishPushTo(Article article,Member receiver);
 	//收藏提醒

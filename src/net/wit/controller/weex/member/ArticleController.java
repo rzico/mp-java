@@ -90,7 +90,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isDraft,Pageable pageable, HttpServletRequest request){
+    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isForm, Boolean isDraft,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -105,6 +105,9 @@ public class ArticleController extends BaseController {
         }
         if (isVote!=null && isVote) {
             filters.add(new Filter().isNotNull("votes"));
+        }
+        if (isForm!=null && isForm) {
+            filters.add(new Filter().isNotNull("form"));
         }
         if (isDraft!=null) {
             filters.add(new Filter("isDraft", Filter.Operator.eq,isDraft));
@@ -186,6 +189,11 @@ public class ArticleController extends BaseController {
 
         Boolean isDraft = model.getIsDraft();
 
+        String forms = null;
+        if(model.getForms()!=null){
+            forms = JsonUtils.toJson(model.getForms());
+        }
+
         String votes = null;
         if (model.getVotes()!=null) {
             votes = JsonUtils.toJson(model.getVotes());
@@ -204,7 +212,7 @@ public class ArticleController extends BaseController {
             article.setLaud(0L);
             article.setReview(0L);
             article.setShare(0L);
-            article.setAuthority(Article.Authority.isPrivate);
+            article.setAuthority(Article.Authority.isPublic);
             article.setIsExample(false);
             article.setIsPitch(false);
             article.setIsPublish(false);
@@ -221,6 +229,7 @@ public class ArticleController extends BaseController {
         article.setMusic(music);
         article.setContent(content);
         article.setVotes(votes);
+        article.setForm(forms);
         article.setMember(member);
         article.setMediaType(Article.MediaType.image);
 
