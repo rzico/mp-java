@@ -453,20 +453,30 @@ public class ShippingController extends BaseController {
 		if (admin.getEnterprise()==null) {
 			return Message.error("店铺已打洋,请先启APP");
 		}
-		Enterprise enterprise = admin.getEnterprise();
-		List<Filter> filters = new ArrayList<Filter>();
-		if (shopId==null) {
-			filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
-		} else {
-			filters.add(new Filter("shop", Filter.Operator.eq, shopService.find(shopId)));
+
+		Shop shop = shopService.find(shopId);
+		if (shop==null) {
+			return Message.error("shopId无效");
 		}
-		pageable.setFilters(filters);
-		pageable.setOrderProperty("shop");
-		pageable.setOrderDirection(Order.Direction.asc);
-		Page<Admin> page = adminService.findPage(null,null,pageable);
-		PageBlock model = PageBlock.bind(page);
-		model.setData(AdminModel.bindList(page.getContent()));
-		return Message.bind(model,request);
+		Enterprise enterprise = admin.getEnterprise();
+		if (shop.getEnterprise().equals(enterprise)) {
+			List<Filter> filters = new ArrayList<Filter>();
+			filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
+
+			pageable.setFilters(filters);
+			pageable.setOrderProperty("shop");
+			pageable.setOrderDirection(Order.Direction.asc);
+			Page<Admin> page = adminService.findPage(null,null,pageable);
+			PageBlock model = PageBlock.bind(page);
+			model.setData(AdminModel.bindList(page.getContent()));
+			return Message.bind(model,request);
+		} else {
+			Page<Admin> page = new Page<Admin>();
+			PageBlock model = PageBlock.bind(page);
+			model.setData(AdminModel.bindList(new ArrayList<Admin>()));
+			return Message.bind(model,request);
+		}
+
 	}
 
 }
