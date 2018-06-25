@@ -424,9 +424,10 @@ public class ShippingController extends BaseController {
 		}
 		Enterprise enterprise = admin.getEnterprise();
 		List<Filter> filters = new ArrayList<Filter>();
-
-		filters.add(new Filter("enterprise", Filter.Operator.eq,enterprise));
-
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		if (!"3".equals(bundle.getString("weex")) ) {
+			filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
+		}
 		pageable.setFilters(filters);
 		Page<Shop> page = shopService.findPage(null,null,pageable);
 		PageBlock model = PageBlock.bind(page);

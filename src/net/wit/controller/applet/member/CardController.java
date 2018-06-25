@@ -492,18 +492,27 @@ public class CardController extends BaseController {
     @RequestMapping(value = "/activity",method = RequestMethod.GET)
     @ResponseBody
     public Message activity(Long authorId,HttpServletRequest request){
+
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
+
+        Member seller = null;
+
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if ("3".equals(bundle.getString("weex")) ) {
-            if (authorId==null) {
-                authorId = Long.parseLong(bundle.getString("platform"));
+            if (member.getCards().size()>0) {
+                Card  card = member.getCards().get(0);
+                seller = card.getOwner();
             }
+         } else {
+            seller = memberService.find(authorId);
         }
 
-        Member seller = memberService.find(authorId);
+        if (seller==null) {
+            return Message.error("authorId无效");
+        }
 
         Topic topic = seller.getTopic();
         if (topic==null) {
