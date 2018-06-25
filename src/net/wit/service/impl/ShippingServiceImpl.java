@@ -400,8 +400,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				}
 
 			}
-
-		orderService.complete(shipping.getOrder(),null);
+		if (shipping.getOrder().equals(Order.OrderStatus.confirmed)) {
+			orderService.complete(shipping.getOrder(), null);
+		}
 
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.complete);
