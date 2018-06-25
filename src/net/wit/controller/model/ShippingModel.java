@@ -96,8 +96,6 @@ public class ShippingModel extends BaseModel implements Serializable {
 
     private ShippingTrackModel track;
 
-
-
     public Long getId() {
         return id;
     }
