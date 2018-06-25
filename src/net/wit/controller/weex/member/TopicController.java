@@ -222,8 +222,10 @@ public class TopicController extends BaseController {
             topic.setName(name);
             if (admin!=null) {
                 Enterprise enterprise = admin.getEnterprise();
-                enterprise.setName(name);
-                enterpriseService.update(enterprise);
+                if (enterprise!=null) {
+                    enterprise.setLogo(logo);
+                    enterpriseService.update(enterprise);
+                }
             }
         }
 
@@ -234,8 +236,10 @@ public class TopicController extends BaseController {
             topic.setLogo(logo);
             if (admin!=null) {
                 Enterprise enterprise = admin.getEnterprise();
-                enterprise.setLogo(logo);
-                enterpriseService.update(enterprise);
+                if (enterprise!=null) {
+                    enterprise.setLogo(logo);
+                    enterpriseService.update(enterprise);
+                }
             }
         }
         if (areaId!=null) {

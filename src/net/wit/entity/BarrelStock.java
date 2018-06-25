@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 /**
  * Entity - 非卖品
@@ -39,6 +40,17 @@ public class BarrelStock extends OrderEntity {
 	@Column(columnDefinition="int(11) not null default 0 comment '库存数'")
 	private Integer stock;
 
+	/** 期初数 */
+	@Min(0)
+	@Column(columnDefinition="int(11) not null default 0 comment '期初数'")
+	private Integer period ;
+
+	/** 桶押金 */
+	@Min(0)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '桶押金'")
+	private BigDecimal pledge ;
+
+
 	public Member getMember() {
 		return member;
 	}
@@ -61,5 +73,21 @@ public class BarrelStock extends OrderEntity {
 
 	public void setStock(Integer stock) {
 		this.stock = stock;
+	}
+
+	public Integer getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(Integer period) {
+		this.period = period;
+	}
+
+	public BigDecimal getPledge() {
+		return pledge;
+	}
+
+	public void setPledge(BigDecimal pledge) {
+		this.pledge = pledge;
 	}
 }

@@ -62,7 +62,6 @@ public class TopicController extends BaseController {
     @Resource(name = "friendsServiceImpl")
     private FriendsService friendsService;
 
-
     /**
      * 公众号设置
      *

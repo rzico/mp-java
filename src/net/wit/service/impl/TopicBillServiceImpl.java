@@ -109,6 +109,7 @@ public class TopicBillServiceImpl extends BaseServiceImpl<TopicBill, Long> imple
 			payee.setLogo("http://cdn.rzico.com/weex/resources/images/"+userName+".png");
 //			payee.setPoint(0L);
 			payee.setBalance(BigDecimal.ZERO);
+			payee.setFreezeBalance(BigDecimal.ZERO);
 			payee.setIsEnabled(true);
 			payee.setIsLocked(false);
 			payee.setLoginFailureCount(0);

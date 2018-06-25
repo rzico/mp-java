@@ -1,12 +1,11 @@
 package net.wit.controller.weex.member;
 
+import net.wit.Filter;
 import net.wit.Message;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.BarrelStockModel;
 import net.wit.controller.model.CouponCodeModel;
-import net.wit.entity.Admin;
-import net.wit.entity.CouponCode;
-import net.wit.entity.Enterprise;
-import net.wit.entity.Member;
+import net.wit.entity.*;
 import net.wit.plat.weixin.pojo.Ticket;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plat.weixin.util.WeixinApi;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -62,6 +62,9 @@ public class CouponCodeController extends BaseController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
+
     /**
      *  核销优惠券
      */
@@ -96,6 +99,74 @@ public class CouponCodeController extends BaseController {
         }
         couponCodeService.update(couponCode);
         return Message.success("核销成功");
+    }
+
+    /**
+     *  获取列表
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public Message list(Long cardId,HttpServletRequest request){
+        Member owner = memberService.getCurrent();
+
+        Admin admin = adminService.findByMember(owner);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            owner = admin.getEnterprise().getMember();
+        }
+
+        Card card = cardService.find(cardId);
+        if (card==null) {
+            return Message.error("cardId 无效");
+        }
+
+        Member member = card.getMember();
+        if (member==null) {
+            return Message.error("没找到卡主");
+        }
+
+        List<CouponCode> models = new ArrayList<>();
+        for (CouponCode c:member.getCouponCodes()) {
+            if (c.getEnabled()) {
+                if (c.getCoupon().getDistributor().equals(owner)) {
+                    models.add(c);
+                }
+            }
+        }
+        return Message.bind(CouponCodeModel.bindList(models),request);
+    }
+
+
+    /**
+     *  赠送
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
+    public Message add(Long couponCodeId,Integer quantity,HttpServletRequest request){
+        Member owner = memberService.getCurrent();
+
+        Admin admin = adminService.findByMember(owner);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            owner = admin.getEnterprise().getMember();
+        }
+
+        CouponCode  couponCode = couponCodeService.find(couponCodeId);
+        if (couponCode==null) {
+            return Message.error("couponCodeId 无效");
+        }
+
+        if (!couponCode.getCoupon().getType().equals(Coupon.Type.exchange)) {
+            return Message.error("优惠券不能赠送");
+        }
+
+        if (!couponCode.getCoupon().getDistributor().equals(owner)) {
+            return Message.error("不是本店电子券");
+        }
+
+
+        couponCode.setStock(couponCode.getStock()+quantity);
+
+        couponCodeService.update(couponCode);
+        return Message.success("执行成功");
     }
 
 }

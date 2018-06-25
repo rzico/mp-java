@@ -286,6 +286,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					bs.setMember(ec);
 					bs.setBarrel(b.getBarrel());
 					bs.setStock(b.getQuantity() - b.getReturnQuantity());
+					bs.setPeriod(0);
+					bs.setPledge(BigDecimal.ZERO);
 					barrelStockDao.persist(bs);
 				} else {
 					barrelStockDao.lock(bs, LockModeType.PESSIMISTIC_WRITE);
