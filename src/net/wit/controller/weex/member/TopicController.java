@@ -325,6 +325,7 @@ public class TopicController extends BaseController {
     @ResponseBody
     public Message view(HttpServletRequest request){
         Member member = memberService.getCurrent();
+        Member loginMember = member;
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
@@ -355,12 +356,11 @@ public class TopicController extends BaseController {
         model.bind(topic);
 
         if (admin!=null && admin.getEnterprise()!=null) {
-            model.setIsOwner(admin.isOwner());
             model.setNoJob(false);
         } else {
             model.setNoJob(true);
-            model.setIsOwner(true);
         }
+        model.setIsOwner(loginMember.equals(member));
 
         Long lives = liveService.count(new Filter("member", Filter.Operator.eq,member));
 
