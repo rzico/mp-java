@@ -393,4 +393,13 @@ public class Admin extends BaseEntity {
         }
     }
 
+    public String realName() {
+        if (getName()!=null) {
+            return getName();
+        } else {
+            return getMember().realName();
+        }
+
+    }
+
 }

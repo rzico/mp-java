@@ -370,7 +370,7 @@ public class ShippingModel extends BaseModel implements Serializable {
 
         if (shipping.getAdmin()!=null) {
             this.adminId = shipping.getAdmin().getId();
-            this.adminName = shipping.getAdmin().getName();
+            this.adminName = shipping.getAdmin().realName();
         }
 
         this.memo = shipping.getMemo();
