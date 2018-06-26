@@ -442,6 +442,7 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.shippingStatus = order.getShippingStatus();
 
         this.freight = shipping.getFreight();
+        this.adminFreight = shipping.getAdminFreight();
 
         this.receiver = new ReceiverModel();
         this.receiver.setAddress(shipping.getAddress());
