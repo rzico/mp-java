@@ -1,15 +1,22 @@
 package net.wit.dao.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
+import net.wit.entity.summary.OrderItemSummary;
+import net.wit.entity.summary.PaymentSummary;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -62,4 +69,41 @@ public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements Paymen
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+
+
+	public List<PaymentSummary> summary(Date beginDate, Date endDate, Pageable pageable) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select member,payment_method,sum(amount),sum(refund) from ("+
+				"select payment.member,payment.payment_method,payment.amount as amount,0 as refund "+
+				"from wx_payment payment where payment.create_date>=?b and payment.create_date<?e and payment.status in (1,3,4,5) "+
+				"union all "+
+				"select refunds.member,refunds.payment_method,0 as amount,sum(refunds.amount) as refund "+
+				"from wx_refunds refunds where refunds.create_date>=?b and refunds.create_date<?e and refunds.status = 2 "+
+				") j group by member,payment_method order by member";
+
+		Query query = entityManager.createNativeQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("b", b).
+				setParameter("e", e);
+		query.setFirstResult(pageable.getPageStart());
+		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		List result = query.getResultList();
+		List<PaymentSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			PaymentSummary rw = new PaymentSummary();
+			rw.setMemberId((Long) row[0]);
+			rw.setTypeName((String) row[1]);
+			rw.setAmount((BigDecimal) row[2]);
+			rw.setRefund((BigDecimal) row[3]);
+			data.add(rw);
+		}
+		return data;
+	}
+
+
 }

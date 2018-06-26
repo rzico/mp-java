@@ -7,12 +7,14 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PaymentSummary implements Serializable {
 
-    private String clientName;
+    private Long memberId;
 
     private String typeName;
 
-     /** 营业额 */
+     /** 收款 */
     private BigDecimal amount;
+     /** 退款 */
+    private BigDecimal refund;
 
     public BigDecimal getAmount() {
         return amount;
@@ -22,15 +24,15 @@ public class PaymentSummary implements Serializable {
         this.amount = amount;
     }
 
-    public String getClientName() {
-        return clientName;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
-    public String getTypeName() {
+     public String getTypeName() {
         return typeName;
     }
 
@@ -38,4 +40,11 @@ public class PaymentSummary implements Serializable {
         this.typeName = typeName;
     }
 
+    public BigDecimal getRefund() {
+        return refund;
+    }
+
+    public void setRefund(BigDecimal refund) {
+        this.refund = refund;
+    }
 }

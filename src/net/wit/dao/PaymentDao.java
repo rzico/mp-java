@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Payment;
+import net.wit.entity.summary.PaymentSummary;
 
 
 /**
@@ -36,4 +37,8 @@ public interface PaymentDao extends BaseDao<Payment, Long> {
 	 * @return Page<Payment>
 	 */
 	Page<Payment> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+
+	public List<PaymentSummary> summary(Date beginDate, Date endDate, Pageable pageable);
+
 }

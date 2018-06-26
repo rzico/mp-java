@@ -13,6 +13,8 @@ import net.wit.Filter.Operator;
 
 import net.wit.dao.*;
 import net.wit.entity.Order;
+import net.wit.entity.summary.OrderSummary;
+import net.wit.entity.summary.PaymentSummary;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
@@ -549,6 +551,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 			}
 		}
+	}
+
+
+	public List<PaymentSummary> summary(Date beginDate, Date endDate, Pageable pageable) {
+		return paymentDao.summary(beginDate,endDate,pageable);
 	}
 
 }
