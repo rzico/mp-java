@@ -1351,7 +1351,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
 
-				order.setAmountPaid(order.getAmountPaid());
+//				order.setAmountPaid(order.getAmountPaid());
 				order.setExpire(null);
 				order.setPaymentStatus(Order.PaymentStatus.refunding);
 				orderDao.merge(order);
