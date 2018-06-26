@@ -13,6 +13,7 @@ import net.wit.Filter.Operator;
 import net.wit.Message;
 import net.wit.dao.*;
 import net.wit.entity.Order;
+import net.wit.entity.summary.OrderSummary;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
 import net.wit.util.SettingUtils;
@@ -1246,7 +1247,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			throw new RuntimeException("不能重复操作");
 		}
 
-		order.setAmountPaid(order.getAmountPaid());
+//		order.setAmountPaid(order.getAmountPaid());
 		order.setExpire(null);
 		order.setPaymentStatus(Order.PaymentStatus.refunding);
 		orderDao.merge(order);
@@ -1417,5 +1418,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 	}
 
+	public List<OrderSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable) {
+	    return orderDao.summary(member,beginDate,endDate,pageable);
+	}
 
-}
+
+
+	}

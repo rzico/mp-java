@@ -165,7 +165,6 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
                    	  completed = false;
 				   }
 				}
-
 				OrderLog orderLog = new OrderLog();
 				orderLog.setType(OrderLog.Type.refunds);
 				orderLog.setOperator(refunds.getMember().userId());
@@ -191,13 +190,10 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					deposit.setSeller(order.getSeller());
 					depositDao.persist(deposit);
 				}
-
 				messageService.orderMemberPushTo(orderLog);
-
 				if (completed) {
 					orderService.complete(order,null);
 				}
-
 			} else {
 				PayBill payBill = refunds.getPayBill();
 				if (payBill != null) {
@@ -227,6 +223,37 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						throw new RuntimeException("重复提交");
 					}
 				}
+				if (refunds.getType().equals(Refunds.Type.payment)) {
+					Order order = refunds.getOrder();
+					Member payee =  refunds.getPayee();
+					memberDao.refresh(payee, LockModeType.PESSIMISTIC_WRITE);
+					if (refunds.getMethod().equals(Refunds.Method.offline) || refunds.getMethod().equals(Refunds.Method.card)) {
+						//线下业务，本身没有结款
+					} else {
+						if (refunds.getAmount().compareTo(BigDecimal.ZERO) != 0) {
+							if (payee.getBalance().subtract(refunds.getAmount()).compareTo(BigDecimal.ZERO)<0) {
+								throw new RuntimeException("商家余额不足");
+							}
+							payee.setBalance(payee.getBalance().subtract(refunds.getAmount()));
+							memberDao.merge(payee);
+							memberDao.flush();
+							Deposit deposit = new Deposit();
+							deposit.setBalance(payee.getBalance());
+							deposit.setType(Deposit.Type.product);
+							deposit.setMemo(refunds.getMemo());
+							deposit.setMember(payee);
+							deposit.setCredit(BigDecimal.ZERO.subtract(refunds.getAmount()));
+							deposit.setDebit(BigDecimal.ZERO);
+							deposit.setDeleted(false);
+							deposit.setOperator("system");
+							deposit.setRefunds(refunds);
+							deposit.setPayBill(null);
+							deposit.setSeller(payee);
+							depositDao.persist(deposit);
+							messageService.depositPushTo(deposit);
+						}
+					}
+				} else
 				if (refunds.getType().equals(Refunds.Type.cashier)) {
 					PayBill payBill = refunds.getPayBill();
 					Member member =  refunds.getPayee();
@@ -238,7 +265,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						BigDecimal settle = payBill.getSettleAmount();
 						if (settle.compareTo(BigDecimal.ZERO) != 0) {
 							if (member.getBalance().add(settle).compareTo(BigDecimal.ZERO)<0) {
-								throw new RuntimeException("余额不足");
+								throw new RuntimeException("商家余额不足");
 							}
 							member.setBalance(member.getBalance().add(settle));
 							memberDao.merge(member);
@@ -259,8 +286,8 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							messageService.depositPushTo(deposit);
 						}
 					}
-					payBill.setPaymentPluginId(refunds.getPaymentPluginId());
-					payBill.setMember(refunds.getMember());
+//					payBill.setPaymentPluginId(refunds.getPaymentPluginId());
+//					payBill.setMember(refunds.getMember());
 					payBill.setStatus(PayBill.Status.refund_waiting);
 					payBillDao.merge(payBill);
 				}else
@@ -275,7 +302,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						BigDecimal settle = payBill.getSettleAmount();
 						if (settle.compareTo(BigDecimal.ZERO) != 0) {
 							if (member.getBalance().add(settle).compareTo(BigDecimal.ZERO)<0) {
-								throw new RuntimeException("余额不足");
+								throw new RuntimeException("商家余额不足");
 							}
 							member.setBalance(member.getBalance().add(settle));
 							memberDao.merge(member);
@@ -296,8 +323,8 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							messageService.depositPushTo(deposit);
 						}
 					}
-					payBill.setMember(refunds.getMember());
-					payBill.setPaymentPluginId(refunds.getPaymentPluginId());
+//					payBill.setMember(refunds.getMember());
+//					payBill.setPaymentPluginId(refunds.getPaymentPluginId());
 					payBill.setStatus(PayBill.Status.refund_waiting);
 					payBillDao.merge(payBill);
 					if (payBill.getType().equals(PayBill.Type.cardRefund)) {

@@ -1,15 +1,22 @@
 package net.wit.dao.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
+import net.wit.entity.summary.OrderItemSummary;
+import net.wit.entity.summary.OrderSummary;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -57,4 +64,36 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}
+
+
+	public List<OrderItemSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select orderItem.product,sum(orderItem.quantity),sum(orderItem.quantity * orderItem.price) "+
+						"from OrderItem orderItem,Order orders where orderItem.orders=orders.id and orders.shipping_date>=?b and orders.shipping_date<?e and orders.member=?member and orders.shipping_status<>0 "+
+						"group by orderItem.product order by orderItem.product ";
+
+		Query query = entityManager.createNativeQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("b", b).
+				setParameter("e", e).
+				setParameter("member",member);
+		query.setFirstResult(pageable.getPageStart());
+		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		List result = query.getResultList();
+		List<OrderItemSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			OrderItemSummary rw = new OrderItemSummary();
+			rw.setProduct((Long) row[0]);
+			rw.setQuantity((Integer) row[1]);
+			rw.setAmount((BigDecimal) row[2]);
+			data.add(rw);
+		}
+		return data;
+
+	}
+
 }

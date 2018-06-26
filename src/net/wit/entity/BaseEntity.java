@@ -66,7 +66,7 @@ public abstract class BaseEntity implements Serializable {
 
 	/** 创建日期 */
 	@DateBridge(resolution = Resolution.SECOND)
-	@Column(updatable = false,columnDefinition="datetime not null comment '创建日期'")
+	@Column(columnDefinition="datetime not null comment '创建日期'")
 	private Date createDate;
 
 	/** 修改日期 */

@@ -7,7 +7,10 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.OrderItem;
+import net.wit.entity.summary.OrderItemSummary;
+import net.wit.entity.summary.OrderSummary;
 
 /**
  * @ClassName: OrderItemService
@@ -17,4 +20,6 @@ import net.wit.entity.OrderItem;
 
 public interface OrderItemService extends BaseService<OrderItem, Long> {
 	Page<OrderItem> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+	List<OrderItemSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable);
 }

@@ -1289,18 +1289,11 @@ public class Order extends BaseEntity {
 	@Transient
 	public BigDecimal getAmount() {
 		BigDecimal amount = getPrice();
-//		if (getFee() != null) {
-//			amount = amount.add(getFee());
-//		}
+
 		if (getFreight() != null) {
 			amount = amount.add(getFreight());
 		}
-		if (getCouponDiscount() != null) {
-			amount = amount.subtract(getCouponDiscount());
-		}
-		if (getExchangeDiscount() != null) {
-			amount = amount.subtract(getExchangeDiscount());
-		}
+
 		if (getOffsetAmount() != null) {
 			amount = amount.add(getOffsetAmount());
 		}
@@ -1368,7 +1361,10 @@ public class Order extends BaseEntity {
 	 */
 	@Transient
 	public BigDecimal getAmountPayable() {
-		BigDecimal amountPayable = getAmount().subtract(getPointDiscount());
+		BigDecimal amountPayable = getAmount().
+				subtract(getPointDiscount()).
+				subtract(getExchangeDiscount()).
+				subtract(getCouponDiscount());
 		return amountPayable.compareTo(new BigDecimal(0)) > 0 ? amountPayable : new BigDecimal(0);
 	}
 

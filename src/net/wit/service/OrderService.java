@@ -9,6 +9,7 @@ import net.wit.Filter;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.*;
+import net.wit.entity.summary.OrderSummary;
 
 /**
  * @ClassName: OrderService
@@ -145,5 +146,6 @@ public interface OrderService extends BaseService<Order, Long> {
 
 	void evictCompleted(Long orderId);
 
+	List<OrderSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable);
 
 }

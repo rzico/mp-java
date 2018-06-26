@@ -14,6 +14,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.entity.summary.OrderItemSummary;
+import net.wit.entity.summary.OrderSummary;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -86,4 +88,11 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Long> imple
 	public Page<OrderItem> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return orderItemDao.findPage(beginDate,endDate,pageable);
 	}
+
+
+	public List<OrderItemSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable) {
+		return orderItemDao.summary(member,beginDate,endDate,pageable);
+	}
+
+
 }

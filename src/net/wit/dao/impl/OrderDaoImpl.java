@@ -1,21 +1,21 @@
 package net.wit.dao.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.NoResultException;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import net.wit.Filter;
-import net.wit.entity.OrderItem;
-import net.wit.entity.Product;
-import net.wit.entity.ProductStock;
+import net.wit.entity.*;
+import net.wit.entity.summary.DepositSummary;
+import net.wit.entity.summary.OrderSummary;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -24,7 +24,6 @@ import org.springframework.util.StringUtils;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.dao.OrderDao;
-import net.wit.entity.Order;
 
 /**
  * @ClassName: OrderDaoImpl
@@ -161,5 +160,42 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 			return null;
 		}
 	}
+
+	public List<OrderSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select sum(orders.fee),sum(orders.freight),sum(orders.freight),sum(orders.pointDiscount),sum(orders.couponDiscount),sum(orders.exchangeDiscount),sum(orders.offsetAmount),sum(orders.amountPayable) "+
+						"from Order orders where orderItem.orders=orders.id and orders.shipping_date>=?b and orders.shipping_date<?e and orders.member=?member and orders.shipping_status<>0 "+
+						"group by orderItem.product order by orderItem.product ";
+
+		Query query = entityManager.createNativeQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("b", b).
+				setParameter("e", e).
+				setParameter("member",member);
+		query.setFirstResult(pageable.getPageStart());
+		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		List result = query.getResultList();
+		List<OrderSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			OrderSummary rw = new OrderSummary();
+			rw.setFee((BigDecimal) row[0]);
+			rw.setFreight((BigDecimal) row[1]);
+			rw.setPointDiscount((BigDecimal) row[2]);
+			rw.setCouponDiscount((BigDecimal) row[3]);
+			rw.setExchangeDiscount((BigDecimal) row[4]);
+			rw.setOffsetAmount((BigDecimal) row[5]);
+			rw.setAmountPayable((BigDecimal) row[6]);
+			rw.setPrice(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()).subtract(rw.getOffsetAmount()).subtract(rw.getFreight()));
+			rw.setAmount(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()));
+			data.add(rw);
+		}
+		return data;
+
+	}
+
 
 }

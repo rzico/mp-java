@@ -8,7 +8,9 @@ import java.util.Map;
 import net.wit.Filter;
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.Order;
+import net.wit.entity.summary.OrderSummary;
 
 
 /**
@@ -39,4 +41,7 @@ public interface OrderDao extends BaseDao<Order, Long> {
 	 */
 	Order findBySn(String sn);
 
-}
+	List<OrderSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable);
+
+
+	}

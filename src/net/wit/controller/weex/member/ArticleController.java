@@ -149,7 +149,7 @@ public class ArticleController extends BaseController {
         ArticleModel model =new ArticleModel();
         model.bind(article);
         return Message.bind(model,request);
-   }
+    }
 
     /**
      * 获取文章发布属性
