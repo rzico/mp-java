@@ -313,6 +313,14 @@ public class OrderController extends BaseController {
 		if (order.isLocked(member.userId())) {
 			return Message.error("订单处理中，请稍候再试");
 		}
+		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+			try {
+				orderService.returns(order, null);
+				return Message.success("退货已提交");
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+		} else
 		if (member.equals(order.getMember()) && order.getOrderStatus() == Order.OrderStatus.confirmed && order.getPaymentStatus() == Order.PaymentStatus.paid) {
 			try {
 				orderService.refunds(order, null);

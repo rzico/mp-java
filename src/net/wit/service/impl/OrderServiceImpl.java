@@ -632,7 +632,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	private void createRebate(Order order, Admin operator) throws Exception {
 		//判断是会员
 		//计算分润
-		if (order.getPromoter() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+		if (order.getPromoter() != null && order.getShippingStatus() == Order.ShippingStatus.shipped  && order.getPaymentStatus() == Order.PaymentStatus.paid) {
 			BigDecimal d = order.getDistribution();
 			if (d.compareTo(BigDecimal.ZERO) > 0) {
 				//扣除商家分配佣金
@@ -773,7 +773,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		//计算股东分红
-		if (order.getPartner() != null && order.getShippingStatus() == Order.ShippingStatus.shipped) {
+		if (order.getPartner() != null && order.getShippingStatus() == Order.ShippingStatus.shipped  && order.getPaymentStatus() == Order.PaymentStatus.paid) {
 			BigDecimal partnerAmount = order.calcPartner();
 			Card pcard = order.getPartner().card(order.getSeller());
 
@@ -841,7 +841,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		//计算公球公排
-		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
+		if (order.getShippingStatus() == Order.ShippingStatus.shipped  && order.getPaymentStatus() == Order.PaymentStatus.paid) {
 			orderRankingService.add(order);
 		}
 
@@ -933,9 +933,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		messageService.orderMemberPushTo(orderLog);
 
 		//计算货款
-		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
+		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
 			if (order.getPaymentMethod().equals(Order.PaymentMethod.online) || order.getPaymentMethod().equals(Order.PaymentMethod.deposit)) {
-
 				//扣除商家分配佣金
 				Member seller = order.getSeller();
 				memberDao.refresh(seller, LockModeType.PESSIMISTIC_WRITE);
@@ -962,7 +961,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setSeller(order.getSeller());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
-
 			}
 		}
 
@@ -972,7 +970,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		if (card != null) {
 			memberService.create(order.getMember(), order.getPromoter());
 		}
-
 
 		try {
 
@@ -1245,6 +1242,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		if (!order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
 			throw new RuntimeException("不能重复操作");
+		}
+
+		if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+			throw new RuntimeException("已发货不能退款");
 		}
 
 //		order.setAmountPaid(order.getAmountPaid());
