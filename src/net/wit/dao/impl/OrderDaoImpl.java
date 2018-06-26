@@ -175,8 +175,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 				setParameter("b", b).
 				setParameter("e", e).
 				setParameter("member",member);
-		query.setFirstResult(pageable.getPageStart());
-		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
 		List result = query.getResultList();
 		List<OrderSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {

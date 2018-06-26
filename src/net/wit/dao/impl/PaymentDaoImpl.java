@@ -71,7 +71,6 @@ public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements Paymen
 	}
 
 
-
 	public List<PaymentSummary> summary(Member member,Date beginDate, Date endDate, Pageable pageable) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
@@ -125,8 +124,6 @@ public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements Paymen
 				setParameter("payee", member).
 				setParameter("b", b).
 				setParameter("e", e);
-		query.setFirstResult(pageable.getPageStart());
-		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
 		List result = query.getResultList();
 		List<PaymentSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {

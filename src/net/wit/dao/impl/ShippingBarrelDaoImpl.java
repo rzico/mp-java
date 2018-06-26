@@ -5,16 +5,25 @@ import net.wit.Pageable;
 import net.wit.dao.BarrelStockDao;
 import net.wit.dao.ShippingBarrelDao;
 import net.wit.entity.BarrelStock;
+import net.wit.entity.Enterprise;
+import net.wit.entity.Member;
 import net.wit.entity.ShippingBarrel;
+import net.wit.entity.summary.BarrelSummary;
+import net.wit.entity.summary.PaymentSummary;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.FlushModeType;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -52,5 +61,64 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
+	}
+
+
+
+	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =	"select barrel.seller,barrel.name,sum(barrel.quantity),sum(barrel.returnQuantity) "+
+						"from wx_shipping_barrel barrel where barrel.enterprise=?enterprise and barrel.create_date>=?b and barrel.create_date<?e  "+
+						"group by barrel.seller,barrel.name order by barrel.seller";
+
+		Query query = entityManager.createNativeQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("enterprise", enterprise).
+				setParameter("b", b).
+				setParameter("e", e);
+		query.setFirstResult(pageable.getPageStart());
+		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		List result = query.getResultList();
+		List<BarrelSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			BarrelSummary rw = new BarrelSummary();
+			rw.setSellerId((Long) row[0]);
+			rw.setBarrelName((String) row[1]);
+			rw.setQuantity((Integer) row[2]);
+			rw.setReturnQuantity((Integer) row[3]);
+			data.add(rw);
+		}
+		return data;
+	}
+
+
+	public List<BarrelSummary> summary_barrel(Enterprise enterprise,Date beginDate, Date endDate, Pageable pageable) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select barrel.name,sum(barrel.quantity),sum(barrel.returnQuantity) "+
+				"from wx_shipping_barrel barrel where barrel.enterprise=?enterprise and barrel.create_date>=?b and barrel.create_date<?e  "+
+				"group by barrel.name order by barrel.name";
+
+		Query query = entityManager.createNativeQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("enterprise", enterprise).
+				setParameter("b", b).
+				setParameter("e", e);
+		List result = query.getResultList();
+		List<BarrelSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			BarrelSummary rw = new BarrelSummary();
+			rw.setBarrelName((String) row[0]);
+			rw.setQuantity((Integer) row[1]);
+			rw.setReturnQuantity((Integer) row[2]);
+			data.add(rw);
+		}
+		return data;
 	}
 }

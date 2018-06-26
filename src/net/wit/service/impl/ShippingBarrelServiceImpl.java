@@ -4,14 +4,19 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.dao.ShippingBarrelDao;
 import net.wit.dao.ShippingBarrelDao;
+import net.wit.entity.Enterprise;
+import net.wit.entity.Member;
 import net.wit.entity.ShippingBarrel;
 import net.wit.entity.ShippingBarrel;
+import net.wit.entity.summary.BarrelSummary;
+import net.wit.entity.summary.PaymentSummary;
 import net.wit.service.ShippingBarrelService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: ShippingBarrelServiceImpl
@@ -74,6 +79,16 @@ public class ShippingBarrelServiceImpl extends BaseServiceImpl<ShippingBarrel, L
 
 	public Page<ShippingBarrel> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return shippingBarrelDao.findPage(beginDate,endDate,pageable);
+	}
+
+
+
+	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+		return shippingBarrelDao.summary(enterprise,beginDate,endDate,pageable);
+	}
+
+	public List<BarrelSummary> summary_barrel(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+		return shippingBarrelDao.summary_barrel(enterprise,beginDate,endDate,pageable);
 	}
 
 

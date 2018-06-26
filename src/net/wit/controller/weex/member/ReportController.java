@@ -7,10 +7,8 @@ import net.wit.Pageable;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.BarrelModel;
 import net.wit.controller.model.CouponModel;
-import net.wit.entity.Admin;
-import net.wit.entity.Barrel;
-import net.wit.entity.Member;
-import net.wit.entity.Role;
+import net.wit.entity.*;
+import net.wit.entity.summary.BarrelSummary;
 import net.wit.entity.summary.OrderItemSummary;
 import net.wit.entity.summary.OrderSummary;
 import net.wit.entity.summary.PaymentSummary;
@@ -70,6 +68,9 @@ public class ReportController extends BaseController {
 
     @Resource(name = "paymentServiceImpl")
     private PaymentService paymentService;
+
+    @Resource(name = "shippingBarrelServiceImpl")
+    private ShippingBarrelService shippingBarrelService;
 
     /**
      *  订单统计表
@@ -132,13 +133,18 @@ public class ReportController extends BaseController {
 
         Member member = memberService.getCurrent();
 
+        Enterprise enterprise = null;
         Admin admin = adminService.findByMember(member);
         if (admin!=null && admin.getEnterprise()!=null) {
-            member = admin.getEnterprise().getMember();
+            enterprise = admin.getEnterprise();
         }
 
-        List<PaymentSummary> header = paymentService.summary_method(member,beginDate,endDate,pageable);
-        List<PaymentSummary> body = paymentService.summary(member,beginDate,endDate,pageable);
+        if (enterprise==null) {
+            return Message.error("没有开通店铺");
+        }
+
+        List<BarrelSummary> header = shippingBarrelService.summary_barrel(enterprise,beginDate,endDate,pageable);
+        List<BarrelSummary> body = shippingBarrelService.summary(enterprise,beginDate,endDate,pageable);
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("summary",header);

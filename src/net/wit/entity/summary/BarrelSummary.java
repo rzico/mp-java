@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class BerralSummary implements Serializable {
+public class BarrelSummary implements Serializable {
 
     private Long sellerId;
 
