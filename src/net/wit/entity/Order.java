@@ -1253,7 +1253,7 @@ public class Order extends BaseEntity {
 					if (orderItem != null && orderItem.getQuantity() != null) {
 						price = price.add(
 								new BigDecimal(
-										(orderItem.getQuantity()-orderItem.getCouponQuantity()) * (receiver.getLevel() - 4)
+										orderItem.getQuantity() * (receiver.getLevel() - 4)
 								)
 						);
 					}

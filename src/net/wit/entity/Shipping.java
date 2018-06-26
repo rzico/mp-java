@@ -637,9 +637,11 @@ public class Shipping extends BaseEntity {
 			price = new BigDecimal(2.5);
 		}
 
-		price = price.add(
-				new BigDecimal(receiver.getLevel() - 2)
-		);
+		if (receiver.getLevel()>2) {
+			price = price.add(
+					new BigDecimal(receiver.getLevel() - 2)
+			);
+		}
 
 		BigDecimal amount = price.multiply(new BigDecimal(quantity));
 
@@ -666,9 +668,11 @@ public class Shipping extends BaseEntity {
 			price = new BigDecimal(1.5);
 		}
 
-		price = price.add(
-				new BigDecimal(receiver.getLevel() - 2)
-		);
+		if (receiver.getLevel()>2) {
+			price = price.add(
+					new BigDecimal(receiver.getLevel() - 2)
+			);
+		}
 
 		BigDecimal amount = price.multiply(new BigDecimal(quantity));
 
@@ -676,6 +680,7 @@ public class Shipping extends BaseEntity {
 			amount = amount.add(new BigDecimal(2));
 		}
 		return amount;
+
 	}
 
 }
