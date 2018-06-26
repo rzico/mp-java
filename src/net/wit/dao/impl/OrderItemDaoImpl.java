@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import javafx.scene.shape.StrokeLineJoin;
 import net.wit.entity.Member;
 import net.wit.entity.summary.OrderItemSummary;
 import net.wit.entity.summary.OrderSummary;
@@ -71,9 +72,9 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
-				"select orderItem.product,sum(orderItem.quantity),sum(orderItem.quantity * orderItem.price) "+
+				"select orderItem.product,orderItem.name,orderItem.spec,sum(orderItem.quantity),sum(orderItem.quantity * orderItem.price) "+
 						"from OrderItem orderItem,Order orders where orderItem.orders=orders.id and orders.shipping_date>=?b and orders.shipping_date<?e and orders.member=?member and orders.shipping_status<>0 "+
-						"group by orderItem.product order by orderItem.product ";
+						"group by orderItem.product,orderItem.name,orderItem.spec order by orderItem.product ";
 
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
@@ -88,8 +89,9 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 			Object[] row = (Object[]) result.get(i);
 			OrderItemSummary rw = new OrderItemSummary();
 			rw.setProduct((Long) row[0]);
-			rw.setQuantity((Integer) row[1]);
-			rw.setAmount((BigDecimal) row[2]);
+			rw.setName((String) row[1]+(String) row[2]);
+			rw.setQuantity((Integer) row[3]);
+			rw.setAmount((BigDecimal) row[4]);
 			data.add(rw);
 		}
 		return data;

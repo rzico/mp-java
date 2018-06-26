@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class OrderItemSummary implements Serializable {
     private Long product;
+    private String name;
 
     /** 销量 */
     private Integer quantity;
@@ -36,5 +37,13 @@ public class OrderItemSummary implements Serializable {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

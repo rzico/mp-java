@@ -1487,6 +1487,11 @@ public class Order extends BaseEntity {
 		}
 	}
 
+	public boolean refundOrReturn() {
+		return getShippingStatus().equals(ShippingStatus.returning) ||  getShippingStatus().equals(ShippingStatus.returned) ||
+			   getPaymentStatus().equals(PaymentStatus.refunding)   ||  getPaymentStatus().equals(PaymentStatus.refunded);
+	}
+
 	/**
 	 *
 	 * 获取本单收益

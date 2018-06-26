@@ -872,7 +872,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 //			member.setPoint(member.getPoint() + order.getPoint());
 //		}
 
-		if (order.getShippingStatus() == Order.ShippingStatus.unshipped || order.getShippingStatus() == Order.ShippingStatus.returned) {
+		if (order.refundOrReturn()) {
 			CouponCode couponCode = order.getCouponCode();
 			if (couponCode != null) {
 				couponCode.setIsUsed(false);
@@ -1000,7 +1000,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		//分销结算
 
-		createRebate(order,operator);
+		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+			createRebate(order, operator);
+		}
 
 		//代理商佣金
 //		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
