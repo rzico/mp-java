@@ -50,6 +50,9 @@ public class ShippingModel extends BaseModel implements Serializable {
     /**  运费 */
     private BigDecimal freight;
 
+    /**  工资 */
+    private BigDecimal adminFreight;
+
     /**  配送点 */
     private Long shopId;
 
@@ -320,6 +323,14 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.track = track;
     }
 
+    public BigDecimal getAdminFreight() {
+        return adminFreight;
+    }
+
+    public void setAdminFreight(BigDecimal adminFreight) {
+        this.adminFreight = adminFreight;
+    }
+
     public void bind(Shipping shipping) {
 
         this.id = shipping.getId();
@@ -348,6 +359,7 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.shippingStatus = order.getShippingStatus();
 
         this.freight = shipping.getFreight();
+        this.adminFreight = shipping.getAdminFreight();
 
         this.receiver = new ReceiverModel();
         this.receiver.setAddress(shipping.getAddress());

@@ -3,6 +3,7 @@ package net.wit.controller.applet;
 import net.wit.*;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.CouponModel;
+import net.wit.entity.Card;
 import net.wit.entity.Coupon;
 import net.wit.entity.CouponCode;
 import net.wit.entity.Member;
@@ -49,10 +50,19 @@ public class CouponController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Long authorId,Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
         List<Filter> filters = new ArrayList<Filter>();
         if (authorId!=null) {
             Member author = memberService.find(authorId);
             filters.add(new Filter("distributor", Filter.Operator.eq,author));
+        }
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        if ("3".equals(bundle.getString("weex")) ) {
+            if (member.getCards().size()>0) {
+                filters.add(new Filter("distributor", Filter.Operator.eq,member.getCards().get(0).getOwner()));
+            } else {
+                return Message.error("没有领卡");
+            }
         }
         Date today = DateUtils.truncate(new Date(), Calendar.DATE);
         filters.add(new Filter("beginDate", Filter.Operator.le,today));

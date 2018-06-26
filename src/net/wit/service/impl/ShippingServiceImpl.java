@@ -147,6 +147,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setAdminFreight(BigDecimal.ZERO);
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		List<ShippingItem> shippingItems = new ArrayList<>();
+
 		for (OrderItem orderItem:order.getOrderItems()) {
 			if (("3".equals(bundle.getString("weex")) || orderItem.getProduct().getType().equals(Product.Type.warehouse))) {
 				ShippingItem shippingItem = new ShippingItem();
@@ -246,6 +247,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 		shippingDao.merge(shipping);
 		return shipping;
+
 	}
 
 	public Shipping receive(Shipping shipping) throws Exception {
@@ -260,6 +262,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		orderLogDao.persist(orderLog);
 		messageService.orderMemberPushTo(orderLog);
 		return shipping;
+
 	}
 
 	public Shipping completed(Shipping shipping) throws Exception {
