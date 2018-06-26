@@ -206,6 +206,10 @@ public class ShippingController extends BaseController {
 				b.setName(br.getName());
 				b.setShipping(shipping);
 				b.setOrder(shipping.getOrder());
+				b.setAdmin(shipping.getAdmin());
+				b.setEnterprise(shipping.getEnterprise());
+				b.setSeller(shipping.getSeller());
+				b.setMember(shipping.getMember());
 				barrels.add(b);
 			}
 
@@ -300,6 +304,10 @@ public class ShippingController extends BaseController {
 				b.setName(br.getName());
 				b.setShipping(shipping);
 				b.setOrder(shipping.getOrder());
+				b.setAdmin(shipping.getAdmin());
+				b.setEnterprise(shipping.getEnterprise());
+				b.setSeller(shipping.getSeller());
+				b.setMember(shipping.getMember());
 				barrels.add(b);
 			}
 			shipping.setShippingBarrels(barrels);

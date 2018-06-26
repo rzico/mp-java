@@ -50,6 +50,30 @@ public class ShippingBarrel extends BaseEntity {
 	@JoinColumn(name = "shipping", nullable = false, updatable = false)
 	private Shipping shipping;
 
+	/** 卖家 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private Member seller;
+
+	/** 买家 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	private Member member;
+
+	/** 配送单位 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private Enterprise enterprise;
+
+	/** 配送门店 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private Shop shop;
+
+	/** 送货员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Admin admin;
+
 	/**
 	 * 获取商品名称
 	 * 
@@ -107,5 +131,45 @@ public class ShippingBarrel extends BaseEntity {
 
 	public void setShipping(Shipping shipping) {
 		this.shipping = shipping;
+	}
+
+	public Member getSeller() {
+		return seller;
+	}
+
+	public void setSeller(Member seller) {
+		this.seller = seller;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Enterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
+	}
+
+	public Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
+	}
+
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
 	}
 }

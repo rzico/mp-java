@@ -554,8 +554,12 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	}
 
 
-	public List<PaymentSummary> summary(Date beginDate, Date endDate, Pageable pageable) {
-		return paymentDao.summary(beginDate,endDate,pageable);
+	public List<PaymentSummary> summary(Member member ,Date beginDate, Date endDate, Pageable pageable) {
+		return paymentDao.summary(member,beginDate,endDate,pageable);
+	}
+
+	public List<PaymentSummary> summary_method(Member member ,Date beginDate, Date endDate, Pageable pageable) {
+		return paymentDao.summary_method(member,beginDate,endDate,pageable);
 	}
 
 }

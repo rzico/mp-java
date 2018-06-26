@@ -13,6 +13,7 @@ import net.wit.entity.Member;
 import net.wit.entity.Role;
 import net.wit.entity.summary.OrderItemSummary;
 import net.wit.entity.summary.OrderSummary;
+import net.wit.entity.summary.PaymentSummary;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,6 +68,9 @@ public class ReportController extends BaseController {
     @Resource(name = "orderItemServiceImpl")
     private OrderItemService orderItemService;
 
+    @Resource(name = "paymentServiceImpl")
+    private PaymentService paymentService;
+
     /**
      *  订单统计表
      */
@@ -107,8 +111,34 @@ public class ReportController extends BaseController {
             member = admin.getEnterprise().getMember();
         }
 
-        List<OrderSummary> header = orderService.summary(member,beginDate,endDate,pageable);
-        List<OrderItemSummary> body = orderItemService.summary(member,beginDate,endDate,pageable);
+        List<PaymentSummary> header = paymentService.summary_method(member,beginDate,endDate,pageable);
+        List<PaymentSummary> body = paymentService.summary(member,beginDate,endDate,pageable);
+
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("summary",header);
+        data.put("data",body);
+        PageBlock model = PageBlock.bind(new Page());
+        model.setData(data);
+        return Message.bind(model,request);
+    }
+
+
+    /**
+     *  桶结算表
+     */
+    @RequestMapping(value = "/barrel_summary", method = RequestMethod.GET)
+    @ResponseBody
+    public Message barrelSummary(Date beginDate, Date endDate, Pageable pageable, HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            member = admin.getEnterprise().getMember();
+        }
+
+        List<PaymentSummary> header = paymentService.summary_method(member,beginDate,endDate,pageable);
+        List<PaymentSummary> body = paymentService.summary(member,beginDate,endDate,pageable);
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("summary",header);

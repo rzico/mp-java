@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.Payment;
 import net.wit.entity.summary.PaymentSummary;
 
@@ -49,6 +50,7 @@ public interface PaymentService extends BaseService<Payment, Long> {
 	 */
 	void query(Long id);
 
-	public List<PaymentSummary> summary(Date beginDate, Date endDate, Pageable pageable);
+	public List<PaymentSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable);
+	public List<PaymentSummary> summary_method(Member member,Date beginDate, Date endDate, Pageable pageable);
 
 }

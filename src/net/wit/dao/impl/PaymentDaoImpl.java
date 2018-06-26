@@ -72,21 +72,22 @@ public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements Paymen
 
 
 
-	public List<PaymentSummary> summary(Date beginDate, Date endDate, Pageable pageable) {
+	public List<PaymentSummary> summary(Member member,Date beginDate, Date endDate, Pageable pageable) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
 				"select member,payment_method,sum(amount),sum(refund) from ("+
 				"select payment.member,payment.payment_method,payment.amount as amount,0 as refund "+
-				"from wx_payment payment where payment.create_date>=?b and payment.create_date<?e and payment.status in (1,3,4,5) "+
+				"from wx_payment payment where payment.payee=?payee and payment.create_date>=?b and payment.create_date<?e and payment.status in (1,3,4,5) "+
 				"union all "+
 				"select refunds.member,refunds.payment_method,0 as amount,sum(refunds.amount) as refund "+
-				"from wx_refunds refunds where refunds.create_date>=?b and refunds.create_date<?e and refunds.status = 2 "+
+				"from wx_refunds refunds where payment.payee=?payee and refunds.create_date>=?b and refunds.create_date<?e and refunds.status = 2 "+
 				") j group by member,payment_method order by member";
 
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
+				setParameter("payee", member).
 				setParameter("b", b).
 				setParameter("e", e);
 		query.setFirstResult(pageable.getPageStart());
@@ -105,5 +106,38 @@ public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements Paymen
 		return data;
 	}
 
+
+	public List<PaymentSummary> summary_method(Member member,Date beginDate, Date endDate, Pageable pageable) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select payment_method,sum(amount),sum(refund) from ("+
+						"select payment.payment_method,payment.amount as amount,0 as refund "+
+						"from wx_payment payment where payment.payee=?payee and payment.create_date>=?b and payment.create_date<?e and payment.status in (1,3,4,5) "+
+						"union all "+
+						"select refunds.payment_method,0 as amount,sum(refunds.amount) as refund "+
+						"from wx_refunds refunds where payment.payee=?payee and refunds.create_date>=?b and refunds.create_date<?e and refunds.status = 2 "+
+						") j group by payment_method order by member";
+
+		Query query = entityManager.createNativeQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter("payee", member).
+				setParameter("b", b).
+				setParameter("e", e);
+		query.setFirstResult(pageable.getPageStart());
+		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		List result = query.getResultList();
+		List<PaymentSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			PaymentSummary rw = new PaymentSummary();
+			rw.setTypeName((String) row[0]);
+			rw.setAmount((BigDecimal) row[1]);
+			rw.setRefund((BigDecimal) row[2]);
+			data.add(rw);
+		}
+		return data;
+	}
 
 }
