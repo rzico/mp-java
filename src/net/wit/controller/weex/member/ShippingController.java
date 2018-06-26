@@ -308,6 +308,7 @@ public class ShippingController extends BaseController {
 				b.setEnterprise(shipping.getEnterprise());
 				b.setSeller(shipping.getSeller());
 				b.setMember(shipping.getMember());
+				b.setShop(shipping.getShop());
 				barrels.add(b);
 			}
 			shipping.setShippingBarrels(barrels);

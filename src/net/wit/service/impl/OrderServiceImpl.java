@@ -989,7 +989,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		//没有发货，或是退货等状态完成，是无效订单
-		if (!order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+		if (order.refundOrReturn()) {
 			card = order.getMember().card(order.getSeller());
 			if (card != null && order.getPointDiscount().compareTo(BigDecimal.ZERO) > 0) {
 				cardService.addPoint(card, order.getPointDiscount().longValue(), "订单退货", order);

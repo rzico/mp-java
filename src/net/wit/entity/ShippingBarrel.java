@@ -52,12 +52,12 @@ public class ShippingBarrel extends BaseEntity {
 
 	/** 卖家 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(nullable = false)
 	private Member seller;
 
 	/** 买家 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(nullable = false)
 	private Member member;
 
 	/** 配送单位 */
@@ -72,6 +72,7 @@ public class ShippingBarrel extends BaseEntity {
 
 	/** 送货员 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
 	private Admin admin;
 
 	/**
