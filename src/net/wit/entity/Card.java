@@ -63,91 +63,90 @@ public class Card extends BaseEntity {
 
 	/** 支付方式 */
 	@NotNull
-	@Column(columnDefinition="int(11) comment '支付方式 {immediate:现结,monthly:月结}'")
+	@Column(columnDefinition="int(11) not null default 0 comment '支付方式 {immediate:现结,monthly:月结}'")
 	private PaymentMethod paymentMethod;
 
 	/** 等级 */
 	@NotNull
-	@Column(columnDefinition="int(11) comment '等级 {vip1:VIP1,vip2:VIP2,vip3:VIP3}'")
+	@Column(columnDefinition="int(11) not null default 0 comment '等级 {vip1:VIP1,vip2:VIP2,vip3:VIP3}'")
 	private VIP vip;
 
 	/** 角色 */
 	@NotNull
-	@Column(columnDefinition="int(11) comment '角色 {member:会员,team:团队,partner:股东}'")
+	@Column(columnDefinition="int(11) not null default 0 comment '角色 {member:会员,team:团队,partner:股东}'")
 	private Type type;
 
-	/** 最近使用日期 */
+	/** 最近使用日期 **/
 	@Column(columnDefinition="datetime comment '最近使用日期'")
 	private Date usedDate;
 
-
-	/** 所属商家 */
+	/** 所属商家 **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	@JsonIgnore
 	private TopicCard topicCard;
 
-	/** 所属商家 */
+	/** 所属商家 **/
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	private Member owner;
 
-	/** 办卡门店 */
+	/** 办卡门店 **/
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Shop shop;
 
-	/** 卡号 */
+	/** 卡号 **/
 	@Column(length = 100,columnDefinition="varchar(100) not null unique comment '卡号'")
 	private String code;
 
-	/** 姓名 */
+	/** 姓名 **/
 	@Column(columnDefinition="varchar(255) comment '姓名'")
 	private String name;
 
-	/** 手机 一个手机号只能办一个 */
+	/** 手机 一个手机号只能办一个 **/
 	@Column(columnDefinition="varchar(50) comment '手机'")
 	private String mobile;
 
-	/** 安全码 */
+	/** 安全码 **/
 	@JsonIgnore
 	@Column(columnDefinition="varchar(50) comment '安全码'")
 	private String sign;
 
-	/** 余额 */
+	/** 余额 **/
 	@Min(0)
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '余额'")
 	private BigDecimal balance;
 
 	/** 分红比例
-	 *  指利润的百分比 */
+	 *  指利润的百分比 **/
 	@Min(0)
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '分红比例'")
 	private BigDecimal bonus;
 
-	/** 累计消费 */
+	/** 累计消费 **/
 	@Min(0)
 	@Column(columnDefinition="decimal(21,6) not null default 0 comment '累计消费'")
 	private BigDecimal amount;
 
-	/** 积分 */
+	/** 积分 **/
 	@Min(0)
-	@Column(columnDefinition="bigint(20) default 0 comment '积分'")
+	@Column(columnDefinition="bigint(20) not null default 0 comment '积分'")
 	private Long point;
 
-	/** 卡主 */
+	/** 卡主 **/
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	private Member member;
 
-	/*  会员 */
+	/**  会员 **/
 	@JsonIgnore
 	@ManyToMany(mappedBy = "cards",fetch = FetchType.LAZY)
 	private List<Member> members = new ArrayList<Member>();
 
-	/** 推广 */
+	/** 推广 **/
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member promoter;

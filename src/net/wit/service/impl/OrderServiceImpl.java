@@ -554,24 +554,26 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		} else {
 			//判断月结客户
-			if (card != null && card.getPaymentMethod().equals(Card.PaymentMethod.monthly)) {
-				orderDao.flush();
-				try {
-					Payment payment = payment(order,null);
-					if (payment!=null) {
-						payment.setTranSn(payment.getSn());
-						payment.setMethod(Payment.Method.offline);
-						payment.setPaymentPluginId("monthPayPlugin");
-						payment.setPaymentMethod("月结付款");
-						paymentService.update(payment);
+			if (card != null) {
+				if (card.getPaymentMethod().equals(Card.PaymentMethod.monthly)) {
+					orderDao.flush();
+					try {
+						Payment payment = payment(order, null);
+						if (payment != null) {
+							payment.setTranSn(payment.getSn());
+							payment.setMethod(Payment.Method.offline);
+							payment.setPaymentPluginId("monthPayPlugin");
+							payment.setPaymentMethod("月结付款");
+							paymentService.update(payment);
 
-						paymentService.handle(payment);
+							paymentService.handle(payment);
 
-						order.setPaymentMethod(Order.PaymentMethod.offline);
-						orderDao.merge(order);
+							order.setPaymentMethod(Order.PaymentMethod.offline);
+							orderDao.merge(order);
+						}
+					} catch (Exception e) {
+						throw new RuntimeException(e.getMessage());
 					}
-				} catch (Exception e) {
-					throw new RuntimeException(e.getMessage());
 				}
 			}
 		}
