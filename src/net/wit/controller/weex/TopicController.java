@@ -76,8 +76,8 @@ public class TopicController extends BaseController {
             String url = "pages/shop/index?id=" + member.getId();
             return Message.success((Object) url,"复制成功");
         } else {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+member.getId();
-            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            String url = "https://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+member.getId();
+            String redirectUrl = "https://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return Message.success((Object) MenuManager.codeUrlO2(redirectUrl),"复制成功");
         }

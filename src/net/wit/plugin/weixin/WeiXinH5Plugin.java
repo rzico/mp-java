@@ -152,7 +152,7 @@ public class WeiXinH5Plugin extends PaymentPlugin {
 		packageParams.put("notify_url", getNotifyUrl(sn, NotifyMethod.async));
 		packageParams.put("trade_type", "MWEB");
 		//String xapp = request.getHeader("x-app");
-		//packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://"+pluginConfig.getAttribute("host")+"\",\"wap_name\": \"睿商助手\"}}");
+		//packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"https://"+pluginConfig.getAttribute("host")+"\",\"wap_name\": \"睿商助手\"}}");
 		packageParams.put("scene_info", "{\"h5_info\": {\"type\":\"IOS\",\"app_name\": \"魔篇\",\"package_name\": \"com.rzico.assistant\"}}");
 
 		try {

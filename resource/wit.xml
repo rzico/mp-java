@@ -3,7 +3,7 @@
 <wit>
 	<setting name="siteName" value="魔篇"/>
 	<setting name="siteCompany" value="厦门亿想软件有限公司"/>
-	<setting name="siteUrl" value="http://mopian.1xx.com"/>
+	<setting name="siteUrl" value="https://mopian.1xx.com"/>
 	<setting name="logo" value="http://m.73yigou.cn/upload/images/logo.png"/>
 	<setting name="address" value=""/>
 	<setting name="phone" value="0592-6085128"/>

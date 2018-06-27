@@ -199,9 +199,9 @@ public class TopicViewModel extends BaseModel implements Serializable {
             shareUser = member;
         }
         if (template==null) {
-            this.url = "http://" + bundle.getString("weixin.url") + "/#/c1001?id=" + member.getId() + "&xuid=" + shareUser.getId();
+            this.url = "https://" + bundle.getString("weixin.url") + "/#/c1001?id=" + member.getId() + "&xuid=" + shareUser.getId();
         } else {
-            this.url = "http://" + bundle.getString("weixin.url") + "/#/c"+template.getSn()+"?id=" + member.getId() + "&xuid=" + shareUser.getId();
+            this.url = "https://" + bundle.getString("weixin.url") + "/#/c"+template.getSn()+"?id=" + member.getId() + "&xuid=" + shareUser.getId();
         }
     }
 }

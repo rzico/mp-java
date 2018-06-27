@@ -85,8 +85,8 @@ public class CardController extends BaseController {
         Member seller = memberService.find(id);
         Member member = memberService.getCurrent();
         if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/member/card/deposit.jhtml?id="+id;
-            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            String url = "https://"+bundle.getString("weixin.url")+"/website/member/card/deposit.jhtml?id="+id;
+            String redirectUrl = "https://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
         }
@@ -111,8 +111,8 @@ public class CardController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/member/card/index.jhtml?id="+id+"&card_id="+card_id;
-            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            String url = "https://"+bundle.getString("weixin.url")+"/website/member/card/index.jhtml?id="+id+"&card_id="+card_id;
+            String redirectUrl = "https://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
         }
@@ -165,7 +165,7 @@ public class CardController extends BaseController {
         card.setSign(String.valueOf(challege));
         cardService.update(card);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String payCode = "http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
+        String payCode = "https://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
 
 
         return Message.success((Object)payCode,"获取成功");
@@ -227,7 +227,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        data.put("payCode","https://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
 
         Ticket ticket = WeixinApi.getWxCardTicket();
         if (ticket!=null) {
@@ -280,7 +280,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        data.put("payCode","https://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
         return Message.bind(data,request);
 
     }
@@ -321,7 +321,7 @@ public class CardController extends BaseController {
             int challege = StringUtils.Random6Code();
             card.setSign(String.valueOf(challege));
             cardService.update(card);
-            data.put("payCode", "http://" + bundle.getString("weixin.url") + "/q/818802" + card.getCode() + String.valueOf(challege) + ".jhtml");
+            data.put("payCode", "https://" + bundle.getString("weixin.url") + "/q/818802" + card.getCode() + String.valueOf(challege) + ".jhtml");
         }
         return Message.bind(data,request);
     }
@@ -416,7 +416,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        data.put("payCode","https://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
         Ticket ticket = WeixinApi.getWxCardTicket();
         if (ticket!=null) {
             HashMap<String, Object> params = new HashMap<>();

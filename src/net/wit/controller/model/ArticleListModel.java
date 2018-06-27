@@ -184,9 +184,9 @@ public class ArticleListModel extends BaseModel implements Serializable {
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         if (article.getTemplate()==null) {
-            this.url = "http://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId();
+            this.url = "https://" + bundle.getString("weixin.url") + "/#/t1001?id=" + article.getId();
         } else {
-            this.url = "http://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId();
+            this.url = "https://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId();
         }
     }
 

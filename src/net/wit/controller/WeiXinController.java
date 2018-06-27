@@ -190,14 +190,14 @@ public class WeiXinController extends BaseController {
         if (member==null) {
             String userAgent = request.getHeader("user-agent");
             if (BrowseUtil.isWeixin(userAgent)) {
-                String url = "http://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
-                String redirectUrl = "http://" + bundle.getString("weixin.url") + "/website/login/weixin.jhtml?redirectURL=" + net.wit.util.StringUtils.base64Encode(url.getBytes());
+                String url = "https://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
+                String redirectUrl = "https://" + bundle.getString("weixin.url") + "/website/login/weixin.jhtml?redirectURL=" + net.wit.util.StringUtils.base64Encode(url.getBytes());
                 redirectUrl = URLEncoder.encode(redirectUrl);
                 return "redirect:" + MenuManager.codeUrlO2(redirectUrl);
             }
             if (BrowseUtil.isAlipay(userAgent)) {
-                String url = "http://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
-                String redirectUrl = "http://" + bundle.getString("weixin.url") + "/website/login/alipay.jhtml?redirectURL=" + net.wit.util.StringUtils.base64Encode(url.getBytes());
+                String url = "https://" + bundle.getString("weixin.url") + "/weixin/qrcode/go.jhtml?type=" + type + "&no=" + no;
+                String redirectUrl = "https://" + bundle.getString("weixin.url") + "/website/login/alipay.jhtml?redirectURL=" + net.wit.util.StringUtils.base64Encode(url.getBytes());
                 redirectUrl = URLEncoder.encode(redirectUrl);
                 String alipay = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=" + bundle.getString("alipay.appid")+"&scope=auth_base&state=state&redirect_uri=" + redirectUrl;
                 return "redirect:" + alipay;

@@ -444,9 +444,9 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	public String getNotifyUrl(String sn, NotifyMethod notifyMethod) {
 		PluginConfig pluginConfig = getPluginConfig();
 		if (notifyMethod == null) {
-			return "http://"+pluginConfig.getAttribute("host") + "/payment/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
+			return "https://"+pluginConfig.getAttribute("host") + "/payment/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
 		}
-		return "http://"+pluginConfig.getAttribute("host") + "/payment/notify/" + notifyMethod + "/" + sn + ".jhtml";
+		return "https://"+pluginConfig.getAttribute("host") + "/payment/notify/" + notifyMethod + "/" + sn + ".jhtml";
 	}
 
 	/**
@@ -458,9 +458,9 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	public String getRefundsNotifyUrl(String sn, NotifyMethod notifyMethod) {
 		PluginConfig pluginConfig = getPluginConfig();
 		if (notifyMethod == null) {
-			return "http://"+pluginConfig.getAttribute("host") + "/refunds/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
+			return "https://"+pluginConfig.getAttribute("host") + "/refunds/notify/" + NotifyMethod.general + "/" + sn + ".jhtml";
 		}
-		return "http://"+pluginConfig.getAttribute("host") + "/refunds/notify/" + notifyMethod + "/" + sn + ".jhtml";
+		return "https://"+pluginConfig.getAttribute("host") + "/refunds/notify/" + notifyMethod + "/" + sn + ".jhtml";
 	}
 
 	/**

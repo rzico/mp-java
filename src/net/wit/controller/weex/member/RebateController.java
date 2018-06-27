@@ -55,8 +55,8 @@ public class RebateController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
-            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            String url = "https://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml";
+            String redirectUrl = "https://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
         }

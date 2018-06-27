@@ -116,7 +116,7 @@ public class CardController extends BaseController {
         card.setSign(String.valueOf(challege));
         cardService.update(card);
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String payCode = "http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
+        String payCode = "https://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml";
 
 
         return Message.success((Object)payCode,"获取成功");
@@ -178,7 +178,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        data.put("payCode","https://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
         return Message.success(data,"激活成功");
     }
 
@@ -217,7 +217,7 @@ public class CardController extends BaseController {
             int challege = StringUtils.Random6Code();
             card.setSign(String.valueOf(challege));
             cardService.update(card);
-            data.put("payCode", "http://" + bundle.getString("weixin.url") + "/q/818802" + card.getCode() + String.valueOf(challege) + ".jhtml");
+            data.put("payCode", "https://" + bundle.getString("weixin.url") + "/q/818802" + card.getCode() + String.valueOf(challege) + ".jhtml");
         }
         return Message.bind(data,request);
     }
@@ -312,7 +312,7 @@ public class CardController extends BaseController {
         int challege = StringUtils.Random6Code();
         card.setSign(String.valueOf(challege));
         cardService.update(card);
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
+        data.put("payCode","https://"+bundle.getString("weixin.url")+"/q/818802"+card.getCode()+String.valueOf(challege)+".jhtml");
         return Message.bind(data,request);
     }
 

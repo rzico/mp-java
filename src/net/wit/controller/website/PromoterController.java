@@ -77,9 +77,9 @@ public class PromoterController extends BaseController {
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             String url = "";
             if (member!=null) {
-                url = "http://"+bundle.getString("weixin.url") + "?xuid=" + member.getId();
+                url = "https://"+bundle.getString("weixin.url") + "?xuid=" + member.getId();
             } else {
-                url = "http://"+bundle.getString("weixin.url");
+                url = "https://"+bundle.getString("weixin.url");
             }
             String tempFile = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID() + ".jpg";
             String srcFile = rootPath+"/upload/qrcode/default.jpg";

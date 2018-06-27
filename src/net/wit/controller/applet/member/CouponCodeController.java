@@ -70,8 +70,8 @@ public class CouponCodeController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Member member = memberService.getCurrent();
         if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/member/couponCode/index.jhtml?id="+id;
-            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+            String url = "https://"+bundle.getString("weixin.url")+"/website/member/couponCode/index.jhtml?id="+id;
+            String redirectUrl = "https://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
             redirectUrl = URLEncoder.encode(redirectUrl);
             return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
         }
@@ -139,7 +139,7 @@ public class CouponCodeController extends BaseController {
         data.put("mobile",member.getMobile());
         data.put("name",member.getName());
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818803"+couponCode.getCode()+".jhtml");
+        data.put("payCode","https://"+bundle.getString("weixin.url")+"/q/818803"+couponCode.getCode()+".jhtml");
 
         Member owner = couponCode.getCoupon().getDistributor();
         if (owner.getTopic()!=null && owner.getTopic().getTopicCard()!=null) {

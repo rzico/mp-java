@@ -59,21 +59,21 @@ public class CommonController extends BaseController {
             String verifyTicket = pluginConfig.getAttribute("verify_ticket");
             ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, appId, secret);
             String url = "";
-            //http://mopian.1xx.me/weixin/notify.jhtml
+            //https://mopian.1xx.me/weixin/notify.jhtml
             if (componentAccessToken != null && componentAccessToken.getComponent_access_token() != null && !componentAccessToken.getComponent_access_token().equals("")) {
                 String preAuthCode = WeixinApi.getPreAuthCode(componentAccessToken.getComponent_access_token(), appId);
                 Member member = memberService.getCurrent();
                 System.out.println("weixinSouquan===============================:" + (member == null ? "null" : "nonull"));
-                if (member == null) return "redirect:http://mopian.1xx.me";
+                if (member == null) return "redirect:https://mopian.1xx.me";
                 System.out.println("weixinSouquan===============================" + member.getId());
                 //+ memberService.getCurrent().getId()；
-//                String reUrl = net.wit.util.StringUtils.base64Encode(("http://" + bundle.getString("weixin.component.url") + "/component/common/weixinCallback.jhtml").getBytes());
-                String reUrl = "http://" + bundle.getString("weixin.component.url") + "/component/common/weixinCallback.jhtml?memberId=" + memberService.getCurrent().getId();
+//                String reUrl = net.wit.util.StringUtils.base64Encode(("https://" + bundle.getString("weixin.component.url") + "/component/common/weixinCallback.jhtml").getBytes());
+                String reUrl = "https://" + bundle.getString("weixin.component.url") + "/component/common/weixinCallback.jhtml?memberId=" + memberService.getCurrent().getId();
                 url = "https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&auth_type=2&no_scan=1&component_appid=" + appId + "&pre_auth_code=" + preAuthCode + "&redirect_uri=" + reUrl + "#wechat_redirect";
                 return "redirect:" + url;
             }
         }
-        return "redirect:http://mopian.1xx.me";
+        return "redirect:https://mopian.1xx.me";
 //        HashMap<String, Object> data = new HashMap<>();
 //        data.put("url", url);
 //        return Message.bind(data,request);
@@ -95,13 +95,13 @@ public class CommonController extends BaseController {
 //            if(member.getTopic() == null)
                 Admin admin = adminService.findByMember(member);
                 if (admin == null || admin.getEnterprise() == null) {//这里是没开通专栏, 则开通成功
-                    WeixinApi.httpRequest("http://" + serverUrl + "/weex/member/topic/submit.jhtml", "POST", null);
+                    WeixinApi.httpRequest("https://" + serverUrl + "/weex/member/topic/submit.jhtml", "POST", null);
                 }
 
                 String verifyTicket = pluginConfig.getAttribute("verify_ticket");
                 ComponentAccessToken componentAccessToken = WeixinApi.getComponentToken(verifyTicket, appId, secret);
                 if (componentAccessToken == null) {
-                    return "redirect:http://" + serverUrl + "/#/agreeError";
+                    return "redirect:https://" + serverUrl + "/#/agreeError";
                 }
                 AuthAccessToken authAccessToken = WeixinApi.getAuthorizationCode(componentAccessToken.getComponent_access_token(), appId, auth_code);
 
@@ -111,7 +111,7 @@ public class CommonController extends BaseController {
                     //设置小程序
                     TopicConfig topicConfig = topic.getConfig();
                     if(topicConfig.getAppetAppId() != null && !topicConfig.getAppetAppId().equals("")){
-                        return "redirect:http://" + serverUrl + "/#/agreeError";
+                        return "redirect:https://" + serverUrl + "/#/agreeError";
                     }
 
                     topicConfig.setEstate(TopicConfig.Estate.AUTHORIZED);
@@ -134,7 +134,7 @@ public class CommonController extends BaseController {
                         topic.setName(authorizerInfo.getNickName());//这个是专栏名称 这里设置成小程序的名称了
                         topicService.update(topic);
                         if (admin == null) {
-                            return "redirect:http://" + serverUrl + "/#/agreeError";
+                            return "redirect:https://" + serverUrl + "/#/agreeError";
                         }
 
                         //更新企业信息
@@ -185,15 +185,15 @@ public class CommonController extends BaseController {
                         }
                     }
                 } else {
-                    return "redirect:http://" + serverUrl + "/#/agreeError";
+                    return "redirect:https://" + serverUrl + "/#/agreeError";
                 }
 
             } else {
-                return "redirect:http://" + serverUrl + "/#/agreeError";
+                return "redirect:https://" + serverUrl + "/#/agreeError";
             }
-            return "redirect:http://" + serverUrl + "/#/agreeSuccess";
+            return "redirect:https://" + serverUrl + "/#/agreeSuccess";
         }catch (Exception e){
-            return "redirect:http://" + serverUrl + "/#/agreeError";
+            return "redirect:https://" + serverUrl + "/#/agreeError";
         }
     }
 

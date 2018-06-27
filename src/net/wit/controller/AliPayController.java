@@ -155,7 +155,7 @@ public class AliPayController extends BaseController {
                             article.setDescription(art.delHTMLTag());
                             article.setPicUrl(art.getThumbnail());
                             article.setTitle(art.getTitle());
-                            article.setUrl("http://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
+                            article.setUrl("https://"+bundle.getString("weixin.url")+"/website/article/view.jhtml?id="+art.getId());
                             articles.add(article);
                         }
                         newsMessage.setArticles(articles);

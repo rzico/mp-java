@@ -80,8 +80,8 @@ public class TopicController extends BaseController {
         if (member==null) {
             member = memberService.getCurrent();
             if (member==null) {
-                String url = "http://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+id;
-                String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+                String url = "https://"+bundle.getString("weixin.url")+"/website/topic/index.jhtml?id="+id;
+                String redirectUrl = "https://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
                 redirectUrl = URLEncoder.encode(redirectUrl);
                 return "redirect:"+MenuManager.codeUrlO2(redirectUrl);
             }
@@ -93,7 +93,7 @@ public class TopicController extends BaseController {
             template = topic.getTemplate().getSn();
         }
 
-        return "redirect:"+"http://"+bundle.getString("weixin.url")+"/#/c"+template+"?id="+id;
+        return "redirect:"+"https://"+bundle.getString("weixin.url")+"/#/c"+template+"?id="+id;
      }
 
     /**
