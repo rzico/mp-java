@@ -165,11 +165,13 @@ public class Article extends BaseEntity{
 
 
     /** 是否投稿 */
+    /** 时间 2018.6.26 是否发布 与前端吻合*/
     @NotNull
     @Column(columnDefinition="bit comment '是否投稿'")
     private Boolean isPublish;
 
     /** 是否精选 */
+    /** 时间 2018.6.26 是否投稿 与前端吻合*/
     @NotNull
     @Column(columnDefinition="bit comment '是否精选'")
     private Boolean isPitch;

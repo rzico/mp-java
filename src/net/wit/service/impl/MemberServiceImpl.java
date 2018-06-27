@@ -144,6 +144,12 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		return memberDao.findByUsername(username);
 	}
 	@Transactional(readOnly = true)
+	public Member findByNickName(String nickName) {
+		return memberDao.findByNickName(nickName);
+	}
+
+
+	@Transactional(readOnly = true)
 	public Member findByMobile(String mobile) {
 		return memberDao.findByMobile(mobile);
 	}

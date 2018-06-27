@@ -90,7 +90,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isForm, Boolean isDraft,Pageable pageable, HttpServletRequest request){
+    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isForm, Boolean isDraft,Boolean isPublish, Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -107,10 +107,16 @@ public class ArticleController extends BaseController {
             filters.add(new Filter().isNotNull("votes"));
         }
         if (isForm!=null && isForm) {
+            filters.add(new Filter("form", Filter.Operator.ne, "[]"));
+            filters.add(new Filter("form", Filter.Operator.ne, ""));
+            filters.add(new Filter("form", Filter.Operator.ne, null));
             filters.add(new Filter().isNotNull("form"));
         }
         if (isDraft!=null) {
             filters.add(new Filter("isDraft", Filter.Operator.eq,isDraft));
+        }
+        if(isPublish != null){
+            filters.add(new Filter("isPublish" ,Filter.Operator.eq, isPublish));
         }
         filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);

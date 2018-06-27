@@ -171,6 +171,12 @@ public class ArticleModel extends BaseModel implements Serializable {
             votes = JsonUtils.toObject(article.getVotes(), List.class);
         }
         this.votes = votes;
+        List<ArticleFormDataModel> forms = new ArrayList<ArticleFormDataModel>();
+        String aa = article.getForm();
+        if (article.getForm()!=null && !article.getForm().equalsIgnoreCase("") && !article.getForm().equalsIgnoreCase("[]")) {
+            forms = JsonUtils.toObject(article.getForm(), List.class);
+        }
+        this.forms = forms;
         this.hits = article.getHits();
         this.laud = article.getLaud();
         this.review = article.getReview();

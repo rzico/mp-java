@@ -74,6 +74,18 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements MemberDa
 		}
 	}
 
+	public Member findByNickName(String nickName) {
+		if (nickName == null) {
+			return null;
+		}
+		try {
+			String jpql = "select members from Member members where lower(members.nickName) = lower(:nickName)";
+			return entityManager.createQuery(jpql, Member.class).setFlushMode(FlushModeType.COMMIT).setParameter("nickName", nickName).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 	public Member findByMobile(String mobile) {
 		if (mobile == null) {
 			return null;

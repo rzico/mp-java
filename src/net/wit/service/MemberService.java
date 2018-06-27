@@ -27,6 +27,14 @@ public interface MemberService extends BaseService<Member, Long> {
 	 */
 	Member findByUsername(String username);
 	/**
+	 * 根据用户名查找会员
+	 * @param nickName 用户名(忽略大小写)
+	 * @return 会员，若不存在则返回null
+	 */
+	Member findByNickName(String nickName);
+
+
+	/**
 	 * 根据手机号查找会员
 	 * @param mobile 用户名(忽略大小写)
 	 * @return 会员，若不存在则返回null
