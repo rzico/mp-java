@@ -10,6 +10,8 @@ public class BarrelStockModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
 
+    private String logo;
+
     private Integer stock;
 
     public Long getId() {
@@ -36,9 +38,18 @@ public class BarrelStockModel extends BaseModel implements Serializable {
         this.stock = stock;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
     public void bind(BarrelStock barrelStock) {
         this.id = barrelStock.getBarrel().getId();
         this.name = barrelStock.getBarrel().getName();
+        this.logo = barrelStock.getBarrel().getLogo();
         this.stock = barrelStock.getStock();
     }
 

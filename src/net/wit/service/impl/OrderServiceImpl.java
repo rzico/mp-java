@@ -411,6 +411,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	}
 
 	/**
+	 *
 	 * 创建订单
 	 *
 	 * @param cart
@@ -422,6 +423,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 * @return 订单
+	 *
 	 */
 	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon,Date hopeDate) {
 

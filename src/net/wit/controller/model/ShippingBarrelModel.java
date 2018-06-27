@@ -17,6 +17,8 @@ public class ShippingBarrelModel extends BaseModel implements Serializable {
 
     private String name;
 
+    private String logo;
+
     /**  送出数量 */
     private Integer quantity;
 
@@ -63,10 +65,19 @@ public class ShippingBarrelModel extends BaseModel implements Serializable {
         this.barrelId = barrelId;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
     public void bind(ShippingBarrel shippingBarrel) {
         this.id = shippingBarrel.getId();
         this.barrelId = shippingBarrel.getBarrel().getId();
         this.name = shippingBarrel.getName();
+        this.logo = shippingBarrel.getBarrel().getLogo();
         this.quantity = shippingBarrel.getQuantity();
         this.returnQuantity = shippingBarrel.getReturnQuantity();
     }

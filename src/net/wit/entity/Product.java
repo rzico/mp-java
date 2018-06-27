@@ -53,6 +53,11 @@ public class Product extends OrderEntity {
 	@Column(columnDefinition="int(11) not null comment '商品类型 {product:快递,warehouse:同城,dummy:虚拟}'")
 	private Type type;
 
+	/** 所属品牌 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Barrel barrel;
+
 	/** 会员 */
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -398,6 +403,13 @@ public class Product extends OrderEntity {
 		this.allocatedStock = allocatedStock;
 	}
 
+	public Barrel getBarrel() {
+		return barrel;
+	}
+
+	public void setBarrel(Barrel barrel) {
+		this.barrel = barrel;
+	}
 
 	public Long [] getTagIds() {
 		List<Long> data = new ArrayList<>();

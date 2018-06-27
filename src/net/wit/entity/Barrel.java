@@ -33,6 +33,15 @@ public class Barrel extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** logo */
+	@Column(columnDefinition="varchar(255) comment 'logo'")
+	private String logo;
+
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Member member;
+
 	/**
 	 * 获取名称
 	 * 
@@ -52,4 +61,27 @@ public class Barrel extends OrderEntity {
 		this.name = name;
 	}
 
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
 }
