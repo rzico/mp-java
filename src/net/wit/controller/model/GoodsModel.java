@@ -1,5 +1,6 @@
 package net.wit.controller.model;
 
+import net.wit.entity.Barrel;
 import net.wit.entity.Goods;
 import net.wit.entity.Product;
 import net.wit.entity.ProductStock;
@@ -30,6 +31,9 @@ public class GoodsModel extends BaseModel implements Serializable {
 
     /** 配送方式 */
     private Product.Type type;
+
+    /** 品牌 */
+    private BarrelModel barrel;
 
     /** 商品 */
     private List<ProductModel> products;
@@ -106,6 +110,14 @@ public class GoodsModel extends BaseModel implements Serializable {
         this.type = type;
     }
 
+    public BarrelModel getBarrel() {
+        return barrel;
+    }
+
+    public void setBarrel(BarrelModel barrel) {
+        this.barrel = barrel;
+    }
+
     public void bind(Goods goods) {
         Product mProduct = goods.getProducts().get(0);
         this.id = goods.getId();
@@ -120,9 +132,15 @@ public class GoodsModel extends BaseModel implements Serializable {
         if (mProduct.getDistribution()!=null) {
             distributionViewModel.bind(mProduct.getDistribution());
         }
+        this.distribution = distributionViewModel;
+
+        BarrelModel barrelModel = new BarrelModel();
+        if (mProduct.getBarrel()!=null) {
+            barrelModel.bind(mProduct.getBarrel());
+        }
+        this.barrel = barrelModel;
 
         this.type = mProduct.getType();
-        this.distribution = distributionViewModel;
 
         this.unit = mProduct.getUnit();
         this.products = new ArrayList<ProductModel>();
