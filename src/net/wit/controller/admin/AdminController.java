@@ -78,6 +78,9 @@ public class AdminController extends BaseController {
 
 //		model.addAttribute("roles",roleService.findAll());
 
+
+
+
 		return "/admin/admin/list";
 	}
 

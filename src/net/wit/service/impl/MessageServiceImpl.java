@@ -386,6 +386,22 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		return pushTo(msg);
 	}
 
+	//文章表单提醒
+	public Boolean formPushTo(ArticleForm form){
+		Message msg = new Message();
+		msg.setMember(form.getSender());
+		msg.setReceiver(form.getReceiver());
+		msg.setType(Message.Type.share);
+		msg.setThumbnial(form.getArticle().getThumbnail());
+		msg.setTitle("【"+form.getSender().getNickName()+"】在您的文章【" + form.getArticle().getTitle() + "】中提交了信息。");
+		msg.setContent("【"+form.getSender().getNickName()+"】在您的文章【" + form.getArticle().getTitle() + "】中提交了信息。");
+
+		ArticleFormModel ext = new ArticleFormModel();
+		ext.bind(form);
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
 	//分享提醒
 	public Boolean sharePushTo(ArticleShare share) {
 		Setting setting = SettingUtils.get();

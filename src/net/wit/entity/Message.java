@@ -59,7 +59,8 @@ public class Message extends BaseEntity {
 		/** 线下收单 gm_10212  */
 		cashier,
 		/** 问题反馈 gm_10213  */
-		feedback
+
+
 	}
 
 	/** 类型 */

@@ -95,7 +95,7 @@ public class TopicController extends BaseController {
             topic.setStatus(Topic.Status.waiting);
             topic.setHits(0L);
             topic.setMember(member);
-            topic.setFee(new BigDecimal("1999"));
+            topic.setFee(new BigDecimal("5999"));
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.personal);
             topic.setRanking(0L);
@@ -339,7 +339,7 @@ public class TopicController extends BaseController {
             topic.setStatus(Topic.Status.waiting);
             topic.setHits(0L);
             topic.setMember(member);
-            topic.setFee(new BigDecimal("1999"));
+            topic.setFee(new BigDecimal("5999"));
             topic.setLogo(member.getLogo());
             topic.setType(Topic.Type.individual);
             topic.setRanking(0L);
