@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * Entity - 非卖品
+ * Entity - 品牌
  *
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
