@@ -623,38 +623,35 @@ public class CardController extends BaseController {
         }
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("owner", Filter.Operator.eq,owner));
-        if (!member.equals(owner) && !admin.getRoles().contains(roleService.find(1L))) {
-            if (admin.getRoles().contains(roleService.find(2L))) {
+        if (!admin.isOwner()) {
+            if (admin.roles().contains("34")) {
+                filters.add(new Filter("promoter", Filter.Operator.eq, member));
+            } else {
                 Shop shop = admin.getShop();
                 if (shop != null) {
                     filters.add(new Filter("shop", Filter.Operator.eq, shop));
-                } else {
-                    filters.add(new Filter("promoter", Filter.Operator.eq, member));
                 }
-            } else {
-                filters.add(new Filter("promoter", Filter.Operator.eq, member));
             }
         }
-        filters.add(new Filter("status", Filter.Operator.ne,Card.Status.none));
+//        filters.add(new Filter("status", Filter.Operator.ne,Card.Status.none));
         pageable.setFilters(filters);
         Page<Card> page = cardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         List<CardViewModel> cardList = CardViewModel.bindList(page.getContent());
-        for (CardViewModel c:cardList) {
-            Card card = cardService.find(c.getId());
-            Member cardMember = card.getMembers().get(0);
-            Bankcard bankcard = bankcardService.findDefault(cardMember);
-            if (bankcard!=null) {
-                c.setName(bankcard.getName());
-                c.setBindName(true);
-            }
-
-            if (cardMember.getMobile()!=null) {
-                c.setMobile(cardMember.getMobile());
-                c.setBindMobile(true);
-            }
-        }
-
+//        for (CardViewModel c:cardList) {
+//            Card card = cardService.find(c.getId());
+//            Member cardMember = card.getMembers().get(0);
+//            Bankcard bankcard = bankcardService.findDefault(cardMember);
+//            if (bankcard!=null) {
+//                c.setName(bankcard.getName());
+//                c.setBindName(true);
+//            }
+//            if (cardMember.getMobile()!=null) {
+//                c.setMobile(cardMember.getMobile());
+//                c.setBindMobile(true);
+//            }
+//        }
+//
         model.setData(cardList);
         return Message.bind(model,request);
     }

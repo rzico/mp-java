@@ -288,7 +288,7 @@ public class ReceiverController extends BaseController {
             level = 0;
         }
         receiver.setLevel(level);
-        receiver.setShop(null);
+        receiver.setShop(admin.getShop());
 
         cardService.createAndMember(receiver,owner);
 

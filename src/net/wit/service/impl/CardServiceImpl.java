@@ -492,8 +492,11 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		card.setTopicCard(owner.getTopic().getTopicCard());
 		card.setBalance(BigDecimal.ZERO);
 		card.setAmount(BigDecimal.ZERO);
+		card.setName(receiver.getConsignee());
+		card.setMobile(receiver.getPhone());
 		card.setPoint(0L);
 		card.setPaymentMethod(Card.PaymentMethod.immediate);
+		card.setShop(receiver.getShop());
 		topicCardDao.refresh(topicCard, LockModeType.PESSIMISTIC_WRITE);
 		Long no = topicCard.getIncrement() + 1L;
 		topicCard.setIncrement(no);
