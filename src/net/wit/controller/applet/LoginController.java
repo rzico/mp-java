@@ -83,6 +83,7 @@ public class LoginController extends BaseController {
             Member agent = memberService.find(xmid);
             if (agent.getTopic()!=null && agent.getTopic().getConfig()!=null && agent.getTopic().getConfig().getAppetAppId()!=null) {
                 appid = agent.getTopic().getConfig().getAppetAppId();
+                appsecret = agent.getTopic().getConfig().getAppetAppSerect();
             }
         }
 
