@@ -48,10 +48,10 @@ public class OrderModel extends BaseModel implements Serializable {
     private String promoter;
 
     /**  支付方式 */
-    private Order.PaymentMethod paymentMethod;
+    private String paymentMethod;
 
     /**  配送方式 */
-    private Order.ShippingMethod shippingMethod;
+    private String shippingMethod;
 
     /**  支付方式 */
     private Order.PaymentStatus paymentStatus;
@@ -197,19 +197,19 @@ public class OrderModel extends BaseModel implements Serializable {
         this.couponName = couponName;
     }
 
-    public Order.PaymentMethod getPaymentMethod() {
+    public String getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(Order.PaymentMethod paymentMethod) {
+    public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
-    public Order.ShippingMethod getShippingMethod() {
+    public String getShippingMethod() {
         return shippingMethod;
     }
 
-    public void setShippingMethod(Order.ShippingMethod shippingMethod) {
+    public void setShippingMethod(String shippingMethod) {
         this.shippingMethod = shippingMethod;
     }
 
@@ -411,9 +411,18 @@ public class OrderModel extends BaseModel implements Serializable {
 
         this.couponDiscount = order.getCouponDiscount();
         this.pointDiscount = order.getPointDiscount();
-        this.paymentMethod = order.getPaymentMethod();
-        this.shippingMethod = order.getShippingMethod();
-        this.paymentStatus = order.getPaymentStatus();
+        this.paymentMethod = order.getPaymentPluginName();
+
+        if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
+            this.shippingMethod = "普通快递";
+        } else
+        if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
+            this.shippingMethod = "同城配送";
+        } else {
+            this.shippingMethod = "电子卡包";
+        }
+
+         this.paymentStatus = order.getPaymentStatus();
         this.shippingStatus = order.getShippingStatus();
 
         this.exchangeDiscount = order.getExchangeDiscount();
@@ -468,8 +477,16 @@ public class OrderModel extends BaseModel implements Serializable {
         }
         this.couponDiscount = order.getCouponDiscount();
         this.pointDiscount = order.getPointDiscount();
-        this.paymentMethod = order.getPaymentMethod();
-        this.shippingMethod = order.getShippingMethod();
+        this.paymentMethod = order.getPaymentPluginName();
+
+        if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
+            this.shippingMethod = "普通快递";
+        } else
+        if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
+            this.shippingMethod = "同城配送";
+        } else {
+            this.shippingMethod = "电子卡包";
+        }
         this.freight = order.getFreight();
 
         this.quantity = order.getQuantity();

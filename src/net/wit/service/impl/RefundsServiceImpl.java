@@ -188,6 +188,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					deposit.setRefunds(refunds);
 					deposit.setOrder(order);
 					deposit.setSeller(order.getSeller());
+					deposit.setTrade(order.getSeller());
 					depositDao.persist(deposit);
 				}
 				messageService.orderMemberPushTo(orderLog);
@@ -201,6 +202,26 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 					payBillDao.merge(payBill);
 				}
 				messageService.payBillPushTo(payBill);
+
+				if (refunds.getMethod().equals(Refunds.Method.online)) {
+					Member member = refunds.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.refunds);
+					deposit.setMemo(refunds.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(refunds.getAmount());
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setRefunds(refunds);
+					deposit.setOrder(refunds.getOrder());
+					deposit.setSeller(refunds.getPayee());
+					deposit.setTrade(refunds.getPayee());
+					depositDao.persist(deposit);
+				}
 			}
 		}
 	}
@@ -251,6 +272,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							deposit.setRefunds(refunds);
 							deposit.setPayBill(payBill);
 							deposit.setSeller(payBill.getOwner());
+							deposit.setTrade(payBill.getMember());
 							depositDao.persist(deposit);
 							messageService.depositPushTo(deposit);
 						}
@@ -288,6 +310,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 							deposit.setRefunds(refunds);
 							deposit.setPayBill(payBill);
 							deposit.setSeller(payBill.getOwner());
+							deposit.setTrade(payBill.getMember());
 							depositDao.persist(deposit);
 							messageService.depositPushTo(deposit);
 						}
@@ -396,6 +419,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						deposit.setRefunds(refunds);
 						deposit.setPayBill(payBill);
 						deposit.setSeller(payBill.getOwner());
+						deposit.setTrade(payBill.getMember());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -430,6 +454,7 @@ public class RefundsServiceImpl extends BaseServiceImpl<Refunds, Long> implement
 						deposit.setRefunds(refunds);
 						deposit.setPayBill(payBill);
 						deposit.setSeller(payBill.getOwner());
+						deposit.setTrade(payBill.getMember());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}

@@ -82,6 +82,10 @@ public class PayBill extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '结算插件'")
 	private String paymentPluginId;
 
+	/** 插件名称 */
+	@Column(columnDefinition="varchar(255) comment '插件名称'")
+	private String paymentPluginName;
+
 	/** 消费者 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -315,6 +319,14 @@ public class PayBill extends BaseEntity {
 
 	public void setPaymentPluginId(String paymentPluginId) {
 		this.paymentPluginId = paymentPluginId;
+	}
+
+	public String getPaymentPluginName() {
+		return paymentPluginName;
+	}
+
+	public void setPaymentPluginName(String paymentPluginName) {
+		this.paymentPluginName = paymentPluginName;
 	}
 
 	//有效发生金额

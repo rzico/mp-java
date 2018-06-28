@@ -142,6 +142,15 @@ public class Order extends BaseEntity {
 	@Column(nullable = false,columnDefinition="int(11) not null comment '付款方式'")
 	private PaymentMethod paymentMethod;
 
+
+	/** 结算插件 */
+	@Column(columnDefinition="varchar(255) comment '结算插件'")
+	private String paymentPluginId;
+
+	/** 插件名称 */
+	@Column(columnDefinition="varchar(255) comment '插件名称'")
+	private String paymentPluginName;
+
 	/** 配送方式 */
 	@Column(nullable = false,columnDefinition="int(11) not null comment '配送方式'")
 	private ShippingMethod shippingMethod;
@@ -502,6 +511,22 @@ public class Order extends BaseEntity {
 
 	public void setPointDiscount(BigDecimal pointDiscount) {
 		this.pointDiscount = pointDiscount;
+	}
+
+	public String getPaymentPluginId() {
+		return paymentPluginId;
+	}
+
+	public void setPaymentPluginId(String paymentPluginId) {
+		this.paymentPluginId = paymentPluginId;
+	}
+
+	public String getPaymentPluginName() {
+		return paymentPluginName;
+	}
+
+	public void setPaymentPluginName(String paymentPluginName) {
+		this.paymentPluginName = paymentPluginName;
 	}
 
 	/**

@@ -80,7 +80,7 @@ public class CebWeiXinLetPlugin extends PaymentPlugin {
 		map.put("is_raw","1");
 		map.put("body", description);
 		map.put("is_minipg","1");
-		map.put("sub_appid", pluginConfig.getAttribute("applet"));
+		map.put("sub_appid", pluginConfig.getAttribute("appId"));
 		BindUser bindUser = findByUser(payment.getMember(),pluginConfig.getAttribute("appId"), BindUser.Type.weixin);
 		map.put("sub_openid", bindUser.getOpenId());
 		map.put("total_fee", decimalFormat.format(money));

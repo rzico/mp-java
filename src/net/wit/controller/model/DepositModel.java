@@ -3,6 +3,7 @@ package net.wit.controller.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import net.wit.entity.ArticleReward;
 import net.wit.entity.Deposit;
+import net.wit.entity.Member;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -110,8 +111,14 @@ public class DepositModel extends BaseModel implements Serializable {
         } else {
             this.method = "往来结算";
         }
-        this.logo = deposit.getSeller().getLogo();
-        this.nickName = deposit.getSeller().displayName();
+        Member trade = deposit.getTrade();
+        if (trade!=null) {
+            this.logo = trade.getLogo();
+            this.nickName = trade.displayName();
+        } else {
+            this.logo = deposit.getMember().getLogo();
+            this.nickName = deposit.getMember().displayName();
+        }
     }
 
     public static List<DepositModel> bindList(List<Deposit> deposits) {

@@ -167,6 +167,8 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				}
 
 				order.setPaymentMethod(Order.PaymentMethod.values()[payment.getMethod().ordinal()]);
+				order.setPaymentPluginId(payment.getPaymentPluginId());
+				order.setPaymentPluginName(payment.getPaymentMethod());
 
 				order.setExpire(null);
 				order.setOrderStatus(Order.OrderStatus.confirmed);
@@ -250,6 +252,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					payBill.setMethod(PayBill.Method.online);
 				}
 				payBill.setPaymentPluginId(payment.getPaymentPluginId());
+				payBill.setPaymentPluginId(payment.getPaymentPluginId());
+				payBill.setPaymentPluginName(payment.getPaymentMethod());
+
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
@@ -313,6 +318,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					payBill.setMethod(PayBill.Method.online);
 				}
 				payBill.setPaymentPluginId(payment.getPaymentPluginId());
+				payBill.setPaymentPluginId(payment.getPaymentPluginId());
+				payBill.setPaymentPluginName(payment.getPaymentMethod());
+
 				payBill.setMember(payment.getMember());
 				payBill.setStatus(PayBill.Status.success);
 				payBillDao.merge(payBill);
