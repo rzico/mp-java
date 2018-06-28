@@ -16,6 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 
 /**
@@ -67,7 +69,18 @@ public class NoticeController extends BaseController {
     public Message list(Long authorId,Pageable pageable, HttpServletRequest request){
 
          List<NoticeModel> data = new ArrayList<>();
-         Member member = memberService.find(authorId);
+         Member member = null;
+         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+         if ("3".equals(bundle.getString("weex"))) {
+             Member loginMember = memberService.getCurrent();
+             if (loginMember.getCards().size()>0) {
+                 member = loginMember.getCards().get(0).getOwner();
+             }
+         }
+         if (member==null) {
+             member = memberService.find(authorId);
+         }
+
          Admin admin = adminService.findByMember(member);
          if (admin!=null && admin.getEnterprise()!=null) {
              NoticeModel m = new NoticeModel();

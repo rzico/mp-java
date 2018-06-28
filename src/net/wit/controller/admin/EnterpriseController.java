@@ -207,6 +207,9 @@ public class EnterpriseController extends BaseController {
 		entity.setLogo(enterprise.getLogo());
 		entity.setName(enterprise.getName());
 
+		entity.setPhone(enterprise.getPhone());
+		entity.setLinkman(enterprise.getLinkman());
+
 		entity.setTransfer(enterprise.getTransfer());
 
 		entity.setBrokerage(enterprise.getBrokerage());
