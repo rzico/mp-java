@@ -472,7 +472,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		messageService.orderMemberPushTo(orderLog);
 		shippingDao.flush();
 
-		if (shipping.getOrder().equals(Order.OrderStatus.confirmed)) {
+		if (shipping.getOrder().getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			orderService.complete(shipping.getOrder(), null);
 		}
 
