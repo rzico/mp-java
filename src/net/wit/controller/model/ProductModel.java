@@ -38,8 +38,8 @@ public class ProductModel extends BaseModel implements Serializable {
 //    private BigDecimal vip2Price;
 //    /** vip3 */
 //    private BigDecimal vip3Price;
-//    /** 成本价 */
-//    private BigDecimal cost;
+    /** 成本价 */
+    private BigDecimal cost;
     /** 库存 */
     private Integer stock;
     /** 可用库存 */
@@ -117,6 +117,14 @@ public class ProductModel extends BaseModel implements Serializable {
         this.rebate = rebate;
     }
 
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
     public void bind(Product product) {
         this.productId = product.getId();
         this.thumbnail = product.getThumbnail();
@@ -131,7 +139,7 @@ public class ProductModel extends BaseModel implements Serializable {
 //        this.vip1Price = product.getVip1Price();
 //        this.vip2Price = product.getVip2Price();
 //        this.vip3Price = product.getVip3Price();
-//        this.cost = product.getCost();
+        this.cost = product.getCost();
 //        List<ProductStock> stocks = product.getProductStocks();
 //        this.stock = 0;
 //        for (ProductStock productStock:stocks) {
