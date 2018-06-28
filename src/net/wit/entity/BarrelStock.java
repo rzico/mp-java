@@ -27,7 +27,7 @@ public class BarrelStock extends OrderEntity {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false)
-	private Member member;
+	private Card card;
 
 	/**  实物 */
 	@NotNull
@@ -49,15 +49,6 @@ public class BarrelStock extends OrderEntity {
 	@Min(0)
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '桶押金'")
 	private BigDecimal pledge ;
-
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
 
 	public Barrel getBarrel() {
 		return barrel;
@@ -89,5 +80,13 @@ public class BarrelStock extends OrderEntity {
 
 	public void setPledge(BigDecimal pledge) {
 		this.pledge = pledge;
+	}
+
+	public Card getCard() {
+		return card;
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
 	}
 }

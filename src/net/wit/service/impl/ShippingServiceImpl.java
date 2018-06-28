@@ -283,10 +283,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 			Member ec = shipping.getMember();
 			for (ShippingBarrel b : shipping.getShippingBarrels()) {
-				BarrelStock bs = barrelStockDao.find(ec, b.getBarrel());
+				Card card = ec.getCards().get(0);
+				BarrelStock bs = barrelStockDao.find(card, b.getBarrel());
 				if (bs == null) {
 					bs = new BarrelStock();
-					bs.setMember(ec);
+					bs.setCard(card);
 					bs.setBarrel(b.getBarrel());
 					bs.setStock(b.getQuantity() - b.getReturnQuantity());
 					bs.setPeriod(0);

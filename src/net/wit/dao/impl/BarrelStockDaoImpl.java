@@ -62,11 +62,11 @@ public class BarrelStockDaoImpl extends BaseDaoImpl<BarrelStock, Long> implement
 		return super.findPage(criteriaQuery,pageable);
 	}
 
-	public synchronized BarrelStock find(Member member, Barrel barrel) {
-		String jpql = "select barrelStock from BarrelStock barrelStock where barrelStock.member = :member and barrelStock.barrel=:barrel";
+	public synchronized BarrelStock find(Card card, Barrel barrel) {
+		String jpql = "select barrelStock from BarrelStock barrelStock where barrelStock.card = :card and barrelStock.barrel=:barrel";
 		try {
 			BarrelStock barrelStock = entityManager.createQuery(jpql, BarrelStock.class).setFlushMode(FlushModeType.COMMIT)
-					.setParameter("member", member)
+					.setParameter("card", card)
 					.setParameter("barrel", barrel)
 					.getSingleResult();
 			return barrelStock;

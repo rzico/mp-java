@@ -9,6 +9,7 @@ import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Barrel;
 import net.wit.entity.BarrelStock;
+import net.wit.entity.Card;
 import net.wit.entity.Member;
 
 
@@ -30,5 +31,5 @@ public interface BarrelStockDao extends BaseDao<BarrelStock, Long> {
 	 */
 	Page<BarrelStock> findPage(Date beginDate, Date endDate, Pageable pageable);
 
-	BarrelStock find(Member member, Barrel barrel);
+	BarrelStock find(Card card, Barrel barrel);
 }
