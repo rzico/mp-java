@@ -187,21 +187,9 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 * @param name 属性名称
 	 * @return 属性值
 	 */
-	public String getAttribute(Payment payment,String name) {
-		if (payment!=null && payment.getMerchant()!=null && payment.getWay().equals(Payment.Way.merchant)) {
-			Member merchant = payment.getMerchant();
-			if ("appId".equals(name)) {
-				return merchant.getTopic().getConfig().getAppetAppId();
-			} else
-				if ("partner".equals(name)) {
-				return merchant.getTopic().getConfig().getAppetPartner();
-			} else{
-				return merchant.getTopic().getConfig().getAppetAppSerect();
-			}
-		} else {
+	public String getAttribute(String name) {
 			PluginConfig pluginConfig = getPluginConfig();
 			return pluginConfig != null ? pluginConfig.getAttribute(name) : null;
-		}
 	}
 
 	/**

@@ -33,7 +33,7 @@ import java.util.*;
  * @author rsico Team
  * @version 3.0
  */
-@Component("weixinPayPlugin")
+@Component("weixinOcPayPlugin")
 public class CebWeiXinPayPlugin extends PaymentPlugin {
 
 	@Override

@@ -89,9 +89,13 @@ public class TopicConfig implements Serializable {
 	@Column(columnDefinition="varchar(255) comment '小程序appSerect'")
 	private String appetAppSerect;
 
-	/** 小程序 partner */
-	@Column(columnDefinition="varchar(255) comment '小程序appId'")
-	private String appetPartner;
+	/**  商户号  */
+	@Column(columnDefinition="varchar(255) comment '商户号'")
+	private String wxPartner;
+
+	/**  支付密钥  */
+	@Column(columnDefinition="varchar(255) comment '支付密钥'")
+	private String wxkey;
 
 	public PromoterType getPromoterType() {
 		return promoterType;
@@ -173,11 +177,19 @@ public class TopicConfig implements Serializable {
 		this.amount = amount;
 	}
 
-	public String getAppetPartner() {
-		return appetPartner;
+	public String getWxPartner() {
+		return wxPartner;
 	}
 
-	public void setAppetPartner(String appetPartner) {
-		this.appetPartner = appetPartner;
+	public void setWxPartner(String wxPartner) {
+		this.wxPartner = wxPartner;
+	}
+
+	public String getWxkey() {
+		return wxkey;
+	}
+
+	public void setWxkey(String wxkey) {
+		this.wxkey = wxkey;
 	}
 }
