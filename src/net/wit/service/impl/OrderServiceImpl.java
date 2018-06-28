@@ -218,6 +218,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setRebateAmount(BigDecimal.ZERO);
 		order.setIsPartner(false);
 		order.setPartnerAmount(BigDecimal.ZERO);
+		order.setShippingFreight(BigDecimal.ZERO);
+		order.setAdminFreight(BigDecimal.ZERO);
 
 		if (shippingMethod==null) {
 			shippingMethod = Order.ShippingMethod.shipping;
@@ -310,7 +312,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						orderItem.setOrder(order);
 						orderItem.setCouponQuantity(0L);
 						orderItems.add(orderItem);
-
 
 						ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 						if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {

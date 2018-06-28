@@ -131,16 +131,33 @@ public class Shipping extends BaseEntity {
 	@Column(nullable = false,columnDefinition="int(11) not null default 0 comment '楼层'")
 	private Integer level;
 
-	/** 物流费用 */
+	/** 成本 */
+	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(updatable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '物流费用'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '成本'")
 	private BigDecimal freight;
 
-	/** 送货工资 */
+
+	/** 运费 */
+	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(updatable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '送货工资'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '运费'")
+	private BigDecimal freight;
+
+	/** 配送费用 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '配送费用'")
+	private BigDecimal shippingFreight;
+
+	/** 配送工资 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '配送工资'")
 	private BigDecimal adminFreight;
 
 	/** 收货人 */
@@ -549,6 +566,14 @@ public class Shipping extends BaseEntity {
 	@Transient
 	public boolean isLocked(String operator) {
 		return getLockExpire() != null && new Date().before(getLockExpire()) && ((operator != null && !operator.equals(getOperator())) || (operator == null && getOperator() != null));
+	}
+
+	public BigDecimal getShippingFreight() {
+		return shippingFreight;
+	}
+
+	public void setShippingFreight(BigDecimal shippingFreight) {
+		this.shippingFreight = shippingFreight;
 	}
 
 	/**

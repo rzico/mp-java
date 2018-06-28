@@ -169,21 +169,21 @@ public class Order extends BaseEntity {
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '运费'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '运费'")
 	private BigDecimal freight;
 
 	/** 配送费用 */
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '配送费用'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '配送费用'")
 	private BigDecimal shippingFreight;
 
 	/** 配送工资 */
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '配送工资'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '配送工资'")
 	private BigDecimal adminFreight;
 
 	/** 积分抵扣 */

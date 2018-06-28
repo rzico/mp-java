@@ -143,7 +143,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setSeller(order.getSeller());
 		shipping.setZipCode(order.getZipCode());
 		shipping.setSn(snService.generate(Sn.Type.shipping));
-		shipping.setFreight(BigDecimal.ZERO);
+		shipping.setFreight(order.getFreight());
+		shipping.setShippingFreight(BigDecimal.ZERO);
 		shipping.setAdminFreight(BigDecimal.ZERO);
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		List<ShippingItem> shippingItems = new ArrayList<>();
@@ -184,7 +185,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		}
 
 		//结算运费
-		shipping.setFreight(
+		shipping.setShippingFreight(
 				shipping.calcFreight(receiver)
 		);
 
@@ -365,7 +366,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					Member shippingMember = shipping.getEnterprise().getMember();
 					memberDao.lock(shippingMember, LockModeType.PESSIMISTIC_WRITE);
 
-					BigDecimal freight = shipping.getFreight();
+					BigDecimal freight = shipping.getShippingFreight();
 					sellerMember.setBalance(sellerMember.getBalance().subtract(freight));
 					if (sellerMember.getBalance().compareTo(BigDecimal.ZERO) < 0) {
 						throw new RuntimeException("余额不足不能核销");
