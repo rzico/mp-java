@@ -811,6 +811,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					deposit.setOperator("system");
 					deposit.setOrder(order);
 					deposit.setSeller(order.getSeller());
+					deposit.setTrade(order.getPartner());
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 
@@ -832,6 +833,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					deposit_partner.setOperator("system");
 					deposit_partner.setOrder(order);
 					deposit_partner.setSeller(order.getSeller());
+					deposit_partner.setTrade(order.getSeller());
 					depositDao.persist(deposit_partner);
 					messageService.depositPushTo(deposit_partner);
 
@@ -964,6 +966,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				deposit.setOperator("system");
 				deposit.setOrder(order);
 				deposit.setSeller(order.getSeller());
+				deposit.setTrade(order.getMember());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 			}

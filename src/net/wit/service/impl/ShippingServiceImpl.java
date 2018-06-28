@@ -306,6 +306,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				if (!shipping.getSeller().equals(shipping.getEnterprise().getMember())) {
 					Member sellerMember = shipping.getSeller();
 					memberDao.lock(sellerMember, LockModeType.PESSIMISTIC_WRITE);
+					//给配送站
+					Member shippingMember = shipping.getEnterprise().getMember();
+					memberDao.lock(shippingMember, LockModeType.PESSIMISTIC_WRITE);
 
 					BigDecimal cost = shipping.calcCost();
 					sellerMember.setBalance(sellerMember.getBalance().subtract(cost));
@@ -327,12 +330,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					sellerDeposit.setOperator("system");
 					sellerDeposit.setOrder(shipping.getOrder());
 					sellerDeposit.setSeller(shipping.getSeller());
+					sellerDeposit.setTrade(shippingMember);
 					depositDao.persist(sellerDeposit);
 					messageService.depositPushTo(sellerDeposit);
 
-					//给配送站
-					Member shippingMember = shipping.getEnterprise().getMember();
-					memberDao.lock(shippingMember, LockModeType.PESSIMISTIC_WRITE);
 
 					shippingMember.setBalance(shippingMember.getBalance().add(cost));
 					memberDao.merge(shippingMember);
@@ -350,6 +351,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					deposit.setOperator("system");
 					deposit.setOrder(shipping.getOrder());
 					deposit.setSeller(shipping.getSeller());
+					deposit.setTrade(sellerMember);
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 				}
@@ -357,6 +359,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				if (!shipping.getSeller().equals(shipping.getEnterprise().getMember())) {
 					Member sellerMember = shipping.getSeller();
 					memberDao.lock(sellerMember, LockModeType.PESSIMISTIC_WRITE);
+					Member shippingMember = shipping.getEnterprise().getMember();
+					memberDao.lock(shippingMember, LockModeType.PESSIMISTIC_WRITE);
 
 					BigDecimal freight = shipping.getFreight();
 					sellerMember.setBalance(sellerMember.getBalance().subtract(freight));
@@ -378,12 +382,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					sellerDeposit.setOperator("system");
 					sellerDeposit.setOrder(shipping.getOrder());
 					sellerDeposit.setSeller(shipping.getSeller());
+					sellerDeposit.setTrade(shippingMember);
 					depositDao.persist(sellerDeposit);
 					messageService.depositPushTo(sellerDeposit);
 
 					//给配送站
-					Member shippingMember = shipping.getEnterprise().getMember();
-					memberDao.lock(shippingMember, LockModeType.PESSIMISTIC_WRITE);
 
 					shippingMember.setBalance(shippingMember.getBalance().add(freight));
 					memberDao.merge(shippingMember);
@@ -401,6 +404,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					deposit.setOperator("system");
 					deposit.setOrder(shipping.getOrder());
 					deposit.setSeller(shipping.getSeller());
+					deposit.setTrade(sellerMember);
 					depositDao.persist(deposit);
 					messageService.depositPushTo(deposit);
 				}
@@ -416,6 +420,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 					memberDao.flush();
 
+					Member adminMember = shipping.getAdmin().getMember();
+					memberDao.lock(adminMember,LockModeType.PESSIMISTIC_WRITE);
+
 					Deposit adminDeposit = new Deposit();
 					adminDeposit.setBalance(shippingMember.getBalance());
 					adminDeposit.setType(Deposit.Type.freight);
@@ -427,13 +434,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					adminDeposit.setOperator("system");
 					adminDeposit.setOrder(shipping.getOrder());
 					adminDeposit.setSeller(shipping.getSeller());
+					adminDeposit.setTrade(adminMember);
 					depositDao.persist(adminDeposit);
 					messageService.depositPushTo(adminDeposit);
 
 
-
-					Member adminMember = shipping.getAdmin().getMember();
-					memberDao.lock(adminMember,LockModeType.PESSIMISTIC_WRITE);
 
 					adminMember.setBalance(adminMember.getBalance().add(shipping.getAdminFreight()));
 					memberDao.merge(adminMember);
@@ -451,6 +456,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					wagesDeposit.setOperator("system");
 					wagesDeposit.setOrder(shipping.getOrder());
 					wagesDeposit.setSeller(shipping.getSeller());
+					wagesDeposit.setTrade(shippingMember);
 					depositDao.persist(wagesDeposit);
 					messageService.depositPushTo(wagesDeposit);
 				}

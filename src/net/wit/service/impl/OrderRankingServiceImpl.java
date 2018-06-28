@@ -167,6 +167,7 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 				  owdeposit.setOperator("system");
 				  owdeposit.setOrder(orderItem.getOrder());
 				  owdeposit.setSeller(seller);
+				  owdeposit.setTrade(rk.getMember());
 				  depositDao.persist(owdeposit);
 				  messageService.depositPushTo(owdeposit);
 
@@ -188,6 +189,7 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 				  deposit.setOperator("system");
 				  deposit.setOrder(orderItem.getOrder());
 				  deposit.setSeller(seller);
+				  deposit.setTrade(ow);
 				  depositDao.persist(deposit);
 				  messageService.depositPushTo(deposit);
 
