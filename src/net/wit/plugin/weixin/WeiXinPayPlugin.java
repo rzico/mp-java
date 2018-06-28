@@ -101,12 +101,12 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 	/**
 	 * 作用：生成签名
 	 */
-	public String getSign(HashMap<String, Object> params) throws Exception {
+	public String getSign(HashMap<String, Object> params,Payment payment) throws Exception {
 		PluginConfig pluginConfig = getPluginConfig();
 		// 签名步骤一：按字典序排序参数
 		String str = WeiXinUtils.FormatBizQueryParaMap(params, false);
 		// 签名步骤二：在string后加入KEY
-		str += "&key=" + pluginConfig.getAttribute("key");
+		str += "&key=" + getAttribute(payment,"key");
 		// 签名步骤三：MD5加密 签名步骤四：所有字符转为大写
 		str = MD5Utils.getMD5Str(str).toUpperCase();
 		return str;
@@ -166,7 +166,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		}
 
 		try {
-			String sign = getSign(packageParams);
+			String sign = getSign(packageParams,payment);
 			packageParams.put("sign", sign);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,7 +188,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 				finalpackage.put("package", packages);
 				finalpackage.put("signType","MD5");
 				try {
-					String finalsign = getSign(finalpackage);
+					String finalsign = getSign(finalpackage,payment);
 					finalpackage.put("paySign", finalsign);
 					finalpackage.put("return_code", "SUCCESS");
 				} catch (Exception e) {
@@ -230,7 +230,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 			}
 			map = WeiXinUtils.doXMLParse(info.toString());
 			if (map.get("result_code").toString().equals("SUCCESS")) {
-				String sign = getSign(map);
+				String sign = getSign(map,payment);
 				if (sign.equals(map.get("sign")) && sn.equals(map.get("out_trade_no")) && map.get("appid").equals(getAttribute(payment,"appId"))
 						&& payment.getAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal((String) map.get("total_fee"))) == 0) {
 					try {
@@ -261,7 +261,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		parameterMap.put("out_trade_no", payment.getSn());
 		parameterMap.put("nonce_str", createNoncestr);
 		try {
-			parameterMap.put("sign",getSign(parameterMap));
+			parameterMap.put("sign",getSign(parameterMap,payment));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			throw new Exception("查询出错");
@@ -380,7 +380,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		map.put("total_fee", decimalFormat.format(money));
 		map.put("refund_fee", decimalFormat.format(money));
 		try {
-			map.put("sign",getSign(map));
+			map.put("sign",getSign(map,refunds.getPayment()));
 		} catch (Exception e) {
 			finalpackage.put("return_code", "FAIL");
 			finalpackage.put("result_msg","签名出错");
@@ -396,7 +396,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
 
 				if(resultMap.containsKey("sign")){
-					String sign = getSign(resultMap);
+					String sign = getSign(resultMap,refunds.getPayment());
 					if(!sign.equals(resultMap.get("sign"))){
 						finalpackage.put("return_code", "FAIL");
 						finalpackage.put("result_msg", "验证签名不通过");
@@ -438,7 +438,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 		map.put("out_refund_no", refunds.getSn());
 		map.put("nonce_str", String.valueOf(new Date().getTime()));
 		try {
-			map.put("sign",getSign(map));
+			map.put("sign",getSign(map,refunds.getPayment()));
 		} catch (Exception e) {
 			throw new Exception("签名出错");
 		}
@@ -450,7 +450,7 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 
 				HashMap<String,Object> resultMap = WeiXinUtils.doXMLParse(jsonStr);
 				if (resultMap.containsKey("sign")) {
-					String sign = getSign(resultMap);
+					String sign = getSign(resultMap,refunds.getPayment());
 					if(!sign.equals(resultMap.get("sign").toString())){
 						throw new Exception("签名出错");
 					} else {
