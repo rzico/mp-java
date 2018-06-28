@@ -195,6 +195,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					deposit.setPayment(payment);
 					deposit.setOrder(order);
 					deposit.setSeller(order.getSeller());
+					deposit.setTrade(order.getSeller());
 					depositDao.persist(deposit);
 				}
 
@@ -217,14 +218,14 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 
 			} else
 			if (payment.getType() == Payment.Type.cashier) {
-				Member member = payment.getPayee();
-				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 				PayBill payBill = payment.getPayBill();
 				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
 					payBill.setFee(BigDecimal.ZERO);
 					payBill.setMethod(PayBill.Method.offline);
 					//线下或会员卡支付，不需要给商家结算
 				} else {
+					Member member = payment.getPayee();
+					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 					BigDecimal settle = payBill.getSettleAmount();
 					if (settle.compareTo(BigDecimal.ZERO) > 0) {
 						member.setBalance(member.getBalance().add(settle));
@@ -242,6 +243,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setPayment(payment);
 						deposit.setPayBill(payBill);
 						deposit.setSeller(payBill.getOwner());
+						deposit.setTrade(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -257,17 +259,36 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					couponCodeDao.merge(couponCode);
 				}
 				messageService.payBillPushTo(payBill);
+
+				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.payment);
+					deposit.setMemo(payment.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(BigDecimal.ZERO);
+					deposit.setDebit(payment.getAmount());
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setPayBill(payBill);
+					deposit.setSeller(payBill.getOwner());
+					deposit.setTrade(payBill.getOwner());
+					depositDao.persist(deposit);
+				}
 //				cardService.createAndActivate(payBill.getMember(),payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
 			}else
 			if (payment.getType() == Payment.Type.cardFill) {
-				Member member = payment.getPayee();
-				memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 				PayBill payBill = payment.getPayBill();
 				if (payment.getMethod().equals(Payment.Method.offline) || payment.getMethod().equals(Payment.Method.card)) {
 					payBill.setFee(BigDecimal.ZERO);
 					payBill.setMethod(PayBill.Method.offline);
 					//线下或会员卡支付，不需要给商家结算
 				} else {
+					Member member = payment.getPayee();
+					memberDao.refresh(member, LockModeType.PESSIMISTIC_WRITE);
 					BigDecimal settle = payBill.getSettleAmount();
 					if (settle.compareTo(BigDecimal.ZERO) > 0) {
 						member.setBalance(member.getBalance().add(settle));
@@ -285,6 +306,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 						deposit.setPayment(payment);
 						deposit.setPayBill(payBill);
 						deposit.setSeller(payBill.getOwner());
+						deposit.setTrade(payBill.getOwner());
 						depositDao.persist(deposit);
 						messageService.depositPushTo(deposit);
 					}
@@ -344,51 +366,113 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 				}
 				messageService.payBillPushTo(payBill);
+
+
+				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.payment);
+					deposit.setMemo(payment.getMemo());
+					deposit.setMember(member);
+					deposit.setCredit(BigDecimal.ZERO);
+					deposit.setDebit(payment.getAmount());
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					deposit.setPayBill(payBill);
+					deposit.setSeller(payBill.getOwner());
+					deposit.setTrade(payBill.getOwner());
+					depositDao.persist(deposit);
+				}
+
 //				cardService.createAndActivate(payBill.getMember(),payBill.getOwner(),null,payBill.getAmount(),BigDecimal.ZERO);
 			} else
 			if (payment.getType() == Payment.Type.reward) {
-				Member member = payment.getPayee();
-				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
 				ArticleReward reward = payment.getArticleReward();
-				member.setBalance(member.getBalance().add(reward.getAmount().subtract(reward.getFee())));
-				memberDao.merge(member);
+				Member author = reward.getAuthor();
+				memberDao.refresh(author,LockModeType.PESSIMISTIC_WRITE);
+				author.setBalance(author.getBalance().add(reward.getAmount().subtract(reward.getFee())));
+				memberDao.merge(author);
 				memberDao.flush();
 
 				Deposit deposit = new Deposit();
-				deposit.setBalance(member.getBalance());
+				deposit.setBalance(author.getBalance());
 				deposit.setType(Deposit.Type.reward);
 				deposit.setMemo(payment.getMemo());
-				deposit.setMember(member);
+				deposit.setMember(author);
 				deposit.setCredit(reward.getAmount().subtract(reward.getFee()));
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setPayment(payment);
-				deposit.setSeller(payment.getPayee());
+				deposit.setSeller(author);
+				deposit.setTrade(reward.getMember());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
 				reward.setStatus(ArticleReward.Status.success);
 				articleRewardDao.merge(reward);
 				messageService.rewardPushTo(reward);
+
+				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit memberDeposit = new Deposit();
+					memberDeposit.setBalance(member.getBalance());
+					memberDeposit.setType(Deposit.Type.payment);
+					memberDeposit.setMemo(payment.getMemo());
+					memberDeposit.setMember(member);
+					memberDeposit.setCredit(BigDecimal.ZERO);
+					memberDeposit.setDebit(payment.getAmount());
+					memberDeposit.setDeleted(false);
+					memberDeposit.setOperator("system");
+					memberDeposit.setPayment(payment);
+					memberDeposit.setOrder(null);
+					memberDeposit.setSeller(author);
+					memberDeposit.setTrade(author);
+					depositDao.persist(memberDeposit);
+				}
 			} else
 			if (payment.getType() == Payment.Type.recharge) {
-				Member member = payment.getPayee();
-				memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
-				member.setBalance(member.getBalance().add(payment.getAmount()));
-				memberDao.merge(member);
+				Member payee = payment.getPayee();
+				memberDao.refresh(payee,LockModeType.PESSIMISTIC_WRITE);
+				payee.setBalance(payee.getBalance().add(payment.getAmount()));
+				memberDao.merge(payee);
+				memberDao.flush();
 				Deposit deposit = new Deposit();
-				deposit.setBalance(member.getBalance());
+				deposit.setBalance(payee.getBalance());
 				deposit.setType(Deposit.Type.recharge);
 				deposit.setMemo(payment.getMemo());
-				deposit.setMember(member);
+				deposit.setMember(payee);
 				deposit.setCredit(payment.getAmount());
 				deposit.setDebit(BigDecimal.ZERO);
 				deposit.setDeleted(false);
 				deposit.setOperator("system");
 				deposit.setPayment(payment);
 				deposit.setSeller(payment.getPayee());
+				deposit.setTrade(payment.getPayee());
 				depositDao.persist(deposit);
 				messageService.depositPushTo(deposit);
+
+				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit memberDeposit = new Deposit();
+					memberDeposit.setBalance(member.getBalance());
+					memberDeposit.setType(Deposit.Type.payment);
+					memberDeposit.setMemo(payment.getMemo());
+					memberDeposit.setMember(member);
+					memberDeposit.setCredit(BigDecimal.ZERO);
+					memberDeposit.setDebit(payment.getAmount());
+					memberDeposit.setDeleted(false);
+					memberDeposit.setOperator("system");
+					memberDeposit.setPayment(payment);
+					memberDeposit.setSeller(payment.getPayee());
+					memberDeposit.setTrade(payment.getPayee());
+					depositDao.persist(memberDeposit);
+				}
+
 			} else
 			if (payment.getType() == Payment.Type.topic) {
 				TopicBill topicBill = payment.getTopicBill();
@@ -403,6 +487,24 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				topicDao.merge(topic);
 				messageService.topicPushTo(topic);
 				enterpriseService.create(topic);
+
+				if (payment.getMethod().equals(Payment.Method.online)) {
+					Member member = payment.getMember();
+					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
+					Deposit memberDeposit = new Deposit();
+					memberDeposit.setBalance(member.getBalance());
+					memberDeposit.setType(Deposit.Type.payment);
+					memberDeposit.setMemo(payment.getMemo());
+					memberDeposit.setMember(member);
+					memberDeposit.setCredit(BigDecimal.ZERO);
+					memberDeposit.setDebit(payment.getAmount());
+					memberDeposit.setDeleted(false);
+					memberDeposit.setOperator("system");
+					memberDeposit.setPayment(payment);
+					memberDeposit.setSeller(payment.getPayee());
+					memberDeposit.setTrade(null);
+					depositDao.persist(memberDeposit);
+				}
 			}
 		}
 	}
