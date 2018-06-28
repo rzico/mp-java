@@ -381,6 +381,12 @@ public class OrderModel extends BaseModel implements Serializable {
         this.amountPaid = amountPaid;
     }
 
+    /**  运费 */
+    private BigDecimal shippingFreight;
+
+    /**  工资 */
+    private BigDecimal adminFreight;
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -451,6 +457,8 @@ public class OrderModel extends BaseModel implements Serializable {
            }
         }
         this.freight = order.getFreight();
+        this.shippingFreight = order.getShippingFreight();
+        this.adminFreight = order.getAdminFreight();
 
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();
@@ -488,6 +496,8 @@ public class OrderModel extends BaseModel implements Serializable {
             this.shippingMethod = "电子卡包";
         }
         this.freight = order.getFreight();
+        this.shippingFreight = order.getShippingFreight();
+        this.adminFreight = order.getAdminFreight();
 
         this.quantity = order.getQuantity();
 

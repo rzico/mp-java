@@ -172,6 +172,20 @@ public class Order extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '运费'")
 	private BigDecimal freight;
 
+	/** 配送费用 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '配送费用'")
+	private BigDecimal shippingFreight;
+
+	/** 配送工资 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '配送工资'")
+	private BigDecimal adminFreight;
+
 	/** 积分抵扣 */
 	@NotNull
 	@Min(0)
@@ -1120,6 +1134,22 @@ public class Order extends BaseEntity {
 
 	public void setExchangeDiscount(BigDecimal exchangeDiscount) {
 		this.exchangeDiscount = exchangeDiscount;
+	}
+
+	public BigDecimal getShippingFreight() {
+		return shippingFreight;
+	}
+
+	public void setShippingFreight(BigDecimal shippingFreight) {
+		this.shippingFreight = shippingFreight;
+	}
+
+	public BigDecimal getAdminFreight() {
+		return adminFreight;
+	}
+
+	public void setAdminFreight(BigDecimal adminFreight) {
+		this.adminFreight = adminFreight;
 	}
 
 	/**

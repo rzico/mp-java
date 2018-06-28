@@ -40,6 +40,13 @@ public class OrderItem extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '商品价格'")
 	private BigDecimal price;
 
+	/** 成本价 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '成本价'")
+	private BigDecimal cost;
+
 	/** 商品重量 */
 	@Column(updatable = false,columnDefinition="decimal(21,6) not null comment '商品重量'")
 	private Integer weight;
@@ -298,6 +305,14 @@ public class OrderItem extends BaseEntity {
 
 	public void setPromotion(Promotion promotion) {
 		this.promotion = promotion;
+	}
+
+	public BigDecimal getCost() {
+		return cost;
+	}
+
+	public void setCost(BigDecimal cost) {
+		this.cost = cost;
 	}
 
 	/**

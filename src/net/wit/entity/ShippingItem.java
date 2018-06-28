@@ -1,17 +1,15 @@
 
 package net.wit.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import java.math.BigDecimal;
 
 /**
  * Entity - 发货项
@@ -45,6 +43,20 @@ public class ShippingItem extends BaseEntity {
 	@Min(1)
 	@Column(nullable = false, updatable = false,columnDefinition="int(11) not null comment '数量'")
 	private Integer quantity;
+
+	/** 销售价 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '销售价'")
+	private BigDecimal price;
+
+	/** 成本价 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '成本价'")
+	private BigDecimal cost;
 
 	/** 发货单 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -155,4 +167,37 @@ public class ShippingItem extends BaseEntity {
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public BigDecimal getCost() {
+		return cost;
+	}
+
+	public void setCost(BigDecimal cost) {
+		this.cost = cost;
+	}
+
+
+	/**
+	 * 获取小计
+	 *
+	 * @return 小计
+	 */
+	@JsonProperty
+	@Transient
+	public BigDecimal getSubtotal() {
+		if (getPrice() != null && getQuantity() != null) {
+			return getPrice().multiply(new BigDecimal(getQuantity()));
+		} else {
+			return new BigDecimal(0);
+		}
+	}
+
 }

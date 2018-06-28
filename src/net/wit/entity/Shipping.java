@@ -623,8 +623,8 @@ public class Shipping extends BaseEntity {
 		BigDecimal amount = BigDecimal.ZERO;
 		if (getShippingItems() != null) {
 			for (ShippingItem shippingItem : getShippingItems()) {
-				if (shippingItem != null && shippingItem.getProduct() != null) {
-					amount = amount.add(shippingItem.getProduct().getCost());
+				if (shippingItem != null) {
+					amount = amount.add(shippingItem.getCost());
 				}
 			}
 		}

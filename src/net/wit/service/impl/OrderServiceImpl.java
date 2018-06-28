@@ -244,6 +244,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderItem.setName(product.getName());
 			orderItem.setSpec(product.getSpec());
 			orderItem.setPrice(product.getPrice());
+			orderItem.setCost(product.getCost());
 			orderItem.setWeight(product.getWeight());
 			orderItem.setThumbnail(product.getThumbnail());
 			orderItem.setIsGift(false);
@@ -274,6 +275,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						giftItem.setName(gift.getName());
 						giftItem.setSpec(gift.getSpec());
 						giftItem.setPrice(BigDecimal.ZERO);
+						giftItem.setCost(product.getCost());
 						giftItem.setWeight(gift.getWeight());
 						giftItem.setThumbnail(gift.getThumbnail());
 						giftItem.setIsGift(true);
@@ -297,6 +299,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						orderItem.setName(cartProduct.getName());
 						orderItem.setSpec(cartProduct.getSpec());
 						orderItem.setPrice(cartItem.getEffectivePrice());
+						orderItem.setCost(product.getCost());
 						orderItem.setWeight(cartProduct.getWeight());
 						orderItem.setThumbnail(cartProduct.getThumbnail());
 						orderItem.setIsGift(false);
@@ -327,6 +330,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								giftItem.setName(gift.getName());
 								giftItem.setSpec(gift.getSpec());
 								giftItem.setPrice(BigDecimal.ZERO);
+								giftItem.setCost(product.getCost());
 								giftItem.setWeight(gift.getWeight());
 								giftItem.setThumbnail(gift.getThumbnail());
 								giftItem.setIsGift(true);

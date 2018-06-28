@@ -154,6 +154,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				shippingItem.setName(orderItem.getName());
 				shippingItem.setProduct(orderItem.getProduct());
 				shippingItem.setQuantity(orderItem.getQuantity());
+				shippingItem.setPrice(orderItem.getPrice());
+				shippingItem.setCost(orderItem.getCost());
 				shippingItem.setSn(orderItem.getProduct().getSn());
 				shippingItem.setSpec(orderItem.getSpec());
 				shippingItem.setThumbnail(orderItem.getThumbnail());
