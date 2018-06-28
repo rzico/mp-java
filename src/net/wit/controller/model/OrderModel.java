@@ -71,11 +71,21 @@ public class OrderModel extends BaseModel implements Serializable {
     /**   运费 */
     private BigDecimal freight;
 
+    /**  配送费用 */
+    private BigDecimal shippingFreight;
+
+    /**  配送工资 */
+    private BigDecimal adminFreight;
+
+
     /**  商品数量 */
     private Integer quantity;
 
     /**  订单金额 */
     private BigDecimal amount;
+
+    /**  结算货款 */
+    private BigDecimal cost;
 
     /**  优惠券折扣 */
     private BigDecimal couponDiscount;
@@ -381,11 +391,29 @@ public class OrderModel extends BaseModel implements Serializable {
         this.amountPaid = amountPaid;
     }
 
-    /**  运费 */
-    private BigDecimal shippingFreight;
+    public BigDecimal getCost() {
+        return cost;
+    }
 
-    /**  工资 */
-    private BigDecimal adminFreight;
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public BigDecimal getShippingFreight() {
+        return shippingFreight;
+    }
+
+    public void setShippingFreight(BigDecimal shippingFreight) {
+        this.shippingFreight = shippingFreight;
+    }
+
+    public BigDecimal getAdminFreight() {
+        return adminFreight;
+    }
+
+    public void setAdminFreight(BigDecimal adminFreight) {
+        this.adminFreight = adminFreight;
+    }
 
     public void bind(Order order) {
         this.id = order.getId();
@@ -456,6 +484,8 @@ public class OrderModel extends BaseModel implements Serializable {
                this.promoter = promoter.displayName();
            }
         }
+
+        this.cost = order.getCost();
         this.freight = order.getFreight();
         this.shippingFreight = order.getShippingFreight();
         this.adminFreight = order.getAdminFreight();
@@ -495,6 +525,8 @@ public class OrderModel extends BaseModel implements Serializable {
         } else {
             this.shippingMethod = "电子卡包";
         }
+
+        this.cost = order.getCost();
         this.freight = order.getFreight();
         this.shippingFreight = order.getShippingFreight();
         this.adminFreight = order.getAdminFreight();

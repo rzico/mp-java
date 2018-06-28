@@ -1356,6 +1356,24 @@ public class Order extends BaseEntity {
 	}
 
 	/**
+	 * 获取订单金额
+	 *
+	 * @return 订单金额
+	 */
+	@Transient
+	public BigDecimal getCost() {
+		BigDecimal price = new BigDecimal(0);
+		if (getOrderItems() != null) {
+			for (OrderItem orderItem : getOrderItems()) {
+				if (orderItem != null) {
+					price = price.add(orderItem.getCost().multiply(new BigDecimal(orderItem.getQuantity())));
+				}
+			}
+		}
+		return price;
+	}
+
+	/**
 	 * 获取分销佣金
 	 *
 	 * @return 分销佣金
