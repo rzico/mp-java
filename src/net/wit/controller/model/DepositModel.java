@@ -99,8 +99,6 @@ public class DepositModel extends BaseModel implements Serializable {
     public void bind(Deposit deposit) {
         this.type = deposit.getType();
         this.amount = deposit.getCredit().subtract(deposit.getDebit());
-        this.logo = deposit.getSeller().getLogo();
-        this.nickName = deposit.getSeller().displayName();
         this.createDate = deposit.getCreateDate();
         this.balance = deposit.getBalance();
         this.memo = deposit.getMemo();
@@ -112,7 +110,8 @@ public class DepositModel extends BaseModel implements Serializable {
         } else {
             this.method = "往来结算";
         }
-
+        this.logo = deposit.getSeller().getLogo();
+        this.nickName = deposit.getSeller().displayName();
     }
 
     public static List<DepositModel> bindList(List<Deposit> deposits) {
