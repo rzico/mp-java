@@ -618,7 +618,18 @@ public class Shipping extends BaseEntity {
 		this.shippingBarrels = shippingBarrels;
 	}
 
-
+	@Transient
+	public BigDecimal calcCost() {
+		BigDecimal amount = BigDecimal.ZERO;
+		if (getShippingItems() != null) {
+			for (ShippingItem shippingItem : getShippingItems()) {
+				if (shippingItem != null && shippingItem.getProduct() != null) {
+					amount = amount.add(shippingItem.getProduct().getCost());
+				}
+			}
+		}
+		return amount;
+	}
 
 	@Transient
 	public BigDecimal calcFreight(Receiver receiver) {

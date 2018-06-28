@@ -871,12 +871,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		Member member = order.getMember();
 		memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
-//
-//		if (order.getShippingStatus() == Order.ShippingStatus.shipped) {
-//			member.setPoint(member.getPoint() + order.getPoint());
-//		}
 
 		if (order.refundOrReturn()) {
+
 			CouponCode couponCode = order.getCouponCode();
 			if (couponCode != null) {
 				couponCode.setIsUsed(false);

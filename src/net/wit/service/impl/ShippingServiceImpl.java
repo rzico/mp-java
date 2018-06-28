@@ -281,7 +281,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				receiverService.update(receiver);
 			}
 
-			Member ec = shipping.getEnterprise().getMember();
+			Member ec = shipping.getMember();
 			for (ShippingBarrel b : shipping.getShippingBarrels()) {
 				BarrelStock bs = barrelStockDao.find(ec, b.getBarrel());
 				if (bs == null) {
@@ -302,59 +302,112 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 			//结算配送站运费
 		    if (shipping.getEnterprise()!=null) {
+				//扣成本
+				if (!shipping.getSeller().equals(shipping.getEnterprise().getMember())) {
+					Member sellerMember = shipping.getSeller();
+					memberDao.lock(sellerMember, LockModeType.PESSIMISTIC_WRITE);
 
-		    	//扣销售站
-				Member sellerMember = shipping.getSeller();
-				memberDao.lock(sellerMember,LockModeType.PESSIMISTIC_WRITE);
+					BigDecimal cost = shipping.calcCost();
+					sellerMember.setBalance(sellerMember.getBalance().subtract(cost));
+					if (sellerMember.getBalance().compareTo(BigDecimal.ZERO) < 0) {
+						throw new RuntimeException("余额不足不能核销");
+					}
+					memberDao.merge(sellerMember);
 
-				BigDecimal freight = shipping.getFreight();
-				sellerMember.setBalance(sellerMember.getBalance().subtract(freight));
-				if (sellerMember.getBalance().compareTo(BigDecimal.ZERO)<0) {
-					throw new RuntimeException("余额不足不能核销");
+					memberDao.flush();
+
+					Deposit sellerDeposit = new Deposit();
+					sellerDeposit.setBalance(sellerMember.getBalance());
+					sellerDeposit.setType(Deposit.Type.product);
+					sellerDeposit.setMemo("货款结算");
+					sellerDeposit.setMember(sellerMember);
+					sellerDeposit.setCredit(BigDecimal.ZERO.subtract(cost));
+					sellerDeposit.setDebit(BigDecimal.ZERO);
+					sellerDeposit.setDeleted(false);
+					sellerDeposit.setOperator("system");
+					sellerDeposit.setOrder(shipping.getOrder());
+					sellerDeposit.setSeller(shipping.getSeller());
+					depositDao.persist(sellerDeposit);
+					messageService.depositPushTo(sellerDeposit);
+
+					//给配送站
+					Member shippingMember = shipping.getEnterprise().getMember();
+					memberDao.lock(shippingMember, LockModeType.PESSIMISTIC_WRITE);
+
+					shippingMember.setBalance(shippingMember.getBalance().add(cost));
+					memberDao.merge(shippingMember);
+
+					memberDao.flush();
+
+					Deposit deposit = new Deposit();
+					deposit.setBalance(shippingMember.getBalance());
+					deposit.setType(Deposit.Type.product);
+					deposit.setMemo("货款结算");
+					deposit.setMember(shippingMember);
+					deposit.setCredit(cost);
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setOrder(shipping.getOrder());
+					deposit.setSeller(shipping.getSeller());
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
 				}
-				memberDao.merge(sellerMember);
+					//运费结算
+				if (!shipping.getSeller().equals(shipping.getEnterprise().getMember())) {
+					Member sellerMember = shipping.getSeller();
+					memberDao.lock(sellerMember, LockModeType.PESSIMISTIC_WRITE);
 
-				memberDao.flush();
+					BigDecimal freight = shipping.getFreight();
+					sellerMember.setBalance(sellerMember.getBalance().subtract(freight));
+					if (sellerMember.getBalance().compareTo(BigDecimal.ZERO) < 0) {
+						throw new RuntimeException("余额不足不能核销");
+					}
+					memberDao.merge(sellerMember);
 
-				Deposit  sellerDeposit = new Deposit();
-				sellerDeposit.setBalance(sellerMember.getBalance());
-				sellerDeposit.setType(Deposit.Type.freight);
-				sellerDeposit.setMemo("支付运费");
-				sellerDeposit.setMember(sellerMember);
-				sellerDeposit.setCredit(BigDecimal.ZERO.subtract(freight));
-				sellerDeposit.setDebit(BigDecimal.ZERO);
-				sellerDeposit.setDeleted(false);
-				sellerDeposit.setOperator("system");
-				sellerDeposit.setOrder(shipping.getOrder());
-				sellerDeposit.setSeller(shipping.getSeller());
-				depositDao.persist(sellerDeposit);
-				messageService.depositPushTo(sellerDeposit);
+					memberDao.flush();
 
-				//给配送站
-				Member shippingMember = shipping.getEnterprise().getMember();
-				memberDao.lock(shippingMember,LockModeType.PESSIMISTIC_WRITE);
+					Deposit sellerDeposit = new Deposit();
+					sellerDeposit.setBalance(sellerMember.getBalance());
+					sellerDeposit.setType(Deposit.Type.freight);
+					sellerDeposit.setMemo("支付运费");
+					sellerDeposit.setMember(sellerMember);
+					sellerDeposit.setCredit(BigDecimal.ZERO.subtract(freight));
+					sellerDeposit.setDebit(BigDecimal.ZERO);
+					sellerDeposit.setDeleted(false);
+					sellerDeposit.setOperator("system");
+					sellerDeposit.setOrder(shipping.getOrder());
+					sellerDeposit.setSeller(shipping.getSeller());
+					depositDao.persist(sellerDeposit);
+					messageService.depositPushTo(sellerDeposit);
 
-				shippingMember.setBalance(shippingMember.getBalance().add(freight));
-				memberDao.merge(shippingMember);
+					//给配送站
+					Member shippingMember = shipping.getEnterprise().getMember();
+					memberDao.lock(shippingMember, LockModeType.PESSIMISTIC_WRITE);
 
-				memberDao.flush();
+					shippingMember.setBalance(shippingMember.getBalance().add(freight));
+					memberDao.merge(shippingMember);
 
-				Deposit deposit = new Deposit();
-				deposit.setBalance(shippingMember.getBalance());
-				deposit.setType(Deposit.Type.freight);
-				deposit.setMemo("运费结算");
-				deposit.setMember(shippingMember);
-				deposit.setCredit(freight);
-				deposit.setDebit(BigDecimal.ZERO);
-				deposit.setDeleted(false);
-				deposit.setOperator("system");
-				deposit.setOrder(shipping.getOrder());
-				deposit.setSeller(shipping.getSeller());
-				depositDao.persist(deposit);
-				messageService.depositPushTo(deposit);
+					memberDao.flush();
+
+					Deposit deposit = new Deposit();
+					deposit.setBalance(shippingMember.getBalance());
+					deposit.setType(Deposit.Type.freight);
+					deposit.setMemo("运费结算");
+					deposit.setMember(shippingMember);
+					deposit.setCredit(freight);
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setOrder(shipping.getOrder());
+					deposit.setSeller(shipping.getSeller());
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+				}
 
 				//送水员运费
 				if (shipping.getAdmin()!=null) {
+					Member shippingMember = shipping.getEnterprise().getMember();
 					shippingMember.setBalance(shippingMember.getBalance().subtract(shipping.getAdminFreight()));
 					if (shippingMember.getBalance().compareTo(BigDecimal.ZERO)<0) {
 						throw new RuntimeException("配送站余额不足不能核销");
@@ -403,14 +456,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				}
 
 			}
-		if (shipping.getOrder().equals(Order.OrderStatus.confirmed)) {
-			orderService.complete(shipping.getOrder(), null);
-		}
-
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.complete);
 		orderLog.setOperator("system");
-		orderLog.setContent("订单已完成");
+		orderLog.setContent("核销已完成");
 		Long d = 0L;
 		for (ShippingBarrel b:shipping.getShippingBarrels()) {
 			d = d + b.getReturnQuantity();
@@ -421,6 +470,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		orderLog.setOrder(shipping.getOrder());
 		orderLogDao.persist(orderLog);
 		messageService.orderMemberPushTo(orderLog);
+		shippingDao.flush();
+
+		if (shipping.getOrder().equals(Order.OrderStatus.confirmed)) {
+			orderService.complete(shipping.getOrder(), null);
+		}
 
 		return shipping;
 
