@@ -47,8 +47,14 @@ public class ShippingModel extends BaseModel implements Serializable {
     /**  状态描述 */
     private String status;
 
+    /**  货款 */
+    private BigDecimal cost;
+
     /**  运费 */
     private BigDecimal freight;
+
+    /**  配送费 */
+    private BigDecimal shippingFreight;
 
     /**  工资 */
     private BigDecimal adminFreight;
@@ -331,6 +337,22 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.adminFreight = adminFreight;
     }
 
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public BigDecimal getShippingFreight() {
+        return shippingFreight;
+    }
+
+    public void setShippingFreight(BigDecimal shippingFreight) {
+        this.shippingFreight = shippingFreight;
+    }
+
     public void bind(Shipping shipping) {
 
         this.id = shipping.getId();
@@ -367,7 +389,9 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.paymentStatus = order.getPaymentStatus();
         this.shippingStatus = order.getShippingStatus();
 
+        this.cost = shipping.getCost();
         this.freight = shipping.getFreight();
+        this.shippingFreight = shipping.getShippingFreight();
         this.adminFreight = shipping.getAdminFreight();
 
         this.receiver = new ReceiverModel();
@@ -458,7 +482,10 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.paymentStatus = order.getPaymentStatus();
         this.shippingStatus = order.getShippingStatus();
 
+
+        this.cost = shipping.getCost();
         this.freight = shipping.getFreight();
+        this.shippingFreight = shipping.getShippingFreight();
         this.adminFreight = shipping.getAdminFreight();
 
         this.receiver = new ReceiverModel();

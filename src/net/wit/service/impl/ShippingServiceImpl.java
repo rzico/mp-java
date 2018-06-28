@@ -146,6 +146,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setFreight(order.getFreight());
 		shipping.setShippingFreight(BigDecimal.ZERO);
 		shipping.setAdminFreight(BigDecimal.ZERO);
+		shipping.setCost(shipping.calcCost());
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		List<ShippingItem> shippingItems = new ArrayList<>();
 

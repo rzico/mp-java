@@ -136,6 +136,13 @@ public class Shipping extends BaseEntity {
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '成本'")
+	private BigDecimal cost;
+
+	/** 运费 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '运费'")
 	private BigDecimal freight;
 
 	/** 配送费用 */
@@ -183,6 +190,14 @@ public class Shipping extends BaseEntity {
 	/** 操作人 */
 	@Column(columnDefinition="varchar(255) comment '操作人'")
 	private String operator;
+
+	public BigDecimal getCost() {
+		return cost;
+	}
+
+	public void setCost(BigDecimal cost) {
+		this.cost = cost;
+	}
 
 	/** 订单 */
 	@NotNull
