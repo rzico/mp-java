@@ -48,14 +48,14 @@ public class ShippingItem extends BaseEntity {
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '销售价'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '销售价'")
 	private BigDecimal price;
 
 	/** 成本价 */
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '成本价'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '成本价'")
 	private BigDecimal cost;
 
 	/** 发货单 */

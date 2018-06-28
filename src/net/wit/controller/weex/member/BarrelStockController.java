@@ -72,13 +72,8 @@ public class BarrelStockController extends BaseController {
             return Message.error("cardId 无效");
         }
 
-        Member member = card.getMember();
-        if (member==null) {
-            return Message.error("没找到卡主");
-        }
-
         List<Filter> filters = new ArrayList<>();
-        filters.add(new Filter("member",Filter.Operator.eq,member));
+        filters.add(new Filter("card",Filter.Operator.eq,card));
 
         List<BarrelStock> bs = barrelStockService.findList(null,null,filters,null);
 
