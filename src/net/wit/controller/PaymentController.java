@@ -140,13 +140,6 @@ public class PaymentController extends BaseController {
             return Message.error("支付插件无效");
         }
 
-
-
-        payment.setMethod(Method.online);
-        payment.setPaymentPluginId(paymentPluginId);
-        payment.setPaymentMethod(paymentPlugin.getName());
-        paymentService.update(payment);
-
         if (xmid!=null) {
             Member agent = memberService.find(xmid);
             if (agent==null) {
@@ -155,6 +148,12 @@ public class PaymentController extends BaseController {
             payment.setWay(Payment.Way.merchant);
             payment.setMerchant(agent);
         }
+
+        payment.setMethod(Method.online);
+        payment.setPaymentPluginId(paymentPluginId);
+        payment.setPaymentMethod(paymentPlugin.getName());
+        paymentService.update(payment);
+
         Map<String, Object> parameters = null;
         if (safeKey==null) {
             parameters = paymentPlugin.getParameterMap(payment.getSn(), payment.getMemo(), request);
