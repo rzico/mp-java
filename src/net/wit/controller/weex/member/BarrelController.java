@@ -52,17 +52,34 @@ public class BarrelController extends BaseController {
     @Resource(name = "barrelServiceImpl")
     private BarrelService barrelService;
 
+    @Resource(name = "shippingServiceImpl")
+    private ShippingService shippingService;
     /**
      *  获取包装列表
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(HttpServletRequest request){
-
+    public Message list(Long shippingId,HttpServletRequest request){
         List<Barrel> barrels = barrelService.findAll();
 
-        return Message.bind(BarrelModel.bindList(barrels),request);
+        List<BarrelModel> data = BarrelModel.bindList(barrels);
+        if (shippingId!=null) {
+            Shipping shipping = shippingService.find(shippingId);
+            if (shipping!=null) {
+                List<Barrel> bs = shipping.barrels();
+                for (BarrelModel bm:data) {
+                    Boolean s = false;
+                    for (Barrel bl:bs) {
+                        if (bm.getId().equals(bl.getId())) {
+                            s = true;
+                        }
+                    }
+                    bm.setShow(s);
+                }
+            }
+        }
 
+        return Message.bind(data,request);
     }
 
 

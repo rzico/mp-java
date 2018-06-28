@@ -632,6 +632,22 @@ public class Shipping extends BaseEntity {
 	}
 
 	@Transient
+	public List<Barrel> barrels() {
+		List<Barrel> bs = new ArrayList<>();
+		if (getShippingItems() != null) {
+			for (ShippingItem shippingItem : getShippingItems()) {
+				if (shippingItem != null && shippingItem.getProduct() != null) {
+					Barrel b = shippingItem.getProduct().getBarrel();
+					if (b!=null && !bs.contains(b)) {
+						bs.add(b);
+					}
+				}
+			}
+		}
+		return bs;
+	}
+
+	@Transient
 	public BigDecimal calcFreight(Receiver receiver) {
 		BigDecimal price = BigDecimal.ZERO;
 		int quantity = getQuantity();

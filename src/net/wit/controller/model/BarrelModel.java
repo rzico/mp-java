@@ -10,6 +10,8 @@ public class BarrelModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
 
+    private Boolean show;
+
     public Long getId() {
         return id;
     }
@@ -26,9 +28,18 @@ public class BarrelModel extends BaseModel implements Serializable {
         this.name = name;
     }
 
+    public Boolean getShow() {
+        return show;
+    }
+
+    public void setShow(Boolean show) {
+        this.show = show;
+    }
+
     public void bind(Barrel barrel) {
         this.id = barrel.getId();
         this.name = barrel.getName();
+        this.show = false;
     }
 
     public static List<BarrelModel> bindList(List<Barrel> barrels) {
