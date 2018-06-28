@@ -47,4 +47,5 @@ public class PaymentSummary implements Serializable {
     public void setRefund(BigDecimal refund) {
         this.refund = refund;
     }
+
 }

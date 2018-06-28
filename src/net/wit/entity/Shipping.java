@@ -138,14 +138,6 @@ public class Shipping extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '成本'")
 	private BigDecimal freight;
 
-
-	/** 运费 */
-	@NotNull
-	@Min(0)
-	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '运费'")
-	private BigDecimal freight;
-
 	/** 配送费用 */
 	@NotNull
 	@Min(0)
@@ -268,7 +260,6 @@ public class Shipping extends BaseEntity {
 	public void setShippingStatus(ShippingStatus shippingStatus) {
 		this.shippingStatus = shippingStatus;
 	}
-
 
 
 	/**
