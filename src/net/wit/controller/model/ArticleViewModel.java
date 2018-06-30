@@ -274,7 +274,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             this.url = "https://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
         }
 
-        System.out.println("shareUrl:===========" + this.url);
+//        System.out.println("shareUrl:===========" + this.url);
     }
 
 }

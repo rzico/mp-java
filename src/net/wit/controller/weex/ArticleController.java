@@ -195,6 +195,7 @@ public class ArticleController extends BaseController {
 
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         filters.add(new Filter("authority", Filter.Operator.eq, Article.Authority.isPublic));
+        filters.add(new Filter("deleted", Filter.Operator.eq, false));
         pageable.setFilters(filters);
         pageable.setOrderProperty("hits");
         pageable.setOrderDirection(Order.Direction.desc);
