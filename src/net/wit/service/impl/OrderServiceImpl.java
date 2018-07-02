@@ -199,7 +199,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
 //		Assert.notEmpty(cart.getCartItems());
-
 		Order order = new Order();
 		order.setPaymentStatus(Order.PaymentStatus.unpaid);
 		order.setShippingStatus(Order.ShippingStatus.unshipped);
