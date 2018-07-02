@@ -281,34 +281,7 @@ public class ShippingController extends BaseController {
 
 	}
 
-
-
-	/**
-	 *  计算
-	 */
-	@RequestMapping(value = "/calculate", method = RequestMethod.POST)
-	public @ResponseBody
-	Message calculate(String sn,HttpServletRequest request) {
-		Member member = memberService.getCurrent();
-		if (member==null) {
-			return Message.error(Message.SESSION_INVAILD);
-		}
-
-		Shipping shipping = shippingService.findBySn(sn);
-		if (shipping==null) {
-			return Message.error("无效送货id");
-		}
-
-		shipping.setShippingStatus(Shipping.ShippingStatus.completed);
-
-		shippingService.update(shipping);
-
-		ShippingModel model = new ShippingModel();
-		model.bind(shipping);
-		return Message.bind(model,request);
-	}
-
-	/**
+     /**
 	 *  核销
 	 */
 	@RequestMapping(value = "/completed", method = RequestMethod.POST)

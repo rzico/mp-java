@@ -283,7 +283,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	public Shipping completed(Shipping shipping) throws Exception {
 
 		    shippingDao.refresh(shipping,LockModeType.PESSIMISTIC_WRITE);
-		    if (!shipping.getShippingStatus().equals(Shipping.ShippingStatus.completed)) {
+		    if (shipping.getShippingStatus().equals(Shipping.ShippingStatus.completed)) {
 		    	throw  new RuntimeException("已经核销，不能重复操作");
 			}
 
