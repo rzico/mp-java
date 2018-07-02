@@ -86,7 +86,6 @@ public class BarrelStockController extends BaseController {
         data.put("pledge",BigDecimal.ZERO);
         data.put("data", BarrelStockModel.bindList(bs));
         return Message.bind(data,request);
-
     }
 
 }

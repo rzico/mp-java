@@ -21,6 +21,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -125,6 +126,12 @@ public class Shipping extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '运单号'")
 	private String trackingNo;
 
+	/** 是否转派单 */
+	@NotNull
+	@Column(columnDefinition="bit comment '是否转派单'")
+	@JsonIgnore
+	private Boolean transfer;
+
 	/** 楼层 */
 	@NotNull
 	@Min(1)
@@ -158,6 +165,13 @@ public class Shipping extends BaseEntity {
 	@Digits(integer = 12, fraction = 3)
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '配送工资'")
 	private BigDecimal adminFreight;
+
+	/** 楼层费 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '楼层费'")
+	private BigDecimal levelFreight;
 
 	/** 收货人 */
 	@Column(columnDefinition="varchar(255) comment '收货人'")
@@ -231,6 +245,14 @@ public class Shipping extends BaseEntity {
 
 	public void setHopeDate(Date hopeDate) {
 		this.hopeDate = hopeDate;
+	}
+
+	public Boolean getTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(Boolean transfer) {
+		this.transfer = transfer;
 	}
 
 	/**
@@ -562,6 +584,14 @@ public class Shipping extends BaseEntity {
 		this.level = level;
 	}
 
+	public BigDecimal getLevelFreight() {
+		return levelFreight;
+	}
+
+	public void setLevelFreight(BigDecimal levelFreight) {
+		this.levelFreight = levelFreight;
+	}
+
 	/**
 	 * 判断是否已锁定
 	 *
@@ -725,6 +755,27 @@ public class Shipping extends BaseEntity {
 		} else {
 			price = new BigDecimal(1.5);
 		}
+
+		if (receiver.getLevel()>2) {
+			price = price.add(
+					new BigDecimal(receiver.getLevel() - 2)
+			);
+		}
+
+		BigDecimal amount = price.multiply(new BigDecimal(quantity));
+
+		if (quantity==1) {
+			amount = amount.add(new BigDecimal(2));
+		}
+		return amount;
+
+	}
+
+
+	@Transient
+	public BigDecimal calcLevelFreight(Receiver receiver) {
+		BigDecimal price = BigDecimal.ZERO;
+		int quantity = getQuantity();
 
 		if (receiver.getLevel()>2) {
 			price = price.add(

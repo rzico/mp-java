@@ -77,6 +77,8 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  配送工资 */
     private BigDecimal adminFreight;
 
+    /**  楼层费 */
+    private BigDecimal levelFreight;
 
     /**  商品数量 */
     private Integer quantity;
@@ -415,6 +417,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.adminFreight = adminFreight;
     }
 
+    public BigDecimal getLevelFreight() {
+        return levelFreight;
+    }
+
+    public void setLevelFreight(BigDecimal levelFreight) {
+        this.levelFreight = levelFreight;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -489,6 +499,7 @@ public class OrderModel extends BaseModel implements Serializable {
         this.freight = order.getFreight();
         this.shippingFreight = order.getShippingFreight();
         this.adminFreight = order.getAdminFreight();
+        this.levelFreight = order.getLevelFreight();
 
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();

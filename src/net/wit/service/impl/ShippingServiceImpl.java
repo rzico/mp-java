@@ -194,6 +194,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				shipping.calcAdminFreight(receiver)
 		);
 
+		shipping.setLevelFreight(
+				shipping.calcLevelFreight(receiver)
+		);
+
 		if (receiver!=null && receiver.getShop()!=null) {
 			shipping.setEnterprise(receiver.getShop().getEnterprise());
 			shipping.setShop(receiver.getShop());
@@ -221,6 +225,12 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		}
 
 		shippingDao.persist(shipping);
+
+		order.setAdminFreight(shipping.getAdminFreight());
+		order.setLevelFreight(shipping.getLevelFreight());
+		order.setShippingFreight(shipping.getShippingFreight());
+
+		orderService.update(order);
 		return shipping;
 
 	}

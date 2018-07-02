@@ -321,7 +321,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							order.setSeller(cartItem.getSeller());
 						}
 
-
 						Promotion promotion = cartItem.getPromotion();
 						if (promotion != null) {
 							Integer qt = promotion.calc(orderItem.getSubtotal(), orderItem.getQuantity());

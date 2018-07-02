@@ -186,6 +186,13 @@ public class Order extends BaseEntity {
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '配送工资'")
 	private BigDecimal adminFreight;
 
+	/** 楼层费 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '楼层费'")
+	private BigDecimal levelFreight;
+
 	/** 积分抵扣 */
 	@NotNull
 	@Min(0)
@@ -1150,6 +1157,14 @@ public class Order extends BaseEntity {
 
 	public void setAdminFreight(BigDecimal adminFreight) {
 		this.adminFreight = adminFreight;
+	}
+
+	public BigDecimal getLevelFreight() {
+		return levelFreight;
+	}
+
+	public void setLevelFreight(BigDecimal levelFreight) {
+		this.levelFreight = levelFreight;
 	}
 
 	/**

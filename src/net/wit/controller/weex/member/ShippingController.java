@@ -117,7 +117,7 @@ public class ShippingController extends BaseController {
 	 */
 	@RequestMapping(value = "/dispatch", method = RequestMethod.POST)
 	public @ResponseBody
-	Message dispatch(String sn,Long shopId,Long adminId,String memo,HttpServletRequest request) {
+	Message dispatch(String sn,Long shopId,Long adminId,String memo,Boolean transfer,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -157,6 +157,11 @@ public class ShippingController extends BaseController {
 		}
 
 		try {
+			if (transfer!=null) {
+				shipping.setTransfer(transfer);
+			} else {
+				shipping.setTransfer(false);
+			}
 			shippingService.dispatch(shipping);
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
