@@ -71,6 +71,12 @@ public class OrderController extends BaseController {
 	@Resource(name = "productServiceImpl")
 	private ProductService productService;
 
+	@Resource(name = "shopServiceImpl")
+	private ShopService shopService;
+
+	@Resource(name = "shippingServiceImpl")
+	private ShippingService shippingService;
+
 	/**
 	 *  获取订单信息
 	 */
@@ -423,7 +429,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/shipping", method = RequestMethod.POST)
 	public @ResponseBody
-	Message shipping(String sn, Order.ShippingMethod shippingMethod,String trackingNo, HttpServletRequest request) {
+	Message shipping(String sn, Order.ShippingMethod shippingMethod,String trackingNo,Long shopId,Long adminId, HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -455,6 +461,22 @@ public class OrderController extends BaseController {
 			if (shippingMethod==null) {
 				shippingMethod = order.getShippingMethod();
 			}
+
+			if (shopId!=null) {
+				Receiver receiver = receiverService.find(order.getReceiverId());
+				if (receiver!=null) {
+					receiver.setShop(shopService.find(shopId));
+				}
+
+				if (adminId!=null) {
+                    receiver.setAdmin(adminService.find(adminId));
+				} else {
+					receiver.setAdmin(null);
+				}
+
+				receiverService.update(receiver);
+			}
+
 			orderService.shipping(order,shippingMethod,trackingNo,admin);
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
@@ -464,6 +486,75 @@ public class OrderController extends BaseController {
 		return Message.success(model,"退款成功");
 	}
 
+	/**
+	 *  派单
+	 */
+	@RequestMapping(value = "/dispatch", method = RequestMethod.POST)
+	public @ResponseBody
+	Message dispatch(String sn,Long shopId,Long adminId,String memo,Boolean transfer,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("无效订单id");
+		}
+
+		if (!order.getOrderStatus().equals(Order.OrderStatus.confirmed)) {
+			return Message.error("订单未审核");
+		}
+
+		Shipping shipping = null;
+		if (order.getShippings().size()>0) {
+			shipping = order.getShippings().get(order.getShippings().size()-1);
+		}
+		if (shipping==null) {
+			return Message.error("无效送货id");
+		}
+
+		Shop shop = shopService.find(shopId);
+		if (shop==null) {
+			return Message.error("无效配送点 id");
+		}
+
+		Admin admin = null;
+		if (adminId!=null) {
+			admin = adminService.find(adminId);
+		}
+		shipping.setShop(shop);
+
+		if (memo!=null) {
+			String s = shipping.getMemo();
+			if (s==null) {
+				s = "";
+			}
+			s = s.concat(member.displayName()+":"+memo+"\n");
+			shipping.setMemo(s);
+		}
+
+		shipping.setEnterprise(shop.getEnterprise());
+
+		shipping.setAdmin(admin);
+		if (admin!=null) {
+			shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
+			shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
+		}
+
+		try {
+			if (transfer!=null) {
+				shipping.setTransfer(transfer);
+			}
+			shippingService.dispatch(shipping);
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
+
+		ShippingModel model = new ShippingModel();
+		model.bind(shipping);
+		return Message.bind(model,request);
+	}
 
 	/**
 	 *  退货

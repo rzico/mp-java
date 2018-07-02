@@ -17,8 +17,10 @@ public class ReceiverModel extends BaseModel implements Serializable {
     private double lat;
     private double lng;
     private Boolean isDefault;
-//    private Long roadId;
-//    private String roadName;
+    private Long shopId;
+    private String shopName;
+    private Long adminId;
+    private String adminName;
 
     public Long getId() {
         return id;
@@ -107,7 +109,24 @@ public class ReceiverModel extends BaseModel implements Serializable {
     public void setLat(double lat) {
         this.lat = lat;
     }
-//    public void setRoadId(Long roadId) {
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    //    public void setRoadId(Long roadId) {
 //        this.roadId = roadId;
 //    }
 //
@@ -134,10 +153,21 @@ public class ReceiverModel extends BaseModel implements Serializable {
             this.lat = receiver.getLocation().getLat();
         }
         this.level = receiver.getLevel();
-//        if (receiver.getRoad()!=null) {
-//            this.roadId = receiver.getRoad().getId();
-//            this.roadName = receiver.getRoad().getName();
-//        }
+
+        if (receiver.getShop()!=null) {
+            this.shopId = receiver.getShop().getId();
+            this.shopName = receiver.getShop().getName();
+        } else {
+            this.shopId = 0L;
+        }
+
+        if (receiver.getAdmin()!=null) {
+            this.adminId = receiver.getAdmin().getId();
+            this.adminName = receiver.getAdmin().getName();
+        } else {
+            this.adminId = 0L;
+        }
+
     }
 
     public static List<ReceiverModel> bindList(List<Receiver> receivers) {

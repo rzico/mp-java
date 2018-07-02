@@ -68,6 +68,9 @@ public class ShippingModel extends BaseModel implements Serializable {
     /**  配送名称 */
     private String shopName;
 
+    /**  分组名称 */
+    private String groupName;
+
     /**  送货员 */
     private Long adminId;
 
@@ -362,6 +365,14 @@ public class ShippingModel extends BaseModel implements Serializable {
 
     public void setLevelFreight(BigDecimal levelFreight) {
         this.levelFreight = levelFreight;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public void bind(Shipping shipping) {

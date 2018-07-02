@@ -111,7 +111,6 @@ public class ShippingController extends BaseController {
 		return Message.bind(model,request);
 	}
 
-
 	/**
 	 *  派单
 	 */
@@ -159,8 +158,6 @@ public class ShippingController extends BaseController {
 		try {
 			if (transfer!=null) {
 				shipping.setTransfer(transfer);
-			} else {
-				shipping.setTransfer(false);
 			}
 			shippingService.dispatch(shipping);
 		} catch (Exception e) {
@@ -170,6 +167,54 @@ public class ShippingController extends BaseController {
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);
 		return Message.bind(model,request);
+	}
+
+	/**
+	 *  批量派单
+	 */
+	@RequestMapping(value = "/batch_dispatch", method = RequestMethod.POST)
+	public @ResponseBody
+	Message dispatch(Long [] ids,Long shopId,Long adminId,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Shop shop = shopService.find(shopId);
+		if (shop==null) {
+			return Message.error("无效配送点 id");
+		}
+
+		Admin admin = null;
+		if (adminId!=null) {
+			admin = adminService.find(adminId);
+		}
+
+		for (Long id:ids ) {
+			Shipping shipping = shippingService.find(id);
+			if (shipping == null) {
+				return Message.error("无效送货id");
+			}
+
+			shipping.setShop(shop);
+
+			shipping.setEnterprise(shop.getEnterprise());
+
+			shipping.setAdmin(admin);
+			if (admin != null) {
+				shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
+				shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
+			}
+
+			try {
+				shippingService.dispatch(shipping);
+			} catch (Exception e) {
+				return Message.error(e.getMessage());
+			}
+
+		}
+
+		return Message.success("派单成功");
 	}
 
 
@@ -323,6 +368,7 @@ public class ShippingController extends BaseController {
 		shipping.setLevel(level);
 
 		try {
+			shippingService.update(shipping);
 			shippingService.completed(shipping);
 		} catch (Exception e) {
 			return Message.error(e.getMessage());

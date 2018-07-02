@@ -219,6 +219,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setPartnerAmount(BigDecimal.ZERO);
 		order.setShippingFreight(BigDecimal.ZERO);
 		order.setAdminFreight(BigDecimal.ZERO);
+		order.setLevelFreight(BigDecimal.ZERO);
 
 		if (shippingMethod==null) {
 			shippingMethod = Order.ShippingMethod.shipping;
@@ -300,7 +301,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						orderItem.setName(cartProduct.getName());
 						orderItem.setSpec(cartProduct.getSpec());
 						orderItem.setPrice(cartItem.getEffectivePrice());
-						orderItem.setCost(product.getCost());
+						orderItem.setCost(cartItem.getProduct().getCost());
 						orderItem.setWeight(cartProduct.getWeight());
 						orderItem.setThumbnail(cartProduct.getThumbnail());
 						orderItem.setIsGift(false);
@@ -329,7 +330,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 								giftItem.setName(gift.getName());
 								giftItem.setSpec(gift.getSpec());
 								giftItem.setPrice(BigDecimal.ZERO);
-								giftItem.setCost(product.getCost());
+								giftItem.setCost(gift.getCost());
 								giftItem.setWeight(gift.getWeight());
 								giftItem.setThumbnail(gift.getThumbnail());
 								giftItem.setIsGift(true);

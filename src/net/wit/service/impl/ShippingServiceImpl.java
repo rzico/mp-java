@@ -147,11 +147,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setShippingFreight(BigDecimal.ZERO);
 		shipping.setAdminFreight(BigDecimal.ZERO);
 		shipping.setCost(shipping.calcCost());
-		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		List<ShippingItem> shippingItems = new ArrayList<>();
 
 		for (OrderItem orderItem:order.getOrderItems()) {
-			if (("3".equals(bundle.getString("weex")) || orderItem.getProduct().getType().equals(Product.Type.warehouse))) {
+			if (!orderItem.getProduct().getType().equals(Product.Type.dummy)) {
 				ShippingItem shippingItem = new ShippingItem();
 				shippingItem.setName(orderItem.getName());
 				shippingItem.setProduct(orderItem.getProduct());
@@ -229,6 +229,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		order.setAdminFreight(shipping.getAdminFreight());
 		order.setLevelFreight(shipping.getLevelFreight());
 		order.setShippingFreight(shipping.getShippingFreight());
+		order.setLevelFreight(shipping.getLevelFreight());
 
 		orderService.update(order);
 		return shipping;
@@ -281,6 +282,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	public Shipping completed(Shipping shipping) throws Exception {
 
+		    shippingDao.refresh(shipping,LockModeType.PESSIMISTIC_WRITE);
+		    if (!shipping.getShippingStatus().equals(Shipping.ShippingStatus.completed)) {
+		    	throw  new RuntimeException("已经核销，不能重复操作");
+			}
+
 			shipping.setShippingStatus(Shipping.ShippingStatus.completed);
 			shipping.setOrderStatus(Shipping.OrderStatus.completed);
   			shippingDao.merge(shipping);
@@ -288,7 +294,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
   			//记忆楼层和送货点
 
 		    Receiver receiver = receiverService.find(shipping.getOrder().getReceiverId());
-		    if (receiver!=null) {
+		    if (receiver!=null && !shipping.getTransfer()) {
 		    	receiver.setLevel(shipping.getLevel());
 				receiver.setShop(shipping.getShop());
 				receiver.setAdmin(shipping.getAdmin());
