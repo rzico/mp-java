@@ -58,6 +58,18 @@
 
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分享图：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="shareBkgFileList" class="uploader-list"></div>
+                    <div id="shareBkgFilePicker">选择图片</div>
+                    <input type="hidden" value="" id="shareBkg" name="shareBkg">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">分类：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
             [#if gaugeCategorys??]
@@ -278,6 +290,7 @@
                 });
 
                 new $uploadpicture("contentFileList","contentFilePicker");
+                new $uploadpicture("shareBkgFileList","shareBkgFilePicker");
 
                 $("#form-add").validate({
                     rules:{

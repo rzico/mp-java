@@ -125,6 +125,10 @@ public class Gauge extends BaseEntity {
     @JsonIgnore
     private String notice3;
 
+    /** 分享图片 */
+    @Column(columnDefinition="varchar(255) comment '分享图片'")
+    private String shareBkg;
+
     /** 测评简介 */
     @Lob
     @Column(columnDefinition="longtext comment '测评须知'")
@@ -510,4 +514,14 @@ public class Gauge extends BaseEntity {
     public int getEmployee() {
         return getEvaluations().size();
     }
+
+    public String getShareBkg() {
+        return shareBkg;
+    }
+
+    public void setShareBkg(String shareBkg) {
+        this.shareBkg = shareBkg;
+    }
+
+
 }

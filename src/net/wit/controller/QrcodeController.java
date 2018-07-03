@@ -1,12 +1,17 @@
 
 package net.wit.controller;
 
+import com.google.zxing.WriterException;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageDecoder;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import net.wit.Message;
 import net.wit.entity.Card;
 import net.wit.entity.Payment;
 import net.wit.entity.Topic;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
+
 import net.wit.util.ScanUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -35,6 +42,7 @@ public class QrcodeController extends BaseController {
 
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
+
 
      /**
       * 生成二维码

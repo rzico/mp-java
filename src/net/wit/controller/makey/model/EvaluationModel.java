@@ -19,6 +19,8 @@ public class EvaluationModel extends BaseModel implements Serializable {
     private String result;
     private String jsonResult;
     private String nickName;
+    private String qrcode;
+    private String shareBkg;
     private String logo;
     private Date createDate;
     private String title;
@@ -88,6 +90,22 @@ public class EvaluationModel extends BaseModel implements Serializable {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
+    }
+
+    public String getQrcode() {
+        return qrcode;
+    }
+
+    public void setQrcode(String qrcode) {
+        this.qrcode = qrcode;
+    }
+
+    public String getShareBkg() {
+        return shareBkg;
+    }
+
+    public void setShareBkg(String shareBkg) {
+        this.shareBkg = shareBkg;
     }
 
     //    public List<EvaluationResultModel> getResult() {

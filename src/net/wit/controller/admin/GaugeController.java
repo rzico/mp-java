@@ -249,6 +249,8 @@ public class GaugeController extends BaseController {
 
 		entity.setNotice4(gauge.getNotice4());
 
+		entity.setShareBkg(gauge.getShareBkg());
+
 		entity.setNotice("");
 
 		entity.setPrice(gauge.getPrice());
@@ -374,6 +376,8 @@ public class GaugeController extends BaseController {
 		entity.setNotice3(gauge.getNotice3());
 
 		entity.setNotice4(gauge.getNotice4());
+
+		entity.setShareBkg(gauge.getShareBkg());
 
 		entity.setPrice(gauge.getPrice());
 
