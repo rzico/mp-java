@@ -205,6 +205,12 @@ public class Shipping extends BaseEntity {
 	@Column(columnDefinition="varchar(255) comment '操作人'")
 	private String operator;
 
+
+	/** 方向 */
+	@Column(columnDefinition="varchar(255) not null default '#' comment '方向'")
+	private String groupName;
+
+
 	public BigDecimal getCost() {
 		return cost;
 	}
@@ -298,6 +304,13 @@ public class Shipping extends BaseEntity {
 		this.shippingStatus = shippingStatus;
 	}
 
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 
 	/**
 	 * 获取配送方式

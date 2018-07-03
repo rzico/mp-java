@@ -314,4 +314,29 @@ public class Receiver extends BaseEntity {
 			return null;
 		}
 	}
+
+	public String group(Shop shop) {
+       if (shop.getLocation()!=null && shop.getLocation().getLng()>0 ) {
+       	  if (getLocation()!=null && getLocation().getLng()>0) {
+       	  	 double x = getLocation().getLat()-shop.getLocation().getLat();
+       	  	 double y = getLocation().getLng()-shop.getLocation().getLng();
+
+       	  	 if (x>0 && y>0) {
+       	  	 	return "A";
+			 } else
+			 if (x>0 && y<0) {
+       	  	 	return "B";
+			 } else
+			 if (x<0 && y<0) {
+       	  	 	return "C";
+			 } else {
+       	  	 	return "D";
+			 }
+		  } else {
+       	  	return "#";
+		  }
+	   } else {
+       	  return "#";
+	   }
+	}
 }

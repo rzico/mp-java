@@ -344,6 +344,7 @@ public class ShippingController extends BaseController {
 			shippingService.update(shipping);
 			shippingService.completed(shipping);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return Message.error(e.getMessage());
 		}
 
@@ -374,13 +375,19 @@ public class ShippingController extends BaseController {
 		if ("unconfirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
 			filters.add(new Filter("hopeDate", Filter.Operator.isNull,null));
+			pageable.setOrderDirection(Order.Direction.asc);
+	    	pageable.setOrderProperty("groupName");
 		} else
 		if ("hope".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
 			filters.add(new Filter("hopeDate", Filter.Operator.isNotNull,null));
+			pageable.setOrderDirection(Order.Direction.asc);
+			pageable.setOrderProperty("groupName");
 		} else
 		if ("confirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
+			pageable.setOrderDirection(Order.Direction.asc);
+			pageable.setOrderProperty("groupName");
 		} else {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed));
 			filters.add(new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
@@ -391,8 +398,7 @@ public class ShippingController extends BaseController {
 			filters.add(new Filter("shop", Filter.Operator.eq,shop));
 		}
 		pageable.setFilters(filters);
-//		pageable.setOrderDirection(net.wit.Order.Direction.desc);
-//		pageable.setOrderProperty("createDate");
+
 		Page<Shipping> page = shippingService.findPage(null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(ShippingListModel.bindList(page.getContent()));

@@ -147,6 +147,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setShippingFreight(BigDecimal.ZERO);
 		shipping.setAdminFreight(BigDecimal.ZERO);
 		shipping.setCost(shipping.calcCost());
+		shipping.setTransfer(false);
 //		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		List<ShippingItem> shippingItems = new ArrayList<>();
 
@@ -224,6 +225,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 //			}
 		}
 
+		if (shipping.getShop()!=null) {
+			shipping.setGroupName(receiver.group(shipping.getShop()));
+		} else {
+			shipping.setGroupName("#");
+		}
 		shippingDao.persist(shipping);
 
 		order.setAdminFreight(shipping.getAdminFreight());
@@ -238,7 +244,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 
 	public Shipping dispatch(Shipping shipping) throws Exception {
-
+		if (shipping.getShop()!=null) {
+			Receiver receiver = receiverService.find(shipping.getOrder().getReceiverId());
+			shipping.setGroupName(receiver.group(shipping.getShop()));
+		}
 		if (shipping.getAdmin()!=null) {
 			shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
 			shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
@@ -280,9 +289,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	}
 
-	public Shipping completed(Shipping shipping) throws Exception {
+	public Shipping completed(Shipping _shipping) throws Exception {
+		    Shipping shipping = shippingDao.find(_shipping.getId(),LockModeType.PESSIMISTIC_WRITE);
 
-		    shippingDao.refresh(shipping,LockModeType.PESSIMISTIC_WRITE);
 		    if (shipping.getShippingStatus().equals(Shipping.ShippingStatus.completed)) {
 		    	throw  new RuntimeException("已经核销，不能重复操作");
 			}
@@ -290,7 +299,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			shipping.setShippingStatus(Shipping.ShippingStatus.completed);
 			shipping.setOrderStatus(Shipping.OrderStatus.completed);
   			shippingDao.merge(shipping);
-
   			//记忆楼层和送货点
 
 		    Receiver receiver = receiverService.find(shipping.getOrder().getReceiverId());
@@ -300,7 +308,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				receiver.setAdmin(shipping.getAdmin());
 				receiverService.update(receiver);
 			}
-
 			Member ec = shipping.getMember();
 			for (ShippingBarrel b : shipping.getShippingBarrels()) {
 				Card card = ec.getCards().get(0);
@@ -320,7 +327,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				}
 				barrelStockDao.flush();
 			}
-
 			//结算配送站运费
 		    if (shipping.getEnterprise()!=null) {
 				//扣成本
@@ -498,7 +504,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		orderLogDao.persist(orderLog);
 		messageService.orderMemberPushTo(orderLog);
 		shippingDao.flush();
-
 		if (shipping.getOrder().getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			orderService.complete(shipping.getOrder(), null);
 		}

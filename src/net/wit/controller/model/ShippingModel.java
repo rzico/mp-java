@@ -429,6 +429,8 @@ public class ShippingModel extends BaseModel implements Serializable {
             this.receiver.setLng(order.getLocation().getLng());
         }
 
+        this.groupName = shipping.getGroupName();
+
         if (shipping.getShop()!=null) {
             this.shopId = shipping.getShop().getId();
             this.shopName = shipping.getShop().getName();
