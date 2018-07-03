@@ -129,7 +129,7 @@ public class EvaluationModel extends BaseModel implements Serializable {
         this.logo = evaluation.getMember().getLogo();
         this.shareBkg = evaluation.getGauge().getShareBkg();
         String q = "https://weex.meixinshuo.com/q?id="+evaluation.getGauge().getId()+"&xuid="+evaluation.getMember().getId();
-        this.qrcode = "http://weixin.rzico.com/q/show.jhtml?url="+ URLEncoder.encode(q);
+        this.qrcode = "https://weex.meixinshuo.com/q/show.jhtml?url="+ URLEncoder.encode(q);
 
 //
 //        List<EvaluationResultModel> templates = new ArrayList<EvaluationResultModel>();

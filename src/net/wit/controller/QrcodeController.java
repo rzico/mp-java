@@ -6,12 +6,10 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import net.wit.Message;
-import net.wit.entity.Card;
-import net.wit.entity.Payment;
-import net.wit.entity.Topic;
+import net.wit.entity.*;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.service.*;
-
+import net.wit.util.QRBarCodeUtil;
 import net.wit.util.ScanUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +41,45 @@ public class QrcodeController extends BaseController {
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
+    @Resource(name = "shopServiceImpl")
+    private ShopService shopService;
 
+    @Resource(name = "memberServiceImpl")
+    private MemberService memberService;
+
+    @Resource(name = "adminServiceImpl")
+    private AdminService adminService;
+
+    /**
+     * 根据
+     */
+    @RequestMapping(value = "/show", method = RequestMethod.GET)
+    public void show(String url, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String tempFile = System.getProperty("java.io.tmpdir") + "/upload_" + UUID.randomUUID() + ".jpg";
+            response.reset();
+            response.setContentType("image/jpeg;charset=utf-8");
+            try {
+                QRBarCodeUtil.encodeQRCode(url, tempFile, 200, 200);
+            } catch (WriterException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            ServletOutputStream output = response.getOutputStream();// 得到输出流
+            InputStream imageIn = new FileInputStream(new File(tempFile));
+            // 得到输入的编码器，将文件流进行jpg格式编码
+            JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(imageIn);
+            // 得到编码后的图片对象
+            BufferedImage image = decoder.decodeAsBufferedImage();
+            // 得到输出的编码器
+            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(output);
+            encoder.encode(image);// 对图片进行输出编码
+            imageIn.close();// 关闭文件流
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
      /**
       * 生成二维码
       */
@@ -55,7 +91,19 @@ public class QrcodeController extends BaseController {
              if ("865380".equals(cmd)) {
                  String userId = id.substring(6, id.length());
                  Long uid = Long.parseLong(userId) - 10200L;
-                 return "redirect:/#/topic?id=" + uid;
+
+                 Member member = memberService.find(uid);
+                 Admin admin = adminService.findByMember(member);
+                 if (admin!=null && admin.getEnterprise()!=null) {
+                     Topic topic = admin.getEnterprise().getMember().getTopic();
+                     if (topic!=null && topic.getTopicCard()!=null) {
+                         return "redirect:/#/card?code=85" + String.valueOf(100000000 + topic.getTopicCard().getId()) + "&xuid=" + String.valueOf(uid);
+                     } else {
+                         return "redirect:/#/topic?id=" + uid;
+                     }
+                 } else {
+                    return "redirect:/#/topic?id=" + uid;
+                 }
              } else
              /**
               * 会员卡 空卡，跑转领卡界面,会员卡界面判断跳转  会号规则 88100006165001042 实体卡  86100006165 商家码
@@ -87,4 +135,65 @@ public class QrcodeController extends BaseController {
      }
 
 
+    /**
+     * 二维码分解
+     */
+    @RequestMapping(value = "/scan", method = RequestMethod.GET)
+    @ResponseBody
+    public  Message scan(String code,HttpServletRequest request,HttpServletResponse response) {
+
+        Map<String, String> data = ScanUtil.scanParser(code);
+//
+//        名片：865380  + (10200 + 会员 id）
+//        领卡:  818801  + 会员卡号
+//        付款码:  818802  + 会员卡号+验证码
+//        优惠券:  818803  + 代码
+//        收钱码:  818804  + 编码
+//        钱包付款码:  818805  + 会员号+验证码
+//
+        String c = data.get("code");
+        if (data.get("type").toString().equals("865380")) {
+            Long id = Long.parseLong(c) - 10200;
+            data.put("id", String.valueOf(id));
+            Member member = memberService.find(id);
+            if (member==null) {
+                return Message.error("无效名片");
+            }
+            Admin admin = adminService.findByMember(member);
+            if (admin!=null && admin.getEnterprise()!=null) {
+                data.put("tuid", String.valueOf(admin.getEnterprise().getMember().getId())); 
+            }
+            data.put("xuid", String.valueOf(id));
+
+        } else if (data.get("type").toString().equals("818801")) {
+            String no = c.substring(6);
+            if (no.substring(0, 2).equals("86")) {
+                Long shopId = Long.parseLong(no.substring(2)) - 100000000;
+                Shop shop = shopService.find(shopId);
+                if (shop != null) {
+                    data.put("tuid", String.valueOf(shop.getOwner().getId()));
+                } else {
+                    return Message.error("不能识别的二维码");
+                }
+            } else {
+                return Message.error("不能识别的二维码");
+            }
+        } else if (data.get("type").toString().equals("818802")) {
+            String no = c.substring(0, c.length() - 6);
+            String sign = c.substring(c.length() - 6, c.length());
+            Card card = cardService.find(no);
+            if (card == null) {
+                return Message.error("不能识别的二维码");
+            }
+//            if (!sign.equals(card.getSign())) {
+//                return Message.error("不能识别的二维码");
+//            }
+            data.put("tuid", String.valueOf(card.getOwner().getId()));
+            data.put("xuid", String.valueOf(card.getMembers().get(0).getId()));
+        } else {
+            return Message.error("不能识别的二维码");
+        }
+
+        return Message.success(data, "有效二维码");
+    }
 }
