@@ -228,7 +228,7 @@ public class ArticleController extends BaseController {
             article.setTemplate(templateService.findDefault(Template.Type.article));
         }
         article.setIsDraft(isDraft);
-        article.setIsAudit(false);
+        article.setIsAudit(true);//直接提交审核
         article.setTitle(title);
         article.setAuthor(author);
         article.setThumbnail(thumbnail);

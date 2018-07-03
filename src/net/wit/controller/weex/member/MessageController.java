@@ -148,7 +148,15 @@ public class MessageController extends BaseController {
         if (message.getType().equals(net.wit.entity.Message.Type.share)) {
             Map<String,Object> data = JsonUtils.toObject(message.getExt(),Map.class);
             String oid = data.get("id").toString();
-            url = "file://view/article/preview.js?articleId="+oid+"&publish=true";
+            String title = data.get("title").toString();
+            if(title.contains("中提交了信息")){
+                String formStr = data.get("data").toString();
+                Map<String,Object> formData = JsonUtils.toObject(formStr,Map.class);
+                String articleId = data.get("id").toString();
+                url = "file://view/member/tableList.js?articleId="+articleId+"&title=" + formData.get("title").toString();
+            }else {
+                url = "file://view/article/preview.js?articleId="+oid+"&publish=true";
+            }
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.message)) {
             if (message.getExt()!=null) {
