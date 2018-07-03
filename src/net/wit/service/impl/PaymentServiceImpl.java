@@ -87,6 +87,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "articleRewardDaoImpl")
 	private ArticleRewardDao articleRewardDao;
 
+	@Resource(name = "receiverDaoImpl")
+	private ReceiverDao receiverDao;
+
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
 		super.setBaseDao(paymentDao);
@@ -201,18 +204,19 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					depositDao.persist(deposit);
 				}
 
+				//新客户不自动配送
+				ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
 				//卡包
 				if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 					orderService.shipping(order,Order.ShippingMethod.cardbkg,null,null);
 					orderService.complete(order,null);
-				}
-
-				//新客户不自动配送
-
-				ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-
-				if (bundle.containsKey("weex") && "3".equals(bundle.getString("weex")) && !order.getShippingMethod().equals(Order.ShippingMethod.cardbkg) && order.getMember().getOrders().size()>0) {
-					orderService.shipping(order,Order.ShippingMethod.warehouse,null,null);
+				} else
+				if (bundle.containsKey("weex") && "3".equals(bundle.getString("weex")) ) {
+				    Receiver receiver = receiverDao.find(order.getReceiverId());
+				    if (receiver!=null && receiver.getShop()!=null) {
+						orderService.shipping(order, Order.ShippingMethod.warehouse, null, null);
+					}
 				}
 
 				messageService.orderMemberPushTo(orderLog);

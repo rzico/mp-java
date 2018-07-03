@@ -685,7 +685,7 @@ public class Shipping extends BaseEntity {
 		if (getShippingItems() != null) {
 			for (ShippingItem shippingItem : getShippingItems()) {
 				if (shippingItem != null) {
-					amount = amount.add(shippingItem.getCost());
+					amount = amount.add(shippingItem.getCost().multiply(new BigDecimal(shippingItem.getQuantity())));
 				}
 			}
 		}
