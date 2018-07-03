@@ -93,7 +93,6 @@ public class ReceiverController extends BaseController {
             level = 0;
         }
         receiver.setLevel(level);
-        receiver.setShop(null);
 
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));
@@ -138,7 +137,6 @@ public class ReceiverController extends BaseController {
         if (level!=null) {
             receiver.setLevel(level);
         }
-        receiver.setShop(null);
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));
 //        }
