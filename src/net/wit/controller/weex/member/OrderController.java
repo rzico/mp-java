@@ -512,22 +512,29 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public @ResponseBody
 	Message save(String sn,String paymentPluginId,Order.ShippingMethod shippingMethod,Date hopeDate,HttpServletRequest request) {
+
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
+
+		System.out.println(sn);
 
 		Order order = orderService.findBySn(sn);
 		if (order==null) {
 			return Message.error("无效订单id");
 		}
 
+		System.out.println("11111111111111111111");
+
 		//完成支付
 		if (order.getPaymentStatus().equals(Order.PaymentStatus.unpaid)) {
+			System.out.println(paymentPluginId);
 			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
 			if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
 				return Message.error("支付插件无效");
 			}
+			System.out.println("22222222222222222222");
 			try {
 				Payment payment = orderService.payment(order,null);
 				payment.setMethod(Payment.Method.offline);
@@ -541,6 +548,7 @@ public class OrderController extends BaseController {
 				return Message.error("支付失败");
 			}
 		}
+		System.out.println("99999999999999");
 
 		OrderModel model = new OrderModel();
 		model.bind(order);
