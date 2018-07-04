@@ -27,6 +27,22 @@ public class MessageManager {
             return false;
         }
     }
+    public static Boolean sendAppletMsg(String data) {
+        try {
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            // 第三方用户唯一凭证
+            String appId = bundle.getString("applet.appid");// 睿商圈
+            // String appId = "wxd9cfce3d40f0caf7";//测试号
+            // 第三方用户唯一凭证密钥
+            String appSecret = bundle.getString("applet.secret");
+            //System.out.println(data);
+            // 调用接口创建菜单
+            int result = WeixinApi.sendTemplete(appId, appSecret, data);
+            return result == 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     public static String createOrderTempelete(String openId, String title, String url, String sn, String status, String content, String date) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");

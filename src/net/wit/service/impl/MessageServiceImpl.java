@@ -186,11 +186,11 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 					if (hopeDate!=null) {
 						String data = MessageManager.createAppletOrderTempelete(openId, first, url,
 								OrderSn, OrderStatus, nf.format(amount), remark, formatter.format(timeStamp), formatter.format(hopeDate));
-						MessageManager.sendMsg(data);
+						MessageManager.sendAppletMsg(data);
 					} else {
 						String data = MessageManager.createAppletOrderTempelete(openId, first, url,
 								OrderSn, OrderStatus, nf.format(amount), remark, formatter.format(timeStamp),"");
-						MessageManager.sendMsg(data);
+						MessageManager.sendAppletMsg(data);
 					}
 				}
 			});
@@ -332,6 +332,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		BindUser appletUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("applet.appid"), BindUser.Type.weixin);
 		if (appletUser!=null) {
 			String url = "pages/member/shipping/index";
+			System.out.println(url);
 			addLTTask(appletUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),orderLog.getOrder().getAmount(),msg.getContent(),url,orderLog.getCreateDate(),orderLog.getOrder().getHopeDate());
 		}
 		return pushTo(msg);
