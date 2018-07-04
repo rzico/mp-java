@@ -112,10 +112,10 @@ public class CouponServiceImpl extends BaseServiceImpl<Coupon, Long> implements 
 			coupon.setColor(Coupon.Color.c1);
 			coupon.setDeleted(false);
 			coupon.setDistributor(owner);
-			coupon.setIntroduction("提货券,请勿删除");
+			coupon.setIntroduction("电子券,请勿删除");
 			coupon.setMinimumPrice(BigDecimal.ZERO);
 			coupon.setType(Coupon.Type.exchange);
-			coupon.setName(product.getName()+"-提货券");
+			coupon.setName(product.getName()+"-电子券");
 			coupon.setScope(Coupon.Scope.all);
 			coupon.setStock(0L);
 			couponDao.persist(coupon);
