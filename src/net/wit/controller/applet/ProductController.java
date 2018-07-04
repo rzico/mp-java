@@ -138,7 +138,7 @@ public class ProductController extends BaseController {
 			filters.add(Filter.like("name", "%" + keyword + "%"));
 		}
 
-		Page<Product> page = productService.findPage(null,null,null,pageable);
+		Page<Product> page = productService.findPage(null,null,tag,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));
 		return Message.bind(model,request);

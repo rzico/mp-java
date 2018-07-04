@@ -100,7 +100,9 @@ public class ProductController extends BaseController {
 		if (orderType==null) {
 			orderType = "default";
 		}
+
 		List<Order> orders = new ArrayList<>();
+
 		if ("hitsDesc".equals(orderType)) {
 			orders.add(new Order("modifyDate",Order.Direction.desc));
 		} else
@@ -115,6 +117,7 @@ public class ProductController extends BaseController {
 		} else {
 			orders.add(new Order("modifyDate",Order.Direction.desc));
 		}
+
 		pageable.setOrders(orders);
 //		pageable.setOrderDirection(Order.Direction.desc);
 //		pageable.setOrderProperty("modifyDate");
