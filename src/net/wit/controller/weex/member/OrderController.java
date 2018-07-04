@@ -478,6 +478,7 @@ public class OrderController extends BaseController {
 		}
 
 		try {
+
 			if (shippingMethod==null) {
 				shippingMethod = order.getShippingMethod();
 			}
