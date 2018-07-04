@@ -537,6 +537,7 @@ public class OrderController extends BaseController {
 				paymentService.update(payment);
 				paymentService.handle(payment);
 			} catch (Exception e1) {
+				System.out.println(e1.getMessage());
 				return Message.error("支付失败");
 			}
 		}

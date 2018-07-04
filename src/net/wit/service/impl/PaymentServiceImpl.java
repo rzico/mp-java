@@ -256,7 +256,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					payBill.setMethod(PayBill.Method.online);
 				}
 				payBill.setPaymentPluginId(payment.getPaymentPluginId());
-				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setPaymentPluginName(payment.getPaymentMethod());
 
 				payBill.setMember(payment.getMember());
@@ -321,7 +320,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					}
 					payBill.setMethod(PayBill.Method.online);
 				}
-				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setPaymentPluginId(payment.getPaymentPluginId());
 				payBill.setPaymentPluginName(payment.getPaymentMethod());
 
