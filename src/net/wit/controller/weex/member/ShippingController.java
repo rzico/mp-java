@@ -372,25 +372,56 @@ public class ShippingController extends BaseController {
 			return Message.error("没有分配店铺");
 		}
 		List<Filter> filters = new ArrayList<Filter>();
+		List<Order> orders = pageable.getOrders();
+
 		if ("unconfirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
 			filters.add(new Filter("hopeDate", Filter.Operator.isNull,null));
-			pageable.setOrderDirection(Order.Direction.asc);
-	    	pageable.setOrderProperty("groupName");
+
+			Order order = new Order();
+			order.setDirection(Order.Direction.asc);
+			order.setProperty("groupName");
+			orders.add(order);
+			Order order1 = new Order();
+			order1.setDirection(Order.Direction.asc);
+			order1.setProperty("createDate");
+			orders.add(order1);
 		} else
 		if ("hope".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.unconfirmed));
 			filters.add(new Filter("hopeDate", Filter.Operator.isNotNull,null));
-			pageable.setOrderDirection(Order.Direction.asc);
-			pageable.setOrderProperty("groupName");
+			Order order = new Order();
+			order.setDirection(Order.Direction.asc);
+			order.setProperty("groupName");
+			orders.add(order);
+			Order order1 = new Order();
+			order1.setDirection(Order.Direction.asc);
+			order1.setProperty("createDate");
+			orders.add(order1);
 		} else
 		if ("confirmed".equals(status)) {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
-			pageable.setOrderDirection(Order.Direction.asc);
-			pageable.setOrderProperty("groupName");
+			Order order = new Order();
+			order.setDirection(Order.Direction.asc);
+			order.setProperty("groupName");
+			orders.add(order);
+			Order order1 = new Order();
+			order1.setDirection(Order.Direction.asc);
+			order1.setProperty("createDate");
+			orders.add(order1);
 		} else {
 			filters.add(new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed));
 			filters.add(new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
+
+			Order order = new Order();
+			order.setDirection(Order.Direction.asc);
+			order.setProperty("shippingStatus");
+			orders.add(order);
+			Order order1 = new Order();
+			order1.setDirection(Order.Direction.asc);
+			order1.setProperty("createDate");
+			orders.add(order1);
+
 		}
 		if (admin.roles().contains("3")) {
 			filters.add(new Filter("admin", Filter.Operator.eq,admin));
