@@ -61,6 +61,9 @@ public class PaymentController extends BaseController {
     @Resource(name = "cardServiceImpl")
     private CardService cardService;
 
+    @Resource(name = "bindUserServiceImpl")
+    private BindUserService bindUserService;
+
 //    /**
 //     * 付款页
 //     *
@@ -118,7 +121,8 @@ public class PaymentController extends BaseController {
 
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(String paymentPluginId, String sn,String safeKey,Long xmid, HttpServletRequest request) {
+    public Message submit(String paymentPluginId, String sn,String safeKey,Long xmid,String formId, HttpServletRequest request) {
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         Payment payment = paymentService.findBySn(sn);
         if (payment==null) {
             return Message.error("无效付款单");
@@ -133,6 +137,12 @@ public class PaymentController extends BaseController {
             } else {
                 paymentPluginId = "weixinPayPlugin";
             }
+        }
+
+        BindUser bindUser = bindUserService.findMember(payment.getMember(),bundle.getString("applet.appid"),BindUser.Type.weixin);
+        if (bindUser!=null) {
+            bindUser.setFormId(formId);
+            bindUserService.update(bindUser);
         }
 
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);

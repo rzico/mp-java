@@ -173,6 +173,10 @@ public class WeiXinPayPlugin extends PaymentPlugin {
 					String finalsign = getSign(finalpackage);
 					finalpackage.put("paySign", finalsign);
 					finalpackage.put("return_code", "SUCCESS");
+
+					bindUser.setFormId(prepay_id);
+					bindUserService.update(bindUser);
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

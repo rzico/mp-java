@@ -45,6 +45,7 @@ public class WeixinApi {
 	private static Logger log = LoggerFactory.getLogger(WeixinApi.class);
 
 	private static AccessToken accessToken = null;
+	private static AccessToken accessAuth2Token = null;
 
 //	private static HashMap<String, ComponentAccessToken> componentAccessTokenHashMap = new HashMap<>();
 	private static HashMap<String, AuthAccessToken> authAccessTokenHashMap = new HashMap<>();
@@ -103,8 +104,10 @@ public class WeixinApi {
 	private static String GETWXCARDTICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=wx_card";
 
 	private static String send_message = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
+	private static String send_applet_message = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=ACCESS_TOKEN";
 
-    //获取小程序信息接口
+
+	//获取小程序信息接口
     private static final String SMALLINFORMATION = "https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token=COMPONENT_ACCESS_TOKEN";
 
 	//获取第三方平台component_access_token
@@ -975,26 +978,33 @@ title	小程序页面的标题,标题长度不超过32*/
 	 *  * 获取access_token  *   * @param appid 凭证  * @param appsecret 密钥  * @return access_token  
 	 */
 	public static AccessToken getOauth2AccessToken(String appid, String appsecret, String code) {
-		AccessToken accessToken = null;
+
+		try {
+			if (accessAuth2Token != null && accessAuth2Token.getExpire().getTime() > (new Date()).getTime() - 2000) {
+				return accessAuth2Token;
+			}
+		} catch (Exception e) {
+			accessAuth2Token = null;
+		}
 
 		String requestUrl = oauth2_access_token_url.replace("APPID", appid).replace("SECRET", appsecret).replace("CODE", code);
 		JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
-		//System.out.println("getAccess==================="+ jsonObject.toString());
+
 		// 如果请求成功 
 		if (null != jsonObject) {
 			try {
-				accessToken = new AccessToken();
-				accessToken.setToken(jsonObject.getString("access_token"));
-				accessToken.setExpiresIn(jsonObject.getInt("expires_in"));
-				accessToken.setOpenid(jsonObject.getString("openid"));
-				accessToken.setRefreshToken(jsonObject.getString("refresh_token"));
-				accessToken.setScope(jsonObject.getString("scope"));
+				accessAuth2Token = new AccessToken();
+				accessAuth2Token.setToken(jsonObject.getString("access_token"));
+				accessAuth2Token.setExpiresIn(jsonObject.getInt("expires_in"));
+				accessAuth2Token.setOpenid(jsonObject.getString("openid"));
+				accessAuth2Token.setRefreshToken(jsonObject.getString("refresh_token"));
+				accessAuth2Token.setScope(jsonObject.getString("scope"));
 			} catch (JSONException e) {
-				accessToken = null;
+				accessAuth2Token = null;
 				log.error("获取token失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
 			}
 		}
-		return accessToken;
+		return accessAuth2Token;
 	}
 
 	/**
@@ -1205,6 +1215,23 @@ title	小程序页面的标题,标题长度不超过32*/
 	/**
 	 *  * 根据OpenID列表群发 
 	 */
+	public static int sendAppletTemplete(String appid, String appsecret, String message) {
+		int result = 0;
+		AccessToken token = WeixinApi.getAccessToken(appid, appsecret);
+		String requestUrl = send_applet_message.replace("ACCESS_TOKEN", token.getToken());
+		JSONObject jsonObject = httpRequest(requestUrl, "POST", message);
+		if (null != jsonObject) {
+			if (0 != jsonObject.getInt("errcode")) {
+				result = jsonObject.getInt("errcode");
+				log.error("模板消息 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 *  * 根据OpenID列表群发 
+	 */
 	public static int sendTemplete(String appid, String appsecret, String message) {
 		int result = 0;
 		AccessToken token = WeixinApi.getAccessToken(appid, appsecret);
@@ -1218,7 +1245,7 @@ title	小程序页面的标题,标题长度不超过32*/
 		}
 		return result;
 	}
-	
+
 	/**
 	 *  * 根据OpenID列表群发 
 	 */

@@ -176,7 +176,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	/**
 	 * 添加小程序模版发送任务
 	 */
-	private void addLTTask(final String openId, final String first, final String OrderSn, final String OrderStatus,final BigDecimal amount,final String remark,final String url,final Date timeStamp,final Date hopeDate) {
+	private void addLTTask(final String openId,final String formId, final String first, final String OrderSn, final String OrderStatus,final BigDecimal amount,final String remark,final String url,final Date timeStamp,final Date hopeDate) {
 		try {
 			taskExecutor.execute(new Runnable() {
 				public void run() {
@@ -184,11 +184,11 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 					NumberFormat nf=NumberFormat.getNumberInstance();
 					nf.setMaximumFractionDigits(2);
 					if (hopeDate!=null) {
-						String data = MessageManager.createAppletOrderTempelete(openId, first, url,
+						String data = MessageManager.createAppletOrderTempelete(openId,formId, first, url,
 								OrderSn, OrderStatus, nf.format(amount), remark, formatter.format(timeStamp), formatter.format(hopeDate));
 						MessageManager.sendAppletMsg(data);
 					} else {
-						String data = MessageManager.createAppletOrderTempelete(openId, first, url,
+						String data = MessageManager.createAppletOrderTempelete(openId,formId, first, url,
 								OrderSn, OrderStatus, nf.format(amount), remark, formatter.format(timeStamp),"");
 						MessageManager.sendAppletMsg(data);
 					}
@@ -333,7 +333,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		if (appletUser!=null) {
 			String url = "pages/member/shipping/index";
 			System.out.println(url);
-			addLTTask(appletUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),orderLog.getOrder().getAmount(),msg.getContent(),url,orderLog.getCreateDate(),orderLog.getOrder().getHopeDate());
+			addLTTask(appletUser.getOpenId(),appletUser.getFormId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),orderLog.getOrder().getAmount(),msg.getContent(),url,orderLog.getCreateDate(),orderLog.getOrder().getHopeDate());
 		}
 		return pushTo(msg);
 

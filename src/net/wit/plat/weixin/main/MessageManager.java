@@ -37,7 +37,7 @@ public class MessageManager {
             String appSecret = bundle.getString("applet.secret");
             //System.out.println(data);
             // 调用接口创建菜单
-            int result = WeixinApi.sendTemplete(appId, appSecret, data);
+            int result = WeixinApi.sendAppletTemplete(appId, appSecret, data);
             return result == 0;
         } catch (Exception e) {
             return false;
@@ -65,7 +65,7 @@ public class MessageManager {
         return data;
     }
 
-    public static String createAppletOrderTempelete(String openId, String title, String url, String sn, String status, String amount, String content, String date, String hopeDate) {
+    public static String createAppletOrderTempelete(String openId,String formId, String title, String url, String sn, String status, String amount, String content, String date, String hopeDate) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String templateId = "applet.template.order";
         if (bundle.containsKey("applet.template.order")) {
@@ -74,8 +74,8 @@ public class MessageManager {
         String data = "";
         data += "{\"touser\":\"" + openId + "\",";
         data += "\"template_id\":\"" + templateId + "\",";
-        data += "\"url\":\"" + url + "\",";
-        data += "\"topcolor\":\"#FF0000\",";
+        data += "\"page\":\"" + url + "\",";
+        data += "\"form_id\":\""+formId+"\",";
         data += "\"data\":{";
         data += "\"keyword1\": {\"value\":\"" + amount + "\",\"color\":\"#FF0000\"},";
         data += "\"keyword2\": {\"value\":\"" + status + "\",\"color\":\"#173177\"},";

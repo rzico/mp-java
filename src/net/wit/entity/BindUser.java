@@ -55,6 +55,10 @@ public class BindUser extends BaseEntity {
 	@JoinColumn(nullable = false)
 	private Member member;
 
+	/** 交互号 */
+	private String formId;
+
+
 	public String getOpenId() {
 		return openId;
 	}
@@ -93,5 +97,13 @@ public class BindUser extends BaseEntity {
 
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	public String getFormId() {
+		return formId;
+	}
+
+	public void setFormId(String formId) {
+		this.formId = formId;
 	}
 }
