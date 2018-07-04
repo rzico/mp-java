@@ -351,8 +351,16 @@ public class OrderController extends BaseController {
 		filters.add(new Filter("seller", Filter.Operator.eq,member));
 		filters.add(new Filter("orderStatus", Filter.Operator.ne, Order.OrderStatus.cancelled));
 		pageable.setFilters(filters);
-//		pageable.setOrderDirection(net.wit.Order.Direction.desc);
-//		pageable.setOrderProperty("modifyDate");
+
+		List<net.wit.Order> orders = pageable.getOrders();
+		if (!"completed".equals(status) && !"cancelled".equals(status) && !"pending".equals(status)) {
+ 	    	pageable.setOrderDirection(net.wit.Order.Direction.asc);
+ 		    pageable.setOrderProperty("createDate");
+		} else {
+			pageable.setOrderDirection(net.wit.Order.Direction.desc);
+			pageable.setOrderProperty("createDate");
+		}
+
 		Page<Order> page = orderService.findPage(null,null,status,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(OrderListModel.bindList(page.getContent()));

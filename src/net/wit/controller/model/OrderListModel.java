@@ -40,6 +40,9 @@ public class OrderListModel extends BaseModel implements Serializable {
     /**  订单日期 */
     private Date createDate;
 
+    /**  预约时间 */
+    private Date hopeDate;
+
     /**  状态描述 */
     private String statusDescr;
 
@@ -189,6 +192,14 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.rebate = rebate;
     }
 
+    public Date getHopeDate() {
+        return hopeDate;
+    }
+
+    public void setHopeDate(Date hopeDate) {
+        this.hopeDate = hopeDate;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -214,6 +225,8 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.amount = order.getAmount();
         this.quantity = order.getQuantity();
         this.consignee = order.getConsignee();
+
+        this.hopeDate = order.getHopeDate();
     }
 
 

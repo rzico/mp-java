@@ -77,13 +77,14 @@ public class MessageManager {
         data += "\"page\":\"" + url + "\",";
         data += "\"form_id\":\""+formId+"\",";
         data += "\"data\":{";
-        data += "\"keyword1\": {\"value\":\"" + amount + "\",\"color\":\"#FF0000\"},";
-        data += "\"keyword2\": {\"value\":\"" + status + "\",\"color\":\"#173177\"},";
-        data += "\"keyword3\":{\"value\":\"" + sn + "\",\"color\":\"#173177\"},";
-        data += "\"keyword4\":{\"value\":\"" + hopeDate + "\",\"color\":\"#173177\"}";
-        data += "\"keyword5\":{\"value\":\"" + content + "\",\"color\":\"#173177\"}";
-        data += "\"keyword6\":{\"value\":\"" + date + "\",\"color\":\"#173177\"}";
-        data += "}";
+        data += "\"keyword1\": {\"value\":\"" + amount + "\"},";
+        data += "\"keyword2\": {\"value\":\"" + status + "\"},";
+        data += "\"keyword3\":{\"value\":\"" + sn + "\"},";
+        data += "\"keyword4\":{\"value\":\"" + hopeDate + "\"}";
+        data += "\"keyword5\":{\"value\":\"" + content + "\"}";
+        data += "\"keyword6\":{\"value\":\"" + date + "\"}";
+        data += "},";
+        data += "\"emphasis_keyword\": \"keyword2\"";
         data += "}";
         return data;
     }
