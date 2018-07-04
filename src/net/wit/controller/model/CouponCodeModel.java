@@ -121,14 +121,15 @@ public class CouponCodeModel extends BaseModel implements Serializable {
             this.name = owner.displayName();
             this.logo = owner.getLogo();
         }
-        String sc = "全场";
-        if (coupon.getType().equals(Coupon.Scope.mall)) {
-            sc = "商城购买";
-        } else
-        if (coupon.getType().equals(Coupon.Scope.shop)) {
-            sc = "到店消费";
-        } else {
-            sc = "全场";
+        String sc = "";
+        if (coupon.getType().equals(Coupon.Type.exchange)) {
+            if (coupon.getType().equals(Coupon.Scope.mall)) {
+                sc = "商城购买";
+            } else if (coupon.getType().equals(Coupon.Scope.shop)) {
+                sc = "到店消费";
+            } else {
+                sc = "全场";
+            }
         }
         this.type = coupon.getType();
         this.couponName = sc+coupon.getName();
