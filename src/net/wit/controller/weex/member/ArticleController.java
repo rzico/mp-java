@@ -226,9 +226,10 @@ public class ArticleController extends BaseController {
             article.setIsTop(false);
             article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
+            article.setIsDraft(false);
         }
         article.setIsDraft(isDraft);
-        article.setIsAudit(true);//直接提交审核
+        article.setIsAudit(article.getIsAudit());//直接提交审核
         article.setTitle(title);
         article.setAuthor(author);
         article.setThumbnail(thumbnail);
@@ -291,8 +292,8 @@ public class ArticleController extends BaseController {
         if (articleCatalogId!=null) {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
-        article.setIsDraft(false);
-//        article.setIsPublish(true);
+//        article.setIsDraft(false);
+        article.setIsPublish(true);
         articleService.update(article);
 
         List<Filter> filters = new ArrayList<Filter>();
