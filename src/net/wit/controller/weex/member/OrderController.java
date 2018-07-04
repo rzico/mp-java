@@ -77,6 +77,9 @@ public class OrderController extends BaseController {
 	@Resource(name = "shippingServiceImpl")
 	private ShippingService shippingService;
 
+	@Resource(name = "paymentServiceImpl")
+	private PaymentService paymentService;
+
 	/**
 	 *  获取订单信息
 	 */
@@ -166,7 +169,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,Long memberId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
+	Message create(Long id,Integer quantity,Long receiverId,Long memberId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId,Long shopId,Long adminId,Integer level) {
 		Member member = memberService.getCurrent();
 		Member loginMember = member;
 		if (memberId!=null) {
@@ -186,6 +189,17 @@ public class OrderController extends BaseController {
 		if (receiver == null) {
 			return Message.error("无效地址");
 		}
+
+		Shop shop = shopService.find(shopId);
+		Admin admin = null;
+
+		if (admin!=null && shop!=null && level!=null && receiver!=null) {
+			receiver.setShop(shop);
+			receiver.setAdmin(admin);
+			receiver.setLevel(level);
+			receiverService.update(receiver);
+		}
+
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
@@ -484,6 +498,46 @@ public class OrderController extends BaseController {
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		return Message.success(model,"退款成功");
+	}
+
+	/**
+	 *  补单
+	 */
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public @ResponseBody
+	Message save(String sn,String paymentPluginId,Order.ShippingMethod shippingMethod,Date hopeDate,HttpServletRequest request) {
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Order order = orderService.findBySn(sn);
+		if (order==null) {
+			return Message.error("无效订单id");
+		}
+
+		//完成支付
+		if (order.getPaymentStatus().equals(Order.PaymentStatus.unpaid)) {
+			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
+			if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
+				return Message.error("支付插件无效");
+			}
+			try {
+				Payment payment = orderService.payment(order,null);
+				payment.setMethod(Payment.Method.offline);
+				payment.setPaymentPluginId(paymentPluginId);
+				payment.setPaymentMethod(paymentPlugin.getName());
+				payment.setTranSn(payment.getSn());
+				paymentService.update(payment);
+				paymentService.handle(payment);
+			} catch (Exception e1) {
+				return Message.error("支付失败");
+			}
+		}
+
+		OrderModel model = new OrderModel();
+		model.bind(order);
+		return Message.success(model,"保存成功");
 	}
 
 	/**

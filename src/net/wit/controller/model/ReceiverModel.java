@@ -126,7 +126,23 @@ public class ReceiverModel extends BaseModel implements Serializable {
         this.shopName = shopName;
     }
 
-    //    public void setRoadId(Long roadId) {
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public String getAdminName() {
+        return adminName;
+    }
+
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
+
+//    public void setRoadId(Long roadId) {
 //        this.roadId = roadId;
 //    }
 //

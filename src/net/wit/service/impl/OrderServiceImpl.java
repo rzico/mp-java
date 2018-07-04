@@ -212,6 +212,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setMemo(memo);
 		order.setMember(member);
 		order.setPaymentMethod(Order.PaymentMethod.online);
+		order.setPaymentPluginName("线上付款");
 		order.setIsAllocatedStock(false);
 		order.setIsDistribution(false);
 		order.setRebateAmount(BigDecimal.ZERO);
@@ -552,6 +553,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 					paymentService.handle(payment);
 					order.setPaymentMethod(Order.PaymentMethod.offline);
+					order.setPaymentPluginName("电子券结算");
 					orderDao.merge(order);
 				}
 			} catch (Exception e) {
@@ -575,6 +577,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 							paymentService.handle(payment);
 
 							order.setPaymentMethod(Order.PaymentMethod.offline);
+							order.setPaymentPluginName("月结付款");
 							orderDao.merge(order);
 						}
 					} catch (Exception e) {
