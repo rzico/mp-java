@@ -172,6 +172,33 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		}
 	}
 
+
+	/**
+	 * 添加小程序模版发送任务
+	 */
+	private void addLTTask(final String openId, final String first, final String OrderSn, final String OrderStatus,final BigDecimal amount,final String remark,final String url,final Date timeStamp,final Date hopeDate) {
+		try {
+			taskExecutor.execute(new Runnable() {
+				public void run() {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					NumberFormat nf=NumberFormat.getNumberInstance();
+					nf.setMaximumFractionDigits(2);
+					if (hopeDate!=null) {
+						String data = MessageManager.createAppletOrderTempelete(openId, first, url,
+								OrderSn, OrderStatus, nf.format(amount), remark, formatter.format(timeStamp), formatter.format(hopeDate));
+						MessageManager.sendMsg(data);
+					} else {
+						String data = MessageManager.createAppletOrderTempelete(openId, first, url,
+								OrderSn, OrderStatus, nf.format(amount), remark, formatter.format(timeStamp),"");
+						MessageManager.sendMsg(data);
+					}
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Member GMInit(Message.Type type) {
 		String userName = "gm_"+String.valueOf(10200+type.ordinal());
 		Member sender = memberDao.findByUsername(userName);
@@ -255,7 +282,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				message.setMember(sender);
 			}
 			super.save(message);
-			addTask(message.getSender().getUsername(),message.getReceiver().userId(),message.getCreateDate().getTime(),message.getContent());
+			if (message.getSender().getUuid()!=null) {
+				addTask(message.getSender().getUsername(), message.getReceiver().userId(), message.getCreateDate().getTime(), message.getContent());
+			}
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -299,7 +328,14 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			String url = "http://"+bundle.getString("weixin.url")+"/#/orderDetails?sn="+orderLog.getOrder().getSn();
 			addWXTask(bindUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),msg.getContent(),url,orderLog.getCreateDate());
 		}
+
+		BindUser appletUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("applet.appid"), BindUser.Type.weixin);
+		if (appletUser!=null) {
+			String url = "pages/member/shipping/index";
+			addLTTask(appletUser.getOpenId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),orderLog.getOrder().getAmount(),msg.getContent(),url,orderLog.getCreateDate(),orderLog.getOrder().getHopeDate());
+		}
 		return pushTo(msg);
+
 	}
 
 	//订单提醒

@@ -190,8 +190,14 @@ public class OrderController extends BaseController {
 			return Message.error("无效地址");
 		}
 
-		Shop shop = shopService.find(shopId);
 		Admin admin = null;
+		Shop shop = null;
+		if (shopId!=null) {
+			shop = shopService.find(shopId);
+		}
+		if (adminId!=null) {
+			admin = adminService.find(adminId);
+		}
 
 		if (admin!=null && shop!=null && level!=null && receiver!=null) {
 			receiver.setShop(shop);

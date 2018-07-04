@@ -31,8 +31,8 @@ public class MessageManager {
     public static String createOrderTempelete(String openId, String title, String url, String sn, String status, String content, String date) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String templateId = "R5QbFydHVPqqAyZdt5U13-a6NyvXB2M49bN3OiZy_M0";
-        if (bundle.containsKey("orderTemplate")) {
-            templateId = bundle.getString("orderTemplate");
+        if (bundle.containsKey("weixin.template.order")) {
+            templateId = bundle.getString("weixin.template.order");
         }
         String data = "";
         data += "{\"touser\":\"" + openId + "\",";
@@ -48,6 +48,30 @@ public class MessageManager {
         data += "}";
         return data;
     }
+
+    public static String createAppletOrderTempelete(String openId, String title, String url, String sn, String status, String amount, String content, String date, String hopeDate) {
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+        String templateId = "applet.template.order";
+        if (bundle.containsKey("applet.template.order")) {
+            templateId = bundle.getString("applet.template.order");
+        }
+        String data = "";
+        data += "{\"touser\":\"" + openId + "\",";
+        data += "\"template_id\":\"" + templateId + "\",";
+        data += "\"url\":\"" + url + "\",";
+        data += "\"topcolor\":\"#FF0000\",";
+        data += "\"data\":{";
+        data += "\"keyword1\": {\"value\":\"" + amount + "\",\"color\":\"#FF0000\"},";
+        data += "\"keyword2\": {\"value\":\"" + status + "\",\"color\":\"#173177\"},";
+        data += "\"keyword3\":{\"value\":\"" + sn + "\",\"color\":\"#173177\"},";
+        data += "\"keyword4\":{\"value\":\"" + hopeDate + "\",\"color\":\"#173177\"}";
+        data += "\"keyword5\":{\"value\":\"" + content + "\",\"color\":\"#173177\"}";
+        data += "\"keyword6\":{\"value\":\"" + date + "\",\"color\":\"#173177\"}";
+        data += "}";
+        data += "}";
+        return data;
+    }
+
 
     public static String createDepositTempelete(String openId, String title, String url, String date, String adCharge, String balance, String content) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");

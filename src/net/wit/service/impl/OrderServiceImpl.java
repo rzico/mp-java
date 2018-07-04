@@ -1167,6 +1167,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderDao.merge(order);
 		} else {
 			order.setFee(BigDecimal.ZERO);
+			orderDao.merge(order);
 			payment.setPaymentPluginId("cashPayPlugin");
 			payment.setPaymentMethod("现金");
 		}
