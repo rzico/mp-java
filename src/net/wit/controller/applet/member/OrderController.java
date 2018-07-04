@@ -62,6 +62,9 @@ public class OrderController extends BaseController {
 	@Resource(name = "pluginServiceImpl")
 	private PluginService pluginService;
 
+	@Resource(name = "bindUserServiceImpl")
+	private BindUserService bindUserService;
+
 	/**
 	 * 订单锁定
 	 */
@@ -173,7 +176,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
+	Message create(Long id,Integer quantity,Long receiverId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId,String formId) {
 		Member member = memberService.getCurrent();
 		Cart cart = null;
 		if (id==null) {
@@ -200,6 +203,17 @@ public class OrderController extends BaseController {
 		if (dragonId!=null) {
 			dragon = dragonService.find(dragonId);
 		}
+
+        if (formId!=null) {
+			ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+			BindUser bindUser = bindUserService.findMember(member, bundle.getString("applet.appid"), BindUser.Type.weixin);
+			if (bindUser != null) {
+				bindUser.setFormId(formId);
+				bindUserService.update(bindUser);
+			}
+		}
+
+
 		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate);
 
 		if (cart != null) {

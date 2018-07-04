@@ -183,6 +183,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					NumberFormat nf=NumberFormat.getNumberInstance();
 					nf.setMaximumFractionDigits(2);
+					System.out.println(formId);
 					if (hopeDate!=null) {
 						String data = MessageManager.createAppletOrderTempelete(openId,formId, first, url,
 								OrderSn, OrderStatus, nf.format(amount), remark, formatter.format(timeStamp), formatter.format(hopeDate));
