@@ -52,6 +52,9 @@ public class ShippingListModel extends BaseModel implements Serializable {
     /**  收货人 */
     private String consignee;
 
+    /**  分组名称 */
+    private String groupName;
+
     /** 商品 */
     private List<ShippingItemModel> shippingItems;
 
@@ -175,6 +178,14 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.memberId = memberId;
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
     public void bind(Shipping shipping) {
         Order order = shipping.getOrder();
         this.id = shipping.getId();
@@ -195,6 +206,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
 
         this.quantity = shipping.getQuantity();
         this.consignee = shipping.getConsignee();
+
+        this.groupName = shipping.getGroupName();
     }
 
     public static List<ShippingListModel> bindList(List<Shipping> shippings) {
