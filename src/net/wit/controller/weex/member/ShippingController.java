@@ -364,31 +364,30 @@ public class ShippingController extends BaseController {
 
 		if (body!=null) {
 			List<ShippingBarrel> barrels = shipping.getShippingBarrels();
-
+			for (ShippingBarrel sb:barrels) {
+				sb.setReturnQuantity(0);
+				sb.setQuantity(0);
+			}
 			JSONArray ja = JSONArray.fromObject(body);
 
 			for (int i=0;i<ja.size();i++) {
 				JSONObject jn = ja.getJSONObject(i);
-				Barrel br = barrelService.find(jn.getLong("id"));
+				Integer q = jn.getInt("quantity");
+				Integer r = jn.getInt("returnQuantity");
+				if (q==0 && r==0) {
+					continue;
+				}
+				Long bid = jn.getLong("id");
 				ShippingBarrel b = null;
 				for (ShippingBarrel sb:barrels) {
-					if (sb.getBarrel().equals(br)) {
+					if (sb.getBarrel().getId().equals(bid)) {
 						b = sb;
 						break;
 					}
 				}
-				b.setBarrel(br);
-				b.setQuantity(jn.getInt("quantity"));
-				b.setReturnQuantity(jn.getInt("returnQuantity"));
-				b.setName(br.getName());
-				b.setShipping(shipping);
-				b.setOrder(shipping.getOrder());
-				b.setAdmin(shipping.getAdmin());
-				b.setEnterprise(shipping.getEnterprise());
-				b.setSeller(shipping.getSeller());
-				b.setMember(shipping.getMember());
-				b.setShop(shipping.getShop());
-				barrels.add(b);
+
+				b.setQuantity(q);
+				b.setReturnQuantity(r);
 			}
 			shipping.setShippingBarrels(barrels);
 
