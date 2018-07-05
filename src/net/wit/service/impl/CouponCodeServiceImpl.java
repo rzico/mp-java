@@ -184,7 +184,7 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 			Long stock = couponCode.getGiven();
 			couponCode.setStock(couponCode.getStock()-couponCode.getGiven());
 			if (couponCode.getGiven()==0) {
-				throw new RuntimeException("不能重复领取");
+				throw new RuntimeException("已经被领取");
 			}
 			if (couponCode.getStock()<0) {
 				throw new RuntimeException("不能重复领取");
