@@ -86,6 +86,9 @@ public class CouponController extends BaseController {
             if (coupon == null) {
                 return Message.error("无效优惠券id");
             }
+            if (coupon.getType().equals(Coupon.Type.exchange)) {
+                return Message.error("兑换券只能转赠");
+            }
             try {
                 couponCode = couponCodeService.build(coupon, member);
             } catch (Exception e) {
