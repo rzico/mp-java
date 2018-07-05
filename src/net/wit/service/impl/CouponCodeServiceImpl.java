@@ -13,6 +13,7 @@ import net.wit.Principal;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.CouponDao;
+import net.wit.dao.CouponGivenDao;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,6 +38,9 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 
 	@Resource(name = "couponDaoImpl")
 	private CouponDao couponDao;
+
+	@Resource(name = "couponGivenDaoImpl")
+	private CouponGivenDao couponGivenDao;
 
 	@Resource(name = "couponCodeDaoImpl")
 	public void setBaseDao(CouponCodeDao couponCodeDao) {
@@ -188,7 +192,15 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 			couponCode.setGiven(0L);
 			couponCodeDao.merge(couponCode);
 
+			CouponGiven couponGiven = new CouponGiven();
+			couponGiven.setCoupon(couponCode.getCoupon());
+			couponGiven.setMember(couponCode.getMember());
+			couponGiven.setGiven(member);
+			couponGiven.setQuantity(stock);
+			couponGivenDao.persist(couponGiven);
+
 			return build(couponCode.getCoupon(),member,stock);
+
 		} else {
 			couponCode.setMember(member);
 			couponCodeDao.merge(couponCode);
