@@ -116,6 +116,7 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 		couponCode.setCoupon(coupon);
 		couponCode.setMember(member);
 		couponCode.setStock(1L);
+		couponCode.setGiven(0L);
 		couponCodeDao.persist(couponCode);
 		coupon.setStock(coupon.getStock()-1);
 		couponDao.merge(coupon);
@@ -123,14 +124,15 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 	}
 
 	public CouponCode build(Coupon coupon, Member member,Long amount) throws Exception {
+
 		couponDao.lock(coupon, LockModeType.PESSIMISTIC_WRITE);
+
 //		if (coupon.getStock().equals(0L)) {
 //			throw new RuntimeException("已抢完,下次再来");
 //		}
 //		if (coupon.getStock().compareTo(amount)<0) {
 //			throw new RuntimeException("库存不足，下次再来");
 //		}
-
 
 		CouponCode couponCode = null;
 
@@ -143,6 +145,7 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 		if (codes.size()>0) {
 			couponCode = codes.get(0);
 		}
+
 		if (couponCode==null) {
 			couponCode = new CouponCode();
 			String uuid = UUID.randomUUID().toString().toUpperCase();
@@ -151,15 +154,47 @@ public class CouponCodeServiceImpl extends BaseServiceImpl<CouponCode, Long> imp
 			couponCode.setCoupon(coupon);
 			couponCode.setMember(member);
 			couponCode.setStock(amount);
+			couponCode.setGiven(0L);
 			couponCodeDao.persist(couponCode);
 		} else {
 			couponCode.setStock(couponCode.getStock()+amount);
 			couponCode.setIsUsed(false);
 			couponCodeDao.merge(couponCode);
 		}
+
 //		coupon.setStock(coupon.getStock()-amount);
 //		couponDao.merge(coupon);
+
 		return couponCode;
+	}
+
+	public CouponCode given(CouponCode couponCode,Member member) throws Exception {
+		couponCodeDao.lock(couponCode,LockModeType.PESSIMISTIC_WRITE);
+		List<Filter> filters = new ArrayList<>();
+		filters.add(new Filter("member",Operator.eq,member));
+		filters.add(new Filter("coupon",Operator.eq,couponCode.getCoupon()));
+
+		List<CouponCode> codes = couponCodeDao.findList(null,null,filters,null);
+
+		if (couponCode.getCoupon().getType().equals(Coupon.Type.exchange)) {
+			Long stock = couponCode.getGiven();
+			couponCode.setStock(couponCode.getStock()-couponCode.getGiven());
+			if (couponCode.getGiven()==0) {
+				throw new RuntimeException("不能重复领取");
+			}
+			if (couponCode.getStock()<0) {
+				throw new RuntimeException("不能重复领取");
+			}
+			couponCode.setGiven(0L);
+			couponCodeDao.merge(couponCode);
+
+			return build(couponCode.getCoupon(),member,stock);
+		} else {
+			couponCode.setMember(member);
+			couponCodeDao.merge(couponCode);
+			return  couponCode;
+		}
+
 	}
 
 }

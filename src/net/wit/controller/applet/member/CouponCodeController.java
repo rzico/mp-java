@@ -108,7 +108,24 @@ public class CouponCodeController extends BaseController {
         }
         return Message.bind(CouponCodeModel.bindList(models),request);
     }
+    /**
+     *   转赠
+     */
+    @RequestMapping(value = "/given")
+    @ResponseBody
+    public Message given(Long id,Long quantity,HttpServletRequest request) {
+        CouponCode  couponCode = couponCodeService.find(id);
 
+        if (couponCode==null) {
+            return Message.error("无效电子票");
+        }
+        if (quantity==null) {
+            quantity = 50L;
+        }
+        couponCode.setGiven(quantity);
+        couponCodeService.update(couponCode);
+        return Message.success("转赠发起成功");
+    }
     /**
      *   获取优惠券
      */

@@ -57,6 +57,12 @@ public class CouponCode extends BaseEntity {
 	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '数量'")
 	private Long stock;
 
+	/** 转赠 */
+	@NotNull
+	@Min(0)
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '转赠'")
+	private Long given;
+
 	/**
 	 * 获取号码
 	 * 
@@ -171,7 +177,15 @@ public class CouponCode extends BaseEntity {
 		return !isUsed && getCoupon().hasBegun() && !getCoupon().hasExpired() && !getCoupon().getDeleted();
 	}
 
-	public BigDecimal calculate(BigDecimal amount,Order order) {
+	public Long getGiven() {
+		return given;
+	}
+
+	public void setGiven(Long given) {
+		this.given = given;
+	}
+
+	public BigDecimal calculate(BigDecimal amount, Order order) {
       if (amount.compareTo(BigDecimal.ZERO)<0) {
           return  BigDecimal.ZERO;
 	  }

@@ -26,6 +26,8 @@ public interface CouponCodeService extends BaseService<CouponCode, Long> {
 	CouponCode findByCode(String code);
 	Page<CouponCode> findPage(Date beginDate,Date endDate, Pageable pageable);
 
+	CouponCode given(CouponCode couponCode,Member member) throws Exception;
+
 	/**
 	 * 生成优惠码
 	 * @param coupon 优惠券

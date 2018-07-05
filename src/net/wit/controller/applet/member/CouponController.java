@@ -60,7 +60,7 @@ public class CouponController extends BaseController {
      */
     @RequestMapping(value = "/activate")
     @ResponseBody
-    public Message activate(Long id,Long couponCodeId,Long xuid, HttpServletRequest request){
+    public Message activate(Long id,Long couponCodeId,Long xuid,HttpServletRequest request) {
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -78,9 +78,11 @@ public class CouponController extends BaseController {
             if (!couponCode.getMember().equals(x)) {
                 return Message.error("已经被领取");
             }
-            couponCode.setMember(member);
-            couponCodeService.update(couponCode);
-
+            try {
+                couponCodeService.given(couponCode, member);
+            } catch (Exception e) {
+                return Message.error(e.getMessage());
+            }
         } else {
             Coupon coupon = couponService.find(id);
             if (coupon == null) {
