@@ -40,6 +40,9 @@ public class ShippingListModel extends BaseModel implements Serializable {
     /**  订单日期 */
     private Date createDate;
 
+    /**  预约时间 */
+    private Date hopeDate;
+
     /**  状态描述 */
     private String statusDescr;
 
@@ -186,6 +189,14 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.groupName = groupName;
     }
 
+    public Date getHopeDate() {
+        return hopeDate;
+    }
+
+    public void setHopeDate(Date hopeDate) {
+        this.hopeDate = hopeDate;
+    }
+
     public void bind(Shipping shipping) {
         Order order = shipping.getOrder();
         this.id = shipping.getId();
@@ -208,6 +219,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.consignee = shipping.getConsignee();
 
         this.groupName = shipping.getGroupName();
+
+        this.hopeDate = shipping.getHopeDate();
     }
 
     public static List<ShippingListModel> bindList(List<Shipping> shippings) {
