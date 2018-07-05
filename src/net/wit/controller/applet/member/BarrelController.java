@@ -21,10 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -54,6 +51,7 @@ public class BarrelController extends BaseController {
 
     @Resource(name = "barrelStockServiceImpl")
     private BarrelStockService barrelStockService;
+
      /**
      *  我的空桶
      */
@@ -66,14 +64,16 @@ public class BarrelController extends BaseController {
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
-
+        Card card = null;
         if ("3".equals(bundle.getString("weex")) ) {
-            authorId = Long.parseLong(bundle.getString("platform"));
+            card = member.getCards().get(0);
+        } else {
+            Member author = memberService.find(authorId);
+            card = member.card(author);
         }
-
-        Member author = memberService.find(authorId);
-
-        Card card = member.card(author);
+        if (card==null) {
+            return Message.error("无效会员卡");
+        }
 
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("card", Filter.Operator.eq,card));
@@ -82,4 +82,38 @@ public class BarrelController extends BaseController {
         return Message.bind(BarrelStockModel.bindList(page),request);
     }
 
+    /**
+     *  我的空桶
+     */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @ResponseBody
+    public Message view(Long authorId,Pageable pageable, HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+        Card card = null;
+        if ("3".equals(bundle.getString("weex")) ) {
+            card = member.getCards().get(0);
+        } else {
+            Member author = memberService.find(authorId);
+            card = member.card(author);
+        }
+        if (card==null) {
+            return Message.error("无效会员卡");
+        }
+
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter("card", Filter.Operator.eq,card));
+        List<BarrelStock> page = barrelStockService.findList(null,null,filters,null);
+        BigDecimal total = BigDecimal.ZERO;
+        for (BarrelStock stock:page) {
+            total = total.add(stock.getPledge());
+        }
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("pledge",total);
+        return Message.bind(data,request);
+    }
 }
