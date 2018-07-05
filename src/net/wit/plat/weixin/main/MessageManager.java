@@ -67,7 +67,7 @@ public class MessageManager {
 
     public static String createAppletOrderTempelete(String openId,String formId, String title, String url, String sn, String status, String amount, String content, String date, String hopeDate) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        String templateId = "applet.template.order";
+        String templateId = "iFTDeRcyULjCukkPp7FPq8y-DywTE8j5CJUcwJEmyJk";
         if (bundle.containsKey("applet.template.order")) {
             templateId = bundle.getString("applet.template.order");
         }
@@ -80,12 +80,14 @@ public class MessageManager {
         data += "\"keyword1\": {\"value\":\"" + amount + "\"},";
         data += "\"keyword2\": {\"value\":\"" + status + "\"},";
         data += "\"keyword3\":{\"value\":\"" + sn + "\"},";
-        data += "\"keyword4\":{\"value\":\"" + hopeDate + "\"}";
-        data += "\"keyword5\":{\"value\":\"" + content + "\"}";
+        data += "\"keyword4\":{\"value\":\"" + hopeDate + "\"},";
+        data += "\"keyword5\":{\"value\":\"" + content + "\"},";
         data += "\"keyword6\":{\"value\":\"" + date + "\"}";
         data += "},";
         data += "\"emphasis_keyword\": \"keyword2\"";
         data += "}";
+
+        System.out.println(data);
         return data;
     }
 

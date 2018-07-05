@@ -66,6 +66,7 @@ public class ShippingController extends BaseController {
 	/**
 	 * 送货锁定
 	 */
+
 	@RequestMapping(value = "/lock", method = RequestMethod.POST)
 	public @ResponseBody
 	Message lock(String sn) {
@@ -93,6 +94,7 @@ public class ShippingController extends BaseController {
 	/**
 	 *  送货情况
 	 */
+
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public @ResponseBody
 	Message view(String sn,HttpServletRequest request) {
@@ -114,6 +116,7 @@ public class ShippingController extends BaseController {
 	/**
 	 *  派单
 	 */
+
 	@RequestMapping(value = "/dispatch", method = RequestMethod.POST)
 	public @ResponseBody
 	Message dispatch(String sn,Long shopId,Long adminId,String memo,Boolean transfer,HttpServletRequest request) {
@@ -159,6 +162,56 @@ public class ShippingController extends BaseController {
 			if (transfer!=null) {
 				shipping.setTransfer(transfer);
 			}
+			shippingService.dispatch(shipping);
+		} catch (Exception e) {
+			return Message.error(e.getMessage());
+		}
+
+		ShippingModel model = new ShippingModel();
+		model.bind(shipping);
+		return Message.bind(model,request);
+	}
+
+	/**
+	 *  驳回
+	 */
+	@RequestMapping(value = "/reject", method = RequestMethod.POST)
+	public @ResponseBody
+	Message reject(String sn,HttpServletRequest request) {
+
+		Member member = memberService.getCurrent();
+		if (member==null) {
+			return Message.error(Message.SESSION_INVAILD);
+		}
+
+		Shipping shipping = shippingService.findBySn(sn);
+		if (shipping==null) {
+			return Message.error("无效送货id");
+		}
+
+		Admin admin = adminService.findByMember(shipping.getSeller());
+		if (admin==null) {
+			return Message.error("没有开通店铺");
+		}
+
+		if (admin.getEnterprise()==null) {
+			return Message.error("没有开通店铺");
+		}
+
+		if (admin.getShop()==null) {
+			return Message.error("没有分配店铺");
+		}
+
+		shipping.setEnterprise(admin.getEnterprise());
+		shipping.setShop(admin.getShop());
+
+		shipping.setAdmin(null);
+
+		shipping.setShippingStatus(Shipping.ShippingStatus.unconfirmed);
+		shipping.setOrderStatus(Shipping.OrderStatus.unconfirmed);
+
+
+		try {
 			shippingService.dispatch(shipping);
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
