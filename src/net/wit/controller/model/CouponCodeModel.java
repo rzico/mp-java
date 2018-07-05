@@ -167,6 +167,7 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         }
 
         this.given = couponCode.getGiven();
+
     }
 
 

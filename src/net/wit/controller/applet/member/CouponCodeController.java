@@ -107,6 +107,7 @@ public class CouponCodeController extends BaseController {
             }
         }
         return Message.bind(CouponCodeModel.bindList(models),request);
+
     }
     /**
      *   转赠
