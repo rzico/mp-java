@@ -58,6 +58,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
     /**  分组名称 */
     private String groupName;
 
+    private Boolean isSelf;
+
     /** 商品 */
     private List<ShippingItemModel> shippingItems;
 
@@ -197,6 +199,14 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.hopeDate = hopeDate;
     }
 
+    public Boolean getIsSelf() {
+        return isSelf;
+    }
+
+    public void setIsSelf(Boolean self) {
+        isSelf = self;
+    }
+
     public void bind(Shipping shipping) {
         Order order = shipping.getOrder();
         this.id = shipping.getId();
@@ -221,6 +231,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.groupName = shipping.getGroupName();
 
         this.hopeDate = shipping.getHopeDate();
+
+        this.isSelf = shipping.getSeller().equals(shipping.getEnterprise().getMember());
     }
 
     public static List<ShippingListModel> bindList(List<Shipping> shippings) {

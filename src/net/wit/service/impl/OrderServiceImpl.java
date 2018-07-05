@@ -240,6 +240,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 		List<OrderItem> orderItems = order.getOrderItems();
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
 		if (product != null) {
 
@@ -260,7 +261,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 			orderItems.add(orderItem);
 
-			ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 			if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
                 Card card = member.getCards().get(0);
                 order.setSeller(card.getOwner());
@@ -314,7 +314,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						orderItem.setCouponQuantity(0L);
 						orderItems.add(orderItem);
 
-						ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 						if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
 							Card card = member.getCards().get(0);
 							order.setSeller(card.getOwner());
@@ -351,13 +350,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 
-//		BigDecimal freight = shippingMethod.calculateFreight(cart.getWeight());
-//		for (Promotion promotion : cart.getPromotions()) {
-//			if (promotion.getIsFreeShipping()) {
-//				freight = new BigDecimal(0);
-//				break;
-//			}
-//		}
+		if (bundle.containsKey("weex") && bundle.getString("weex").equals("3")) {
+			//水达人，有水票时，以水票所属商家为主
+			if (member != null && !order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
+				List<CouponCode> couponCodes = member.getCouponCodes();
+				for (CouponCode code : couponCodes) {
+					if (   code.getCoupon().getType().equals(Coupon.Type.exchange)
+							&& code.getEnabled()
+							&& !code.getCoupon().getScope().equals(Coupon.Scope.shop)
+					   ) {
+						BigDecimal d = code.calculate(order.getPrice(),order);
+						if (d.compareTo(BigDecimal.ZERO)>0) {
+							order.setSeller(code.getCoupon().getDistributor());
+						}
+					}
+				}
+			}
+		}
 
 		if (member != null && !order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 			List<CouponCode> couponCodes = member.getCouponCodes();

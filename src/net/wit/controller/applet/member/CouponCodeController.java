@@ -97,7 +97,7 @@ public class CouponCodeController extends BaseController {
 
         List<CouponCode> models = new ArrayList<>();
         for (CouponCode c:member.getCouponCodes()) {
-            if (c.getEnabled()) {
+            if (c.getEnabled() && c.getStock()>0) {
                 if (owner==null) {
                     models.add(c);
                 } else
