@@ -115,7 +115,7 @@ public class CouponServiceImpl extends BaseServiceImpl<Coupon, Long> implements 
 			coupon.setIntroduction("电子券,请勿删除");
 			coupon.setMinimumPrice(BigDecimal.ZERO);
 			coupon.setType(Coupon.Type.exchange);
-			coupon.setName(product.getName()+"-电子券");
+			coupon.setName(product.getName());
 			coupon.setScope(Coupon.Scope.all);
 			coupon.setStock(0L);
 			couponDao.persist(coupon);
