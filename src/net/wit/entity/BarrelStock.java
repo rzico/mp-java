@@ -40,10 +40,15 @@ public class BarrelStock extends OrderEntity {
 	@Column(columnDefinition="int(11) not null default 0 comment '库存数'")
 	private Integer stock;
 
-	/** 期初数 */
+	/** 押桶数 */
 	@Min(0)
-	@Column(columnDefinition="int(11) not null default 0 comment '期初数'")
-	private Integer period ;
+	@Column(columnDefinition="int(11) not null default 0 comment '押桶数'")
+	private Integer mortgage ;
+
+	/** 借桶数 */
+	@Min(0)
+	@Column(columnDefinition="int(11) not null default 0 comment '借桶数'")
+	private Integer borrow ;
 
 	/** 桶押金 */
 	@Min(0)
@@ -66,12 +71,20 @@ public class BarrelStock extends OrderEntity {
 		this.stock = stock;
 	}
 
-	public Integer getPeriod() {
-		return period;
+	public Integer getMortgage() {
+		return mortgage;
 	}
 
-	public void setPeriod(Integer period) {
-		this.period = period;
+	public void setMortgage(Integer mortgage) {
+		this.mortgage = mortgage;
+	}
+
+	public Integer getBorrow() {
+		return borrow;
+	}
+
+	public void setBorrow(Integer borrow) {
+		this.borrow = borrow;
 	}
 
 	public BigDecimal getPledge() {

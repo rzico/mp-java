@@ -81,8 +81,8 @@ public class ProductController extends BaseController {
 		filters.add(new Filter("type", Filter.Operator.eq,Product.Type.warehouse));
 		filters.add(new Filter("isList", Filter.Operator.eq,true));
 		pageable.setFilters(filters);
-		pageable.setOrderDirection(Order.Direction.desc);
-		pageable.setOrderProperty("modifyDate");
+		pageable.setOrderDirection(Order.Direction.asc);
+		pageable.setOrderProperty("barrel");
 		Page<Product> page = productService.findPage(null,null,null,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));

@@ -317,7 +317,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					bs.setCard(card);
 					bs.setBarrel(b.getBarrel());
 					bs.setStock(b.getQuantity() - b.getReturnQuantity());
-					bs.setPeriod(0);
+					bs.setBorrow(0);
+					bs.setMortgage(0);
 					bs.setPledge(BigDecimal.ZERO);
 					barrelStockDao.persist(bs);
 				} else {

@@ -3,6 +3,7 @@ import net.wit.entity.Barrel;
 import net.wit.entity.BarrelStock;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,12 @@ public class BarrelStockModel extends BaseModel implements Serializable {
     private String logo;
 
     private Integer stock;
+
+    private Integer mortgage ;
+
+    private Integer borrow ;
+
+    private BigDecimal pledge ;
 
     public Long getId() {
         return id;
@@ -46,11 +53,38 @@ public class BarrelStockModel extends BaseModel implements Serializable {
         this.logo = logo;
     }
 
+    public Integer getMortgage() {
+        return mortgage;
+    }
+
+    public void setMortgage(Integer mortgage) {
+        this.mortgage = mortgage;
+    }
+
+    public Integer getBorrow() {
+        return borrow;
+    }
+
+    public void setBorrow(Integer borrow) {
+        this.borrow = borrow;
+    }
+
+    public BigDecimal getPledge() {
+        return pledge;
+    }
+
+    public void setPledge(BigDecimal pledge) {
+        this.pledge = pledge;
+    }
+
     public void bind(BarrelStock barrelStock) {
         this.id = barrelStock.getBarrel().getId();
         this.name = barrelStock.getBarrel().getName();
         this.logo = barrelStock.getBarrel().getLogo();
         this.stock = barrelStock.getStock();
+        this.borrow = barrelStock.getBorrow();
+        this.mortgage = barrelStock.getMortgage();
+        this.pledge = barrelStock.getPledge();
     }
 
     public static List<BarrelStockModel> bindList(List<BarrelStock> barrels) {
