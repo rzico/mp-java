@@ -80,7 +80,7 @@ public class CouponController extends BaseController {
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @ResponseBody
-    public Message view(Long id,HttpServletRequest request){
+    public Message view(Long id,Long couponCodeId,HttpServletRequest request){
         Coupon coupon = couponService.find(id);
         CouponModel model = new CouponModel();
         model.bind(coupon);
@@ -100,6 +100,14 @@ public class CouponController extends BaseController {
             }
         } else {
             data.put("activate",false);
+        }
+        if (couponCodeId!=null) {
+            CouponCode c = couponCodeService.find(couponCodeId);
+            if (c!=null) {
+                data.put("given",c.getGiven());
+            } else {
+                data.put("given","1");
+            }
         }
         return Message.bind(data,request);
     }

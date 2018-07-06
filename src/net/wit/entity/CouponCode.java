@@ -185,6 +185,33 @@ public class CouponCode extends BaseEntity {
 		this.given = given;
 	}
 
+	public BigDecimal checkSeller(BigDecimal amount, Order order) {
+
+		if (amount.compareTo(BigDecimal.ZERO)<0) {
+			return  BigDecimal.ZERO;
+		}
+		if (!getEnabled()) {
+			return  BigDecimal.ZERO;
+		}
+		if (getStock()<=0) {
+			return  BigDecimal.ZERO;
+		}
+		Coupon coupon = getCoupon();
+		BigDecimal discount = BigDecimal.ZERO;
+			if (coupon.getType().equals(Coupon.Type.exchange) && order!=null){
+			for (OrderItem orderItem:order.getOrderItems()) {
+				if (orderItem.getCouponCode()==null && coupon.getGoods().equals(orderItem.getProduct().getGoods())) {
+					if (orderItem.getQuantity()>getStock()) {
+						discount = discount.add(orderItem.getPrice().multiply(new BigDecimal(getStock())).setScale(2,BigDecimal.ROUND_DOWN));
+					} else {
+						discount = discount.add(orderItem.getSubtotal());
+					}
+				}
+			}
+		}
+		return discount.compareTo(amount)>0?amount:discount;
+	}
+
 	public BigDecimal calculate(BigDecimal amount, Order order) {
       if (amount.compareTo(BigDecimal.ZERO)<0) {
           return  BigDecimal.ZERO;

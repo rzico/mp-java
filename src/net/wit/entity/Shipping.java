@@ -710,7 +710,7 @@ public class Shipping extends BaseEntity {
 		List<Barrel> bs = new ArrayList<>();
 		if (getShippingItems() != null) {
 			for (ShippingItem shippingItem : getShippingItems()) {
-				if (shippingItem != null && shippingItem.getProduct() != null) {
+				if (shippingItem != null && shippingItem.getProduct() != null && shippingItem.getProduct().getType().equals(Product.Type.warehouse)) {
 					Barrel b = shippingItem.getProduct().getBarrel();
 					if (b!=null && !bs.contains(b)) {
 						bs.add(b);

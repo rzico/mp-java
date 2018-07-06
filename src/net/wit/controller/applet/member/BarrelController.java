@@ -93,7 +93,6 @@ public class BarrelController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-
         Card card = null;
         if ("3".equals(bundle.getString("weex")) ) {
             card = member.getCards().get(0);

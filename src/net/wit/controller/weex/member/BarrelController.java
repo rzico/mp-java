@@ -61,7 +61,6 @@ public class BarrelController extends BaseController {
     @ResponseBody
     public Message list(Long shippingId,HttpServletRequest request){
         List<Barrel> barrels = barrelService.findAll();
-
         List<BarrelModel> data = BarrelModel.bindList(barrels);
         if (shippingId!=null) {
             Shipping shipping = shippingService.find(shippingId);
