@@ -924,7 +924,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 
 		}
-
 //		member.setAmount(member.getAmount().add(order.getAmountPaid()));
 		memberDao.merge(member);
 
@@ -1031,7 +1030,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		//代理商佣金
 //		rebateService.rebate(order.getFee(),order.getMember(),order.getPersonal(),order.getAgent(),order.getOperate(),order);
-
 		//放入卡包
 		if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 			for (OrderItem orderItem:order.getOrderItems()) {
@@ -1452,7 +1450,4 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	public List<OrderSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable) {
 	    return orderDao.summary(member,beginDate,endDate,pageable);
 	}
-
-
-
-	}
+}
