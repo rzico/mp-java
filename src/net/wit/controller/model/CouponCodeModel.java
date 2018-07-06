@@ -28,9 +28,9 @@ public class CouponCodeModel extends BaseModel implements Serializable {
     /** 金额 */
     private String amount;
     /** 数量 */
-    /** 数量 */
     private Long stock;
     private Long given;
+
     public Long getId() {
         return id;
     }

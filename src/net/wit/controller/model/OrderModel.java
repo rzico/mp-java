@@ -4,6 +4,7 @@ import net.wit.entity.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -120,6 +121,9 @@ public class OrderModel extends BaseModel implements Serializable {
 
     /** 日志 */
     private List<OrderLogModel> orderLogs;
+
+    /** 赠品 */
+    private List<CouponCodeModel> couponCodes;
 
     public Long getId() {
         return id;
@@ -425,6 +429,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.levelFreight = levelFreight;
     }
 
+    public List<CouponCodeModel> getCouponCodes() {
+        return couponCodes;
+    }
+
+    public void setCouponCodes(List<CouponCodeModel> couponCodes) {
+        this.couponCodes = couponCodes;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -506,6 +518,16 @@ public class OrderModel extends BaseModel implements Serializable {
 
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();
+
+        this.couponCodes = new ArrayList<>();
+        for (CouponCode couponCode:order.getMember().getCouponCodes()) {
+            if (couponCode.getStock()>0 && couponCode.getEnabled() && couponCode.getCoupon().getType().equals(Coupon.Type.exchange) && !couponCode.getCoupon().getGoods().product().getType().equals(Product.Type.warehouse)) {
+                CouponCodeModel m = new CouponCodeModel();
+                m.bind(couponCode);
+                this.couponCodes.add(m);
+            }
+        }
+
     }
 
 
