@@ -355,11 +355,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			if (member != null && !order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 				List<CouponCode> couponCodes = member.getCouponCodes();
 				for (CouponCode code : couponCodes) {
-					if (   code.getCoupon().getType().equals(Coupon.Type.exchange)
+					if (    !code.getCoupon().getDistributor().equals(order.getSeller())
+					        && code.getCoupon().getType().equals(Coupon.Type.exchange)
 							&& code.getEnabled()
 							&& !code.getCoupon().getScope().equals(Coupon.Scope.shop)
 					   ) {
-						BigDecimal d = code.calculate(order.getPrice(),order);
+						BigDecimal d = code.checkSeller(order.getPrice(),order);
 						if (d.compareTo(BigDecimal.ZERO)>0) {
 							order.setSeller(code.getCoupon().getDistributor());
 						}
@@ -1034,8 +1035,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		//放入卡包
 		if (order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 			for (OrderItem orderItem:order.getOrderItems()) {
-				Coupon coupon = couponService.create(orderItem.getProduct(),order.getSeller());
-				couponCodeService.build(coupon,order.getMember(),orderItem.getQuantity().longValue());
+//				if (orderItem.getProduct().getType().equals(Product.Type.warehouse)) {
+					Coupon coupon = couponService.create(orderItem.getProduct(), order.getSeller());
+					couponCodeService.build(coupon, order.getMember(), orderItem.getQuantity().longValue());
+//				}
 			}
 		} else {
 			for (OrderItem orderItem:order.getOrderItems()) {
