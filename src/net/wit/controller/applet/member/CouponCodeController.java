@@ -61,23 +61,23 @@ public class CouponCodeController extends BaseController {
     @Resource(name = "shopServiceImpl")
     private ShopService shopService;
 
-    /**
-     * 我的优惠券
-     * id 会员
-     */
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(Long id,HttpServletRequest request,HttpServletResponse response){
-        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            String url = "http://"+bundle.getString("weixin.url")+"/website/member/couponCode/index.jhtml?id="+id;
-            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
-            redirectUrl = URLEncoder.encode(redirectUrl);
-            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
-        }
-
-        return "redirect:/member/coupon?id="+id;
-    }
+//    /**
+//     * 我的优惠券
+//     * id 会员
+//     */
+//    @RequestMapping(value = "/index", method = RequestMethod.GET)
+//    public String index(Long id,HttpServletRequest request,HttpServletResponse response){
+//        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//        Member member = memberService.getCurrent();
+//        if (member==null) {
+//            String url = "http://"+bundle.getString("weixin.url")+"/website/member/couponCode/index.jhtml?id="+id;
+//            String redirectUrl = "http://"+bundle.getString("weixin.url")+"/website/login/weixin.jhtml?redirectURL="+ StringUtils.base64Encode(url.getBytes());
+//            redirectUrl = URLEncoder.encode(redirectUrl);
+//            return "redirect:"+ MenuManager.codeUrlO2(redirectUrl);
+//        }
+//
+//        return "redirect:/member/coupon?id="+id;
+//    }
 
     /**
      *  文章列表,带分页
@@ -159,23 +159,23 @@ public class CouponCodeController extends BaseController {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         data.put("payCode","http://"+bundle.getString("weixin.url")+"/q/818803"+couponCode.getCode()+".jhtml");
 
-        Member owner = couponCode.getCoupon().getDistributor();
-        if (owner.getTopic()!=null && owner.getTopic().getTopicCard()!=null) {
-            Ticket ticket = WeixinApi.getWxCardTicket();
-            HashMap<String, Object> params = new HashMap<>();
-            params.put("api_ticket", ticket.getTicket());
-            params.put("timestamp", WeiXinUtils.getTimeStamp());
-            params.put("nonce_str", WeiXinUtils.CreateNoncestr());
-            params.put("card_id", owner.getTopic().getTopicCard().getWeixinCardId());
-            String sha1Sign1 = getCardSha1Sign(params);
-            HashMap<String, Object> cardExt = new HashMap<>();
-            cardExt.put("timestamp", params.get("timestamp"));
-            cardExt.put("nonce_str", params.get("nonce_str"));
-            cardExt.put("signature", sha1Sign1);
-            data.put("cardExt", cardExt);
-            data.put("cardId", owner.getTopic().getTopicCard().getWeixinCardId());
-        }
-
+//        Member owner = couponCode.getCoupon().getDistributor();
+//        if (owner.getTopic()!=null && owner.getTopic().getTopicCard()!=null) {
+//            Ticket ticket = WeixinApi.getWxCardTicket();
+//            HashMap<String, Object> params = new HashMap<>();
+//            params.put("api_ticket", ticket.getTicket());
+//            params.put("timestamp", WeiXinUtils.getTimeStamp());
+//            params.put("nonce_str", WeiXinUtils.CreateNoncestr());
+//            params.put("card_id", owner.getTopic().getTopicCard().getWeixinCardId());
+//            String sha1Sign1 = getCardSha1Sign(params);
+//            HashMap<String, Object> cardExt = new HashMap<>();
+//            cardExt.put("timestamp", params.get("timestamp"));
+//            cardExt.put("nonce_str", params.get("nonce_str"));
+//            cardExt.put("signature", sha1Sign1);
+//            data.put("cardExt", cardExt);
+//            data.put("cardId", owner.getTopic().getTopicCard().getWeixinCardId());
+//        }
+//
         return Message.bind(data,request);
     }
 
