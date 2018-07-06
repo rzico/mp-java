@@ -124,13 +124,9 @@ public class CouponCodeModel extends BaseModel implements Serializable {
         Coupon coupon = couponCode.getCoupon();
         this.couponId = coupon.getId();
         Member owner = coupon.getDistributor();
-        if (owner.getTopic()!=null) {
-            this.name = owner.getTopic().getName();
-            this.logo = owner.getTopic().getLogo();
-        } else {
-            this.name = owner.displayName();
-            this.logo = owner.getLogo();
-        }
+        this.name = owner.displayName();
+        this.logo = owner.getLogo();
+
         String sc = "";
         if (coupon.getType().equals(Coupon.Type.exchange)) {
             if (coupon.getType().equals(Coupon.Scope.mall)) {
