@@ -11,6 +11,7 @@ import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.Message;
+import net.wit.controller.model.CouponCodeModel;
 import net.wit.dao.*;
 import net.wit.entity.Order;
 import net.wit.entity.summary.OrderSummary;
@@ -346,6 +347,33 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 						}
 
 					}
+				}
+			}
+		}
+
+        //赠品电子券
+		if (shippingMethod.equals(Order.ShippingMethod.warehouse)) {
+			for (CouponCode couponCode : order.getMember().getCouponCodes()) {
+				if (couponCode.getStock() > 0 && couponCode.getEnabled() && couponCode.getCoupon().getType().equals(Coupon.Type.exchange) && !couponCode.getCoupon().getGoods().product().getType().equals(Product.Type.warehouse)) {
+					Product gift = couponCode.getCoupon().getGoods().product();
+					OrderItem giftItem = new OrderItem();
+					giftItem.setName(gift.getName());
+					giftItem.setSpec(gift.getSpec());
+					giftItem.setPrice(BigDecimal.ZERO);
+					giftItem.setCost(gift.getCost());
+					giftItem.setWeight(gift.getWeight());
+					giftItem.setThumbnail(gift.getThumbnail());
+					giftItem.setIsGift(true);
+					giftItem.setQuantity(couponCode.getStock().intValue());
+					giftItem.setShippedQuantity(0);
+					giftItem.setReturnQuantity(0);
+					giftItem.setCouponQuantity(0L);
+					giftItem.setProduct(gift);
+					giftItem.setPromotion(null);
+					giftItem.setCouponCode(couponCode);
+					giftItem.setCouponQuantity(couponCode.getStock());
+					giftItem.setOrder(order);
+					orderItems.add(giftItem);
 				}
 			}
 		}

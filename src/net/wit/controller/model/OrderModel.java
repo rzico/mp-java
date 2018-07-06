@@ -123,7 +123,7 @@ public class OrderModel extends BaseModel implements Serializable {
     private List<OrderLogModel> orderLogs;
 
     /** 赠品 */
-    private List<CouponCodeModel> couponCodes;
+    private List<OrderItemModel> giftItems;
 
     public Long getId() {
         return id;
@@ -429,12 +429,12 @@ public class OrderModel extends BaseModel implements Serializable {
         this.levelFreight = levelFreight;
     }
 
-    public List<CouponCodeModel> getCouponCodes() {
-        return couponCodes;
+    public List<OrderItemModel> getGiftItems() {
+        return giftItems;
     }
 
-    public void setCouponCodes(List<CouponCodeModel> couponCodes) {
-        this.couponCodes = couponCodes;
+    public void setGiftItems(List<OrderItemModel> giftItems) {
+        this.giftItems = giftItems;
     }
 
     public void bind(Order order) {
@@ -519,14 +519,7 @@ public class OrderModel extends BaseModel implements Serializable {
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();
 
-        this.couponCodes = new ArrayList<>();
-        for (CouponCode couponCode:order.getMember().getCouponCodes()) {
-            if (couponCode.getStock()>0 && couponCode.getEnabled() && couponCode.getCoupon().getType().equals(Coupon.Type.exchange) && !couponCode.getCoupon().getGoods().product().getType().equals(Product.Type.warehouse)) {
-                CouponCodeModel m = new CouponCodeModel();
-                m.bind(couponCode);
-                this.couponCodes.add(m);
-            }
-        }
+        this.giftItems = OrderItemModel.giftList(order.getOrderItems());
 
     }
 
@@ -579,6 +572,10 @@ public class OrderModel extends BaseModel implements Serializable {
 
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();
+
+
+        this.giftItems = OrderItemModel.giftList(order.getOrderItems());
+
 
     }
 

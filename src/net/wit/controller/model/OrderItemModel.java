@@ -126,4 +126,16 @@ public class OrderItemModel extends BaseModel implements Serializable {
         return ms;
     }
 
+    public static List<OrderItemModel> giftList(List<OrderItem> orderItems) {
+        List<OrderItemModel> ms = new ArrayList<OrderItemModel>();
+        for (OrderItem orderItem:orderItems) {
+            if (orderItem.getPrice().compareTo(BigDecimal.ZERO)==0) {
+                OrderItemModel m = new OrderItemModel();
+                m.bind(orderItem);
+                ms.add(m);
+            }
+        }
+        return ms;
+    }
+
 }
