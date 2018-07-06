@@ -55,6 +55,9 @@ public class ProductController extends BaseController {
 	@Resource(name = "articleServiceImpl")
 	private ArticleService articleService;
 
+	@Resource(name = "barrelServiceImpl")
+	private BarrelService barrelService;
+
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
@@ -147,7 +150,9 @@ public class ProductController extends BaseController {
 			if (model.getDistribution()!=null && model.getDistribution().getId()!=null) {
 				product.setDistribution(distributionService.find(model.getDistribution().getId()));
 			}
-
+			if (model.getBarrel()!=null && model.getBarrel().getId()!=null) {
+				product.setBarrel(barrelService.find(model.getBarrel().getId()));
+			}
 			if (tags!=null) {
 				product.setTags(new ArrayList<Tag>(tags));
 			} else {

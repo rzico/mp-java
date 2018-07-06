@@ -98,7 +98,6 @@ public class ProductController extends BaseController {
 		Member member = memberService.getCurrent();
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(new Filter("member", Filter.Operator.eq,member));
-//		filters.add(new Filter("stock", Filter.Operator.gt,0L));
 		List<CouponCode> page = couponCodeService.findList(null,null,filters,null);
 		List<Product> products = new ArrayList<>();
 		for (CouponCode couponCode:page) {
