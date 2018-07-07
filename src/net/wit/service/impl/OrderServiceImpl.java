@@ -1286,7 +1286,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 		  //对同城配送商品，生成配送单
 			Shipping shipping = shippingService.create(order);
-			if (shop!=null && admin!=null) {
+			if (shop!=null) {
 				shipping.setShop(shop);
 				shipping.setEnterprise(shop.getEnterprise());
 				shipping.setAdmin(admin);

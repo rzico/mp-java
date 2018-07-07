@@ -60,6 +60,8 @@ public class ShopModel extends BaseModel implements Serializable {
     /** 距离 */
     private double distance;
 
+    private Boolean isSelf;
+
     public Long getId() {
         return id;
     }
@@ -188,6 +190,14 @@ public class ShopModel extends BaseModel implements Serializable {
         this.lng = lng;
     }
 
+    public Boolean getIsSelf() {
+        return isSelf;
+    }
+
+    public void setIsSelf(Boolean self) {
+        isSelf = self;
+    }
+
     public void bind(Shop shop) {
         this.id = shop.getId();
         this.address = shop.getAddress();
@@ -210,6 +220,8 @@ public class ShopModel extends BaseModel implements Serializable {
             this.lat = shop.getLocation().getLat();
             this.lng = shop.getLocation().getLng();
         }
+
+        this.isSelf = true;
     }
 
     public static List<ShopModel> bindList(List<Shop> shops,Double lat,Double lng) {
@@ -229,4 +241,28 @@ public class ShopModel extends BaseModel implements Serializable {
         }
         return ms;
     }
+
+
+    public static List<ShopModel> bindShipping(List<Shop> shops,Double lat,Double lng,Enterprise enterprise) {
+        List<ShopModel> ms = new ArrayList<ShopModel>();
+        for (Shop shop:shops) {
+            ShopModel m = new ShopModel();
+            m.bind(shop);
+
+            if (!shop.getEnterprise().equals(enterprise)) {
+                m.setIsSelf(false);
+            }
+
+            if (lat !=null && lng !=null && lat>0 && lng>0) {
+                Location location = shop.getLocation();
+                if (location.getLat()>0 && location.getLng()>0) {
+                    m.setDistance(shop.getLocation().calcDistance(lat, lng));
+                }
+            }
+
+            ms.add(m);
+        }
+        return ms;
+    }
+
 }

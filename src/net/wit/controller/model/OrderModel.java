@@ -605,21 +605,6 @@ public class OrderModel extends BaseModel implements Serializable {
         this.giftItems = OrderItemModel.giftList(order.getOrderItems());
 
 
-        if (order.getShippings().size()>0) {
-            Shipping shipping = order.getShippings().get(0);
-
-            if (shipping.getShop()!=null) {
-                this.shopId = shipping.getShop().getId();
-                this.shopName = shipping.getShop().getName();
-            }
-
-            if (shipping.getAdmin()!=null) {
-                this.adminId = shipping.getAdmin().getId();
-                this.adminName = shipping.getAdmin().realName();
-            }
-
-        }
-
     }
 
 }

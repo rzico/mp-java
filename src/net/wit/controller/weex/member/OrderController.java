@@ -495,9 +495,10 @@ public class OrderController extends BaseController {
 			Admin shippingAdmin = null;
 			if (shopId!=null) {
 				shop = shopService.find(shopId);
-                shippingAdmin = adminService.find(adminId);
+				if (adminId!=null) {
+					shippingAdmin = adminService.find(adminId);
+				}
 			}
-
 			orderService.shipping(order,shippingMethod,trackingNo,admin,shop,shippingAdmin);
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
