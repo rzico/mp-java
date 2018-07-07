@@ -197,14 +197,14 @@ public class Order extends BaseEntity {
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '积分抵扣'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '积分抵扣'")
 	private BigDecimal pointDiscount;
 
 	/** 优惠券折扣 */
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '优惠券折扣'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '优惠券折扣'")
 	private BigDecimal couponDiscount;
 
 
@@ -212,7 +212,7 @@ public class Order extends BaseEntity {
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '提货券抵扣'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '提货券抵扣'")
 	private BigDecimal exchangeDiscount;
 
 
@@ -220,34 +220,41 @@ public class Order extends BaseEntity {
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '调整金额'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '调整金额'")
 	private BigDecimal offsetAmount;
+
+	/** 应付金额 */
+	@NotNull
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '应付金额'")
+	private BigDecimal amountPayable;
 
 	/** 已付金额 */
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '已付金额'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '已付金额'")
 	private BigDecimal amountPaid;
 
 	/** 分销佣金 */
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '分销佣金'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '分销佣金'")
 	private BigDecimal rebateAmount;
 
 	/** 股东分红 */
 	@NotNull
 	@Min(0)
 	@Digits(integer = 12, fraction = 3)
-	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '股东分红'")
+	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '股东分红'")
 	private BigDecimal partnerAmount;
 
 	/** 赠送积分 */
 	@NotNull
 	@Min(0)
-	@Column(nullable = false,columnDefinition="bigint(20) not null comment '赠送积分'")
+	@Column(nullable = false,columnDefinition="bigint(20) not null default 0 comment '赠送积分'")
 	private Long point;
 
 	/** 收货地址 id */
@@ -1442,13 +1449,21 @@ public class Order extends BaseEntity {
 		return d;
 	}
 
+	public void setAmountPayable(BigDecimal amountPayable) {
+		this.amountPayable = amountPayable;
+	}
+
+	public BigDecimal getAmountPayable() {
+		return amountPayable;
+	}
+
 	/**
 	 * 获取应付金额
 	 *
 	 * @return 应付金额
 	 */
 	@Transient
-	public BigDecimal getAmountPayable() {
+	public BigDecimal calcAmountPayable() {
 		BigDecimal amountPayable = getAmount().
 				subtract(getPointDiscount()).
 				subtract(getExchangeDiscount()).

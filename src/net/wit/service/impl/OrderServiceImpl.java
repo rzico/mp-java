@@ -441,6 +441,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setFreight(BigDecimal.ZERO);
 		}
 
+
+		Card card = member.card(order.getSeller());
+		if (card != null) {
+			Long point = order.getAmount().setScale(0, BigDecimal.ROUND_DOWN).longValue();
+			if (card.getPoint() >= point) {
+				order.setPointDiscount(new BigDecimal(point));
+			} else {
+				order.setPointDiscount(new BigDecimal(card.getPoint()));
+			}
+		}
+
+		order.setAmountPayable(order.calcAmountPayable());
 		order.setAmountPaid(new BigDecimal(0));
 
 		order.setOrderStatus(Order.OrderStatus.unconfirmed);
@@ -509,16 +521,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		order.setDeleted(false);
 
 		order.setFee(BigDecimal.ZERO);
-
 		Card card = member.card(order.getSeller());
-		if (card != null) {
-			Long point = order.getAmount().setScale(0, BigDecimal.ROUND_DOWN).longValue();
-			if (card.getPoint() >= point) {
-				order.setPointDiscount(new BigDecimal(point));
-			} else {
-				order.setPointDiscount(new BigDecimal(card.getPoint()));
-			}
-		}
 
 		//接龙订单,业绩归接龙人
 		if (dragon!=null && !dragon.getMember().equals(order.getSeller())) {
@@ -554,8 +557,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 		orderDao.persist(order);
 
-		cardService.decPoint(card, order.getPointDiscount().longValue(), "订单支付", order);
-
+		if (order.getPointDiscount().compareTo(BigDecimal.ZERO)>0) {
+			cardService.decPoint(card, order.getPointDiscount().longValue(), "订单支付", order);
+		}
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.create);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);

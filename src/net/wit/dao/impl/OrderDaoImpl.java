@@ -166,9 +166,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
-				"select sum(orders.fee),sum(orders.freight),sum(orders.freight),sum(orders.pointDiscount),sum(orders.couponDiscount),sum(orders.exchangeDiscount),sum(orders.offsetAmount),sum(orders.amountPayable) "+
-						"from wx_order orders where orderItem.orders=orders.id and orders.shipping_date>=?b and orders.shipping_date<?e and orders.member=?member and orders.shipping_status<>0 "+
-						"group by orderItem.product order by orderItem.product ";
+				"select sum(orders.fee),sum(orders.freight),sum(orders.freight),sum(orders.point_discount),sum(orders.coupon_discount),sum(orders.exchange_discount),sum(orders.offset_amount),sum(orders.amount_payable) "+
+						"from wx_order orders where orders.orders=orders.id and orders.shipping_date>=?b and orders.shipping_date<?e and orders.member=?member and orders.shipping_status<>0 "+
+						"group by orders.product order by orders.product ";
 
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).

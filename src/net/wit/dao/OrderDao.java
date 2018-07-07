@@ -44,4 +44,4 @@ public interface OrderDao extends BaseDao<Order, Long> {
 	List<OrderSummary> summary(Member member, Date beginDate, Date endDate, Pageable pageable);
 
 
-	}
+}
