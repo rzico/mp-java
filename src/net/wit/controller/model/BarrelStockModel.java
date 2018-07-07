@@ -78,7 +78,7 @@ public class BarrelStockModel extends BaseModel implements Serializable {
     }
 
     public void bind(BarrelStock barrelStock) {
-        this.id = barrelStock.getBarrel().getId();
+        this.id = barrelStock.getId();
         this.name = barrelStock.getBarrel().getName();
         this.logo = barrelStock.getBarrel().getLogo();
         this.stock = barrelStock.getStock();

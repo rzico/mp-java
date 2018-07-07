@@ -1235,7 +1235,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @param operator
 	 *            操作员
 	 */
-	public void shipping(Order order, Order.ShippingMethod shippingMethod,String trackingNo, Admin operator) throws Exception {
+	public void shipping(Order order, Order.ShippingMethod shippingMethod,String trackingNo, Admin operator, Shop shop, Admin admin) throws Exception {
+
 		Assert.notNull(order);
 
 		orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
@@ -1284,7 +1285,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 		  //对同城配送商品，生成配送单
-			shippingService.create(order);
+			Shipping shipping = shippingService.create(order);
+			if (shop!=null && admin!=null) {
+				shipping.setShop(shop);
+				shipping.setEnterprise(shop.getEnterprise());
+				shipping.setAdmin(admin);
+				if (admin!=null) {
+					shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
+					shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
+				}
+				shipping.setTransfer(false);
+				shippingService.dispatch(shipping);
+			}
 		}
 
 		return;

@@ -125,6 +125,19 @@ public class OrderModel extends BaseModel implements Serializable {
     /** 赠品 */
     private List<OrderItemModel> giftItems;
 
+    /**  配送点 */
+    private Long shopId;
+
+    /**  配送名称 */
+    private String shopName;
+
+    /**  送货员 */
+    private Long adminId;
+
+    /**  送货员姓名 */
+    private String adminName;
+
+
     public Long getId() {
         return id;
     }
@@ -481,7 +494,7 @@ public class OrderModel extends BaseModel implements Serializable {
             this.shippingMethod = "电子卡包";
         }
 
-         this.paymentStatus = order.getPaymentStatus();
+        this.paymentStatus = order.getPaymentStatus();
         this.shippingStatus = order.getShippingStatus();
 
         this.exchangeDiscount = order.getExchangeDiscount();
@@ -520,6 +533,21 @@ public class OrderModel extends BaseModel implements Serializable {
         this.hopeDate = order.getHopeDate();
 
         this.giftItems = OrderItemModel.giftList(order.getOrderItems());
+
+        if (order.getShippings().size()>0) {
+            Shipping shipping = order.getShippings().get(0);
+
+            if (shipping.getShop()!=null) {
+                this.shopId = shipping.getShop().getId();
+                this.shopName = shipping.getShop().getName();
+            }
+
+            if (shipping.getAdmin()!=null) {
+                this.adminId = shipping.getAdmin().getId();
+                this.adminName = shipping.getAdmin().realName();
+            }
+
+        }
 
     }
 
@@ -576,6 +604,21 @@ public class OrderModel extends BaseModel implements Serializable {
 
         this.giftItems = OrderItemModel.giftList(order.getOrderItems());
 
+
+        if (order.getShippings().size()>0) {
+            Shipping shipping = order.getShippings().get(0);
+
+            if (shipping.getShop()!=null) {
+                this.shopId = shipping.getShop().getId();
+                this.shopName = shipping.getShop().getName();
+            }
+
+            if (shipping.getAdmin()!=null) {
+                this.adminId = shipping.getAdmin().getId();
+                this.adminName = shipping.getAdmin().realName();
+            }
+
+        }
 
     }
 

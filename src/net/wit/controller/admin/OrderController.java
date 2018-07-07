@@ -625,7 +625,7 @@ public class OrderController extends BaseController {
 		}
 
 		try {
-			orderService.shipping(order,null,null,admin);
+			orderService.shipping(order,null,null,admin,null,null);
 			order = orderService.find(orderId);
 			return Message.success(order,"订单发货成功!");
 		} catch (Exception e) {

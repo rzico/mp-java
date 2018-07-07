@@ -146,7 +146,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setFreight(order.getFreight());
 		shipping.setShippingFreight(BigDecimal.ZERO);
 		shipping.setAdminFreight(BigDecimal.ZERO);
-		shipping.setCost(shipping.calcCost());
 		shipping.setTransfer(false);
 //		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 		List<ShippingItem> shippingItems = new ArrayList<>();
@@ -198,6 +197,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setLevelFreight(
 				shipping.calcLevelFreight(receiver)
 		);
+
+		shipping.setCost(shipping.calcCost());
 
 		if (receiver!=null && receiver.getShop()!=null) {
 			shipping.setEnterprise(receiver.getShop().getEnterprise());

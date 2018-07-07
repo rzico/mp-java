@@ -6,6 +6,7 @@ import org.hibernate.search.annotations.Resolution;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -92,14 +93,12 @@ public class PayBill extends BaseEntity {
 	private Member member;
 
 	/** 付款单 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
-	private Payment payment;
+	@Column(nullable = false,columnDefinition="bigint(20) comment '付款单'")
+	private Long payment;
 
 	/** 退款单 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
-	private Refunds refunds;
+	@Column(nullable = false,columnDefinition="bigint(20) comment '退款单'")
+	private Long refunds;
 
 	/** 收款账户 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -281,14 +280,6 @@ public class PayBill extends BaseEntity {
 		this.billDate = billDate;
 	}
 
-	public Payment getPayment() {
-		return payment;
-	}
-
-	public void setPayment(Payment payment) {
-		this.payment = payment;
-	}
-
 	public Admin getAdmin() {
 		return admin;
 	}
@@ -297,11 +288,19 @@ public class PayBill extends BaseEntity {
 		this.admin = admin;
 	}
 
-	public Refunds getRefunds() {
+	public Long getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Long payment) {
+		this.payment = payment;
+	}
+
+	public Long getRefunds() {
 		return refunds;
 	}
 
-	public void setRefunds(Refunds refunds) {
+	public void setRefunds(Long refunds) {
 		this.refunds = refunds;
 	}
 

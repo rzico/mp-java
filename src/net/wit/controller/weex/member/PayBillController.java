@@ -249,13 +249,13 @@ public class PayBillController extends BaseController {
         }
 
         if (payBill.getType().equals(PayBill.Type.cardRefund) || payBill.getType().equals(PayBill.Type.cashierRefund)) {
-            Refunds refunds = payBill.getRefunds();
+            Refunds refunds = refundsService.find(payBill.getRefunds());
             if (refunds.getStatus().equals(Refunds.Status.waiting)) {
                 Map<String,Object> data = new HashMap<String,Object>();
                 PayBillViewModel model = new PayBillViewModel();
                 model.bind(payBill);
                 data.put("data",model);
-                data.put("sn",payBill.getRefunds().getSn());
+                data.put("sn",refunds.getSn());
                 return Message.success(data,"申请退款");
             } else {
                 return Message.error("退款单，不能再退款");
@@ -263,7 +263,7 @@ public class PayBillController extends BaseController {
         }
 
         if (payBill.getStatus().equals(PayBill.Status.none)) {
-            Payment payment = payBill.getPayment();
+            Payment payment = paymentService.find(payBill.getPayment());
             PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
             String resultCode = null;
             try {
@@ -328,8 +328,9 @@ public class PayBillController extends BaseController {
         Map<String,Object> data = new HashMap<String,Object>();
         PayBillViewModel model = new PayBillViewModel();
         model.bind(bill);
+        Refunds refunds = refundsService.find(bill.getRefunds());
         data.put("data",model);
-        data.put("sn",bill.getRefunds().getSn());
+        data.put("sn",refunds.getSn());
         return Message.success(data,"申请退款");
     }
 
@@ -464,7 +465,7 @@ public class PayBillController extends BaseController {
         }
         if (payBill.getStatus().equals(PayBill.Status.none)) {
             if (payBill.getType().equals(PayBill.Type.cashierRefund) || payBill.getType().equals(PayBill.Type.cardRefund)) {
-                Refunds refunds = payBill.getRefunds();
+                Refunds refunds = refundsService.find(payBill.getRefunds());
                 //还没提交，前台发起补提交退款
                 if (refunds.getStatus().equals(Refunds.Status.waiting)) {
                     return Message.error("没有提交不能打印");
@@ -498,7 +499,7 @@ public class PayBillController extends BaseController {
                 }
 
             } else {
-                Payment payment = payBill.getPayment();
+                Payment payment = paymentService.find(payBill.getPayment());
                 PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(payment.getPaymentPluginId());
                 String resultCode = null;
                 try {
@@ -577,15 +578,15 @@ public class PayBillController extends BaseController {
             byte[] paymentDate = builder6.append("日期时间：").append(formattedTime).toString().getBytes("gb2312");
             byte[] type = null;
             if (payBill.getType().equals(PayBill.Type.cardRefund)) {
-                type = builder7.append("交易类型：退款[").append(payBill.getRefunds() == null ? "线下支付" : payBill.getRefunds().getPaymentMethod()).append("]").toString().getBytes("gb2312");
+                type = builder7.append("交易类型：退款[").append(payBill.getRefunds() == null ? "线下支付" : payBill.getPaymentPluginName()).append("]").toString().getBytes("gb2312");
             } else
             if (payBill.getType().equals(PayBill.Type.cashierRefund)) {
-                type = builder7.append("交易类型：退款[").append(payBill.getRefunds() == null ? "线下支付" : payBill.getRefunds().getPaymentMethod()).append("]").toString().getBytes("gb2312");
+                type = builder7.append("交易类型：退款[").append(payBill.getRefunds() == null ? "线下支付" :payBill.getPaymentPluginName()).append("]").toString().getBytes("gb2312");
             } else
             if (payBill.getType().equals(PayBill.Type.card)) {
-                type = builder7.append("交易类型：充值[").append(payBill.getPayment() == null ? "线下支付" : payBill.getPayment().getPaymentMethod()).append("]").toString().getBytes("gb2312");
+                type = builder7.append("交易类型：充值[").append(payBill.getPayment() == null ? "线下支付" :payBill.getPaymentPluginName()).append("]").toString().getBytes("gb2312");
             } else {
-                type = builder7.append("交易类型：消费[").append(payBill.getPayment() == null ? "线下支付" : payBill.getPayment().getPaymentMethod()).append("]").toString().getBytes("gb2312");
+                type = builder7.append("交易类型：消费[").append(payBill.getPayment() == null ? "线下支付" : payBill.getPaymentPluginName()).append("]").toString().getBytes("gb2312");
             }
             byte[] amount = builder8.append("金额：RMB ").append(payBill.getPayBillAmount()).toString().getBytes("gb2312");
             byte[] signature = "支付人签名：".getBytes("gb2312");

@@ -62,30 +62,52 @@ public class BarrelStockController extends BaseController {
     private CardService cardService;
 
     /**
-     *  获取列表
+     * 获取列表
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long cardId,HttpServletRequest request){
+    public Message list(Long cardId, HttpServletRequest request) {
         Card card = cardService.find(cardId);
-        if (card==null) {
+        if (card == null) {
             return Message.error("cardId 无效");
         }
 
         List<Filter> filters = new ArrayList<>();
-        filters.add(new Filter("card",Filter.Operator.eq,card));
+        filters.add(new Filter("card", Filter.Operator.eq, card));
 
-        List<BarrelStock> bs = barrelStockService.findList(null,null,filters,null);
+        List<BarrelStock> bs = barrelStockService.findList(null, null, filters, null);
 
         Integer stock = 0;
-        for (BarrelStock b:bs) {
+        for (BarrelStock b : bs) {
             stock = stock + b.getStock();
         }
-        Map<String,Object> data = new HashMap<String,Object>();
-        data.put("stock",stock);
-        data.put("pledge",BigDecimal.ZERO);
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("stock", stock);
+        data.put("pledge", BigDecimal.ZERO);
         data.put("data", BarrelStockModel.bindList(bs));
-        return Message.bind(data,request);
+        return Message.bind(data, request);
     }
 
+
+    /**
+     * 修改桶信息
+     */
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public Message update(Long id, BigDecimal pledge, Integer mortgage, Integer borrow, HttpServletRequest request) {
+        BarrelStock bs = barrelStockService.find(id);
+        if (bs == null) {
+            return Message.error("无效id");
+        }
+        Integer m = bs.getMortgage();
+        Integer b = bs.getBorrow();
+        bs.setStock(bs.getStock() - m - b + mortgage + borrow);
+        bs.setMortgage(mortgage);
+        bs.setBorrow(borrow);
+        bs.setPledge(pledge);
+        barrelStockService.update(bs);
+        BarrelStockModel model = new BarrelStockModel();
+        model.bind(bs);
+        return Message.success(model, "修改成功");
+    }
 }

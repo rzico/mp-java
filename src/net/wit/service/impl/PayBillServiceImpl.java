@@ -131,7 +131,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 
 			paymentDao.persist(payment);
 
-			payBill.setPayment(payment);
+			payBill.setPayment(payment.getId());
 
 			payBillDao.merge(payBill);
 
@@ -166,7 +166,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			payment.setWay(Payment.Way.yundian);
 			paymentDao.persist(payment);
 
-			payBill.setPayment(payment);
+			payBill.setPayment(payment.getId());
 
 			payBillDao.merge(payBill);
 
@@ -194,7 +194,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			refunds.setPayBill(payBill);
 			refundsDao.persist(refunds);
 
-			payBill.setRefunds(refunds);
+			payBill.setRefunds(refunds.getId());
 
 			payBillDao.merge(payBill);
 
@@ -213,7 +213,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 			throw new RuntimeException("不能重复退款");
 		}
 
-        Payment payment = payBill.getPayment();
+        Payment payment = paymentDao.find(payBill.getPayment());
         paymentDao.refresh(payment,LockModeType.PESSIMISTIC_WRITE);
         if (payment.getStatus().equals(Payment.Status.refund_waiting) || payment.getStatus().equals(Payment.Status.refund_success)) {
 			throw new RuntimeException("不能重复退款");
@@ -268,7 +268,7 @@ public class PayBillServiceImpl extends BaseServiceImpl<PayBill, Long> implement
 		refunds.setType(Refunds.Type.values()[payment.getType().ordinal()]);
 		refunds.setSn(snService.generate(Sn.Type.refunds));
 		refundsDao.persist(refunds);
-		bill.setRefunds(refunds);
+		bill.setRefunds(refunds.getId());
 		payBillDao.merge(bill);
 		payBill.setStatus(PayBill.Status.refund_waiting);
 		payBillDao.merge(payBill);

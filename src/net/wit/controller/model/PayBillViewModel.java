@@ -108,30 +108,30 @@ public class PayBillViewModel extends BaseModel implements Serializable {
         String s = "";
         if (payBill.getType().equals(PayBill.Type.cashierRefund)) {
             this.memo = "退款";
-            if (payBill.getRefunds().getPaymentMethod()!=null) {
-                s = ","+payBill.getRefunds().getPaymentMethod();
+            if (payBill.getPaymentPluginName()!=null) {
+                s = ","+payBill.getPaymentPluginName();
             }
-            this.method = payBill.getRefunds().getPaymentMethod();
+            this.method = payBill.getPaymentPluginName();
         } else
         if (payBill.getType().equals(PayBill.Type.cardRefund)){
             this.memo = "退款(会员卡)";
-            if (payBill.getRefunds().getPaymentMethod()!=null) {
-                s = ","+payBill.getRefunds().getPaymentMethod();
+            if (payBill.getPaymentPluginName()!=null) {
+                s = ","+payBill.getPaymentPluginName();
             }
-            this.method = payBill.getRefunds().getPaymentMethod();
+            this.method = payBill.getPaymentPluginName();
         } else
         if (payBill.getType().equals(PayBill.Type.card)) {
             this.memo = "充值(会员卡)";
-            if (payBill.getPayment().getPaymentMethod()!=null) {
-                s = ","+payBill.getPayment().getPaymentMethod();
+            if (payBill.getPaymentPluginName()!=null) {
+                s = ","+payBill.getPaymentPluginName();
             }
-            this.method = payBill.getPayment().getPaymentMethod();
+            this.method = payBill.getPaymentPluginName();
         } else {
             this.memo = "消费";
-            if (payBill.getPayment().getPaymentMethod()!=null) {
-                s = ","+payBill.getPayment().getPaymentMethod();
+            if (payBill.getPaymentPluginName()!=null) {
+                s = ","+payBill.getPaymentPluginName();
             }
-            this.method = payBill.getPayment().getPaymentMethod();
+            this.method = payBill.getPaymentPluginName();
         }
         this.memo = this.memo + s;
         this.createDate = payBill.getCreateDate();

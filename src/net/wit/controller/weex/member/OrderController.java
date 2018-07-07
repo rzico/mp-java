@@ -491,22 +491,14 @@ public class OrderController extends BaseController {
 				shippingMethod = order.getShippingMethod();
 			}
 
+			Shop shop = null;
+			Admin shippingAdmin = null;
 			if (shopId!=null) {
-				Receiver receiver = receiverService.find(order.getReceiverId());
-				if (receiver!=null) {
-					receiver.setShop(shopService.find(shopId));
-				}
-
-				if (adminId!=null) {
-                    receiver.setAdmin(adminService.find(adminId));
-				} else {
-					receiver.setAdmin(null);
-				}
-
-				receiverService.update(receiver);
+				shop = shopService.find(shopId);
+                shippingAdmin = adminService.find(adminId);
 			}
 
-			orderService.shipping(order,shippingMethod,trackingNo,admin);
+			orderService.shipping(order,shippingMethod,trackingNo,admin,shop,shippingAdmin);
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
 		}
