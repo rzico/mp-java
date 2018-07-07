@@ -551,7 +551,6 @@ public class OrderModel extends BaseModel implements Serializable {
 
     }
 
-
     public void bindHeader(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -601,9 +600,7 @@ public class OrderModel extends BaseModel implements Serializable {
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();
 
-
         this.giftItems = OrderItemModel.giftList(order.getOrderItems());
-
 
     }
 
