@@ -1270,7 +1270,7 @@ public class Order extends BaseEntity {
         int exchangeQuantity = 0;
         if (getOrderItems() != null) {
             for (OrderItem orderItem : getOrderItems()) {
-                if (orderItem != null && orderItem.getCouponCode() != null) {
+                if (orderItem != null && orderItem.getCouponCode() != null && orderItem.getPrice().compareTo(BigDecimal.ZERO)>0) {
                     exchangeQuantity += orderItem.getCouponCode().getStock();
                 }
             }
