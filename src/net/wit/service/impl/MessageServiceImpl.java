@@ -360,12 +360,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		Message msg = new Message();
 		msg.setReceiver(shipping.getEnterprise().getMember());
 		msg.setMember(shipping.getSeller());
-		msg.setType(Message.Type.order);
+		msg.setType(Message.Type.shipping);
 		msg.setThumbnial(msg.getMember().getLogo());
-		msg.setTitle("订单提醒");
+		msg.setTitle("派单提醒");
 		msg.setContent(orderLog.getContent());
-		OrderListModel ext = new OrderListModel();
-		ext.bind(orderLog.getOrder());
+		ShippingListModel ext = new ShippingListModel();
+		ext.bind(shipping);
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
@@ -375,12 +375,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		Message msg = new Message();
 		msg.setReceiver(shipping.getAdmin().getMember());
 		msg.setMember(shipping.getEnterprise().getMember());
-		msg.setType(Message.Type.order);
+		msg.setType(Message.Type.shipping);
 		msg.setThumbnial(msg.getMember().getLogo());
-		msg.setTitle("订单提醒");
+		msg.setTitle("送货提醒");
 		msg.setContent(orderLog.getContent());
-		OrderListModel ext = new OrderListModel();
-		ext.bind(orderLog.getOrder());
+		ShippingListModel ext = new ShippingListModel();
+		ext.bind(shipping);
 		msg.setExt(JsonUtils.toJson(ext));
 		return pushTo(msg);
 	}
@@ -400,7 +400,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			msg.setContent("线下退款" + df.format(payBill.getPayBillAmount()) + "元");
 		} else {
 			msg.setTitle("线下收款");
-			msg.setContent("芸店收款" + df.format(payBill.getPayBillAmount()) + "元");
+			msg.setContent("线下收款" + df.format(payBill.getPayBillAmount()) + "元");
 		}
 		PayBillViewModel ext = new PayBillViewModel();
 		ext.bind(payBill);
@@ -429,7 +429,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 					mmsg.setContent("线下退款" + df.format(payBill.getPayBillAmount()) + "元");
 				} else {
 					mmsg.setTitle("线下收款");
-					mmsg.setContent("芸店收款" + df.format(payBill.getPayBillAmount()) + "元");
+					mmsg.setContent("线下收款" + df.format(payBill.getPayBillAmount()) + "元");
 				}
 				PayBillModel mext = new PayBillModel();
 				mext.bind(payBill);

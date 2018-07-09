@@ -7,9 +7,6 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ShippingSummary implements Serializable {
 
-    private Long sellerId;
-    private String sellerName;
-
      /** 销售金额 */
     private BigDecimal amount;
     /**  结算货款 */
@@ -65,23 +62,6 @@ public class ShippingSummary implements Serializable {
     public void setLevelFreight(BigDecimal levelFreight) {
         this.levelFreight = levelFreight;
     }
-
-    public Long getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(Long sellerId) {
-        this.sellerId = sellerId;
-    }
-
-    public String getSellerName() {
-        return sellerName;
-    }
-
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
-    }
-
 
     public BigDecimal getProfit() {
         return profit;

@@ -14,6 +14,8 @@ import net.wit.Pageable;
 import net.wit.Principal;
 import net.wit.Filter.Operator;
 
+import net.wit.entity.summary.ShippingItemSummary;
+import net.wit.entity.summary.ShippingSummary;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.cache.annotation.CacheEvict;
@@ -86,4 +88,10 @@ public class ShippingItemServiceImpl extends BaseServiceImpl<ShippingItem, Long>
 	public Page<ShippingItem> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return shippingItemDao.findPage(beginDate,endDate,pageable);
 	}
+
+
+	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+		return shippingItemDao.summary(enterprise,beginDate,endDate,pageable);
+	}
+
 }

@@ -12,10 +12,20 @@ public class ShippingItemSummary implements Serializable {
 
     /**  销量 */
     private Integer quantity;
-    /**  金额 */
-    private BigDecimal amount;
     /**  货款 */
     private BigDecimal cost;
+
+    /**  合计货款 */
+    private BigDecimal subTotal;
+    /**  配送费 */
+    private BigDecimal shippingFreight;
+    /**  送货工资 */
+    private BigDecimal adminFreight;
+    /**  楼层工资 */
+    private BigDecimal levelFreight;
+    /**  送货利润 */
+    private BigDecimal profit;
+
 
     public Long getProduct() {
         return product;
@@ -31,14 +41,6 @@ public class ShippingItemSummary implements Serializable {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public String getName() {
@@ -57,4 +59,43 @@ public class ShippingItemSummary implements Serializable {
         this.cost = cost;
     }
 
+    public BigDecimal getShippingFreight() {
+        return shippingFreight;
+    }
+
+    public void setShippingFreight(BigDecimal shippingFreight) {
+        this.shippingFreight = shippingFreight;
+    }
+
+    public BigDecimal getAdminFreight() {
+        return adminFreight;
+    }
+
+    public void setAdminFreight(BigDecimal adminFreight) {
+        this.adminFreight = adminFreight;
+    }
+
+    public BigDecimal getLevelFreight() {
+        return levelFreight;
+    }
+
+    public void setLevelFreight(BigDecimal levelFreight) {
+        this.levelFreight = levelFreight;
+    }
+
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
+    }
+
+    public BigDecimal getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(BigDecimal subTotal) {
+        this.subTotal = subTotal;
+    }
 }

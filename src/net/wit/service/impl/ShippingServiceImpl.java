@@ -14,6 +14,7 @@ import net.wit.Principal;
 import net.wit.Filter.Operator;
 
 import net.wit.dao.*;
+import net.wit.entity.summary.ShippingSummary;
 import net.wit.service.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
@@ -129,7 +130,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	}
 
 	public Shipping create(Order order) {
-		
 		Shipping shipping = new Shipping();
 		shipping.setAddress(order.getAddress());
 		shipping.setAreaName(order.getAreaName());
@@ -237,8 +237,19 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		order.setLevelFreight(shipping.getLevelFreight());
 		order.setShippingFreight(shipping.getShippingFreight());
 		order.setLevelFreight(shipping.getLevelFreight());
-
 		orderService.update(order);
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.shipping);
+		orderLog.setOperator("system");
+		orderLog.setContent("订单至"+shipping.getShop().getName()+"");
+		orderLog.setOrder(shipping.getOrder());
+		orderLogDao.persist(orderLog);
+
+		if (!shipping.getEnterprise().getMember().equals(order.getSeller())) {
+			messageService.shippingPushTo(shipping, orderLog);
+		}
+
 		return shipping;
 
 	}
@@ -258,7 +269,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			orderLog.setContent("已指派送货员“"+shipping.getAdmin().getMember().realName()+"”");
 			orderLog.setOrder(shipping.getOrder());
 			orderLogDao.persist(orderLog);
-			messageService.orderMemberPushTo(orderLog);
+//			messageService.orderMemberPushTo(orderLog);
 			messageService.shippingAdminPushTo(shipping,orderLog);
 		} else {
 			OrderLog orderLog = new OrderLog();
@@ -494,7 +505,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.complete);
 		orderLog.setOperator("system");
-		orderLog.setContent("核销已完成");
+		orderLog.setContent("订单已完成");
 		Long d = 0L;
 		for (ShippingBarrel b:shipping.getShippingBarrels()) {
 			d = d + b.getReturnQuantity();
@@ -504,7 +515,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		}
 		orderLog.setOrder(shipping.getOrder());
 		orderLogDao.persist(orderLog);
-		messageService.orderMemberPushTo(orderLog);
+//		messageService.orderMemberPushTo(orderLog);
 		shippingDao.flush();
 		if (shipping.getOrder().getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			orderService.complete(shipping.getOrder(), null);
@@ -513,5 +524,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		return shipping;
 
 	}
+
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+		return shippingDao.summary(enterprise,beginDate,endDate,pageable);
+	}
+
 
 }

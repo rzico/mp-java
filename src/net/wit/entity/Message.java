@@ -57,7 +57,9 @@ public class Message extends BaseEntity {
 		/** 客服消息 gm_10211  */
 		gmchat,
 		/** 线下收单 gm_10212  */
-		cashier
+		cashier,
+		/** 物流提醒  */
+		shipping,
 	}
 
 	/** 类型 */

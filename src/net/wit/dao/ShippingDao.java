@@ -7,7 +7,9 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Enterprise;
 import net.wit.entity.Shipping;
+import net.wit.entity.summary.ShippingSummary;
 
 
 /**
@@ -36,4 +38,6 @@ public interface ShippingDao extends BaseDao<Shipping, Long> {
 	 * @return 订单，若不存在则返回null
 	 */
 	Shipping findBySn(String sn);
+
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
 }

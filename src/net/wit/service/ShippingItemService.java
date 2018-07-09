@@ -7,7 +7,10 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Enterprise;
 import net.wit.entity.ShippingItem;
+import net.wit.entity.summary.ShippingItemSummary;
+import net.wit.entity.summary.ShippingSummary;
 
 /**
  * @ClassName: ShippingItemService
@@ -17,4 +20,6 @@ import net.wit.entity.ShippingItem;
 
 public interface ShippingItemService extends BaseService<ShippingItem, Long> {
 	Page<ShippingItem> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
 }

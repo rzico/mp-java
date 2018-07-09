@@ -580,7 +580,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			}
 		}
 
-		messageService.orderMemberPushTo(orderLog);
+//		messageService.orderMemberPushTo(orderLog);
         //没有付款时，直接确定订单
 		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) {
 			orderDao.flush();
@@ -985,7 +985,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("订单交易完成");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
-		messageService.orderMemberPushTo(orderLog);
+//		messageService.orderMemberPushTo(orderLog);
 
 		//计算货款
 		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
@@ -1158,7 +1158,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("关闭订单成功");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
-		messageService.orderMemberPushTo(orderLog);
+//		messageService.orderMemberPushTo(orderLog);
 
 		return;
 
@@ -1285,7 +1285,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		orderLog.setContent("卖家已发货");
 		orderLog.setOrder(order);
 		orderLogDao.persist(orderLog);
-		messageService.orderMemberPushTo(orderLog);
+//		messageService.orderMemberPushTo(orderLog);
 
 		if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 		  //对同城配送商品，生成配送单
@@ -1354,12 +1354,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderLog.setContent("卖家确定退款");
 		}
 		orderLogDao.persist(orderLog);
-		if (operator == null) {
-			messageService.orderSellerPushTo(orderLog);
-		} else {
-			messageService.orderMemberPushTo(orderLog);
-		}
-
+//		if (operator == null) {
+//			messageService.orderSellerPushTo(orderLog);
+//		} else {
+//			messageService.orderMemberPushTo(orderLog);
+//		}
+//
 	}
 
 	/**
@@ -1419,10 +1419,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			orderLog.setContent("卖家确定退货");
 			orderLog.setOrder(order);
 			orderLogDao.persist(orderLog);
-			messageService.orderMemberPushTo(orderLog);
+//			messageService.orderMemberPushTo(orderLog);
 
 			if (order.getPaymentStatus().equals(Order.PaymentStatus.paid)) {
-
 //				order.setAmountPaid(order.getAmountPaid());
 				order.setExpire(null);
 				order.setPaymentStatus(Order.PaymentStatus.refunding);
@@ -1453,7 +1452,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 				orderLog1.setContent("卖家确定退款");
 				orderLog1.setOrder(order);
 				orderLogDao.persist(orderLog1);
-				messageService.orderMemberPushTo(orderLog);
+//				messageService.orderMemberPushTo(orderLog);
 
 			} else {
 				//不要退款，自动完成
@@ -1464,7 +1463,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setShippingStatus(Order.ShippingStatus.returning);
 			order.setExpire(null);
 			orderDao.merge(order);
-
 			OrderLog orderLog = new OrderLog();
 			orderLog.setType(OrderLog.Type.returns);
 			orderLog.setOperator(operator != null ? operator.getUsername() : null);

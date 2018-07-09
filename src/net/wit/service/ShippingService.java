@@ -7,8 +7,10 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Enterprise;
 import net.wit.entity.Order;
 import net.wit.entity.Shipping;
+import net.wit.entity.summary.ShippingSummary;
 
 /**
  * @ClassName: ShippingService
@@ -36,5 +38,7 @@ public interface ShippingService extends BaseService<Shipping, Long> {
 	Shipping receive(Shipping shipping) throws Exception;
 
 	Shipping completed(Shipping shipping) throws Exception;
+
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
 
 }

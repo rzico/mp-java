@@ -68,21 +68,30 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 	}
 
 
-	public List<ShippingItemSummary> summary(Enterprise enterprise,Member seller, Date beginDate, Date endDate, Pageable pageable) {
+	public List<ShippingItemSummary> summary(Enterprise enterprise,Date beginDate, Date endDate, Pageable pageable) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
-				"select  shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.price),sum(shippingItem.quantity * shippingItem.cost) "+
-						"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? and shipping.,Member seller=? "+
-						"group by shippingItem.product,orderItem.name,shippingItem.spec order by shippingItem.product ";
+			        	"select shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.cost) "+
+						"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? "+
+						"group by shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec  ";
+		String ssql =
+				        "select shipping.seller,sum(shipping.cost) as cost,"+
+						"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight "+
+						"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? "+
+						"group by shipping.seller";
+
+		jpql = "select j.*,b.cost,b.shippingFreight,b.adminFreight,b.levelFreight from ("+jpql+") j ,("+ssql+") b where j.seller=b.seller order by j.seller,j.product";
 
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
 				setParameter(1, b).
 				setParameter(2, e).
 				setParameter(3,enterprise).
-				setParameter(4,seller);
+				setParameter(4, b).
+				setParameter(5, e).
+				setParameter(6,enterprise);
 		query.setFirstResult(pageable.getPageStart());
 		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
 		List result = query.getResultList();
@@ -93,12 +102,18 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 			BigInteger bi = (BigInteger) row[0];
 			if (bi!=null) {
 				rw.setProduct(bi.longValue());
-				rw.setName((String) row[1] + (String) row[2]);
-				BigDecimal bd = (BigDecimal) row[3];
+				rw.setName((String) row[2] + (String) row[3]);
+				BigDecimal bd = (BigDecimal) row[4];
 				rw.setQuantity(bd.intValue());
-				rw.setAmount((BigDecimal) row[4]);
 				rw.setCost((BigDecimal) row[5]);
-				data.add(rw);
+				rw.setSubTotal((BigDecimal) row[6]);
+				rw.setShippingFreight((BigDecimal) row[7]);
+				rw.setAdminFreight((BigDecimal) row[8]);
+				rw.setLevelFreight((BigDecimal) row[9]);
+				if (rw.getAdminFreight()!=null) {
+					rw.setAdminFreight(rw.getAdminFreight().subtract(rw.getLevelFreight()));
+					data.add(rw);
+				}
 			}
 		}
 		return data;

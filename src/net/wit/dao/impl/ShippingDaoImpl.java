@@ -87,10 +87,10 @@ public class ShippingDaoImpl extends BaseDaoImpl<Shipping, Long> implements Ship
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
-				"select shipping.seller,sum(shipping.cost) as cost,"+
+				"select sum(shipping.cost) as cost,"+
 						"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight "+
-						"from wx_shipping shipping where shipping.shipping_date>=? and shipping.shipping_date<? and shipping.enterprise=? "+
-						"group by shipping.seller ";
+						"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? "+
+						"  ";
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
 				setParameter(1, b).

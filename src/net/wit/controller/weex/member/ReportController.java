@@ -8,10 +8,7 @@ import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.BarrelModel;
 import net.wit.controller.model.CouponModel;
 import net.wit.entity.*;
-import net.wit.entity.summary.BarrelSummary;
-import net.wit.entity.summary.OrderItemSummary;
-import net.wit.entity.summary.OrderSummary;
-import net.wit.entity.summary.PaymentSummary;
+import net.wit.entity.summary.*;
 import net.wit.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +68,12 @@ public class ReportController extends BaseController {
 
     @Resource(name = "shippingBarrelServiceImpl")
     private ShippingBarrelService shippingBarrelService;
+
+    @Resource(name = "shippingItemServiceImpl")
+    private ShippingItemService shippingItemService;
+
+    @Resource(name = "shippingServiceImpl")
+    private ShippingService shippingService;
 
     /**
      *  订单统计表
@@ -153,5 +156,36 @@ public class ReportController extends BaseController {
         model.setData(data);
         return Message.bind(model,request);
     }
+
+    /**
+     *  物流结算
+     */
+    @RequestMapping(value = "/shipping_summary", method = RequestMethod.GET)
+    @ResponseBody
+    public Message shippingSummary(Date beginDate, Date endDate, Pageable pageable, HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+
+        Enterprise enterprise = null;
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null && admin.getEnterprise()!=null) {
+            enterprise = admin.getEnterprise();
+        }
+
+        if (enterprise==null) {
+            return Message.error("没有开通店铺");
+        }
+
+        List<ShippingSummary> header = shippingService.summary(enterprise,beginDate,endDate,pageable);
+        List<ShippingItemSummary> body = shippingItemService.summary(enterprise,beginDate,endDate,pageable);
+
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("summary",header);
+        data.put("data",body);
+        PageBlock model = PageBlock.bind(new Page());
+        model.setData(data);
+        return Message.bind(model,request);
+    }
+
 
 }
