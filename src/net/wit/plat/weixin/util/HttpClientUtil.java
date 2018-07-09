@@ -201,9 +201,7 @@ public class HttpClientUtil {
 	
 	/**
 	 * 获取SSLContext
-	 * @param trustFile 
 	 * @param trustPasswd
-	 * @param keyFile
 	 * @param keyPasswd
 	 * @return
 	 * @throws NoSuchAlgorithmException 

@@ -117,7 +117,8 @@
                     },
                     success: function (data) {
                         var rsaKey = new RSAKey();
-                        rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent));
+                        rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent))
+                        alert($password.val());
                         var enPassword = hex2b64(rsaKey.encrypt($password.val()));
                         $.ajax({
                             url: $loginForm.attr("action"),

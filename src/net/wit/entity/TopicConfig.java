@@ -31,7 +31,7 @@ public class TopicConfig implements Serializable {
 		team,
 		/** 分红股东 */
 		partner
-	}
+	};
 
 	public static enum Pattern{
 		/** 无门槛，领卡，即成为团队成员 */
@@ -149,6 +149,14 @@ public class TopicConfig implements Serializable {
 	 * 产品类
 	 * @return
 	 */
+
+	/**  商户号  */
+	@Column(columnDefinition="varchar(255) comment '商户号'")
+	private String wxPartner;
+
+	/**  支付密钥  */
+	@Column(columnDefinition="varchar(255) comment '支付密钥'")
+	private String wxkey;
 
 	public PromoterType getPromoterType() {
 		return promoterType;
@@ -293,5 +301,20 @@ public class TopicConfig implements Serializable {
 
 	public void setAppletgid(String appletgid) {
 		this.appletgid = appletgid;
+	}
+	public String getWxPartner() {
+		return wxPartner;
+	}
+
+	public void setWxPartner(String wxPartner) {
+		this.wxPartner = wxPartner;
+	}
+
+	public String getWxkey() {
+		return wxkey;
+	}
+
+	public void setWxkey(String wxkey) {
+		this.wxkey = wxkey;
 	}
 }

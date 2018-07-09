@@ -188,8 +188,8 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 * @return 属性值
 	 */
 	public String getAttribute(String name) {
-		PluginConfig pluginConfig = getPluginConfig();
-		return pluginConfig != null ? pluginConfig.getAttribute(name) : null;
+			PluginConfig pluginConfig = getPluginConfig();
+			return pluginConfig != null ? pluginConfig.getAttribute(name) : null;
 	}
 
 	/**

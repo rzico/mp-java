@@ -118,21 +118,10 @@ public class PaymentController extends BaseController {
 
     @RequestMapping(value = "/submit")
     @ResponseBody
-    public Message submit(String paymentPluginId, String sn,String safeKey,Long xmid,HttpServletRequest request) {
+    public Message submit(String paymentPluginId, String sn,String safeKey, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
         if (payment==null) {
             return Message.error("无效付款单");
-        }
-
-        if ("weixinPayPlugin".equals(paymentPluginId)) {
-            if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
-                paymentPluginId = "weixinLetPlugin";
-            } else
-            if (request.getHeader("x-app")!=null && request.getHeader("x-app").contains("com.rzico.")) {
-                paymentPluginId = "weixinAppPlugin";
-            } else {
-                paymentPluginId = "weixinPayPlugin";
-            }
         }
 
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
@@ -140,29 +129,19 @@ public class PaymentController extends BaseController {
             return Message.error("支付插件无效");
         }
 
+        if (xmid!=null) {
+            Member agent = memberService.find(xmid);
+            if (agent==null) {
+                return Message.error("无效代理商xmid");
+            }
+            payment.setWay(Payment.Way.merchant);
+            payment.setMerchant(agent);
+        }
+
         payment.setMethod(Method.online);
         payment.setPaymentPluginId(paymentPluginId);
         payment.setPaymentMethod(paymentPlugin.getName());
         paymentService.update(payment);
-
-//        if (xmid!=null) {
-//            Member agent = memberService.find(xmid);
-//            if (agent.getTopic()==null) {
-//                return Message.error("没有开通");
-//            }
-//            if (agent.getTopic().getConfig()==null)  {
-//                return Message.error("没有设置");
-//            }
-//            if (agent.getTopic().getConfig().getAppetAppId()==null)  {
-//                return Message.error("没有设置");
-//            }
-////            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-////
-////            String appid = agent.getTopic().getConfig().getAppetAppId();
-////
-//            payment.setWay(Payment.Way.yundian);
-//            payment.setMerchant(agent);
-//        }
 
         Map<String, Object> parameters = null;
         if (safeKey==null) {
@@ -198,7 +177,7 @@ public class PaymentController extends BaseController {
             parameters = paymentPlugin.submit(payment,safeKey,request);
         }
         if ("SUCCESS".equals(parameters.get("return_code"))) {
-            if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId) || "monthPayPlugin".equals(paymentPluginId)) {
+            if ("balancePayPlugin".equals(paymentPluginId) || "cardPayPlugin".equals(paymentPluginId) || "bankPayPlugin".equals(paymentPluginId) || "cashPayPlugin".equals(paymentPluginId)) {
                 try {
                     paymentService.handle(payment);
                 } catch (Exception e) {
@@ -249,7 +228,7 @@ public class PaymentController extends BaseController {
     @RequestMapping("/transfer/{sn}")
     public void transfer(@PathVariable String sn, HttpServletRequest request,HttpServletResponse response) throws Exception {
         Transfer transfer = transferService.findBySn(sn);
-//        System.out.println("transfer");
+        System.out.println("transfer");
         if (transfer != null) {
              String resp = UnsPay.verifyNotify(sn, request);
                 if ("00".equals (resp)) {
@@ -299,7 +278,7 @@ public class PaymentController extends BaseController {
     /**
      * 查询支付状态
      */
-    @RequestMapping(value = "/query")
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
     public Message query(String sn, HttpServletRequest request) {
         Payment payment = paymentService.findBySn(sn);
@@ -327,6 +306,7 @@ public class PaymentController extends BaseController {
         switch (resultCode) {
             case "0000":
                 try {
+
                     paymentService.handle(payment);
                 } catch (Exception e) {
                     logger.error(e.getMessage());

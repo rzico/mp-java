@@ -31,7 +31,7 @@
 <header class="navbar-wrapper">
     <div class="navbar navbar-fixed-top">
         <div class="container-fluid cl">
-             <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/aboutHui.shtml">${setting.siteName}</a>
+            <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/aboutHui.shtml">${setting.siteName}</a>
             <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml">H-ui</a>
             <span class="logo navbar-slogan f-l mr-10 hidden-xs">v2.0</span>
             <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
