@@ -1,6 +1,7 @@
 package net.wit.dao.impl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -73,14 +74,14 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 		e =DateUtils.addDays(e,1);
 		String jpql =
 				"select orderItem.product,orderItem.name,orderItem.spec,sum(orderItem.quantity),sum(orderItem.quantity * orderItem.price) "+
-						"from wx_order_item orderItem,wx_order orders where orderItem.orders=orders.id and orders.shipping_date>=?b and orders.shipping_date<?e and orders.member=?member and orders.shipping_status<>0 "+
+						"from wx_order_item orderItem,wx_order orders where orderItem.orders=orders.id and orders.shipping_date>=? and orders.shipping_date<? and orders.seller=? and orders.shipping_status<>0 "+
 						"group by orderItem.product,orderItem.name,orderItem.spec order by orderItem.product ";
 
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
-				setParameter("b", b).
-				setParameter("e", e).
-				setParameter("member",member);
+				setParameter(1, b).
+				setParameter(2, e).
+				setParameter(3,member);
 		query.setFirstResult(pageable.getPageStart());
 		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
 		List result = query.getResultList();
@@ -88,11 +89,15 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 		for (int i=0;i<result.size();i++) {
 			Object[] row = (Object[]) result.get(i);
 			OrderItemSummary rw = new OrderItemSummary();
-			rw.setProduct((Long) row[0]);
-			rw.setName((String) row[1]+(String) row[2]);
-			rw.setQuantity((Integer) row[3]);
-			rw.setAmount((BigDecimal) row[4]);
-			data.add(rw);
+			BigInteger bi = (BigInteger) row[0];
+			if (bi!=null) {
+				rw.setProduct(bi.longValue());
+				rw.setName((String) row[1] + (String) row[2]);
+				BigDecimal bd = (BigDecimal) row[3];
+				rw.setQuantity(bd.intValue());
+				rw.setAmount((BigDecimal) row[4]);
+				data.add(rw);
+			}
 		}
 		return data;
 

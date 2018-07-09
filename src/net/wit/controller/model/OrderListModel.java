@@ -58,6 +58,8 @@ public class OrderListModel extends BaseModel implements Serializable {
     /**  收货人 */
     private String consignee;
 
+    private String address;
+
     /**  本单收益 */
     private BigDecimal rebate;
 
@@ -200,6 +202,14 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.hopeDate = hopeDate;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -225,6 +235,8 @@ public class OrderListModel extends BaseModel implements Serializable {
         this.amount = order.getAmount();
         this.quantity = order.getQuantity();
         this.consignee = order.getConsignee();
+
+        this.address = order.getAreaName()+order.getAddress();
 
         this.hopeDate = order.getHopeDate();
     }

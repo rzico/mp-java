@@ -8,9 +8,8 @@ import java.math.BigDecimal;
 public class PaymentSummary implements Serializable {
 
     private Long memberId;
-
+    private String memberName;
     private String typeName;
-
      /** 收款 */
     private BigDecimal amount;
      /** 退款 */
@@ -46,6 +45,14 @@ public class PaymentSummary implements Serializable {
 
     public void setRefund(BigDecimal refund) {
         this.refund = refund;
+    }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
     }
 
 }

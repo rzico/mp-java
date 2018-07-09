@@ -54,6 +54,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
 
     /**  收货人 */
     private String consignee;
+    /**  收货地址 */
+    private String address;
 
     /**  分组名称 */
     private String groupName;
@@ -207,6 +209,14 @@ public class ShippingListModel extends BaseModel implements Serializable {
         isSelf = self;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public void bind(Shipping shipping) {
         Order order = shipping.getOrder();
         this.id = shipping.getId();
@@ -233,6 +243,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.hopeDate = shipping.getHopeDate();
 
         this.isSelf = shipping.getSeller().equals(shipping.getEnterprise().getMember());
+
+        this.address = shipping.getAreaName()+shipping.getAddress();
     }
 
     public static List<ShippingListModel> bindList(List<Shipping> shippings) {

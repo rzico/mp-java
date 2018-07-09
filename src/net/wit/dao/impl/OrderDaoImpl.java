@@ -166,15 +166,15 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
-				"select sum(orders.fee),sum(orders.freight),sum(orders.freight),sum(orders.point_discount),sum(orders.coupon_discount),sum(orders.exchange_discount),sum(orders.offset_amount),sum(orders.amount_payable) "+
-						"from wx_order orders where orders.orders=orders.id and orders.shipping_date>=?b and orders.shipping_date<?e and orders.member=?member and orders.shipping_status<>0 "+
-						"group by orders.product order by orders.product ";
-
+				"select sum(orders.fee) as fee,sum(orders.freight) as freight,sum(orders.point_discount) as pointDiscount,sum(orders.coupon_discount) as couponDiscount,"+
+						"sum(orders.exchange_discount) as exchangeDiscount,sum(orders.offset_amount) as offsetAmount,sum(orders.amount_payable) as amountPayable "+
+						"from wx_order orders where orders.shipping_date>=? and orders.shipping_date<? and orders.seller=? and orders.shipping_status<>0 "+
+						" ";
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).
-				setParameter("b", b).
-				setParameter("e", e).
-				setParameter("member",member);
+				setParameter(1, b).
+				setParameter(2, e).
+				setParameter(3,member);
 		List result = query.getResultList();
 		List<OrderSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {
@@ -187,9 +187,11 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 			rw.setExchangeDiscount((BigDecimal) row[4]);
 			rw.setOffsetAmount((BigDecimal) row[5]);
 			rw.setAmountPayable((BigDecimal) row[6]);
-			rw.setPrice(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()).subtract(rw.getOffsetAmount()).subtract(rw.getFreight()));
-			rw.setAmount(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()));
-			data.add(rw);
+			if (rw.getAmountPayable()!=null){
+				rw.setPrice(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()).subtract(rw.getOffsetAmount()).subtract(rw.getFreight()));
+				rw.setAmount(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()));
+				data.add(rw);
+			}
 		}
 		return data;
 

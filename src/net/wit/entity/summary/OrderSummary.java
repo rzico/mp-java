@@ -9,17 +9,21 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class OrderSummary implements Serializable {
 
-     /** 营业额 */
-    private BigDecimal amount;
 
     /**  商品合计 */
     private BigDecimal price;
 
-    /**  佣金 */
-    private BigDecimal fee;
+     /** 营业额 */
+    private BigDecimal amount;
+
+    /**  付款金额 */
+    private BigDecimal AmountPayable;
 
     /**  运费 */
     private BigDecimal freight;
+    /**  佣金 */
+    private BigDecimal fee;
+
 
     /**  积分抵扣 */
     private BigDecimal pointDiscount;
@@ -32,9 +36,6 @@ public class OrderSummary implements Serializable {
 
     /**  调价 */
     private BigDecimal offsetAmount;
-
-    /**  付款金额 */
-    private BigDecimal AmountPayable;
 
     public BigDecimal getAmount() {
         return amount;
