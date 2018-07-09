@@ -1,16 +1,24 @@
 package net.wit.dao.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Enterprise;
+import net.wit.entity.Member;
 import net.wit.entity.Order;
+import net.wit.entity.summary.OrderSummary;
+import net.wit.entity.summary.ShippingSummary;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -72,4 +80,38 @@ public class ShippingDaoImpl extends BaseDaoImpl<Shipping, Long> implements Ship
 			return null;
 		}
 	}
+
+
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
+		Date e = DateUtils.truncate(endDate,Calendar.DATE);
+		e =DateUtils.addDays(e,1);
+		String jpql =
+				"select shipping.seller,sum(shipping.cost) as cost,"+
+						"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight "+
+						"from wx_shipping shipping where shipping.shipping_date>=? and shipping.shipping_date<? and shipping.enterprise=? "+
+						"group by shipping.seller ";
+		Query query = entityManager.createNativeQuery(jpql).
+				setFlushMode(FlushModeType.COMMIT).
+				setParameter(1, b).
+				setParameter(2, e).
+				setParameter(3,enterprise);
+		List result = query.getResultList();
+		List<ShippingSummary> data = new ArrayList<>();
+		for (int i=0;i<result.size();i++) {
+			Object[] row = (Object[]) result.get(i);
+			ShippingSummary rw = new ShippingSummary();
+			rw.setCost((BigDecimal) row[0]);
+			rw.setShippingFreight((BigDecimal) row[1]);
+			rw.setAdminFreight((BigDecimal) row[2]);
+			rw.setLevelFreight((BigDecimal) row[3]);
+			if (rw.getAdminFreight()!=null){
+				rw.setAdminFreight(rw.getAdminFreight().subtract(rw.getLevelFreight()));
+				data.add(rw);
+			}
+		}
+		return data;
+
+	}
+
 }

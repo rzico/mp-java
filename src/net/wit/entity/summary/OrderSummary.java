@@ -9,21 +9,8 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class OrderSummary implements Serializable {
 
-
     /**  商品合计 */
     private BigDecimal price;
-
-     /** 营业额 */
-    private BigDecimal amount;
-
-    /**  付款金额 */
-    private BigDecimal AmountPayable;
-
-    /**  运费 */
-    private BigDecimal freight;
-    /**  佣金 */
-    private BigDecimal fee;
-
 
     /**  积分抵扣 */
     private BigDecimal pointDiscount;
@@ -36,6 +23,24 @@ public class OrderSummary implements Serializable {
 
     /**  调价 */
     private BigDecimal offsetAmount;
+
+    /**  运费 */
+    private BigDecimal freight;
+
+    /**  营业额 */
+    private BigDecimal amount;
+
+    /**  商品成本 */
+    private BigDecimal cost;
+
+    /**  平台佣金 */
+    private BigDecimal fee;
+
+    /**  配送费 */
+    private BigDecimal shippingFreight;
+
+    /**  净利润 */
+    private BigDecimal profit;
 
     public BigDecimal getAmount() {
         return amount;
@@ -101,11 +106,27 @@ public class OrderSummary implements Serializable {
         this.price = price;
     }
 
-    public BigDecimal getAmountPayable() {
-        return AmountPayable;
+    public BigDecimal getCost() {
+        return cost;
     }
 
-    public void setAmountPayable(BigDecimal amountPayable) {
-        AmountPayable = amountPayable;
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
+    }
+
+    public BigDecimal getShippingFreight() {
+        return shippingFreight;
+    }
+
+    public void setShippingFreight(BigDecimal shippingFreight) {
+        this.shippingFreight = shippingFreight;
     }
 }

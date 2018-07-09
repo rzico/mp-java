@@ -9,6 +9,8 @@ public class BarrelSummary implements Serializable {
 
     private Long sellerId;
 
+    private String sellerName;
+
     private String barrelName;
 
      /** 送出 */
@@ -46,5 +48,13 @@ public class BarrelSummary implements Serializable {
 
     public void setReturnQuantity(Integer returnQuantity) {
         this.returnQuantity = returnQuantity;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 }

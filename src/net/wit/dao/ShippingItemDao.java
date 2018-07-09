@@ -7,7 +7,11 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Enterprise;
+import net.wit.entity.Member;
 import net.wit.entity.ShippingItem;
+import net.wit.entity.summary.OrderItemSummary;
+import net.wit.entity.summary.ShippingItemSummary;
 
 
 /**
@@ -27,4 +31,6 @@ public interface ShippingItemDao extends BaseDao<ShippingItem, Long> {
 	 * @return Page<ShippingItem>
 	 */
 	Page<ShippingItem> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+	public List<ShippingItemSummary> summary(Enterprise enterprise, Member seller, Date beginDate, Date endDate, Pageable pageable);
 }

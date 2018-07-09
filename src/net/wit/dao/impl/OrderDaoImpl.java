@@ -167,7 +167,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 		e =DateUtils.addDays(e,1);
 		String jpql =
 				"select sum(orders.fee) as fee,sum(orders.freight) as freight,sum(orders.point_discount) as pointDiscount,sum(orders.coupon_discount) as couponDiscount,"+
-						"sum(orders.exchange_discount) as exchangeDiscount,sum(orders.offset_amount) as offsetAmount,sum(orders.amount_payable) as amountPayable "+
+						"sum(orders.exchange_discount) as exchangeDiscount,sum(orders.offset_amount) as offsetAmount,sum(orders.amount_payable) as amountPayable,"+
+						"sum(orders.shipping_freight) as shippingFreight,sum(orders.admin_freight) as adminFreight,sum(orders.level_freight) as levelFreight "+
 						"from wx_order orders where orders.shipping_date>=? and orders.shipping_date<? and orders.seller=? and orders.shipping_status<>0 "+
 						" ";
 		Query query = entityManager.createNativeQuery(jpql).
@@ -186,10 +187,12 @@ public class OrderDaoImpl extends BaseDaoImpl<Order, Long> implements OrderDao {
 			rw.setCouponDiscount((BigDecimal) row[3]);
 			rw.setExchangeDiscount((BigDecimal) row[4]);
 			rw.setOffsetAmount((BigDecimal) row[5]);
-			rw.setAmountPayable((BigDecimal) row[6]);
-			if (rw.getAmountPayable()!=null){
-				rw.setPrice(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()).subtract(rw.getOffsetAmount()).subtract(rw.getFreight()));
-				rw.setAmount(rw.getAmountPayable().add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()));
+			BigDecimal amountPayable = (BigDecimal) row[6];
+			if (amountPayable!=null){
+				rw.setPrice(amountPayable.add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()).subtract(rw.getOffsetAmount()).subtract(rw.getFreight()));
+				rw.setAmount(amountPayable.add(rw.getPointDiscount()).add(rw.getCouponDiscount()).add(rw.getExchangeDiscount()));
+				rw.setShippingFreight((BigDecimal) row[7]);
+				rw.setProfit(rw.getAmount().subtract(rw.getFee()).subtract(rw.getShippingFreight()));
 				data.add(rw);
 			}
 		}

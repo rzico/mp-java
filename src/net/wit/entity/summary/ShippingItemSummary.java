@@ -5,21 +5,17 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class OrderItemSummary implements Serializable {
+public class ShippingItemSummary implements Serializable {
+
     private Long product;
     private String name;
 
-    /** 销量 */
+    /**  销量 */
     private Integer quantity;
-
     /**  金额 */
     private BigDecimal amount;
-
-    /**  成本 */
+    /**  货款 */
     private BigDecimal cost;
-
-    /**  毛利 */
-    private BigDecimal profit;
 
     public Long getProduct() {
         return product;
@@ -61,11 +57,4 @@ public class OrderItemSummary implements Serializable {
         this.cost = cost;
     }
 
-    public BigDecimal getProfit() {
-        return profit;
-    }
-
-    public void setProfit(BigDecimal profit) {
-        this.profit = profit;
-    }
 }

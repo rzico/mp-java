@@ -83,7 +83,7 @@ public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements Paymen
 				"union all "+
 				"select refunds.member,refunds.payment_method,0 as amount,sum(refunds.amount) as refund "+
 				"from wx_refunds refunds where refunds.payee=? and refunds.create_date>=? and refunds.create_date<? and refunds.status = 2 "+
-				") j group by member,payment_method order by payee";
+				") j group by member,payment_method order by member,payment_method";
 
 		Query query = entityManager.createNativeQuery(jpql).
 				setFlushMode(FlushModeType.COMMIT).

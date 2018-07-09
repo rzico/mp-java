@@ -73,7 +73,7 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
 		String jpql =
-				"select orderItem.product,orderItem.name,orderItem.spec,sum(orderItem.quantity),sum(orderItem.quantity * orderItem.price) "+
+				"select orderItem.product,orderItem.name,orderItem.spec,sum(orderItem.quantity),sum(orderItem.quantity * orderItem.price),sum(orderItem.quantity * orderItem.cost) "+
 						"from wx_order_item orderItem,wx_order orders where orderItem.orders=orders.id and orders.shipping_date>=? and orders.shipping_date<? and orders.seller=? and orders.shipping_status<>0 "+
 						"group by orderItem.product,orderItem.name,orderItem.spec order by orderItem.product ";
 
@@ -96,6 +96,7 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 				BigDecimal bd = (BigDecimal) row[3];
 				rw.setQuantity(bd.intValue());
 				rw.setAmount((BigDecimal) row[4]);
+				rw.setCost((BigDecimal) row[5]);
 				data.add(rw);
 			}
 		}
