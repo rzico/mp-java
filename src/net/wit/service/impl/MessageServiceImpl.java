@@ -692,18 +692,18 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 //			share.setAuthor(article.getMember());
 //			sharePushTo(share);
 //		}
-		if (member.getMobile()==null) {
-			Message msg = new Message();
-			msg.setMember(member);
-			msg.setReceiver(member);
-			msg.setType(Message.Type.message);
-			msg.setTitle("绑定手机号");
-			msg.setContent("接工信部要求，分发内容都必须绑定手机。");
-			Map<String,String> ext = new HashMap<String,String>();
-			ext.put("type","mobile");
-			msg.setExt(JsonUtils.toJson(ext));
-			pushTo(msg);
-		}
+//		if (member.getMobile()==null) {
+//			Message msg = new Message();
+//			msg.setMember(member);
+//			msg.setReceiver(member);
+//			msg.setType(Message.Type.message);
+//			msg.setTitle("绑定手机号");
+//			msg.setContent("接工信部要求，分发内容都必须绑定手机。");
+//			Map<String,String> ext = new HashMap<String,String>();
+//			ext.put("type","mobile");
+//			msg.setExt(JsonUtils.toJson(ext));
+//			pushTo(msg);
+//		}
 	}
 
 }
