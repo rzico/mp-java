@@ -137,7 +137,6 @@ public class PaymentController extends BaseController {
             payment.setWay(Payment.Way.merchant);
             payment.setMerchant(agent);
         }
-
         payment.setMethod(Method.online);
         payment.setPaymentPluginId(paymentPluginId);
         payment.setPaymentMethod(paymentPlugin.getName());

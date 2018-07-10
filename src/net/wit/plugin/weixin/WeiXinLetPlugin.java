@@ -80,6 +80,29 @@ public class WeiXinLetPlugin extends PaymentPlugin {
 		return "UTF-8";
 	}
 
+
+	/**
+	 * 获取属性值
+	 * @param name 属性名称
+	 * @return 属性值
+	 */
+	public String getAttribute(Payment payment,String name) {
+		if (payment!=null && payment.getMerchant()!=null && payment.getWay().equals(Payment.Way.merchant)) {
+			Member merchant = payment.getMerchant();
+			if ("appId".equals(name)) {
+				return merchant.getTopic().getConfig().getAppetAppId();
+			} else
+			if ("partner".equals(name)) {
+				return merchant.getTopic().getConfig().getWxPartner();
+			} else{
+				return merchant.getTopic().getConfig().getWxkey();
+			}
+		} else {
+			PluginConfig pluginConfig = getPluginConfig();
+			return pluginConfig != null ? pluginConfig.getAttribute(name) : null;
+		}
+	}
+
 	/**
 	 * 作用：生成签名
 	 */

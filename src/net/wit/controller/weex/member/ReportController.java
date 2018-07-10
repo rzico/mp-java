@@ -183,12 +183,14 @@ public class ReportController extends BaseController {
            Member sn = memberService.find(s.getSellerId());
            s.setSellerName(sn.displayName());
         }
+
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("summary",header);
         data.put("data",body);
         PageBlock model = PageBlock.bind(new Page());
         model.setData(data);
         return Message.bind(model,request);
+
     }
 
 
