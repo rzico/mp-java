@@ -25,6 +25,7 @@ public class User {
     public static String im_attr="https://console.tim.qq.com/v4/openim/im_set_attr_name?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_attr="https://console.tim.qq.com/v4/im_open_login_svc/account_import?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
     public static String user_state="https://console.tim.qq.com/v4/openim/querystate?usersig=USERSIG&identifier=ADMIN&sdkappid=SDKAPPID&random=RANDOM&contenttype=json";
+
     public static boolean checkUserSig(String urlSig,String username) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
@@ -38,6 +39,7 @@ public class User {
             return false;
         }
     }
+
     public static String createUserSig(String username) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         // generate signature
@@ -50,6 +52,7 @@ public class User {
             return "";
         }
     }
+
     public static boolean imAttr() {
         return true;
 //        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
@@ -120,7 +123,7 @@ public class User {
 //        } finally {
 //            httpClient.getConnectionManager().shutdown();
 //        }
-//
+
     }
     public static boolean userState(List<Member> members) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
