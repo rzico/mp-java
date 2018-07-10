@@ -548,6 +548,26 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		return true;
 	}
 
+	public Boolean redPackagePushTo(RedPackage redPackage){
+		Message msg = new Message();
+		String content = "";
+		msg.setMember(redPackage.getMember());
+		msg.setReceiver(redPackage.getMember());
+		msg.setType(Message.Type.message);
+		msg.setTitle("红包提醒");
+		if(redPackage.getStatus() == RedPackage.Status.get){
+			//领取红包提醒
+			content = "恭喜您分享【" + redPackage.getArticle().getTitle() + "】获得红包" + redPackage.getAmount() + "元。";
+		}else {
+			content = "您已成功将红包放入文章【" + redPackage.getArticle().getTitle() + "】中";
+		}
+		msg.setContent(content);
+		Map<String,String> ext = new HashMap<String,String>();
+		ext.put("type","redPackage");
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
+	}
+
 	public Boolean topicConfigPushTo(Topic topic) {
 		TopicConfig topicConfig = topic.getConfig();
 		Message msg = new Message();

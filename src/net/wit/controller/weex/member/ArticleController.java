@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -85,6 +87,8 @@ public class ArticleController extends BaseController {
     @Resource(name = "weixinUpServiceImpl")
     private WeixinUpService weixinUpService;
 
+    @Resource(name = "redPackageServiceImpl")
+    private RedPackageService redPackageService;
     /**
      *  文章列表,带分页
      */
@@ -223,6 +227,7 @@ public class ArticleController extends BaseController {
             article.setIsPitch(false);
             article.setIsPublish(false);
             article.setIsReview(true);
+            article.setIsAudit(false);
             article.setIsTop(false);
             article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
@@ -267,7 +272,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
-    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptionModel articleOptions,Location location,HttpServletRequest request){
+    public Message publish(Long id, Long articleCategoryId, Long articleCatalogId, ArticleOptionModel articleOptions, Location location, HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
@@ -279,9 +284,13 @@ public class ArticleController extends BaseController {
             article.setIsPublish(true);
             article.setAuthority(articleOptions.getAuthority());
             article.setIsPitch(articleOptions.getIsPitch());
+            //更新设置红包
+//            article.setIsRedPackage(articleOptions.getIsRedPackage());
+
             if (articleOptions.getPassword()!=null) {
                 article.setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
             }
+
         }
         if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
             article.setLocation(location);
@@ -294,6 +303,7 @@ public class ArticleController extends BaseController {
         }
 //        article.setIsDraft(false);
         article.setIsPublish(true);
+
         articleService.update(article);
 
         List<Filter> filters = new ArrayList<Filter>();
@@ -437,6 +447,76 @@ public class ArticleController extends BaseController {
         article.setDeleted(false);
         articleService.update(article);
         return Message.success("还原成功");
+    }
+
+
+
+
+    @RequestMapping(value = "/getRedPackage", method = RequestMethod.POST)
+    @ResponseBody
+    public Message getRedPackage(Long articleId){
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Article article = articleService.find(articleId);
+        if(article == null){
+            return Message.error("没有找到该文章");
+        }
+        RedPackage redPackage = new RedPackage();
+        redPackage.setMember(member);
+        redPackage.setStatus(RedPackage.Status.get);
+        redPackage.setArticle(article);
+        double getMoney = redPackageService.getRedPackage(redPackage);
+        if(getMoney > 0.0){
+            return Message.success(getMoney,"领取成功");
+        }else {
+            return Message.error("领取失败");
+        }
+
+    }
+    /**
+     * 向文章包红包
+     */
+    @RequestMapping(value = "/setRedPackage", method = RequestMethod.POST)
+    @ResponseBody
+    public Message setRedPackage(Long articleId, ArticleRedPackageModel articleRedPackage,Boolean isRedPackage, HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Article article = articleService.find(articleId);
+        if(article == null){
+            return Message.error("没有找到该文章");
+        }
+
+
+        ArticleRedPackage aredPackage = new ArticleRedPackage();
+        if(articleRedPackage != null){
+            aredPackage.setRedPackageType(articleRedPackage.getRedPackageType());
+            aredPackage.setRemainSize(articleRedPackage.getRemainSize());
+            aredPackage.setAmount(articleRedPackage.getRemainMoney());
+        }
+        article.setIsRedPackage(isRedPackage);
+        article.setArticleRedPackage(aredPackage);
+        articleService.update(article);
+
+        RedPackage redPackage = new RedPackage();
+        redPackage.setMember(member);
+        redPackage.setArticle(article);
+        redPackage.setAmount(aredPackage.getAmount());
+        redPackage.setIp(request.getRemoteAddr());
+        redPackage.setStatus(RedPackage.Status.wait);
+        try {
+            Payment payment = redPackageService.sendRedPackage(redPackage);
+            return Message.success((Object) payment.getSn(), "发送成功");
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+            return Message.error(e.getMessage());
+        }
     }
 
     /**

@@ -46,7 +46,9 @@ public class Payment extends BaseEntity {
 		/** 专栏激活     */
 		topic,
 		/** 充会员卡    */
-		card
+		card,
+		/** 红包 */
+		redpackage
 	}
 
 	/**
@@ -161,6 +163,13 @@ public class Payment extends BaseEntity {
 	@JoinColumn(name = "orders",updatable = false)
 	@JsonIgnore
 	private Order order;
+
+	/** 红包 */
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private RedPackage redPackage;
+
 
 	/** 订单 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -328,6 +337,14 @@ public class Payment extends BaseEntity {
 
 	public void setTranSn(String tranSn) {
 		this.tranSn = tranSn;
+	}
+
+	public RedPackage getRedPackage() {
+		return redPackage;
+	}
+
+	public void setRedPackage(RedPackage redPackage) {
+		this.redPackage = redPackage;
 	}
 
 	public TopicBill getTopicBill() {
