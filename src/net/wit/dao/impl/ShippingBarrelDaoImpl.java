@@ -67,9 +67,11 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 
 
 	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
+
 		String jpql =	"select barrel.seller,barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) "+
 						"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  "+
 						"group by barrel.seller,barrel.name order by barrel.seller";
@@ -90,8 +92,10 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 			if (bi!=null) {
 				rw.setSellerId(bi.longValue());
 				rw.setBarrelName((String) row[1]);
-				rw.setQuantity((Integer) row[2]);
-				rw.setReturnQuantity((Integer) row[3]);
+				BigDecimal bq = (BigDecimal) row[2];
+				rw.setQuantity(bq.intValue());
+				BigDecimal br = (BigDecimal) row[3];
+				rw.setReturnQuantity(br.intValue());
 				data.add(rw);
 			}
 		}
@@ -119,8 +123,10 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 			Object[] row = (Object[]) result.get(i);
 			BarrelSummary rw = new BarrelSummary();
 			rw.setBarrelName((String) row[0]);
-			rw.setQuantity((Integer) row[1]);
-			rw.setReturnQuantity((Integer) row[2]);
+			BigDecimal bq = (BigDecimal) row[1];
+			rw.setQuantity(bq.intValue());
+			BigDecimal br = (BigDecimal) row[2];
+			rw.setReturnQuantity(br.intValue());
 			if (rw.getBarrelName()!=null) {
 				data.add(rw);
 			}

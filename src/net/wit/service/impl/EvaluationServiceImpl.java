@@ -104,7 +104,6 @@ public class EvaluationServiceImpl extends BaseServiceImpl<Evaluation, Long> imp
 		payment.setSn(snService.generate(Sn.Type.payment));
 		payment.setMemo("购买测评");
 		payment.setEvaluation(evaluation);
-		payment.setPlatform(Payment.Platform.applet);
 		payment.setWay(Payment.Way.yundian);
 		if (payment.getAmount().compareTo(BigDecimal.ZERO)==0) {
 			payment.setStatus(Payment.Status.success);

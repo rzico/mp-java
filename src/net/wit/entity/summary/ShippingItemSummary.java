@@ -10,6 +10,9 @@ public class ShippingItemSummary implements Serializable {
     private Long product;
     private String name;
 
+    private Long sellerId;
+    private String sellerName;
+
     /**  销量 */
     private Integer quantity;
     /**  货款 */
@@ -97,5 +100,21 @@ public class ShippingItemSummary implements Serializable {
 
     public void setSubTotal(BigDecimal subTotal) {
         this.subTotal = subTotal;
+    }
+
+    public Long getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 }

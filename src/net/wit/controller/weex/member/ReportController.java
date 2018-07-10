@@ -179,6 +179,10 @@ public class ReportController extends BaseController {
         List<ShippingSummary> header = shippingService.summary(enterprise,beginDate,endDate,pageable);
         List<ShippingItemSummary> body = shippingItemService.summary(enterprise,beginDate,endDate,pageable);
 
+        for (ShippingItemSummary s:body) {
+           Member sn = memberService.find(s.getSellerId());
+           s.setSellerName(sn.displayName());
+        }
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("summary",header);
         data.put("data",body);

@@ -58,9 +58,7 @@ public class Payment extends BaseEntity {
 		/** 专栏激活     */
 		topic,
 		/** 充会员卡    */
-		cardFill
-		/** 会员卡    */
-		card,
+		cardFill,
 		/** 心里测评    */
 		evaluation
 	}
@@ -216,14 +214,6 @@ public class Payment extends BaseEntity {
 	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private Evaluation evaluation;
-
-	public Platform getPlatform() {
-		return platform;
-	}
-
-	public void setPlatform(Platform platform) {
-		this.platform = platform;
-	}
 
 	public String getSn() {
 		return sn;

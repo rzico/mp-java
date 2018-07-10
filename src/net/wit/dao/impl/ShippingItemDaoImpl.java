@@ -101,7 +101,9 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 			ShippingItemSummary rw = new ShippingItemSummary();
 			BigInteger bi = (BigInteger) row[0];
 			if (bi!=null) {
-				rw.setProduct(bi.longValue());
+				rw.setSellerId(bi.longValue());
+				BigInteger bp = (BigInteger) row[1];
+				rw.setProduct(bp.longValue());
 				rw.setName((String) row[2] + (String) row[3]);
 				BigDecimal bd = (BigDecimal) row[4];
 				rw.setQuantity(bd.intValue());
