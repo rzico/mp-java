@@ -147,7 +147,7 @@ public class Order extends BaseEntity {
 	private String paymentPluginId;
 
 	/** 清算方式 */
-	@Column(columnDefinition="varchar(255) comment '清算方式'")
+	@Column(columnDefinition="int(11) not null default 0 comment '方向 {yundian:代付,merchant:直清}'")
 	private Payment.Way way;
 
 	/** 插件名称 */

@@ -402,7 +402,7 @@ public class ShippingModel extends BaseModel implements Serializable {
         if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
             this.shippingMethod = "普通快递";
         } else
-        if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
+        if (Order.ShippingMethod.warehouse.equals(order.getShippingMethod())) {
             this.shippingMethod = "同城配送";
         } else {
             this.shippingMethod = "电子卡包";
@@ -499,7 +499,7 @@ public class ShippingModel extends BaseModel implements Serializable {
         if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
             this.shippingMethod = "普通快递";
         } else
-        if (Order.ShippingMethod.shipping.equals(order.getShippingMethod())) {
+        if (Order.ShippingMethod.warehouse.equals(order.getShippingMethod())) {
             this.shippingMethod = "同城配送";
         } else {
             this.shippingMethod = "电子卡包";
