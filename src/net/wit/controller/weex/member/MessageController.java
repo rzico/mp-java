@@ -49,6 +49,9 @@ public class MessageController extends BaseController {
     @Resource(name = "messageServiceImpl")
     private MessageService messageService;
 
+    @Resource(name = "shippingServiceImpl")
+    private ShippingService shippingService;
+
     /**
      *  我的消息列表
      */
@@ -137,6 +140,33 @@ public class MessageController extends BaseController {
             net.wit.entity.Order order = orderService.find(Long.parseLong(oid));
             if (order.getSeller().equals(member)) {
                 url = "file://view/shop/order/details.js?sn=" + order.getSn();
+            } else {
+                url = "";
+            }
+        } else
+        if (message.getType().equals(net.wit.entity.Message.Type.shipping)) {
+            Map<String,Object> data = JsonUtils.toObject(message.getExt(),Map.class);
+            String oid = data.get("id").toString();
+            net.wit.entity.Shipping shipping = shippingService.find(Long.parseLong(oid));
+            if (shipping.getSeller().equals(member)) {
+                String  s = "0";
+                if (shipping.getOrderStatus().equals(Shipping.OrderStatus.unconfirmed)) {
+                    if (shipping.getHopeDate()==null) {
+                        s = "0";
+                    } else {
+                        s = "1";
+                    }
+                } else
+                if (shipping.getOrderStatus().equals(Shipping.OrderStatus.confirmed)) {
+                    if (shipping.getShippingStatus().equals(Shipping.ShippingStatus.dispatch) || shipping.getShippingStatus().equals(Shipping.ShippingStatus.delivery)) {
+                        s = "2";
+                    } else {
+                        s = "3";
+                    }
+                } else {
+                    s = "3";
+                }
+                url = "file://view/shop/shipping/list.js?index="+s+"&productCategoryId=" + s;
             } else {
                 url = "";
             }
