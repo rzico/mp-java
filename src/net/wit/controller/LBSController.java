@@ -150,6 +150,9 @@ public class LBSController extends BaseController {
     @RequestMapping(value = "location", method = RequestMethod.POST)
     @ResponseBody
     public Message location(Long memberId,Double lat,Double lng,HttpServletRequest request){
+        System.out.println(memberId);
+        System.out.println(lat);
+        System.out.println(lng);
         Member member = memberService.find(memberId);
         if (member!=null && lat!=null && lng!=null) {
             Location location = new Location();
