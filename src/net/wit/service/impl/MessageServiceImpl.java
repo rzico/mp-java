@@ -283,7 +283,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 				message.setMember(sender);
 			}
 			super.save(message);
-			if (message.getSender().getUuid()!=null) {
+			if (message.getReceiver().getUuid()!=null) {
 				addTask(message.getSender().getUsername(), message.getReceiver().userId(), message.getCreateDate().getTime(), message.getContent());
 			}
 			return true;
@@ -333,7 +333,6 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		BindUser appletUser = bindUserDao.findMember(msg.getReceiver(),bundle.getString("applet.appid"), BindUser.Type.weixin);
 		if (appletUser!=null) {
 			String url = "pages/member/shipping/index";
-			System.out.println(url);
 			addLTTask(appletUser.getOpenId(),appletUser.getFormId(),msg.getTitle(),orderLog.getOrder().getSn(),orderLog.getOrder().getStatusDescr(),orderLog.getOrder().getAmount(),msg.getContent(),url,orderLog.getCreateDate(),orderLog.getOrder().getHopeDate());
 		}
 		return pushTo(msg);

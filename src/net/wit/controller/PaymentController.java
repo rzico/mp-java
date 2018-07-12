@@ -124,6 +124,17 @@ public class PaymentController extends BaseController {
             return Message.error("无效付款单");
         }
 
+        if ("weixinPayPlugin".equals(paymentPluginId)) {
+            if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
+                paymentPluginId = "weixinLetPlugin";
+            } else
+            if (request.getHeader("x-app")!=null && request.getHeader("x-app").contains("com.rzico.")) {
+                paymentPluginId = "weixinAppPlugin";
+            } else {
+                paymentPluginId = "weixinPayPlugin";
+            }
+        }
+
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
         if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
             return Message.error("支付插件无效");

@@ -5,10 +5,7 @@
  */
 package net.wit.plugin.weixin;
 
-import net.wit.entity.BindUser;
-import net.wit.entity.Payment;
-import net.wit.entity.PluginConfig;
-import net.wit.entity.Refunds;
+import net.wit.entity.*;
 import net.wit.plat.weixin.util.WeiXinUtils;
 import net.wit.plugin.PaymentPlugin;
 import net.wit.util.MD5Utils;
