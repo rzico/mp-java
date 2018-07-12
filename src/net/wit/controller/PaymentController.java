@@ -145,8 +145,13 @@ public class PaymentController extends BaseController {
             if (agent==null) {
                 return Message.error("无效代理商xmid");
             }
-            payment.setWay(Payment.Way.merchant);
-            payment.setMerchant(agent);
+            if (agent.getTopic()!=null && agent.getTopic().getConfig().getWxPartner()!=null) {
+                payment.setWay(Payment.Way.merchant);
+                payment.setMerchant(agent);
+            } else {
+                payment.setWay(Payment.Way.yundian);
+                payment.setMerchant(null);
+            }
         }
         payment.setMethod(Method.online);
         payment.setPaymentPluginId(paymentPluginId);
