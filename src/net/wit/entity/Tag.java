@@ -35,7 +35,13 @@ public class Tag extends OrderEntity{
         /* 商品 */
         product,
         /* 专栏 */
-        topic
+        topic,
+        /* 课程 */
+        course,
+        /* 测评 */
+        evaluation,
+        /* 专家 */
+        counselor,
     }
 
     /*名称*/

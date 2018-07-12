@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: Counselor
@@ -68,6 +70,29 @@ public class Counselor extends OrderEntity {
 	@JsonIgnore
 	private String content;
 
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
+	private Member member;
+
+	/** 企业 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private Enterprise enterprise;
+
+	/** 标签*/
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "wx_counselor_tag")
+	@OrderBy("orders asc")
+	@JsonIgnore
+	private List<Tag> tags = new ArrayList<Tag>();
+
+	/** 是否删除 */
+	@NotNull
+	@Column(columnDefinition="bit not null default 0 comment '是否删除'")
+	@JsonIgnore
+	private Boolean deleted;
+
 	public Counselor.Status getStatus() {
 		return status;
 	}
@@ -114,5 +139,29 @@ public class Counselor extends OrderEntity {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Enterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 }

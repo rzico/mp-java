@@ -67,6 +67,16 @@ public class Subscribe extends BaseEntity {
 	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
 	private Member member;
 
+	/** 企业 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private Enterprise enterprise;
+
+	/** 企业 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private Counselor counselor;
+
 	public Subscribe.Status getStatus() {
 		return status;
 	}
@@ -105,5 +115,29 @@ public class Subscribe extends BaseEntity {
 
 	public void setWorry(String worry) {
 		this.worry = worry;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Enterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
+	}
+
+	public Counselor getCounselor() {
+		return counselor;
+	}
+
+	public void setCounselor(Counselor counselor) {
+		this.counselor = counselor;
 	}
 }
