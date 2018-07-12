@@ -142,10 +142,13 @@ public class Order extends BaseEntity {
 	@Column(nullable = false,columnDefinition="int(11) not null comment '付款方式'")
 	private PaymentMethod paymentMethod;
 
-
 	/** 结算插件 */
 	@Column(columnDefinition="varchar(255) comment '结算插件'")
 	private String paymentPluginId;
+
+	/** 清算方式 */
+	@Column(columnDefinition="varchar(255) comment '清算方式'")
+	private Payment.Way way;
 
 	/** 插件名称 */
 	@Column(columnDefinition="varchar(255) comment '插件名称'")
@@ -458,6 +461,15 @@ public class Order extends BaseEntity {
 
 	public void setDragon(Dragon dragon) {
 		this.dragon = dragon;
+	}
+
+
+	public Payment.Way getWay() {
+		return way;
+	}
+
+	public void setWay(Payment.Way way) {
+		this.way = way;
 	}
 
 	/**

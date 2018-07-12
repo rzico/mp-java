@@ -494,6 +494,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		order.setDragon(dragon);
 
+		order.setWay(Payment.Way.yundian);
+
 		order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
 		order.setOperator(member.userId());
 
@@ -988,7 +990,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 //		messageService.orderMemberPushTo(orderLog);
 
 		//计算货款
-		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
+		if (order.getPaymentStatus().equals(Order.PaymentStatus.paid) && order.getWay().equals(Payment.Way.yundian)  && order.getShippingStatus().equals(Order.ShippingStatus.shipped)) {
 			if (order.getPaymentMethod().equals(Order.PaymentMethod.online) || order.getPaymentMethod().equals(Order.PaymentMethod.deposit)) {
 				//扣除商家分配佣金
 				Member seller = order.getSeller();

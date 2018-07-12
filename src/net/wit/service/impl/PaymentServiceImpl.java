@@ -169,6 +169,8 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					order.setFee(BigDecimal.ZERO);
 				}
 
+				order.setWay(payment.getWay());
+
 				order.setPaymentMethod(Order.PaymentMethod.values()[payment.getMethod().ordinal()]);
 				order.setPaymentPluginId(payment.getPaymentPluginId());
 				order.setPaymentPluginName(payment.getPaymentMethod());
