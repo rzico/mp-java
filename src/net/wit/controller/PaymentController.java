@@ -125,13 +125,23 @@ public class PaymentController extends BaseController {
         }
 
         if ("weixinPayPlugin".equals(paymentPluginId)) {
-            if (request.getHeader("x-app")!=null && "applet".equals(request.getHeader("x-app"))) {
-                paymentPluginId = "weixinLetPlugin";
-            } else
-            if (request.getHeader("x-app")!=null && request.getHeader("x-app").contains("com.rzico.")) {
-                paymentPluginId = "weixinAppPlugin";
+            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+            if (bundle.getString("weex").equals("1")) {
+                if (request.getHeader("x-app") != null && "applet".equals(request.getHeader("x-app"))) {
+                    paymentPluginId = "weixinOcLetPlugin";
+                } else if (request.getHeader("x-app") != null && request.getHeader("x-app").contains("com.rzico.")) {
+                    paymentPluginId = "weixinAppPlugin";
+                } else {
+                    paymentPluginId = "weixinOcPayPlugin";
+                }
             } else {
-                paymentPluginId = "weixinPayPlugin";
+                if (request.getHeader("x-app") != null && "applet".equals(request.getHeader("x-app"))) {
+                    paymentPluginId = "weixinLetPlugin";
+                } else if (request.getHeader("x-app") != null && request.getHeader("x-app").contains("com.rzico.")) {
+                    paymentPluginId = "weixinAppPlugin";
+                } else {
+                    paymentPluginId = "weixinPayPlugin";
+                }
             }
         }
 
