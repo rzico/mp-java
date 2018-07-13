@@ -60,6 +60,9 @@ public class TagController extends BaseController {
 		types.add(new MapEntity("template","模板"));
 		types.add(new MapEntity("product","商品"));
 		types.add(new MapEntity("topic","专栏"));
+		types.add(new MapEntity("course","课程"));
+		types.add(new MapEntity("evaluation","测评"));
+		types.add(new MapEntity("counselor","专家"));
 		model.addAttribute("types",types);
 
 		return "/admin/tag/list";
@@ -78,6 +81,9 @@ public class TagController extends BaseController {
 		types.add(new MapEntity("template","模板"));
 		types.add(new MapEntity("product","商品"));
 		types.add(new MapEntity("topic","专栏"));
+		types.add(new MapEntity("course","课程"));
+		types.add(new MapEntity("evaluation","测评"));
+		types.add(new MapEntity("counselor","专家"));
 		model.addAttribute("types",types);
 
 		return "/admin/tag/add";
@@ -147,6 +153,9 @@ public class TagController extends BaseController {
 		types.add(new MapEntity("template","模板"));
 		types.add(new MapEntity("product","商品"));
 		types.add(new MapEntity("topic","专栏"));
+		types.add(new MapEntity("course","课程"));
+		types.add(new MapEntity("evaluation","测评"));
+		types.add(new MapEntity("counselor","专家"));
 		model.addAttribute("types",types);
 
 		model.addAttribute("data",tagService.find(id));

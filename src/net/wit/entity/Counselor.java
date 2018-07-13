@@ -164,4 +164,12 @@ public class Counselor extends OrderEntity {
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 }

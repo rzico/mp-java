@@ -187,4 +187,20 @@ public class Course extends OrderEntity {
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 }
