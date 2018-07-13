@@ -117,6 +117,10 @@ public class ReportController extends BaseController {
 
         List<PaymentSummary> header = paymentService.summary_method(member,beginDate,endDate,pageable);
         List<PaymentSummary> body = paymentService.summary(member,beginDate,endDate,pageable);
+        for (PaymentSummary s:body) {
+            Member sn = memberService.find(s.getMemberId());
+            s.setMemberName(sn.displayName());
+        }
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("summary",header);
@@ -148,6 +152,11 @@ public class ReportController extends BaseController {
 
         List<BarrelSummary> header = shippingBarrelService.summary_barrel(enterprise,beginDate,endDate,pageable);
         List<BarrelSummary> body = shippingBarrelService.summary(enterprise,beginDate,endDate,pageable);
+
+        for (BarrelSummary s:body) {
+            Member sn = memberService.find(s.getSellerId());
+            s.setSellerName(sn.displayName());
+        }
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("summary",header);

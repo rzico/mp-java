@@ -60,7 +60,9 @@ public class Payment extends BaseEntity {
 		/** 充会员卡    */
 		cardFill,
 		/** 心里测评    */
-		evaluation
+		evaluation,
+		/** 课程报名    */
+		course
 	}
 
 	/**
@@ -214,6 +216,12 @@ public class Payment extends BaseEntity {
 	@JoinColumn(updatable = false)
 	@JsonIgnore
 	private Evaluation evaluation;
+
+	/** 课程 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	@JsonIgnore
+	private CourseOrder courseOrder;
 
 	public String getSn() {
 		return sn;

@@ -107,6 +107,7 @@ public class ShippingDaoImpl extends BaseDaoImpl<Shipping, Long> implements Ship
 			rw.setLevelFreight((BigDecimal) row[3]);
 			if (rw.getAdminFreight()!=null){
 				rw.setAdminFreight(rw.getAdminFreight().subtract(rw.getLevelFreight()));
+				rw.setProfit(rw.getShippingFreight().subtract(rw.getAdminFreight()).subtract(rw.getLevelFreight()));
 				data.add(rw);
 			}
 		}
