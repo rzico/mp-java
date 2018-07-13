@@ -206,4 +206,5 @@ public class Message extends BaseEntity {
 			return null;
 		}
 	}
+
 }
