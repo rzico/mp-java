@@ -32,7 +32,7 @@ public class Message extends BaseEntity {
 	
 	/** 消息类型  */
 	public static enum Type {
-		/** 订单提醒  */
+		/** 订单提醒  gm_10200 */
 		order,
 		/** 账单提醒   */
 		account,
@@ -58,7 +58,7 @@ public class Message extends BaseEntity {
 		gmchat,
 		/** 线下收单 gm_10212  */
 		cashier,
-		/** 物流提醒  */
+		/** 物流提醒 gm_10213 */
 		shipping,
 	}
 
