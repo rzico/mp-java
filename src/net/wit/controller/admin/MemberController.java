@@ -349,6 +349,49 @@ public class MemberController extends BaseController {
 		return "/admin/member/view/occupationView";
 	}
 
+	/**
+	 * 会员管理视图
+	 */
+	@RequestMapping(value = "/memberView", method = RequestMethod.GET)
+	public String memberView(Long id, ModelMap model) {
+		List<MapEntity> genders = new ArrayList<>();
+		genders.add(new MapEntity("male","男"));
+		genders.add(new MapEntity("female","女"));
+		genders.add(new MapEntity("secrecy","保密"));
+		model.addAttribute("genders",genders);
 
+		model.addAttribute("areas",areaService.findAll());
+
+		model.addAttribute("occupations",occupationService.findAll());
+
+		model.addAttribute("tags",tagService.findAll());
+
+		model.addAttribute("member",memberService.find(id));
+		return "/admin/member/view/memberView";
+	}
+
+
+	/**
+	 * 通过会员手机号调取会员信息
+	 */
+	@RequestMapping(value = "/find", method = RequestMethod.GET)
+	@ResponseBody
+	public Message getMemberInfo(String phone){
+		try {
+			Member member = memberService.findByMobile(phone);
+			if(member != null){
+				Map<String,Object> data = new HashMap<>();
+			    data.put("name",member.getName());
+			    data.put("mobile",member.getMobile());
+			    data.put("username",member.userId());
+			    data.put("id",member.getId());
+				return Message.success(data,"admin.update.success");
+			}else{
+				return Message.error("admin.update.error");
+			}
+		} catch (Exception e) {
+			return Message.error("admin.update.error");
+		}
+	}
 
 }

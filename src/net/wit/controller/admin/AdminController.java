@@ -88,15 +88,11 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
 
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
 		List<MapEntity> genders = new ArrayList<>();
 		genders.add(new MapEntity("male","男"));
 		genders.add(new MapEntity("female","女"));
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
-//
-//		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("roles",roleService.findAll());
 
@@ -110,11 +106,15 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Admin admin, Long areaId, Long enterpriseId, Long [] roleIds){
+		Admin loginAdmin = adminService.getCurrent();
+
+
+		Admin check = adminService.findByUsername(admin.getUsername());
+		if (check!=null) {
+			return Message.error("用户名重复");
+		}
+
 		Admin entity = new Admin();	
-
-		entity.setCreateDate(admin.getCreateDate());
-
-		entity.setModifyDate(admin.getModifyDate());
 
 		entity.setDepartment(admin.getDepartment());
 
@@ -123,17 +123,14 @@ public class AdminController extends BaseController {
 		entity.setIsEnabled(true);
 
 		entity.setIsLocked(false);
-		//entity.setLockedDate(admin.getLockedDate());
-		//entity.setLoginDate(admin.getLoginDate());
 		entity.setLoginFailureCount(0);
-		//entity.setLoginIp(admin.getLoginIp());
 		entity.setName(admin.getName());
 
 		entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
 
 		entity.setUsername(admin.getUsername());
 
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
+		entity.setEnterprise(loginAdmin.getEnterprise());
 
 		entity.setGender(admin.getGender());
 
@@ -167,6 +164,13 @@ public class AdminController extends BaseController {
 			}
 		}
 
+		for (Long id:ids) {
+			Admin admin = adminService.find(id);
+			if (admin.getMember()!=null) {
+				return Message.error("用户账号不允许删除!");
+			}
+		}
+
         try {
             adminService.delete(ids);
             return Message.success("admin.delete.success");
@@ -183,15 +187,11 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
 		List<MapEntity> genders = new ArrayList<>();
 		genders.add(new MapEntity("male","男"));
 		genders.add(new MapEntity("female","女"));
 		genders.add(new MapEntity("secrecy","保密"));
 		model.addAttribute("genders",genders);
-//
-//		model.addAttribute("areas",areaService.findAll());
 
 		model.addAttribute("roles",roleService.findAll());
 
@@ -209,12 +209,8 @@ public class AdminController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Admin admin, Long areaId, Long enterpriseId, Long [] roleIds){
+	public Message update(Admin admin, Long areaId,Long [] roleIds){
 		Admin entity = adminService.find(admin.getId());
-		
-		entity.setCreateDate(admin.getCreateDate());
-
-		entity.setModifyDate(admin.getModifyDate());
 
 		entity.setDepartment(admin.getDepartment());
 
@@ -233,10 +229,6 @@ public class AdminController extends BaseController {
 		entity.setLoginIp(admin.getLoginIp());
 
 		entity.setName(admin.getName());
-		//entity.setPassword(MD5Utils.getMD5Str(admin.getPassword()));
-		entity.setUsername(admin.getUsername());
-
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
 
 		entity.setGender(admin.getGender());
 
@@ -317,37 +309,19 @@ public class AdminController extends BaseController {
 		}
 
 		Admin admin =adminService.getCurrent();
-//		System.out.println("admin.ID:"+admin.getId());
-		Enterprise enterprise=admin.getEnterprise();
-//		System.out.println("enter.ID:"+enterprise.getId());
 
-		if(enterprise==null){
-			return Message.error("您还未绑定企业");
-		}
-		//判断企业是否被删除
-		if(enterprise.getDeleted()){
-			Message.error("您的企业不存在");
-		}
-		//代理商
-		//个人代理商(無權限)
-		//商家
-		if(enterprise.getType()== Enterprise.Type.shop||enterprise.getType()== Enterprise.Type.agent){
-			if(enterprise.getMember()!=null){
-				Filter mediaTypeFilter = new Filter("enterprise", Filter.Operator.eq, enterprise);
-//				System.out.println("admin.enter.member.ID:"+enterprise.getMember().getId());
-				filters.add(mediaTypeFilter);
-			}
-			else{
-				return Message.error("该商家未绑定");
-			}
+		//非超级管理员都只能管本企业用户
+		if (!admin.getId().equals(1L)) {
+			filters.add(new Filter("enterprise", Filter.Operator.eq, admin.getEnterprise()));
 		}
 
 		if(searchValue!=null){
-			Filter mediaTypeFilter = new Filter("name", Filter.Operator.like, "%"+searchValue+"%");
-			filters.add(mediaTypeFilter);
+			filters.add( new Filter("name", Filter.Operator.like, "%"+searchValue+"%"));
 		}
+
 		Page<Admin> page = adminService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
+
 	}
 	
 	
@@ -356,7 +330,6 @@ public class AdminController extends BaseController {
 	 */
 	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
 	public String areaView(Long id, ModelMap model) {
-
 
 		model.addAttribute("area",areaService.find(id));
 		return "/admin/admin/view/areaView";

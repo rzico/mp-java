@@ -52,6 +52,12 @@ public class Counselor extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 电话 */
+	@NotNull
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '电话'")
+	private String phone;
+
 	/** 签名 */
 	@NotNull
 	@Length(max = 200)
@@ -171,5 +177,13 @@ public class Counselor extends OrderEntity {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }

@@ -44,7 +44,7 @@ import net.wit.controller.admin.model.*;
 public class CounselorController extends BaseController {
 	@Resource(name = "counselorServiceImpl")
 	private CounselorService counselorService;
-	
+
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
@@ -67,6 +67,9 @@ public class CounselorController extends BaseController {
 	private HostService hostService;
 
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 
 	/**
 	 * 主页
@@ -75,13 +78,11 @@ public class CounselorController extends BaseController {
 	public String index(ModelMap model) {
 
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("enabled","开启"));
-		statuss.add(new MapEntity("disabled","关闭"));
-		model.addAttribute("statuss",statuss);
+		statuss.add(new MapEntity("enabled", "开启"));
+		statuss.add(new MapEntity("disabled", "关闭"));
+		model.addAttribute("statuss", statuss);
 
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
+		model.addAttribute("tags", tagService.findList(Tag.Type.counselor));
 
 		return "/admin/counselor/list";
 	}
@@ -94,29 +95,26 @@ public class CounselorController extends BaseController {
 	public String add(ModelMap model) {
 
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("enabled","开启"));
-		statuss.add(new MapEntity("disabled","关闭"));
-		model.addAttribute("statuss",statuss);
+		statuss.add(new MapEntity("enabled", "开启"));
+		statuss.add(new MapEntity("disabled", "关闭"));
+		model.addAttribute("statuss", statuss);
 
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
+		model.addAttribute("tags", tagService.findList(Tag.Type.counselor));
 
 		return "/admin/counselor/add";
 	}
 
 
 	/**
-     * 保存
-     */
+	 * 保存
+	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-    @ResponseBody
-	public Message save(Counselor counselor, Long memberId, Long enterpriseId){
-		Counselor entity = new Counselor();	
+	@ResponseBody
+	public Message save(Counselor counselor, Long memberId) {
 
-		entity.setCreateDate(counselor.getCreateDate());
+		Admin admin = adminService.getCurrent();
 
-		entity.setModifyDate(counselor.getModifyDate());
+		Counselor entity = new Counselor();
 
 		entity.setOrders(counselor.getOrders() == null ? 0 : counselor.getOrders());
 
@@ -124,49 +122,51 @@ public class CounselorController extends BaseController {
 
 		entity.setContent(counselor.getContent());
 
-		entity.setDeleted(counselor.getDeleted());
+		entity.setDeleted(false);
 
 		entity.setLogo(counselor.getLogo());
 
 		entity.setName(counselor.getName());
 
+		entity.setPhone(counselor.getPhone());
+
 		entity.setSpeciality(counselor.getSpeciality());
 
 		entity.setStatus(counselor.getStatus());
 
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
+		entity.setEnterprise(admin.getEnterprise());
 
 		entity.setMember(memberService.find(memberId));
-		
+
 		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
-        try {
-            counselorService.save(entity);
-            return Message.success(entity,"admin.save.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("admin.save.error");
-        }
+			return Message.error("admin.data.valid");
+		}
+		try {
+			counselorService.save(entity);
+			return Message.success(entity, "admin.save.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.save.error");
+		}
 	}
 
 
 	/**
-     * 删除
-     */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public @ResponseBody
-    Message delete(Long[] ids) {
-        try {
-            counselorService.delete(ids);
-            return Message.success("admin.delete.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("admin.delete.error");
-        }
-    }
-	
-	
+	 * 删除
+	 */
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public @ResponseBody
+	Message delete(Long[] ids) {
+		try {
+			counselorService.delete(ids);
+			return Message.success("admin.delete.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.delete.error");
+		}
+	}
+
+
 	/**
 	 * 编辑
 	 */
@@ -174,31 +174,27 @@ public class CounselorController extends BaseController {
 	public String edit(Long id, ModelMap model) {
 
 		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("enabled","开启"));
-		statuss.add(new MapEntity("disabled","关闭"));
-		model.addAttribute("statuss",statuss);
+		statuss.add(new MapEntity("enabled", "开启"));
+		statuss.add(new MapEntity("disabled", "关闭"));
+		model.addAttribute("statuss", statuss);
 
-		model.addAttribute("enterprises",enterpriseService.findAll());
+		model.addAttribute("tags", tagService.findList(Tag.Type.counselor));
 
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("data",counselorService.find(id));
+		model.addAttribute("data", counselorService.find(id));
 
 		return "/admin/counselor/edit";
 	}
 
-	
-	/**
-     * 更新
-     */
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-    @ResponseBody
-	public Message update(Counselor counselor, Long memberId, Long enterpriseId){
-		Counselor entity = counselorService.find(counselor.getId());
-		
-		entity.setCreateDate(counselor.getCreateDate());
 
-		entity.setModifyDate(counselor.getModifyDate());
+	/**
+	 * 更新
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseBody
+	public Message update(Counselor counselor, Long memberId) {
+		Admin admin = adminService.getCurrent();
+
+		Counselor entity = counselorService.find(counselor.getId());
 
 		entity.setOrders(counselor.getOrders() == null ? 0 : counselor.getOrders());
 
@@ -206,110 +202,57 @@ public class CounselorController extends BaseController {
 
 		entity.setContent(counselor.getContent());
 
-		entity.setDeleted(counselor.getDeleted());
+		entity.setDeleted(false);
 
 		entity.setLogo(counselor.getLogo());
 
 		entity.setName(counselor.getName());
 
+		entity.setPhone(counselor.getPhone());
+
 		entity.setSpeciality(counselor.getSpeciality());
 
 		entity.setStatus(counselor.getStatus());
 
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
+		entity.setEnterprise(admin.getEnterprise());
 
 		entity.setMember(memberService.find(memberId));
-		
+
 		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
-        try {
-            counselorService.update(entity);
-            return Message.success(entity,"admin.update.success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Message.error("admin.update.error");
-        }
+			return Message.error("admin.data.valid");
+		}
+
+		try {
+			counselorService.update(entity);
+			return Message.success(entity, "admin.update.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.update.error");
+		}
 	}
-	
+
 
 	/**
-     * 列表
-     */
+	 * 列表
+	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Counselor.Status status, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, Counselor.Status status, Pageable pageable, ModelMap model) {
+		Admin admin = adminService.getCurrent();
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
-		if (status!=null) {
+		if (status != null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
 
-		Page<Counselor> page = counselorService.findPage(beginDate,endDate,pageable);
+		//非超级管理员都只能管本企业用户
+		if (!admin.getId().equals(1L)) {
+			filters.add(new Filter("enterprise", Filter.Operator.eq, admin.getEnterprise()));
+		}
+
+		Page<Counselor> page = counselorService.findPage(beginDate, endDate, pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
-	
-	
-	/**
-	 * 会员管理视图
-	 */
-	@RequestMapping(value = "/memberView", method = RequestMethod.GET)
-	public String memberView(Long id, ModelMap model) {
-		List<MapEntity> genders = new ArrayList<>();
-		genders.add(new MapEntity("male","男"));
-		genders.add(new MapEntity("female","女"));
-		genders.add(new MapEntity("secrecy","保密"));
-		model.addAttribute("genders",genders);
-
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("occupations",occupationService.findAll());
-
-		model.addAttribute("topics",topicService.findAll());
-
-		List<MapEntity> vips = new ArrayList<>();
-		vips.add(new MapEntity("vip1","vip1"));
-		vips.add(new MapEntity("vip2","vip2"));
-		vips.add(new MapEntity("vip3","vip3"));
-		model.addAttribute("vips",vips);
-
-		model.addAttribute("agents",enterpriseService.findAll());
-
-		model.addAttribute("operates",enterpriseService.findAll());
-
-		model.addAttribute("personals",enterpriseService.findAll());
-
-		model.addAttribute("tags",tagService.findAll());
-
-		model.addAttribute("member",memberService.find(id));
-		return "/admin/counselor/view/memberView";
-	}
-
-
-	/**
-	 * 企业管理视图
-	 */
-	@RequestMapping(value = "/enterpriseView", method = RequestMethod.GET)
-	public String enterpriseView(Long id, ModelMap model) {
-		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","代理商"));
-		model.addAttribute("types",types);
-
-		model.addAttribute("areas",areaService.findAll());
-
-		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("waiting","待审核"));
-		statuss.add(new MapEntity("success","已审核"));
-		statuss.add(new MapEntity("failure","已关闭"));
-		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("hosts",hostService.findAll());
-
-		model.addAttribute("enterprise",enterpriseService.find(id));
-		return "/admin/counselor/view/enterpriseView";
-	}
-
 
 
 }

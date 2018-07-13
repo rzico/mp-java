@@ -57,6 +57,8 @@ public class CourseController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 
 	/**
@@ -74,8 +76,6 @@ public class CourseController extends BaseController {
 		types.add(new MapEntity("_public","公共"));
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("enterprises",enterpriseService.findAll());
 
 		return "/admin/course/list";
 	}
@@ -97,8 +97,6 @@ public class CourseController extends BaseController {
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
 		return "/admin/course/add";
 	}
 
@@ -109,25 +107,22 @@ public class CourseController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Course course, Long enterpriseId){
+		Admin admin = adminService.getCurrent();
 		Course entity = new Course();	
-
-		entity.setCreateDate(course.getCreateDate());
-
-		entity.setModifyDate(course.getModifyDate());
 
 		entity.setOrders(course.getOrders() == null ? 0 : course.getOrders());
 
 		entity.setContent(course.getContent());
 
-		entity.setDeleted(course.getDeleted());
+		entity.setDeleted(false);
 
-		entity.setHits(course.getHits() == null ? 0 : course.getHits());
+		entity.setHits(0L);
 
 		entity.setName(course.getName());
 
 		entity.setPrice(course.getPrice());
 
-		entity.setSignup(course.getSignup() == null ? 0 : course.getSignup());
+		entity.setSignup(0L);
 
 		entity.setStatus(course.getStatus());
 
@@ -135,7 +130,7 @@ public class CourseController extends BaseController {
 
 		entity.setType(course.getType());
 
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
+		entity.setEnterprise(admin.getEnterprise());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -182,8 +177,6 @@ public class CourseController extends BaseController {
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
 		model.addAttribute("data",courseService.find(id));
 
 		return "/admin/course/edit";
@@ -196,25 +189,18 @@ public class CourseController extends BaseController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
 	public Message update(Course course, Long enterpriseId){
+		Admin admin = adminService.getCurrent();
 		Course entity = courseService.find(course.getId());
 		
-		entity.setCreateDate(course.getCreateDate());
-
-		entity.setModifyDate(course.getModifyDate());
-
 		entity.setOrders(course.getOrders() == null ? 0 : course.getOrders());
 
 		entity.setContent(course.getContent());
 
-		entity.setDeleted(course.getDeleted());
-
-		entity.setHits(course.getHits() == null ? 0 : course.getHits());
+		entity.setDeleted(false);
 
 		entity.setName(course.getName());
 
 		entity.setPrice(course.getPrice());
-
-		entity.setSignup(course.getSignup() == null ? 0 : course.getSignup());
 
 		entity.setStatus(course.getStatus());
 
@@ -222,7 +208,7 @@ public class CourseController extends BaseController {
 
 		entity.setType(course.getType());
 
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
+		entity.setEnterprise(admin.getEnterprise());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -251,6 +237,13 @@ public class CourseController extends BaseController {
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
 			filters.add(typeFilter);
+		}
+
+		Admin admin =adminService.getCurrent();
+
+		//非超级管理员都只能管本企业用户
+		if (!admin.getId().equals(1L)) {
+			filters.add(new Filter("enterprise", Filter.Operator.eq, admin.getEnterprise()));
 		}
 
 		Page<Course> page = courseService.findPage(beginDate,endDate,pageable);
