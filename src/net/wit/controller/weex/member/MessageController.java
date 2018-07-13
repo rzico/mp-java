@@ -148,7 +148,7 @@ public class MessageController extends BaseController {
             Map<String,Object> data = JsonUtils.toObject(message.getExt(),Map.class);
             String oid = data.get("id").toString();
             net.wit.entity.Shipping shipping = shippingService.find(Long.parseLong(oid));
-            if (shipping.getSeller().equals(member)) {
+            if (shipping!=null) {
                 String  s = "0";
                 if (shipping.getOrderStatus().equals(Shipping.OrderStatus.unconfirmed)) {
                     if (shipping.getHopeDate()==null) {
