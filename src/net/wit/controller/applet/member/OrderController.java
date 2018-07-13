@@ -415,7 +415,7 @@ public class OrderController extends BaseController {
 		OrderLog orderLog = new OrderLog();
 		orderLog.setOrder(order);
 		orderLog.setType(OrderLog.Type.shipping);
-		orderLog.setContent("请卖家尽快发货");
+		orderLog.setContent("亲，有客户催单了，请及时处理");
 		orderLog.setOperator(member.userId());
 		messageService.orderSellerPushTo(orderLog);
 

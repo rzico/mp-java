@@ -242,7 +242,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.shipping);
 		orderLog.setOperator("system");
-		orderLog.setContent("订单至"+shipping.getShop().getName()+"");
+		if (shipping.getHopeDate()==null) {
+			orderLog.setContent("订单安排至" + shipping.getShop().getName() + "");
+		} else {
+			orderLog.setContent("预约单安排至" + shipping.getShop().getName() + "");
+		}
 		orderLog.setOrder(shipping.getOrder());
 		orderLogDao.persist(orderLog);
 
@@ -275,7 +279,11 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			OrderLog orderLog = new OrderLog();
 			orderLog.setType(OrderLog.Type.shipping);
 			orderLog.setOperator("system");
-			orderLog.setContent("订单至"+shipping.getShop().getName()+"");
+			if (shipping.getHopeDate()==null) {
+				orderLog.setContent("订单安排至" + shipping.getShop().getName() + "");
+			} else {
+				orderLog.setContent("预约单安排至" + shipping.getShop().getName() + "");
+			}
 			orderLog.setOrder(shipping.getOrder());
 			orderLogDao.persist(orderLog);
 			messageService.shippingPushTo(shipping,orderLog);

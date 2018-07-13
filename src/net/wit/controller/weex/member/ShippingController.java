@@ -63,6 +63,9 @@ public class ShippingController extends BaseController {
 	@Resource(name = "enterpriseServiceImpl")
 	private EnterpriseService enterpriseService;
 
+	@Resource(name = "messageServiceImpl")
+	private MessageService messageService;
+
 	/**
 	 * 送货锁定
 	 */
@@ -216,6 +219,13 @@ public class ShippingController extends BaseController {
 		} catch (Exception e) {
 			return Message.error(e.getMessage());
 		}
+
+		OrderLog orderLog = new OrderLog();
+		orderLog.setOrder(shipping.getOrder());
+		orderLog.setType(OrderLog.Type.shipping);
+		orderLog.setContent("订单退回至"+shipping.getShop().getName());
+		orderLog.setOperator(member.userId());
+		messageService.shippingPushTo(shipping,orderLog);
 
 		ShippingModel model = new ShippingModel();
 		model.bind(shipping);
