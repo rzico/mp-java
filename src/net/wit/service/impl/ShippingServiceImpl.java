@@ -203,7 +203,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		if (receiver!=null && receiver.getShop()!=null) {
 			shipping.setEnterprise(receiver.getShop().getEnterprise());
 			shipping.setShop(receiver.getShop());
-			shipping.setAdmin(receiver.getAdmin());
+//			shipping.setAdmin(receiver.getAdmin());
 		} else {
 			//没有分配，按距离来，选按谁的客户给谁
 //			Member member = order.getMember();
