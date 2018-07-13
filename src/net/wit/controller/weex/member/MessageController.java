@@ -149,24 +149,24 @@ public class MessageController extends BaseController {
             String oid = data.get("id").toString();
             net.wit.entity.Shipping shipping = shippingService.find(Long.parseLong(oid));
             if (shipping!=null) {
-                String  s = "0";
+                Integer  s = 0;
                 if (shipping.getOrderStatus().equals(Shipping.OrderStatus.unconfirmed)) {
                     if (shipping.getHopeDate()==null) {
-                        s = "0";
+                        s = 0;
                     } else {
-                        s = "1";
+                        s = 1;
                     }
                 } else
                 if (shipping.getOrderStatus().equals(Shipping.OrderStatus.confirmed)) {
                     if (shipping.getShippingStatus().equals(Shipping.ShippingStatus.dispatch) || shipping.getShippingStatus().equals(Shipping.ShippingStatus.delivery)) {
-                        s = "2";
+                        s = 2;
                     } else {
-                        s = "3";
+                        s = 3;
                     }
                 } else {
-                    s = "3";
+                    s = 3;
                 }
-                url = "file://view/shop/shipping/list.js?index="+s+"&productCategoryId=" + s;
+                url = "file://view/shop/shipping/list.js?index="+String.valueOf(s)+"&productCategoryId=" + String.valueOf(s+1);
             } else {
                 url = "";
             }
