@@ -382,7 +382,6 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				}
 				messageService.payBillPushTo(payBill);
 
-
 				if (payment.getMethod().equals(Payment.Method.online)) {
 					Member member = payment.getMember();
 					memberDao.refresh(member,LockModeType.PESSIMISTIC_WRITE);
