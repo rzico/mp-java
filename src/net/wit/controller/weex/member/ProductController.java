@@ -162,7 +162,11 @@ public class ProductController extends BaseController {
 			product.setThumbnail(pm.getThumbnail());
 			product.setMarketPrice(pm.getPrice());
 			product.setPrice(pm.getPrice());
-			product.setCost(pm.getCost());
+			if (pm.getCost()==null) {
+				product.setCost(BigDecimal.ZERO);
+			} else {
+				product.setCost(pm.getCost());
+			}
 			product.setVip1Price(pm.getPrice());
 			product.setVip2Price(pm.getPrice());
 			product.setVip3Price(pm.getPrice());

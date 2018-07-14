@@ -94,7 +94,7 @@ public class MobileController extends BaseController {
 
         Smssend smsSend = new Smssend();
         smsSend.setMobile(m);
-        smsSend.setContent("验证码 :" + securityCode + ",只用于设置密码。");
+        smsSend.setContent("验证码 :" + securityCode + ",只用于绑定手机。");
         smssendService.smsSend(smsSend);
         return Message.success("发送成功");
     }

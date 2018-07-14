@@ -245,6 +245,7 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.isSelf = shipping.getSeller().equals(shipping.getEnterprise().getMember());
 
         this.address = shipping.getAreaName()+shipping.getAddress();
+
     }
 
     public static List<ShippingListModel> bindList(List<Shipping> shippings) {

@@ -487,6 +487,7 @@ public class ShippingController extends BaseController {
 			orders.add(order1);
 
 		}
+
 		if (admin.roles().contains("3")) {
 			filters.add(new Filter("admin", Filter.Operator.eq,admin));
 		} else {
@@ -498,6 +499,7 @@ public class ShippingController extends BaseController {
 		PageBlock model = PageBlock.bind(page);
 		model.setData(ShippingListModel.bindList(page.getContent()));
 		return Message.bind(model,request);
+
 	}
 
 	/**
