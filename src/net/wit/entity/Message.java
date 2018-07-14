@@ -111,6 +111,11 @@ public class Message extends BaseEntity {
 	@Column(columnDefinition="longtext comment '消息来源'")
 	private String ext;
 
+
+	/** 提示音 0、消息提示音 1、水达人有新订单了，请及时处理。 2、亲，有客户催单了，请及时处理。3、你有未派送新订单，请及时处理。4、你有新的预约订单，清留意配送。5、你有预约单快到时间了，请及时配送。6、你的转派单已退回，请及时安排。 */
+	@Column(columnDefinition="int(11) not null default 0 comment '提示音'")
+	private Integer sound;
+
 	public Message.Type getType() {
 		return type;
 	}
@@ -189,6 +194,14 @@ public class Message extends BaseEntity {
 
 	public void setSender(Member sender) {
 		this.sender = sender;
+	}
+
+	public Integer getSound() {
+		return sound;
+	}
+
+	public void setSound(Integer sound) {
+		this.sound = sound;
 	}
 
 	public MapEntity getMapMember() {

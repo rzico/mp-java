@@ -48,10 +48,10 @@ public class Push {
         OfflinePushInfo.put("Ext","");
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
-        AndroidInfo.put("Sound","msg.mp3");
+        AndroidInfo.put("Sound","h"+String.valueOf(message.getSound())+".mp3");
         Map<String,Object> ApnsInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("ApnsInfo",ApnsInfo);
-        ApnsInfo.put("Sound","msg.mp3");
+        ApnsInfo.put("Sound","h"+String.valueOf(message.getSound())+".mp3");
         ApnsInfo.put("BadgeMode",1);
 
         HttpClient httpClient = new DefaultHttpClient();
@@ -78,7 +78,7 @@ public class Push {
         }
     }
 
-    public static boolean taskPush(String sender,String receiver,Long timeStamp,String content) {
+    public static boolean taskPush(String sender,String receiver,Long timeStamp,String content,Integer sound) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
         String userSig= User.createUserSig(bundle.getString("im.admin"));
         int random= StringUtils.Random6Code();
@@ -106,10 +106,10 @@ public class Push {
         OfflinePushInfo.put("Ext","");
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
-        AndroidInfo.put("Sound","msg.mp3");
+        AndroidInfo.put("Sound","h"+String.valueOf(sound)+".mp3");
         Map<String,Object> ApnsInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("ApnsInfo",ApnsInfo);
-        ApnsInfo.put("Sound","msg.mp3");
+        ApnsInfo.put("Sound","h"+String.valueOf(sound)+".mp3");
         ApnsInfo.put("BadgeMode",1);
 
         HttpClient httpClient = new DefaultHttpClient();

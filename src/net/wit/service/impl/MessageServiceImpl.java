@@ -122,11 +122,11 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	/**
 	 * 添加发送任务
 	 */
-	private void addTask(final String sender, final String receiver, final Long timeStamp, final String content) {
+	private void addTask(final String sender, final String receiver, final Long timeStamp, final String content, final Integer sound) {
 		try {
 			taskExecutor.execute(new Runnable() {
 				public void run() {
-				   Push.taskPush(sender,receiver,timeStamp,content);
+				   Push.taskPush(sender,receiver,timeStamp,content,sound);
 				}
 			});
 		} catch (Exception e) {
@@ -282,9 +282,12 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			if (message.getMember()==null) {
 				message.setMember(sender);
 			}
+			if (message.getSound()==null) {
+				message.setSound(0);
+			}
 			super.save(message);
 			if (message.getReceiver().getUuid()!=null) {
-				addTask(message.getSender().getUsername(), message.getReceiver().userId(), message.getCreateDate().getTime(), message.getContent());
+				addTask(message.getSender().getUsername(), message.getReceiver().userId(), message.getCreateDate().getTime(), message.getContent(), message.getSound());
 			}
 			return true;
 		} catch (Exception e) {
@@ -351,6 +354,15 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		OrderListModel ext = new OrderListModel();
 		ext.bind(orderLog.getOrder());
 		msg.setExt(JsonUtils.toJson(ext));
+
+		if (orderLog.getType().equals(OrderLog.Type.payment)) {
+			msg.setSound(1);
+		} else {
+			if (orderLog.getContent().equals("亲，有客户催单了，请及时处理")) {
+				msg.setSound(2);
+			}
+		}
+
 		return pushTo(msg);
 	}
 
@@ -366,6 +378,17 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		ShippingListModel ext = new ShippingListModel();
 		ext.bind(shipping);
 		msg.setExt(JsonUtils.toJson(ext));
+
+		if (msg.getContent().contains("预约单安排至")) {
+			msg.setSound(4);
+		} else
+		if (msg.getContent().contains("订单安排至")) {
+			msg.setSound(1);
+		} else
+		if (msg.getContent().contains("订单退回至")) {
+			msg.setSound(6);
+		}
+
 		return pushTo(msg);
 	}
 
@@ -381,6 +404,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		ShippingListModel ext = new ShippingListModel();
 		ext.bind(shipping);
 		msg.setExt(JsonUtils.toJson(ext));
+		msg.setSound(1);
 		return pushTo(msg);
 	}
 
