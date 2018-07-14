@@ -8,6 +8,8 @@ import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.*;
 
+import net.wit.entity.Article;
+import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -65,10 +67,10 @@ public class RedPackageDaoImpl extends BaseDaoImpl<RedPackage, Long> implements 
 		Predicate restrictions = criteriaBuilder.conjunction();
 		if(redPackage != null){
 			if(redPackage.getMember() != null){
-				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.equal(root.join("member", JoinType.LEFT).<Long> get("id"),redPackage.getMember()));
+				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.equal(root.join("member", JoinType.LEFT).<Member> get("id"),redPackage.getMember().getId()));
 			}
 			if(redPackage.getArticle() != null){
-				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.equal(root.join("article", JoinType.LEFT).<Long> get("id"),redPackage.getArticle()));
+				restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.equal(root.join("article", JoinType.LEFT).<Article> get("id"),redPackage.getArticle().getId()));
 			}
 			restrictions = criteriaBuilder.and(restrictions, criteriaBuilder.equal(root.<RedPackage.Status>get("status"), RedPackage.Status.get));
 			criteriaQuery.where(restrictions);

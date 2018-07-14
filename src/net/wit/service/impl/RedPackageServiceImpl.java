@@ -154,9 +154,12 @@ public class RedPackageServiceImpl extends BaseServiceImpl<RedPackage, Long> imp
 			//开始领红包操作
 			//先判断有没有领取资格 1、红包有钱 2、 红包他没领过
 			ArticleRedPackage articleRedPackage = redPackage.getArticle().getArticleRedPackage();
-			boolean have1 = articleRedPackage.getRemainSize() > 0 && articleRedPackage.getAmount().doubleValue() > 0.0;
+			boolean have1 =articleRedPackage.getIsPay() && articleRedPackage.getRemainSize() > 0 && articleRedPackage.getAmount().doubleValue() > 0.0;
 			List<RedPackage> redPackages = redPackageDao.findByRedPackage(redPackage);
 			boolean have2 = redPackages == null || redPackages.size() == 0;
+			if(!have2){//表示已领取
+				return 0.0;
+			}
 			if(have1 && have2){
 				double getMoney = getRandomMoney(redPackage.getArticle());
 				if(getMoney > 0.0){//说明领取成功了
@@ -172,7 +175,7 @@ public class RedPackageServiceImpl extends BaseServiceImpl<RedPackage, Long> imp
 			}
 		}
 
-		return 0.0;
+		return -1.0;//表示领取失败
 	}
 
 	public synchronized Payment sendRedPackage(RedPackage redPackage) {
@@ -194,7 +197,7 @@ public class RedPackageServiceImpl extends BaseServiceImpl<RedPackage, Long> imp
 			User.userAttr(payee);
 		}
 		Payment payment = new Payment();
-		payment.setMemo("激活专栏");
+		payment.setMemo("发送红包");
 		payment.setSn(snService.generate(Sn.Type.redpackage));
 		payment.setMethod(Payment.Method.online);
 		payment.setMember(redPackage.getMember());

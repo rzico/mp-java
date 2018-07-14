@@ -470,6 +470,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				RedPackage redPackage = payment.getRedPackage();
 				redPackage.setStatus(RedPackage.Status.failure);
 				redPackageDao.merge(redPackage);
+
+				Article article = redPackage.getArticle();
+				article.getArticleRedPackage().setIsPay(false);
+				articleDao.merge(article);
 			}
 		};
 	}

@@ -301,7 +301,7 @@ public class ArticleController extends BaseController {
         if (articleCatalogId!=null) {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
-//        article.setIsDraft(false);
+        article.setIsDraft(true);
         article.setIsPublish(true);
 
         articleService.update(article);
@@ -454,7 +454,7 @@ public class ArticleController extends BaseController {
 
     @RequestMapping(value = "/getRedPackage", method = RequestMethod.POST)
     @ResponseBody
-    public Message getRedPackage(Long articleId){
+    public Message getRedPackage(Long articleId, HttpServletRequest request){
 
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -469,10 +469,13 @@ public class ArticleController extends BaseController {
         redPackage.setMember(member);
         redPackage.setStatus(RedPackage.Status.get);
         redPackage.setArticle(article);
+        redPackage.setIp(request.getRemoteAddr());
         double getMoney = redPackageService.getRedPackage(redPackage);
         if(getMoney > 0.0){
             return Message.success(getMoney,"领取成功");
-        }else {
+        }else if(getMoney == 0.0){
+            return Message.error("已领取");
+        }else{
             return Message.error("领取失败");
         }
 
@@ -499,6 +502,7 @@ public class ArticleController extends BaseController {
             aredPackage.setRedPackageType(articleRedPackage.getRedPackageType());
             aredPackage.setRemainSize(articleRedPackage.getRemainSize());
             aredPackage.setAmount(articleRedPackage.getRemainMoney());
+            aredPackage.setIsPay(false);
         }
         article.setIsRedPackage(isRedPackage);
         article.setArticleRedPackage(aredPackage);
