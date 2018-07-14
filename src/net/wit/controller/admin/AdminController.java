@@ -352,6 +352,4 @@ public class AdminController extends BaseController {
 		return "/admin/admin/view/enterpriseView";
 	}
 
-
-
 }
