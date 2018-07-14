@@ -65,8 +65,8 @@
     </div>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-                <a href="javascript:;" onclick="add('首页 &gt; Course &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 新增Course</a>
+                <a href="javascript:;" onclick="add('首页 &gt; 课程管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增课程</a>
                 <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
         </span>
     </div>
@@ -183,6 +183,11 @@
                 {
                     "mData": "signup",
                     "sTitle": "报名数",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "mapTags",
+                    "sTitle": "标签",
                     "sClass": "center"
                 },
                 {

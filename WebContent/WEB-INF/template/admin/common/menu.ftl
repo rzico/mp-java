@@ -11,7 +11,8 @@
                     <ul>
                         <li><a data-href="../article/index.jhtml" data-title="文章管理" href="javascript:;">文章管理</a></li>
                         <li><a data-href="../gauge/index.jhtml" data-title="量表管理" href="javascript:;">量表管理</a></li>
-                        <li><a data-href="../gauge/index.jhtml" data-title="咨询管理" href="javascript:;">咨询管理</a></li>
+                        <li><a data-href="../counselor/index.jhtml" data-title="专家团队" href="javascript:;">专家团队</a></li>
+                        <li><a data-href="../course/index.jhtml" data-title="课程管理" href="javascript:;">课程管理</a></li>
                     </ul>
                 </dd>
             [/#if]
