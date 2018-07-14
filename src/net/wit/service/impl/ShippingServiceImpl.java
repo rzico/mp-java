@@ -175,7 +175,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		shipping.setHopeDate(null);
 		if (order.getHopeDate()!=null) {
 			if (order.getHopeDate().compareTo(
-					DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.HOUR),2)
+					DateUtils.addHours(DateUtils.truncate(new Date(), Calendar.HOUR),2)
 			)>0) {
 				shipping.setHopeDate(order.getHopeDate());
 			}

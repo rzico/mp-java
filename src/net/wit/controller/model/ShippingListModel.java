@@ -62,6 +62,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
 
     private Boolean isSelf;
 
+    private Boolean choose;
+
     /** 商品 */
     private List<ShippingItemModel> shippingItems;
 
@@ -217,6 +219,14 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.address = address;
     }
 
+    public Boolean getChoose() {
+        return choose;
+    }
+
+    public void setChoose(Boolean choose) {
+        this.choose = choose;
+    }
+
     public void bind(Shipping shipping) {
         Order order = shipping.getOrder();
         this.id = shipping.getId();
@@ -245,6 +255,8 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.isSelf = shipping.getSeller().equals(shipping.getEnterprise().getMember());
 
         this.address = shipping.getAreaName()+shipping.getAddress();
+
+        this.choose = false;
 
     }
 
