@@ -32,37 +32,6 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="content" name="content">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true">
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="hits" value="" placeholder="" id="hits" onInput="intInit(this)">
-            </div>
-        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
@@ -72,30 +41,13 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>报名数：</label>
+            <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" name="signup" value="" placeholder="" id="signup" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if statuss??]
-                [#list statuss as status]
-                    <div class="radio-box">
-                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}">
-                        <label for="status-${status_index}">${status.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="thumbnail" name="thumbnail">
+                <div class="uploader-thum-container">
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="hidden" value="" id="thumbnail" name="thumbnail">
+                </div>
             </div>
         </div>
 
@@ -114,18 +66,33 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Enterprise：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if enterprises??]
-				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
-                    [#list enterprises as enterprise]
-					<option value="${enterprise.id}">${enterprise.name}</option>
-                    [/#list]
-				</select>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                [#if statuss??]
+                [#list statuss as status]
+                    <div class="radio-box">
+                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}">
+                        <label for="status-${status_index}">${status.name}</label>
+                    </div>
+                [/#list]
                 [/#if]
-				</span>
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="content" name="content">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -150,7 +117,15 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
         <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
 
-        <script type="text/javascript">
+<script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
+
+<script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
                 $('.skin-minimal input').iCheck({
@@ -158,21 +133,17 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
-
+                var ue = UE.getEditor('content');
                 $("#form-add").validate({
                     rules:{
-                        hits:{
-                            required:true,
-                        },
+
                         name:{
                             required:true,
                         },
                         price:{
                             required:true,
                         },
-                        signup:{
-                            required:true,
-                        },
+
                         status:{
                             required:true,
                         },
@@ -180,9 +151,6 @@
                             required:true,
                         },
                         type:{
-                            required:true,
-                        },
-                        enterprise:{
                             required:true,
                         },
 

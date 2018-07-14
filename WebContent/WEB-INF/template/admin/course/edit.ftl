@@ -34,49 +34,11 @@
     <form action="" method="post" class="form form-horizontal" id="form-update">
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">Orders：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.content}" placeholder="" id="content" name="content">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否删除：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="deleted" id="deleted" value="true"[#if data.deleted?? && data.deleted] checked[/#if]>
-                    <input type="hidden" name="_deleted" value="false" />
-                    <label for="deleted">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.hits}" placeholder="" id="hits" name="hits" onInput="intInit(this)">
-            </div>
-        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>报名数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.signup}" placeholder="" id="signup" name="signup" onInput="intInit(this)">
             </div>
         </div>
 
@@ -94,12 +56,23 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.thumbnail}" placeholder="" id="thumbnail" name="thumbnail">
-            </div>
-        </div>
+            <div class="row cl">
+               <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+               <div class="formControls col-xs-8 col-sm-9">
+                   <div class="uploader-thum-container">
+                       <div id="fileList" class="uploader-list">
+                            [#if data.thumbnail??]
+                                <div class="file-item thumbnail">
+                                    <img width="100px" height="100px" src="${data.thumbnail}"/>
+                                    <div class="info"></div>
+                                </div>'
+                            [/#if]
+                       </div>
+                       <div id="filePicker">选择图片</div>
+                       <input type="hidden" value="${data.thumbnail}" id="thumbnail" name="thumbnail">
+                   </div>
+               </div>
+           </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
@@ -116,18 +89,19 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Enterprise：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if enterprises??]
-				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
-                    [#list enterprises as enterprise]
-					<option[#if data.enterprise?? && enterprise.id == data.enterprise.id] selected[/#if] value="${enterprise.id}">${enterprise.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-				</span>
+            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                     <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
             </div>
         </div>
+
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">Orders：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
+                    </div>
+                </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -152,6 +126,14 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+
+        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
+        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
@@ -160,19 +142,17 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+                var ue = UE.getEditor('content');
+                ue.ready(function() {//编辑器初始化完成再赋值
+                    ue.setContent('${data.content}');
+                });
 
                 $("#form-update").validate({
                     rules:{
-                        hits:{
-                            required:true,
-                        },
                         name:{
                             required:true,
                         },
                         price:{
-                            required:true,
-                        },
-                        signup:{
                             required:true,
                         },
                         status:{
@@ -184,10 +164,6 @@
                         type:{
                             required:true,
                         },
-                        enterprise:{
-                            required:true,
-                        },
-
                     },
                     onkeyup:false,
                     focusCleanup:true,

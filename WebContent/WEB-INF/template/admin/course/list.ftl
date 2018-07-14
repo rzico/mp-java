@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>Course</title>
+    <title>课程管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> Course <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 课程管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -161,31 +161,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "orders",
-                    "sTitle": "Orders",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "content",
-                    "sTitle": "介绍",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "deleted",
-                    "sTitle": "是否删除",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "hits",
-                    "sTitle": "阅读数",
-                    "sClass": "center"
-                },
-                {
                     "mData": "name",
                     "sTitle": "名称",
                     "sClass": "center"
@@ -193,6 +168,16 @@
                 {
                     "mData": "price",
                     "sTitle": "销售价",
+                    "sClass": "center"
+                },
+                {
+                    "mData": "orders",
+                    "sTitle": "Orders",
+                    "sClass": "center"
+                },
+                 {
+                    "mData": "hits",
+                    "sTitle": "阅读数",
                     "sClass": "center"
                 },
                 {
@@ -206,18 +191,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "thumbnail",
-                    "sTitle": "缩例图",
-                    "sClass": "center"
-                },
-                {
                     "mData": "type",
                     "sTitle": "类型",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "mapEnterprise",
-                    "sTitle": "Enterprise",
                     "sClass": "center"
                 },
                 {
@@ -244,12 +219,6 @@
                     }
                 },
                 {
-                    "aTargets": [3],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if (data != null && data) {
@@ -260,7 +229,7 @@
                     }
                 },
                 {
-                    "aTargets": [11],
+                    "aTargets": [7],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]
@@ -276,7 +245,7 @@
                     }
                 },
                 {
-                    "aTargets": [13],
+                    "aTargets": [8],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -291,18 +260,9 @@
                         }
                     }
                 },
+
                 {
-                    "aTargets": [14],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','enterpriseView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [15],
+                    "aTargets": [9],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; Course &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -314,13 +274,13 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 14, 15]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 9]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
                 var _status =  $('select[name="status"]').val();
                 var _type =  $('select[name="type"]').val();
