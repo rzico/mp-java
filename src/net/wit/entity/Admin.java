@@ -402,4 +402,8 @@ public class Admin extends BaseEntity {
 
     }
 
+    public Boolean isManager() {
+        return getId().equals(1L);
+    }
+
 }

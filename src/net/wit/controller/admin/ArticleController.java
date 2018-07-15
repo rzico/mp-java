@@ -100,10 +100,10 @@ public class ArticleController extends BaseController {
 		model.addAttribute("authoritys",authoritys);
 
 		List<MapEntity> mediaTypes = new ArrayList<>();
-		mediaTypes.add(new MapEntity("html","系统公告"));
+		mediaTypes.add(new MapEntity("html","系统图文"));
 		mediaTypes.add(new MapEntity("article","用户图文"));
 		mediaTypes.add(new MapEntity("product","商品详情"));
-		mediaTypes.add(new MapEntity("video","品牌介绍"));
+		mediaTypes.add(new MapEntity("video","短视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
@@ -127,10 +127,10 @@ public class ArticleController extends BaseController {
 
 
 		List<MapEntity> mediaTypes = new ArrayList<>();
-		mediaTypes.add(new MapEntity("html","系统公告"));
+		mediaTypes.add(new MapEntity("html","系统图文"));
 		mediaTypes.add(new MapEntity("article","用户图文"));
 		mediaTypes.add(new MapEntity("product","商品详情"));
-		mediaTypes.add(new MapEntity("video","品牌介绍"));
+		mediaTypes.add(new MapEntity("video","短视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 //
@@ -150,6 +150,8 @@ public class ArticleController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Article article, Long templateId, Long articleCategoryId, Long areaId, Long [] tagIds){
+
+		Admin admin = adminService.getCurrent();
 		Article entity = new Article();
 
 		entity.setAuthority(article.getAuthority());
@@ -188,9 +190,13 @@ public class ArticleController extends BaseController {
 
 		entity.setArea(areaService.find(areaId));
 
-		messageService.GMInit(net.wit.entity.Message.Type.message);
+		if (admin.isManager()) {
+			messageService.GMInit(net.wit.entity.Message.Type.message);
 
-		entity.setMember(memberService.findByUsername("gm_10202"));
+			entity.setMember(memberService.findByUsername("gm_10202"));
+		} else {
+			entity.setMember(admin.getEnterprise().getMember());
+		}
 
 		entity.setTemplate(templateService.find(templateId));
 
@@ -252,10 +258,10 @@ public class ArticleController extends BaseController {
 		model.addAttribute("authoritys",authoritys);
 
 		List<MapEntity> mediaTypes = new ArrayList<>();
-		mediaTypes.add(new MapEntity("html","系统公告"));
+		mediaTypes.add(new MapEntity("html","系统图文"));
 		mediaTypes.add(new MapEntity("article","用户图文"));
 		mediaTypes.add(new MapEntity("product","商品详情"));
-		mediaTypes.add(new MapEntity("video","品牌介绍"));
+		mediaTypes.add(new MapEntity("video","短视频"));
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
@@ -364,10 +370,8 @@ public class ArticleController extends BaseController {
 	public Message list(Date beginDate, Date endDate, Long tagIds, Article.Authority authority, Article.MediaType mediaType, Pageable pageable,String searchValue, ModelMap model) {
 
 		Admin admin=adminService.getCurrent();
-		//判断用户有没有所属企业
-		if(admin.getEnterprise()==null){
-			return Message.error("企业不存在");
-		}
+
+
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (authority!=null) {
 			Filter authorityFilter = new Filter("authority", Filter.Operator.eq, authority);
@@ -379,35 +383,12 @@ public class ArticleController extends BaseController {
 		}
 
 		//判断用户公司属于哪种企业类型
-		Enterprise enterprise=admin.getEnterprise();
-		if(enterprise==null){
-			return Message.error("您还未绑定企业");
-		}
-		//判断企业是否被删除
-		if(enterprise.getDeleted()){
-			Message.error("您的企业不存在");
-		}
 
-		//代理商
-		if(enterprise.getType()== Enterprise.Type.agent){
-			if(enterprise.getArea()!=null){
-				Filter mediaTypeFilter = new Filter("area", Filter.Operator.eq, enterprise.getArea());
+		if(!admin.isManager()){
+
+				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, admin.getEnterprise().getMember());
 				filters.add(mediaTypeFilter);
-			}
-			else {
-				return Message.error("您不是区域代理商!");
-			}
-		}
-		//个人代理商
-		//商家
-		if(enterprise.getType()== Enterprise.Type.shop){
-			if(enterprise.getMember()!=null){
-				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, enterprise.getMember());
-				filters.add(mediaTypeFilter);
-			}
-			else{
-				return Message.error("该商家未绑定");
-			}
+
 		}
 
 		if(searchValue!=null){
@@ -418,90 +399,6 @@ public class ArticleController extends BaseController {
 		Page<Article> page = articleService.findPage(beginDate,endDate,tagService.findList(tagIds),pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
-	
-	
-	/**
-	 * 模版管理视图
-	 */
-	@RequestMapping(value = "/templateView", method = RequestMethod.GET)
-	public String templateView(Long id, ModelMap model) {
-		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("article","文章"));
-		types.add(new MapEntity("product","商品"));
-		model.addAttribute("types",types);
-
-		model.addAttribute("template",templateService.find(id));
-		return "/admin/article/view/templateView";
-	}
-
-
-	/**
-	 * 文集管理视图
-	 */
-	@RequestMapping(value = "/articleCatalogView", method = RequestMethod.GET)
-	public String articleCatalogView(Long id, ModelMap model) {
-		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("enabled","开启"));
-		statuss.add(new MapEntity("disabled","关闭"));
-		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("members",memberService.findAll());
-
-		model.addAttribute("articleCatalog",articleCatalogService.find(id));
-		return "/admin/article/view/articleCatalogView";
-	}
-
-
-	/**
-	 * 文章分类视图
-	 */
-	@RequestMapping(value = "/articleCategoryView", method = RequestMethod.GET)
-	public String articleCategoryView(Long id, ModelMap model) {
-		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("enabled","开启"));
-		statuss.add(new MapEntity("disabled","关闭"));
-		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("articles",articleService.findAll());
-
-		model.addAttribute("articleCategory",articleCategoryService.find(id));
-		return "/admin/article/view/articleCategoryView";
-	}
-
-
-	/**
-	 * 地区视图
-	 */
-	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
-	public String areaView(Long id, ModelMap model) {
-
-
-		model.addAttribute("area",areaService.find(id));
-		return "/admin/article/view/areaView";
-	}
-
-
-	/**
-	 * 会员管理视图
-	 */
-	@RequestMapping(value = "/memberView", method = RequestMethod.GET)
-	public String memberView(Long id, ModelMap model) {
-		List<MapEntity> genders = new ArrayList<>();
-		genders.add(new MapEntity("male","男"));
-		genders.add(new MapEntity("female","女"));
-		genders.add(new MapEntity("secrecy","保密"));
-		model.addAttribute("genders",genders);
-
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("occupations",occupationService.findAll());
-
-		model.addAttribute("tags",tagService.findAll());
-
-		model.addAttribute("member",memberService.find(id));
-		return "/admin/article/view/memberView";
-	}
-
 
 	/**
 	 * 文章推广
@@ -552,39 +449,12 @@ public class ArticleController extends BaseController {
 
 		try {
 			String rootPath = request.getSession().getServletContext().getRealPath("/");
-//			Properties properties=new Properties();
-//			FileInputStream fileInputStream=new FileInputStream(rootPath+"/WEB-INF/classes/config.properties");
-//			properties.load(fileInputStream);
-//			fileInputStream.close();
-//			String appID=properties.getProperty("weixin.appid");
-//			String appsecret=properties.getProperty("weixin.secret");
 			weixinUpService.ArticleUpLoad(ids,topic.getConfig().getWxAppId(),topic.getConfig().getWxAppSerect(),rootPath);
 			return Message.success("发布成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Message.error("发布失败");
 		}
-	}
-
-	/**
-	 * 预览
-	 */
-	@RequestMapping(value = "/articleview", method = RequestMethod.GET)
-	public String articleView(Long id, ModelMap model) {
-		Article article=articleService.find(id);
-		ArticleModel articleModel=new ArticleModel();
-		articleModel.bind(article);
-		if(articleModel==null){
-			return "/404";
-		}
-		List<ArticleContentModel> articleContentModels=articleModel.getTemplates();
-		model.addAttribute("articles",articleContentModels);
-		return "/admin/article/view/articleView";
-	}
-
-	@RequestMapping(value = "/xiumi",method = RequestMethod.GET)
-	public String xiumiIndex(){
-		return "/admin/article/xiumi";
 	}
 
 }

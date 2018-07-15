@@ -323,33 +323,4 @@ public class AdminController extends BaseController {
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 
 	}
-	
-	
-	/**
-	 * 地区视图
-	 */
-	@RequestMapping(value = "/areaView", method = RequestMethod.GET)
-	public String areaView(Long id, ModelMap model) {
-
-		model.addAttribute("area",areaService.find(id));
-		return "/admin/admin/view/areaView";
-	}
-
-
-	/**
-	 * 企业管理视图
-	 */
-	@RequestMapping(value = "/enterpriseView", method = RequestMethod.GET)
-	public String enterpriseView(Long id, ModelMap model) {
-		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","代理商"));
-		model.addAttribute("types",types);
-
-		model.addAttribute("areas",areaService.findAll());
-
-		model.addAttribute("enterprise",enterpriseService.find(id));
-		return "/admin/admin/view/enterpriseView";
-	}
-
 }

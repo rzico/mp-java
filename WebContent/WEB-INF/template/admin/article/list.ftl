@@ -170,11 +170,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
-                    "sClass": "center"
-                },
-                {
                     "mData": "title",
                     "sTitle": "标题",
                     "sClass": "center"
@@ -245,11 +240,6 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "isTop",
-                    "sTitle": "置顶",
-                    "sClass": "center"
-                },
-                {
                     "mData": "mapTags",
                     "sTitle": "标签",
                     "sClass": "center"
@@ -283,13 +273,7 @@
                     }
                 },
                 {
-                    "aTargets": [3],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [5],
+                    "aTargets": [4],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -299,7 +283,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if authoritys??]
@@ -311,6 +295,16 @@
                         [/#if]
                         }else{
                             return "";
+                        }
+                    }
+                },
+                {
+                    "aTargets": [6],
+                    "mRender": function (data, display, row) {
+                        if (data != null && data) {
+                            return "<span class=\"label label-success radius\">是</span>";
+                        } else {
+                            return "<span class=\"label label-success radius\">否</span>";
                         }
                     }
                 },
@@ -345,17 +339,7 @@
                     }
                 },
                 {
-                    "aTargets": [10],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [15],
+                    "aTargets": [14],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if mediaTypes??]
@@ -371,7 +355,7 @@
                     }
                 },
                 {
-                    "aTargets": [16],
+                    "aTargets": [15],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','articleCatalogView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -381,7 +365,7 @@
                     }
                 }, 
                 {
-                    "aTargets": [17],
+                    "aTargets": [16],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','articleCategoryView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
@@ -390,18 +374,9 @@
                         }
                     }
                 }, 
+
                 {
-                    "aTargets": [18],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [19],
+                    "aTargets": [17],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return data.name;
@@ -411,19 +386,7 @@
                     }
                 },
                 {
-                    "aTargets": [21],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
-                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>" +
-                                    "<a title='预览' href='javascript:;' onclick=\"show('" + data + "','articleview.jhtml?id="+data+"','"+data+"','360','640')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe695;</i></a>";
-                        }else{
-                            return "";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [20],
+                    "aTargets": [18],
                     "mRender": function (data, display, row) {
                         if (data != null && data.name == 'true') {
                             return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"publish(this,'"+data.id+"');\" name=\"\">取消发布</button>"
@@ -433,8 +396,19 @@
                     }
 
                 },
+                {
+                    "aTargets": [19],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                        }else{
+                            return "";
+                        }
+                    }
+                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 5, 16, 17, 19, 20, 21]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 4, 14, 15, 16, 18, 19]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/

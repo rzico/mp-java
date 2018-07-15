@@ -40,8 +40,8 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if statuss??]
-			<span class="select-box" style="background-color:#FFFFFF;width=100px;height=32px;">
-				<select name="status" class="select" style="background-color: #FFFFFF;">
+			<span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="authority" class="select" style="background-color: #FFFFFF;">
 					<option value="">状态</option>
 					[#list statuss as status]
 					<option value="${status.id}">${status.name}</option>

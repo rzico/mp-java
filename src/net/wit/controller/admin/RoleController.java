@@ -79,10 +79,6 @@ public class RoleController extends BaseController {
 	public Message save(Role role){
 		Role entity = new Role();	
 
-		entity.setCreateDate(role.getCreateDate());
-
-		entity.setModifyDate(role.getModifyDate());
-
 		entity.setDescription(role.getDescription());
 
 		entity.setIsSystem(role.getIsSystem());
@@ -139,10 +135,6 @@ public class RoleController extends BaseController {
     @ResponseBody
 	public Message update(Role role){
 		Role entity = roleService.find(role.getId());
-		
-		entity.setCreateDate(role.getCreateDate());
-
-		entity.setModifyDate(role.getModifyDate());
 
 		entity.setDescription(role.getDescription());
 
