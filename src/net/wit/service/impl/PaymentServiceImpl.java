@@ -90,6 +90,12 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "receiverDaoImpl")
 	private ReceiverDao receiverDao;
 
+	@Resource(name = "evaluationDaoImpl")
+	private EvaluationDao evaluationDao;
+
+	@Resource(name = "rebateServiceImpl")
+	private RebateService rebateService;
+
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
 		super.setBaseDao(paymentDao);
@@ -519,6 +525,41 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					memberDeposit.setTrade(null);
 					depositDao.persist(memberDeposit);
 				}
+			}  else
+			if (payment.getType() == Payment.Type.evaluation) {
+				Evaluation evaluation = payment.getEvaluation();
+				evaluation.setEvalStatus(Evaluation.EvalStatus.paid);
+				evaluationDao.merge(evaluation);
+				if (evaluation.getPromoter()!=null && evaluation.getRebate().compareTo(BigDecimal.ZERO)>0) {
+					Member buyer = evaluation.getMember();
+					rebateService.link(buyer,evaluation.getPromoter());
+
+					evaluation.setPersonal(buyer.getPersonal());
+					evaluation.setAgent(buyer.getAgent());
+					evaluation.setOperate(buyer.getOperate());
+					evaluationDao.merge(evaluation);
+
+					Member member = evaluation.getPromoter();
+					member.setBalance(member.getBalance().add(evaluation.getRebate()));
+					memberDao.merge(member);
+					memberDao.flush();
+
+					Deposit deposit = new Deposit();
+					deposit.setBalance(member.getBalance());
+					deposit.setType(Deposit.Type.rebate);
+					deposit.setMemo("推广奖励金");
+					deposit.setMember(member);
+					deposit.setCredit(evaluation.getRebate());
+					deposit.setDebit(BigDecimal.ZERO);
+					deposit.setDeleted(false);
+					deposit.setOperator("system");
+					deposit.setPayment(payment);
+					depositDao.persist(deposit);
+					messageService.depositPushTo(deposit);
+					rebateService.rebate(evaluation.getPrice(),buyer,evaluation.getPersonal(),evaluation.getAgent(),evaluation.getOperate(),null);
+				}
+
+
 			}
 		}
 	}
@@ -582,6 +623,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				TopicBill topicBill = payment.getTopicBill();
 				topicBill.setStatus(TopicBill.Status.failure);
 				topicBillDao.merge(topicBill);
+			} else
+			if (payment.getType().equals(Payment.Type.evaluation)) {
+				Evaluation evaluation = payment.getEvaluation();
+				evaluation.setEvalStatus(Evaluation.EvalStatus.cancelled);
+				evaluationDao.merge(evaluation);
 			}
 		};
 	}
