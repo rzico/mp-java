@@ -70,6 +70,8 @@ public class NavigationController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 
 	/**
@@ -88,6 +90,9 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("recommend","推荐"));
 		types.add(new MapEntity("dragon","拼团"));
 		types.add(new MapEntity("mall","商城"));
+		types.add(new MapEntity("counselor","咨询"));
+		types.add(new MapEntity("course","课程"));
+		types.add(new MapEntity("custom","自定义"));
 		model.addAttribute("types",types);
 		model.addAttribute("topicId",topicId);
 
@@ -111,6 +116,9 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("recommend","推荐"));
 		types.add(new MapEntity("dragon","拼团"));
 		types.add(new MapEntity("mall","商城"));
+		types.add(new MapEntity("counselor","咨询"));
+		types.add(new MapEntity("course","课程"));
+		types.add(new MapEntity("custom","自定义"));
 		model.addAttribute("types",types);
 		model.addAttribute("topicId",topicId);
 
@@ -134,11 +142,8 @@ public class NavigationController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Navigation navigation,Long topicId,Long articleCatalogId,Long productCategoryId){
+		Admin admin = adminService.getCurrent();
 		Navigation entity = new Navigation();	
-
-		entity.setCreateDate(navigation.getCreateDate());
-
-		entity.setModifyDate(navigation.getModifyDate());
 
 		entity.setOrders(navigation.getOrders() == null ? 0 : navigation.getOrders());
 
@@ -147,15 +152,20 @@ public class NavigationController extends BaseController {
 		data.put("productCategory",productCategoryId);
 		entity.setExtend(JsonUtils.toJson(data));
 
+		entity.setUrl(navigation.getUrl());
+
 		entity.setLogo(navigation.getLogo());
 
 		entity.setName(navigation.getName());
 
 		entity.setType(navigation.getType());
 
-		Topic topic = topicService.find(topicId);
-		entity.setOwner(topic.getMember());
-		
+		if (topicId!=null) {
+			Topic topic = topicService.find(topicId);
+			entity.setOwner(topic.getMember());
+		} else {
+			entity.setOwner(admin.getEnterprise().getMember());
+		}
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -202,6 +212,9 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("recommend","推荐"));
 		types.add(new MapEntity("dragon","拼团"));
 		types.add(new MapEntity("mall","商城"));
+		types.add(new MapEntity("counselor","咨询"));
+		types.add(new MapEntity("course","课程"));
+		types.add(new MapEntity("custom","自定义"));
 		model.addAttribute("types",types);
 
 		List<Filter> filters = new ArrayList<>();
@@ -228,17 +241,14 @@ public class NavigationController extends BaseController {
 	public Message update(Navigation navigation,Long articleCatalogId,Long productCategoryId){
 
 		Navigation entity = navigationService.find(navigation.getId());
-		
-		entity.setCreateDate(navigation.getCreateDate());
-
-		entity.setModifyDate(navigation.getModifyDate());
-
 		entity.setOrders(navigation.getOrders() == null ? 0 : navigation.getOrders());
 
 		Map<String,Long> data = new HashMap<>();
 		data.put("articleCatalog",articleCatalogId);
 		data.put("productCategory",productCategoryId);
 		entity.setExtend(JsonUtils.toJson(data));
+
+		entity.setUrl(navigation.getUrl());
 
 		entity.setLogo(navigation.getLogo());
 
@@ -271,12 +281,19 @@ public class NavigationController extends BaseController {
 			filters.add(typeFilter);
 		}
 
-		Topic topic = topicService.find(topicId);
-		Filter ownerFilter = new Filter("owner", Filter.Operator.eq, topic.getMember());
-		filters.add(ownerFilter);
+		Admin admin = adminService.getCurrent();
+		if (topicId!=null) {
+			Topic topic = topicService.find(topicId);
+			Filter ownerFilter = new Filter("owner", Filter.Operator.eq, topic.getMember());
+			filters.add(ownerFilter);
+		} else {
+			Filter ownerFilter = new Filter("owner", Filter.Operator.eq, admin.getEnterprise().getMember());
+			filters.add(ownerFilter);
+		}
 
 		Page<Navigation> page = navigationService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
+
 	}
 	
 	

@@ -40,25 +40,27 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if statuss??]
-        <span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
-			<select name="status" class="select" style="background-color: #FFFFFF;">
-				<option value="">状态</option>
-				[#list statuss as status]
-                <option value="${status.id}">${status.name}</option>
-				[/#list]
-			</select>
-          </span>
+			<span class="select-box" style="background-color:#FFFFFF;width=100px;height=32px;">
+				<select name="status" class="select" style="background-color: #FFFFFF;">
+					<option value="">状态</option>
+					[#list statuss as status]
+					<option value="${status.id}">${status.name}</option>
+					[/#list]
+				</select>
+			</span>
 		[/#if]
-
         <input type="text" class="input-text" style="width:250px" placeholder="输入要查询的内容" id="searchValue" name="">
         <button type="submit" class="btn btn-success radius" id="" onclick="search();" name="">
             <i class="Hui-iconfont">&#xe665;</i> 查询
         </button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
-        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-		<a href="javascript:;" onclick="add('首页 &gt; 文集管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius"><i
-                class="Hui-iconfont">&#xe600;</i> 新增文集管理</a></span></div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+                <a href="javascript:;" onclick="add('首页 &gt; 文集管理 &gt; 新增','add.jhtml','','510')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新增文集管理</a>
+                <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+        </span>
+    </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
             <thead style="width: 100%;">
@@ -128,31 +130,23 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
+                $(row).children('td').eq(6).attr('style', 'text-align: left;');
+
             },
             "aoColumns": [
                 {
-                    "mData": "id",
+                    "mData": "id", "bSortable": false,
                     "sClass": "center",
                     "sTitle": "<input type=\"checkbox\" onchange='idTitleChange();' id=\"idTitle\" value=\"\">",
                 },
                 {
-                    "mData": "id", "bSortable": false,
+                    "mData": "id",
                     "sTitle": "ID",
                     "sClass": "center"
                 },
                 {
                     "mData": "createDate",
                     "sTitle": "创建日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "orders",
-                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
@@ -166,8 +160,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "mapMember",
-                    "sTitle": "Member",
+                    "mData": "orders",
+                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
@@ -193,14 +187,9 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
+
                 {
-                    "aTargets": [3],
-                    "mRender": function (data, display, row) {
-                        return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    "aTargets": [6],
+                    "aTargets": [4],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]
@@ -215,18 +204,9 @@
                         }
                     }
                 },
+
                 {
-                    "aTargets": [7],
-                    "mRender": function (data, display, row) {
-                        if(data != null){
-                            return "<u style='cursor:pointer' class='text-primary' onclick=\"show('" + data.name + "','memberView.jhtml?id=" + data.id + "','1000" + data.id + "','360','400')\">" + data.name + "</u>";
-                        }else{
-                            return "";
-                        }
-                    }
-                }, 
-                {
-                    "aTargets": [8],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文集管理 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -238,13 +218,13 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7, 8]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 6]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /*处理查询数据*/searchValue
+                /*处理查询数据*/
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
                 var _status =  $('select[name="status"]').val();
                 var index = layer.msg('加载中', {

@@ -48,6 +48,7 @@ public class AdminDirective extends BaseDirective {
 				data.put("type","");
 			}
 			data.put("role",admin.roles());
+			data.put("isManager",admin.isManager());
 			setLocalVariable(VARIABLE_NAME, data, env, body);
 		} else {
 			data.put("type","");

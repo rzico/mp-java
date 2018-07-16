@@ -403,7 +403,7 @@ public class Admin extends BaseEntity {
     }
 
     public Boolean isManager() {
-        return getId().equals(1L);
+        return getUsername().equals("admin");
     }
 
 }

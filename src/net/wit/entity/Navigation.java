@@ -44,7 +44,13 @@ public class Navigation extends OrderEntity{
         /**  拼团 */
         dragon,
         /**  图集 */
-        images
+        images,
+        /**  咨询 */
+        counselor,
+        /**  课程 */
+        course,
+        /**  自定 */
+        custom
     }
 
     /**  类型 */
@@ -56,6 +62,12 @@ public class Navigation extends OrderEntity{
     @Length(max = 200)
     @Column(columnDefinition="varchar(255) not null comment '名称'")
     private String name ;
+
+
+    /*路径*/
+    @Length(max = 200)
+    @Column(columnDefinition="varchar(255)  comment '路径'")
+    private String url ;
 
     /*图标*/
     @NotNull
@@ -116,6 +128,14 @@ public class Navigation extends OrderEntity{
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @JsonIgnore

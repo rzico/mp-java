@@ -57,6 +57,9 @@ public class ArticleCatalogController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 
 
 	/**
@@ -99,11 +102,9 @@ public class ArticleCatalogController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(ArticleCatalog articleCatalog, Long memberId){
+		Admin admin = adminService.getCurrent();
+
 		ArticleCatalog entity = new ArticleCatalog();	
-
-		entity.setCreateDate(articleCatalog.getCreateDate());
-
-		entity.setModifyDate(articleCatalog.getModifyDate());
 
 		entity.setOrders(articleCatalog.getOrders() == null ? 0 : articleCatalog.getOrders());
 
@@ -111,7 +112,7 @@ public class ArticleCatalogController extends BaseController {
 
 		entity.setStatus(articleCatalog.getStatus());
 
-		entity.setMember(memberService.find(memberId));
+		entity.setMember(admin.getEnterprise().getMember());
 		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
@@ -169,18 +170,12 @@ public class ArticleCatalogController extends BaseController {
 	public Message update(ArticleCatalog articleCatalog, Long memberId){
 		ArticleCatalog entity = articleCatalogService.find(articleCatalog.getId());
 		
-		entity.setCreateDate(articleCatalog.getCreateDate());
-
-		entity.setModifyDate(articleCatalog.getModifyDate());
-
 		entity.setOrders(articleCatalog.getOrders() == null ? 0 : articleCatalog.getOrders());
 
 		entity.setName(articleCatalog.getName());
 
 		entity.setStatus(articleCatalog.getStatus());
 
-		entity.setMember(memberService.find(memberId));
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -199,12 +194,16 @@ public class ArticleCatalogController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, ArticleCatalog.Status status, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, ArticleCatalog.Status status, Pageable pageable, ModelMap model) {
+		Admin admin = adminService.getCurrent();
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
+
+		Filter memberFilter = new Filter("member", Filter.Operator.eq, admin.getEnterprise().getMember());
+		filters.add(memberFilter);
 
 		Page<ArticleCatalog> page = articleCatalogService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
