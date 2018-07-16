@@ -149,6 +149,7 @@ public class CourseController extends BaseController {
             e.printStackTrace();
             return Message.error("admin.save.error");
         }
+
 	}
 
 
@@ -217,8 +218,6 @@ public class CourseController extends BaseController {
 
 		entity.setType(course.getType());
 
-		entity.setEnterprise(admin.getEnterprise());
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }

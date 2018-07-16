@@ -168,8 +168,8 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "排序",
-                    "sTitle": "Orders",
+                    "mData": "orders",
+                    "sTitle": "排序",
                     "sClass": "center"
                 },
                  {
@@ -221,6 +221,16 @@
                     }
                 },
 
+                {
+                    "aTargets": [8],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return data.name;
+                        }else{
+                            return "";
+                        }
+                    }
+                },
                 {
                     "aTargets": [9],
                     "mRender": function (data, display, row) {
