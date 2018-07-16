@@ -190,22 +190,6 @@ public class OrderController extends BaseController {
 			return Message.error("无效地址");
 		}
 
-		Admin admin = null;
-		Shop shop = null;
-		if (shopId!=null) {
-			shop = shopService.find(shopId);
-		}
-		if (adminId!=null) {
-			admin = adminService.find(adminId);
-		}
-
-		if (admin!=null && shop!=null && level!=null && receiver!=null) {
-			receiver.setShop(shop);
-			receiver.setAdmin(admin);
-			receiver.setLevel(level);
-			receiverService.update(receiver);
-		}
-
 		Product product = null;
 		if (id!=null) {
 			product = productService.find(id);
@@ -514,7 +498,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public @ResponseBody
-	Message save(String sn,String paymentPluginId,Order.ShippingMethod shippingMethod,Date hopeDate,HttpServletRequest request) {
+	Message save(String sn,String paymentPluginId,Order.ShippingMethod shippingMethod,Date hopeDate,Long shopId,Long adminId,HttpServletRequest request) {
 
 		Member member = memberService.getCurrent();
 		if (member==null) {
@@ -527,8 +511,6 @@ public class OrderController extends BaseController {
 		if (order==null) {
 			return Message.error("无效订单id");
 		}
-
-		System.out.println("11111111111111111111");
 
 		//完成支付
 		if (order.getPaymentStatus().equals(Order.PaymentStatus.unpaid)) {
@@ -551,7 +533,28 @@ public class OrderController extends BaseController {
 				return Message.error("支付失败");
 			}
 		}
-		System.out.println("99999999999999");
+
+
+
+		if (order.getShippings().size()>0 && shopId!=null) {
+			Admin admin = null;
+			Shop shop = null;
+			if (shopId!=null) {
+				shop = shopService.find(shopId);
+			}
+			if (adminId!=null) {
+				admin = adminService.find(adminId);
+			}
+			Shipping shipping = order.getShippings().get(0);
+			shipping.setShop(shop);
+			shipping.setAdmin(admin);
+			shipping.setTransfer(false);
+			try {
+				shippingService.dispatch(shipping);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+		}
 
 		OrderModel model = new OrderModel();
 		model.bind(order);

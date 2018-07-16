@@ -114,12 +114,75 @@
             [/#if]
                  </div>
              </div>
+
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>课程目标：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <textarea class="input-text" name="content1" id="content1" style="height:200px;width:500px;">${data.content1}</textarea>
+                    </div>
+                </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>课程内容：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                     <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
+                <textarea class="input-text" name="content2" id="content2" style="height:200px;width:500px;">${data.content2}</textarea>
             </div>
         </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>授课形式：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content3" id="content3" style="height:200px;width:500px;">${data.content3}</textarea>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">讲师头像：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="contentLogoFileList" class="uploader-list"></div>
+                    <div id="contentLogoFilePicker">选择图片</div>
+                    <input type="hidden" value="" id="contentLogo" name="contentLogo">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>讲师简介：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content4" id="content4" style="height:200px;width:500px;">${data.content4}</textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>课程大纲：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content5" id="content5" style="height:200px;width:500px;">${data.content5}</textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>适合谁听：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content6" id="content6" style="height:200px;width:500px;">${data.content6}</textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>您将获得：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea class="input-text" name="content7" id="content7" style="height:200px;width:500px;">${data.content7}</textarea>
+            </div>
+        </div>
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">往期回顾：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="imagesFileList" class="uploader-list"></div>
+                    <div id="imagesFilePicker">选择图片</div>
+                    <input type="hidden" value="" id="images" name="images">
+                </div>
+            </div>
+        </div>
+
 
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">排序：</label>
@@ -159,6 +222,7 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 
         <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/mutiUploader.js"></script>
 
         <script type="text/javascript">
             $(function(){
@@ -168,6 +232,7 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+                new $uploadpicture("contentLogoFileList","contentLogoFilePicker");
                 var ue = UE.getEditor('content');
                 ue.ready(function() {//编辑器初始化完成再赋值
                     ue.setContent('${data.content}');

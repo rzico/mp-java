@@ -9,6 +9,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.util.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filters;
@@ -119,7 +120,18 @@ public class CourseController extends BaseController {
 
 		entity.setOrders(course.getOrders() == null ? 0 : course.getOrders());
 
-		entity.setContent(course.getContent());
+		entity.setContent1(course.getContent1());
+		entity.setContent2(course.getContent1());
+		entity.setContent3(course.getContent1());
+		entity.setContent4(course.getContent1());
+		entity.setContent5(course.getContent1());
+		entity.setContent6(course.getContent1());
+		entity.setContent7(course.getContent1());
+		entity.setContent1(course.getContent1());
+		entity.setContentLogo(course.getContentLogo());
+		List<String> images = new ArrayList<>();
+		images.add(course.getImages());
+		entity.setContentLogo(JsonUtils.toJson(images));
 
 		entity.setDeleted(false);
 
@@ -204,7 +216,18 @@ public class CourseController extends BaseController {
 		
 		entity.setOrders(course.getOrders() == null ? 0 : course.getOrders());
 
-		entity.setContent(course.getContent());
+		entity.setContent1(course.getContent1());
+		entity.setContent2(course.getContent1());
+		entity.setContent3(course.getContent1());
+		entity.setContent4(course.getContent1());
+		entity.setContent5(course.getContent1());
+		entity.setContent6(course.getContent1());
+		entity.setContent7(course.getContent1());
+		entity.setContent1(course.getContent1());
+		entity.setContentLogo(course.getContentLogo());
+		List<String> images = new ArrayList<>();
+		images.add(course.getImages());
+		entity.setContentLogo(JsonUtils.toJson(images));
 
 		entity.setDeleted(false);
 

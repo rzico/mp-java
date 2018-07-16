@@ -90,11 +90,60 @@ public class Course extends OrderEntity {
 	@Column(columnDefinition="bigint(20) not null default 0 comment '阅读数'")
 	private Long hits;
 
-	/** 介绍 */
+	/** 课程目标 */
 	@Lob
-	@Column(columnDefinition="longtext comment '介绍'")
+	@Column(columnDefinition="longtext comment '课程目标'")
 	@JsonIgnore
-	private String content;
+	private String content1;
+
+	/** 课程内容 */
+	@Lob
+	@Column(columnDefinition="longtext comment '课程内容'")
+	@JsonIgnore
+	private String content2;
+
+
+	/** 授课形式 */
+	@Lob
+	@Column(columnDefinition="longtext comment '授课形式'")
+	@JsonIgnore
+	private String content3;
+
+	/** 讲师头像 */
+	@NotEmpty
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '讲师头像'")
+	private String contentLogo;
+
+	/** 讲师简介 */
+	@Lob
+	@Column(columnDefinition="longtext comment '讲师简介'")
+	@JsonIgnore
+	private String content4;
+
+	/** 课程大纲 */
+	@NotEmpty
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '讲师头像'")
+	private String content5;
+
+	/** 适合谁听 */
+	@Lob
+	@Column(columnDefinition="longtext comment '适合谁听'")
+	@JsonIgnore
+	private String content6;
+
+	/** 您将获得 */
+	@Lob
+	@Column(columnDefinition="longtext comment '您将获得'")
+	@JsonIgnore
+	private String content7;
+
+	/** 往期回顾 图片json */
+	@Lob
+	@Column(columnDefinition="longtext comment '往期回顾'")
+	@JsonIgnore
+	private String images;
 
 	/** 企业 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -173,14 +222,6 @@ public class Course extends OrderEntity {
 		this.hits = hits;
 	}
 
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
 	public List<Tag> getTags() {
 		return tags;
 	}
@@ -203,5 +244,77 @@ public class Course extends OrderEntity {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getContent1() {
+		return content1;
+	}
+
+	public void setContent1(String content1) {
+		this.content1 = content1;
+	}
+
+	public String getContent2() {
+		return content2;
+	}
+
+	public void setContent2(String content2) {
+		this.content2 = content2;
+	}
+
+	public String getContent3() {
+		return content3;
+	}
+
+	public void setContent3(String content3) {
+		this.content3 = content3;
+	}
+
+	public String getContentLogo() {
+		return contentLogo;
+	}
+
+	public void setContentLogo(String contentLogo) {
+		this.contentLogo = contentLogo;
+	}
+
+	public String getContent4() {
+		return content4;
+	}
+
+	public void setContent4(String content4) {
+		this.content4 = content4;
+	}
+
+	public String getContent5() {
+		return content5;
+	}
+
+	public void setContent5(String content5) {
+		this.content5 = content5;
+	}
+
+	public String getContent6() {
+		return content6;
+	}
+
+	public void setContent6(String content6) {
+		this.content6 = content6;
+	}
+
+	public String getContent7() {
+		return content7;
+	}
+
+	public void setContent7(String content7) {
+		this.content7 = content7;
+	}
+
+	public String getImages() {
+		return images;
+	}
+
+	public void setImages(String images) {
+		this.images = images;
 	}
 }

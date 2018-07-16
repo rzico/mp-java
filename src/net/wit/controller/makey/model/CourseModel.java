@@ -98,7 +98,6 @@ public class CourseModel extends BaseModel implements Serializable {
         this.id = course.getId();
         this.name = course.getName();
         this.thumbnail = course.getThumbnail();
-        this.content = course.getContent();
         this.hits = course.getHits();
         this.price = course.getPrice();
         this.signup = course.getSignup();
