@@ -120,6 +120,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "orders",
+                    "sTitle": "序号",
+                    "sClass": "center"
+                },
+                {
                     "mData": "createDate",
                     "sTitle": "创建日期",
                     "sClass": "center"
@@ -132,11 +137,6 @@
                 {
                     "mData": "name",
                     "sTitle": "名称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "orders",
-                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
@@ -157,14 +157,14 @@
                     }
                 }, 
                 {
-                    "aTargets": [2],
+                    "aTargets": [3],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
 
                 {
-                    "aTargets": [3],
+                    "aTargets": [4],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]

@@ -40,8 +40,8 @@
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax"
                class="input-text Wdate" style="width:120px;">
 		[#if statuss??]
-			<span class="select-box" style="background-color:#FFFFFF;width=100px;height=32px;">
-				<select name="status" class="select" style="background-color: #FFFFFF;">
+			<span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
+			<select name="authority" class="select" style="background-color: #FFFFFF;">
 					<option value="">状态</option>
 					[#list statuss as status]
 					<option value="${status.id}">${status.name}</option>
@@ -101,7 +101,7 @@
             "bServerSide": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": "${base}/admin/articleCatalog/list.jhtml",
-            "aaSorting": [[2, "desc"]],//默认第几个排序
+            "aaSorting": [[2, "asc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
             language: {
@@ -145,6 +145,11 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "orders",
+                    "sTitle": "序号",
+                    "sClass": "center"
+                },
+               {
                     "mData": "createDate",
                     "sTitle": "创建日期",
                     "sClass": "center"
@@ -157,11 +162,6 @@
                 {
                     "mData": "status",
                     "sTitle": "状态",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "orders",
-                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
@@ -182,14 +182,14 @@
                     }
                 }, 
                 {
-                    "aTargets": [2],
+                    "aTargets": [3],
                     "mRender": function (data, display, row) {
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
 
                 {
-                    "aTargets": [4],
+                    "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]

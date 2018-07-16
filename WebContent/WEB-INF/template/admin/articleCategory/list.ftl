@@ -142,23 +142,18 @@
                     "sClass": "center"
                 },
                 {
+                    "mData": "orders",
+                    "sTitle": "序号",
+                    "sClass": "center"
+                },
+                {
                     "mData": "createDate",
                     "sTitle": "创建日期",
                     "sClass": "center"
                 },
                 {
-                    "mData": "modifyDate",
-                    "sTitle": "修改日期",
-                    "sClass": "center"
-                },
-                {
                     "mData": "name",
                     "sTitle": "名称",
-                    "sClass": "center"
-                },
-                {
-                    "mData": "orders",
-                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
@@ -196,7 +191,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]
@@ -212,7 +207,7 @@
                     }
                 },
                  {
-                    "aTargets": [7],
+                    "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 文章分类 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -224,7 +219,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 7]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 6]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/
