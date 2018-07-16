@@ -3,45 +3,41 @@ package net.wit.dao.impl;
 import java.util.Calendar;
 
 import java.util.Date;
-import javax.persistence.FlushModeType;
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.collections.map.HashedMap;
+import net.wit.entity.CounselorOrder;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.dao.ArticleProductDao;
-import net.wit.entity.ArticleProduct;
+import net.wit.dao.CounselorOrderDao;
 
 
 /**
- * @ClassName: ArticleProductDaoImpl
+ * @ClassName: CounselorOrderDaoImpl
  * @author 降魔战队
- * @date 2017-9-14 19:42:4
+ * @date 2018-7-13 14:38:31
  */
  
 
-@Repository("articleProductDaoImpl")
-public class ArticleProductDaoImpl extends BaseDaoImpl<ArticleProduct, Long> implements ArticleProductDao {
+@Repository("counselorOrderDaoImpl")
+public class CounselorOrderDaoImpl extends BaseDaoImpl<CounselorOrder, Long> implements CounselorOrderDao {
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
 	 * @param beginDate
 	 * @param endDate
 	 * @param pageable
-	 * @return Page<ArticleProduct>
+	 * @return Page<Subscribe>
 	 */
-	public Page<ArticleProduct> findPage(Date beginDate,Date endDate, Pageable pageable) {
+	public Page<CounselorOrder> findPage(Date beginDate, Date endDate, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<ArticleProduct> criteriaQuery = criteriaBuilder.createQuery(ArticleProduct.class);
-		Root<ArticleProduct> root = criteriaQuery.from(ArticleProduct.class);
+		CriteriaQuery<CounselorOrder> criteriaQuery = criteriaBuilder.createQuery(CounselorOrder.class);
+		Root<CounselorOrder> root = criteriaQuery.from(CounselorOrder.class);
 		criteriaQuery.select(root);
 		Predicate restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.conjunction();

@@ -37,97 +37,48 @@
 
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
+                <input type="text" class="input-text" value="${data.title}" placeholder="" id="title" name="title">
             </div>
         </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">头像：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <div class="uploader-thum-container">
-                    <div id="fileList" class="uploader-list">
-                            [#if data.logo??]
-                                <div class="file-item thumbnail">
-                                    <img width="100px" height="100px" src="${data.logo}"/>
-                                    <div class="info"></div>
-                                </div>'
-                            [/#if]
-                    </div>
-                    <div id="filePicker">选择图片</div>
-                    <input type="hidden" value="${data.logo}" id="logo" name="logo">
-                </div>
-            </div>
-        </div>
-
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>电话：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.phone}" placeholder="" id="phone" name="phone">
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>头街：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.speciality}" placeholder="多个用,号分隔" id="speciality" name="speciality">
-            </div>
-        </div>
-
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>签名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.autograph}" placeholder="" id="autograph" name="autograph">
-            </div>
-        </div>
-
-             <div class="row cl">
-                 <label class="form-label col-xs-4 col-sm-2">检签：</label>
-                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-            [#if tags??]
-                [#list tags as tag]
-                <div class="check-box">
-                            [#assign checkUp = "false"]
-                            [#list data.tags as dataTag]
-                                [#if dataTag.id == tag.id]
-                                    [#assign checkUp = "true"]
-                                [/#if]
-                            [/#list]
-                    <label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${tag.id}" name="tagIds" >${tag.name}</label>
-                </div>
-                [/#list]
-            [/#if]
-                 </div>
-             </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-               <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if statuss??]
-                [#list statuss as status]
-                    <div class="radio-box">
-                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
-                        <label for="status-${status_index}">${status.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="${data.orders}" placeholder="" id="orders" name="orders" onInput="intInit(this)">
+            </div>
+        </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                        <div id="fileList" class="uploader-list">
+                            [#if data.thumbnail??]
+                                <div class="file-item thumbnail">
+                                    <img width="100px" height="100px" src="${data.thumbnail}"/>
+                                    <div class="info"></div>
+                                </div>'
+                            [/#if]
+                        </div>
+                        <div id="filePicker">选择图片</div>
+                        <input type="hidden" value="${data.thumbnail}" id="thumbnail" name="thumbnail">
+                    </div>
+                </div>
+            </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                ${data.hits}
             </div>
         </div>
 
@@ -157,12 +108,13 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
 
 
-        <script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
-        <script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="${base}/resources/admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 
-        <script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/uploader.js"></script>
+
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
@@ -171,30 +123,27 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
-
+                
                 var ue = UE.getEditor('content');
                 ue.ready(function() {//编辑器初始化完成再赋值
                     ue.setContent('${data.content}');
                 });
 
-
                 $("#form-update").validate({
                     rules:{
-                        autograph:{
+                        hits:{
                             required:true,
                         },
-                        logo:{
+                        thumbnail:{
                             required:true,
                         },
-                        name:{
+                        title:{
                             required:true,
                         },
-                        speciality:{
+                        enterprise:{
                             required:true,
                         },
-                        status:{
-                            required:true,
-                        },
+
                     },
                     onkeyup:false,
                     focusCleanup:true,
@@ -206,7 +155,7 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/counselor/update.jhtml" ,
+                            url: "${base}/admin/music/update.jhtml" ,
                             beforeSend: function() {
                                 $submit.prop("disabled", true);
                             },

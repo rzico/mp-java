@@ -1,28 +1,19 @@
 package net.wit.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
-import net.wit.Filter;
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.Principal;
-import net.wit.Filter.Operator;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.springframework.cache.annotation.CacheEvict;
+import net.wit.dao.CounselorOrderDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.SubscribeDao;
+import net.wit.dao.CounselorOrderDao;
 import net.wit.entity.*;
-import net.wit.service.SubscribeService;
+import net.wit.service.CounselorOrderService;
 
 /**
  * @ClassName: SubscribeDaoImpl
@@ -31,34 +22,34 @@ import net.wit.service.SubscribeService;
  */
  
  
-@Service("subscribeServiceImpl")
-public class SubscribeServiceImpl extends BaseServiceImpl<Subscribe, Long> implements SubscribeService {
-	@Resource(name = "subscribeDaoImpl")
-	private SubscribeDao subscribeDao;
+@Service("counselorOrderServiceImpl")
+public class CounselorOrderServiceImpl extends BaseServiceImpl<CounselorOrder, Long> implements CounselorOrderService {
+	@Resource(name = "counselorOrderDaoImpl")
+	private CounselorOrderDao counselorOrderDao;
 
 	@Resource(name = "subscribeDaoImpl")
-	public void setBaseDao(SubscribeDao subscribeDao) {
-		super.setBaseDao(subscribeDao);
+	public void setBaseDao(CounselorOrderDao subscribeDao) {
+		super.setBaseDao(counselorOrderDao);
 	}
 	
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void save(Subscribe subscribe) {
+	public void save(CounselorOrder subscribe) {
 		super.save(subscribe);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public Subscribe update(Subscribe subscribe) {
+	public CounselorOrder update(CounselorOrder subscribe) {
 		return super.update(subscribe);
 	}
 
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public Subscribe update(Subscribe subscribe, String... ignoreProperties) {
+	public CounselorOrder update(CounselorOrder subscribe, String... ignoreProperties) {
 		return super.update(subscribe, ignoreProperties);
 	}
 
@@ -79,11 +70,11 @@ public class SubscribeServiceImpl extends BaseServiceImpl<Subscribe, Long> imple
 	@Override
 	@Transactional
 	//@CacheEvict(value = "authorization", allEntries = true)
-	public void delete(Subscribe subscribe) {
+	public void delete(CounselorOrder subscribe) {
 		super.delete(subscribe);
 	}
 
-	public Page<Subscribe> findPage(Date beginDate,Date endDate, Pageable pageable) {
-		return subscribeDao.findPage(beginDate,endDate,pageable);
+	public Page<CounselorOrder> findPage(Date beginDate, Date endDate, Pageable pageable) {
+		return counselorOrderDao.findPage(beginDate,endDate,pageable);
 	}
 }

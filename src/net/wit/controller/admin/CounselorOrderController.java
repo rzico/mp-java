@@ -1,49 +1,39 @@
 package net.wit.controller.admin;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Filters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import net.wit.entity.BaseEntity.Save;
-import net.wit.entity.Subscribe;
-import net.wit.service.SubscribeService;
+import net.wit.entity.CounselorOrder;
+import net.wit.service.CounselorOrderService;
 
 import java.util.*;
 
 import net.wit.*;
 
-import net.wit.entity.*;
 import net.wit.service.*;
-import net.wit.controller.admin.model.*;
-
 
 
 /**
- * @ClassName: SubscribeController
+ * @ClassName: CounselorOrderController
  * @author 降魔战队
  * @date 2018-7-13 14:39:5
  */
  
-@Controller("adminSubscribeController")
-@RequestMapping("/admin/subscribe")
-public class SubscribeController extends BaseController {
-	@Resource(name = "subscribeServiceImpl")
-	private SubscribeService subscribeService;
+@Controller("adminCounselorOrderController")
+@RequestMapping("/admin/counselorOrder")
+public class CounselorOrderController extends BaseController {
+	@Resource(name = "counselorOrderServiceImpl")
+	private CounselorOrderService counselorOrderService;
 	
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
@@ -118,8 +108,8 @@ public class SubscribeController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Subscribe subscribe, Long memberId, Long enterpriseId, Long counselorId){
-		Subscribe entity = new Subscribe();	
+	public Message save(CounselorOrder subscribe, Long memberId, Long enterpriseId, Long counselorId){
+		CounselorOrder entity = new CounselorOrder();
 
 		entity.setCreateDate(subscribe.getCreateDate());
 
@@ -145,7 +135,7 @@ public class SubscribeController extends BaseController {
             return Message.error("admin.data.valid");
         }
         try {
-            subscribeService.save(entity);
+			counselorOrderService.save(entity);
             return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,7 +151,7 @@ public class SubscribeController extends BaseController {
     public @ResponseBody
     Message delete(Long[] ids) {
         try {
-            subscribeService.delete(ids);
+			counselorOrderService.delete(ids);
             return Message.success("admin.delete.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,7 +177,7 @@ public class SubscribeController extends BaseController {
 
 		model.addAttribute("members",memberService.findAll());
 
-		model.addAttribute("data",subscribeService.find(id));
+		model.addAttribute("data",counselorOrderService.find(id));
 
 		return "/admin/subscribe/edit";
 	}
@@ -198,8 +188,8 @@ public class SubscribeController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Subscribe subscribe, Long memberId, Long enterpriseId, Long counselorId){
-		Subscribe entity = subscribeService.find(subscribe.getId());
+	public Message update(CounselorOrder subscribe, Long memberId, Long enterpriseId, Long counselorId){
+		CounselorOrder entity = counselorOrderService.find(subscribe.getId());
 		
 		entity.setCreateDate(subscribe.getCreateDate());
 
@@ -225,7 +215,7 @@ public class SubscribeController extends BaseController {
             return Message.error("admin.data.valid");
         }
         try {
-            subscribeService.update(entity);
+			counselorOrderService.update(entity);
             return Message.success(entity,"admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,14 +229,14 @@ public class SubscribeController extends BaseController {
      */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public Message list(Date beginDate, Date endDate, Subscribe.Status status, Pageable pageable, ModelMap model) {	
+	public Message list(Date beginDate, Date endDate, CounselorOrder.Status status, Pageable pageable, ModelMap model) {
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (status!=null) {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
 
-		Page<Subscribe> page = subscribeService.findPage(beginDate,endDate,pageable);
+		Page<CounselorOrder> page = counselorOrderService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
 	

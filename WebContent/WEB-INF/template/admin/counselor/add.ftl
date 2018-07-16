@@ -61,7 +61,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>头街：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="speciality" name="speciality">
+                <input type="text" class="input-text" value="" placeholder="多个用,号分隔" id="speciality" name="speciality">
             </div>
         </div>
 

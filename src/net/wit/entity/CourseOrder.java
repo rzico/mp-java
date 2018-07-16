@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * @ClassName: CourseOrder
- * @Description:  我的学习
+ * @Description:  报名订单
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */

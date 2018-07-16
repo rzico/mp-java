@@ -64,9 +64,6 @@ public class ArticleController extends BaseController {
     @Resource(name = "productServiceImpl")
     private ProductService productService;
 
-    @Resource(name = "articleProductServiceImpl")
-    private ArticleProductService articleProductService;
-
     @Resource(name = "articleLaudServiceImpl")
     private ArticleLaudService articleLaudService;
 

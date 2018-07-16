@@ -1,13 +1,10 @@
 package net.wit.dao;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.entity.Subscribe;
+import net.wit.entity.CounselorOrder;
 
 
 /**
@@ -17,7 +14,7 @@ import net.wit.entity.Subscribe;
  */
  
 
-public interface SubscribeDao extends BaseDao<Subscribe, Long> {
+public interface CounselorOrderDao extends BaseDao<CounselorOrder, Long> {
 	/**
 	 * @Title：findPage
 	 * @Description：标准代码
@@ -26,5 +23,5 @@ public interface SubscribeDao extends BaseDao<Subscribe, Long> {
 	 * @param pageable
 	 * @return Page<Subscribe>
 	 */
-	Page<Subscribe> findPage(Date beginDate, Date endDate, Pageable pageable);
+	Page<CounselorOrder> findPage(Date beginDate, Date endDate, Pageable pageable);
 }

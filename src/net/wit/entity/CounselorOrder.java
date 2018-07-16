@@ -1,23 +1,21 @@
 
 package net.wit.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * @ClassName: Subscribe
+ * @ClassName: CounselorOrder
  * @Description:  预约咨询
  * @author 降魔战队
  * @date 2017/2/13 19:00:18
  */
 @Entity
-@Table(name = "wx_subscribe")
-@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_subscribe_sequence")
-public class Subscribe extends BaseEntity {
+@Table(name = "wx_counselor_order")
+@SequenceGenerator(name = "sequenceGenerator", sequenceName = "wx_counselor_order_sequence")
+public class CounselorOrder extends BaseEntity {
 
 	private static final long serialVersionUID = 33L;
 
@@ -77,11 +75,11 @@ public class Subscribe extends BaseEntity {
 	@JoinColumn(nullable = false)
 	private Counselor counselor;
 
-	public Subscribe.Status getStatus() {
+	public CounselorOrder.Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(Subscribe.Status status) {
+	public void setStatus(CounselorOrder.Status status) {
 		this.status = status;
 	}
 
