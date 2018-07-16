@@ -63,19 +63,19 @@
             </div>
         </div>
 
-        [#--<div class="row cl">--]
-            [#--<label class="form-label col-xs-4 col-sm-2">类型：</label>--]
-            [#--<div class="formControls col-xs-8 col-sm-9 skin-minimal">--]
-                [#--[#if types??]--]
-                [#--[#list types as type]--]
-                    [#--<div class="radio-box">--]
-                        [#--<input name="type" type="radio" id="type-${type_index}" value="${type.id} [#if type_index == 1] checked[/#if]">--]
-                        [#--<label for="type-${type_index}">${type.name}</label>--]
-                    [#--</div>--]
-                [#--[/#list]--]
-                [#--[/#if]--]
-            [#--</div>--]
-        [#--</div>--]
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">类型：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                [#if types??]
+                [#list types as type]
+                    <div class="radio-box">
+                        <input name="type" type="radio" id="type-${type_index}" value="${type.id} [#if type_index == 1] checked[/#if]">
+                        <label for="type-${type_index}">${type.name}</label>
+                    </div>
+                [/#list]
+                [/#if]
+            </div>
+        </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">城市：</label>

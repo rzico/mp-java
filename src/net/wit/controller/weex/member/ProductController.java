@@ -257,10 +257,12 @@ public class ProductController extends BaseController {
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
 		}
+
 		Admin admin = adminService.findByMember(member);
 		if (admin!=null && admin.getEnterprise()!=null) {
 			member = admin.getEnterprise().getMember();
 		}
+
 		ProductCategory productCategory = productCategoryService.find(productCategoryId);
 		List<Filter> filters = new ArrayList<Filter>();
 		if (productCategory!=null) {
@@ -269,6 +271,7 @@ public class ProductController extends BaseController {
         if (keyword!=null) {
 		    filters.add(Filter.like("name","%"+keyword+"%"));
 		}
+
 		if ("3".equals(bundle.getString("weex"))) {
             if (type!=null && type.equals("query")) {
 				Long memberId = Long.parseLong(bundle.getString("platform"));
