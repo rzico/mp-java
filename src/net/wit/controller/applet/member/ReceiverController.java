@@ -188,4 +188,5 @@ public class ReceiverController extends BaseController {
         receiverService.delete(id);
         return Message.success("删除成功");
     }
+
 }
