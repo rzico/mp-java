@@ -65,6 +65,9 @@ public class OrderController extends BaseController {
 	@Resource(name = "bindUserServiceImpl")
 	private BindUserService bindUserService;
 
+	@Resource(name = "orderLogServiceImpl")
+	private OrderLogService orderLogService;
+
 	/**
 	 * 订单锁定
 	 */
@@ -417,8 +420,17 @@ public class OrderController extends BaseController {
 		orderLog.setType(OrderLog.Type.shipping);
 		orderLog.setContent("亲，有客户催单了，请及时处理");
 		orderLog.setOperator(member.userId());
-		messageService.orderSellerPushTo(orderLog);
-
+		orderLogService.save(orderLog);
+		if (order.getShippings().size()>0) {
+			Shipping shipping = order.getShippings().get(0);
+			if (shipping.getShippingStatus().equals(Shipping.ShippingStatus.unconfirmed)) {
+				messageService.shippingPushTo(shipping,orderLog);
+			} else {
+				messageService.shippingAdminPushTo(shipping,orderLog);
+			}
+		} else {
+			messageService.orderSellerPushTo(orderLog);
+		}
 		return Message.success("提醒成功");
 	}
 

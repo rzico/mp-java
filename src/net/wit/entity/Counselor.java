@@ -78,12 +78,14 @@ public class Counselor extends OrderEntity {
 
 	/** 会员 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
+	@JoinColumn(columnDefinition="bigint(20) comment '会员'")
+	@JsonIgnore
 	private Member member;
 
 	/** 企业 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
+	@JsonIgnore
 	private Enterprise enterprise;
 
 	/** 标签*/

@@ -83,14 +83,22 @@ public class CourseOrder extends BaseEntity {
 	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '销售价'")
 	private BigDecimal price;
 
+	/** 会员 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '备注'")
+	@JsonIgnore
+	private Member member;
+
 	/** 企业 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
+	@JsonIgnore
 	private Enterprise enterprise;
 
 	/** 课程 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
+	@JsonIgnore
 	private Course course;
 
 	public Enterprise getEnterprise() {

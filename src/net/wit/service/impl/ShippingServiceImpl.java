@@ -518,8 +518,13 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		orderLog.setOperator("system");
 		orderLog.setContent("订单已完成");
 		Long d = 0L;
+		Long s = 0L;
 		for (ShippingBarrel b:shipping.getShippingBarrels()) {
 			d = d + b.getReturnQuantity();
+			s = s + b.getQuantity();
+		}
+		if (s>0L) {
+			orderLog.setContent(orderLog.getContent()+",送出桶"+String.valueOf(s));
 		}
 		if (d>0L) {
 			orderLog.setContent(orderLog.getContent()+",回桶数"+String.valueOf(d));
