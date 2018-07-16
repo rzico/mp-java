@@ -57,6 +57,9 @@ public class ProductCategoryController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 	/**
 	 * 主页
 	 */
@@ -82,25 +85,17 @@ public class ProductCategoryController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(ProductCategory productCategory, Long parentId, Long memberId){
+	public Message save(ProductCategory productCategory){
+		Admin admin = adminService.getCurrent();
 		ProductCategory entity = new ProductCategory();	
-
-		entity.setCreateDate(productCategory.getCreateDate());
-
-		entity.setModifyDate(productCategory.getModifyDate());
 
 		entity.setOrders(productCategory.getOrders() == null ? 0 : productCategory.getOrders());
 
-		entity.setGrade(productCategory.getGrade() == null ? 0 : productCategory.getGrade());
-
 		entity.setName(productCategory.getName());
+		entity.setThumbnail(productCategory.getThumbnail());
 
-		entity.setTreePath(productCategory.getTreePath());
+		entity.setMember(admin.getEnterprise().getMember());
 
-		entity.setMember(memberService.find(memberId));
-
-		entity.setParent(productCategoryService.find(parentId));
-		
 		if (!isValid(entity, Save.class)) {
             return Message.error("admin.data.valid");
         }
@@ -148,7 +143,7 @@ public class ProductCategoryController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(ProductCategory productCategory, Long parentId, Long memberId){
+	public Message update(ProductCategory productCategory){
 		ProductCategory entity = productCategoryService.find(productCategory.getId());
 
 		entity.setOrders(productCategory.getOrders() == null ? 0 : productCategory.getOrders());
