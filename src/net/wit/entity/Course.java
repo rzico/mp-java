@@ -2,6 +2,7 @@
 package net.wit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.wit.util.JsonUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -316,5 +317,14 @@ public class Course extends OrderEntity {
 
 	public void setImages(String images) {
 		this.images = images;
+	}
+
+	public List<String> getArrayImages() {
+		if (getImages()!=null) {
+		  List<String> data = JsonUtils.toObject(getImages(),List.class);
+		  return data;
+		} else {
+			return null;
+		}
 	}
 }

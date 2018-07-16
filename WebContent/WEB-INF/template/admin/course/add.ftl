@@ -119,22 +119,16 @@
 
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>讲师头像：</label>
+            <label class="form-label col-xs-4 col-sm-2">讲师头像：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
-                    <div id="contentLogoFileList" class="uploader-list">
-                            [#if data.content??]
-                                <div class="file-item thumbnail">
-                                    <img width="100px" height="100px" src="${data.contentLogo}"/>
-                                    <div class="info"></div>
-                                </div>'
-                            [/#if]
-                    </div>
+                    <div id="contentLogoFileList" class="uploader-list"></div>
                     <div id="contentLogoFilePicker">选择图片</div>
-                    <input type="hidden" value="${data.contentLogo}" id="contentLogo" name="contentLogo">
+                    <input type="hidden" value="" id="contentLogo" name="contentLogo">
                 </div>
             </div>
         </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>讲师简介：</label>
@@ -163,22 +157,16 @@
 
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>往期回顾：</label>
+            <label class="form-label col-xs-4 col-sm-2">往期回顾：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
-                    <div id="mutiFileList" class="uploader-list">
-                            [#if data.images??]
-                                <div class="file-item thumbnail">
-                                    <img width="100px" height="100px" src="${data.images}"/>
-                                    <div class="info"></div>
-                                </div>'
-                            [/#if]
-                    </div>
-                    <div id="mutiFilePicker">选择图片</div>
-                    <input type="hidden" value="${data.images}" id="images" name="images">
+                    <div id="imagesFileList" class="uploader-list"></div>
+                    <div id="imagesFilePicker">选择图片</div>
+                    <input type="hidden" value="" id="images" name="images">
                 </div>
             </div>
         </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序：</label>
