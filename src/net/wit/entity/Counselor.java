@@ -188,4 +188,5 @@ public class Counselor extends OrderEntity {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
 }

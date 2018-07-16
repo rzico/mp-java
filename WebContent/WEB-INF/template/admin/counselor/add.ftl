@@ -50,6 +50,14 @@
                 </div>
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>电话：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>头街：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -64,7 +72,18 @@
                 <input type="text" class="input-text" value="" placeholder="" id="autograph" name="autograph">
             </div>
         </div>
-
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">标签：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				[#if tags??]
+				[#list tags as tag]
+				<div class="check-box">
+                    <label class=""><input type="checkbox" value="${tag.id}" name="tagIds" >${tag.name}</label>
+                </div>
+                [/#list]
+                [/#if]
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">介绍：</label>
             <div class="formControls col-xs-8 col-sm-9">

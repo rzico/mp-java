@@ -52,6 +52,13 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>销售价：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="price" name="price" onInput="floatInit(this)">
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 [#if types??]
@@ -80,9 +87,21 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">标签：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				[#if tags??]
+				[#list tags as tag]
+				<div class="check-box">
+                    <label class=""><input type="checkbox" value="${tag.id}" name="tagIds" >${tag.name}</label>
+                </div>
+                [/#list]
+                [/#if]
+            </div>
+        </div>
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">介绍：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="content" name="content">
+                <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
             </div>
         </div>
 

@@ -42,20 +42,6 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if statuss??]
-                [#list statuss as status]
-                    <div class="radio-box">
-                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
-                        <label for="status-${status_index}">${status.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-
             <div class="row cl">
                <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
                <div class="formControls col-xs-8 col-sm-9">
@@ -74,6 +60,14 @@
                </div>
            </div>
 
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>销售价：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="${data.marketPrice}" placeholder="" id="marketPrice" name="marketPrice" onInput="floatInit(this)">
+                </div>
+            </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -88,6 +82,38 @@
             </div>
         </div>
 
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                [#if statuss??]
+                [#list statuss as status]
+                    <div class="radio-box">
+                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
+                        <label for="status-${status_index}">${status.name}</label>
+                    </div>
+                [/#list]
+                [/#if]
+            </div>
+        </div>
+
+             <div class="row cl">
+                 <label class="form-label col-xs-4 col-sm-2">检签：</label>
+                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+            [#if tags??]
+                [#list tags as tag]
+                <div class="check-box">
+                            [#assign checkUp = "false"]
+                            [#list data.tags as dataTag]
+                                [#if dataTag.id == tag.id]
+                                    [#assign checkUp = "true"]
+                                [/#if]
+                            [/#list]
+                    <label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${tag.id}" name="tagIds" >${tag.name}</label>
+                </div>
+                [/#list]
+            [/#if]
+                 </div>
+             </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">介绍：</label>
             <div class="formControls col-xs-8 col-sm-9">

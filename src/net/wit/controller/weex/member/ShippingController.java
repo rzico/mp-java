@@ -533,7 +533,7 @@ public class ShippingController extends BaseController {
 		data.put("hope",hope);
 		Long confirmed = shippingService.count(filter,new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.confirmed));
 		data.put("confirmed",confirmed);
-		Long completed = shippingService.count(filter,new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed),new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
+		Long completed = shippingService.count(filter,new Filter("shippingStatus", Filter.Operator.eq,Shipping.ShippingStatus.receive),new Filter("orderStatus", Filter.Operator.eq,Shipping.OrderStatus.completed),new Filter("createDate", Filter.Operator.gt, DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.DATE),-3)));
 		data.put("completed",completed);
 
     	return Message.success(data,"success");

@@ -139,9 +139,6 @@
             },
             "createdRow": function (row, data, dataIndex) {
                 $(row).children('td').attr('style', 'text-align: center;')
-                $(row).children('td').eq(6).attr('style', 'text-align: left;');
-                $(row).children('td').eq(9).attr('style', 'text-align: left;');
-                $(row).children('td').eq(13).attr('style', 'text-align: left;');
 
             },
             "aoColumns": [
@@ -171,7 +168,7 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "orders",
+                    "mData": "排序",
                     "sTitle": "Orders",
                     "sClass": "center"
                 },
@@ -223,18 +220,9 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
+
                 {
-                    "aTargets": [6],
-                    "mRender": function (data, display, row) {
-                        if (data != null && data) {
-                            return "<span class=\"label label-success radius\">是</span>";
-                        } else {
-                            return "<span class=\"label label-success radius\">否</span>";
-                        }
-                    }
-                },
-                {
-                    "aTargets": [7],
+                    "aTargets": [9],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if statuss??]
@@ -250,7 +238,7 @@
                     }
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [10],
                     "mRender": function (data, display, row) {
                         if(data != null){
                         [#if types??]
@@ -267,7 +255,7 @@
                 },
 
                 {
-                    "aTargets": [9],
+                    "aTargets": [11],
                     "mRender": function (data, display, row) {
                         if(data != null){
                             return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; Course &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
@@ -279,7 +267,7 @@
 
                 },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 9]}// 制定列不参与排序
+                {"orderable": false, "aTargets": [0, 11]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 /*处理查询数据*/

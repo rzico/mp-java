@@ -60,6 +60,9 @@ public class CourseController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
+	@Resource(name = "tagServiceImpl")
+	private TagService tagService;
+
 
 	/**
 	 * 主页
@@ -76,6 +79,8 @@ public class CourseController extends BaseController {
 		types.add(new MapEntity("_public","公共"));
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
+
+		model.addAttribute("tags", tagService.findList(Tag.Type.course));
 
 		return "/admin/course/list";
 	}
@@ -96,6 +101,8 @@ public class CourseController extends BaseController {
 		types.add(new MapEntity("_public","公共"));
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
+
+		model.addAttribute("tags", tagService.findList(Tag.Type.course));
 
 		return "/admin/course/add";
 	}
@@ -177,6 +184,8 @@ public class CourseController extends BaseController {
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
+		model.addAttribute("tags", tagService.findList(Tag.Type.course));
+
 		model.addAttribute("data",courseService.find(id));
 
 		return "/admin/course/edit";
@@ -249,32 +258,5 @@ public class CourseController extends BaseController {
 		Page<Course> page = courseService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");
 	}
-	
-	
-	/**
-	 * 企业管理视图
-	 */
-	@RequestMapping(value = "/enterpriseView", method = RequestMethod.GET)
-	public String enterpriseView(Long id, ModelMap model) {
-		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("operate","运营商"));
-		types.add(new MapEntity("agent","代理商"));
-		model.addAttribute("types",types);
-
-		model.addAttribute("areas",areaService.findAll());
-
-		List<MapEntity> statuss = new ArrayList<>();
-		statuss.add(new MapEntity("waiting","待审核"));
-		statuss.add(new MapEntity("success","已审核"));
-		statuss.add(new MapEntity("failure","已关闭"));
-		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("hosts",hostService.findAll());
-
-		model.addAttribute("enterprise",enterpriseService.find(id));
-		return "/admin/course/view/enterpriseView";
-	}
-
-
 
 }
