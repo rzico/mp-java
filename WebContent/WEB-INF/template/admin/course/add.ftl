@@ -160,8 +160,8 @@
             <label class="form-label col-xs-4 col-sm-2">往期回顾：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
-                    <div id="imagesFileList" class="uploader-list"></div>
-                    <div id="imagesFilePicker">选择图片</div>
+                    <div id="mutiFileList" class="uploader-list"></div>
+                    <div id="mutiFilePicker">选择图片</div>
                     <input type="hidden" value="" id="images" name="images">
                 </div>
             </div>

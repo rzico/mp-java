@@ -114,7 +114,7 @@ public class CourseController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Course course, Long enterpriseId){
+	public Message save(Course course,String [] images,  Long enterpriseId){
 		Admin admin = adminService.getCurrent();
 		Course entity = new Course();	
 
@@ -129,9 +129,11 @@ public class CourseController extends BaseController {
 		entity.setContent7(course.getContent1());
 		entity.setContent1(course.getContent1());
 		entity.setContentLogo(course.getContentLogo());
-		List<String> images = new ArrayList<>();
-		images.add(course.getImages());
-		entity.setContentLogo(JsonUtils.toJson(images));
+		List<String> id = new ArrayList<>();
+		for (String s:images) {
+			id.add(s);
+		}
+		entity.setImages(JsonUtils.toJson(id));
 
 		entity.setDeleted(false);
 
@@ -210,7 +212,7 @@ public class CourseController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Course course, Long enterpriseId){
+	public Message update(Course course,String [] images, Long enterpriseId){
 		Admin admin = adminService.getCurrent();
 		Course entity = courseService.find(course.getId());
 		
@@ -225,9 +227,11 @@ public class CourseController extends BaseController {
 		entity.setContent7(course.getContent1());
 		entity.setContent1(course.getContent1());
 		entity.setContentLogo(course.getContentLogo());
-		List<String> images = new ArrayList<>();
-		images.add(course.getImages());
-		entity.setContentLogo(JsonUtils.toJson(images));
+		List<String> id = new ArrayList<>();
+		for (String s:images) {
+			id.add(s);
+		}
+		entity.setImages(JsonUtils.toJson(id));
 
 		entity.setDeleted(false);
 
