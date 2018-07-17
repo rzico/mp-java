@@ -58,6 +58,9 @@ public class MusicController extends BaseController {
 	private MemberService memberService;
 
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 
 	/**
 	 * 主页
@@ -89,23 +92,20 @@ public class MusicController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Music music, Long enterpriseId){
-		Music entity = new Music();	
-
-		entity.setCreateDate(music.getCreateDate());
-
-		entity.setModifyDate(music.getModifyDate());
+		Admin admin = adminService.getCurrent();
+		Music entity = new Music();
 
 		entity.setOrders(music.getOrders() == null ? 0 : music.getOrders());
 
 		entity.setContent(music.getContent());
 
-		entity.setHits(music.getHits() == null ? 0 : music.getHits());
+		entity.setHits(0L);
 
 		entity.setThumbnail(music.getThumbnail());
 
 		entity.setTitle(music.getTitle());
 
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
+		entity.setEnterprise(admin.getEnterprise());
 		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
@@ -158,22 +158,14 @@ public class MusicController extends BaseController {
 	public Message update(Music music, Long enterpriseId){
 		Music entity = musicService.find(music.getId());
 		
-		entity.setCreateDate(music.getCreateDate());
-
-		entity.setModifyDate(music.getModifyDate());
-
 		entity.setOrders(music.getOrders() == null ? 0 : music.getOrders());
 
 		entity.setContent(music.getContent());
-
-		entity.setHits(music.getHits() == null ? 0 : music.getHits());
 
 		entity.setThumbnail(music.getThumbnail());
 
 		entity.setTitle(music.getTitle());
 
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
