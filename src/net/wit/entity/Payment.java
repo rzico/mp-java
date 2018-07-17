@@ -62,7 +62,9 @@ public class Payment extends BaseEntity {
 		/** 心里测评    */
 		evaluation,
 		/** 课程报名    */
-		course
+		course,
+		/** 接口代收    */
+		gather
 	}
 
 	/**

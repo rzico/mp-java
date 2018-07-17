@@ -32,8 +32,8 @@ import java.util.Map;
  * @author rsico Team
  * @version 3.0
  */
-@Controller("unspayController")
-@RequestMapping("/unspay")
+@Controller("unspayTransferController")
+@RequestMapping("/unspay/transfer")
 public class UnspayController extends BaseController {
 
     @Resource(name = "memberServiceImpl")
@@ -60,7 +60,7 @@ public class UnspayController extends BaseController {
      * @param 开户名 name
      * @param 城市 city
      * @param 转账金额 amount
-     * @param 商户id member
+     * @param 商户id merchart
      *
      */
 
@@ -71,13 +71,13 @@ public class UnspayController extends BaseController {
 
       Map<String,String> data = JsonUtils.toObject(params,Map.class);
 
-      Member member = memberService.find(Long.parseLong(data.get("member")));
+      Member member = memberService.find(Long.parseLong(data.get("merchart")));
       if (member==null) {
           return Message.error("无效商户号");
       }
       String h = MD5Utils.getMD5Str(body+member.getPassword());
       if (h.equals(sign)) {
-          return Message.error("无效商户号");
+          return Message.error("签名出错了");
       }
       Admin admin = adminService.findByMember(member);
       if (admin==null) {
@@ -86,6 +86,9 @@ public class UnspayController extends BaseController {
       Enterprise enterprise = admin.getEnterprise();
         if (enterprise==null) {
             return Message.error("无效商户号");
+        }
+        if (!enterprise.getStatus().equals(Enterprise.Status.success)) {
+            return Message.error("商户没有审核通过");
         }
 
         BigDecimal fee = enterprise.getTransfer();
@@ -117,6 +120,9 @@ public class UnspayController extends BaseController {
 
     /**
      * 查询支付状态
+     *
+     * @param 付款单号 sn
+     *
      */
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
@@ -127,7 +133,7 @@ public class UnspayController extends BaseController {
         }
         String h = MD5Utils.getMD5Str(sn+transfer.getMember().getPassword());
         if (h.equals(sign)) {
-            return Message.error("无效商户号");
+            return Message.error("签名出错了");
         }
         if (transfer.getStatus().equals(Status.success)) {
             return Message.success((Object) "0000","支付成功");
@@ -154,5 +160,29 @@ public class UnspayController extends BaseController {
             e.printStackTrace();
             return Message.error(e.getMessage());
         }
+    }
+
+    /**
+     * 查询账户余额
+
+     *      *
+     *      * @param 商户id merchart
+     *      *
+
+     */
+    @RequestMapping(value = "/queryBalance", method = RequestMethod.POST)
+    @ResponseBody
+    public Message queryBalance(String merchant,String sign, HttpServletRequest request) {
+        Member member = memberService.find(Long.parseLong(merchant));
+        if (member==null) {
+            return Message.error("无效商户号");
+        }
+        String h = MD5Utils.getMD5Str(merchant+member.getPassword());
+        if (h.equals(sign)) {
+            return Message.error("签名出错了");
+        }
+
+        return Message.success(member.getBalance(),"查询成功");
+
     }
 }

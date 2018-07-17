@@ -38,6 +38,12 @@ public class Music extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '缩例图'")
 	private String thumbnail;
 
+	/** 音乐文件 */
+	@NotEmpty
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '音乐文件'")
+	private String musicFile;
+
 	/** 阅读数 */
 	@Min(0)
 	@NotNull
@@ -93,5 +99,13 @@ public class Music extends OrderEntity {
 
 	public void setEnterprise(Enterprise enterprise) {
 		this.enterprise = enterprise;
+	}
+
+	public String getMusicFile() {
+		return musicFile;
+	}
+
+	public void setMusicFile(String musicFile) {
+		this.musicFile = musicFile;
 	}
 }

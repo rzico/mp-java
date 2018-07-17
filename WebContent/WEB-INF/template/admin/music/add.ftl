@@ -43,6 +43,13 @@
 
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">音乐文件：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" name="musicFile" value="" placeholder="" id="musicFile">
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">序号：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" name="orders" value="" placeholder="" id="orders" onInput="intInit(this)">
