@@ -279,7 +279,7 @@ public class CourseController extends BaseController {
 		Admin admin =adminService.getCurrent();
 
 		//非超级管理员都只能管本企业用户
-		if (!admin.getId().equals(1L)) {
+		if (!admin.isManager()) {
 			filters.add(new Filter("enterprise", Filter.Operator.eq, admin.getEnterprise()));
 		}
 
