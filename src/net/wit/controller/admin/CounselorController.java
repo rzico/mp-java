@@ -110,13 +110,14 @@ public class CounselorController extends BaseController {
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
-	public Message save(Counselor counselor, Long memberId) {
+	public Message save(Counselor counselor, Long [] tagIds,Long memberId) {
 
 		Admin admin = adminService.getCurrent();
 
 		Counselor entity = new Counselor();
 
 		entity.setOrders(counselor.getOrders() == null ? 0 : counselor.getOrders());
+		entity.setTags(tagService.findList(tagIds));
 
 		entity.setAutograph(counselor.getAutograph());
 
@@ -191,12 +192,13 @@ public class CounselorController extends BaseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Message update(Counselor counselor, Long memberId) {
+	public Message update(Counselor counselor,Long [] tagIds, Long memberId) {
 		Admin admin = adminService.getCurrent();
 
 		Counselor entity = counselorService.find(counselor.getId());
 
 		entity.setOrders(counselor.getOrders() == null ? 0 : counselor.getOrders());
+		entity.setTags(tagService.findList(tagIds));
 
 		entity.setAutograph(counselor.getAutograph());
 

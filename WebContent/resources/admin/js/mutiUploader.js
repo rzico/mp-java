@@ -1,7 +1,7 @@
 // 图片上传demo
 jQuery(function() {
 
-    var $uploadpicture = function (divname,pickerid){
+    var $mutiUploadpicture = function (divname,pickerid,clearid){
 
     var $ = jQuery,
         //$list = $('#fileList'),
@@ -40,12 +40,19 @@ jQuery(function() {
         }
     });
 
+        $('#'+clearid).click(
+            function () {
+                $list.html("");
+            }
+        )
+
     // 当有文件添加进来的时候
     uploader.on( 'fileQueued', function( file ) {
         var $li = $(
                 '<div id="' + file.id + '" class="file-item thumbnail">' +
                 '<img id='+pickerid+'>' +
                 '<div class="info">' + file.name + '</div>' +
+                '<input type="hidden" id="' + file.id + '" name="images">'+
                 '</div>'
             ),
 
@@ -88,12 +95,13 @@ jQuery(function() {
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on( 'uploadSuccess', function( file ,response) {
+
         if (response.state=="SUCCESS") {
             $('#' + file.id).addClass('upload-state-done');
-            $input = $list.siblings('input');
+            $input = $('#' + file.id).children('input');
+
             $input.val(response.url);
-            $physicalPath = $('#physicalPath');
-            $physicalPath.val(response.physicalPath);
+
         } else {
             var $li = $( '#'+file.id ),
                 $error = $li.find('div.error');
@@ -129,7 +137,7 @@ jQuery(function() {
 
     }
 
-    window.$uploadpicture = $uploadpicture;
+    window.$mutiUploadpicture = $mutiUploadpicture;
 
-    $uploadpicture("mutiFileList","mutiFilePicker");
+    $mutiUploadpicture("mutiFileList","mutiFilePicker","mutiFileClear");
 });

@@ -64,7 +64,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>销售价：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.marketPrice}" placeholder="" id="marketPrice" name="marketPrice" onInput="floatInit(this)">
+                    <input type="text" class="input-text" value="${data.price}" placeholder="" id="marketPrice" name="price" onInput="floatInit(this)">
                 </div>
             </div>
 
@@ -186,15 +186,19 @@
                             [#if data.arrayImages??]
                                 [#list data.arrayImages as item]
                                 <div class="file-item thumbnail">
-                                    <img width="100px" height="100px" src="${item.images}"/>
+                                    <img width="100px" height="100px" src="${item}"/>
                                     <div class="info"></div>
                                 </div>'
+                                <input type="hidden" value="${item}" id="${item_index}" name="images">
                                 [/#list]
                             [/#if]
                     </div>
-                    <div id="mutiFilePicker">选择图片</div>
-                    <input type="hidden" value="${data.images}" id="images" name="images">
-                </div>
+                    <div>
+                        <div id="mutiFilePicker">选择图片</div>
+                        <div id="mutiFileClear" class="btn btn-default radius">清除图片</div>
+                    </div>
+
+                 </div>
             </div>
         </div>
 
@@ -247,10 +251,7 @@
                     increaseArea: '20%'
                 });
                 new $uploadpicture("contentLogoFileList","contentLogoFilePicker");
-                var ue = UE.getEditor('content');
-                ue.ready(function() {//编辑器初始化完成再赋值
-                    ue.setContent('${data.content}');
-                });
+
 
                 $("#form-update").validate({
                     rules:{

@@ -114,23 +114,22 @@ public class CourseController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Course course,String [] images,  Long enterpriseId){
+	public Message save(Course course,String images,Long [] tagIds, Long enterpriseId){
 		Admin admin = adminService.getCurrent();
 		Course entity = new Course();	
 
 		entity.setOrders(course.getOrders() == null ? 0 : course.getOrders());
 
 		entity.setContent1(course.getContent1());
-		entity.setContent2(course.getContent1());
-		entity.setContent3(course.getContent1());
-		entity.setContent4(course.getContent1());
-		entity.setContent5(course.getContent1());
-		entity.setContent6(course.getContent1());
-		entity.setContent7(course.getContent1());
-		entity.setContent1(course.getContent1());
+		entity.setContent2(course.getContent2());
+		entity.setContent3(course.getContent3());
+		entity.setContent4(course.getContent4());
+		entity.setContent5(course.getContent5());
+		entity.setContent6(course.getContent6());
+		entity.setContent7(course.getContent7());
 		entity.setContentLogo(course.getContentLogo());
 		List<String> id = new ArrayList<>();
-		for (String s:images) {
+		for (String s:images.split(",")) {
 			id.add(s);
 		}
 		entity.setImages(JsonUtils.toJson(id));
@@ -150,6 +149,8 @@ public class CourseController extends BaseController {
 		entity.setThumbnail(course.getThumbnail());
 
 		entity.setType(course.getType());
+
+		entity.setTags(tagService.findList(tagIds));
 
 		entity.setEnterprise(admin.getEnterprise());
 		
@@ -212,23 +213,22 @@ public class CourseController extends BaseController {
      */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-	public Message update(Course course,String [] images, Long enterpriseId){
+	public Message update(Course course,String images,Long [] tagIds, Long enterpriseId){
 		Admin admin = adminService.getCurrent();
 		Course entity = courseService.find(course.getId());
 		
 		entity.setOrders(course.getOrders() == null ? 0 : course.getOrders());
 
 		entity.setContent1(course.getContent1());
-		entity.setContent2(course.getContent1());
-		entity.setContent3(course.getContent1());
-		entity.setContent4(course.getContent1());
-		entity.setContent5(course.getContent1());
-		entity.setContent6(course.getContent1());
-		entity.setContent7(course.getContent1());
-		entity.setContent1(course.getContent1());
+		entity.setContent2(course.getContent2());
+		entity.setContent3(course.getContent3());
+		entity.setContent4(course.getContent4());
+		entity.setContent5(course.getContent5());
+		entity.setContent6(course.getContent6());
+		entity.setContent7(course.getContent7());
 		entity.setContentLogo(course.getContentLogo());
 		List<String> id = new ArrayList<>();
-		for (String s:images) {
+		for (String s:images.split(",")) {
 			id.add(s);
 		}
 		entity.setImages(JsonUtils.toJson(id));
@@ -244,6 +244,8 @@ public class CourseController extends BaseController {
 		entity.setThumbnail(course.getThumbnail());
 
 		entity.setType(course.getType());
+
+		entity.setTags(tagService.findList(tagIds));
 
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
