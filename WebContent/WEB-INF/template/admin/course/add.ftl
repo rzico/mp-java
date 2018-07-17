@@ -136,12 +136,18 @@
                 <textarea class="input-text" name="content4" id="content4" style="height:200px;width:500px;"></textarea>
             </div>
         </div>
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>课程大纲：</label>
+            <label class="form-label col-xs-4 col-sm-2">课程大纲：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content5" id="content5" style="height:200px;width:500px;"></textarea>
+                <div class="uploader-thum-container">
+                    <div id="content5FileList" class="uploader-list"></div>
+                    <div id="content5FilePicker">选择图片</div>
+                    <input type="hidden" value="" id="content5" name="content5">
+                </div>
             </div>
         </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>适合谁听：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -219,7 +225,10 @@
                     radioClass: 'iradio-blue',
                     increaseArea: '20%'
                 });
+
                 new $uploadpicture("contentLogoFileList","contentLogoFilePicker");
+
+                new $uploadpicture("content5FileList","content5FilePicker");
 
                 $("#form-add").validate({
                     rules:{

@@ -60,6 +60,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	@Resource(name = "receiverServiceImpl")
 	private ReceiverService receiverService;
 
+	@Resource(name = "smssendServiceImpl")
+	private SmssendService smssendService;
+
 	@Resource(name = "barrelStockDaoImpl")
 	private BarrelStockDao barrelStockDao;
 
@@ -331,6 +334,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				receiver.setAdmin(shipping.getAdmin());
 				receiverService.update(receiver);
 			}
+
 			Member ec = shipping.getMember();
 			for (ShippingBarrel b : shipping.getShippingBarrels()) {
 				Card card = ec.getCards().get(0);
@@ -351,6 +355,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				}
 				barrelStockDao.flush();
 			}
+
 			//结算配送站运费
 		    if (shipping.getEnterprise()!=null) {
 				//扣成本
@@ -513,22 +518,28 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				}
 
 			}
+
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.complete);
 		orderLog.setOperator("system");
 		orderLog.setContent("订单已完成");
+
 		Long d = 0L;
 		Long s = 0L;
 		for (ShippingBarrel b:shipping.getShippingBarrels()) {
 			d = d + b.getReturnQuantity();
 			s = s + b.getQuantity();
 		}
+
+		String sms = "";
 		if (s>0L) {
-			orderLog.setContent(orderLog.getContent()+",送出桶"+String.valueOf(s));
+			sms = sms.concat(",送出"+String.valueOf(s)+"桶");
 		}
 		if (d>0L) {
-			orderLog.setContent(orderLog.getContent()+",回桶数"+String.valueOf(d));
+			sms = sms.concat(",回收"+String.valueOf(d)+"桶");
 		}
+
+		orderLog.setContent(orderLog.getContent()+sms);
 		orderLog.setOrder(shipping.getOrder());
 		orderLogDao.persist(orderLog);
 //		messageService.orderMemberPushTo(orderLog);
@@ -537,6 +548,12 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			orderService.complete(shipping.getOrder(), null);
 		}
 
+		if (shipping.getMember().getMobile()==null) {
+			Smssend smsSend = new Smssend();
+			smsSend.setMobile(shipping.getMember().getMobile());
+			smsSend.setContent("订单已完成,"+sms);
+			smssendService.smsSend(smsSend);
+		}
 		return shipping;
 
 	}

@@ -324,7 +324,7 @@ public class ShippingController extends BaseController {
 				b.setSeller(shipping.getSeller());
 				b.setMember(shipping.getMember());
 				b.setShop(shipping.getShop());
-				if (b.getQuantity()!=0 && b.getReturnQuantity()!=0) {
+				if (b.getQuantity()!=0 || b.getReturnQuantity()!=0) {
 					barrels.add(b);
 				}
 			}

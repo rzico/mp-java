@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 
 public class CashierModel extends BaseModel implements Serializable {
 
+    private Topic.Status status;
+
     private Long shopId;
     /** 今日收银 */
     private BigDecimal today;
@@ -40,4 +42,13 @@ public class CashierModel extends BaseModel implements Serializable {
     public void setYesterday(BigDecimal yesterday) {
         this.yesterday = yesterday;
     }
+
+    public Topic.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Topic.Status status) {
+        this.status = status;
+    }
+
 }

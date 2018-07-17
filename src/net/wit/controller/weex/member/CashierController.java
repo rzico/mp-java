@@ -65,38 +65,36 @@ public class CashierController extends BaseController {
     @RequestMapping(value = "view", method = RequestMethod.GET)
     @ResponseBody
     public Message view(HttpServletRequest request){
-        Date d = DateUtils.truncate(new Date(), Calendar.DATE);
-        Date y = DateUtils.addDays(d,-1);
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
         }
-        Admin admin = adminService.findByMember(member);
-        if (admin==null) {
-            return Message.error("没有开通收银台");
-        }
-        if (admin.getEnterprise()==null) {
-            return Message.error("店铺已打洋,请先启APP");
-        }
-        Shop shop = admin.getShop();
-        if (admin.isRole("1")) {
-            shop = null;
-        }
-
-        List<PayBillShopSummary> dsum = payBillService.sumPage(shop,admin.getEnterprise(),d,d);
-        List<PayBillShopSummary> ysum = payBillService.sumPage(shop,admin.getEnterprise(),y,y);
         CashierModel model = new CashierModel();
-        shop = admin.getShop();
-        if (shop!=null) {
-            model.setShopId(shop.getId());
-        }
+        model.setStatus(Topic.Status.waiting);
         model.setToday(BigDecimal.ZERO);
         model.setYesterday(BigDecimal.ZERO);
-        for (PayBillShopSummary s:dsum) {
-            model.setToday(model.getToday().add(s.getAmount().subtract(s.getCouponDiscount())) );
-        }
-        for (PayBillShopSummary s:ysum) {
-            model.setYesterday(model.getYesterday().add(s.getAmount().subtract(s.getCouponDiscount())) );
+        Admin admin = adminService.findByMember(member);
+        if (admin!=null ) {
+            Member owner = admin.getEnterprise().getMember();
+            model.setStatus(owner.getTopic().getStatus());
+            Date d = DateUtils.truncate(new Date(), Calendar.DATE);
+            Date y = DateUtils.addDays(d, -1);
+            Shop shop = admin.getShop();
+            if (admin.isRole("1")) {
+                shop = null;
+            }
+            List<PayBillShopSummary> dsum = payBillService.sumPage(shop, admin.getEnterprise(), d, d);
+            List<PayBillShopSummary> ysum = payBillService.sumPage(shop, admin.getEnterprise(), y, y);
+            shop = admin.getShop();
+            if (shop != null) {
+                model.setShopId(shop.getId());
+            }
+            for (PayBillShopSummary s : dsum) {
+                model.setToday(model.getToday().add(s.getAmount().subtract(s.getCouponDiscount())));
+            }
+            for (PayBillShopSummary s : ysum) {
+                model.setYesterday(model.getYesterday().add(s.getAmount().subtract(s.getCouponDiscount())));
+            }
         }
         return Message.bind(model,request);
     }
