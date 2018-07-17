@@ -16,6 +16,8 @@ public class NavigationModel extends BaseModel implements Serializable {
     private String name;
     /** 图标 */
     private String logo;
+    /** 路径 */
+    private String url;
     /** 分类 */
     private Long id;
 
@@ -51,10 +53,19 @@ public class NavigationModel extends BaseModel implements Serializable {
         this.id = id;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public void bind(Navigation navigation) {
         this.name = navigation.getName();
         this.logo = navigation.getLogo();
         this.type = navigation.getType();
+        this.url = navigation.getUrl();
         this.id = 0L;
         if (navigation.getType().equals(Navigation.Type.article)) {
             this.id =  navigation.getArticleCatalogId();

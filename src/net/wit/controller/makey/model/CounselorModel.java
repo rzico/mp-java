@@ -2,6 +2,7 @@ package net.wit.controller.makey.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.controller.model.BaseModel;
+import net.wit.controller.model.TagModel;
 import net.wit.entity.Counselor;
 import net.wit.entity.Course;
 import org.hibernate.validator.constraints.Length;
@@ -37,6 +38,9 @@ public class CounselorModel extends BaseModel implements Serializable {
 
     /** 介绍 */
     private String content;
+
+    /** 标签名 */
+    private List<TagModel> tags = new ArrayList<TagModel>();
 
     public Long getId() {
         return id;
@@ -94,6 +98,14 @@ public class CounselorModel extends BaseModel implements Serializable {
         this.content = content;
     }
 
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     public void bind(Counselor counselor) {
         this.id = counselor.getId();
         this.name = counselor.getName();
@@ -106,6 +118,9 @@ public class CounselorModel extends BaseModel implements Serializable {
             this.speciality = null;
         }
         this.phone = counselor.getPhone();
+
+        this.tags = TagModel.bindList(counselor.getTags());
+
     }
 
     public static List<CounselorModel> bindList(List<Counselor> counselors) {

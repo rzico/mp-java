@@ -2,6 +2,7 @@ package net.wit.controller.makey.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.wit.controller.model.BaseModel;
+import net.wit.controller.model.TagModel;
 import net.wit.entity.Course;
 import net.wit.entity.Organization;
 import org.hibernate.validator.constraints.Length;
@@ -23,6 +24,7 @@ public class CourseModel extends BaseModel implements Serializable {
     
     private Long id;
     private String name;
+    private String subTitle;
     /** 缩例图 */
     private String thumbnail;
 
@@ -62,6 +64,9 @@ public class CourseModel extends BaseModel implements Serializable {
 
     /** 往期回顾 图片json */
     private String images;
+
+    /** 标签名 */
+    private List<TagModel> tags = new ArrayList<TagModel>();
 
     public Long getId() {
         return id;
@@ -183,6 +188,22 @@ public class CourseModel extends BaseModel implements Serializable {
         this.images = images;
     }
 
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     public void bind(Course course) {
         this.id = course.getId();
         this.name = course.getName();
@@ -198,6 +219,8 @@ public class CourseModel extends BaseModel implements Serializable {
         this.content5 = course.getContent5();
         this.content6 = course.getContent6();
         this.content7 = course.getContent7();
+        this.tags = TagModel.bindList(course.getTags());
+
     }
 
     public static List<CourseModel> bindList(List<Course> courses) {
