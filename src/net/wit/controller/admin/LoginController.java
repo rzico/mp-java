@@ -55,6 +55,9 @@ public class LoginController extends BaseController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;
 
+    @Resource(name = "memberServiceImpl")
+    private MemberService memberService;
+
     /**
      * 登录页面
      */
@@ -81,6 +84,13 @@ public class LoginController extends BaseController {
             rsaService.removePrivateKey(request);
             //登出
             SecurityUtils.getSecurityManager().logout(SecurityUtils.getSubject());
+            if (username.length()==11) {
+                Member member = memberService.findByMobile(username);
+                if (member!=null) {
+                    Admin admin = adminService.findByMember(member);
+                    username = admin.getUsername();
+                }
+            }
             //登录后存放进shiro token
             AuthenticationToken authenticationToken = new AuthenticationToken(username, password,captchaId,captcha,rememberMe,request.getRemoteHost());
             Subject subject = SecurityUtils.getSubject();

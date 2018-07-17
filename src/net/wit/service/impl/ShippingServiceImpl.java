@@ -344,6 +344,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					bs.setCard(card);
 					bs.setBarrel(b.getBarrel());
 					bs.setStock(b.getQuantity() - b.getReturnQuantity());
+					bs.setBorrow(b.getQuantity() - b.getReturnQuantity());
 					bs.setBorrow(0);
 					bs.setMortgage(0);
 					bs.setPledge(BigDecimal.ZERO);
@@ -351,6 +352,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 				} else {
 					barrelStockDao.lock(bs, LockModeType.PESSIMISTIC_WRITE);
 					bs.setStock(bs.getStock() + b.getQuantity() - b.getReturnQuantity());
+					bs.setBorrow(bs.getBorrow()  + b.getQuantity() - b.getReturnQuantity());
 					barrelStockDao.merge(bs);
 				}
 				barrelStockDao.flush();

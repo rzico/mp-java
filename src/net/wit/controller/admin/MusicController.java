@@ -91,7 +91,7 @@ public class MusicController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Music music, Long enterpriseId){
+	public Message save(Music music){
 		Admin admin = adminService.getCurrent();
 		Music entity = new Music();
 
