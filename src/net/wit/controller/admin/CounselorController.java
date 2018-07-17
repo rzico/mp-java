@@ -231,6 +231,7 @@ public class CounselorController extends BaseController {
 			e.printStackTrace();
 			return Message.error("admin.update.error");
 		}
+
 	}
 
 
