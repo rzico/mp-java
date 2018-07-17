@@ -271,6 +271,13 @@ public class CardController extends BaseController {
         card.setName(name);
         cardService.update(card);
 
+        if (member.getMobile()==null && mobile!=null) {
+            if (memberService.findByMobile(mobile)==null) {
+                member.setMobile(mobile);
+                memberService.update(member);
+            }
+        }
+
         Map<String,Object> data = new HashMap<String,Object>();
 
         data.put("status", card.getStatus());

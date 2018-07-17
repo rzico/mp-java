@@ -550,7 +550,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			orderService.complete(shipping.getOrder(), null);
 		}
 
-		if (shipping.getMember().getMobile()==null) {
+		if (shipping.getMember().getMobile()!=null) {
 			Smssend smsSend = new Smssend();
 			smsSend.setMobile(shipping.getMember().getMobile());
 			smsSend.setContent("订单已完成,"+sms);
