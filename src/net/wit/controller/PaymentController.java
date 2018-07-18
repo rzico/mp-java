@@ -124,7 +124,7 @@ public class PaymentController extends BaseController {
             return Message.error("无效付款单");
         }
 
-        if ("weixinPayPlugin".equals(paymentPluginId)) {
+        if ("weixinPayPlugin".equals(paymentPluginId) || "weixinQcPayPlugin".equals(paymentPluginId)) {
             ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
             if (bundle.getString("weex").equals("1")) {
                 if (request.getHeader("x-app") != null && "applet".equals(request.getHeader("x-app"))) {
