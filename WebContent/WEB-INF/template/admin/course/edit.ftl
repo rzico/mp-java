@@ -42,6 +42,13 @@
             </div>
         </div>
 
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>副标题：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.subTitle}" placeholder="" id="subTitle" name="subTitle">
+            </div>
+        </div>
+
             <div class="row cl">
                <label class="form-label col-xs-4 col-sm-2">缩例图：</label>
                <div class="formControls col-xs-8 col-sm-9">
