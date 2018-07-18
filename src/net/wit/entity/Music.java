@@ -59,6 +59,7 @@ public class Music extends OrderEntity {
 	/** 企业 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
+	@JsonIgnore
 	private Enterprise enterprise;
 
 	public String getTitle() {

@@ -102,10 +102,12 @@ public class Coupon extends BaseEntity {
 
 	/** 发放者 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Member distributor;
 
 	/** 兑换商品 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Goods goods;
 
 	/** 活动规则
@@ -142,14 +144,17 @@ public class Coupon extends BaseEntity {
 	/** 介绍 */
 	@Lob
 	@Column(nullable = false,columnDefinition="longtext comment '介绍'")
+	@JsonIgnore
 	private String introduction;
 
 	/** 优惠码 */
 	@OneToMany(mappedBy = "coupon", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Set<CouponCode> couponCodes = new HashSet<CouponCode>();
 
 	/** 是否删除 */
 	@Column(nullable = false,columnDefinition="bit not null comment '是否删除'")
+	@JsonIgnore
 	private Boolean deleted;
 
 	/**

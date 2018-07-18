@@ -101,6 +101,8 @@ public class MusicController extends BaseController {
 
 		entity.setHits(0L);
 
+		entity.setMusicFile(music.getMusicFile());
+
 		entity.setThumbnail(music.getThumbnail());
 
 		entity.setTitle(music.getTitle());
@@ -161,6 +163,8 @@ public class MusicController extends BaseController {
 		entity.setOrders(music.getOrders() == null ? 0 : music.getOrders());
 
 		entity.setContent(music.getContent());
+
+		entity.setMusicFile(music.getMusicFile());
 
 		entity.setThumbnail(music.getThumbnail());
 
