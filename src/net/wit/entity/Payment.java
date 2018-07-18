@@ -401,6 +401,14 @@ public class Payment extends BaseEntity {
 		this.merchant = merchant;
 	}
 
+	public CourseOrder getCourseOrder() {
+		return courseOrder;
+	}
+
+	public void setCourseOrder(CourseOrder courseOrder) {
+		this.courseOrder = courseOrder;
+	}
+
 	/**
 	 * 判断是否已过期
 	 * 

@@ -244,10 +244,6 @@ public class GaugeResultController extends BaseController {
 	public Message update(GaugeResult gaugeResult,String htmlContent,String imageContent, String expr, Long gaugeId,Long [] genes,String [] attrs,Long [] scompare, Long gaugeGeneId){
 
 		GaugeResult entity = gaugeResultService.find(gaugeResult.getId());
-		
-		entity.setCreateDate(gaugeResult.getCreateDate());
-
-		entity.setModifyDate(gaugeResult.getModifyDate());
 
 		entity.setOrders(gaugeResult.getOrders() == null ? 0 : gaugeResult.getOrders());
 		entity.setType(gaugeResult.getType());
