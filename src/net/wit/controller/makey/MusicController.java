@@ -21,13 +21,13 @@ import java.util.List;
 
 
 /**
- * @ClassName: CourseController
+ * @ClassName: MusicController
  * @author 降魔战队
  * @date 2017-9-14 19:42:9
  */
  
-@Controller("makeyCourseController")
-@RequestMapping("/makey/course")
+@Controller("makeyMusicController")
+@RequestMapping("/makey/music")
 public class MusicController extends BaseController {
 
     @Resource(name = "courseServiceImpl")
