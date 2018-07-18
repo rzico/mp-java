@@ -64,6 +64,10 @@ public class ShippingListModel extends BaseModel implements Serializable {
 
     private Boolean choose;
 
+    private Long receiverId;
+    private Double lat;
+    private Double lng;
+
     /** 商品 */
     private List<ShippingItemModel> shippingItems;
 
@@ -227,6 +231,30 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.choose = choose;
     }
 
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
+    }
+
     public void bind(Shipping shipping) {
         Order order = shipping.getOrder();
         this.id = shipping.getId();
@@ -257,6 +285,11 @@ public class ShippingListModel extends BaseModel implements Serializable {
         this.address = shipping.getAreaName()+shipping.getAddress();
 
         this.choose = false;
+
+        this.receiverId = shipping.getOrder().getReceiverId();
+
+        this.lat = 0.0;
+        this.lng = 0.0;
 
     }
 

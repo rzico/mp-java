@@ -60,6 +60,9 @@ public class ShippingController extends BaseController {
 	@Resource(name = "refundsServiceImpl")
 	private RefundsService refundsService;
 
+	@Resource(name = "receiverServiceImpl")
+	private ReceiverService receiverService;
+
 	@Resource(name = "enterpriseServiceImpl")
 	private EnterpriseService enterpriseService;
 
@@ -286,7 +289,7 @@ public class ShippingController extends BaseController {
 	 */
 	@RequestMapping(value = "/receive", method = RequestMethod.POST)
 	public @ResponseBody
-	Message receive(String sn,String body,Integer level,String memo,HttpServletRequest request) {
+	Message receive(String sn,String body,Integer level,String memo,Double lat,Double lng,HttpServletRequest request) {
 		Member member = memberService.getCurrent();
 		if (member==null) {
 			return Message.error(Message.SESSION_INVAILD);
@@ -331,6 +334,17 @@ public class ShippingController extends BaseController {
 
 			shipping.setShippingBarrels(barrels);
 
+		}
+
+		if (lat!=null && lng!=null && lat>0 && lng>0) {
+			Receiver receiver = receiverService.find(shipping.getOrder().getReceiverId());
+			if (receiver != null) {
+                Location location = new Location();
+                location.setLat(lat);
+                location.setLng(lng);
+                receiver.setLocation(location);
+                receiverService.update(receiver);
+			}
 		}
 
 		shipping.setLevel(level);
@@ -496,8 +510,17 @@ public class ShippingController extends BaseController {
 		pageable.setFilters(filters);
 
 		Page<Shipping> page = shippingService.findPage(null,null,pageable);
+	    List<ShippingListModel> data = ShippingListModel.bindList(page.getContent());
+	    for (ShippingListModel m:data) {
+	    	Receiver receiver = receiverService.find(m.getReceiverId());
+	    	if (receiver!=null && receiver.getLocation()!=null) {
+	    		m.setLat(receiver.getLocation().getLat());
+	    		m.setLng(receiver.getLocation().getLng());
+			}
+		}
+
 		PageBlock model = PageBlock.bind(page);
-		model.setData(ShippingListModel.bindList(page.getContent()));
+		model.setData(data);
 		return Message.bind(model,request);
 
 	}
