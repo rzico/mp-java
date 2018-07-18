@@ -287,7 +287,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 			}
 			super.save(message);
 			if (message.getReceiver().getUuid()!=null) {
-				addTask(message.getSender().getUsername(), message.getReceiver().userId(), message.getCreateDate().getTime(), message.getContent(), message.getSound());
+				addTask(message.getSender().getUsername(), message.getReceiver().userId(), message.getCreateDate().getTime(),"<"+message.getId()+">"+message.getContent(), message.getSound());
 			}
 			return true;
 		} catch (Exception e) {

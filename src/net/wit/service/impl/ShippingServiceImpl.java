@@ -496,8 +496,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 					depositDao.persist(adminDeposit);
 					messageService.depositPushTo(adminDeposit);
 
-
-
 					adminMember.setBalance(adminMember.getBalance().add(shipping.getAdminFreight()));
 					memberDao.merge(adminMember);
 
