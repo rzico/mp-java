@@ -541,6 +541,15 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			sms = sms.concat(",回收"+String.valueOf(d)+"桶");
 		}
 
+		Member buy = shipping.getMember();
+		ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+		Card card = buy.card(shipping.getSeller());
+		if ("3".equals(bundle.getString("weex")) ) {
+	       card = buy.getCards().get(0);
+		}
+		Long bal = barrelStockDao.calcStock(card);
+		sms = sms.concat(",存桶数"+String.valueOf(bal));
+
 		orderLog.setContent(orderLog.getContent()+sms);
 		orderLog.setOrder(shipping.getOrder());
 		orderLogDao.persist(orderLog);

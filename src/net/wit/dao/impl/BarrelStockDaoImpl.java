@@ -1,5 +1,6 @@
 package net.wit.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import java.util.Date;
@@ -72,6 +73,20 @@ public class BarrelStockDaoImpl extends BaseDaoImpl<BarrelStock, Long> implement
 			return barrelStock;
 		} catch (NoResultException e) {
 			return null;
+		}
+
+	}
+
+	public Long calcStock(Card card) {
+		String jpql = "select sum(barrelStock.stock) from BarrelStock barrelStock where barrelStock.card = :card";
+		try {
+			Object data = entityManager.createQuery(jpql, BarrelStock.class).setFlushMode(FlushModeType.COMMIT)
+					.setParameter("card", card)
+					.getSingleResult();
+			BigDecimal b = (BigDecimal) data;
+			return b.longValue();
+		} catch (NoResultException e) {
+			return 0L;
 		}
 
 	}

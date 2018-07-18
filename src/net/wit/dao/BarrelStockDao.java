@@ -32,4 +32,7 @@ public interface BarrelStockDao extends BaseDao<BarrelStock, Long> {
 	Page<BarrelStock> findPage(Date beginDate, Date endDate, Pageable pageable);
 
 	BarrelStock find(Card card, Barrel barrel);
+
+	Long calcStock(Card card);
+
 }
