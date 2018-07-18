@@ -216,7 +216,7 @@ public class TopicViewModel extends BaseModel implements Serializable {
             }
         } else {
             this.name = member.displayName();
-            this.thumbnail = member.getLogo();
+            this.thumbnail = "http://cdn.rzico.com/weex/resources/images/default.png";
             this.hits = 0;
         }
         this.tags = TagModel.bindList(member.getTags());
