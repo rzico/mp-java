@@ -88,10 +88,9 @@ public class BarrelStockDaoImpl extends BaseDaoImpl<BarrelStock, Long> implement
 					setParameter(1, card);
 			List result = query.getResultList();
 			for (int i=0;i<result.size();i++) {
-				Object[] row = (Object[]) result.get(i);
+				BigDecimal row = (BigDecimal) result.get(i);
 				if (row!=null) {
-				    Integer dd = (Integer) row[0];
-					return dd.longValue();
+					return row.longValue();
 				} else {
 					return 0L;
 				}
