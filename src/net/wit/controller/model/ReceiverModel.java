@@ -8,6 +8,7 @@ import java.util.List;
 
 public class ReceiverModel extends BaseModel implements Serializable {
     private Long id;
+    private Long memberId;
     private String consignee;
     private String areaName;
     private String address;
@@ -142,8 +143,18 @@ public class ReceiverModel extends BaseModel implements Serializable {
         this.adminName = adminName;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
     public void bind(Receiver receiver) {
         this.id = receiver.getId();
+
+        this.memberId = receiver.getMember().getId();
         this.consignee = receiver.getConsignee();
         this.address = receiver.getAddress();
         this.areaId = receiver.getArea().getId();
