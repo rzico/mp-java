@@ -55,7 +55,11 @@ public class CardDaoImpl extends BaseDaoImpl<Card, Long> implements CardDao {
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
 		if (pageable.getSearchValue()!=null && !"".equals(pageable.getSearchValue())) {
-			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.or(criteriaBuilder.like(root.<String> get("code"), "%"+pageable.getSearchValue()),criteriaBuilder.equal(root.<String> get("mobile"), pageable.getSearchValue())));
+			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.or(
+					criteriaBuilder.like(root.<String> get("code"), "%"+pageable.getSearchValue()),
+					criteriaBuilder.equal(root.<String> get("mobile"), "%"+pageable.getSearchValue()+"%"),
+					criteriaBuilder.equal(root.<String> get("name"), "%"+pageable.getSearchValue()+"%")
+			));
 		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);

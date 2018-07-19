@@ -1,6 +1,6 @@
 package net.wit.controller.weex.member;
 
-import net.wit.Filter;
+import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
@@ -53,7 +53,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long tagIds,HttpServletRequest request){
+    public Message list(Long tagIds, String type,String keyword, Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -63,10 +63,17 @@ public class ReceiverController extends BaseController {
         orders.add(new Order("isDefault", Order.Direction.desc));
 
         List<Filter> filters = new ArrayList<>();
-        filters.add(new Filter("member", Filter.Operator.eq,member));
-        List<Receiver> receivers = receiverService.findList(null,null,filters,orders);
+        if ("query".equals(type)) {
+//            filters.add(new Filter("member", Filter.Operator.eq, member));
+        } else {
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+        }
+        if (keyword!=null) {
+            pageable.setSearchValue(keyword);
+        }
+        Page<Receiver> page = receiverService.findPage(null,null,pageable);
 
-        return Message.bind(ReceiverModel.bindList(receivers),request);
+        return Message.bind(ReceiverModel.bindList(page.getContent()),request);
     }
 
 

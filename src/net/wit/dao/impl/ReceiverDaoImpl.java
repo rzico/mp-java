@@ -54,6 +54,16 @@ public class ReceiverDaoImpl extends BaseDaoImpl<Receiver, Long> implements Rece
 			e =DateUtils.addDays(e,1);
 			restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.lessThan(root.<Date> get("createDate"), e));
 		}
+		if (pageable.getSearchValue()!=null) {
+			restrictions = criteriaBuilder.and(restrictions,
+					criteriaBuilder.or(
+							criteriaBuilder.like(root.<String>get("consignee"),"%"+pageable.getSearchValue()+"%"),
+							criteriaBuilder.like(root.<String>get("phone"),"%"+pageable.getSearchValue()+"%"),
+							criteriaBuilder.like(root.<String>get("areaName"),"%"+pageable.getSearchValue()+"%"),
+							criteriaBuilder.like(root.<String>get("address"),"%"+pageable.getSearchValue()+"%")
+					)
+			);
+		}
 		criteriaQuery.where(restrictions);
 		return super.findPage(criteriaQuery,pageable);
 	}

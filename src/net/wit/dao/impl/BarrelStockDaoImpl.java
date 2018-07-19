@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -15,6 +17,7 @@ import javax.persistence.criteria.Root;
 import net.wit.entity.Barrel;
 import net.wit.entity.Card;
 import net.wit.entity.Member;
+import net.wit.entity.summary.PaymentSummary;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -78,13 +81,22 @@ public class BarrelStockDaoImpl extends BaseDaoImpl<BarrelStock, Long> implement
 	}
 
 	public Long calcStock(Card card) {
-		String jpql = "select sum(barrelStock.stock) from BarrelStock barrelStock where barrelStock.card = :card";
+		String jpql = "select sum(barrelStock.stock) from wx_barrel_stock barrelStock where barrelStock.card = ?";
 		try {
-			Object data = entityManager.createQuery(jpql, BarrelStock.class).setFlushMode(FlushModeType.COMMIT)
-					.setParameter("card", card)
-					.getSingleResult();
-			BigDecimal b = (BigDecimal) data;
-			return b.longValue();
+			Query query = entityManager.createNativeQuery(jpql).
+					setFlushMode(FlushModeType.COMMIT).
+					setParameter(1, card);
+			List result = query.getResultList();
+			for (int i=0;i<result.size();i++) {
+				Object[] row = (Object[]) result.get(i);
+				if (row!=null) {
+				    Integer dd = (Integer) row[0];
+					return dd.longValue();
+				} else {
+					return 0L;
+				}
+			}
+			return 0L;
 		} catch (NoResultException e) {
 			return 0L;
 		}

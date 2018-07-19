@@ -5,11 +5,10 @@ import net.wit.Message;
 import net.wit.controller.admin.BaseController;
 import net.wit.controller.model.ArticleCategoryModel;
 import net.wit.entity.ArticleCategory;
+import net.wit.entity.Card;
 import net.wit.entity.Payment;
 import net.wit.plat.unspay.Merchant;
-import net.wit.service.ArticleCategoryService;
-import net.wit.service.OrderService;
-import net.wit.service.PaymentService;
+import net.wit.service.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +40,11 @@ public class TESTController extends BaseController {
     @Resource(name = "orderServiceImpl")
     private OrderService orderService;
 
+    @Resource(name = "barrelStockServiceImpl")
+    private BarrelStockService barrelStockService;
+
+    @Resource(name = "cardServiceImpl")
+    private CardService cardService;
     /**
      *  分类列表
      */
@@ -85,5 +89,16 @@ public class TESTController extends BaseController {
         return Message.success("");
     }
 
+    /**
+     *   任务测试
+     */
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    @ResponseBody
+    public Message test(Long tagIds,HttpServletRequest request) throws Exception {
+
+        Card card = cardService.find(501L);
+        barrelStockService.calcStock(card);
+        return Message.success("");
+    }
 
 }

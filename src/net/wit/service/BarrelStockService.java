@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.BarrelStock;
+import net.wit.entity.Card;
 
 /**
  * @ClassName: BarrelStockService
@@ -17,4 +18,6 @@ import net.wit.entity.BarrelStock;
 
 public interface BarrelStockService extends BaseService<BarrelStock, Long> {
 	Page<BarrelStock> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+	Long calcStock(Card card);
 }

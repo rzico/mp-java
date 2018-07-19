@@ -86,4 +86,8 @@ public class BarrelStockServiceImpl extends BaseServiceImpl<BarrelStock, Long> i
 	public Page<BarrelStock> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return barrelStockDao.findPage(beginDate,endDate,pageable);
 	}
+
+	public Long calcStock(Card card) {
+		return barrelStockDao.calcStock(card);
+	}
 }

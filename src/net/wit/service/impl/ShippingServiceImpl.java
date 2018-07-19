@@ -259,7 +259,6 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		if (!shipping.getEnterprise().getMember().equals(order.getSeller())) {
 			messageService.shippingPushTo(shipping, orderLog);
 		}
-
 		return shipping;
 
 	}
@@ -547,6 +546,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		}
 		Long bal = barrelStockDao.calcStock(card);
 		sms = sms.concat(",存桶数"+String.valueOf(bal));
+		int bl = shipping.getOrder().getExchangeBalance();
+		sms = sms.concat(",余票"+String.valueOf(bl));
 
 		orderLog.setContent(orderLog.getContent()+sms);
 		orderLog.setOrder(shipping.getOrder());
