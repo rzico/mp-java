@@ -93,7 +93,7 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 				setParameter(5, e).
 				setParameter(6,enterprise);
 		query.setFirstResult(pageable.getPageStart());
-		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		query.setMaxResults(pageable.getPageSize());
 		List result = query.getResultList();
 		List<ShippingItemSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {

@@ -83,7 +83,7 @@ public class OrderItemDaoImpl extends BaseDaoImpl<OrderItem, Long> implements Or
 				setParameter(2, e).
 				setParameter(3,member);
 		query.setFirstResult(pageable.getPageStart());
-		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		query.setMaxResults(pageable.getPageSize());
 		List result = query.getResultList();
 		List<OrderItemSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {

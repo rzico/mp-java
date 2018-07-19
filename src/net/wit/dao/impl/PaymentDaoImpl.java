@@ -94,7 +94,7 @@ public class PaymentDaoImpl extends BaseDaoImpl<Payment, Long> implements Paymen
 				setParameter(5,b).
 				setParameter(6, e);
 		query.setFirstResult(pageable.getPageStart());
-		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
+		query.setMaxResults(pageable.getPageSize());
 
 		List result = query.getResultList();
 		List<PaymentSummary> data = new ArrayList<>();
