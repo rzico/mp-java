@@ -194,6 +194,8 @@ public class ArticleController extends BaseController {
 
 		entity.setDeleted(false);
 
+		entity.setDragonStatus(Article.DragonStatus.none);
+
 		entity.setArea(areaService.find(areaId));
 
 		if (admin.isManager()) {

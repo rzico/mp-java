@@ -340,7 +340,6 @@ public class ArticleController extends BaseController {
         filters.add(new Filter("isPublish", Filter.Operator.eq, true));
         if (mediaType==null) {
             filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.product));
-            filters.add(new Filter("mediaType", Filter.Operator.ne, Article.ArticleType.html));
         } else {
             filters.add(new Filter("mediaType", Filter.Operator.eq, mediaType));
         }
