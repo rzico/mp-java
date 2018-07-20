@@ -79,7 +79,6 @@ public class NavigationController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Long topicId,ModelMap model) {
-
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("article","文章"));
 		types.add(new MapEntity("product","商品"));
@@ -95,9 +94,13 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("course","课程"));
 		types.add(new MapEntity("custom","自定义"));
 		model.addAttribute("types",types);
-		model.addAttribute("topicId",topicId);
-
+		String s = "";
+		if (topicId!=null) {
+			s = String.valueOf(topicId);
+		}
+		model.addAttribute("topicId",s);
 		return "/admin/navigation/list";
+
 	}
 
 
@@ -122,7 +125,11 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("course","课程"));
 		types.add(new MapEntity("custom","自定义"));
 		model.addAttribute("types",types);
-		model.addAttribute("topicId",topicId);
+		String s = "";
+		if (topicId!=null) {
+			s = String.valueOf(topicId);
+		}
+		model.addAttribute("topicId",s);
 
 		List<Filter> filters = new ArrayList<>();
 		Admin admin = adminService.getCurrent();
@@ -274,6 +281,7 @@ public class NavigationController extends BaseController {
             e.printStackTrace();
             return Message.error("admin.update.error");
         }
+
 	}
 	
 
