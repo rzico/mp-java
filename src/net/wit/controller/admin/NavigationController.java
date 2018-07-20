@@ -90,6 +90,7 @@ public class NavigationController extends BaseController {
 		types.add(new MapEntity("recommend","推荐"));
 		types.add(new MapEntity("dragon","拼团"));
 		types.add(new MapEntity("mall","商城"));
+		types.add(new MapEntity("gauge","量表"));
 		types.add(new MapEntity("counselor","咨询"));
 		types.add(new MapEntity("course","课程"));
 		types.add(new MapEntity("custom","自定义"));
@@ -131,7 +132,6 @@ public class NavigationController extends BaseController {
 		} else {
 			filters.add(new Filter("member", Filter.Operator.eq,admin.getEnterprise().getMember()));
 		}
-
 
 	    model.addAttribute("articleCatalogs",articleCatalogService.findList(null,null,filters,null));
 
