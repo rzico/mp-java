@@ -121,7 +121,14 @@ public class CounselorController extends BaseController {
 
 		entity.setAutograph(counselor.getAutograph());
 
-		entity.setContent(counselor.getContent());
+		entity.setContent1(counselor.getContent1());
+		entity.setContent2(counselor.getContent2());
+		entity.setContent3(counselor.getContent3());
+		entity.setContent4(counselor.getContent4());
+		entity.setContent5(counselor.getContent5());
+		entity.setContent6(counselor.getContent6());
+		entity.setContent7(counselor.getContent7());
+		entity.setContent8(counselor.getContent8());
 
 		entity.setDeleted(false);
 
@@ -202,7 +209,15 @@ public class CounselorController extends BaseController {
 
 		entity.setAutograph(counselor.getAutograph());
 
-		entity.setContent(counselor.getContent());
+
+		entity.setContent1(counselor.getContent1());
+		entity.setContent2(counselor.getContent2());
+		entity.setContent3(counselor.getContent3());
+		entity.setContent4(counselor.getContent4());
+		entity.setContent5(counselor.getContent5());
+		entity.setContent6(counselor.getContent6());
+		entity.setContent7(counselor.getContent7());
+		entity.setContent8(counselor.getContent8());
 
 		entity.setDeleted(false);
 

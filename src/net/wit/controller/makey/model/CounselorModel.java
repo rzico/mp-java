@@ -36,8 +36,29 @@ public class CounselorModel extends BaseModel implements Serializable {
     /** 头街 */
     private String [] speciality ;
 
-    /** 介绍 */
-    private String content;
+    /** 简介 */
+    private String content1;
+
+    /** 教育经历 */
+    private String content2;
+
+    /** 工作经历 */
+    private String content3;
+
+    /** 行业执照 */
+    private String content4;
+
+    /** 治疗取向 */
+    private String content5;
+
+    /** 咨询经验 */
+    private String content6;
+
+    /** 擅长领域 */
+    private String content7;
+
+    /** 咨询方式与费用 */
+    private String content8;
 
     /** 标签名 */
     private List<TagModel> tags = new ArrayList<TagModel>();
@@ -90,12 +111,68 @@ public class CounselorModel extends BaseModel implements Serializable {
         this.speciality = speciality;
     }
 
-    public String getContent() {
-        return content;
+    public String getContent1() {
+        return content1;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContent1(String content1) {
+        this.content1 = content1;
+    }
+
+    public String getContent2() {
+        return content2;
+    }
+
+    public void setContent2(String content2) {
+        this.content2 = content2;
+    }
+
+    public String getContent3() {
+        return content3;
+    }
+
+    public void setContent3(String content3) {
+        this.content3 = content3;
+    }
+
+    public String getContent4() {
+        return content4;
+    }
+
+    public void setContent4(String content4) {
+        this.content4 = content4;
+    }
+
+    public String getContent5() {
+        return content5;
+    }
+
+    public void setContent5(String content5) {
+        this.content5 = content5;
+    }
+
+    public String getContent6() {
+        return content6;
+    }
+
+    public void setContent6(String content6) {
+        this.content6 = content6;
+    }
+
+    public String getContent7() {
+        return content7;
+    }
+
+    public void setContent7(String content7) {
+        this.content7 = content7;
+    }
+
+    public String getContent8() {
+        return content8;
+    }
+
+    public void setContent8(String content8) {
+        this.content8 = content8;
     }
 
     public List<TagModel> getTags() {
@@ -110,7 +187,14 @@ public class CounselorModel extends BaseModel implements Serializable {
         this.id = counselor.getId();
         this.name = counselor.getName();
         this.logo = counselor.getLogo();
-        this.content = counselor.getContent();
+        this.content1 = counselor.getContent1();
+        this.content2 = counselor.getContent2();
+        this.content3 = counselor.getContent3();
+        this.content4 = counselor.getContent4();
+        this.content5 = counselor.getContent5();
+        this.content6 = counselor.getContent6();
+        this.content7 = counselor.getContent7();
+        this.content8 = counselor.getContent8();
         this.autograph = counselor.getAutograph();
         if (counselor.getSpeciality()!=null) {
             this.speciality = counselor.getSpeciality().split(",");
