@@ -110,9 +110,9 @@ public class ArticleCatalogController extends BaseController {
 
 		entity.setMember(admin.getEnterprise().getMember());
 		
-		if (!isValid(entity, Save.class)) {
-            return Message.error("admin.data.valid");
-        }
+//		if (!isValid(entity, Save.class)) {
+//            return Message.error("admin.data.valid");
+//        }
         try {
             articleCatalogService.save(entity);
             return Message.success(entity,"admin.save.success");
@@ -170,9 +170,9 @@ public class ArticleCatalogController extends BaseController {
 
 		entity.setStatus(articleCatalog.getStatus());
 
-		if (!isValid(entity)) {
-            return Message.error("admin.data.valid");
-        }
+//		if (!isValid(entity)) {
+//            return Message.error("admin.data.valid");
+//        }
         try {
             articleCatalogService.update(entity);
             return Message.success(entity,"admin.update.success");

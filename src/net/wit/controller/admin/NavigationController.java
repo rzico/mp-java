@@ -122,10 +122,15 @@ public class NavigationController extends BaseController {
 		model.addAttribute("types",types);
 		model.addAttribute("topicId",topicId);
 
-		Topic topic = topicService.find(topicId);
-
 		List<Filter> filters = new ArrayList<>();
-		filters.add(new Filter("member", Filter.Operator.eq,topic.getMember()));
+		Admin admin = adminService.getCurrent();
+		if (topicId!=null) {
+			Topic topic = topicService.find(topicId);
+			filters.add(new Filter("member", Filter.Operator.eq,topic.getMember()));
+		} else {
+			filters.add(new Filter("member", Filter.Operator.eq,admin.getEnterprise().getMember()));
+		}
+
 
 	    model.addAttribute("articleCatalogs",articleCatalogService.findList(null,null,filters,null));
 
@@ -218,6 +223,7 @@ public class NavigationController extends BaseController {
 		model.addAttribute("types",types);
 
 		List<Filter> filters = new ArrayList<>();
+
 		filters.add(new Filter("member", Filter.Operator.eq,navigation.getOwner()));
 
 
