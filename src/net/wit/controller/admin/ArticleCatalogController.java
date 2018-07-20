@@ -73,8 +73,6 @@ public class ArticleCatalogController extends BaseController {
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
-		model.addAttribute("members",memberService.findAll());
-
 		return "/admin/articleCatalog/list";
 	}
 
@@ -89,8 +87,6 @@ public class ArticleCatalogController extends BaseController {
 		statuss.add(new MapEntity("enabled","开启"));
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("members",memberService.findAll());
 
 		return "/admin/articleCatalog/add";
 	}
@@ -153,8 +149,6 @@ public class ArticleCatalogController extends BaseController {
 		statuss.add(new MapEntity("enabled","开启"));
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("members",memberService.findAll());
 
 		model.addAttribute("data",articleCatalogService.find(id));
 
