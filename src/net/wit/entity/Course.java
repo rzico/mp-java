@@ -66,6 +66,18 @@ public class Course extends OrderEntity {
 	@Column(columnDefinition="varchar(255) not null comment '名称'")
 	private String name;
 
+	/** 副标题  */
+	@NotNull
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '副标题'")
+	private String subTitle;
+
+	/** 课程标签   */
+	@NotNull
+	@Length(max = 200)
+	@Column(columnDefinition="varchar(255) not null comment '课程标签'")
+	private String tagNames ;
+
 	/** 缩例图 */
 	@NotEmpty
 	@Length(max = 200)
@@ -317,6 +329,22 @@ public class Course extends OrderEntity {
 
 	public void setImages(String images) {
 		this.images = images;
+	}
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+
+	public String getTagNames() {
+		return tagNames;
+	}
+
+	public void setTagNames(String tagNames) {
+		this.tagNames = tagNames;
 	}
 
 	public List<String> getArrayImages() {

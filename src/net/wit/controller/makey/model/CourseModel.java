@@ -25,6 +25,9 @@ public class CourseModel extends BaseModel implements Serializable {
     private Long id;
     private String name;
     private String subTitle;
+
+    /** 头街 */
+    private String [] tagNames ;
     /** 缩例图 */
     private String thumbnail;
 
@@ -204,6 +207,14 @@ public class CourseModel extends BaseModel implements Serializable {
         this.tags = tags;
     }
 
+    public String[] getTagNames() {
+        return tagNames;
+    }
+
+    public void setTagNames(String[] tagNames) {
+        this.tagNames = tagNames;
+    }
+
     public void bind(Course course) {
         this.id = course.getId();
         this.name = course.getName();
@@ -220,7 +231,11 @@ public class CourseModel extends BaseModel implements Serializable {
         this.content6 = course.getContent6();
         this.content7 = course.getContent7();
         this.tags = TagModel.bindList(course.getTags());
-
+        if (course.getTagNames()!=null) {
+            this.tagNames = course.getTagNames().split(",");
+        } else {
+            this.tagNames = null;
+        }
     }
 
     public static List<CourseModel> bindList(List<Course> courses) {
