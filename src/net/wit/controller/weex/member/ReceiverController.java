@@ -4,6 +4,7 @@ import net.wit.*;
 import net.wit.Message;
 import net.wit.Order;
 import net.wit.controller.admin.BaseController;
+import net.wit.controller.model.OrderListModel;
 import net.wit.controller.model.ReceiverModel;
 import net.wit.entity.*;
 import net.wit.service.*;
@@ -72,8 +73,9 @@ public class ReceiverController extends BaseController {
             pageable.setSearchValue(keyword);
         }
         Page<Receiver> page = receiverService.findPage(null,null,pageable);
-
-        return Message.bind(ReceiverModel.bindList(page.getContent()),request);
+        PageBlock model = PageBlock.bind(page);
+        model.setData(ReceiverModel.bindList(page.getContent()));
+        return Message.bind(model,request);
     }
 
 
