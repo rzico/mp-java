@@ -52,7 +52,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标签：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.tagNames}" placeholder="" id="tagNames" name="tagNames">
+                <input type="text" class="input-text" value="${data.tagNames}" placeholder="多个标签用,号分隔" id="tagNames" name="tagNames">
             </div>
         </div>
 
