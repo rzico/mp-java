@@ -42,6 +42,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	private MemberDao memberDao;
 
 
+	@Resource(name = "orderDaoImpl")
+	private OrderDao orderDao;
+
 	@Resource(name = "depositDaoImpl")
 	private DepositDao depositDao;
 
@@ -300,9 +303,14 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	}
 
 	public Shipping receive(Shipping shipping) throws Exception {
+		shipping.setDeliveryDate(new Date());
 		shipping.setShippingStatus(Shipping.ShippingStatus.receive);
 		shipping.setOrderStatus(Shipping.OrderStatus.completed);
 		shippingDao.merge(shipping);
+
+		Order order = shipping.getOrder();
+		order.setDeliveryDate(shipping.getDeliveryDate());
+		orderDao.merge(order);
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.shipping);
 		orderLog.setOperator("system");

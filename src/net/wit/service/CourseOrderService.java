@@ -7,7 +7,9 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Course;
 import net.wit.entity.CourseOrder;
+import net.wit.entity.Payment;
 
 /**
  * @ClassName: CourseOrderService
@@ -17,4 +19,8 @@ import net.wit.entity.CourseOrder;
 
 public interface CourseOrderService extends BaseService<CourseOrder, Long> {
 	Page<CourseOrder> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+
+	public Payment create(CourseOrder courseOrder);
+
 }

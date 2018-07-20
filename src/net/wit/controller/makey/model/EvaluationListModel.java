@@ -172,6 +172,7 @@ public class EvaluationListModel extends BaseModel implements Serializable {
         this.sn = evaluation.getSn();
         this.createDate = evaluation.getCreateDate();
         this.seconds = evaluation.getSeconds();
+
     }
 
     public static List<EvaluationListModel> bindList(List<Evaluation> evaluations) {

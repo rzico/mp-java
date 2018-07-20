@@ -87,6 +87,8 @@ public class ShippingModel extends BaseModel implements Serializable {
     /**  预约时间 */
     private Date hopeDate;
 
+    /**  送达日期 */
+    private Date deliveryDate;
 
     /**  支付方式 */
     private String paymentMethod;
@@ -375,6 +377,14 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.groupName = groupName;
     }
 
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
     public void bind(Shipping shipping) {
 
         this.id = shipping.getId();
@@ -410,6 +420,7 @@ public class ShippingModel extends BaseModel implements Serializable {
 
         this.paymentStatus = order.getPaymentStatus();
         this.shippingStatus = order.getShippingStatus();
+        this.deliveryDate = shipping.getDeliveryDate();
 
         this.cost = shipping.getCost();
         this.freight = shipping.getFreight();
@@ -539,7 +550,7 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.orderMemo = order.getMemo();
         this.hopeDate = order.getHopeDate();
 
-
+        this.deliveryDate = order.getDeliveryDate();
         ShippingTrackModel track = new ShippingTrackModel();
         track.setLng(0);
         track.setLat(0);

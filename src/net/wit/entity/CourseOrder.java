@@ -89,6 +89,12 @@ public class CourseOrder extends BaseEntity {
 	@JsonIgnore
 	private Member member;
 
+	/** 分享人 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false,columnDefinition="bigint(20) not null comment '分享人'")
+	@JsonIgnore
+	private Member promoter;
+
 	/** 企业 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
@@ -155,5 +161,21 @@ public class CourseOrder extends BaseEntity {
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Member getPromoter() {
+		return promoter;
+	}
+
+	public void setPromoter(Member promoter) {
+		this.promoter = promoter;
 	}
 }

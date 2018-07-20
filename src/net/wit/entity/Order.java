@@ -344,6 +344,10 @@ public class Order extends BaseEntity {
 	@Column(columnDefinition="datetime comment '退货时间'")
 	private Date returnedDate;
 
+	/** 送达时间 */
+	@Column(columnDefinition="datetime comment '送达时间'")
+	private Date DeliveryDate;
+
 	/** 买家 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -594,6 +598,14 @@ public class Order extends BaseEntity {
 
 	public void setShippings(List<Shipping> shippings) {
 		this.shippings = shippings;
+	}
+
+	public Date getDeliveryDate() {
+		return DeliveryDate;
+	}
+
+	public void setDeliveryDate(Date deliveryDate) {
+		DeliveryDate = deliveryDate;
 	}
 
 	/**
@@ -1185,6 +1197,7 @@ public class Order extends BaseEntity {
 	public void setLevelFreight(BigDecimal levelFreight) {
 		this.levelFreight = levelFreight;
 	}
+
 
 	/**
 	 * 获取订单名称
