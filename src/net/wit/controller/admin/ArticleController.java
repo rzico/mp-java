@@ -117,7 +117,7 @@ public class ArticleController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
-
+        Admin admin = adminService.getCurrent();
 		List<MapEntity> authoritys = new ArrayList<>();
 		authoritys.add(new MapEntity("isPublic","公开"));
 		authoritys.add(new MapEntity("isShare","不公开"));
@@ -136,6 +136,10 @@ public class ArticleController extends BaseController {
 //
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
 
+		List<Filter> filters = new ArrayList<>();
+		filters.add(new Filter("member", Filter.Operator.eq,admin.getEnterprise().getMember()));
+		model.addAttribute("articleCatalogs",articleCatalogService.findList(null,null,filters,null));
+
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
 		model.addAttribute("tags",tagService.findList(Tag.Type.article));
@@ -149,7 +153,7 @@ public class ArticleController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Article article, Long templateId, Long articleCategoryId, Long areaId, Long [] tagIds){
+	public Message save(Article article, Long templateId, Long articleCategoryId,Long articleCatalogId, Long areaId, Long [] tagIds){
 
 		Admin admin = adminService.getCurrent();
 		Article entity = new Article();
@@ -185,6 +189,8 @@ public class ArticleController extends BaseController {
 		entity.setTitle(article.getTitle());
 
 		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
+
+		entity.setArticleCatalog(articleCatalogService.find(articleCatalogId));
 
 		entity.setDeleted(false);
 
@@ -249,6 +255,7 @@ public class ArticleController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
+		Admin admin = adminService.getCurrent();
 
 		List<MapEntity> authoritys = new ArrayList<>();
 		authoritys.add(new MapEntity("isPublic","公开"));
@@ -265,6 +272,10 @@ public class ArticleController extends BaseController {
 		model.addAttribute("mediaTypes",mediaTypes);
 
 		model.addAttribute("articleCategorys",articleCategoryService.findAll());
+
+		List<Filter> filters = new ArrayList<>();
+		filters.add(new Filter("member", Filter.Operator.eq,admin.getEnterprise().getMember()));
+		model.addAttribute("articleCatalogs",articleCatalogService.findList(null,null,filters,null));
 
 		model.addAttribute("templates",templateService.findList(Template.Type.article));
 
@@ -307,6 +318,8 @@ public class ArticleController extends BaseController {
 		entity.setTitle(article.getTitle());
 
 		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
+
+		entity.setArticleCatalog(articleCatalogService.find(articleCatalogId));
 
 		entity.setTemplate(templateService.find(templateId));
 
