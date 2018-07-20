@@ -81,6 +81,7 @@ public class CourseController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
         CourseOrder eval =  new CourseOrder();
+        eval.setName(course.getName());
         eval.setThumbnail(course.getThumbnail());
         eval.setOrderStatus(CourseOrder.OrderStatus.unconfirmed);
         eval.setCourse(course);
