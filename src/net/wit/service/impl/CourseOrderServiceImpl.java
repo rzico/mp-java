@@ -38,7 +38,7 @@ public class CourseOrderServiceImpl extends BaseServiceImpl<CourseOrder, Long> i
 	@Resource(name = "courseOrderDaoImpl")
 	private CourseOrderDao courseOrderDao;
 
-	@Resource(name = "paymentImpl")
+	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
 	@Resource(name = "snServiceImpl")

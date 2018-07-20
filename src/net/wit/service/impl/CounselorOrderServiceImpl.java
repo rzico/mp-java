@@ -27,8 +27,8 @@ public class CounselorOrderServiceImpl extends BaseServiceImpl<CounselorOrder, L
 	@Resource(name = "counselorOrderDaoImpl")
 	private CounselorOrderDao counselorOrderDao;
 
-	@Resource(name = "subscribeDaoImpl")
-	public void setBaseDao(CounselorOrderDao subscribeDao) {
+	@Resource(name = "counselorOrderDaoImpl")
+	public void setBaseDao(CounselorOrderDao counselorOrderDao) {
 		super.setBaseDao(counselorOrderDao);
 	}
 	
