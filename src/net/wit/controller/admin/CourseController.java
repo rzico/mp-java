@@ -138,6 +138,10 @@ public class CourseController extends BaseController {
 
 		entity.setHits(0L);
 
+		entity.setTagNames(course.getTagNames());
+
+		entity.setSubTitle(course.getSubTitle());
+
 		entity.setName(course.getName());
 
 		entity.setPrice(course.getPrice());
@@ -236,6 +240,10 @@ public class CourseController extends BaseController {
 		entity.setDeleted(false);
 
 		entity.setName(course.getName());
+
+		entity.setTagNames(course.getTagNames());
+
+		entity.setSubTitle(course.getSubTitle());
 
 		entity.setPrice(course.getPrice());
 
