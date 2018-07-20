@@ -74,6 +74,7 @@ public class CounselorController extends BaseController {
         counselorOrder.setMobile(mobile);
         counselorOrder.setName(name);
         counselorOrder.setSex(sex);
+        counselorOrder.setWorry(worry);
         counselorOrder.setStatus(CounselorOrder.Status.enabled);
         counselorOrderService.save(counselorOrder);
         return Message.success("success");
