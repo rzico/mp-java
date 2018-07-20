@@ -45,6 +45,8 @@ public class Navigation extends OrderEntity{
         dragon,
         /**  图集 */
         images,
+        /**  测评 */
+        gauge,
         /**  咨询 */
         counselor,
         /**  课程 */
