@@ -106,55 +106,56 @@ public class CashierController extends BaseController {
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
     public Message submit(Long shopId,BigDecimal amount,HttpServletRequest request){
-        Shop shop = shopService.find(shopId);
-        if (shop==null) {
-            return Message.error("无效店铺");
-        }
-        Member member = memberService.getCurrent();
-        if (member==null) {
-            return Message.error(Message.SESSION_INVAILD);
-        }
-        Topic topic = member.getTopic();
-        if (topic==null) {
-            return Message.error("没有品牌专栏");
-        }
-        Admin admin = adminService.findByMember(member);
-        if (admin==null) {
-            return Message.error("没有开通收银台");
-        }
-        if (admin.getEnterprise()==null) {
-            return Message.error("店铺已打洋,请先启APP");
-        }
-        PayBill payBill = new PayBill();
-        payBill.setType(PayBill.Type.cashier);
-        payBill.setAmount(amount);
-        payBill.setCardAmount(amount);
-        payBill.setNoDiscount(BigDecimal.ZERO);
-        payBill.setCouponCode(null);
-        payBill.setCouponDiscount(BigDecimal.ZERO);
-        payBill.setCard(null);
-        payBill.setCardDiscount(BigDecimal.ZERO);
-        BigDecimal effective = payBill.getEffectiveAmount();
-        payBill.setFee(topic.calcPaybill(effective));
-        payBill.setMethod(PayBill.Method.online);
-        payBill.setStatus(PayBill.Status.none);
-        payBill.setMember(member);
-        payBill.setOwner(shop.getOwner());
-        payBill.setShop(shop);
-        payBill.setAdmin(admin);
-        payBill.setEnterprise(shop.getEnterprise());
-        try {
-            if (amount.compareTo(BigDecimal.ZERO)<=0) {
-                return Message.error("请输入收款金额");
-            }
-            Payment payment = payBillService.submit(payBill);
-            Map<String,Object> data = new HashMap<String,Object>();
-            data.put("id",payBill.getId());
-            data.put("sn",payment.getSn());
-            return Message.success(data,"success");
-        } catch (Exception e) {
-            return Message.error(e.getMessage());
-        }
+        return Message.error("此功能暂停使用");
+//        Shop shop = shopService.find(shopId);
+//        if (shop==null) {
+//            return Message.error("无效店铺");
+//        }
+//        Member member = memberService.getCurrent();
+//        if (member==null) {
+//            return Message.error(Message.SESSION_INVAILD);
+//        }
+//        Topic topic = member.getTopic();
+//        if (topic==null) {
+//            return Message.error("没有品牌专栏");
+//        }
+//        Admin admin = adminService.findByMember(member);
+//        if (admin==null) {
+//            return Message.error("没有开通收银台");
+//        }
+//        if (admin.getEnterprise()==null) {
+//            return Message.error("店铺已打洋,请先启APP");
+//        }
+//        PayBill payBill = new PayBill();
+//        payBill.setType(PayBill.Type.cashier);
+//        payBill.setAmount(amount);
+//        payBill.setCardAmount(amount);
+//        payBill.setNoDiscount(BigDecimal.ZERO);
+//        payBill.setCouponCode(null);
+//        payBill.setCouponDiscount(BigDecimal.ZERO);
+//        payBill.setCard(null);
+//        payBill.setCardDiscount(BigDecimal.ZERO);
+//        BigDecimal effective = payBill.getEffectiveAmount();
+//        payBill.setFee(topic.calcPaybill(effective));
+//        payBill.setMethod(PayBill.Method.online);
+//        payBill.setStatus(PayBill.Status.none);
+//        payBill.setMember(member);
+//        payBill.setOwner(shop.getOwner());
+//        payBill.setShop(shop);
+//        payBill.setAdmin(admin);
+//        payBill.setEnterprise(shop.getEnterprise());
+//        try {
+//            if (amount.compareTo(BigDecimal.ZERO)<=0) {
+//                return Message.error("请输入收款金额");
+//            }
+//            Payment payment = payBillService.submit(payBill);
+//            Map<String,Object> data = new HashMap<String,Object>();
+//            data.put("id",payBill.getId());
+//            data.put("sn",payment.getSn());
+//            return Message.success(data,"success");
+//        } catch (Exception e) {
+//            return Message.error(e.getMessage());
+//        }
     }
 
 
