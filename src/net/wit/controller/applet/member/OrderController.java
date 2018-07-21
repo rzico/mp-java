@@ -285,7 +285,7 @@ public class OrderController extends BaseController {
 				Member shippingMember = shipping.getAdmin().getMember();
 				if (shippingMember.getLocation()!=null) {
 					track.setLng(shippingMember.getLocation().getLng());
-					track.setLat(shippingMember.getLocation().getLng());
+					track.setLat(shippingMember.getLocation().getLat());
 				}
 				track.setMethod("同城配送");
 				track.setName(shippingMember.realName());
