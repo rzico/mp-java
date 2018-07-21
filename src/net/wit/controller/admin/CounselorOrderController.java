@@ -7,6 +7,7 @@ import net.wit.Filter;
 import net.wit.Message;
 import net.wit.Pageable;
 
+import net.wit.entity.Admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +61,9 @@ public class CounselorOrderController extends BaseController {
 	private HostService hostService;
 
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
+
 
 	/**
 	 * 主页
@@ -71,13 +75,6 @@ public class CounselorOrderController extends BaseController {
 		statuss.add(new MapEntity("enabled","开启"));
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("counselors",counselorService.findAll());
-
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
 		return "/admin/subscribe/list";
 	}
 
@@ -92,12 +89,6 @@ public class CounselorOrderController extends BaseController {
 		statuss.add(new MapEntity("enabled","开启"));
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
-
-		model.addAttribute("counselors",counselorService.findAll());
-
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
 
 		return "/admin/subscribe/add";
 	}
@@ -171,12 +162,6 @@ public class CounselorOrderController extends BaseController {
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
-		model.addAttribute("counselors",counselorService.findAll());
-
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
-		model.addAttribute("members",memberService.findAll());
-
 		model.addAttribute("data",counselorOrderService.find(id));
 
 		return "/admin/subscribe/edit";
@@ -190,27 +175,10 @@ public class CounselorOrderController extends BaseController {
     @ResponseBody
 	public Message update(CounselorOrder subscribe, Long memberId, Long enterpriseId, Long counselorId){
 		CounselorOrder entity = counselorOrderService.find(subscribe.getId());
-		
-		entity.setCreateDate(subscribe.getCreateDate());
-
-		entity.setModifyDate(subscribe.getModifyDate());
-
-		entity.setMobile(subscribe.getMobile());
-
-		entity.setName(subscribe.getName());
-
-		entity.setSex(subscribe.getSex());
 
 		entity.setStatus(subscribe.getStatus());
 
-		entity.setWorry(subscribe.getWorry());
 
-		entity.setCounselor(counselorService.find(counselorId));
-
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
-
-		entity.setMember(memberService.find(memberId));
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -235,6 +203,14 @@ public class CounselorOrderController extends BaseController {
 			Filter statusFilter = new Filter("status", Filter.Operator.eq, status);
 			filters.add(statusFilter);
 		}
+
+		if (pageable.getSearchValue()!=null) {
+			Filter keywordFilter = new Filter("name", Filter.Operator.like, "%"+pageable.getSearchValue()+"%");
+			filters.add(keywordFilter);
+		}
+
+		Admin admin = adminService.getCurrent();
+		filters.add(new Filter("enterprise",Filter.Operator.eq,admin.getEnterprise()));
 
 		Page<CounselorOrder> page = counselorOrderService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

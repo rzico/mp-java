@@ -35,20 +35,37 @@
         <input type="number" value="${data.id}" style="display:none" name="id">
         [#if data??]
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>姓名：</label>
             <div class="formControls col-xs-8 col-sm-9">
                  ${data.name}
             </div>
         </div>
-
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>手机号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                ${data.mobile}
+            </div>
+        </div>
+   <div class="row cl">
+       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>咨询师：</label>
+       <div class="formControls col-xs-8 col-sm-9">
+           ${data.counselor.name}
+       </div>
+   </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>困扰描述：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                ${data.worry}
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if orderStatuss??]
-                [#list orderStatuss as orderStatus]
+                [#if statuss??]
+                [#list statuss as status]
                     <div class="radio-box">
-                        <input name="orderStatus" type="radio" id="orderStatus-${orderStatus_index}" value="${orderStatus.id}"[#if orderStatus.id == data.orderStatus] checked[/#if]>
-                        <label for="orderStatus-${orderStatus_index}">${orderStatus.name}</label>
+                        <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
+                        <label for="status-${status_index}">${status.name}</label>
                     </div>
                 [/#list]
                 [/#if]

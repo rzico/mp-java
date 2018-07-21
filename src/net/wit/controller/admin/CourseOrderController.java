@@ -60,6 +60,8 @@ public class CourseOrderController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 
 	/**
@@ -77,10 +79,6 @@ public class CourseOrderController extends BaseController {
 		types.add(new MapEntity("_public","公共"));
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
-
-		model.addAttribute("courses",courseService.findAll());
-
-		model.addAttribute("enterprises",enterpriseService.findAll());
 
 		return "/admin/courseOrder/list";
 	}
@@ -102,9 +100,6 @@ public class CourseOrderController extends BaseController {
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
-		model.addAttribute("courses",courseService.findAll());
-
-		model.addAttribute("enterprises",enterpriseService.findAll());
 
 		return "/admin/courseOrder/add";
 	}
@@ -176,15 +171,6 @@ public class CourseOrderController extends BaseController {
 		orderStatuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("orderStatuss",orderStatuss);
 
-		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("_public","公共"));
-		types.add(new MapEntity("_private","私有"));
-		model.addAttribute("types",types);
-
-		model.addAttribute("courses",courseService.findAll());
-
-		model.addAttribute("enterprises",enterpriseService.findAll());
-
 		model.addAttribute("data",courseOrderService.find(id));
 
 		return "/admin/courseOrder/edit";
@@ -199,24 +185,8 @@ public class CourseOrderController extends BaseController {
 	public Message update(CourseOrder courseOrder, Long courseId, Long enterpriseId){
 		CourseOrder entity = courseOrderService.find(courseOrder.getId());
 		
-		entity.setCreateDate(courseOrder.getCreateDate());
-
-		entity.setModifyDate(courseOrder.getModifyDate());
-
-		entity.setName(courseOrder.getName());
-
 		entity.setOrderStatus(courseOrder.getOrderStatus());
 
-		entity.setPrice(courseOrder.getPrice());
-
-		entity.setThumbnail(courseOrder.getThumbnail());
-
-		entity.setType(courseOrder.getType());
-
-		entity.setCourse(courseService.find(courseId));
-
-		entity.setEnterprise(enterpriseService.find(enterpriseId));
-		
 		if (!isValid(entity)) {
             return Message.error("admin.data.valid");
         }
@@ -241,10 +211,19 @@ public class CourseOrderController extends BaseController {
 			Filter orderStatusFilter = new Filter("orderStatus", Filter.Operator.eq, orderStatus);
 			filters.add(orderStatusFilter);
 		}
+
 		if (type!=null) {
 			Filter typeFilter = new Filter("type", Filter.Operator.eq, type);
 			filters.add(typeFilter);
 		}
+
+		if (pageable.getSearchValue()!=null) {
+			Filter keywordFilter = new Filter("name", Filter.Operator.like, "%"+pageable.getSearchValue()+"%");
+			filters.add(keywordFilter);
+		}
+
+		Admin admin = adminService.getCurrent();
+		filters.add(new Filter("enterprise",Filter.Operator.eq,admin.getEnterprise()));
 
 		Page<CourseOrder> page = courseOrderService.findPage(beginDate,endDate,pageable);
 		return Message.success(PageBlock.bind(page), "admin.list.success");

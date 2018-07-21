@@ -21,23 +21,21 @@
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/skin/default/skin.css" id="skin" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/h-ui.admin/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${base}/resources/admin/css/wx.css" />
+
     <!--[if IE 6]>
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
     <!--/meta 作为公共模版分离出去-->
-
     <link href="${base}/resources/admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-update">
-        <input type="number" value="${data.id}" style="display:none" name="id">
-        [#if data??]
+    <form action="" method="post" class="form form-horizontal" id="form-add">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                 ${data.name}
+                <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
             </div>
         </div>
 
@@ -47,7 +45,7 @@
                 [#if orderStatuss??]
                 [#list orderStatuss as orderStatus]
                     <div class="radio-box">
-                        <input name="orderStatus" type="radio" id="orderStatus-${orderStatus_index}" value="${orderStatus.id}"[#if orderStatus.id == data.orderStatus] checked[/#if]>
+                        <input name="orderStatus" type="radio" id="orderStatus-${orderStatus_index}" value="${orderStatus.id}">
                         <label for="orderStatus-${orderStatus_index}">${orderStatus.name}</label>
                     </div>
                 [/#list]
@@ -56,14 +54,60 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"></label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;修改&nbsp;&nbsp;">
+                <input type="text" class="input-text" value="" placeholder="" id="thumbnail" name="thumbnail">
             </div>
         </div>
-            [#else]
-            查找失败
-        [/#if]
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                [#if types??]
+                [#list types as type]
+                    <div class="radio-box">
+                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}">
+                        <label for="type-${type_index}">${type.name}</label>
+                    </div>
+                [/#list]
+                [/#if]
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Course：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                [#if courses??]
+				<select name="courseId" class="select" style="background-color: #FFFFFF">
+                    [#list courses as course]
+					<option value="${course.id}">${course.name}</option>
+                    [/#list]
+				</select>
+                [/#if]
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Enterprise：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                [#if enterprises??]
+				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
+                    [#list enterprises as enterprise]
+					<option value="${enterprise.id}">${enterprise.name}</option>
+                    [/#list]
+				</select>
+                [/#if]
+				</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"></label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+
     </form>
 </div>
         <!--_footer 作为公共模版分离出去-->
@@ -79,6 +123,8 @@
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
         <script type="text/javascript" src="${base}/resources/admin/lib/jquery.ISelect/jquery.lSelect.js"></script>
+        <script type="text/javascript" src="${base}/resources/admin/js/wx.js"></script>
+
         <script type="text/javascript">
             $(function(){
                 var $submit = $(":submit");
@@ -88,18 +134,35 @@
                     increaseArea: '20%'
                 });
 
-                $("#form-update").validate({
+                $("#form-add").validate({
                     rules:{
-
+                        name:{
+                            required:true,
+                        },
                         orderStatus:{
                             required:true,
                         },
-
+                        price:{
+                            required:true,
+                        },
+                        thumbnail:{
+                            required:true,
+                        },
+                        type:{
+                            required:true,
+                        },
+                        course:{
+                            required:true,
+                        },
+                        enterprise:{
+                            required:true,
+                        },
 
                     },
                     onkeyup:false,
                     focusCleanup:true,
                     success:"valid",
+                    ignore:"",
                     submitHandler:function(form){
                         var load = layer.msg('加载中', {
                             icon: 16
@@ -107,9 +170,9 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/courseOrder/update.jhtml" ,
+                            url: "${base}/admin/courseOrder/save.jhtml" ,
                             beforeSend: function() {
-                                $submit.prop("disabled", true);
+                               $submit.prop("disabled", true);
                             },
                             success: function(message){
                                 layer.close(load);
@@ -117,17 +180,16 @@
 //                                    关闭当前页面
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.add_row(message.data);
-                                    //关闭弹窗并提示
-                                    parent.closeWindow(index, '修改成功');
+                                    parent.closeWindow(index, '添加成功');
                                 }else{
                                     $submit.prop("disabled", false);
-                                    parent.toast('修改失败',2);
+                                    layer.msg('添加失败!',{icon:2,time:1000});
                                 }
                             },
                             error: function(XmlHttpRequest, textStatus, errorThrown){
                                 $submit.prop("disabled", false);
                                 layer.close(load);
-                                parent.toast('修改失败',2);
+                                layer.msg('error!',{icon:2,time:1000});
                             }
                         });
                     }

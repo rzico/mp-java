@@ -26,10 +26,10 @@
     <script type="text/javascript" src="${base}/resources/admin/lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
 
-    <title>报名课程</title>
+    <title>预约咨询</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 报名课程 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 预约咨询 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
                                                href="javascript:location.replace(location.href);" title="刷新"><i
         class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
@@ -41,19 +41,10 @@
                class="input-text Wdate" style="width:120px;">
 		[#if orderStatuss??]
 			<span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
-			<select name="orderStatus" class="select" style="background-color: #FFFFFF;">
+			<select name="status" class="select" style="background-color: #FFFFFF;">
 					<option value="">状态</option>
-					[#list orderStatuss as orderStatus]
-					<option value="${orderStatus.id}">${orderStatus.name}</option>
-					[/#list]
-				</select>
-			</span>
-		[/#if]		[#if types??]
-			<span class="select-box"  style="background-color: #FFFFFF;width:100px;height:32px;">
-			<select name="type" class="select" style="background-color: #FFFFFF;">
-					<option value="">类型</option>
-					[#list types as type]
-					<option value="${type.id}">${type.name}</option>
+					[#list statuss as status]
+					<option value="${status.id}">${status.name}</option>
 					[/#list]
 				</select>
 			</span>
@@ -163,12 +154,12 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "price",
-                    "sTitle": "销售价",
+                    "mData": "mobile",
+                    "sTitle": "手机号",
                     "sClass": "center"
                 },
                 {
-                    "mData": "orderStatus",
+                    "mData": "status",
                     "sTitle": "状态",
                     "sClass": "center"
                 },
@@ -200,10 +191,10 @@
                     "aTargets": [5],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                        [#if orderStatuss??]
-                            [#list orderStatuss as orderStatus]
-                                if ("${orderStatus.id}" == data) {
-                                    return "${orderStatus.name}";
+                        [#if statuss??]
+                            [#list statuss as status]
+                                if ("${status.id}" == data) {
+                                    return "${status.name}";
                                 }
                             [/#list]
                         [/#if]
@@ -217,7 +208,7 @@
                     "aTargets": [6],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 报名课程 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>" +
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 预约咨询 &gt; 详情','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>详情</i></a>" +
                                     "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
                         }else{
                             return "";
@@ -234,7 +225,7 @@
                 var _endDate   = $("#datemax").val();
                 var _searchValue = $("#searchValue").val();
                 /*处理常量*/
-                var _orderStatus =  $('select[name="orderStatus"]').val();
+                var _status =  $('select[name="status"]').val();
                 var _type =  $('select[name="type"]').val();
                 var index = layer.msg('加载中', {
                     icon: 16
@@ -246,7 +237,7 @@
                         "aoData": JSON.stringify(aoData),
                         "beginDate":_beginDate,
                         "endDate":_endDate,
-                        "orderStatus":_orderStatus,
+                        "status":_status,
                         "type":_type,
                         "searchValue":_searchValue
                     },//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
@@ -316,7 +307,7 @@
     }
     /*删除全部*/
     function delAll(){
-        var url = "${base}/admin/courseOrder/delete.jhtml";
+        var url = "${base}/admin/counselorOrder/delete.jhtml";
         var i = 0;
         $('input[type="checkbox"][name="ids"]:checked').each(
                 function() {
@@ -370,7 +361,7 @@
                 data: {
                     ids: id
                 },
-                url: '${base}/admin/courseOrder/delete.jhtml',
+                url: '${base}/admin/counselorOrder/delete.jhtml',
                 dataType: 'json',
                 success: function (data) {
                     layer.close(load);

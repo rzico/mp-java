@@ -1,6 +1,7 @@
 
 package net.wit.entity;
 
+import net.wit.MapEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -137,5 +138,14 @@ public class CounselorOrder extends BaseEntity {
 
 	public void setCounselor(Counselor counselor) {
 		this.counselor = counselor;
+	}
+
+
+	public MapEntity getMapCounselor() {
+		if (getCounselor() != null) {
+			return new MapEntity(getCounselor().getId().toString(), getCounselor().getName() );
+		} else {
+			return null;
+		}
 	}
 }

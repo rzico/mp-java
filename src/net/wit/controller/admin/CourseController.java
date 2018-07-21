@@ -70,14 +70,16 @@ public class CourseController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
-
+        Admin admin = adminService.getCurrent();
 		List<MapEntity> statuss = new ArrayList<>();
 		statuss.add(new MapEntity("enabled","开启"));
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("_public","公共"));
+		if (admin.isManager()) {
+			types.add(new MapEntity("_public", "公共"));
+		}
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
@@ -92,14 +94,16 @@ public class CourseController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(ModelMap model) {
-
+        Admin admin = adminService.getCurrent();
 		List<MapEntity> statuss = new ArrayList<>();
 		statuss.add(new MapEntity("enabled","开启"));
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("_public","公共"));
+		if (admin.isManager()) {
+			types.add(new MapEntity("_public", "公共"));
+		}
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
@@ -193,14 +197,16 @@ public class CourseController extends BaseController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
-
+        Admin admin = adminService.getCurrent();
 		List<MapEntity> statuss = new ArrayList<>();
 		statuss.add(new MapEntity("enabled","开启"));
 		statuss.add(new MapEntity("disabled","关闭"));
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("_public","公共"));
+		if (admin.isManager()) {
+			types.add(new MapEntity("_public", "公共"));
+		}
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
