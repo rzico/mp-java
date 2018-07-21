@@ -282,7 +282,7 @@ public class OrderController extends BaseController {
 		if (order.getShippings().size()>0) {
 			Shipping shipping = order.getShippings().get(0);
 			if (shipping.getAdmin()!=null && shipping.getMember()!=null) {
-				Member shippingMember = shipping.getMember();
+				Member shippingMember = shipping.getAdmin().getMember();
 				if (shippingMember.getLocation()!=null) {
 					track.setLng(shippingMember.getLocation().getLng());
 					track.setLat(shippingMember.getLocation().getLng());
