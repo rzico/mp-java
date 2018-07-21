@@ -11,6 +11,8 @@ public class BarrelModel extends BaseModel implements Serializable {
     private String name;
 
     private Boolean show;
+    private Integer quantity;
+    private Integer returnQuantity;
 
     public Long getId() {
         return id;
@@ -36,10 +38,28 @@ public class BarrelModel extends BaseModel implements Serializable {
         this.show = show;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Integer getReturnQuantity() {
+        return returnQuantity;
+    }
+
+    public void setReturnQuantity(Integer returnQuantity) {
+        this.returnQuantity = returnQuantity;
+    }
+
     public void bind(Barrel barrel) {
         this.id = barrel.getId();
         this.name = barrel.getName();
         this.show = false;
+        this.quantity = 0;
+        this.returnQuantity = 0;
     }
 
     public static List<BarrelModel> bindList(List<Barrel> barrels) {

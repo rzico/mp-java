@@ -65,16 +65,22 @@ public class BarrelController extends BaseController {
         if (shippingId!=null) {
             Shipping shipping = shippingService.find(shippingId);
             if (shipping!=null) {
-                List<Barrel> bs = shipping.barrels();
-                for (BarrelModel bm:data) {
-                    Boolean s = false;
-                    for (Barrel bl:bs) {
-                        if (bm.getId().equals(bl.getId())) {
-                            s = true;
+
+                for (ShippingItem shippingItem : shipping.getShippingItems()) {
+                    if (shippingItem != null && shippingItem.getProduct() != null && shippingItem.getProduct().getType().equals(Product.Type.warehouse)) {
+                        Barrel b = shippingItem.getProduct().getBarrel();
+                        if (b!=null) {
+                            for (BarrelModel bl:data) {
+                                if (b.getId().equals(bl.getId())) {
+                                    bl.setQuantity(bl.getQuantity()+shippingItem.getQuantity());
+                                    bl.setReturnQuantity(bl.getReturnQuantity()+shippingItem.getQuantity());
+                                    bl.setShow(true);
+                                }
+                            }
                         }
                     }
-                    bm.setShow(s);
                 }
+
             }
         }
 

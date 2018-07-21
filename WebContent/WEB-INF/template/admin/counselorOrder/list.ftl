@@ -100,7 +100,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": "${base}/admin/courseOrder/list.jhtml",
+            "sAjaxSource": "${base}/admin/counselorOrder/list.jhtml",
             "aaSorting": [[2, "desc"]],//默认第几个排序
             "bFilter": false, //过滤功能
             "bLengthChange": false, //改变每页显示数据数量
@@ -216,7 +216,6 @@
                     }
 
                 },
-                //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
                 {"orderable": false, "aTargets": [0,6]}// 制定列不参与排序
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
