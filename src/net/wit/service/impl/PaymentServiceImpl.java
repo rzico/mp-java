@@ -221,8 +221,10 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					orderService.complete(order,null);
 				} else {
 
-					messageService.orderMemberPushTo(orderLog);
-					messageService.orderSellerPushTo(orderLog);
+					if (!payment.getMethod().equals(Payment.Method.offline)) {
+						messageService.orderMemberPushTo(orderLog);
+					    messageService.orderSellerPushTo(orderLog);
+				    }
 
 					if (bundle.containsKey("weex") && "3".equals(bundle.getString("weex"))) {
 						Receiver receiver = receiverDao.find(order.getReceiverId());

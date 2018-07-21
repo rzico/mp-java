@@ -353,9 +353,13 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		OrderListModel ext = new OrderListModel();
 		ext.bind(orderLog.getOrder());
 		msg.setExt(JsonUtils.toJson(ext));
-
 		if (orderLog.getType().equals(OrderLog.Type.payment)) {
-			msg.setSound(1);
+			if (orderLog.getOrder().getHopeDate()!=null) {
+				msg.setContent("<预约单>"+msg.getContent());
+				msg.setSound(4);
+			} else {
+				msg.setSound(1);
+			}
 		} else {
 			if (orderLog.getContent().equals("亲，有客户催单了，请及时处理")) {
 				msg.setSound(2);
