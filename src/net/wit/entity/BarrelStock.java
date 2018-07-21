@@ -36,22 +36,18 @@ public class BarrelStock extends OrderEntity {
 	private Barrel barrel;
 
 	/** 库存数 */
-	@Min(0)
 	@Column(columnDefinition="int(11) not null default 0 comment '库存数'")
 	private Integer stock;
 
 	/** 押桶数 */
-	@Min(0)
 	@Column(columnDefinition="int(11) not null default 0 comment '押桶数'")
 	private Integer mortgage ;
 
 	/** 借桶数 */
-	@Min(0)
 	@Column(columnDefinition="int(11) not null default 0 comment '借桶数'")
 	private Integer borrow ;
 
 	/** 桶押金 */
-	@Min(0)
 	@Column(nullable = false, precision = 21, scale = 6,columnDefinition="decimal(21,6) not null comment '桶押金'")
 	private BigDecimal pledge ;
 
