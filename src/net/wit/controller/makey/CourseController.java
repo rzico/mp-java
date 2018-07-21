@@ -46,13 +46,15 @@ public class CourseController extends BaseController {
     @ResponseBody
     public Message list(Long xmid, Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
+        pageable.setFilters(filters);
+        Page<Course> page = null;
         if (xmid!=null) {
                 Member xmember = memberService.find(xmid);
                 Admin admin = adminService.findByMember(xmember);
-                filters.add(new Filter("enterprise", Filter.Operator.eq, admin.getEnterprise()));
+                page = courseService.findPage(null,null,admin.getEnterprise(),pageable);
+        } else {
+                page = courseService.findPage(null,null,pageable);
         }
-        pageable.setFilters(filters);
-        Page<Course> page = courseService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);
         model.setData(CourseModel.bindList(page.getContent()));
         return Message.bind(model,request);

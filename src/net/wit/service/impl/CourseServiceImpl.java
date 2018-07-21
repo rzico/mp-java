@@ -91,5 +91,8 @@ public class CourseServiceImpl extends BaseServiceImpl<Course, Long> implements 
 		return courseDao.findPage(beginDate,endDate,pageable);
 	}
 
+	public Page<Course> findPage(Date beginDate,Date endDate, Enterprise enterprise, Pageable pageable) {
+		return courseDao.findPage(beginDate,endDate,enterprise,pageable);
+	}
 
 }

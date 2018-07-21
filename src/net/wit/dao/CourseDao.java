@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Course;
+import net.wit.entity.Enterprise;
 
 
 /**
@@ -27,4 +28,7 @@ public interface CourseDao extends BaseDao<Course, Long> {
 	 * @return Page<Course>
 	 */
 	Page<Course> findPage(Date beginDate, Date endDate, Pageable pageable);
+
+	Page<Course> findPage(Date beginDate, Date endDate, Enterprise enterprise, Pageable pageable);
+
 }

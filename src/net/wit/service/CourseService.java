@@ -8,6 +8,7 @@ import java.util.Map;
 import net.wit.Page;
 import net.wit.Pageable;
 import net.wit.entity.Course;
+import net.wit.entity.Enterprise;
 import net.wit.entity.Evaluation;
 import net.wit.entity.Payment;
 
@@ -20,5 +21,6 @@ import net.wit.entity.Payment;
 public interface CourseService extends BaseService<Course, Long> {
 	Page<Course> findPage(Date beginDate, Date endDate, Pageable pageable);
 
+	Page<Course> findPage(Date beginDate, Date endDate, Enterprise enterprise, Pageable pageable);
 
 }
