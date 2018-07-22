@@ -60,19 +60,21 @@ public class ReceiverController extends BaseController {
             return Message.error(Message.SESSION_INVAILD);
         }
 
+        Admin admin = adminService.findByMember(member);
+
         List<Order> orders = new ArrayList<Order>();
         orders.add(new Order("isDefault", Order.Direction.desc));
-
+        Page<Receiver> page = null;
         List<Filter> filters = new ArrayList<>();
-        if ("query".equals(type)) {
-//            filters.add(new Filter("member", Filter.Operator.eq, member));
-        } else {
-            filters.add(new Filter("member", Filter.Operator.eq,member));
-        }
         if (keyword!=null) {
             pageable.setSearchValue(keyword);
         }
-        Page<Receiver> page = receiverService.findPage(null,null,pageable);
+        if ("query".equals(type)) {
+            page = receiverService.findPage(null,null,admin.getEnterprise().getMember(),pageable);
+        } else {
+            filters.add(new Filter("member", Filter.Operator.eq,member));
+            page = receiverService.findPage(null,null,pageable);
+        }
         PageBlock model = PageBlock.bind(page);
         model.setData(ReceiverModel.bindList(page.getContent()));
         return Message.bind(model,request);

@@ -128,4 +128,8 @@ public class ReceiverServiceImpl extends BaseServiceImpl<Receiver, Long> impleme
 	public Page<Receiver> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return receiverDao.findPage(beginDate,endDate,pageable);
 	}
+	public Page<Receiver> findPage(Date beginDate, Date endDate, Member owner, Pageable pageable) {
+		return receiverDao.findPage(beginDate,endDate,owner,pageable);
+	}
+
 }
