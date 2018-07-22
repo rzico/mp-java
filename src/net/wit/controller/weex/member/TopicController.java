@@ -223,7 +223,7 @@ public class TopicController extends BaseController {
             if (admin!=null) {
                 Enterprise enterprise = admin.getEnterprise();
                 if (enterprise!=null) {
-                    enterprise.setLogo(logo);
+                    enterprise.setName(name);
                     enterpriseService.update(enterprise);
                 }
             }

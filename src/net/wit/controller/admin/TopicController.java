@@ -66,6 +66,9 @@ public class TopicController extends BaseController {
 	@Resource(name = "adminServiceImpl")
 	private AdminService adminService;
 
+	@Resource(name = "enterpriseServiceImpl")
+	private EnterpriseService enterpriseService;
+
 	/**
 	 * 主页
 	 */
@@ -282,7 +285,23 @@ public class TopicController extends BaseController {
         }
         try {
             topicService.update(entity);
-
+            Member member = topic.getMember();
+            Admin admin = adminService.findByMember(member);
+            if (admin!=null && admin.getEnterprise()!=null) {
+            	Enterprise enterprise = admin.getEnterprise();
+            	if (enterprise!=null) {
+            		enterprise.setName(topic.getName());
+            		if (topic.getStatus().equals(Topic.Status.success)) {
+            			enterprise.setStatus(Enterprise.Status.success);
+					} else
+					if (topic.getStatus().equals(Topic.Status.failure)) {
+						enterprise.setStatus(Enterprise.Status.failure);
+					} else {
+						enterprise.setStatus(Enterprise.Status.waiting);
+					}
+					enterpriseService.update(enterprise);
+				}
+			}
 
             return Message.success(entity,"admin.update.success");
         } catch (Exception e) {

@@ -54,6 +54,8 @@ public class EnterpriseController extends BaseController {
 	@Resource(name = "memberServiceImpl")
 	private MemberService memberService;
 
+	@Resource(name = "topicServiceImpl")
+	private TopicService topicService;
 
 	/**
 	 * 主页
@@ -223,11 +225,28 @@ public class EnterpriseController extends BaseController {
         }
         try {
             enterpriseService.update(entity);
+
+            Member member = enterprise.getMember();
+            Topic topic = member.getTopic();
+            if (topic!=null) {
+            	topic.setName(enterprise.getName());
+            	if (enterprise.getStatus().equals(Enterprise.Status.success)) {
+            		topic.setStatus(Topic.Status.success);
+				} else
+				if (enterprise.getStatus().equals(Enterprise.Status.failure)) {
+					topic.setStatus(Topic.Status.failure);
+				} else {
+					topic.setStatus(Topic.Status.waiting);
+				}
+				topicService.update(topic);
+			}
+
             return Message.success(entity,"admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();
             return Message.error("admin.update.error");
         }
+
 	}
 
 
