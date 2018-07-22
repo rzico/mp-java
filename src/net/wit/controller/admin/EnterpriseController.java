@@ -227,20 +227,20 @@ public class EnterpriseController extends BaseController {
             enterpriseService.update(entity);
 
             Member member = enterprise.getMember();
-            Topic topic = member.getTopic();
-            if (topic!=null) {
-            	topic.setName(enterprise.getName());
-            	if (enterprise.getStatus().equals(Enterprise.Status.success)) {
-            		topic.setStatus(Topic.Status.success);
-				} else
-				if (enterprise.getStatus().equals(Enterprise.Status.failure)) {
-					topic.setStatus(Topic.Status.failure);
-				} else {
-					topic.setStatus(Topic.Status.waiting);
+            if (member!=null) {
+				Topic topic = member.getTopic();
+				if (topic != null) {
+					topic.setName(enterprise.getName());
+					if (enterprise.getStatus().equals(Enterprise.Status.success)) {
+						topic.setStatus(Topic.Status.success);
+					} else if (enterprise.getStatus().equals(Enterprise.Status.failure)) {
+						topic.setStatus(Topic.Status.failure);
+					} else {
+						topic.setStatus(Topic.Status.waiting);
+					}
+					topicService.update(topic);
 				}
-				topicService.update(topic);
 			}
-
             return Message.success(entity,"admin.update.success");
         } catch (Exception e) {
             e.printStackTrace();
