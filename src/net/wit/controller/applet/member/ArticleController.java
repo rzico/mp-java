@@ -252,6 +252,9 @@ public class ArticleController extends BaseController {
         article.setContent(content);
         article.setVotes(votes);
 
+        article.setIsDraft(false);
+        article.setIsPublish(true);
+
         if (isNew) {
             articleService.save(article);
         } else {
@@ -262,78 +265,6 @@ public class ArticleController extends BaseController {
         entityModel.bind(article);
         return Message.success(entityModel,"保存成功");
 
-    }
-
-    /**
-     * 发布文章信息
-     */
-    @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    @ResponseBody
-    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptionModel articleOptions,Location location,HttpServletRequest request){
-        Article article = articleService.find(id);
-        if (article==null) {
-            return Message.error("无效文章编号");
-        }
-        if (articleOptions!=null) {
-            article.setIsReward(articleOptions.getIsReward());
-            article.setIsTop(articleOptions.getIsTop());
-            article.setIsReview(articleOptions.getIsReview());
-            article.setIsPublish(articleOptions.getIsPublish());
-            article.setAuthority(articleOptions.getAuthority());
-            if (articleOptions.getPassword()!=null) {
-                article.setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
-            }
-
-            if (articleOptions.getIsTag4()!=null) {
-                Tag tag4 = tagService.find(4L);
-                if (articleOptions.getIsTag4()) {
-                    if (!article.getTags().contains(tag4)) {
-                        article.getTags().add(tag4);
-                    }
-                } else {
-                    if (article.getTags().contains(tag4)) {
-                        article.getTags().remove(tag4);
-                    }
-                }
-            }
-
-
-            if (articleOptions.getIsTag5()!=null) {
-                Tag tag5 = tagService.find(5L);
-                if (articleOptions.getIsTag5()) {
-                    if (!article.getTags().contains(tag5)) {
-                        article.getTags().add(tag5);
-                    }
-                } else {
-                    if (article.getTags().contains(tag5)) {
-                        article.getTags().remove(tag5);
-                    }
-                }
-            }
-
-        }
-        if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
-            article.setLocation(location);
-        }
-        if (articleCategoryId!=null) {
-            article.setArticleCategory(articleCategoryService.find(articleCategoryId));
-        }
-        if (articleCatalogId!=null) {
-            article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
-        }
-        article.setIsDraft(false);
-        article.setIsPublish(true);
-        articleService.update(article);
-
-        List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Filter("follow", Filter.Operator.eq,article.getMember()));
-        List<MemberFollow> data = memberFollowService.findList(null,null,filters,null);
-        for (MemberFollow follow:data) {
-           messageService.publishPushTo(article,follow.getMember());
-        }
-        ArticleModel entityModel =new ArticleModel();
-        entityModel.bind(article);
-        return Message.success(entityModel,"保存成功");
     }
 
     /**
