@@ -152,7 +152,7 @@ public class EnterpriseController extends BaseController {
 			if (member!=null) {
 				Topic topic = member.getTopic();
 				if (topic==null) {
-					topicService.create(topic);
+					topic = topicService.autoCreate(member);
 				}
 				if (topic != null) {
 					topic.setName(enterprise.getName());
@@ -249,7 +249,7 @@ public class EnterpriseController extends BaseController {
             if (member!=null) {
 				Topic topic = member.getTopic();
 				if (topic==null) {
-					topicService.create(topic);
+					topic = topicService.autoCreate(member);
 				}
 				if (topic != null) {
 					topic.setName(enterprise.getName());
