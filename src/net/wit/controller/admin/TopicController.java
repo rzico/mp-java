@@ -278,6 +278,10 @@ public class TopicController extends BaseController {
 
 		topicConfig.setWxAppSerect(topic.getConfig().getWxAppSerect());
 
+		topicConfig.setWxPartner(topic.getConfig().getWxPartner());
+
+		topicConfig.setWxkey(topic.getConfig().getWxkey());
+
 		entity.setConfig(topicConfig);
 
 		if (!isValid(entity)) {
