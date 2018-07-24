@@ -147,7 +147,26 @@ public class EnterpriseController extends BaseController {
             return Message.error("admin.data.valid");
         }
         try {
-			enterpriseService.addCreate(entity,member);
+		    Enterprise enterprise =	enterpriseService.addCreate(entity,member);
+
+			if (member!=null) {
+				Topic topic = member.getTopic();
+				if (topic==null) {
+					topicService.create(topic);
+				}
+				if (topic != null) {
+					topic.setName(enterprise.getName());
+					if (enterprise.getStatus().equals(Enterprise.Status.success)) {
+						topic.setStatus(Topic.Status.success);
+					} else if (enterprise.getStatus().equals(Enterprise.Status.failure)) {
+						topic.setStatus(Topic.Status.failure);
+					} else {
+						topic.setStatus(Topic.Status.waiting);
+					}
+					topicService.update(topic);
+				}
+			}
+
             return Message.success(entity,"admin.save.success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,6 +248,9 @@ public class EnterpriseController extends BaseController {
             Member member = enterprise.getMember();
             if (member!=null) {
 				Topic topic = member.getTopic();
+				if (topic==null) {
+					topicService.create(topic);
+				}
 				if (topic != null) {
 					topic.setName(enterprise.getName());
 					if (enterprise.getStatus().equals(Enterprise.Status.success)) {

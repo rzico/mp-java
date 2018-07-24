@@ -76,11 +76,12 @@
                     [#--<li><a data-href="../organization/index.jhtml" data-title="合作单位" href="javascript:;">合作单位</a></li>--]
                 </ul>
             </dd>
-             [#if (admin.isManager && admin.role?contains("1"))]
                <dt><i class="Hui-iconfont">&#xe60d;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i>
                 </dt>
                <dd>
                    <ul>
+                        <li><a data-href="../admin/index.jhtml" data-title="管理员" href="javascript:;">管理员</a></li>
+             [#if (admin.isManager && admin.role?contains("1"))]
                         <li><a data-href="../role/index.jhtml" data-title="角色管理" href="javascript:;">角色管理</a></li>
                         <li><a data-href="../tag/index.jhtml" data-title="标签管理" href="javascript:;">标签管理</a></li>
                         <li><a data-href="../articleCategory/index.jhtml" data-title="文章分类" href="javascript:;">文章分类</a></li>
@@ -92,9 +93,9 @@
                         <li><a data-href="../smssend/index.jhtml" data-title="短信管理" href="javascript:;">短信管理</a></li>
                         <li><a data-href="../log/index.jhtml" data-title="日志管理" href="javascript:;">日志管理</a></li>
                         <li><a data-href="../message/index.jhtml" data-title="消息管理" href="javascript:;">消息管理</a></li>
+              [/#if]
                    </ul>
                </dd>
-             [/#if]
         </dl>
 
     </div>

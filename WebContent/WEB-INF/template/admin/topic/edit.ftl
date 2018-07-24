@@ -191,6 +191,21 @@
                 </div>
             </div>
 
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">商户号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" name="config.wxAppId" value="${data.config.wxPartner}" placeholder="" id="wxPartner" >
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">支付密钥：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" name="config.wxAppId" value="${data.config.wxkey}" placeholder="" id="wxkey" >
+                </div>
+            </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
