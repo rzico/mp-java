@@ -196,7 +196,7 @@ public class OrderController extends BaseController {
 		if (dragonId!=null) {
 			dragon = dragonService.find(dragonId);
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate,false);
 		if (cart != null) {
 			cartService.delete(cart);
 		}

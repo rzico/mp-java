@@ -480,7 +480,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 	 * @return 订单
 	 *
 	 */
-	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon,Date hopeDate) {
+	public Order create(Member member, Product product, Integer quantity, Cart cart, Receiver receiver, String memo, Long xuid, Admin operator, Long promotionId, Order.ShippingMethod shippingMethod,Dragon dragon,Date hopeDate,Boolean offline) {
 
 //		Assert.notNull(cart);
 //		Assert.notNull(cart.getMember());
@@ -583,49 +583,51 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 		}
 
 //		messageService.orderMemberPushTo(orderLog);
-        //没有付款时，直接确定订单
-		if (order.getAmountPayable().compareTo(BigDecimal.ZERO)==0) {
-			orderDao.flush();
-			try {
-				Payment payment = payment(order,null);
-				if (payment!=null) {
-					payment.setTranSn(payment.getSn());
-					payment.setMethod(Payment.Method.offline);
-					payment.setPaymentPluginId("cashPayPlugin");
-					payment.setPaymentMethod("电子券结算");
-					paymentService.update(payment);
+		if (!offline) {
+			//没有付款时，直接确定订单
+			if (order.getAmountPayable().compareTo(BigDecimal.ZERO) == 0) {
+				orderDao.flush();
+				try {
+					Payment payment = payment(order, null);
+					if (payment != null) {
+						payment.setTranSn(payment.getSn());
+						payment.setMethod(Payment.Method.online);
+						payment.setPaymentPluginId("cashPayPlugin");
+						payment.setPaymentMethod("电子票结算");
+						paymentService.update(payment);
 
-					paymentService.handle(payment);
-					order.setPaymentMethod(Order.PaymentMethod.offline);
-					order.setPaymentPluginName("电子券结算");
-					orderDao.merge(order);
+						paymentService.handle(payment);
+						order.setPaymentMethod(Order.PaymentMethod.online);
+						order.setPaymentPluginName("电子票结算");
+						orderDao.merge(order);
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e.getMessage());
 				}
-			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
-			}
 
-		} else {
-			//判断月结客户
-			if (card != null) {
-				if (card.getPaymentMethod().equals(Card.PaymentMethod.monthly)) {
-					orderDao.flush();
-					try {
-						Payment payment = payment(order, null);
-						if (payment != null) {
-							payment.setTranSn(payment.getSn());
-							payment.setMethod(Payment.Method.offline);
-							payment.setPaymentPluginId("monthPayPlugin");
-							payment.setPaymentMethod("月结付款");
-							paymentService.update(payment);
+			} else {
+				//判断月结客户
+				if (card != null) {
+					if (card.getPaymentMethod().equals(Card.PaymentMethod.monthly)) {
+						orderDao.flush();
+						try {
+							Payment payment = payment(order, null);
+							if (payment != null) {
+								payment.setTranSn(payment.getSn());
+								payment.setMethod(Payment.Method.online);
+								payment.setPaymentPluginId("monthPayPlugin");
+								payment.setPaymentMethod("月结付款");
+								paymentService.update(payment);
 
-							paymentService.handle(payment);
+								paymentService.handle(payment);
 
-							order.setPaymentMethod(Order.PaymentMethod.offline);
-							order.setPaymentPluginName("月结付款");
-							orderDao.merge(order);
+								order.setPaymentMethod(Order.PaymentMethod.online);
+								order.setPaymentPluginName("月结付款");
+								orderDao.merge(order);
+							}
+						} catch (Exception e) {
+							throw new RuntimeException(e.getMessage());
 						}
-					} catch (Exception e) {
-						throw new RuntimeException(e.getMessage());
 					}
 				}
 			}

@@ -201,7 +201,7 @@ public class OrderController extends BaseController {
 		if (dragonId!=null) {
 			dragon = dragonService.find(dragonId);
 		}
-		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate);
+		Order order = orderService.create(member,product,quantity,cart, receiver,memo, xuid,null,promotionId,shippingMethod,dragon,hopeDate,true);
 		order.setLockExpire(DateUtils.addSeconds(new Date(), 20));
 		order.setOperator(loginMember.userId());
 		orderService.update(order);
@@ -505,8 +505,6 @@ public class OrderController extends BaseController {
 			return Message.error(Message.SESSION_INVAILD);
 		}
 
-		System.out.println(sn);
-
 		Order order = orderService.findBySn(sn);
 		if (order==null) {
 			return Message.error("无效订单id");
@@ -532,39 +530,20 @@ public class OrderController extends BaseController {
 			}
 		}
 
-		if (order.getShippings().size()>0 && shopId!=null) {
-			Admin admin = null;
-			Shop shop = null;
-			if (shopId!=null) {
-				shop = shopService.find(shopId);
-			}
-			if (adminId!=null) {
-				admin = adminService.find(adminId);
-			}
-			Shipping shipping = order.getShippings().get(0);
-			if (shop!=null && !shop.equals(shipping.getShop())) {
-				shipping.setShop(shop);
-				shipping.setAdmin(admin);
-				shipping.setTransfer(false);
-				try {
-					shippingService.dispatch(shipping);
-				} catch (Exception e) {
-					logger.error(e.getMessage());
-				}
-			} else {
-				if (admin!=null && !admin.equals(shipping.getAdmin())) {
-					shipping.setShop(shop);
-					shipping.setAdmin(admin);
-					shipping.setTransfer(false);
-					try {
-						shippingService.dispatch(shipping);
-					} catch (Exception e) {
-						logger.error(e.getMessage());
-					}
-				}
-			}
+		Admin admin = null;
+		Shop shop = null;
+		if (shopId!=null) {
+			shop = shopService.find(shopId);
+		}
+		if (adminId!=null) {
+			admin = adminService.find(adminId);
 		}
 
+		try {
+			orderService.shipping(order, Order.ShippingMethod.warehouse, null, null, shop, admin);
+		} catch (Exception e) {
+			return Message.error("发货失败");
+		}
 		OrderModel model = new OrderModel();
 		model.bind(order);
 		return Message.success(model,"保存成功");

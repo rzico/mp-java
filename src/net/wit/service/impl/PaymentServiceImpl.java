@@ -220,16 +220,14 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					orderService.shipping(order,Order.ShippingMethod.cardbkg,null,null,null,null);
 					orderService.complete(order,null);
 				} else {
-
 					if (!payment.getMethod().equals(Payment.Method.offline)) {
 						messageService.orderMemberPushTo(orderLog);
 					    messageService.orderSellerPushTo(orderLog);
-				    }
-
-					if (bundle.containsKey("weex") && "3".equals(bundle.getString("weex"))) {
-						Receiver receiver = receiverDao.find(order.getReceiverId());
-						if (receiver != null && receiver.getShop() != null) {
-							orderService.shipping(order, Order.ShippingMethod.warehouse, null, null, null, null);
+						if (bundle.containsKey("weex") && "3".equals(bundle.getString("weex"))) {
+							Receiver receiver = receiverDao.find(order.getReceiverId());
+							if (receiver != null && receiver.getShop() != null) {
+								orderService.shipping(order, Order.ShippingMethod.warehouse, null, null, null, null);
+							}
 						}
 					}
 
