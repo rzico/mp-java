@@ -245,7 +245,7 @@ public class EnterpriseController extends BaseController {
         try {
             enterpriseService.update(entity);
 
-            Member member = enterprise.getMember();
+            Member member = entity.getMember();
             if (member!=null) {
 				Topic topic = member.getTopic();
 				if (topic==null) {
