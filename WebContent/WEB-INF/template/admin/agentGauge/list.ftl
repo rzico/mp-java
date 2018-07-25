@@ -191,6 +191,18 @@
                         return DateFormat(data, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
+                {
+                    "aTargets": [5],
+                    "mRender": function (data, display, row) {
+                        if(data != null){
+                            return "<a title='编辑' href='javascript:;' onclick=\"edit('首页 &gt; 量表 &gt; 编辑','edit.jhtml?id=" + data + "','200" + data + "','510')\" class=\"ml-5\" style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>" +
+                                    "<a title='删除' href='javascript:;' onclick=\"del(this,'" + data + "')\" class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>";
+                        }else{
+                            return "";
+                        }
+                    }
+
+                },
                 //{'bVisible': false, "aTargets": [ 3 ]} //控制列的隐藏显示
                 {"orderable": false, "aTargets": [0]}// 制定列不参与排序
             ],
@@ -198,7 +210,7 @@
                 /*处理查询数据*/searchValue
                 var _beginDate = $("#datemin").val();
                 var _endDate   = $("#datemax").val();
-                var _searchValue = $("#searchvalue").val();
+                var _searchValue = $("#searchValue").val();
                 /*处理常量*/
                 var _agentCategory =  $('select[name="agentCategory"]').val();
                 var index = layer.msg('加载中', {

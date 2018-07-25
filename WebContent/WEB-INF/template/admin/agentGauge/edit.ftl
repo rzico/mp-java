@@ -46,193 +46,28 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>副标题：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.subTitle}" placeholder="" id="subTitle" name="subTitle">
+                    ${data.subTitle}
                 </div>
             </div>
 
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <div class="uploader-thum-container">
-                        <div id="fileList" class="uploader-list">
-                            [#if data.thumbnail??]
-                                <div class="file-item thumbnail">
-                                    <img width="100px" height="100px" src="${data.thumbnail}"/>
-                                    <div class="info"></div>
-                                </div>
-                            [/#if]
-                        </div>
-                        <div id="filePicker">选择图片</div>
-                        <input type="hidden" value="${data.thumbnail}" id="thumbnail" name="thumbnail">
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">分类：</label>
-                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                    [#if gaugeCategorys??]
-                        <select name="gaugeCategoryId" class="select" style="background-color: #FFFFFF">
-                            [#list gaugeCategorys as gaugeCategory]
-                                <option [#if data.gaugeCategory?? && gaugeCategory.id == data.gaugeCategory.id] selected[/#if] value="${gaugeCategory.id}">${gaugeCategory.name}</option>
-                            [/#list]
-				</select>
-                    [/#if]
-				</span>
-				</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模类型：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    [#if types??]
-                        [#list types as type]
-                            <div class="radio-box">
-                                <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
-                                <label for="type-${type_index}">${type.name}</label>
-                            </div>
-                        [/#list]
-                    [/#if]
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户类型：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    [#if userTypes??]
-                        [#list userTypes as userType]
-                            <div class="radio-box">
-                                <input name="userType" type="radio" id="userType-${userType_index}" value="${userType.id}"[#if userType.id == data.userType] checked[/#if]>
-                                <label for="userType-${userType_index}">${userType.name}</label>
-                            </div>
-                        [/#list]
-                    [/#if]
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评方法：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    [#if methods??]
-                        [#list methods as method]
-                            <div class="radio-box">
-                                <input name="method" type="radio" id="userType-${method_index}" value="${method.id}"[#if method.id == data.method] checked[/#if]>
-                                <label for="method-${method_index}">${method.name}</label>
-                            </div>
-                        [/#list]
-                    [/#if]
-                </div>
-            </div>
-
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评目的：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <textarea class="input-text" name="notice1" id="notice1" value="${data.notice1}" style="height:200px;width:500px;"></textarea>
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评介绍：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <textarea class="input-text" name="notice2" id="notice2"  value="${data.notice2}" style="height:200px;width:500px;"></textarea>
-                </div>
-
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>专业支持：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <textarea class="input-text" name="notice3" id="notice3" value="${data.notice3}" style="height:200px;width:500px;"></textarea>
-                </div>
-
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <textarea class="input-text" name="notice4" id="notice4"  value="${data.notice4}" style="height:200px;width:500px;"></textarea>
-                </div>
-
-            </div>
-
-            <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评人数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="${data.evaluation}" placeholder="" id="evaluation" name="evaluation" onInput="intInit(this)">
-            </div>
-        </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>亮点介绍：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    [#if data.spots?? && data.spots?size>0]
-                        [#list data.spots as spot]
-                            <input type="text" class="input-text" style="width:100px;" value="${spot}" name="spots" placeholder="" id="spots" >
-                        [/#list]
-                    [#else]
-                        <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots1" >
-                        <input type="text" class="input-text" style="width:100px;" name="spots" value="" placeholder="" id="spots2" >
-                    [/#if]
-                </div>
-            </div>
-
-            [#--<div class="row cl">--]
-                [#--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>测评须知：</label>--]
-                [#--<div class="formControls col-xs-8 col-sm-9">--]
-                    [#--<textarea class="input-text" name="notice" id="notice" value="${data.notice}" style="height:100px;width:300px;">${data.notice}</textarea>--]
-                [#--</div>--]
-            [#--</div>--]
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>常模修订说明：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <textarea class="input-text" name="revisionNote" id="revisionNote" value="${data.revisionNote}" style="height:100px;width:300px;">${data.revisionNote}</textarea>
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>市场价：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.marketPrice}" placeholder="" id="marketPrice" name="marketPrice" onInput="floatInit(this)">
-                </div>
-            </div>
+          <div class="row cl">
+              <label class="form-label col-xs-4 col-sm-2">分类：</label>
+              <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+            [#if agentCategorys??]
+                <select name="agentCategoryId" class="select" style="background-color: #FFFFFF">
+                    [#list agentCategorys as agentCategory]
+                                <option [#if data.agentCategory?? && agentCategory.id == data.agentCategory.id] selected[/#if] value="${agentCategory.id}">${agentCategory.name}</option>
+                    [/#list]
+                </select>
+            [/#if]
+              </span>
+              </div>
+          </div>
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>销售价：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="${data.price}" placeholder="" id="price" name="price" onInput="floatInit(this)">
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>推广佣金（%）：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.brokerage}" placeholder="" id="brokerage" name="brokerage" onInput="percentInit(this)">
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分销佣金（%）：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.distribution}" placeholder="" id="distribution" name="distribution" onInput="percentInit(this)">
-                </div>
-            </div>
-
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全局因子平均分：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.tavg}" placeholder="" id="tavg" name="tavg" onInput="floatInit(this)">
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>全局因子标准分：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="${data.devi}" placeholder="" id="devi" name="devi" onInput="floatInit(this)">
                 </div>
             </div>
 
@@ -249,20 +84,6 @@
                                     [/#if]
                                 [/#list]
                                 <label class=""><input type="checkbox"[#if checkUp == "true"] checked[/#if] value="${tag.id}" name="tagIds" >${tag.name}</label>
-                            </div>
-                        [/#list]
-                    [/#if]
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发布状态：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    [#if  statuss??]
-                        [#list statuss as status]
-                            <div class="radio-box">
-                                <input name="status" type="radio" id="status-${status_index}" value="${status.id}"[#if status.id == data.status] checked[/#if]>
-                                <label for="status-${status_index}">${status.name}</label>
                             </div>
                         [/#list]
                     [/#if]

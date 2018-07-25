@@ -47,6 +47,8 @@ public class AgentGaugeController extends BaseController {
 	@Resource(name = "tagServiceImpl")
 	private TagService tagService;
 
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 
 	/**
@@ -54,6 +56,10 @@ public class AgentGaugeController extends BaseController {
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Long enterpriseId,ModelMap model) {
+		Admin admin = adminService.getCurrent();
+		if (enterpriseId==null) {
+			enterpriseId = admin.getEnterprise().getId();
+		}
 		model.addAttribute("enterpriseId",enterpriseId);
         List<Filter> filters = new ArrayList<>();
         filters.add(new Filter("enterprise", Filter.Operator.eq,enterpriseService.find(enterpriseId)));
@@ -72,6 +78,10 @@ public class AgentGaugeController extends BaseController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(Long enterpriseId,ModelMap model) {
+		Admin admin = adminService.getCurrent();
+		if (enterpriseId==null) {
+			enterpriseId = admin.getEnterprise().getId();
+		}
 		model.addAttribute("enterpriseId",enterpriseId);
 		List<Filter> filters = new ArrayList<>();
 		filters.add(new Filter("enterprise", Filter.Operator.eq,enterpriseService.find(enterpriseId)));
@@ -84,6 +94,25 @@ public class AgentGaugeController extends BaseController {
 		return "/admin/agentGauge/add";
 	}
 
+	/**
+	 * 编辑
+	 */
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public String edit(Long id, ModelMap model) {
+		AgentGauge agentGauge = agentGaugeService.find(id);
+
+		model.addAttribute("enterpriseId",agentGauge.getEnterprise().getId());
+		List<Filter> filters = new ArrayList<>();
+		filters.add(new Filter("enterprise", Filter.Operator.eq,agentGauge.getEnterprise()));
+		List<AgentCategory> agentCategories = agentCategoryService.findList(null,null,filters,null);
+		model.addAttribute("agentCategorys",agentCategories);
+
+
+		model.addAttribute("tags",tagService.findList(Tag.Type.article));
+		model.addAttribute("data",agentGauge);
+
+		return "/admin/agentGauge/edit";
+	}
 
 	/**
      * 保存
@@ -91,6 +120,10 @@ public class AgentGaugeController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
 	public Message save(Long enterpriseId,Long agentCategoryId,Long gaugeId,Integer orders, Long [] tagIds){
+		Admin admin = adminService.getCurrent();
+		if (enterpriseId==null) {
+			enterpriseId = admin.getEnterprise().getId();
+		}
 		Enterprise enterprise = enterpriseService.find(enterpriseId);
 		AgentGauge entity = new AgentGauge();
 
@@ -114,6 +147,8 @@ public class AgentGaugeController extends BaseController {
 		entity.setSubTitle(gauge.getSubTitle());
 		entity.setThumbnail(gauge.getThumbnail());
 
+		entity.setPrice(gauge.getPrice());
+
 		entity.setTags(tagService.findList(tagIds));
 
         try {
@@ -125,6 +160,31 @@ public class AgentGaugeController extends BaseController {
         }
 	}
 
+	/**
+	 * 修改
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseBody
+	public Message update(Long enterpriseId,Long agentCategoryId,Long gaugeId,Integer orders, Long [] tagIds){
+		AgentGauge entity = agentGaugeService.find(enterpriseId);
+        Gauge gauge = entity.getGauge();
+		entity.setOrders(orders);
+		entity.setTitle(gauge.getTitle());
+		entity.setSubTitle(gauge.getSubTitle());
+		entity.setThumbnail(gauge.getThumbnail());
+
+		entity.setPrice(gauge.getPrice());
+
+		entity.setTags(tagService.findList(tagIds));
+
+		try {
+			agentGaugeService.save(entity);
+			return Message.success(entity,"admin.save.success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Message.error("admin.save.error");
+		}
+	}
 
 	/**
      * 删除
@@ -147,7 +207,11 @@ public class AgentGaugeController extends BaseController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public Message list(Long enterpriseId,Long agentCategoryId,Date beginDate, Date endDate, Pageable pageable, ModelMap model) {
+		Admin admin = adminService.getCurrent();
 		Enterprise enterprise = enterpriseService.find(enterpriseId);
+		if (enterprise==null) {
+			enterprise = admin.getEnterprise();
+		}
 
 		List<Filter> filters = pageable.getFilters();
 		filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));

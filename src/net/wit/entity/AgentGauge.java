@@ -8,7 +8,10 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +51,12 @@ public class AgentGauge extends OrderEntity {
 	@NotNull
 	@Column(columnDefinition="varchar(255) not null comment '主标题'")
 	private String title;
+
+	/** 现价 */
+	@Min(0)
+	@Digits(integer = 12, fraction = 3)
+	@Column(precision = 21, scale = 6,columnDefinition="decimal(21,6) not null default 0 comment '现价'")
+	private BigDecimal price;
 
 	/** 副标题 */
 	@Length(max = 200)
@@ -129,5 +138,13 @@ public class AgentGauge extends OrderEntity {
 
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 }
