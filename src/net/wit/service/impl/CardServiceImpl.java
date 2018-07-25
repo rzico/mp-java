@@ -484,7 +484,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 
 		TopicCard topicCard = owner.getTopic().getTopicCard();
 		Card card = new Card();
-		card.setOwner(owner.getTopic().getMember());
+		card.setOwner(owner);
 		card.setVip(Card.VIP.vip1);
 		card.setType(Card.Type.member);
 		card.setBonus(BigDecimal.ZERO);

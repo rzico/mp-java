@@ -169,7 +169,7 @@ public class OrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/create")
 	public @ResponseBody
-	Message create(Long id,Integer quantity,Long receiverId,Long memberId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId,Long shopId,Long adminId,Integer level) {
+	Message create(Long id,Integer quantity,Long receiverId,Long memberId,Long promotionId,Long xuid,String memo,Date hopeDate,Order.ShippingMethod shippingMethod,Long dragonId) {
 		Member member = memberService.getCurrent();
 		Member loginMember = member;
 		if (memberId!=null) {
@@ -514,12 +514,10 @@ public class OrderController extends BaseController {
 
 		//完成支付
 		if (order.getPaymentStatus().equals(Order.PaymentStatus.unpaid)) {
-			System.out.println(paymentPluginId);
 			PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);
 			if (paymentPlugin == null || !paymentPlugin.getIsEnabled()) {
 				return Message.error("支付插件无效");
 			}
-			System.out.println("22222222222222222222");
 			try {
 				Payment payment = orderService.payment(order,null);
 				payment.setMethod(Payment.Method.offline);
@@ -534,8 +532,6 @@ public class OrderController extends BaseController {
 			}
 		}
 
-
-
 		if (order.getShippings().size()>0 && shopId!=null) {
 			Admin admin = null;
 			Shop shop = null;
@@ -546,13 +542,26 @@ public class OrderController extends BaseController {
 				admin = adminService.find(adminId);
 			}
 			Shipping shipping = order.getShippings().get(0);
-			shipping.setShop(shop);
-			shipping.setAdmin(admin);
-			shipping.setTransfer(false);
-			try {
-				shippingService.dispatch(shipping);
-			} catch (Exception e) {
-				logger.error(e.getMessage());
+			if (shop!=null && !shop.equals(shipping.getShop())) {
+				shipping.setShop(shop);
+				shipping.setAdmin(admin);
+				shipping.setTransfer(false);
+				try {
+					shippingService.dispatch(shipping);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+			} else {
+				if (admin!=null && !admin.equals(shipping.getAdmin())) {
+					shipping.setShop(shop);
+					shipping.setAdmin(admin);
+					shipping.setTransfer(false);
+					try {
+						shippingService.dispatch(shipping);
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+					}
+				}
 			}
 		}
 

@@ -1291,18 +1291,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 
 		if (!order.getShippingMethod().equals(Order.ShippingMethod.cardbkg)) {
 		  //对同城配送商品，生成配送单
-			Shipping shipping = shippingService.create(order);
-			if (shop!=null) {
-				shipping.setShop(shop);
-				shipping.setEnterprise(shop.getEnterprise());
-				shipping.setAdmin(admin);
-				if (admin!=null) {
-					shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
-					shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
-				}
-				shipping.setTransfer(false);
-				shippingService.dispatch(shipping);
-			}
+			Shipping shipping = shippingService.create(order,shop,admin);
+//			if (shop!=null) {
+//				if (!shipping.getShop().equals(shop) && admin.)
+//				shipping.setShop(shop);
+//				shipping.setEnterprise(shop.getEnterprise());
+//				shipping.setAdmin(admin);
+//				if (admin!=null) {
+//					shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
+//					shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
+//				}
+//				shipping.setTransfer(false);
+//				shippingService.dispatch(shipping);
+//			}
 		}
 
 		return;

@@ -7,9 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
-import net.wit.entity.Enterprise;
-import net.wit.entity.Order;
-import net.wit.entity.Shipping;
+import net.wit.entity.*;
 import net.wit.entity.summary.ShippingSummary;
 
 /**
@@ -31,7 +29,7 @@ public interface ShippingService extends BaseService<Shipping, Long> {
 	 */
 	Shipping findBySn(String sn);
 
-	Shipping create(Order order);
+	Shipping create(Order order, Shop shop, Admin admin);
 
 	Shipping dispatch(Shipping shipping) throws Exception;
 

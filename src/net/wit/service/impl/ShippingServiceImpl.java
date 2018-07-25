@@ -135,7 +135,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		return shippingDao.findBySn(sn);
 	}
 
-	public Shipping create(Order order) {
+	public Shipping create(Order order, Shop shop, Admin admin) {
 		Shipping shipping = new Shipping();
 		shipping.setAddress(order.getAddress());
 		shipping.setAreaName(order.getAreaName());
@@ -209,30 +209,20 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 		shipping.setCost(shipping.calcCost());
 
-		if (receiver!=null && receiver.getShop()!=null) {
-			shipping.setEnterprise(receiver.getShop().getEnterprise());
-			shipping.setShop(receiver.getShop());
-//			shipping.setAdmin(receiver.getAdmin());
-		} else {
-			//没有分配，按距离来，选按谁的客户给谁
-//			Member member = order.getMember();
-//			Card card = member.card(order.getSeller());
-//			if (card==null) {
-//				card = member.getCards().get(0);
-//			}
-//			if (card!=null) {
-//				Admin admin = adminService.findByMember(card.getOwner());
-//				if (admin!=null) {
-//					shipping.setEnterprise(admin.getEnterprise());
-//					shipping.setShop(admin.getShop());
-//				}
-//			} else {
-				Admin admin = adminService.findByMember(order.getSeller());
-				if (admin!=null) {
-					shipping.setEnterprise(admin.getEnterprise());
-					shipping.setShop(admin.getShop());
+		if (shop==null && admin==null) {
+			if (receiver != null && receiver.getShop() != null) {
+				shipping.setEnterprise(receiver.getShop().getEnterprise());
+				shipping.setShop(receiver.getShop());
+			} else {
+				Admin ownerAdmin = adminService.findByMember(order.getSeller());
+				if (ownerAdmin != null) {
+					shipping.setEnterprise(ownerAdmin.getEnterprise());
+					shipping.setShop(ownerAdmin.getShop());
 				}
-//			}
+			}
+		} else {
+			shipping.setShop(shop);
+			shipping.setAdmin(admin);
 		}
 
 		if (shipping.getShop()!=null) {
