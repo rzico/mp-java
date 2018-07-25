@@ -92,17 +92,18 @@ public class CardBillServiceImpl extends BaseServiceImpl<CardBill, Long> impleme
 		return cardBillDao.findPage(beginDate,endDate,pageable);
 	}
 
-	public void fill(CardBill cardBill) throws Exception {
+	public synchronized void fill(CardBill cardBill) throws Exception {
 		Card card = cardBill.getCard();
 		cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 		card.setBalance(card.getBalance().add(cardBill.getCredit()));
 		cardDao.merge(card);
+		cardDao.flush();
 		cardBill.setType(CardBill.Type.recharge);
 		cardBill.setBalance(card.getBalance());
 		cardBillDao.persist(cardBill);
 	}
 
-	public void refund(CardBill cardBill) throws Exception {
+	public synchronized void refund(CardBill cardBill) throws Exception {
 		Card card = cardBill.getCard();
 		cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 		if (card.getBalance().compareTo(cardBill.getDebit())<0) {
@@ -110,6 +111,7 @@ public class CardBillServiceImpl extends BaseServiceImpl<CardBill, Long> impleme
 		}
 		card.setBalance(card.getBalance().subtract(cardBill.getDebit()));
 		cardDao.merge(card);
+		cardDao.flush();
 		cardBill.setType(CardBill.Type.recharge);
 		cardBill.setBalance(card.getBalance());
 		cardBillDao.persist(cardBill);

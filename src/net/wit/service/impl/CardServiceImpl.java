@@ -324,7 +324,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	}
 
 	//支付插件专用方法
-	public void payment(Card card,Payment payment) throws Exception {
+	public synchronized void payment(Card card,Payment payment) throws Exception {
 		cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 		if (card.getBalance().compareTo(payment.getAmount()) < 0) {
 			throw new RuntimeException("卡内余额不足");
@@ -372,7 +372,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 	}
 
 	//支付插件专用方法
-	public void refunds(Card card,Refunds refunds) throws Exception {
+	public synchronized void refunds(Card card,Refunds refunds) throws Exception {
 		cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 		try {
 			card.setBalance(card.getBalance().add(refunds.getAmount()));
@@ -417,7 +417,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		}
 	}
 
-	public void addPoint(Card card,Long point,String memo,Order order) {
+	public synchronized void addPoint(Card card,Long point,String memo,Order order) {
 		if (point>0) {
 			cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 			card.setPoint(card.getPoint() + point);
@@ -437,7 +437,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		}
 	}
 
-	public void decPoint(Card card, Long point,String memo,Order order) {
+	public synchronized void decPoint(Card card, Long point,String memo,Order order) {
 		if (point>0) {
 			cardDao.refresh(card, LockModeType.PESSIMISTIC_WRITE);
 			card.setPoint(card.getPoint() - point);

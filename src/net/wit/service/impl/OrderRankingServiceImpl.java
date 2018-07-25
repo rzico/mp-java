@@ -118,12 +118,12 @@ public class OrderRankingServiceImpl extends BaseServiceImpl<OrderRanking, Long>
 		topicDao.merge(topic);
 		topicDao.flush();
 
-
 //		Goods goods = orderItem.getProduct().getGoods();
 //		goodsDao.refresh(goods, LockModeType.PESSIMISTIC_WRITE);
 //		goods.setRanking(goods.getRanking()+1);
 //		goodsDao.merge(goods);
 //		goodsDao.flush();
+
         OrderRanking orderRanking = new OrderRanking();
         orderRanking.setAmount(amount);
         orderRanking.setPoint(point);
