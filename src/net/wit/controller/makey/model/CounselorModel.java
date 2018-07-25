@@ -34,7 +34,10 @@ public class CounselorModel extends BaseModel implements Serializable {
     private String autograph;
 
     /** 头街 */
-    private String [] speciality ;
+    private String speciality ;
+
+    /** 领域 */
+    private String[] fields ;
 
     /** 简介 */
     private String content1;
@@ -103,11 +106,11 @@ public class CounselorModel extends BaseModel implements Serializable {
         this.autograph = autograph;
     }
 
-    public String[] getSpeciality() {
+    public String getSpeciality() {
         return speciality;
     }
 
-    public void setSpeciality(String[] speciality) {
+    public void setSpeciality(String speciality) {
         this.speciality = speciality;
     }
 
@@ -183,6 +186,14 @@ public class CounselorModel extends BaseModel implements Serializable {
         this.tags = tags;
     }
 
+    public String[] getFields() {
+        return fields;
+    }
+
+    public void setFields(String[] fields) {
+        this.fields = fields;
+    }
+
     public void bind(Counselor counselor) {
         this.id = counselor.getId();
         this.name = counselor.getName();
@@ -197,11 +208,12 @@ public class CounselorModel extends BaseModel implements Serializable {
         this.content8 = counselor.getContent8();
         this.autograph = counselor.getAutograph();
         if (counselor.getSpeciality()!=null) {
-            this.speciality = counselor.getSpeciality().split(",");
+            this.fields = counselor.getContent7().split(",");
         } else {
-            this.speciality = null;
+            this.fields = null;
         }
         this.phone = counselor.getPhone();
+        this.speciality = counselor.getSpeciality();
 
         this.tags = TagModel.bindList(counselor.getTags());
 

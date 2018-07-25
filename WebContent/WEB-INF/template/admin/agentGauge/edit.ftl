@@ -149,7 +149,7 @@
                         });
                         $(form).ajaxSubmit({
                             type: 'post',
-                            url: "${base}/admin/gauge/update.jhtml" ,
+                            url: "${base}/admin/agentGauge/update.jhtml" ,
                             beforeSend: function() {
                                 $submit.prop("disabled", true);
                             },
