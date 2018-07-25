@@ -135,40 +135,9 @@
 
                 $("#form-update").validate({
                     rules:{
-                        brokerage:{
-                            required:true,
-                        },
-                        distribution:{
-                            required:true,
-                        },
-                        evaluation:{
-                            required:true,
-                        },
-                        marketPrice:{
-                            required:true,
-                        },
-                        notice:{
-                            required:true,
-                        },
                         price:{
                             required:true,
-                        },
-                        revisionNote:{
-                            required:true,
-                        },
-                        subTitle:{
-                            required:true,
-                        },
-                        title:{
-                            required:true,
-                        },
-                        type:{
-                            required:true,
-                        },
-                        userType:{
-                            required:true,
-                        },
-
+                        }
                     },
                     onkeyup:false,
                     focusCleanup:true,
