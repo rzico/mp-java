@@ -101,7 +101,10 @@ public class LoginController extends BaseController {
 
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" +appid + "&secret=" + appsecret + "&js_code=" + code + "&grant_type=authorization_code";
+       System.out.println(url);
+
         JSONObject result = WeixinApi.httpRequest(url, "GET", null);
+        System.out.println(request);
         if (result.containsKey("session_key")) {
             HttpSession session = request.getSession();
             String sessionId = session.getId();

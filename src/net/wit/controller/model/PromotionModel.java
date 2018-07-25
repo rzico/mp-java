@@ -120,9 +120,16 @@ public class PromotionModel extends BaseModel implements Serializable {
 
         this.id = promotion.getId();
         this.type = promotion.getType();
-        if (promotion.getGift()!=null) {
-            this.giftId = promotion.getGift().getId();
-            this.giftName = promotion.getGift().getName();
+        if (this.type==Promotion.Type.gift) {
+            if (promotion.getGift()!=null) {
+                this.giftId = promotion.getGift().getId();
+                this.giftName = promotion.getGift().getName();
+            }
+        } else {
+            if (promotion.getGoods()!=null) {
+                this.giftId = promotion.getGoods().getId();
+                this.giftName = promotion.getGoods().product().getName();
+            }
         }
         if (promotion.getGoods()!=null) {
             this.goodsId = promotion.getGoods().getId();

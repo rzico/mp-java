@@ -92,8 +92,8 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic, Long> implements To
 	}
 
 	public Topic create(Topic topic) {
-		Member member = topic.getMember();
 		topicDao.persist(topic);
+		Member member = topic.getMember();
 		member.setTopic(topic);
 		memberDao.merge(member);
 		return topic;

@@ -157,7 +157,11 @@ public class PromotionController extends BaseController {
         if (goods==null) {
             return Message.error("");
         }
+
         Goods gift = goodsService.find(giftId);
+        if (type==Promotion.Type.give) {
+            gift = goods;
+        }
 
         Promotion promotion = promotionService.find(id);
         promotion.setType(type);
