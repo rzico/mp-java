@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -119,7 +120,7 @@ public class AgentGaugeController extends BaseController {
      */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-	public Message save(Long enterpriseId,Long agentCategoryId,Long gaugeId,Integer orders, Long [] tagIds){
+	public Message save(Long enterpriseId,Long agentCategoryId, BigDecimal price,Long gaugeId,Integer orders, Long [] tagIds){
 		Admin admin = adminService.getCurrent();
 		if (enterpriseId==null) {
 			enterpriseId = admin.getEnterprise().getId();
@@ -147,7 +148,10 @@ public class AgentGaugeController extends BaseController {
 		entity.setSubTitle(gauge.getSubTitle());
 		entity.setThumbnail(gauge.getThumbnail());
 
-		entity.setPrice(gauge.getPrice());
+		if (price==null) {
+			price = gauge.getPrice();
+		}
+		entity.setPrice(price);
 
 		entity.setTags(tagService.findList(tagIds));
 
@@ -165,15 +169,24 @@ public class AgentGaugeController extends BaseController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public Message update(Long enterpriseId,Long agentCategoryId,Long gaugeId,Integer orders, Long [] tagIds){
-		AgentGauge entity = agentGaugeService.find(enterpriseId);
+	public Message update(Long id, Long agentCategoryId,BigDecimal price,Integer orders, Long [] tagIds){
+		AgentGauge entity = agentGaugeService.find(id);
         Gauge gauge = entity.getGauge();
+		AgentCategory agentCategory = agentCategoryService.find(agentCategoryId);
+		if (agentCategory==null) {
+			return Message.error("无效分类");
+		}
 		entity.setOrders(orders);
 		entity.setTitle(gauge.getTitle());
 		entity.setSubTitle(gauge.getSubTitle());
 		entity.setThumbnail(gauge.getThumbnail());
 
-		entity.setPrice(gauge.getPrice());
+		if (price==null) {
+			price = gauge.getPrice();
+		}
+		entity.setPrice(price);
+
+		entity.setPrice(price);
 
 		entity.setTags(tagService.findList(tagIds));
 
