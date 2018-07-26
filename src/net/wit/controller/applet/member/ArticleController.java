@@ -11,6 +11,7 @@ import net.wit.entity.*;
 import net.wit.service.*;
 import net.wit.util.JsonUtils;
 import net.wit.util.MD5Utils;
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -182,7 +184,14 @@ public class ArticleController extends BaseController {
             }
         }
 
-        ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
+        String bd = null;
+        try {
+            bd = new String(Base64.decode(body),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        ArticleModel model = JsonUtils.toObject(bd,ArticleModel.class);
         if (model==null) {
             return Message.error("无效数据包");
         }
