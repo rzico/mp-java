@@ -33,6 +33,7 @@ import net.wit.entity.*;
  
 @Service("paymentServiceImpl")
 public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implements PaymentService {
+
 	@Resource(name = "paymentDaoImpl")
 	private PaymentDao paymentDao;
 
@@ -93,7 +94,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "evaluationDaoImpl")
 	private EvaluationDao evaluationDao;
 
-	@Resource(name = "ecourseOrderDaoImpl")
+	@Resource(name = "courseOrderDaoImpl")
 	private CourseOrderDao courseOrderDao;
 
 	@Resource(name = "rebateServiceImpl")

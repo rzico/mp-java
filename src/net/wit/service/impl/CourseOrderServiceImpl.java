@@ -101,12 +101,12 @@ public class CourseOrderServiceImpl extends BaseServiceImpl<CourseOrder, Long> i
 		Payment payment = new Payment();
 		payment.setAmount(courseOrder.getPrice());
 		payment.setStatus(Payment.Status.waiting);
-		payment.setType(Payment.Type.evaluation);
+		payment.setType(Payment.Type.course);
 		payment.setMethod(Payment.Method.online);
 		payment.setMember(courseOrder.getMember());
 		payment.setPayee(courseOrder.getEnterprise().getMember());
 		payment.setSn(snService.generate(Sn.Type.payment));
-		payment.setMemo("购买测评");
+		payment.setMemo("购买课程");
 		payment.setCourseOrder(courseOrder);
 		payment.setWay(Payment.Way.yundian);
 		if (payment.getAmount().compareTo(BigDecimal.ZERO)==0) {
