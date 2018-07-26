@@ -159,7 +159,7 @@ public class PromotionController extends BaseController {
         }
 
         Goods gift = goodsService.find(giftId);
-        if (type==Promotion.Type.give) {
+        if (Promotion.Type.give.equals(type)) {
             gift = goods;
         }
 

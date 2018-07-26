@@ -231,6 +231,9 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		} else {
 			shipping.setGroupName("#");
 		}
+
+		shipping.setTransfer(false);
+
 		shippingDao.persist(shipping);
 
 		order.setAdminFreight(shipping.getAdminFreight());
@@ -239,19 +242,12 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		order.setLevelFreight(shipping.getLevelFreight());
 		orderService.update(order);
 
-		OrderLog orderLog = new OrderLog();
-		orderLog.setType(OrderLog.Type.shipping);
-		orderLog.setOperator("system");
-		if (shipping.getHopeDate()==null) {
-			orderLog.setContent("订单安排至" + shipping.getShop().getName() + "");
-		} else {
-			orderLog.setContent("预约单安排至" + shipping.getShop().getName() + "");
-		}
-		orderLog.setOrder(shipping.getOrder());
-		orderLogDao.persist(orderLog);
-
-		if (!shipping.getEnterprise().getMember().equals(order.getSeller())) {
-			messageService.shippingPushTo(shipping, orderLog);
+		try {
+			if (shipping.getShop() != null) {
+				this.dispatch(shipping);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
 		return shipping;
 
@@ -287,7 +283,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			orderLogDao.persist(orderLog);
 			messageService.shippingPushTo(shipping,orderLog);
 		}
-
+		if (shipping.getAdmin()!=null) {
+			shipping.setShippingStatus(Shipping.ShippingStatus.dispatch);
+			shipping.setOrderStatus(Shipping.OrderStatus.confirmed);
+		}
 		shippingDao.merge(shipping);
 		return shipping;
 
