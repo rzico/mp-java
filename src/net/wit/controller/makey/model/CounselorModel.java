@@ -207,7 +207,7 @@ public class CounselorModel extends BaseModel implements Serializable {
         this.content7 = counselor.getContent7();
         this.content8 = counselor.getContent8();
         this.autograph = counselor.getAutograph();
-        if (counselor.getSpeciality()!=null) {
+        if (counselor.getContent7()!=null) {
             this.fields = counselor.getContent7().split(",");
         } else {
             this.fields = null;
