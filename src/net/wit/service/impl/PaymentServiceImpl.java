@@ -562,7 +562,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 					messageService.depositPushTo(deposit);
 					rebateService.rebate(evaluation.getPrice(),buyer,evaluation.getPersonal(),evaluation.getAgent(),evaluation.getOperate(),null);
 				}
-
+			} else
+			if (payment.getType().equals(Payment.Type.course)) {
+				CourseOrder courseOrder = payment.getCourseOrder();
+				courseOrder.setOrderStatus(CourseOrder.OrderStatus.confirmed);
+				courseOrderDao.merge(courseOrder);
 
 			}
 		}
@@ -635,7 +639,7 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 			} else
 			if (payment.getType().equals(Payment.Type.course)) {
 				CourseOrder courseOrder = payment.getCourseOrder();
-				courseOrder.setOrderStatus(CourseOrder.OrderStatus.confirmed);
+				courseOrder.setOrderStatus(CourseOrder.OrderStatus.cancelled);
 				courseOrderDao.merge(courseOrder);
 			}
 		};
