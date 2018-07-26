@@ -1110,7 +1110,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			couponCode.setUsedDate(null);
 			couponCode.setStock(couponCode.getStock()+1);
 			couponCodeDao.merge(couponCode);
-
 			order.setCouponCode(null);
 			orderDao.merge(order);
 		}

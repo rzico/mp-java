@@ -183,6 +183,8 @@ public class ArticleController extends BaseController {
             }
         }
 
+        System.out.println(body);
+
         ArticleModel model = JsonUtils.toObject(body,ArticleModel.class);
         if (model==null) {
             return Message.error("无效数据包");

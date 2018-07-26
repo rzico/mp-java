@@ -98,6 +98,7 @@ public class CourseListModel extends BaseModel implements Serializable {
     public void bind(Course course) {
         this.id = course.getId();
         this.name = course.getName();
+        this.subTitle = course.getSubTitle();
         this.thumbnail = course.getThumbnail();
         this.hits = course.getHits();
         this.price = course.getPrice();
