@@ -460,8 +460,6 @@ public class CardServiceImpl extends BaseServiceImpl<Card, Long> implements Card
 		}
 	}
 
-
-
 	public synchronized Card createAndMember(Receiver receiver,Member owner) {
 
 		Member member = new Member();

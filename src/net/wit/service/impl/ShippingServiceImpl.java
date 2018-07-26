@@ -209,7 +209,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 		shipping.setCost(shipping.calcCost());
 
-		if (shop==null && admin==null) {
+		if (shop==null) {
 			if (receiver != null && receiver.getShop() != null) {
 				shipping.setEnterprise(receiver.getShop().getEnterprise());
 				shipping.setShop(receiver.getShop());
@@ -222,6 +222,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			}
 		} else {
 			shipping.setShop(shop);
+			shipping.setEnterprise(shop.getEnterprise());
 			shipping.setAdmin(admin);
 		}
 
