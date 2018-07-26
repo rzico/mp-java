@@ -116,6 +116,9 @@ public class CourseController extends BaseController {
     public Message list(CourseOrder.OrderStatus status,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         List<Filter> filters = new ArrayList<Filter>();
+        if (status==null) {
+            status = CourseOrder.OrderStatus.confirmed;
+        }
         if (status!=null) {
             filters.add(new Filter("orderStatus", Filter.Operator.eq, status));
         }

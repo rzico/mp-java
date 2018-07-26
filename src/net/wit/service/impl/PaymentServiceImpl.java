@@ -93,6 +93,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "evaluationDaoImpl")
 	private EvaluationDao evaluationDao;
 
+	@Resource(name = "ecourseOrderDaoImpl")
+	private CourseOrderDao courseOrderDao;
+
 	@Resource(name = "rebateServiceImpl")
 	private RebateService rebateService;
 
@@ -628,6 +631,11 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				Evaluation evaluation = payment.getEvaluation();
 				evaluation.setEvalStatus(Evaluation.EvalStatus.cancelled);
 				evaluationDao.merge(evaluation);
+			} else
+			if (payment.getType().equals(Payment.Type.course)) {
+				CourseOrder courseOrder = payment.getCourseOrder();
+				courseOrder.setOrderStatus(CourseOrder.OrderStatus.confirmed);
+				courseOrderDao.merge(courseOrder);
 			}
 		};
 	}
