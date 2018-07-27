@@ -589,7 +589,7 @@ public class ShippingController extends BaseController {
 			filters.add(new Filter("enterprise", Filter.Operator.eq, enterprise));
 		}
 		pageable.setFilters(filters);
-		Page<Shop> page = shopService.findPage(null,null,pageable);
+		Page<Shop> page = shopService.findPage(enterprise.getMember(),pageable);
 		PageBlock model = PageBlock.bind(page);
 		List<ShopModel> data = ShopModel.bindShipping(page.getContent(),lat,lng,admin.getEnterprise());
 		model.setData(data);

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.Shop;
 
 /**
@@ -16,6 +17,8 @@ import net.wit.entity.Shop;
  */
 
 public interface ShopService extends BaseService<Shop, Long> {
-	Page<Shop> findPage(Date beginDate,Date endDate, Pageable pageable);
-	Shop find(String code);
+	 Page<Shop> findPage(Date beginDate,Date endDate, Pageable pageable);
+	 Page<Shop> findPage(Member owner, Pageable pageable);
+
+	 Shop find(String code);
 }

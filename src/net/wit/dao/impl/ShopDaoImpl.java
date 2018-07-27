@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Enterprise;
 import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
@@ -75,7 +76,7 @@ public class ShopDaoImpl extends BaseDaoImpl<Shop, Long> implements ShopDao {
 		Predicate restrictions = criteriaBuilder.conjunction();
 		restrictions = criteriaBuilder.conjunction();
 
-		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.get("enterprise").get("status"), Enterprise.Status.success));
 		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
 		criteriaQuery.where(restrictions);
 

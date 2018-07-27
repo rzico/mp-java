@@ -93,6 +93,11 @@ public class ShopServiceImpl extends BaseServiceImpl<Shop, Long> implements Shop
 	public Page<Shop> findPage(Date beginDate,Date endDate, Pageable pageable) {
 		return shopDao.findPage(beginDate,endDate,pageable);
 	}
+
+
+	public Page<Shop> findPage(Member owner, Pageable pageable) {
+		return shopDao.findPage(owner,pageable);
+	}
 	public Shop find(String code) {
 		return shopDao.find(code);
 	}
