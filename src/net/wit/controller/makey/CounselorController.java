@@ -43,6 +43,7 @@ public class CounselorController extends BaseController {
     /**
      *  列表
      */
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Message list(Long xmid, Pageable pageable, HttpServletRequest request){

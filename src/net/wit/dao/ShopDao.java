@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.wit.Page;
 import net.wit.Pageable;
+import net.wit.entity.Member;
 import net.wit.entity.Shop;
 
 
@@ -27,5 +28,14 @@ public interface ShopDao extends BaseDao<Shop, Long> {
 	 * @return Page<Shop>
 	 */
 	Page<Shop> findPage(Date beginDate,Date endDate, Pageable pageable);
+
+	/**
+	 * @Title：findPage
+	 * @Description：联盟商家配送点
+	 * @param pageable
+	 * @return Page<Shop>
+	 */
+	Page<Shop> findPage(Member owner, Pageable pageable);
+
 	Shop find(String code);
 }

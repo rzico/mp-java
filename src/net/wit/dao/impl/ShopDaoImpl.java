@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import net.wit.entity.Member;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -59,6 +60,28 @@ public class ShopDaoImpl extends BaseDaoImpl<Shop, Long> implements ShopDao {
 		return super.findPage(criteriaQuery,pageable);
 	}
 
+
+	/**
+	 * @Title：findPage
+	 * @Description：联盟商家配送点
+	 * @param pageable
+	 * @return Page<Shop>
+	 */
+	public Page<Shop> findPage(Member owner, Pageable pageable) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Shop> criteriaQuery = criteriaBuilder.createQuery(Shop.class);
+		Root<Shop> root = criteriaQuery.from(Shop.class);
+		criteriaQuery.select(root);
+
+		Predicate restrictions = criteriaBuilder.conjunction();
+		restrictions = criteriaBuilder.conjunction();
+
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
+		restrictions = criteriaBuilder.and(restrictions,criteriaBuilder.equal(root.<Boolean> get("deleted"), false));
+		criteriaQuery.where(restrictions);
+
+		return super.findPage(criteriaQuery,pageable);
+	}
 
 	public Shop find(String code) {
 		if (code == null) {
