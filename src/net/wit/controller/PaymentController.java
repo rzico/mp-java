@@ -125,16 +125,16 @@ public class PaymentController extends BaseController {
         }
 
         if ("weixinPayPlugin".equals(paymentPluginId) || "weixinOcPayPlugin".equals(paymentPluginId)) {
-            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
-            if (bundle.getString("weex").equals("1")) {
-                if (request.getHeader("x-app") != null && "applet".equals(request.getHeader("x-app"))) {
-                    paymentPluginId = "weixinOcLetPlugin";
-                } else if (request.getHeader("x-app") != null && request.getHeader("x-app").contains("com.rzico.")) {
-                    paymentPluginId = "weixinAppPlugin";
-                } else {
-                    paymentPluginId = "weixinOcPayPlugin";
-                }
-            } else {
+//            ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+//            if (bundle.getString("weex").equals("1")) {
+//                if (request.getHeader("x-app") != null && "applet".equals(request.getHeader("x-app"))) {
+//                    paymentPluginId = "weixinOcLetPlugin";
+//                } else if (request.getHeader("x-app") != null && request.getHeader("x-app").contains("com.rzico.")) {
+//                    paymentPluginId = "weixinAppPlugin";
+//                } else {
+//                    paymentPluginId = "weixinOcPayPlugin";
+//                }
+//            } else {
                 if (request.getHeader("x-app") != null && "applet".equals(request.getHeader("x-app"))) {
                     paymentPluginId = "weixinLetPlugin";
                 } else if (request.getHeader("x-app") != null && request.getHeader("x-app").contains("com.rzico.")) {
@@ -142,7 +142,7 @@ public class PaymentController extends BaseController {
                 } else {
                     paymentPluginId = "weixinPayPlugin";
                 }
-            }
+//            }
         }
 
         PaymentPlugin paymentPlugin = pluginService.getPaymentPlugin(paymentPluginId);

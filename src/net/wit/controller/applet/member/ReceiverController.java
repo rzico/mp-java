@@ -72,7 +72,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,Double lat,Double lng,HttpServletRequest request){
+    public Message add(Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,String lat,String lng,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -97,12 +97,16 @@ public class ReceiverController extends BaseController {
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));
 //        }
-//
-        if (lat!=null && lng!=null) {
-            Location location = new Location();
-            location.setLat(lat);
-            location.setLng(lng);
-            receiver.setLocation(location);
+////
+        try {
+            if (lat != null && lng != null) {
+                Location location = new Location();
+                location.setLat(Double.parseDouble(lat));
+                location.setLng(Double.parseDouble(lng));
+                receiver.setLocation(location);
+            }
+        } catch (Exception e) {
+
         }
 
         receiverService.save(receiver);
@@ -117,7 +121,7 @@ public class ReceiverController extends BaseController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,Double lat,Double lng,HttpServletRequest request){
+    public Message update(Long id,Long areaId,String address,String consignee,String phone,Boolean isDefault,Integer level,String lat,String lng,HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -140,11 +144,15 @@ public class ReceiverController extends BaseController {
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));
 //        }
-        if (lat!=null && lng!=null) {
-            Location location = new Location();
-            location.setLat(lat);
-            location.setLng(lng);
-            receiver.setLocation(location);
+        try {
+            if (lat != null && lng != null) {
+                Location location = new Location();
+                location.setLat(Double.parseDouble(lat));
+                location.setLng(Double.parseDouble(lng));
+                receiver.setLocation(location);
+            }
+        } catch (Exception e) {
+
         }
 
         receiverService.update(receiver);

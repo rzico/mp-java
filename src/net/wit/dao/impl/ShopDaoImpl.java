@@ -60,7 +60,6 @@ public class ShopDaoImpl extends BaseDaoImpl<Shop, Long> implements ShopDao {
 		return super.findPage(criteriaQuery,pageable);
 	}
 
-
 	/**
 	 * @Title：findPage
 	 * @Description：联盟商家配送点
