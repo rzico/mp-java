@@ -37,7 +37,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                 ${data.name}
+                <input type="text" class="input-text" value="${data.name}" placeholder="" id="name" name="name">
             </div>
         </div>
 
@@ -55,6 +55,54 @@
             </div>
         </div>
 
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>缩例图：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="${data.thumbnail}" placeholder="" id="thumbnail" name="thumbnail">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>类型：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                [#if types??]
+                [#list types as type]
+                    <div class="radio-box">
+                        <input name="type" type="radio" id="type-${type_index}" value="${type.id}"[#if type.id == data.type] checked[/#if]>
+                        <label for="type-${type_index}">${type.name}</label>
+                    </div>
+                [/#list]
+                [/#if]
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Course：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                [#if courses??]
+				<select name="courseId" class="select" style="background-color: #FFFFFF">
+                    [#list courses as course]
+					<option[#if data.course?? && course.id == data.course.id] selected[/#if] value="${course.id}">${course.name}</option>
+                    [/#list]
+				</select>
+                [/#if]
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>Enterprise：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                [#if enterprises??]
+				<select name="enterpriseId" class="select" style="background-color: #FFFFFF">
+                    [#list enterprises as enterprise]
+					<option[#if data.enterprise?? && enterprise.id == data.enterprise.id] selected[/#if] value="${enterprise.id}">${enterprise.name}</option>
+                    [/#list]
+				</select>
+                [/#if]
+				</span>
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -90,11 +138,27 @@
 
                 $("#form-update").validate({
                     rules:{
-
+                        name:{
+                            required:true,
+                        },
                         orderStatus:{
                             required:true,
                         },
-
+                        price:{
+                            required:true,
+                        },
+                        thumbnail:{
+                            required:true,
+                        },
+                        type:{
+                            required:true,
+                        },
+                        course:{
+                            required:true,
+                        },
+                        enterprise:{
+                            required:true,
+                        },
 
                     },
                     onkeyup:false,

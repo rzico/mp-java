@@ -10,9 +10,7 @@
                         <li><a data-href="../navigation/index.jhtml" data-title="导航管理" href="javascript:;">导航管理</a></li>
                         <li><a data-href="../articleCatalog/index.jhtml" data-title="文集分类" href="javascript:;">文集分类</a></li>
                         <li><a data-href="../article/index.jhtml" data-title="文章管理" href="javascript:;">文章管理</a></li>
-                         [#if (admin.isManager)]
                         <li><a data-href="../gauge/index.jhtml" data-title="量表管理" href="javascript:;">量表管理</a></li>
-                         [/#if]
                         <li><a data-href="../counselor/index.jhtml" data-title="专家团队" href="javascript:;">专家团队</a></li>
                         <li><a data-href="../course/index.jhtml" data-title="课程管理" href="javascript:;">课程管理</a></li>
                         <li><a data-href="../music/index.jhtml" data-title="音乐资料" href="javascript:;">音乐资料</a></li>
@@ -33,8 +31,6 @@
                     <ul>
                         <li><a data-href="../order/index.jhtml" data-title="销售订单" href="javascript:;">销售订单</a></li>
                         <li><a data-href="../evaluation/index.jhtml" data-title="心理测评" href="javascript:;">心理测评</a></li>
-                        <li><a data-href="../courseOrder/index.jhtml" data-title="报名课程" href="javascript:;">报名课程</a></li>
-                        <li><a data-href="../counselorOrder/index.jhtml" data-title="咨询预约" href="javascript:;">咨询预约</a></li>
                     </ul>
                 </dd>
             [#if (admin.isManager)]
@@ -76,12 +72,11 @@
                     [#--<li><a data-href="../organization/index.jhtml" data-title="合作单位" href="javascript:;">合作单位</a></li>--]
                 </ul>
             </dd>
+             [#if (admin.isManager && admin.role?contains("1"))]
                <dt><i class="Hui-iconfont">&#xe60d;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i>
                 </dt>
                <dd>
                    <ul>
-                        <li><a data-href="../admin/index.jhtml" data-title="管理员" href="javascript:;">管理员</a></li>
-             [#if (admin.isManager && admin.role?contains("1"))]
                         <li><a data-href="../role/index.jhtml" data-title="角色管理" href="javascript:;">角色管理</a></li>
                         <li><a data-href="../tag/index.jhtml" data-title="标签管理" href="javascript:;">标签管理</a></li>
                         <li><a data-href="../articleCategory/index.jhtml" data-title="文章分类" href="javascript:;">文章分类</a></li>
@@ -93,9 +88,9 @@
                         <li><a data-href="../smssend/index.jhtml" data-title="短信管理" href="javascript:;">短信管理</a></li>
                         <li><a data-href="../log/index.jhtml" data-title="日志管理" href="javascript:;">日志管理</a></li>
                         <li><a data-href="../message/index.jhtml" data-title="消息管理" href="javascript:;">消息管理</a></li>
-              [/#if]
                    </ul>
                </dd>
+             [/#if]
         </dl>
 
     </div>

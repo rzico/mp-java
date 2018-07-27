@@ -85,51 +85,9 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>简介：</label>
+            <label class="form-label col-xs-4 col-sm-2">介绍：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content1" id="content1" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>教育经历：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content2" id="content2" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>工作经历：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content3" id="content3" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>行业执照：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content4" id="content4" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>治疗取向：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content5" id="content5" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>咨询经验：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content6" id="content6" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>擅长领域：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content7" id="content7" style="height:200px;width:500px;"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>咨询方式与费用：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea class="input-text" name="content8" id="content8" style="height:200px;width:500px;"></textarea>
+                <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
             </div>
         </div>
 

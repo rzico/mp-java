@@ -626,15 +626,15 @@ public class CardController extends BaseController {
         if (type==null) {
             type="manager";
         }
-        if (type.equals("query")) {
+        if (!type.equals("query")) {
             if (!admin.isOwner()) {
-                if (admin.roles().contains("34")) {
+                if (admin.roles().contains("345")) {
                     filters.add(new Filter("promoter", Filter.Operator.eq, member));
-                } else {
-                    Shop shop = admin.getShop();
-                    if (shop != null) {
-                        filters.add(new Filter("shop", Filter.Operator.eq, shop));
-                    }
+//                } else {
+//                    Shop shop = admin.getShop();
+//                    if (shop != null) {
+//                        filters.add(new Filter("shop", Filter.Operator.eq, shop));
+//                    }
                 }
             }
         }

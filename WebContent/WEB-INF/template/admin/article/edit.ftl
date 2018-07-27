@@ -171,20 +171,6 @@
             </div>
         </div>
 
-        <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">文集：</label>
-        <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-            [#if articleCatalogs??]
-				<select name="articleCatalogId" class="select" style="background-color: #FFFFFF">
-                [#list articleCatalogs as articleCatalog]
-					<option[#if data.articleCatalog?? && articleCatalog.id == data.articleCatalog.id] selected[/#if] value="${articleCatalog.id}">${articleCatalog.name}</option>
-                [/#list]
-				</select>
-            [/#if]
-				</span>
-            </div>
-        </div>
-
                 <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">检签：</label>
         <div class="formControls col-xs-8 col-sm-9 skin-minimal">

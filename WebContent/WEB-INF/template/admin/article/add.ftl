@@ -136,22 +136,7 @@
             </div>
         </div>
 
-                    <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">文集：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if articleCatalogs??]
-				<select name="articleCatalogId" class="select" style="background-color: #FFFFFF">
-                    [#list articleCatalogs as articleCatalog]
-					<option value="${articleCatalog.id}">${articleCatalog.name}</option>
-                    [/#list]
-				</select>
-                [/#if]
-                    </span>
-                    </div>
-                    </div>
-
-
-                    <div class="row cl">
+            <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">是否热点：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     <div class="check-box">
