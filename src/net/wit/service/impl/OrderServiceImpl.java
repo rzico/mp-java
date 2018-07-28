@@ -1450,6 +1450,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 					}
 				}
 
+				for (Shipping shipping:order.getShippings()) {
+					shipping.setOrderStatus(Shipping.OrderStatus.cancelled);
+					shippingService.update(shipping);
+				}
+
 				OrderLog orderLog1 = new OrderLog();
 				orderLog1.setType(OrderLog.Type.refunds);
 				orderLog1.setOperator(operator != null ? operator.getUsername() : null);
