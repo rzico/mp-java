@@ -145,7 +145,6 @@ public class ReceiverController extends BaseController {
         }
         receiver.setLevel(level);
 
-
 //        if (roadId!=null) {
 //            receiver.setRoad(roadService.find(roadId));
 //        }
