@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -169,7 +170,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     @ResponseBody
-    public Message submit(String body,Long goodsId,Article.ArticleType articleType, HttpServletRequest request) {
+    public Message submit(String body, Long goodsId, Article.ArticleType articleType, Long articleCatalogId, BigDecimal reward, Article.Authority authority, Location location, HttpServletRequest request) {
 
         Member member = memberService.getCurrent();
         if (member==null) {
@@ -264,11 +265,32 @@ public class ArticleController extends BaseController {
         article.setIsDraft(false);
         article.setIsPublish(true);
 
+
+        if (authority!=null) {
+            article.setAuthority(authority);
+
+        }
+        if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
+            article.setLocation(location);
+        }
+
+        if (articleCatalogId!=null) {
+            article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
+        }
+
+        if (reward!=null) {
+            article.setIsReward(true);
+            article.setReward(reward);
+        } else {
+            article.setReward(BigDecimal.ZERO);
+        }
+
         if (isNew) {
             articleService.save(article);
         } else {
             articleService.update(article);
         }
+
 
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);

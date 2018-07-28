@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -205,6 +206,10 @@ public class Article extends BaseEntity{
     @Column(columnDefinition="bit comment '是否赞赏'")
     private Boolean isReward;
 
+    /** 打赏金额 */
+    @Column(columnDefinition="decimal(21,6) not null default 0 comment '打赏金额'")
+    private BigDecimal reward;
+
     /** 谁可见 */
     @NotNull
     @Column(columnDefinition="int(11) comment '谁可见  {isPublic:公开,isShare:不会开,isEncrypt:加密,isPrivate:私秘}'")
@@ -329,6 +334,14 @@ public class Article extends BaseEntity{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public BigDecimal getReward() {
+        return reward;
+    }
+
+    public void setReward(BigDecimal reward) {
+        this.reward = reward;
     }
 
     public Long getFavorite() {

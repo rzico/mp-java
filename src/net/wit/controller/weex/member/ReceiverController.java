@@ -243,6 +243,44 @@ public class ReceiverController extends BaseController {
 
 
     /**
+     *   判断用户是否存在
+     */
+    @RequestMapping(value = "exist")
+    @ResponseBody
+    public Message exist(String phone,HttpServletRequest request){
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Admin admin = adminService.findByMember(member);
+        if (admin==null) {
+            return Message.error("没有开通店铺");
+        }
+        if (admin.getEnterprise()==null) {
+            return Message.error("店铺已打洋,请先启APP");
+        }
+
+        Member owner = admin.getEnterprise().getMember();
+
+        ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
+
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("mobile", Filter.Operator.eq,phone));
+        if (!"3".equals(bundle.getString("weex"))) {
+            filters.add(new Filter("owner",Filter.Operator.eq,owner));
+        }
+
+        List<Card> cards = cardService.findList(null,null,filters,null);
+
+        if (cards.size()>0) {
+            return Message.bind(true,request);
+        } else {
+            return Message.bind(false,request);
+        }
+
+    }
+
+    /**
      *  添加文集
      */
     @RequestMapping(value = "/addcard", method = RequestMethod.POST)

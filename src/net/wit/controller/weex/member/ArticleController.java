@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -254,7 +255,9 @@ public class ArticleController extends BaseController {
         article.setMusic(music);
         article.setContent(content);
         article.setVotes(votes);
-
+        if (article.getReward()==null) {
+            article.setReward(BigDecimal.ZERO);
+        }
         if (isNew) {
             articleService.save(article);
         } else {
