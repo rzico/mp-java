@@ -244,6 +244,11 @@ public class Article extends BaseEntity{
     @JsonIgnore
     private Template template;
 
+    /** 运营商 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Member xmid;
+
     /** 文章标签*/
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "wx_article_tag")
@@ -586,6 +591,14 @@ public class Article extends BaseEntity{
 
     public void setDragonStatus(DragonStatus dragonStatus) {
         this.dragonStatus = dragonStatus;
+    }
+
+    public Member getXmid() {
+        return xmid;
+    }
+
+    public void setXmid(Member xmid) {
+        this.xmid = xmid;
     }
 
     public MapEntity getMapTemplate() {

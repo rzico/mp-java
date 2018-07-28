@@ -246,6 +246,8 @@ public class ArticleController extends BaseController {
             article.setMember(member);
             article.setMediaType(articleType);
 
+            article.setXmid(member.getXmid());
+
             Goods goods = null;
             if (articleType.equals(Article.ArticleType.product)) {
                 goods = goodsService.find(goodsId);

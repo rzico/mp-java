@@ -628,7 +628,7 @@ public class CardController extends BaseController {
         }
         if (!type.equals("query")) {
             if (!admin.isOwner()) {
-                if (admin.roles().contains("345")) {
+                if (admin.isRole("345")) {
                     filters.add(new Filter("promoter", Filter.Operator.eq, member));
 //                } else {
 //                    Shop shop = admin.getShop();

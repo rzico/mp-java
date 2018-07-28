@@ -313,7 +313,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long authorId,String keyword, Long tagId, Boolean isTop, Long articleCategoryId, Long articleCatalogId, Article.ArticleType mediaType, Pageable pageable, HttpServletRequest request){
+    public Message list(Long authorId,String keyword, Long tagId, Boolean isTop, Long articleCategoryId, Long articleCatalogId, Article.ArticleType mediaType,Long xmid, Pageable pageable, HttpServletRequest request){
         List<Filter> filters = new ArrayList<Filter>();
         if (articleCategoryId!=null) {
             ArticleCategory articleCategory = articleCategoryService.find(articleCategoryId);
@@ -331,6 +331,12 @@ public class ArticleController extends BaseController {
             filters.add(new Filter("member", Filter.Operator.eq,member));
         } else {
             filters.add(new Filter("isAudit", Filter.Operator.eq, true));
+            if (xmid!=null) {
+                Member xMember = memberService.find(xmid);
+                if (xMember == null) {
+                    filters.add(new Filter("xmid", Filter.Operator.eq, xMember));
+                }
+            }
         }
         List<Tag> tags = null;
         if (tagId!=null) {

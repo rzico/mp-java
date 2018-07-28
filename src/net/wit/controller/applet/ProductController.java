@@ -118,7 +118,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody
-	Message list(Long productCategoryId,Long tagId,String keyword,Pageable pageable,HttpServletRequest request) {
+	Message list(Long productCategoryId,Long tagId,String keyword,Long xmid,Pageable pageable,HttpServletRequest request) {
 		ProductCategory productCategory = productCategoryService.find(productCategoryId);
 		List<Filter> filters = new ArrayList<Filter>();
 		if (productCategory!=null) {
@@ -137,7 +137,12 @@ public class ProductController extends BaseController {
 		if (keyword!=null) {
 			filters.add(Filter.like("name", "%" + keyword + "%"));
 		}
-
+		if (xmid!=null) {
+			Member xMember = memberService.find(xmid);
+			if (xMember == null) {
+				filters.add(new Filter("xmid", Filter.Operator.eq, xMember));
+			}
+		}
 		Page<Product> page = productService.findPage(null,null,tag,pageable);
 		PageBlock model = PageBlock.bind(page);
 		model.setData(GoodsListModel.bindList(page.getContent()));

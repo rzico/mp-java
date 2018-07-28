@@ -187,6 +187,11 @@ public class Product extends OrderEntity {
 	@JsonIgnore
 	private List<ProductStock> productStocks = new ArrayList<>();
 
+	/** 运营商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Member xmid;
+
 	/** 标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_product_tag")
@@ -409,6 +414,14 @@ public class Product extends OrderEntity {
 
 	public void setBarrel(Barrel barrel) {
 		this.barrel = barrel;
+	}
+
+	public Member getXmid() {
+		return xmid;
+	}
+
+	public void setXmid(Member xmid) {
+		this.xmid = xmid;
 	}
 
 	public Long [] getTagIds() {

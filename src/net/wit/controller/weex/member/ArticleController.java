@@ -247,6 +247,8 @@ public class ArticleController extends BaseController {
             }
         }
 
+        article.setXmid(member.getXmid());
+
         article.setIsDraft(isDraft);
         article.setIsAudit(false);
         article.setTitle(title);
