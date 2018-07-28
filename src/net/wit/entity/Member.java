@@ -320,6 +320,12 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private Enterprise operate;
 
+
+	/** 运营商 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Member xmid;
+
 	/** 会员标签*/
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "wx_member_tag")
@@ -858,6 +864,14 @@ public class Member extends BaseEntity {
 
 	public void setOperate(Enterprise operate) {
 		this.operate = operate;
+	}
+
+	public Member getXmid() {
+		return xmid;
+	}
+
+	public void setXmid(Member xmid) {
+		this.xmid = xmid;
 	}
 
 	/**

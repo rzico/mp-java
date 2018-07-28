@@ -77,6 +77,7 @@ public class LoginController extends BaseController {
     Message login(String code,String nickName,String logo,Long xmid, HttpServletRequest request, HttpServletResponse response) {
         ResourceBundle bundle = PropertyResourceBundle.getBundle("config");
 
+        Member xMember = null;
         String appid = bundle.getString("applet.appid");
         String appsecret = bundle.getString("applet.secret");
         if (xmid!=null) {
@@ -84,6 +85,7 @@ public class LoginController extends BaseController {
             if (agent.getTopic()!=null && agent.getTopic().getConfig()!=null && agent.getTopic().getConfig().getAppetAppId()!=null) {
                 appid = agent.getTopic().getConfig().getAppetAppId();
                 appsecret = agent.getTopic().getConfig().getAppetAppSerect();
+                xMember = agent;
             }
         }
 
@@ -130,6 +132,7 @@ public class LoginController extends BaseController {
                 member.setIsLocked(false);
                 member.setLoginFailureCount(0);
                 member.setRegisterIp(request.getRemoteAddr());
+                member.setXmid(xMember);
                 memberService.save(member);
             } else {
                 if (nickName!=null && member.getUuid()==null) {
