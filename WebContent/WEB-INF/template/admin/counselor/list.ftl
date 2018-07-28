@@ -181,7 +181,7 @@
                 },
                 {
                     "mData": "orders",
-                    "sTitle": "Orders",
+                    "sTitle": "排序",
                     "sClass": "center"
                 },
                 {
