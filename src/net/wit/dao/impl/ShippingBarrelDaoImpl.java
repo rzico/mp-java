@@ -66,21 +66,34 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 
 
 
-	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable) {
 
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
+		Query query = null;
+		String jpql = "";
+		if ("owner".equals(type)) {
+			jpql = "select barrel.enterprise,barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
+					"from wx_shipping_barrel barrel where barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
+					"group by barrel.enterprise,barrel.name order by barrel.enterprise";
 
-		String jpql =	"select barrel.seller,barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) "+
-						"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  "+
-						"group by barrel.seller,barrel.name order by barrel.seller";
+			query = entityManager.createNativeQuery(jpql).
+					setFlushMode(FlushModeType.COMMIT).
+					setParameter(1, enterprise.getMember()).
+					setParameter(2, b).
+					setParameter(3, e);
+		} else {
+			jpql = "select barrel.seller,barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
+					"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
+					"group by barrel.seller,barrel.name order by barrel.seller";
 
-		Query query = entityManager.createNativeQuery(jpql).
-				setFlushMode(FlushModeType.COMMIT).
-				setParameter(1, enterprise).
-				setParameter(2, b).
-				setParameter(3, e);
+			query = entityManager.createNativeQuery(jpql).
+					setFlushMode(FlushModeType.COMMIT).
+					setParameter(1, enterprise).
+					setParameter(2, b).
+					setParameter(3, e);
+		}
 		query.setFirstResult(pageable.getPageStart());
 		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
 		List result = query.getResultList();
@@ -103,20 +116,33 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 	}
 
 
-	public List<BarrelSummary> summary_barrel(Enterprise enterprise,Date beginDate, Date endDate, Pageable pageable) {
+	public List<BarrelSummary> summary_barrel(Enterprise enterprise,Date beginDate, Date endDate,String type, Pageable pageable) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
-		String jpql =
-				"select barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) "+
-				"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  "+
-				"group by barrel.name order by barrel.name";
+		Query query = null;
+		String jpql = "";
+		if ("owner".equals(type)) {
+			jpql = "select barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
+							"from wx_shipping_barrel barrel where barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
+							"group by barrel.name order by barrel.name";
 
-		Query query = entityManager.createNativeQuery(jpql).
-				setFlushMode(FlushModeType.COMMIT).
-				setParameter(1, enterprise).
-				setParameter(2, b).
-				setParameter(3, e);
+			query = entityManager.createNativeQuery(jpql).
+							setFlushMode(FlushModeType.COMMIT).
+							setParameter(1, enterprise.getMember()).
+							setParameter(2, b).
+							setParameter(3, e);
+		} else {
+			jpql = "select barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
+					"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
+					"group by barrel.name order by barrel.name";
+
+			query = entityManager.createNativeQuery(jpql).
+					setFlushMode(FlushModeType.COMMIT).
+					setParameter(1, enterprise).
+					setParameter(2, b).
+					setParameter(3, e);
+		}
 		List result = query.getResultList();
 		List<BarrelSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {

@@ -90,8 +90,8 @@ public class ShippingItemServiceImpl extends BaseServiceImpl<ShippingItem, Long>
 	}
 
 
-	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
-		return shippingItemDao.summary(enterprise,beginDate,endDate,pageable);
+	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable) {
+		return shippingItemDao.summary(enterprise,beginDate,endDate,type,pageable);
 	}
 
 }

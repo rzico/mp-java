@@ -37,6 +37,6 @@ public interface ShippingService extends BaseService<Shipping, Long> {
 
 	Shipping completed(Shipping shipping) throws Exception;
 
-	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable);
 
 }

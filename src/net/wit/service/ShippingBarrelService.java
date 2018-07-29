@@ -21,7 +21,7 @@ import java.util.List;
 public interface ShippingBarrelService extends BaseService<ShippingBarrel, Long> {
 	Page<ShippingBarrel> findPage(Date beginDate, Date endDate, Pageable pageable);
 
-	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
-	public List<BarrelSummary> summary_barrel(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
+	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type,Pageable pageable);
+	public List<BarrelSummary> summary_barrel(Enterprise enterprise, Date beginDate, Date endDate, String type,Pageable pageable);
 
 }

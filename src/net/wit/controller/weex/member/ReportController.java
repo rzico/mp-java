@@ -66,6 +66,9 @@ public class ReportController extends BaseController {
     @Resource(name = "paymentServiceImpl")
     private PaymentService paymentService;
 
+    @Resource(name = "enterpriseServiceImpl")
+    private EnterpriseService enterpriseService;
+
     @Resource(name = "shippingBarrelServiceImpl")
     private ShippingBarrelService shippingBarrelService;
 
@@ -136,7 +139,7 @@ public class ReportController extends BaseController {
      */
     @RequestMapping(value = "/barrel_summary", method = RequestMethod.GET)
     @ResponseBody
-    public Message barrelSummary(Date beginDate, Date endDate, Pageable pageable, HttpServletRequest request){
+    public Message barrelSummary(Date beginDate, Date endDate,String type, Pageable pageable, HttpServletRequest request){
 
         Member member = memberService.getCurrent();
 
@@ -150,12 +153,17 @@ public class ReportController extends BaseController {
             return Message.error("没有开通店铺");
         }
 
-        List<BarrelSummary> header = shippingBarrelService.summary_barrel(enterprise,beginDate,endDate,pageable);
-        List<BarrelSummary> body = shippingBarrelService.summary(enterprise,beginDate,endDate,pageable);
+        List<BarrelSummary> header = shippingBarrelService.summary_barrel(enterprise,beginDate,endDate,type,pageable);
+        List<BarrelSummary> body = shippingBarrelService.summary(enterprise,beginDate,endDate,type,pageable);
 
         for (BarrelSummary s:body) {
-            Member sn = memberService.find(s.getSellerId());
-            s.setSellerName(sn.displayName());
+            if ("owner".equals(type)) {
+                Member sn = memberService.find(s.getSellerId());
+                s.setSellerName(sn.displayName());
+            } else {
+                Enterprise sn = enterpriseService.find(s.getSellerId());
+                s.setSellerName(sn.getName());
+            }
         }
 
         Map<String,Object> data = new HashMap<String,Object>();
@@ -171,7 +179,7 @@ public class ReportController extends BaseController {
      */
     @RequestMapping(value = "/shipping_summary", method = RequestMethod.GET)
     @ResponseBody
-    public Message shippingSummary(Date beginDate, Date endDate, Pageable pageable, HttpServletRequest request){
+    public Message shippingSummary(Date beginDate, Date endDate,String type, Pageable pageable, HttpServletRequest request){
 
         Member member = memberService.getCurrent();
 
@@ -185,12 +193,20 @@ public class ReportController extends BaseController {
             return Message.error("没有开通店铺");
         }
 
-        List<ShippingSummary> header = shippingService.summary(enterprise,beginDate,endDate,pageable);
-        List<ShippingItemSummary> body = shippingItemService.summary(enterprise,beginDate,endDate,pageable);
+        if (type==null) {
+            type = "shipping";
+        }
+        List<ShippingSummary> header = shippingService.summary(enterprise,beginDate,endDate,type,pageable);
+        List<ShippingItemSummary> body = shippingItemService.summary(enterprise,beginDate,endDate,type,pageable);
 
         for (ShippingItemSummary s:body) {
-           Member sn = memberService.find(s.getSellerId());
-           s.setSellerName(sn.displayName());
+           if ("owner".equals(type)) {
+               Member sn = memberService.find(s.getSellerId());
+               s.setSellerName(sn.displayName());
+           } else {
+               Enterprise sn = enterpriseService.find(s.getSellerId());
+               s.setSellerName(sn.getName());
+           }
         }
 
         Map<String,Object> data = new HashMap<String,Object>();

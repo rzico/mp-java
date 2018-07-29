@@ -68,30 +68,55 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 	}
 
 
-	public List<ShippingItemSummary> summary(Enterprise enterprise,Date beginDate, Date endDate, Pageable pageable) {
+	public List<ShippingItemSummary> summary(Enterprise enterprise,Date beginDate, Date endDate, String type,Pageable pageable) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
-		String jpql =
-			        	"select shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.cost) "+
-						"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? "+
-						"group by shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec  ";
-		String ssql =
-				        "select shipping.seller,sum(shipping.cost) as cost,"+
-						"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight "+
-						"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? "+
-						"group by shipping.seller";
+		String jpql = "";
+		Query query = null;
+		if ("owner".equals(type)) {
+			jpql =
+					"select shipping.enterprise,shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.cost) " +
+							"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.seller=? " +
+							"group by shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec  ";
+			String ssql =
+					"select shipping.enterprise,sum(shipping.cost) as cost," +
+							"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight " +
+							"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.seller=? " +
+							"group by shipping.enterprise";
 
-		jpql = "select j.*,b.cost,b.shippingFreight,b.adminFreight,b.levelFreight from ("+jpql+") j ,("+ssql+") b where j.seller=b.seller order by j.seller,j.product";
+			jpql = "select j.*,b.cost,b.shippingFreight,b.adminFreight,b.levelFreight from (" + jpql + ") j ,(" + ssql + ") b where j.enterprise=b.enterprise order by j.enterprise,j.product";
 
-		Query query = entityManager.createNativeQuery(jpql).
-				setFlushMode(FlushModeType.COMMIT).
-				setParameter(1, b).
-				setParameter(2, e).
-				setParameter(3,enterprise).
-				setParameter(4, b).
-				setParameter(5, e).
-				setParameter(6,enterprise);
+			query = entityManager.createNativeQuery(jpql).
+					setFlushMode(FlushModeType.COMMIT).
+					setParameter(1, b).
+					setParameter(2, e).
+					setParameter(3, enterprise.getMember()).
+					setParameter(4, b).
+					setParameter(5, e).
+					setParameter(6, enterprise.getMember());
+		} else {
+			jpql =
+					"select shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.cost) " +
+							"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? " +
+							"group by shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec  ";
+			String ssql =
+					"select shipping.seller,sum(shipping.cost) as cost," +
+							"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight " +
+							"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? " +
+							"group by shipping.seller";
+
+			jpql = "select j.*,b.cost,b.shippingFreight,b.adminFreight,b.levelFreight from (" + jpql + ") j ,(" + ssql + ") b where j.seller=b.seller order by j.seller,j.product";
+
+			query = entityManager.createNativeQuery(jpql).
+					setFlushMode(FlushModeType.COMMIT).
+					setParameter(1, b).
+					setParameter(2, e).
+					setParameter(3, enterprise).
+					setParameter(4, b).
+					setParameter(5, e).
+					setParameter(6, enterprise);
+		}
 		query.setFirstResult(pageable.getPageStart());
 		query.setMaxResults(pageable.getPageSize());
 		List result = query.getResultList();

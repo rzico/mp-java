@@ -82,20 +82,33 @@ public class ShippingDaoImpl extends BaseDaoImpl<Shipping, Long> implements Ship
 	}
 
 
-	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type,  Pageable pageable) {
 		Date b = DateUtils.truncate(beginDate,Calendar.DATE);
 		Date e = DateUtils.truncate(endDate,Calendar.DATE);
 		e =DateUtils.addDays(e,1);
-		String jpql =
-				"select sum(shipping.cost) as cost,"+
-						"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight "+
-						"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? "+
+		String jpql = "";
+		Query query = null;
+		    if ("owner".equals(type)) {
+				jpql = "select sum(shipping.cost) as cost," +
+						"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight " +
+						"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.seller=? " +
 						"  ";
-		Query query = entityManager.createNativeQuery(jpql).
-				setFlushMode(FlushModeType.COMMIT).
-				setParameter(1, b).
-				setParameter(2, e).
-				setParameter(3,enterprise);
+				query = entityManager.createNativeQuery(jpql).
+						setFlushMode(FlushModeType.COMMIT).
+						setParameter(1, b).
+						setParameter(2, e).
+						setParameter(3,enterprise.getMember());
+			} else {
+				jpql = "select sum(shipping.cost) as cost," +
+						"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight " +
+						"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? " +
+						"  ";
+				query = entityManager.createNativeQuery(jpql).
+						setFlushMode(FlushModeType.COMMIT).
+						setParameter(1, b).
+						setParameter(2, e).
+						setParameter(3,enterprise);
+			}
 		List result = query.getResultList();
 		List<ShippingSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {

@@ -32,5 +32,5 @@ public interface ShippingItemDao extends BaseDao<ShippingItem, Long> {
 	 */
 	Page<ShippingItem> findPage(Date beginDate,Date endDate, Pageable pageable);
 
-	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
+	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, String type,Pageable pageable);
 }

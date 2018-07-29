@@ -21,5 +21,5 @@ import net.wit.entity.summary.ShippingSummary;
 public interface ShippingItemService extends BaseService<ShippingItem, Long> {
 	Page<ShippingItem> findPage(Date beginDate,Date endDate, Pageable pageable);
 
-	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
+	public List<ShippingItemSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable);
 }

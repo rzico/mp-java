@@ -31,9 +31,9 @@ public interface ShippingBarrelDao extends BaseDao<ShippingBarrel, Long> {
 	Page<ShippingBarrel> findPage(Date beginDate, Date endDate, Pageable pageable);
 
 
-	List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
+	List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable);
 
 
-	List<BarrelSummary> summary_barrel(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
+	List<BarrelSummary> summary_barrel(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable);
 
 }

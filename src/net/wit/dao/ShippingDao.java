@@ -39,5 +39,5 @@ public interface ShippingDao extends BaseDao<Shipping, Long> {
 	 */
 	Shipping findBySn(String sn);
 
-	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable);
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable);
 }

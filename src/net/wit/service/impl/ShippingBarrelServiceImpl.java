@@ -83,12 +83,12 @@ public class ShippingBarrelServiceImpl extends BaseServiceImpl<ShippingBarrel, L
 
 
 
-	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
-		return shippingBarrelDao.summary(enterprise,beginDate,endDate,pageable);
+	public List<BarrelSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable) {
+		return shippingBarrelDao.summary(enterprise,beginDate,endDate,type,pageable);
 	}
 
-	public List<BarrelSummary> summary_barrel(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
-		return shippingBarrelDao.summary_barrel(enterprise,beginDate,endDate,pageable);
+	public List<BarrelSummary> summary_barrel(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable) {
+		return shippingBarrelDao.summary_barrel(enterprise,beginDate,endDate,type,pageable);
 	}
 
 

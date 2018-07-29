@@ -566,8 +566,8 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 	}
 
-	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate, Pageable pageable) {
-		return shippingDao.summary(enterprise,beginDate,endDate,pageable);
+	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable) {
+		return shippingDao.summary(enterprise,beginDate,endDate,type,pageable);
 	}
 
 
