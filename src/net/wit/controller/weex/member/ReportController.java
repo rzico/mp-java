@@ -153,6 +153,10 @@ public class ReportController extends BaseController {
             return Message.error("没有开通店铺");
         }
 
+        if (type==null) {
+            type = "shipping";
+        }
+
         List<BarrelSummary> header = shippingBarrelService.summary_barrel(enterprise,beginDate,endDate,type,pageable);
         List<BarrelSummary> body = shippingBarrelService.summary(enterprise,beginDate,endDate,type,pageable);
 

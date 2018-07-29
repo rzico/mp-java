@@ -14,9 +14,7 @@ import net.wit.*;
 import net.wit.Filter.Operator;
 
 import net.wit.controller.model.*;
-import net.wit.dao.ArticleDao;
-import net.wit.dao.BindUserDao;
-import net.wit.dao.MemberDao;
+import net.wit.dao.*;
 import net.wit.entity.Message;
 import net.wit.plat.im.Push;
 import net.wit.plat.im.User;
@@ -34,7 +32,6 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.wit.dao.MessageDao;
 import net.wit.entity.*;
 import net.wit.service.MessageService;
 
@@ -61,6 +58,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 	@Resource(name = "articleDaoImpl")
 	private ArticleDao articleDao;
 
+	@Resource(name = "adminDaoImpl")
+	private AdminDao adminDao;
 
 	@Resource(name = "taskExecutor")
 	private TaskExecutor taskExecutor;
@@ -343,30 +342,41 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 
 	//订单提醒
 	public Boolean orderSellerPushTo(OrderLog orderLog) {
-		Message msg = new Message();
-		msg.setReceiver(orderLog.getOrder().getSeller());
-		msg.setMember(orderLog.getOrder().getMember());
-		msg.setType(Message.Type.order);
-		msg.setThumbnial(msg.getMember().getLogo());
-		msg.setTitle("订单提醒");
-		msg.setContent(orderLog.getContent());
-		OrderListModel ext = new OrderListModel();
-		ext.bind(orderLog.getOrder());
-		msg.setExt(JsonUtils.toJson(ext));
-		if (orderLog.getType().equals(OrderLog.Type.payment)) {
-			if (orderLog.getOrder().getHopeDate()!=null) {
-				msg.setContent("<预约单>"+msg.getContent());
-				msg.setSound(4);
-			} else {
-				msg.setSound(1);
-			}
-		} else {
-			if (orderLog.getContent().equals("亲，有客户催单了，请及时处理")) {
-				msg.setSound(2);
+
+		Admin admin = adminDao.findByMember(orderLog.getOrder().getSeller());
+		if (admin!=null && admin.getEnterprise()!=null) {
+			List<Filter> filters = new ArrayList<>();
+			filters.add(new Filter("enterprise", Operator.eq, admin.getEnterprise()));
+			List<Admin> admins = adminDao.findList(null,null,filters,null);
+			for (Admin ad:admins) {
+				if (ad.isOwner() || ad.isRole("1")) {
+					Message msg = new Message();
+					msg.setReceiver(ad.getMember());
+					msg.setMember(orderLog.getOrder().getMember());
+					msg.setType(Message.Type.order);
+					msg.setThumbnial(msg.getMember().getLogo());
+					msg.setTitle("订单提醒");
+					msg.setContent(orderLog.getContent());
+					OrderListModel ext = new OrderListModel();
+					ext.bind(orderLog.getOrder());
+					msg.setExt(JsonUtils.toJson(ext));
+					if (orderLog.getType().equals(OrderLog.Type.payment)) {
+						if (orderLog.getOrder().getHopeDate() != null) {
+							msg.setContent("<预约单>" + msg.getContent());
+							msg.setSound(4);
+						} else {
+							msg.setSound(1);
+						}
+					} else {
+						if (orderLog.getContent().equals("亲，有客户催单了，请及时处理")) {
+							msg.setSound(2);
+						}
+					}
+					pushTo(msg);
+				}
 			}
 		}
-
-		return pushTo(msg);
+		return true;
 	}
 
 	//提醒配送站
