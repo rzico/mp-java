@@ -55,7 +55,7 @@ public class GaugeQuestion extends OrderEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private  Gauge gauge;
+    private Gauge gauge;
 
     public Type getType() {
         return type;

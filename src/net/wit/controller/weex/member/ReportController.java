@@ -161,7 +161,7 @@ public class ReportController extends BaseController {
         List<BarrelSummary> body = shippingBarrelService.summary(enterprise,beginDate,endDate,type,pageable);
 
         for (BarrelSummary s:body) {
-            if ("owner".equals(type)) {
+            if (!"owner".equals(type)) {
                 Member sn = memberService.find(s.getSellerId());
                 s.setSellerName(sn.displayName());
             } else {
@@ -204,7 +204,7 @@ public class ReportController extends BaseController {
         List<ShippingItemSummary> body = shippingItemService.summary(enterprise,beginDate,endDate,type,pageable);
 
         for (ShippingItemSummary s:body) {
-           if ("owner".equals(type)) {
+           if (!"owner".equals(type)) {
                Member sn = memberService.find(s.getSellerId());
                s.setSellerName(sn.displayName());
            } else {
