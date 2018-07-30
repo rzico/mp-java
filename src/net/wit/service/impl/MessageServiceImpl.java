@@ -381,28 +381,34 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 
 	//提醒配送站
 	public Boolean shippingPushTo(Shipping shipping,OrderLog orderLog) {
-		Message msg = new Message();
-		msg.setReceiver(shipping.getEnterprise().getMember());
-		msg.setMember(shipping.getSeller());
-		msg.setType(Message.Type.shipping);
-		msg.setThumbnial(msg.getMember().getLogo());
-		msg.setTitle("派单提醒");
-		msg.setContent(orderLog.getContent());
-		ShippingListModel ext = new ShippingListModel();
-		ext.bind(shipping);
-		msg.setExt(JsonUtils.toJson(ext));
-
-		if (msg.getContent().contains("预约单安排至")) {
-			msg.setSound(4);
-		} else
-		if (msg.getContent().contains("订单安排至")) {
-			msg.setSound(1);
-		} else
-		if (msg.getContent().contains("订单退回至")) {
-			msg.setSound(6);
-		}
-
-		return pushTo(msg);
+			List<Filter> filters = new ArrayList<>();
+			filters.add(new Filter("enterprise", Operator.eq,shipping.getEnterprise()));
+			List<Admin> admins = adminDao.findList(null,null,filters,null);
+			for (Admin ad:admins) {
+				Message msg = new Message();
+				msg.setReceiver(ad.getMember());
+				msg.setMember(shipping.getSeller());
+				msg.setType(Message.Type.shipping);
+				msg.setThumbnial(msg.getMember().getLogo());
+				msg.setTitle("派单提醒");
+				msg.setContent(orderLog.getContent());
+				ShippingListModel ext = new ShippingListModel();
+				ext.bind(shipping);
+				msg.setExt(JsonUtils.toJson(ext));
+				if (msg.getContent().contains("预约单安排至")) {
+					msg.setSound(4);
+				} else if (msg.getContent().contains("订单安排至")) {
+					msg.setSound(1);
+				} else if (msg.getContent().contains("订单退回至")) {
+					msg.setSound(6);
+				} else {
+					if (msg.getContent().equals("亲，有客户催单了，请及时处理")) {
+						msg.setSound(2);
+					}
+				}
+				pushTo(msg);
+			}
+			return true;
 	}
 
 	//提醒送货员

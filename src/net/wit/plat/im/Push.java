@@ -101,6 +101,7 @@ public class Push {
         Map<String,Object> MsgContent = new HashMap<String,Object>();
         msgBody.put("MsgContent",MsgContent);
         MsgContent.put("Text",content);
+        MsgContent.put("Sound","h"+String.valueOf(sound)+".mp3");
         Map<String,Object> OfflinePushInfo = new HashMap<String,Object>();
         data.put("OfflinePushInfo",OfflinePushInfo);
         OfflinePushInfo.put("PushFlag",0);
