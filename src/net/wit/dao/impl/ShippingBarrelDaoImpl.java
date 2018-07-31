@@ -83,7 +83,7 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 	    	jpql = jpql + "select barrel.seller as memberId,barrel.name,0 as quantity,0 as return_quantity,sum(barrel.quantity) as s_quantity,sum(barrel.return_quantity) as s_return_quantity  " +
 			    	"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
 			    	"group by barrel.seller,barrel.name ";
-	    	jpql = " select memberId,name,sum(quantity),sum(return_quantity),sum(s_quantity),sum(s_return_quantity) from("+jpql+") group by memberId,name order by memberId";
+	    	jpql = " select memberId,name,sum(quantity),sum(return_quantity),sum(s_quantity),sum(s_return_quantity) from("+jpql+") as j group by memberId,name order by memberId";
 
 			query = entityManager.createNativeQuery(jpql).
 					setFlushMode(FlushModeType.COMMIT).
