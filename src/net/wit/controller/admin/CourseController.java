@@ -77,9 +77,7 @@ public class CourseController extends BaseController {
 		model.addAttribute("statuss",statuss);
 
 		List<MapEntity> types = new ArrayList<>();
-		if (admin.isManager()) {
-			types.add(new MapEntity("_public", "公共"));
-		}
+		types.add(new MapEntity("_public", "公共"));
 		types.add(new MapEntity("_private","私有"));
 		model.addAttribute("types",types);
 
@@ -295,6 +293,8 @@ public class CourseController extends BaseController {
 		//非超级管理员都只能管本企业用户
 		if (!admin.isManager()) {
 			filters.add(new Filter("enterprise", Filter.Operator.eq, admin.getEnterprise()));
+		} else {
+			filters.add(new Filter("type", Filter.Operator.eq, Course.Type._private));
 		}
 
 		Page<Course> page = courseService.findPage(beginDate,endDate,pageable);

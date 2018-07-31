@@ -73,27 +73,27 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 		e =DateUtils.addDays(e,1);
 		Query query = null;
 		String jpql = "";
-		if ("owner".equals(type)) {
-			jpql = "select barrel.enterprise,barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
-					"from wx_shipping_barrel barrel where barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
-					"group by barrel.enterprise,barrel.name order by barrel.enterprise";
+
+//		if ("owner".equals(type)) {
+
+			jpql = "select ep.member as memberId,barrel.name as name,sum(barrel.quantity) as quantity,sum(barrel.return_quantity) as return_quantity,0 as s_quantity,0 as s_return_quantity " +
+					"from wx_shipping_barrel barrel,wx_enterprise ep where barrel.enterprise=ep.id and barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
+					"group by ep.member,barrel.name ";
+		    jpql = jpql + " union all ";
+	    	jpql = jpql + "select barrel.seller as memberId,barrel.name,0 as quantity,0 as return_quantity,sum(barrel.quantity) as s_quantity,sum(barrel.return_quantity) as s_return_quantity  " +
+			    	"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
+			    	"group by barrel.seller,barrel.name ";
+	    	jpql = " select memberId,name,sum(quantity),sum(return_quantity),sum(s_quantity),sum(s_return_quantity) from("+jpql+") group by memberId,name order by memberId";
 
 			query = entityManager.createNativeQuery(jpql).
 					setFlushMode(FlushModeType.COMMIT).
 					setParameter(1, enterprise.getMember()).
 					setParameter(2, b).
-					setParameter(3, e);
-		} else {
-			jpql = "select barrel.seller,barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
-					"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
-					"group by barrel.seller,barrel.name order by barrel.seller";
+					setParameter(3, e).
+					setParameter(4, enterprise).
+					setParameter(5, b).
+					setParameter(6, e);
 
-			query = entityManager.createNativeQuery(jpql).
-					setFlushMode(FlushModeType.COMMIT).
-					setParameter(1, enterprise).
-					setParameter(2, b).
-					setParameter(3, e);
-		}
 		query.setFirstResult(pageable.getPageStart());
 		query.setMaxResults(pageable.getPageStart()+pageable.getPageSize());
 		List result = query.getResultList();
@@ -109,6 +109,10 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 				rw.setQuantity(bq.intValue());
 				BigDecimal br = (BigDecimal) row[3];
 				rw.setReturnQuantity(br.intValue());
+				BigDecimal Sbq = (BigDecimal) row[4];
+				rw.setsQuantity(Sbq.intValue());
+				BigDecimal Sbr = (BigDecimal) row[5];
+				rw.setsReturnQuantity(Sbr.intValue());
 				data.add(rw);
 			}
 		}
@@ -122,27 +126,25 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 		e =DateUtils.addDays(e,1);
 		Query query = null;
 		String jpql = "";
-		if ("owner".equals(type)) {
-			jpql = "select barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
-							"from wx_shipping_barrel barrel where barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
-							"group by barrel.name order by barrel.name";
 
-			query = entityManager.createNativeQuery(jpql).
+		jpql = "select barrel.name as name,sum(barrel.quantity) as quantity,sum(barrel.return_quantity) as return_quantity,0 as s_quantity,0 as s_return_quantity " +
+				"from wx_shipping_barrel barrel where barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
+				"group by barrel.name";
+		jpql = jpql + " union all ";
+		jpql = jpql + "select barrel.name as name,0 as quantity,0 as return_quantity,sum(barrel.quantity) as s_quantity,sum(barrel.return_quantity) as s_return_quantity " +
+				"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
+				"group by barrel.name";
+		jpql = " select name,sum(quantity),sum(return_quantity),sum(s_quantity),sum(s_return_quantity) from ("+jpql+") j group by name order by name";
+
+		query = entityManager.createNativeQuery(jpql).
 							setFlushMode(FlushModeType.COMMIT).
 							setParameter(1, enterprise.getMember()).
 							setParameter(2, b).
-							setParameter(3, e);
-		} else {
-			jpql = "select barrel.name,sum(barrel.quantity),sum(barrel.return_quantity) " +
-					"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
-					"group by barrel.name order by barrel.name";
+							setParameter(3, e).
+					setParameter(4, enterprise).
+					setParameter(5, b).
+					setParameter(6, e);
 
-			query = entityManager.createNativeQuery(jpql).
-					setFlushMode(FlushModeType.COMMIT).
-					setParameter(1, enterprise).
-					setParameter(2, b).
-					setParameter(3, e);
-		}
 		List result = query.getResultList();
 		List<BarrelSummary> data = new ArrayList<>();
 		for (int i=0;i<result.size();i++) {
@@ -153,6 +155,10 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 			rw.setQuantity(bq.intValue());
 			BigDecimal br = (BigDecimal) row[2];
 			rw.setReturnQuantity(br.intValue());
+			BigDecimal Sbq = (BigDecimal) row[3];
+			rw.setsQuantity(Sbq.intValue());
+			BigDecimal Sbr = (BigDecimal) row[4];
+			rw.setsReturnQuantity(Sbr.intValue());
 			if (rw.getBarrelName()!=null) {
 				data.add(rw);
 			}

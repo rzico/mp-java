@@ -13,10 +13,15 @@ public class BarrelSummary implements Serializable {
 
     private String barrelName;
 
-     /** 送出 */
+     /** 配送-送出 */
     private Integer quantity;
-     /** 回收 */
+     /** 配送-回收 */
     private Integer returnQuantity;
+
+    /** 派单-送出 */
+    private Integer sQuantity;
+    /** 派单-回收 */
+    private Integer sReturnQuantity;
 
     public Long getSellerId() {
         return sellerId;
@@ -57,4 +62,21 @@ public class BarrelSummary implements Serializable {
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
     }
+
+    public Integer getsQuantity() {
+        return sQuantity;
+    }
+
+    public void setsQuantity(Integer sQuantity) {
+        this.sQuantity = sQuantity;
+    }
+
+    public Integer getsReturnQuantity() {
+        return sReturnQuantity;
+    }
+
+    public void setsReturnQuantity(Integer sReturnQuantity) {
+        this.sReturnQuantity = sReturnQuantity;
+    }
+
 }

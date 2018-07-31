@@ -347,6 +347,8 @@ public class Course extends OrderEntity {
 		this.tagNames = tagNames;
 	}
 
+
+
 	public List<String> getArrayImages() {
 		if (getImages()!=null) {
 		  List<String> data = JsonUtils.toObject(getImages(),List.class);

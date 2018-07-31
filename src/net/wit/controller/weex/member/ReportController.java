@@ -161,13 +161,8 @@ public class ReportController extends BaseController {
         List<BarrelSummary> body = shippingBarrelService.summary(enterprise,beginDate,endDate,type,pageable);
 
         for (BarrelSummary s:body) {
-            if (!"owner".equals(type)) {
-                Member sn = memberService.find(s.getSellerId());
-                s.setSellerName(sn.displayName());
-            } else {
-                Enterprise sn = enterpriseService.find(s.getSellerId());
-                s.setSellerName(sn.getName());
-            }
+            Member sn = memberService.find(s.getSellerId());
+            s.setSellerName(sn.displayName());
         }
 
         Map<String,Object> data = new HashMap<String,Object>();
