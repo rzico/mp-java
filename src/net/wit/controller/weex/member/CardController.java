@@ -598,7 +598,7 @@ public class CardController extends BaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(String type,Pageable pageable, HttpServletRequest request){
+    public Message list(String type,String keyword,Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -639,6 +639,9 @@ public class CardController extends BaseController {
             }
         }
 //        filters.add(new Filter("status", Filter.Operator.ne,Card.Status.none));
+        if (keyword!=null) {
+            pageable.setSearchValue(keyword);
+        }
         pageable.setFilters(filters);
         Page<Card> page = cardService.findPage(null,null,pageable);
         PageBlock model = PageBlock.bind(page);

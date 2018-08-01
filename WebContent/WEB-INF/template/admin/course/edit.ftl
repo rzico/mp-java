@@ -175,7 +175,7 @@
 
 
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">课程大纲：</label>
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>课程大纲：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <div class="uploader-thum-container">
                         <div id="content5FileList" class="uploader-list">

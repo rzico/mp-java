@@ -131,8 +131,10 @@ public class CourseController extends BaseController {
 		entity.setContent7(course.getContent7());
 		entity.setContentLogo(course.getContentLogo());
 		List<String> id = new ArrayList<>();
-		for (String s:images.split(",")) {
-			id.add(s);
+		if (images!=null) {
+			for (String s : images.split(",")) {
+				id.add(s);
+			}
 		}
 		entity.setImages(JsonUtils.toJson(id));
 
@@ -236,8 +238,10 @@ public class CourseController extends BaseController {
 		entity.setContent7(course.getContent7());
 		entity.setContentLogo(course.getContentLogo());
 		List<String> id = new ArrayList<>();
-		for (String s:images.split(",")) {
-			id.add(s);
+		if (images!=null) {
+			for (String s : images.split(",")) {
+				id.add(s);
+			}
 		}
 		entity.setImages(JsonUtils.toJson(id));
 

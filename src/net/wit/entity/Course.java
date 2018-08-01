@@ -135,9 +135,8 @@ public class Course extends OrderEntity {
 	private String content4;
 
 	/** 课程大纲 */
-	@NotEmpty
 	@Length(max = 200)
-	@Column(columnDefinition="varchar(255) not null comment '讲师头像'")
+	@Column(columnDefinition="varchar(255) comment '讲师头像'")
 	private String content5;
 
 	/** 适合谁听 */

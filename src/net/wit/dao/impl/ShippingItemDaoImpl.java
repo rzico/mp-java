@@ -78,7 +78,7 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 			jpql =
 					"select shipping.enterprise,shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.cost) " +
 							"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.seller=? " +
-							"group by shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec  ";
+							"group by shipping.enterprise,shippingItem.product,shippingItem.name,shippingItem.spec  ";
 			String ssql =
 					"select shipping.enterprise,sum(shipping.cost) as cost," +
 							"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight " +
