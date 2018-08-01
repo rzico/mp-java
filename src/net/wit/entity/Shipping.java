@@ -106,6 +106,10 @@ public class Shipping extends BaseEntity {
 	@Column(columnDefinition="datetime comment '送达时间'")
 	private Date DeliveryDate;
 
+	/** 核销时间 */
+	@Column(columnDefinition="datetime comment '核销时间'")
+	private Date CompleteDate;
+
 	/** 编号 */
 	@Column(nullable = false, updatable = false, unique = true, length = 100,columnDefinition="varchar(100) not null unique comment '编号'")
 	private String sn;
@@ -214,6 +218,13 @@ public class Shipping extends BaseEntity {
 	@Column(columnDefinition="varchar(255) not null default '#' comment '方向'")
 	private String groupName;
 
+	public Date getCompleteDate() {
+		return CompleteDate;
+	}
+
+	public void setCompleteDate(Date completeDate) {
+		CompleteDate = completeDate;
+	}
 
 	public BigDecimal getCost() {
 		return cost;

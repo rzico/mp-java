@@ -321,6 +321,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 
 			shipping.setShippingStatus(Shipping.ShippingStatus.completed);
 			shipping.setOrderStatus(Shipping.OrderStatus.completed);
+			shipping.setCompleteDate(new Date());
   			shippingDao.merge(shipping);
   			//记忆楼层和送货点
 
