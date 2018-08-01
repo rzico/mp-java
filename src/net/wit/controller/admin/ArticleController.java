@@ -292,8 +292,8 @@ public class ArticleController extends BaseController {
     @ResponseBody
 	public Message update(Article article, Long templateId, Long articleCatalogId, Long articleCategoryId, Long areaId, Long memberId, Long [] tagIds){
 		Article entity = articleService.find(article.getId());
-
-		entity.setIsTop(article.getIsTop());
+//
+//		entity.setIsTop(article.getIsTop());
 
 		entity.setAuthor(article.getAuthor());
 
@@ -302,8 +302,8 @@ public class ArticleController extends BaseController {
 		}
 
 		entity.setTitle(article.getTitle());
-
-		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
+//
+//		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
 
 		entity.setArticleCatalog(articleCatalogService.find(articleCatalogId));
 
