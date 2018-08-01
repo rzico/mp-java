@@ -325,6 +325,10 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			shipping.setCompleteDate(new Date());
   			shippingDao.merge(shipping);
 
+  			Order order = shipping.getOrder();
+  			order.setCompleteDate(shipping.getCompleteDate());
+  			orderDao.merge(order);
+
   			//记忆楼层和送货点
 
 		    Receiver receiver = receiverService.find(shipping.getOrder().getReceiverId());

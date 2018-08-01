@@ -48,7 +48,7 @@ public class Push {
         OfflinePushInfo.put("Ext","");
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
-        AndroidInfo.put("Sound","android.resource://com.rzico.assistant/beep.ogg");//+String.valueOf(message.getSound())+"");
+        AndroidInfo.put("Sound","h"+String.valueOf(message.getSound())+".mp3");
         Map<String,Object> ApnsInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("ApnsInfo",ApnsInfo);
         ApnsInfo.put("Sound","h"+String.valueOf(message.getSound())+".caf");
@@ -109,7 +109,7 @@ public class Push {
         OfflinePushInfo.put("Ext","");
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
-        AndroidInfo.put("Sound","android.resource://com.rzico.assistant/beep.ogg");//+String.valueOf(message.getSound())+"");
+        AndroidInfo.put("Sound","h"+String.valueOf(sound)+".mp3");
         Map<String,Object> ApnsInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("ApnsInfo",ApnsInfo);
         ApnsInfo.put("Sound","h"+String.valueOf(sound)+".caf");

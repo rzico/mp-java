@@ -348,6 +348,10 @@ public class Order extends BaseEntity {
 	@Column(columnDefinition="datetime comment '送达时间'")
 	private Date DeliveryDate;
 
+	/** 核销时间 */
+	@Column(columnDefinition="datetime comment '核销时间'")
+	private Date CompleteDate;
+
 	/** 买家 */
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -571,6 +575,14 @@ public class Order extends BaseEntity {
 
 	public void setPaymentPluginName(String paymentPluginName) {
 		this.paymentPluginName = paymentPluginName;
+	}
+
+	public Date getCompleteDate() {
+		return CompleteDate;
+	}
+
+	public void setCompleteDate(Date completeDate) {
+		CompleteDate = completeDate;
 	}
 
 	/**

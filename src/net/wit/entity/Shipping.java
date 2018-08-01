@@ -628,6 +628,8 @@ public class Shipping extends BaseEntity {
 		DeliveryDate = deliveryDate;
 	}
 
+
+
 	/**
 	 * 判断是否已锁定
 	 *

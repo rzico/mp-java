@@ -978,6 +978,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Long> implements Or
 			order.setIsAllocatedStock(false);
 		}
 
+		order.setCompleteDate(new Date());
 		order.setOrderStatus(Order.OrderStatus.completed);
 		order.setExpire(null);
 		orderDao.merge(order);

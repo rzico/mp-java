@@ -39,6 +39,9 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  送达日期 */
     private Date deliveryDate;
 
+    /**  核销日期 */
+    private Date completeDate;
+
     /**  状态描述 */
     private String statusDescr;
 
@@ -504,6 +507,14 @@ public class OrderModel extends BaseModel implements Serializable {
         this.shippingMemo = shippingMemo;
     }
 
+    public Date getCompleteDate() {
+        return completeDate;
+    }
+
+    public void setCompleteDate(Date completeDate) {
+        this.completeDate = completeDate;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -657,6 +668,7 @@ public class OrderModel extends BaseModel implements Serializable {
         this.memo = order.getMemo();
         this.hopeDate = order.getHopeDate();
         this.deliveryDate = order.getDeliveryDate();
+        this.completeDate = order.getCompleteDate();
         this.giftItems = OrderItemModel.giftList(order.getOrderItems());
 
     }
