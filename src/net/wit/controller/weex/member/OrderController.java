@@ -337,7 +337,7 @@ public class OrderController extends BaseController {
 		pageable.setFilters(filters);
 
 		List<net.wit.Order> orders = pageable.getOrders();
-		if (!"completed".equals(status) && !"cancelled".equals(status) && !"pending".equals(status)) {
+		if (!"completed".equals(status) && !"cancelled".equals(status) && !"pending".equals(status) && !"shipped".equals(status)) {
  	    	pageable.setOrderDirection(net.wit.Order.Direction.asc);
  		    pageable.setOrderProperty("createDate");
 		} else {
