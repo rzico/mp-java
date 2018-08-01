@@ -65,68 +65,6 @@
                 </div>
             </div>
 
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">模版：</label>
-                <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                    [#if templates??]
-                        <select name="templateId" class="select" style="background-color: #FFFFFF">
-                            [#list templates as template]
-                                <option[#if data.template?? && template.id == data.template.id] selected[/#if] value="${template.id}">${template.name}</option>
-                            [/#list]
-				</select>
-                    [/#if]
-				</span>
-                </div>
-            </div>
-
-
-            <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">谁可见：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if authoritys??]
-                [#list authoritys as authority]
-                    <div class="radio-box">
-                        <input name="authority" type="radio" id="authority-${authority_index}" value="${authority.id}"[#if authority.id == data.authority] checked[/#if]>
-                        <label for="authority-${authority_index}">${authority.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-            </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否投稿：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isPublish" id="isPublish" value="true"[#if data.isPublish] checked[/#if]>
-                    <input type="hidden" name="_isPublish" value="false" />
-                    <label for="isPublish">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否评论：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isReview" id="isReview" value="true"[#if data.isReview] checked[/#if]>
-                    <input type="hidden" name="_isReview" value="false" />
-                    <label for="isReview">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否赞赏：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isReward" id="isReward" value="true"[#if data.isReward] checked[/#if]>
-                    <input type="hidden" name="_isReward" value="false" />
-                    <label for="isReward">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">作者：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -144,26 +82,12 @@
             [/#if]
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">类型：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if mediaTypes??]
-                [#list mediaTypes as mediaType]
-                    <div class="radio-box">
-                        <input name="mediaType" type="radio" id="mediaType-${mediaType_index}" value="${mediaType.id}"[#if mediaType.id == data.mediaType] checked[/#if]>
-                        <label for="mediaType-${mediaType_index}">${mediaType.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">分类：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if articleCategorys??]
-				<select name="articleCategoryId" class="select" style="background-color: #FFFFFF">
-                    [#list articleCategorys as articleCategory]
-					<option[#if data.articleCategory?? && articleCategory.id == data.articleCategory.id] selected[/#if] value="${articleCategory.id}">${articleCategory.name}</option>
+                [#if articleCatalogs??]
+				<select name="articleCatalogId" class="select" style="background-color: #FFFFFF">
+                    [#list articleCatalogs as articleCatalog]
+					<option[#if data.articleCatalog?? && articleCatalog.id == data.articleCatalog.id] selected[/#if] value="${articleCatalog.id}">${articleCatalog.name}</option>
                     [/#list]
 				</select>
                 [/#if]
@@ -201,35 +125,6 @@
         </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否样例：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isExample" id="isExample" value="true"[#if data.isExample?? && data.isExample] checked[/#if]>
-                    <input type="hidden" name="_isExample" value="false" />
-                    <label for="isExample">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否置顶：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isTop" id="isTop" value="true"[#if data.isTop?? && data.isTop] checked[/#if]>
-                    <input type="hidden" name="_isTop" value="false" />
-                    <label for="isTop">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">背景音乐：</label>
-        <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.music}</span>
-                </div>
-                </div>
-
                 <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">评论数：</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -258,47 +153,6 @@
                 </div>
                 </div>
 
-        <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">文集：</label>
-        <div class="formControls col-xs-8 col-sm-9">
-                <span>[#if data.articleCatalog??]${data.articleCatalog.name}[/#if]</span>
-                </div>
-                </div>
-
-        <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">所在地：</label>
-        <div class="formControls col-xs-8 col-sm-9">
-                <span>[#if data.area??]${data.area.name}[/#if]</span>
-                </div>
-                </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">位置：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.addr}</span>
-             </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">伟度：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.lat}</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">经度：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.lng}</span>
-            </div>
-        </div>
-
-         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">投票：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <span>${data.votes}</span>
-            </div>
-        </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">

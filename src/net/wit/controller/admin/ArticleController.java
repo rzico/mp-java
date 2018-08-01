@@ -158,15 +158,15 @@ public class ArticleController extends BaseController {
 		Admin admin = adminService.getCurrent();
 		Article entity = new Article();
 
-		entity.setAuthority(article.getAuthority());
+		entity.setAuthority(Article.Authority.isPublic);
 
 		entity.setIsPublish(true);
 
-		entity.setIsReview(article.getIsReview());
+		entity.setIsReview(true);
 
-		entity.setIsReward(article.getIsReward());
+		entity.setIsReward(false);
 
-		entity.setIsExample(article.getIsExample());
+		entity.setIsExample(false);
 
 		entity.setIsTop(article.getIsTop());
 
@@ -188,15 +188,11 @@ public class ArticleController extends BaseController {
 
 		entity.setTitle(article.getTitle());
 
-		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
-
 		entity.setArticleCatalog(articleCatalogService.find(articleCatalogId));
 
 		entity.setDeleted(false);
 
 		entity.setDragonStatus(Article.DragonStatus.none);
-
-		entity.setArea(areaService.find(areaId));
 
 		if (admin.isManager()) {
 			messageService.GMInit(net.wit.entity.Message.Type.message);
@@ -205,8 +201,6 @@ public class ArticleController extends BaseController {
 		} else {
 			entity.setMember(admin.getEnterprise().getMember());
 		}
-
-		entity.setTemplate(templateService.find(templateId));
 
 		entity.setIsDraft(true);
 
@@ -297,16 +291,6 @@ public class ArticleController extends BaseController {
 	public Message update(Article article, Long templateId, Long articleCatalogId, Long articleCategoryId, Long areaId, Long memberId, Long [] tagIds){
 		Article entity = articleService.find(article.getId());
 
-		entity.setAuthority(article.getAuthority());
-
-		entity.setIsPublish(article.getIsPublish());
-
-		entity.setIsReview(article.getIsReview());
-
-		entity.setIsReward(article.getIsReward());
-
-		entity.setIsExample(article.getIsExample());
-
 		entity.setIsTop(article.getIsTop());
 
 		entity.setAuthor(article.getAuthor());
@@ -315,15 +299,11 @@ public class ArticleController extends BaseController {
 			entity.setContent(article.getContent());
 		}
 
-		entity.setMediaType(article.getMediaType());
-
 		entity.setTitle(article.getTitle());
 
 		entity.setArticleCategory(articleCategoryService.find(articleCategoryId));
 
 		entity.setArticleCatalog(articleCatalogService.find(articleCatalogId));
-
-		entity.setTemplate(templateService.find(templateId));
 
 		entity.setThumbnail(article.getThumbnail());
 

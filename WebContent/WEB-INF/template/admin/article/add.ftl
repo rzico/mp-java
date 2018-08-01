@@ -47,42 +47,6 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">谁可见：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                [#if authoritys??]
-                [#list authoritys as authority]
-                    <div class="radio-box">
-                        <input name="authority" type="radio" id="authority-${authority_index}" value="${authority.id}" [#if authority_index==0] checked [/#if]>
-                        <label for="authority-${authority_index}">${authority.name}</label>
-                    </div>
-                [/#list]
-                [/#if]
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否评论：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isReview" id="isReview" value="true" checked>
-                    <input type="hidden" name="_isReview" value="false" />
-                    <label for="isReview">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否赞赏：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isReward" id="isReward" value="true">
-                    <input type="hidden" name="_isReward" value="false" />
-                    <label for="isReward">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">文章内容：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <script id="content"  name="content" type="text/plain" style="width:100%;height:400px;"></script>
@@ -102,33 +66,12 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">模版：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-            [#if templates??]
-                <select name="templateId" class="select" style="background-color: #FFFFFF">
-                    [#list templates as template]
-                        <option value="${template.id}">${template.name}</option>
-                    [/#list]
-				</select>
-            [/#if]
-				</span>
-            </div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">背景音乐：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="music" name="music">
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">分类：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                [#if articleCategorys??]
-				<select name="articleCategoryId" class="select" style="background-color: #FFFFFF">
-                    [#list articleCategorys as articleCategory]
-					<option value="${articleCategory.id}">${articleCategory.name}</option>
+                [#if articleCatalogs??]
+				<select name="articleCatalogId" class="select" style="background-color: #FFFFFF">
+                    [#list articleCatalogs as articleCatalog]
+					<option value="${articleCatalog.id}">${articleCatalog.name}</option>
                     [/#list]
 				</select>
                 [/#if]
@@ -147,18 +90,7 @@
             </div>
             </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">是否样例：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" name="isExample" id="isExample" value="true">
-                    <input type="hidden" name="_isExample" value="false" />
-                    <label for="isExample">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
+              <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">是否置顶：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
