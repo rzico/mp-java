@@ -54,9 +54,9 @@ public class CartController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public @ResponseBody
 	Message add(Long id, Integer quantity,BigDecimal price,Long promotionId, HttpServletRequest request, HttpServletResponse response) {
-		if (quantity == null || quantity < 1) {
-			return Message.error("请输入购买数量");
-		}
+//		if (quantity == null || quantity < 1) {
+//			return Message.error("请输入购买数量");
+//		}
 		Product product = productService.find(id);
 		if (product == null) {
 			return Message.error("无效商品id");
