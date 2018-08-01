@@ -77,12 +77,12 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 		if ("owner".equals(type)) {
 			jpql =
 					"select shipping.enterprise,shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.cost) " +
-							"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.seller=? " +
+							"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.complete_date>=? and shipping.complete_date<? and shipping.seller=? " +
 							"group by shipping.enterprise,shippingItem.product,shippingItem.name,shippingItem.spec  ";
 			String ssql =
 					"select shipping.enterprise,sum(shipping.cost) as cost," +
 							"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight " +
-							"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.seller=? " +
+							"from wx_shipping shipping where shipping.complete_date>=? and shipping.complete_date<? and shipping.seller=? " +
 							"group by shipping.enterprise";
 
 			jpql = "select j.*,b.cost,b.shippingFreight,b.adminFreight,b.levelFreight from (" + jpql + ") j ,(" + ssql + ") b where j.enterprise=b.enterprise order by j.enterprise,j.product";
@@ -98,12 +98,12 @@ public class ShippingItemDaoImpl extends BaseDaoImpl<ShippingItem, Long> impleme
 		} else {
 			jpql =
 					"select shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec,sum(shippingItem.quantity),sum(shippingItem.quantity * shippingItem.cost) " +
-							"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? " +
+							"from wx_shipping_item shippingItem,wx_shipping shipping where shippingItem.shipping=shipping.id and shipping.complete_date>=? and shipping.complete_date<? and shipping.enterprise=? " +
 							"group by shipping.seller,shippingItem.product,shippingItem.name,shippingItem.spec  ";
 			String ssql =
 					"select shipping.seller,sum(shipping.cost) as cost," +
 							"sum(shipping.shipping_freight) as shippingFreight,sum(shipping.admin_freight) as adminFreight,sum(shipping.level_freight) as levelFreight " +
-							"from wx_shipping shipping where shipping.create_date>=? and shipping.create_date<? and shipping.enterprise=? " +
+							"from wx_shipping shipping where shipping.complete_date>=? and shipping.complete_date<? and shipping.enterprise=? " +
 							"group by shipping.seller";
 
 			jpql = "select j.*,b.cost,b.shippingFreight,b.adminFreight,b.levelFreight from (" + jpql + ") j ,(" + ssql + ") b where j.seller=b.seller order by j.seller,j.product";

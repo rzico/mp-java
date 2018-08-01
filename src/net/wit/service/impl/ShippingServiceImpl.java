@@ -313,6 +313,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	}
 
 	public Shipping completed(Shipping _shipping) throws Exception {
+
 		    Shipping shipping = shippingDao.find(_shipping.getId(),LockModeType.PESSIMISTIC_WRITE);
 
 		    if (shipping.getShippingStatus().equals(Shipping.ShippingStatus.completed)) {
@@ -323,6 +324,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 			shipping.setOrderStatus(Shipping.OrderStatus.completed);
 			shipping.setCompleteDate(new Date());
   			shippingDao.merge(shipping);
+
   			//记忆楼层和送货点
 
 		    Receiver receiver = receiverService.find(shipping.getOrder().getReceiverId());
@@ -551,7 +553,7 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 		orderLog.setContent(orderLog.getContent()+sms);
 		orderLog.setOrder(shipping.getOrder());
 		orderLogDao.persist(orderLog);
-//		messageService.orderMemberPushTo(orderLog);
+
 		shippingDao.flush();
 		if (shipping.getOrder().getOrderStatus().equals(Order.OrderStatus.confirmed)) {
 			orderService.complete(shipping.getOrder(), null);
@@ -570,6 +572,5 @@ public class ShippingServiceImpl extends BaseServiceImpl<Shipping, Long> impleme
 	public List<ShippingSummary> summary(Enterprise enterprise, Date beginDate, Date endDate,String type, Pageable pageable) {
 		return shippingDao.summary(enterprise,beginDate,endDate,type,pageable);
 	}
-
 
 }
