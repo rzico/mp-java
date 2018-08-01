@@ -187,22 +187,11 @@ public class TopicController extends BaseController {
             data.add(products);
         } else
          {
-            NavigationModel videos = new NavigationModel();
-            videos.setType(Navigation.Type.video);
-            videos.setName("视频");
-            videos.setLogo("http://cdnx.rzico.com/images/video.png");
-            data.add(videos);
             NavigationModel  images = new NavigationModel();
             images.setType(Navigation.Type.images);
             images.setName("图集");
             images.setLogo("http://cdnx.rzico.com/images/promotion.png");
             data.add(images);
-            NavigationModel products = new NavigationModel();
-            products.setType(Navigation.Type.product);
-            products.setName("宝贝");
-            products.setLogo("http://cdnx.rzico.com/images/mall.png");
-            products.setId(0L);
-            data.add(products);
         }
         return Message.bind(data,request);
     }

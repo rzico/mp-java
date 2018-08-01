@@ -160,13 +160,16 @@ public class CartController extends BaseController {
 	public @ResponseBody
 	Message edit(Long id, Integer quantity,BigDecimal price,Long promotionId) {
 		Map<String, Object> data = new HashMap<String, Object>();
-		if (quantity == null || quantity < 1) {
-			return Message.error("数据不能为零");
-		}
+
 		Cart cart = cartService.getCurrent();
 		if (cart == null || cart.isEmpty()) {
 			return Message.error("购物车不能为空");
 		}
+
+		if (quantity == null || quantity < 1) {
+			return Message.error("数据不能为零");
+		}
+
 		CartItem cartItem = cartItemService.find(id);
 		Set<CartItem> cartItems = cart.getCartItems();
 		if (cartItem == null || cartItems == null || !cartItems.contains(cartItem)) {
@@ -225,7 +228,9 @@ public class CartController extends BaseController {
 	public @ResponseBody
 	Message clear() {
 		Cart cart = cartService.getCurrent();
-		cartService.delete(cart);
+		if (cart!=null) {
+			cartService.delete(cart);
+		}
 		return Message.success("清理成功");
 	}
 
