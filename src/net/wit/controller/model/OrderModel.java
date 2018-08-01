@@ -66,6 +66,9 @@ public class OrderModel extends BaseModel implements Serializable {
     /**  买家留言 */
     private String memo;
 
+    /**  送货留言 */
+    private String shippingMemo;
+
     /**  预约时间 */
     private Date hopeDate;
 
@@ -461,6 +464,46 @@ public class OrderModel extends BaseModel implements Serializable {
         this.giftItems = giftItems;
     }
 
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public String getAdminName() {
+        return adminName;
+    }
+
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
+
+    public String getShippingMemo() {
+        return shippingMemo;
+    }
+
+    public void setShippingMemo(String shippingMemo) {
+        this.shippingMemo = shippingMemo;
+    }
+
     public void bind(Order order) {
         this.id = order.getId();
         this.createDate = order.getCreateDate();
@@ -558,6 +601,8 @@ public class OrderModel extends BaseModel implements Serializable {
                 this.adminId = shipping.getAdmin().getId();
                 this.adminName = shipping.getAdmin().realName();
             }
+
+            this.shippingMemo = shipping.getMemo();
 
         }
 
