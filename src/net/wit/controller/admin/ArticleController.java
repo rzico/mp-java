@@ -2,6 +2,7 @@ package net.wit.controller.admin;
 
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -202,6 +203,7 @@ public class ArticleController extends BaseController {
 			entity.setMember(admin.getEnterprise().getMember());
 		}
 
+		entity.setReward(BigDecimal.ZERO);
 		entity.setIsDraft(true);
 
 		entity.setThumbnail(article.getThumbnail());
@@ -366,7 +368,6 @@ public class ArticleController extends BaseController {
 
 		Admin admin=adminService.getCurrent();
 
-
 		ArrayList<Filter> filters = (ArrayList<Filter>) pageable.getFilters();
 		if (authority!=null) {
 			Filter authorityFilter = new Filter("authority", Filter.Operator.eq, authority);
@@ -380,10 +381,8 @@ public class ArticleController extends BaseController {
 		//判断用户公司属于哪种企业类型
 
 		if(!admin.isManager()){
-
-				Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, admin.getEnterprise().getMember());
-				filters.add(mediaTypeFilter);
-
+			Filter mediaTypeFilter = new Filter("member", Filter.Operator.eq, admin.getEnterprise().getMember());
+			filters.add(mediaTypeFilter);
 		}
 
 		if(searchValue!=null){
