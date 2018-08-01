@@ -76,11 +76,11 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 
 //		if ("owner".equals(type)) {
 
-			jpql = "select ep.member as memberId,barrel.name as name,sum(barrel.quantity) as quantity,sum(barrel.return_quantity) as return_quantity,0 as s_quantity,0 as s_return_quantity " +
+			jpql = "select ep.member as memberId,barrel.name as name,0 as quantity,0 as return_quantity,sum(barrel.quantity) as s_quantity,sum(barrel.return_quantity) as s_return_quantity " +
 					"from wx_shipping_barrel barrel,wx_enterprise ep where barrel.enterprise=ep.id and barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
 					"group by ep.member,barrel.name ";
 		    jpql = jpql + " union all ";
-	    	jpql = jpql + "select barrel.seller as memberId,barrel.name,0 as quantity,0 as return_quantity,sum(barrel.quantity) as s_quantity,sum(barrel.return_quantity) as s_return_quantity  " +
+	    	jpql = jpql + "select barrel.seller as memberId,barrel.name,sum(barrel.quantity) as quantity,sum(barrel.return_quantity) as return_quantity,0 as s_quantity,0 as s_return_quantity  " +
 			    	"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
 			    	"group by barrel.seller,barrel.name ";
 	    	jpql = " select memberId,name,sum(quantity),sum(return_quantity),sum(s_quantity),sum(s_return_quantity) from("+jpql+") as j group by memberId,name order by memberId";
@@ -127,11 +127,11 @@ public class ShippingBarrelDaoImpl extends BaseDaoImpl<ShippingBarrel, Long> imp
 		Query query = null;
 		String jpql = "";
 
-		jpql = "select barrel.name as name,sum(barrel.quantity) as quantity,sum(barrel.return_quantity) as return_quantity,0 as s_quantity,0 as s_return_quantity " +
+		jpql = "select barrel.name as name,0 as quantity,0 as return_quantity,sum(barrel.quantity) as s_quantity,sum(barrel.return_quantity) as s_return_quantity " +
 				"from wx_shipping_barrel barrel where barrel.seller=? and barrel.create_date>=? and barrel.create_date<?  " +
 				"group by barrel.name";
 		jpql = jpql + " union all ";
-		jpql = jpql + "select barrel.name as name,0 as quantity,0 as return_quantity,sum(barrel.quantity) as s_quantity,sum(barrel.return_quantity) as s_return_quantity " +
+		jpql = jpql + "select barrel.name as name,sum(barrel.quantity) as quantity,sum(barrel.return_quantity) as return_quantity,0 as s_quantity,0 as s_return_quantity " +
 				"from wx_shipping_barrel barrel where barrel.enterprise=? and barrel.create_date>=? and barrel.create_date<?  " +
 				"group by barrel.name";
 		jpql = " select name,sum(quantity),sum(return_quantity),sum(s_quantity),sum(s_return_quantity) from ("+jpql+") j group by name order by name";

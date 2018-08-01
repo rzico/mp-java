@@ -48,10 +48,10 @@ public class Push {
         OfflinePushInfo.put("Ext","");
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
-        AndroidInfo.put("Sound","h"+String.valueOf(message.getSound())+".mp3");
+        AndroidInfo.put("Sound","android.resource://com.rzico.assistant/beep.ogg");//+String.valueOf(message.getSound())+"");
         Map<String,Object> ApnsInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("ApnsInfo",ApnsInfo);
-        ApnsInfo.put("Sound","h"+String.valueOf(message.getSound())+".mp3");
+        ApnsInfo.put("Sound","h"+String.valueOf(message.getSound())+".caf");
         ApnsInfo.put("BadgeMode",1);
 
         System.out.println(data);
@@ -109,10 +109,10 @@ public class Push {
         OfflinePushInfo.put("Ext","");
         Map<String,Object> AndroidInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("AndroidInfo",AndroidInfo);
-        AndroidInfo.put("Sound","h"+String.valueOf(sound)+".mp3");
+        AndroidInfo.put("Sound","android.resource://com.rzico.assistant/beep.ogg");//+String.valueOf(message.getSound())+"");
         Map<String,Object> ApnsInfo = new HashMap<String,Object>();
         OfflinePushInfo.put("ApnsInfo",ApnsInfo);
-        ApnsInfo.put("Sound","h"+String.valueOf(sound)+".mp3");
+        ApnsInfo.put("Sound","h"+String.valueOf(sound)+".caf");
         ApnsInfo.put("BadgeMode",1);
 
         HttpClient httpClient = new DefaultHttpClient();
