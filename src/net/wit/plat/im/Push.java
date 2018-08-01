@@ -123,8 +123,6 @@ public class Push {
             HttpResponse response = httpClient.execute(httpPost);
             String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             Map resp = JsonUtils.toObject(jsonStr,Map.class);
-            System.out.println(msg);
-            System.out.println(resp);
             if ("OK".equals(resp.get("ActionStatus"))) {
                 return true;
             } else {
