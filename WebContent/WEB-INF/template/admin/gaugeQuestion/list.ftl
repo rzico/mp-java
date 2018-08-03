@@ -122,7 +122,7 @@
                     "sClass": "center"
                 },
                 {
-                    "mData": "type",
+                    "mData": "questionType",
                     "sTitle": "题型",
                     "sClass": "center"
                 },
@@ -152,10 +152,10 @@
                     "aTargets": [2],
                     "mRender": function (data, display, row) {
                         if(data != null){
-                        [#if types??]
-                            [#list types as type]
-                                if ("${type.id}" == data) {
-                                    return "${type.name}";
+                        [#if questionTypes??]
+                            [#list questionTypes as questionType]
+                                if ("${questionType.id}" == data) {
+                                    return "${questionType.name}";
                                 }
                             [/#list]
                         [/#if]

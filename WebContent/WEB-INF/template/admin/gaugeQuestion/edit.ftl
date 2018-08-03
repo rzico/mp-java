@@ -48,6 +48,20 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>题型：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    [#if questionTypes??]
+                        [#list questionTypes as questionType]
+                            <div class="radio-box">
+                                <input name="questionType" type="radio" id="type-${questionType_index}" value="${questionType.id}"[#if questionType.id == data.questionType] checked[/#if]>
+                                <label for="questionType-${questionType_index}">${questionType.name}</label>
+                            </div>
+                        [/#list]
+                    [/#if]
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>选项类型：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     [#if types??]
                         [#list types as type]
                             <div class="radio-box">

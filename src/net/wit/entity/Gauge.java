@@ -39,14 +39,10 @@ public class Gauge extends BaseEntity {
     };
 
     public enum Type{
-        /**  常规题库测评 */
-        question,
-        /**  直接记忆广度 */
-        directMemory ,
-        /**  工作记忆广度 */
-        workMemory,
-        /**  记忆准确度 */
-        memoryAccuracy
+        /**  单常模 */
+        single,
+        /**  多常模 */
+        complex
     };
 
     public enum Method{

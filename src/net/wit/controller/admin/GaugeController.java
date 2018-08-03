@@ -80,10 +80,8 @@ public class GaugeController extends BaseController {
 	public String index(ModelMap model) {
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("question","常规题库测评"));
-		types.add(new MapEntity("directMemory","直接记忆广度"));
-		types.add(new MapEntity("workMemory","工作记忆广度"));
-		types.add(new MapEntity("memoryAccuracy","记忆准确度"));
+		types.add(new MapEntity("single","单常模"));
+		types.add(new MapEntity("complex","多常模"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> methods = new ArrayList<>();
@@ -198,10 +196,8 @@ public class GaugeController extends BaseController {
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("question","常规题库测评"));
-		types.add(new MapEntity("directMemory","直接记忆广度"));
-		types.add(new MapEntity("workMemory","工作记忆广度"));
-		types.add(new MapEntity("memoryAccuracy","记忆准确度"));
+		types.add(new MapEntity("single","单常模"));
+		types.add(new MapEntity("complex","多常模"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> userTypes = new ArrayList<>();
@@ -326,10 +322,8 @@ public class GaugeController extends BaseController {
 		model.addAttribute("methods",methods);
 
 		List<MapEntity> types = new ArrayList<>();
-		types.add(new MapEntity("question","常规题库测评"));
-		types.add(new MapEntity("directMemory","直接记忆广度"));
-		types.add(new MapEntity("workMemory","工作记忆广度"));
-		types.add(new MapEntity("memoryAccuracy","记忆准确度"));
+		types.add(new MapEntity("single","单常模"));
+		types.add(new MapEntity("complex","多常模"));
 		model.addAttribute("types",types);
 
 		List<MapEntity> userTypes = new ArrayList<>();
