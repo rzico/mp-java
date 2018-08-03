@@ -47,6 +47,9 @@ public class ShippingModel extends BaseModel implements Serializable {
     /**  状态描述 */
     private String status;
 
+    /**  应收金额 */
+    private BigDecimal amountPayable;
+
     /**  货款 */
     private BigDecimal cost;
 
@@ -385,6 +388,14 @@ public class ShippingModel extends BaseModel implements Serializable {
         this.deliveryDate = deliveryDate;
     }
 
+    public BigDecimal getAmountPayable() {
+        return amountPayable;
+    }
+
+    public void setAmountPayable(BigDecimal amountPayable) {
+        this.amountPayable = amountPayable;
+    }
+
     public void bind(Shipping shipping) {
 
         this.id = shipping.getId();
@@ -480,6 +491,8 @@ public class ShippingModel extends BaseModel implements Serializable {
         }
 
         this.track = track;
+
+        this.amountPayable = shipping.getOrder().getAmountPayable();
 
     }
 

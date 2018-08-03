@@ -62,10 +62,19 @@ public class GaugeQuestionController extends BaseController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Long gaugeId,ModelMap model) {
 
+
+		List<MapEntity> questionTypes = new ArrayList<>();
+		questionTypes.add(new MapEntity("radioBox","单选题"));
+		questionTypes.add(new MapEntity("memory","记忆题"));
+		questionTypes.add(new MapEntity("sort","排序题"));
+		model.addAttribute("questionTypes",questionTypes);
+
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("text","文字"));
 		types.add(new MapEntity("image","图片"));
+		types.add(new MapEntity("formula","算式"));
 		model.addAttribute("types",types);
+
 		model.addAttribute("gaugeId",gaugeId);
 
 		return "/admin/gaugeQuestion/list";
@@ -78,10 +87,18 @@ public class GaugeQuestionController extends BaseController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(Long gaugeId,ModelMap model) {
 
+		List<MapEntity> questionTypes = new ArrayList<>();
+		questionTypes.add(new MapEntity("radioBox","单选题"));
+		questionTypes.add(new MapEntity("memory","记忆题"));
+		questionTypes.add(new MapEntity("sort","排序题"));
+		model.addAttribute("questionTypes",questionTypes);
+
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("text","文字"));
 		types.add(new MapEntity("image","图片"));
+		types.add(new MapEntity("formula","算式"));
 		model.addAttribute("types",types);
+
 		model.addAttribute("gaugeId",gaugeId);
 
 		return "/admin/gaugeQuestion/add";
@@ -126,6 +143,8 @@ public class GaugeQuestionController extends BaseController {
 
 		entity.setTitle(gaugeQuestion.getTitle());
 
+		entity.setQuestionType(gaugeQuestion.getQuestionType());
+
 		entity.setType(gaugeQuestion.getType());
 
 		entity.setGauge(gaugeService.find(gaugeId));
@@ -165,10 +184,19 @@ public class GaugeQuestionController extends BaseController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String edit(Long id, ModelMap model) {
 
+
+		List<MapEntity> questionTypes = new ArrayList<>();
+		questionTypes.add(new MapEntity("radioBox","单选题"));
+		questionTypes.add(new MapEntity("memory","记忆题"));
+		questionTypes.add(new MapEntity("sort","排序题"));
+		model.addAttribute("questionTypes",questionTypes);
+
 		List<MapEntity> types = new ArrayList<>();
 		types.add(new MapEntity("text","文字"));
 		types.add(new MapEntity("image","图片"));
+		types.add(new MapEntity("formula","算式"));
 		model.addAttribute("types",types);
+
 		GaugeQuestion question = gaugeQuestionService.find(id);
 		model.addAttribute("data",question);
 		List<GaugeQuestionOptionModel> opts = JsonUtils.toObject(question.getContent(),List.class);
@@ -222,6 +250,8 @@ public class GaugeQuestionController extends BaseController {
 		entity.setContent(JsonUtils.toJson(data));
 
 		entity.setTitle(gaugeQuestion.getTitle());
+
+		entity.setQuestionType(gaugeQuestion.getQuestionType());
 
 		entity.setType(gaugeQuestion.getType());
 

@@ -27,12 +27,28 @@ public class GaugeQuestion extends OrderEntity {
 
     private static final long serialVersionUID = 24L;
 
+    public enum QuestionType{
+        /**  单选题 */
+        radioBox,
+        /**  记忆题 */
+        memory,
+        /**  排序题 */
+        sort
+    };
+
     public enum Type{
         /**  文字 */
         text,
         /**  图片 */
-        image
+        image,
+        /**  算式 */
+        formula
     };
+
+    /** 题型 */
+    @NotNull
+    @Column(columnDefinition="int(11) not null default 0 comment '题型 {text:文字,image:图片}'")
+    private QuestionType questionType;
 
     /** 题型 */
     @NotNull
@@ -89,5 +105,11 @@ public class GaugeQuestion extends OrderEntity {
         this.gauge = gauge;
     }
 
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
 
+    public void setQuestionType(QuestionType questionType) {
+        this.questionType = questionType;
+    }
 }
