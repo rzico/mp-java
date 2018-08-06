@@ -21,6 +21,12 @@ public class GaugeQuestionModel extends BaseModel implements Serializable {
     /** 题目 */
     private String title;
 
+    /** 数据长度 */
+    private Integer strLen;
+
+    /** 显示时长 */
+    private Integer stayTime;
+
     /** 选项
      *  {id:序号,name:"你几岁了",image:"图片地址",score:分数} */
     private List<GaugeQuestionOptionModel> content;
@@ -57,10 +63,28 @@ public class GaugeQuestionModel extends BaseModel implements Serializable {
         this.content = content;
     }
 
+    public Integer getStrLen() {
+        return strLen;
+    }
+
+    public void setStrLen(Integer strLen) {
+        this.strLen = strLen;
+    }
+
+    public Integer getStayTime() {
+        return stayTime;
+    }
+
+    public void setStayTime(Integer stayTime) {
+        this.stayTime = stayTime;
+    }
+
     public void bind(GaugeQuestion gaugeQuestion) {
         this.id = gaugeQuestion.getId();
         this.title = gaugeQuestion.getTitle();
         this.content = new ArrayList<GaugeQuestionOptionModel>();
+        this.stayTime = gaugeQuestion.getStayTime();
+        this.strLen = gaugeQuestion.getStrLen();
         if (gaugeQuestion.getContent()!=null) {
             this.content = JsonUtils.toObject(gaugeQuestion.getContent(), List.class);
         }

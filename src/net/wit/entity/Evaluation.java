@@ -458,6 +458,7 @@ public class Evaluation extends BaseEntity {
     public String getAnswer() {
         return xlsAnswer(null);
     }
+
     public String xlsAnswer(String c) {
         if (c==null) {
             c = "<br/>";

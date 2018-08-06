@@ -147,6 +147,12 @@ public class GaugeQuestionController extends BaseController {
 
 		entity.setType(gaugeQuestion.getType());
 
+		entity.setStayTime(gaugeQuestion.getStayTime());
+
+		entity.setStrLen(gaugeQuestion.getStrLen());
+
+		entity.setType(gaugeQuestion.getType());
+
 		entity.setGauge(gaugeService.find(gaugeId));
 		
 		if (!isValid(entity)) {
@@ -254,6 +260,10 @@ public class GaugeQuestionController extends BaseController {
 		entity.setQuestionType(gaugeQuestion.getQuestionType());
 
 		entity.setType(gaugeQuestion.getType());
+
+		entity.setStayTime(gaugeQuestion.getStayTime());
+
+		entity.setStrLen(gaugeQuestion.getStrLen());
 
 		entity.setGauge(gaugeService.find(gaugeId));
 		

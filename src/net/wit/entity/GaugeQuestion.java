@@ -67,6 +67,14 @@ public class GaugeQuestion extends OrderEntity {
     @Column(columnDefinition="longtext comment '选项'")
     private String content;
 
+    /** 长度 */
+    @Column(columnDefinition="int(11) not null default 0 comment '长度'")
+    private Integer strLen;
+
+    /** 停留时间(秒数) */
+    @Column(columnDefinition="int(11) not null default 0 comment '停留时间(秒数)'")
+    private Integer stayTime;
+
     /** 量表 */
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -111,5 +119,21 @@ public class GaugeQuestion extends OrderEntity {
 
     public void setQuestionType(QuestionType questionType) {
         this.questionType = questionType;
+    }
+
+    public Integer getStayTime() {
+        return stayTime;
+    }
+
+    public void setStayTime(Integer stayTime) {
+        this.stayTime = stayTime;
+    }
+
+    public Integer getStrLen() {
+        return strLen;
+    }
+
+    public void setStrLen(Integer strLen) {
+        this.strLen = strLen;
     }
 }
