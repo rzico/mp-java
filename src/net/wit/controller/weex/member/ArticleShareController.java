@@ -124,7 +124,7 @@ public class ArticleShareController extends BaseController {
         }
 
         //专栏公众号设置
-        if(topic.getConfig()==null||topic.getConfig().getWxAppId().equals("")||topic.getConfig().getWxAppSerect().equals("")){
+        if(topic.getConfig()==null||topic.getConfig().getWxAppId() == null||topic.getConfig().getWxAppId().equals("")||topic.getConfig().getWxAppSerect() == null || topic.getConfig().getWxAppSerect().equals("")){
             return Message.error("您未绑定公众号");
         }
 
