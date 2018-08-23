@@ -43,6 +43,7 @@ public class ArticleFormController extends BaseController {
     @ResponseBody
     public Message submit(String body, Long articleId, HttpServletRequest request) {
         try {
+            System.out.println("body =======" + body);
             Member sender = memberService.getCurrent();
             Article article = articleService.find(articleId);
             Member receiver = article.getMember();

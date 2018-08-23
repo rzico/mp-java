@@ -109,6 +109,7 @@ public class CommonController extends BaseController {
 				}
 				data.put("appVersion",pluginConfig.getAttribute("iosVersion"));
 				data.put("minVersion",pluginConfig.getAttribute("iosMinVersion"));
+				data.put("auditUrl",pluginConfig.getAttribute("iosAuditUrl"));
 				data.put("appUrl",pluginConfig.getAttribute("iosUrl"));
 			} else {
 				PluginConfig pluginConfig=pluginConfigService.findByPluginId("androidVersionPlugin");

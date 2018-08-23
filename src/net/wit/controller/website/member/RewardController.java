@@ -80,7 +80,6 @@ public class RewardController extends BaseController {
             return Message.error("打赏失败");
         }
         return Message.success((Object) payment.getSn(),"发布成功");
-
     }
 
 

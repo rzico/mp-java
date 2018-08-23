@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -85,12 +87,14 @@ public class ArticleController extends BaseController {
     @Resource(name = "weixinUpServiceImpl")
     private WeixinUpService weixinUpService;
 
+    @Resource(name = "redPackageServiceImpl")
+    private RedPackageService redPackageService;
     /**
      *  文章列表,带分页
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isForm, Boolean isDraft,Pageable pageable, HttpServletRequest request){
+    public Message list(Long articleCatalogId,Long timeStamp,Boolean isVote,Boolean isForm, Boolean isDraft,Boolean isPublish, Pageable pageable, HttpServletRequest request){
         Member member = memberService.getCurrent();
         if (member==null) {
             return Message.error(Message.SESSION_INVAILD);
@@ -107,10 +111,16 @@ public class ArticleController extends BaseController {
             filters.add(new Filter().isNotNull("votes"));
         }
         if (isForm!=null && isForm) {
+            filters.add(new Filter("form", Filter.Operator.ne, "[]"));
+            filters.add(new Filter("form", Filter.Operator.ne, ""));
+            filters.add(new Filter("form", Filter.Operator.ne, null));
             filters.add(new Filter().isNotNull("form"));
         }
         if (isDraft!=null) {
             filters.add(new Filter("isDraft", Filter.Operator.eq,isDraft));
+        }
+        if(isPublish != null){
+            filters.add(new Filter("isPublish" ,Filter.Operator.eq, isPublish));
         }
         filters.add(new Filter("member", Filter.Operator.eq,member));
         pageable.setFilters(filters);
@@ -217,12 +227,15 @@ public class ArticleController extends BaseController {
             article.setIsPitch(false);
             article.setIsPublish(false);
             article.setIsReview(true);
+            article.setIsAudit(false);
             article.setIsTop(false);
+            article.setIsRedPackage(false);
             article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
+            article.setIsDraft(false);
         }
         article.setIsDraft(isDraft);
-        article.setIsAudit(false);
+        article.setIsAudit(article.getIsAudit());//直接提交审核
         article.setTitle(title);
         article.setAuthor(author);
         article.setThumbnail(thumbnail);
@@ -260,10 +273,14 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
-    public Message publish(Long id,Long articleCategoryId,Long articleCatalogId,ArticleOptionModel articleOptions,Location location,HttpServletRequest request){
+    public Message publish(Long id, Long articleCategoryId, Long articleCatalogId, ArticleOptionModel articleOptions, Location location, HttpServletRequest request){
         Article article = articleService.find(id);
         if (article==null) {
             return Message.error("无效文章编号");
+        }
+        boolean isnew = false;//判断是否是第一次发布文章
+        if (!article.getIsPublish() && !article.getIsAudit()){
+            isnew = true;
         }
         if (articleOptions!=null) {
             article.setIsReward(articleOptions.getIsReward());
@@ -272,9 +289,13 @@ public class ArticleController extends BaseController {
             article.setIsPublish(true);
             article.setAuthority(articleOptions.getAuthority());
             article.setIsPitch(articleOptions.getIsPitch());
+            //更新设置红包
+//            article.setIsRedPackage(articleOptions.getIsRedPackage());
+
             if (articleOptions.getPassword()!=null) {
                 article.setPassword(MD5Utils.getMD5Str(articleOptions.getPassword()));
             }
+
         }
         if (location!=null && location.getLat()!=0 && location.getLng()!=0) {
             article.setLocation(location);
@@ -285,15 +306,18 @@ public class ArticleController extends BaseController {
         if (articleCatalogId!=null) {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
-        article.setIsDraft(false);
-//        article.setIsPublish(true);
+        article.setIsAudit(true);//直接提交审核
+        article.setIsPublish(true);
+
         articleService.update(article);
 
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("follow", Filter.Operator.eq,article.getMember()));
         List<MemberFollow> data = memberFollowService.findList(null,null,filters,null);
-        for (MemberFollow follow:data) {
-           messageService.publishPushTo(article,follow.getMember());
+        if(isnew){
+            for (MemberFollow follow:data) {
+                messageService.publishPushTo(article,follow.getMember());
+            }
         }
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
@@ -320,16 +344,18 @@ public class ArticleController extends BaseController {
             edited = true;
         }
         if (isTop!=null) {
-            Tag tag = tagService.find(6L);
-            if (isTop) {
-                if (!article.getTags().contains(tag)) {
-                    article.getTags().add(tag);
-                }
-            } else {
-                if (article.getTags().contains(tag)) {
-                    article.getTags().remove(tag);
-                }
-            }
+            //不知张总为何这么写
+//            Tag tag = tagService.find(6L);
+//            if (isTop) {
+//                if (!article.getTags().contains(tag)) {
+//                    article.getTags().add(tag);
+//                }
+//            } else {
+//                if (article.getTags().contains(tag)) {
+//                    article.getTags().remove(tag);
+//                }
+//            }
+            article.setIsTop(isTop);
             edited = true;
             article.setIsTop(isTop);
         }
@@ -429,8 +455,88 @@ public class ArticleController extends BaseController {
             return Message.error("无效文章编号");
         }
         article.setDeleted(false);
+        article.setIsPublish(true);
+        article.setIsAudit(true);
+
         articleService.update(article);
         return Message.success("还原成功");
+    }
+
+
+
+
+    @RequestMapping(value = "/getRedPackage", method = RequestMethod.POST)
+    @ResponseBody
+    public Message getRedPackage(Long articleId, HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+
+        Article article = articleService.find(articleId);
+        if(article == null){
+            return Message.error("没有找到该文章");
+        }
+        RedPackage redPackage = new RedPackage();
+        redPackage.setMember(member);
+        redPackage.setStatus(RedPackage.Status.get);
+        redPackage.setArticle(article);
+        redPackage.setIp(request.getRemoteAddr());
+        double getMoney = redPackageService.getRedPackage(redPackage);
+        if(getMoney > 0.0){
+            return Message.success(getMoney,"领取成功");
+        }else if(getMoney == 0.0){
+            return Message.error("已领取过");
+        }else if(getMoney == -2.0){
+            return Message.error("该红包已被领完");
+        }
+        else{
+            return Message.error("领取失败");
+        }
+
+    }
+    /**
+     * 向文章包红包
+     */
+    @RequestMapping(value = "/setRedPackage", method = RequestMethod.POST)
+    @ResponseBody
+    public Message setRedPackage(Long articleId, ArticleRedPackageModel articleRedPackage,Boolean isRedPackage, HttpServletRequest request){
+
+        Member member = memberService.getCurrent();
+        if (member==null) {
+            return Message.error(Message.SESSION_INVAILD);
+        }
+        Article article = articleService.find(articleId);
+        if(article == null){
+            return Message.error("没有找到该文章");
+        }
+
+
+        ArticleRedPackage aredPackage = new ArticleRedPackage();
+        if(articleRedPackage != null){
+            aredPackage.setRedPackageType(articleRedPackage.getRedPackageType());
+            aredPackage.setRemainSize(articleRedPackage.getRemainSize());
+            aredPackage.setAmount(articleRedPackage.getRemainMoney());
+            aredPackage.setIsPay(false);
+        }
+        article.setIsRedPackage(isRedPackage);
+        article.setArticleRedPackage(aredPackage);
+        articleService.update(article);
+
+        RedPackage redPackage = new RedPackage();
+        redPackage.setMember(member);
+        redPackage.setArticle(article);
+        redPackage.setAmount(aredPackage.getAmount());
+        redPackage.setIp(request.getRemoteAddr());
+        redPackage.setStatus(RedPackage.Status.wait);
+        try {
+            Payment payment = redPackageService.sendRedPackage(redPackage);
+            return Message.success((Object) payment.getSn(), "发送成功");
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+            return Message.error(e.getMessage());
+        }
     }
 
     /**

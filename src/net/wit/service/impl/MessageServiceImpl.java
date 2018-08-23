@@ -273,7 +273,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		msg.setType(Message.Type.reward);
 		msg.setThumbnial(reward.getMember().getLogo());
 		msg.setTitle("【"+reward.getMember().getNickName()+"】赞赏了你");
-		msg.setContent(""+reward.getMember().getNickName()+"赞赏你:"+reward.getAmount()+"元,文章:"+reward.getArticle().getTitle());
+		msg.setContent(""+reward.getMember().getNickName()+"赞赏你:"+reward.getAmount().setScale(2,BigDecimal.ROUND_HALF_DOWN) + "元,文章:"+reward.getArticle().getTitle());
 		ArticleListModel ext = new ArticleListModel();
 		ext.bind(reward.getArticle());
 		msg.setExt(JsonUtils.toJson(ext));
@@ -546,6 +546,26 @@ public class MessageServiceImpl extends BaseServiceImpl<Message, Long> implement
 		adt.setContent("【"+promoter.getNickName()+"】欢迎您，有问题快去咨询他/她。");
 		pushTo(adt);
 		return true;
+	}
+
+	public Boolean redPackagePushTo(RedPackage redPackage){
+		Message msg = new Message();
+		String content = "";
+		msg.setMember(redPackage.getMember());
+		msg.setReceiver(redPackage.getMember());
+		msg.setType(Message.Type.message);
+		msg.setTitle("红包提醒");
+		if(redPackage.getStatus() == RedPackage.Status.get){
+			//领取红包提醒
+			content = "恭喜您分享【" + redPackage.getArticle().getTitle() + "】获得红包" + redPackage.getAmount().setScale(2,BigDecimal.ROUND_HALF_DOWN) + "元。";
+		}else {
+			content = "您已成功将红包放入文章【" + redPackage.getArticle().getTitle() + "】中";
+		}
+		msg.setContent(content);
+		Map<String,String> ext = new HashMap<String,String>();
+		ext.put("type","redPackage");
+		msg.setExt(JsonUtils.toJson(ext));
+		return pushTo(msg);
 	}
 
 	public Boolean topicConfigPushTo(Topic topic) {

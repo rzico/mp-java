@@ -57,7 +57,7 @@ public class SettingsController {
     @ResponseBody
     public Message edit(String android, String androidMin, String androidUrl,
                         String ios, String iosMin, String iosUrl,
-                        String resource, String resourceUrl,
+                        String resource, String resourceUrl,String auditUrl,
                         String codeVersion, String templateId, int type) {
         switch (type) {
             case 0:
@@ -71,6 +71,7 @@ public class SettingsController {
                 PluginConfig iosPlugin = pluginConfigService.findByPluginId("iosVersionPlugin");
                 iosPlugin.setAttribute("iosVersion", ios);
                 iosPlugin.setAttribute("iosMinVersion", iosMin);
+                iosPlugin.setAttribute("iosAuditUrl", auditUrl);
                 iosPlugin.setAttribute("iosUrl", iosUrl);
                 pluginConfigService.update(iosPlugin);
                 break;

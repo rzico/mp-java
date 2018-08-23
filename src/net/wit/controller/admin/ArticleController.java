@@ -197,6 +197,8 @@ public class ArticleController extends BaseController {
 
 		entity.setShare(0L);
 
+		entity.setIsRedPackage(false);
+
 		entity.setTags(tagService.findList(tagIds));
 
 		if (!isValid(entity)) {

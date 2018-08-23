@@ -163,13 +163,20 @@ public class Article extends BaseEntity{
     @JsonIgnore
     private Boolean isAudit;
 
+    /** 是否可以领取红包 */
+    @NotNull
+    @Column(columnDefinition="bit not null default 0 comment '是否可以领取红包'")
+    private Boolean isRedPackage;
+
 
     /** 是否投稿 */
+    /** 时间 2018.6.26 是否发布 与前端吻合*/
     @NotNull
     @Column(columnDefinition="bit comment '是否投稿'")
     private Boolean isPublish;
 
     /** 是否精选 */
+    /** 时间 2018.6.26 是否投稿 与前端吻合*/
     @NotNull
     @Column(columnDefinition="bit comment '是否精选'")
     private Boolean isPitch;
@@ -229,6 +236,15 @@ public class Article extends BaseEntity{
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<ArticleLaud> lauds = new HashSet<ArticleLaud>();
+
+    /** 红包领取记录*/
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<RedPackage> redPackages = new HashSet<RedPackage>();
+
+    @Embedded
+    private ArticleRedPackage articleRedPackage;
+
 
     /** 收藏者*/
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -353,8 +369,24 @@ public class Article extends BaseEntity{
         return isDraft;
     }
 
+    public ArticleRedPackage getArticleRedPackage() {
+        return articleRedPackage;
+    }
+
+    public void setArticleRedPackage(ArticleRedPackage articleRedPackage) {
+        this.articleRedPackage = articleRedPackage;
+    }
+
     public void setIsDraft(Boolean draft) {
         isDraft = draft;
+    }
+
+    public Set<RedPackage> getRedPackages() {
+        return redPackages;
+    }
+
+    public void setRedPackages(Set<RedPackage> redPackages) {
+        this.redPackages = redPackages;
     }
 
     public List<Tag> getTags() {
@@ -467,6 +499,14 @@ public class Article extends BaseEntity{
 
     public void setIsAudit(Boolean audit) {
         isAudit = audit;
+    }
+
+    public Boolean getIsRedPackage() {
+        return isRedPackage;
+    }
+
+    public void setIsRedPackage(Boolean redPackage) {
+        isRedPackage = redPackage;
     }
 
     public Boolean getIsPublish() {

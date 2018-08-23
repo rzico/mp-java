@@ -1,6 +1,7 @@
 package net.wit.controller.model;
 
 import net.wit.entity.Article;
+import net.wit.entity.ArticleRedPackage;
 
 import java.io.Serializable;
 
@@ -17,6 +18,9 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
     private Boolean isReview;
     /** 是否赞赏 */
     private Boolean isReward;
+
+    /** 是否红包 */
+    private Boolean isRedPackage;
     /** 谁可见 */
     private Article.Authority authority;
     /** 是否样例 */
@@ -30,6 +34,8 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
     private ArticleCatalogModel articleCatalog;
     /** 文章分类 */
     private ArticleCategoryModel articleCategory;
+    /** 红包设置 */
+    private ArticleRedPackageModel articleRedPackage;
 
     public Long getId() {
         return id;
@@ -37,6 +43,14 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getIsRedPackage() {
+        return isRedPackage;
+    }
+
+    public void setIsRedPackage(Boolean redPackage) {
+        isRedPackage = redPackage;
     }
 
     public Boolean getIsPublish() {
@@ -119,6 +133,14 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
         this.articleCategory = articleCategory;
     }
 
+    public ArticleRedPackageModel getArticleRedPackage() {
+        return articleRedPackage;
+    }
+
+    public void setArticleRedPackage(ArticleRedPackageModel articleRedPackage) {
+        this.articleRedPackage = articleRedPackage;
+    }
+
     public void bind(Article article) {
         this.authority = article.getAuthority();
         this.isPublish = article.getIsPublish();
@@ -140,6 +162,15 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
             articleCategoryModel.setName(article.getArticleCategory().getName());
         }
         this.articleCategory = articleCategoryModel;
+
+        ArticleRedPackageModel articleRedPackageModel = new ArticleRedPackageModel();
+        if(article.getArticleRedPackage()!=null){
+            articleRedPackageModel.setRedPackageType(article.getArticleRedPackage().getRedPackageType());
+            articleRedPackageModel.setRemainSize(article.getArticleRedPackage().getRemainSize());
+            articleRedPackageModel.setRemainMoney(article.getArticleRedPackage().getAmount());
+            articleRedPackageModel.setPay(article.getArticleRedPackage().getIsPay());
+        }
+        this.articleRedPackage = articleRedPackageModel;
    }
 
 }

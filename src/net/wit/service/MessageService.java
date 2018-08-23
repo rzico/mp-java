@@ -23,6 +23,9 @@ public interface MessageService extends BaseService<Message, Long> {
 	public Boolean pushTo(Message message);
 	//活动专栏
 	public Boolean topicConfigPushTo(Topic topic);
+
+	//红包提醒
+	public Boolean redPackagePushTo(RedPackage redPackage);
 	//活动专栏
 	public Boolean topicPushTo(Topic topic);
 	//账单提醒

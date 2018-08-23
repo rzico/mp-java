@@ -352,6 +352,12 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private Set<Deposit> deposits = new HashSet<Deposit>();
 
+
+	/** 红包领取记录*/
+	@OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<RedPackage> redPackages = new HashSet<RedPackage>();
+
 	/** 优惠券 */
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
@@ -884,6 +890,14 @@ public class Member extends BaseEntity {
 
 	public void setOperate(Enterprise operate) {
 		this.operate = operate;
+	}
+
+	public Set<RedPackage> getRedPackages() {
+		return redPackages;
+	}
+
+	public void setRedPackages(Set<RedPackage> redPackages) {
+		this.redPackages = redPackages;
 	}
 
 	/**

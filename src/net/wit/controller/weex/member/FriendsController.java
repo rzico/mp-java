@@ -115,6 +115,9 @@ public class FriendsController extends BaseController {
             if (friend == null) {
                 friend = memberService.findByUsername(m);
             }
+            if (friend == null){
+                friend = memberService.findByNickName(m);
+            }
             if (friend!=null) {
                 MemberListModel md = new MemberListModel();
                 md.bind(friend);

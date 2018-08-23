@@ -50,6 +50,10 @@ public class ArticleViewModel extends BaseModel implements Serializable {
     /** 表单 */
     private List<ArticleFormDataModel> forms = new ArrayList<ArticleFormDataModel>();
 
+
+    /** 红包设置 */
+    private ArticleRedPackageModel articleRedPackage;
+
     public Long getId() {
         return id;
     }
@@ -202,6 +206,14 @@ public class ArticleViewModel extends BaseModel implements Serializable {
         this.isReward = isReward;
     }
 
+    public ArticleRedPackageModel getArticleRedPackage() {
+        return articleRedPackage;
+    }
+
+    public void setArticleRedPackage(ArticleRedPackageModel articleRedPackage) {
+        this.articleRedPackage = articleRedPackage;
+    }
+
     public void bind(Article article, Member shareUser) {
         this.id = article.getId();
         this.title = article.getTitle();
@@ -240,11 +252,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             } else {
                 m.setUrl("");
             }
-            if (m.getMediaType().equals(Article.MediaType.video)) {
-                templates.add(0,m);
-            } else {
+//            if (m.getMediaType().equals(Article.MediaType.video)) {
+//                templates.add(0,m);
+//            } else {
                 templates.add(m);
-            }
+//            }
         }
 
         List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
@@ -257,6 +269,15 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             forms = JsonUtils.toObject(article.getForm(), List.class);
         }
         this.htmlTag = article.delHTMLTag();
+
+        ArticleRedPackageModel articleRedPackageModel = new ArticleRedPackageModel();
+        if(article.getArticleRedPackage()!=null){
+            articleRedPackageModel.setRedPackageType(article.getArticleRedPackage().getRedPackageType());
+            articleRedPackageModel.setRemainSize(article.getArticleRedPackage().getRemainSize());
+            articleRedPackageModel.setRemainMoney(article.getArticleRedPackage().getAmount());
+            articleRedPackageModel.setPay(article.getArticleRedPackage().getIsPay());
+        }
+        this.articleRedPackage = articleRedPackageModel;
 
         this.templates = templates;
         this.votes = votes;
@@ -274,6 +295,9 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             this.url = "https://" + bundle.getString("weixin.url") + "/#/t" + article.getTemplate().getSn() + "?id=" + article.getId()+"&xuid="+shareUser.getId().toString();
         }
 
+
+
+//        System.out.println("shareUrl:===========" + this.url);
     }
 
 }

@@ -46,6 +46,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 	@Resource(name = "messageServiceImpl")
 	private MessageService messageService;
 
+	@Resource(name = "articleDaoImpl")
+	private ArticleDao articleDao;
+
 	@Resource(name = "smssendServiceImpl")
 	private SmssendService smssendService;
 
@@ -81,6 +84,9 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 
 	@Resource(name = "articleRewardDaoImpl")
 	private ArticleRewardDao articleRewardDao;
+
+	@Resource(name = "redPackageDaoImpl")
+	private RedPackageDao redPackageDao;
 
 	@Resource(name = "paymentDaoImpl")
 	public void setBaseDao(PaymentDao paymentDao) {
@@ -385,6 +391,17 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				topicDao.merge(topic);
 				messageService.topicPushTo(topic);
 				enterpriseService.create(topic);
+			} else
+			if(payment.getType() == Payment.Type.redpackage){
+				RedPackage redPackage = payment.getRedPackage();
+				redPackage.setStatus(RedPackage.Status.success);
+				redPackageDao.merge(redPackage);
+
+				Article article = redPackage.getArticle();
+				article.getArticleRedPackage().setIsPay(true);
+				articleDao.merge(article);
+				//这里需要推送
+				messageService.redPackagePushTo(redPackage);
 			}
 		}
 	}
@@ -448,6 +465,15 @@ public class PaymentServiceImpl extends BaseServiceImpl<Payment, Long> implement
 				TopicBill topicBill = payment.getTopicBill();
 				topicBill.setStatus(TopicBill.Status.failure);
 				topicBillDao.merge(topicBill);
+			} else
+			if(payment.getType().equals(Payment.Type.redpackage)){
+				RedPackage redPackage = payment.getRedPackage();
+				redPackage.setStatus(RedPackage.Status.failure);
+				redPackageDao.merge(redPackage);
+
+				Article article = redPackage.getArticle();
+				article.getArticleRedPackage().setIsPay(false);
+				articleDao.merge(article);
 			}
 		};
 	}

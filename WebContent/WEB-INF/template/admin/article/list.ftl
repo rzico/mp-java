@@ -430,6 +430,8 @@
                         } else {
                             return "<button type=\"submit\" class=\"btn btn-success radius\" id=\"\" onclick=\"publish(this,'"+data.id+"');\" name=\"\">点我发布</button>"
                         }
+
+                        // return "";
                     }
 
                 },

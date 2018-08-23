@@ -133,18 +133,30 @@ public class MessageController extends BaseController {
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.order)) {
             Map<String,Object> data = JsonUtils.toObject(message.getExt(),Map.class);
-            String oid = data.get("id").toString();
-            net.wit.entity.Order order = orderService.find(Long.parseLong(oid));
-            if (order.getSeller().equals(member)) {
-                url = "file://view/shop/order/details.js?sn=" + order.getSn();
-            } else {
+            if(data == null || data.get("id") == null){
                 url = "";
+            }else {
+                String oid = data.get("id").toString();
+                net.wit.entity.Order order = orderService.find(Long.parseLong(oid));
+                if (order.getSeller().equals(member)) {
+                    url = "file://view/shop/order/details.js?sn=" + order.getSn();
+                } else {
+                    url = "";
+                }
             }
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.share)) {
             Map<String,Object> data = JsonUtils.toObject(message.getExt(),Map.class);
-            String oid = data.get("id").toString();
-            url = "file://view/article/preview.js?articleId="+oid+"&publish=true";
+
+            if(!data.containsKey("id")){
+                String formStr = data.get("data").toString();
+                Map<String,Object> formData = JsonUtils.toObject(formStr,Map.class);
+                String articleId = data.get("articleId").toString();
+                url = "file://view/member/tableList.js?articleId="+articleId+"&title=" + formData.get("title").toString();
+            }else {
+                String oid = data.get("id").toString();
+                url = "file://view/article/preview.js?articleId="+oid+"&publish=true";
+            }
         } else
         if (message.getType().equals(net.wit.entity.Message.Type.message)) {
             if (message.getExt()!=null) {

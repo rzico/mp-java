@@ -93,6 +93,8 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long> implement
 	//@CacheEvict(value = "authorization", allEntries = true)
 	public void delete(Article article) {
 		article.setDeleted(true);
+		article.setIsPublish(false);
+		article.setIsAudit(false);
 		super.update(article);
 	}
 
