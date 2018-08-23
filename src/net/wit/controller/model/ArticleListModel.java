@@ -195,7 +195,11 @@ public class ArticleListModel extends BaseModel implements Serializable {
         for (Article article:articles) {
             ArticleListModel m = new ArticleListModel();
             m.bind(article);
-            ms.add(m);
+            if(article.getIsTop()){
+                ms.add(0, m);
+            }else {
+                ms.add(m);
+            }
         }
         return ms;
     }

@@ -168,6 +168,7 @@ public class ArticleOptionModel extends BaseModel implements Serializable {
             articleRedPackageModel.setRedPackageType(article.getArticleRedPackage().getRedPackageType());
             articleRedPackageModel.setRemainSize(article.getArticleRedPackage().getRemainSize());
             articleRedPackageModel.setRemainMoney(article.getArticleRedPackage().getAmount());
+            articleRedPackageModel.setPay(article.getArticleRedPackage().getIsPay());
         }
         this.articleRedPackage = articleRedPackageModel;
    }

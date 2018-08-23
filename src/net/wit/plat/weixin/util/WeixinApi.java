@@ -763,10 +763,10 @@ title	小程序页面的标题,标题长度不超过32*/
 				"\\\"text\\\": \\\"首页\\\"" +
 				"}," +
 				"{" +
-				"\\\"selectedIconPath\\\": \\\"images/call-fill-three.png\\\"," +
-				"\\\"iconPath\\\": \\\"images/call-nine.png\\\"," +
-				"\\\"pagePath\\\": \\\"pages/contact/contact\\\"," +
-				"\\\"text\\\": \\\"联系我们\\\"" +
+				"\\\"selectedIconPath\\\": \\\"images/mine-fill-three.png\\\"," +
+				"\\\"iconPath\\\": \\\"images/mine-nine.png\\\"," +
+				"\\\"pagePath\\\": \\\"pages/member/index\\\"," +
+				"\\\"text\\\": \\\"我的\\\"" +
 				"}" +
 				"]" +
 				"}," +

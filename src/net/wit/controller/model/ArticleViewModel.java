@@ -252,11 +252,11 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             } else {
                 m.setUrl("");
             }
-            if (m.getMediaType().equals(Article.MediaType.video)) {
-                templates.add(0,m);
-            } else {
+//            if (m.getMediaType().equals(Article.MediaType.video)) {
+//                templates.add(0,m);
+//            } else {
                 templates.add(m);
-            }
+//            }
         }
 
         List<ArticleVoteOptionModel> votes = new ArrayList<ArticleVoteOptionModel>();
@@ -275,6 +275,7 @@ public class ArticleViewModel extends BaseModel implements Serializable {
             articleRedPackageModel.setRedPackageType(article.getArticleRedPackage().getRedPackageType());
             articleRedPackageModel.setRemainSize(article.getArticleRedPackage().getRemainSize());
             articleRedPackageModel.setRemainMoney(article.getArticleRedPackage().getAmount());
+            articleRedPackageModel.setPay(article.getArticleRedPackage().getIsPay());
         }
         this.articleRedPackage = articleRedPackageModel;
 

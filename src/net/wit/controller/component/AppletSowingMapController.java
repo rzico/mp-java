@@ -263,11 +263,11 @@ public class AppletSowingMapController extends BaseController {
 	@ResponseBody
 	public Message list(Long memberId) {
 		Member member = memberService.find(memberId);//获取当前会员
+		List<AppletSowingMapModel> appletSowingMapModels = new ArrayList<>();
 		if(member == null) return Message.error("没有找到该小程序账号id");
 		Topic topic = member.getTopic();
 		if(topic != null){
 			List<AppletSowingMap> appletSowingMaps = topic.getAppletSowingMaps();
-			List<AppletSowingMapModel> appletSowingMapModels = new ArrayList<>();
 			if(appletSowingMaps != null && appletSowingMaps.size() > 0){
 				for (AppletSowingMap item : appletSowingMaps){
 					AppletSowingMapModel appletSowingMapModel = AppletSowingMapModel.bind(item);
@@ -276,7 +276,7 @@ public class AppletSowingMapController extends BaseController {
 				return Message.success(appletSowingMapModels, "admin.list.success");
 			}
 		}
-		return Message.error("获取列表失败");
+		return Message.success(appletSowingMapModels, "admin.list.success");
 	}
 	
 	

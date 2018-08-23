@@ -229,6 +229,7 @@ public class ArticleController extends BaseController {
             article.setIsReview(true);
             article.setIsAudit(false);
             article.setIsTop(false);
+            article.setIsRedPackage(false);
             article.setIsReward(false);
             article.setTemplate(templateService.findDefault(Template.Type.article));
             article.setIsDraft(false);
@@ -277,6 +278,10 @@ public class ArticleController extends BaseController {
         if (article==null) {
             return Message.error("无效文章编号");
         }
+        boolean isnew = false;//判断是否是第一次发布文章
+        if (!article.getIsPublish() && !article.getIsAudit()){
+            isnew = true;
+        }
         if (articleOptions!=null) {
             article.setIsReward(articleOptions.getIsReward());
             article.setIsTop(articleOptions.getIsTop());
@@ -301,7 +306,7 @@ public class ArticleController extends BaseController {
         if (articleCatalogId!=null) {
             article.setArticleCatalog(articleCatalogService.find(articleCatalogId));
         }
-        article.setIsDraft(true);
+        article.setIsAudit(true);//直接提交审核
         article.setIsPublish(true);
 
         articleService.update(article);
@@ -309,8 +314,10 @@ public class ArticleController extends BaseController {
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Filter("follow", Filter.Operator.eq,article.getMember()));
         List<MemberFollow> data = memberFollowService.findList(null,null,filters,null);
-        for (MemberFollow follow:data) {
-           messageService.publishPushTo(article,follow.getMember());
+        if(isnew){
+            for (MemberFollow follow:data) {
+                messageService.publishPushTo(article,follow.getMember());
+            }
         }
         ArticleModel entityModel =new ArticleModel();
         entityModel.bind(article);
@@ -337,16 +344,18 @@ public class ArticleController extends BaseController {
             edited = true;
         }
         if (isTop!=null) {
-            Tag tag = tagService.find(6L);
-            if (isTop) {
-                if (!article.getTags().contains(tag)) {
-                    article.getTags().add(tag);
-                }
-            } else {
-                if (article.getTags().contains(tag)) {
-                    article.getTags().remove(tag);
-                }
-            }
+            //不知张总为何这么写
+//            Tag tag = tagService.find(6L);
+//            if (isTop) {
+//                if (!article.getTags().contains(tag)) {
+//                    article.getTags().add(tag);
+//                }
+//            } else {
+//                if (article.getTags().contains(tag)) {
+//                    article.getTags().remove(tag);
+//                }
+//            }
+            article.setIsTop(isTop);
             edited = true;
         }
         if (!edited) {
@@ -445,6 +454,9 @@ public class ArticleController extends BaseController {
             return Message.error("无效文章编号");
         }
         article.setDeleted(false);
+        article.setIsPublish(true);
+        article.setIsAudit(true);
+
         articleService.update(article);
         return Message.success("还原成功");
     }
@@ -474,8 +486,11 @@ public class ArticleController extends BaseController {
         if(getMoney > 0.0){
             return Message.success(getMoney,"领取成功");
         }else if(getMoney == 0.0){
-            return Message.error("已领取");
-        }else{
+            return Message.error("已领取过");
+        }else if(getMoney == -2.0){
+            return Message.error("该红包已被领完");
+        }
+        else{
             return Message.error("领取失败");
         }
 

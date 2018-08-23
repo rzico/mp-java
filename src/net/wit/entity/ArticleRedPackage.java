@@ -19,21 +19,21 @@ public class ArticleRedPackage {
     }
 
     /**  红包类型 */
-    @Column(columnDefinition="int(11) not null default 0 comment '红包类型'")
+    @Column(columnDefinition="int(11) comment '红包类型'")
     private RedPackageType redPackageType;
     /** 红包数量 */
     @Min(0)
-    @Column(columnDefinition="bigint(20) not null default 0 comment '红包数量'")
+    @Column(columnDefinition="bigint(20) comment '红包数量'")
     private Long remainSize;
 
 
     /** 红包总金额 */
     @Min(0)
-    @Column(columnDefinition="decimal(21,6) not null comment '金额'")
+    @Column(columnDefinition="decimal(21,6) comment '金额'")
     private BigDecimal amount;
 
 
-    @Column(columnDefinition="bit not null default 0 comment '是否支付'")
+    @Column(columnDefinition="bit comment '是否支付'")
     @JsonIgnore
     private Boolean isPay;
 

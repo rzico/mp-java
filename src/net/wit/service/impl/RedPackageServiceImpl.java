@@ -114,13 +114,13 @@ public class RedPackageServiceImpl extends BaseServiceImpl<RedPackage, Long> imp
         ArticleRedPackage.RedPackageType redPackageType = articleRedPackage.getRedPackageType();
 
         if(redPackageType == ArticleRedPackage.RedPackageType.AVE){//平均
-
-			articleRedPackage.setAmount(new BigDecimal(remainMoney - remainMoney / remainSize));
+			double getmoney = remainMoney / remainSize;
+			articleRedPackage.setAmount(new BigDecimal(remainMoney - getmoney));
 			articleRedPackage.setRemainSize(--remainSize);
 			article.setArticleRedPackage(articleRedPackage);
 			articleDao.merge(article);//更新红包金额
 
-            return remainMoney / remainSize;
+            return getmoney;
         }else{
             // remainSize 剩余的红包数量
             // remainMoney 剩余的钱
@@ -154,13 +154,18 @@ public class RedPackageServiceImpl extends BaseServiceImpl<RedPackage, Long> imp
 			//开始领红包操作
 			//先判断有没有领取资格 1、红包有钱 2、 红包他没领过
 			ArticleRedPackage articleRedPackage = redPackage.getArticle().getArticleRedPackage();
-			boolean have1 =articleRedPackage.getIsPay() && articleRedPackage.getRemainSize() > 0 && articleRedPackage.getAmount().doubleValue() > 0.0;
+			boolean have1 = articleRedPackage.getRemainSize() > 0 && articleRedPackage.getAmount().doubleValue() > 0.0;
 			List<RedPackage> redPackages = redPackageDao.findByRedPackage(redPackage);
 			boolean have2 = redPackages == null || redPackages.size() == 0;
+
+			boolean have3 = articleRedPackage.getIsPay();
+			if(!have1){//已经领完
+				return -2.0;
+			}
 			if(!have2){//表示已领取
 				return 0.0;
 			}
-			if(have1 && have2){
+			if(have3){
 				double getMoney = getRandomMoney(redPackage.getArticle());
 				if(getMoney > 0.0){//说明领取成功了
 					redPackage.setAmount(new BigDecimal(getMoney));

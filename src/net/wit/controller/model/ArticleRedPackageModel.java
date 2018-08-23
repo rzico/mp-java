@@ -15,6 +15,9 @@ public class ArticleRedPackageModel {
     /** 红包总金额 */
     private BigDecimal remainMoney;
 
+    /** 是否支付 */
+    private Boolean isPay;
+
     public ArticleRedPackage.RedPackageType getRedPackageType() {
         return redPackageType;
     }
@@ -39,12 +42,21 @@ public class ArticleRedPackageModel {
         this.remainMoney = remainMoney;
     }
 
+    public Boolean getPay() {
+        return isPay;
+    }
+
+    public void setPay(Boolean pay) {
+        isPay = pay;
+    }
+
     public void bind(Article article){
         ArticleRedPackage articleRedPackage = article.getArticleRedPackage();
         if(articleRedPackage != null){
             this.redPackageType = articleRedPackage.getRedPackageType();
             this.remainSize = articleRedPackage.getRemainSize();
             this.remainMoney = articleRedPackage.getAmount();
+            this.isPay = articleRedPackage.getIsPay();
         }
     }
 }

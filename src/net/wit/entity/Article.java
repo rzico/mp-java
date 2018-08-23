@@ -165,7 +165,7 @@ public class Article extends BaseEntity{
 
     /** 是否可以领取红包 */
     @NotNull
-    @Column(columnDefinition="bit comment '是否可以领取红包'")
+    @Column(columnDefinition="bit not null default 0 comment '是否可以领取红包'")
     private Boolean isRedPackage;
 
 

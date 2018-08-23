@@ -68,6 +68,7 @@
         </div>
     </div>
 [/#if]
+
 [#if iosUrl??]
     <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2">苹果URL：</label>
@@ -76,6 +77,16 @@
         </div>
     </div>
 [/#if]
+
+[#if iosAuditUrl??]
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">苹果审核URL：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            <input id="auditUrl" name="auditUrl" type="text" class="input-text" value="${iosAuditUrl}" placeholder="">
+        </div>
+    </div>
+[/#if]
+
 [#if resourceVersion??]
     <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2">服务器版本：</label>
